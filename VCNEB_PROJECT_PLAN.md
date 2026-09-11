@@ -185,6 +185,7 @@
 - [ ] 构造含耦合项的 toy model，验证路径不能被错误地拆成独立原子和 cell 两条路径。
 - [ ] 对比无弹簧、不同弹簧常数、不同 image 数、FIRE/LBFGS 等设置。
 - [ ] 已加入 `examples/run_vcneb_convergence.py` 收敛矩阵驱动；待在指定集群完成并记录结果。
+- [ ] 收敛矩阵首次运行暴露并修正了测试端点漏设最终 cell strain 的问题；修正版待在指定集群重新完成。
 - [ ] 测试 CI-VCNEB 是否把最高 image 推向 saddle，并统计 saddle 一阶负曲率/力残差等诊断。
 
 ### 8.3 参考实现与理论对照

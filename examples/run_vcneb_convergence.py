@@ -34,6 +34,9 @@ def parse_args() -> argparse.Namespace:
 def build_endpoints(reference_cell: np.ndarray):
     initial = Atoms("Ar", scaled_positions=[[0.25, 0.5, 0.5]], cell=reference_cell, pbc=True)
     final = Atoms("Ar", scaled_positions=[[0.75, 0.5, 0.5]], cell=reference_cell, pbc=True)
+    final_cell = reference_cell.copy()
+    final_cell[0, 0] *= 1.25
+    final.set_cell(final_cell, scale_atoms=True)
     return initial, final
 
 
