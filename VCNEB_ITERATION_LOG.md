@@ -1,5 +1,23 @@
 # VC-NEB Iteration Log
 
+## HfO2 Level B optimizer trial (`04bf038`)
+
+- Checked `cu17` before both launches; it had no active DFT/MPI process and 40
+  cores.  The run used independently relaxed 12-atom HfO2 T/PO endpoints,
+  Dojo-NC-FR, 60 Ry, 1x1x1 k points, and `scf_thr=1e-6`.
+- A fresh seven-image FIRE branch completed all 40 requested steps and wrote
+  41 complete snapshots.  Its final generalized force was `0.500065 eV/A`
+  and its provisional enthalpy barrier was `0.394209 eV`; this is a complete
+  but non-converged restart source.
+- A separate LBFGS branch resumed the last complete FIRE trajectory.  Its
+  force rose from `0.617654` to `1.542518 eV/A` in the first four steps, so
+  the task was stopped after six complete snapshots.  No other user's process
+  was touched; the remaining logs and snapshots are retained.
+- The result demonstrates that optimizer choice and SCF-backed path geometry
+  need explicit convergence evidence.  Neither provisional barrier is a
+  publishable HfO2 transition barrier.
+- Compact record: `outputs/abacus_hfo2_levelB_manifest.json`.
+
 ## Installable package skeleton (`0.1.0.dev0`)
 
 - Added `pyproject.toml`, package version metadata, `vcneb --version`, and

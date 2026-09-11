@@ -227,6 +227,7 @@
 
 - [x] Level A 的 model/低精度 DFT smoke 分支已确认输入、路径、计算器、每 image 目录、输出解析、恢复和 CI 独立分支；生产精度仍待完成。
 - [ ] Level B：生产精度 VCNEB，完成无约束路径和 CI-VCNEB。
+- [x] Level B 首轮已在 cu17 完整执行 7-image/40-step FIRE，并从完整轨迹尝试 LBFGS 恢复；两条分支均明确记录为未收敛，不能作为物理能垒。
 - [ ] Level C：加密 image、提高电子精度和改变初始路径，验证能垒与 saddle 的稳定性。
 - [x] Level A 的 model/低精度 DFT smoke 已记录 Git 版本、节点、核数、输入、输出和结果摘要；Level B/C manifest 仍待补充。
 

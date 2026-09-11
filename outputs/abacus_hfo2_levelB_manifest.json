@@ -1,0 +1,60 @@
+{
+  "project": "vcneb",
+  "commit": "04bf038",
+  "gateway": "235",
+  "compute_node": "cu17",
+  "node_check": {
+    "checked_before_fire_run": "2026-09-12T05:51:06+08:00",
+    "checked_before_lbfgs_run": "2026-09-12T06:25:36+08:00",
+    "cores": 40,
+    "fire_load_average_1_5_15": [0.22, 0.08, 0.18],
+    "lbfgs_load_average_1_5_15": [0.10, 6.33, 16.80],
+    "active_dft_processes_before_runs": 0
+  },
+  "runtime": {
+    "python": "/home/zhuxd/Software/anaconda3/envs/icu/bin/python3",
+    "ase": "3.23.1b1",
+    "abacus": "/home/zhuxd/Software/abacus/INSTALL/3.10.0-LTS/bin/abacus",
+    "mpi_command": "mpirun -np 40 /home/zhuxd/Software/abacus/INSTALL/3.10.0-LTS/bin/abacus",
+    "pseudo_family": "ABACUS Dojo-NC-FR",
+    "ecutwfc_Ry": 60.0,
+    "scf_thr": 1e-6,
+    "kpts": [1, 1, 1]
+  },
+  "workdir": "/home/zhuxd/abacus/agent-runs/20260912-vcneb-p0/validation/hfo2_t_to_po/abacus_hfo2_levelB_7img_40step",
+  "n_images": 7,
+  "optimizer": "FIRE",
+  "steps_requested": 40,
+  "fmax_target_eV_per_A": 0.1,
+  "final_max_generalized_force_eV_per_A": 0.5000651140871764,
+  "barrier_enthalpy_eV": 0.3942086000006384,
+  "reaction_enthalpy_eV": -0.7478566999998293,
+  "image_enthalpies_eV": [
+    -9778.5572489,
+    -9779.3129328,
+    -9778.2577268,
+    -9778.1630403,
+    -9778.8270173,
+    -9779.3151484,
+    -9779.3051056
+  ],
+  "calculator": "ASE ABACUS",
+  "stress_required": true,
+  "fire_trial": {
+    "status": "completed_not_converged",
+    "snapshots": 41,
+    "interpretation": "A complete 40-step low-precision Level B trial from independently relaxed endpoints; retained as a restart source, not a physical barrier."
+  },
+  "lbfgs_recovery_trial": {
+    "workdir": "/home/zhuxd/abacus/agent-runs/20260912-vcneb-p0/validation/hfo2_t_to_po/abacus_hfo2_levelB_lbfgs_60step",
+    "source_trajectory": "validation/hfo2_t_to_po/abacus_hfo2_levelB_7img_40step/vcneb.traj",
+    "optimizer": "LBFGS",
+    "steps_requested": 60,
+    "steps_completed": 5,
+    "fmax_target_eV_per_A": 0.05,
+    "logged_fmax_eV_per_A": [0.617654, 0.624439, 0.883145, 1.542518, 0.921749, 0.593001],
+    "status": "stopped_unstable",
+    "interpretation": "Stopped after the early force increase; no summary was generated. Six complete snapshots/log lines remain for diagnostics."
+  },
+  "interpretation": "The real HfO2 variable-cell path, stress channel, per-image directories, restart read, and optimizer switching all executed. The FIRE and LBFGS trials are not converged and their barriers must not be reported as the HfO2 transition barrier."
+}
