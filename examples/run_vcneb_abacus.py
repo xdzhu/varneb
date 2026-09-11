@@ -34,7 +34,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--steps", type=int, default=300)
     parser.add_argument("--k", type=float, default=0.10)
     parser.add_argument("--pressure-gpa", type=float, default=0.0)
-    parser.add_argument("--command", default=None)
+    parser.add_argument(
+        "--command",
+        default=os.environ.get("ABACUS_COMMAND"),
+        help="ABACUS launcher command; defaults to ABACUS_COMMAND when set",
+    )
     parser.add_argument("--pseudo-dir", default=os.environ.get("ABACUS_PP_PATH"))
     parser.add_argument("--basis-dir", default=os.environ.get("ABACUS_ORBITAL_PATH"))
     parser.add_argument("--pp", action="append", default=[], metavar="SPECIES=FILE")
