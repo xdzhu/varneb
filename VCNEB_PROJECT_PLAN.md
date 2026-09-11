@@ -153,7 +153,7 @@
 
 ### 7.3 ABACUS 适配
 
-- [ ] 完成 STRU/KPT/INPUT 生成和结果解析；核对 stress 输出、单位和晶格方向。
+- [x] 完成 STRU/KPT/INPUT 生成和结果解析；核对 stress 输出、单位和晶格方向，并提供参数化多 image 入口。
 - [ ] 验证 ABACUS 命令 profile、MPI 进程数、退出码、超时和 SCF 不收敛处理。
 - [ ] 让同一套 VCNEB 输入只更换 calculator 配置即可切换 VASP/ABACUS。
 

@@ -197,9 +197,9 @@ python scripts/validate_vcneb_inputs.py \
 
 ## ABACUS run
 
-`examples/run_vcneb_abacus.py` expects an ASE ABACUS calculator.  On `cu05`,
-both `ase.calculators.abacus` and `abacus_neb` are importable.  Before a real
-run, fill material-specific settings in the `parameters` dict:
+`examples/run_vcneb_abacus.py` expects an ASE ABACUS calculator. The material
+settings can be supplied on the command line, so the same VC-NEB driver can be
+used with a different calculator configuration:
 
 - `ecutwfc`
 - `kpts`
@@ -208,6 +208,22 @@ run, fill material-specific settings in the `parameters` dict:
 - `pseudo_dir`
 - `basis_dir`
 - spin, smearing, van der Waals, and convergence settings
+
+For example, the HfO2 Dojo-FR setup on the shared cluster uses:
+
+```bash
+python examples/run_vcneb_abacus.py \
+  --initial validation/hfo2_t_to_po/image_00/POSCAR \
+  --final validation/hfo2_t_to_po/image_06/POSCAR \
+  --workdir validation/hfo2_t_to_po/abacus_vcneb_smoke \
+  --command "mpirun -np 40 /home/zhuxd/Software/abacus/INSTALL/3.10.0-LTS/bin/abacus" \
+  --pseudo-dir /home/zhuxd/abacus/PSEUDO/ABACUS-orbitals/Dojo-NC-FR/Pseudopotential \
+  --basis-dir /home/zhuxd/abacus/PSEUDO/ABACUS-orbitals/Dojo-NC-FR/selected_Orbs \
+  --pp Hf=Hf.upf --pp O=O.upf \
+  --basis Hf=Hf_gga_7au_100Ry_4s2p2d1f.orb \
+  --basis O=O_gga_7au_100Ry_2s2p1d.orb \
+  --ecutwfc 60 --kpts 1 1 1
+```
 
 The driver enforces `cal_force=1`, `cal_stress=1`, and `out_stru=1`, which are
 required for VC-NEB.
