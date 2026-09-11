@@ -268,11 +268,9 @@
 
 - [ ] Introduction：晶体相变能垒、固定 cell NEB 的局限、现有 VCNEB/USPEX/ABINIT/ASE 生态和纯 Python 的需求。
 - [ ] Theory：广义坐标、cell 度量、应力到 cell force、切线、弹簧力、CI、约束和收敛判据。
-- [ ] Implementation：核心数据模型、calculator contract、VASP/ABACUS adapter、重启、并行 image 运行和模式 API。
-- [ ] Verification：解析势、有限差分、ASE fixed-cell 对照、收敛矩阵和旧实现/公开方法的差异。
-- [ ] Applications：HfO2 T->PO、钙钛矿案例、模式引导与释放精修、能垒和路径结构。
-- [ ] Limitations：应力精度、cell 参数化、原子映射、磁性/电子态、多路径问题和计算成本。
-- [ ] Availability：版本、许可证、输入、结构、脚本、manifest、原始输出和复现命令。
+- [ ] Software：核心数据模型、calculator contract、VASP/ABACUS adapter、重启、并行 image 运行和模式 API。
+- [ ] Examples：HfO2 T->PO、钙钛矿案例、模式引导与释放精修、能垒和路径结构；解析势、有限差分、ASE fixed-cell 对照、收敛矩阵和旧实现/公开方法的差异作为本节的小节、表格或图展示。
+- [ ] Conclusions/Availability：应力精度、cell 参数化、原子映射、磁性/电子态、多路径问题和计算成本，以及版本、许可证、输入、结构、脚本、manifest、原始输出和复现命令。
 
 ### 11.2 软件发布
 

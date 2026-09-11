@@ -1,5 +1,15 @@
 # VC-NEB Iteration Log
 
+## 2026-09-12 02:58 +08:00
+
+Manuscript organization decision:
+
+- The VCNEB paper will use the compact structure
+  `Introduction -> Theory -> Software -> Examples -> Conclusions/Availability`.
+- Verification, convergence studies and literature/reference-implementation
+  comparisons will be presented as subsections, tables or figures within
+  `Examples`, rather than as a standalone `Benchmarks` section.
+
 ## 2026-09-12 02:45 +08:00
 
 Focus: establish the GitHub-synced project baseline and validate it on the

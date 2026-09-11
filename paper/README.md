@@ -10,9 +10,8 @@
 1. `Introduction`：晶体相变能垒、固定 cell NEB 的局限、现有 VCNEB 工具和纯 Python calculator-agnostic 需求。
 2. `Theory`：扩展构型空间、cell deformation、应力/virial 到 cell force、切线、弹簧、CI、模式与方向约束。
 3. `Software`：核心数据模型、ASE-compatible calculator contract、VASP/ABACUS adapter、恢复、并行 image 执行和结果记录。
-4. `Verification`：有限差分、解析多井势、固定 cell ASE 对照、参数收敛、旧实现和公开方法的差异。
-5. `Examples and Benchmarks`：HfO2 T->PO、钙钛矿相变、模式引导与严格约束、能垒和路径结构。
-6. `Conclusions`：可复现性、适用范围、限制和后续扩展。
+4. `Examples`：HfO2 T->PO、钙钛矿相变、模式引导与严格约束、能垒和路径结构；有限差分、解析多井势、固定 cell ASE 对照、参数收敛和文献对比作为本节的小节、表格或图展示。
+5. `Conclusions/Availability`：可复现性、适用范围、限制、后续扩展、代码和数据获取方式。
 
 ## 写作规则
 
@@ -27,4 +26,3 @@
 - `figures/`：路径、cell 演化、收敛和 calculator 对比图。
 - `data/`：论文使用的汇总 CSV/JSON，不放入大体积 DFT restart 文件。
 - `reproduce/`：从 manifest 复现表格和图的脚本。
-
