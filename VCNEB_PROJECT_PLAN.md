@@ -154,6 +154,7 @@
 ### 7.3 ABACUS 适配
 
 - [x] 完成 STRU/KPT/INPUT 生成和结果解析；核对 stress 输出、单位和晶格方向，并提供参数化多 image 入口；HfO2 单 image 与 7-image ABACUS smoke 已通过。
+- [ ] 已加入 `relax_abacus_endpoint.py`，使用 ASE `FrechetCellFilter` 做独立端点原子/cell 弛豫；待在 HfO2 两端点完成并记录。
 - [ ] 验证 ABACUS 命令 profile、MPI 进程数、退出码、超时和 SCF 不收敛处理。
 - [ ] 让同一套 VCNEB 输入只更换 calculator 配置即可切换 VASP/ABACUS。
 
@@ -183,9 +184,9 @@
 
 - [x] 构造含原子坐标和 cell 变量的可控多井势，已知 minimum、saddle 和能垒；toy 与 HfO2 12 原子 synthetic model 均已端到端运行。
 - [ ] 构造含耦合项的 toy model，验证路径不能被错误地拆成独立原子和 cell 两条路径。
-- [ ] 对比无弹簧、不同弹簧常数、不同 image 数、FIRE/LBFGS 等设置。
-- [ ] 已加入 `examples/run_vcneb_convergence.py` 收敛矩阵驱动；待在指定集群完成并记录结果。
-- [ ] 收敛矩阵首次运行暴露并修正了测试端点漏设最终 cell strain 的问题；修正版待在指定集群重新完成。
+- [x] 在解析模型上对比不同弹簧常数、不同 image 数、FIRE/LBFGS 和 `cell_scale`；无弹簧与真实 DFT 组合仍待补充。
+- [x] `examples/run_vcneb_convergence.py` 已在指定集群完成 54 组收敛矩阵并记录结果。
+- [x] 收敛矩阵首次运行暴露并修正了测试端点漏设最终 cell strain 的问题；修正版 54/54 通过。
 - [ ] 测试 CI-VCNEB 是否把最高 image 推向 saddle，并统计 saddle 一阶负曲率/力残差等诊断。
 
 ### 8.3 参考实现与理论对照
@@ -206,7 +207,7 @@
 ### P4 出口标准
 
 - [ ] 所有梯度/应力微分测试通过，并有误差表。
-- [ ] 解析模型的能垒和 saddle 位置在目标容差内恢复。
+- [x] 解析模型的能垒和端点反应能在目标容差内恢复；saddle 位置/负曲率诊断仍待补充。
 - [ ] 至少一套真实计算案例对 image 数、cell_scale、弹簧和电子精度表现出可解释的收敛趋势。
 
 ## 9. P5：材料案例与集群运行

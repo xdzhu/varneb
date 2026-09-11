@@ -1,0 +1,32 @@
+{
+  "project": "vcneb",
+  "commit": "a8da3bd",
+  "gateway": "235",
+  "compute_node": "cu17",
+  "shared_source_path": "/home/zhuxd/abacus/agent-runs/20260912-vcneb-p0",
+  "node_check": {
+    "checked_before_run": "2026-09-12T03:42:09+08:00",
+    "cores": 40,
+    "load_average_1_5_15": [0.08, 1.17, 2.27],
+    "active_dft_processes": 0
+  },
+  "matrix_file": "outputs/vcneb_convergence_matrix_fixed.json",
+  "calculator": "analytic ToyPhaseTransition",
+  "matrix_size": 54,
+  "settings": {
+    "images": [5, 7, 9],
+    "springs_eV_per_A2": [0.05, 0.1, 0.2],
+    "cell_scales_A": [4.0, 5.0, 6.0],
+    "optimizers": ["FIRE", "LBFGS"],
+    "steps": 300,
+    "fmax_eV_per_A": 0.005
+  },
+  "expected_barrier_eV": 0.25,
+  "converged_cases": 54,
+  "barrier_min_eV": 0.25,
+  "barrier_max_eV": 0.25,
+  "maximum_absolute_barrier_error_eV": 0.0,
+  "maximum_final_force_eV_per_A": 0.004987645585522444,
+  "status": "passed_model_matrix",
+  "interpretation": "The corrected analytic matrix recovers the known barrier for every tested image count, spring and cell scale. It is a model verification, not a DFT convergence claim. The first matrix was discarded because its final endpoint omitted the toy model's required cell strain; the corrected endpoint is recorded in commit a8da3bd."
+}

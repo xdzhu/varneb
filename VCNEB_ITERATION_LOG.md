@@ -1,5 +1,24 @@
 # VC-NEB Iteration Log
 
+## 2026-09-12 03:44 +08:00
+
+Focus: complete the corrected analytic convergence matrix.
+
+- Checked `cu17` immediately before use; it had no active DFT process.
+- The first matrix run was rejected because the convergence driver had omitted
+  the toy potential's final `exx=0.25` endpoint strain, which produced a false
+  `delta=0.1774 eV`.
+- After fixing that endpoint, reran 54 combinations: 5/7/9 images, weak/
+  medium/strong springs, `cell_scale=4/5/6 A`, and FIRE/LBFGS.
+- All 54 cases converged at `fmax=0.005 eV/A`, recovered barrier `0.25 eV`,
+  and recovered reaction energy `0 eV`. Full data are in
+  `outputs/vcneb_convergence_matrix_fixed.json`; run metadata are in
+  `outputs/vcneb_convergence_manifest.json`.
+
+The result validates the model implementation and exposes optimizer/metric
+sensitivity through force and iteration columns. It does not replace the
+pending DFT image/cell/electronic convergence matrix.
+
 ## 2026-09-12 03:31 +08:00
 
 Focus: validate the physical ABACUS path before production VC-NEB.
