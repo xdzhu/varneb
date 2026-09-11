@@ -70,6 +70,19 @@ Compact records: `outputs/release_and_refine_model/manifest.json`,
   rendered pages were visually inspected; only minor underfull/overfull box
   warnings remain for later copy editing.
 
+## Current cluster regression (`799bc3e`)
+
+- Before the run, `cu17` was checked at `2026-09-12T07:30:28+08:00`:
+  40 cores, load averages `0.08/0.12/0.97`, and no active DFT process. The
+  complete compile and non-DFT regression suite passed. A second check at
+  `2026-09-12T07:31:23+08:00` found no VASP/ABACUS/MPI process remaining.
+- The current suite includes the new path diagnostics, nonorthogonal mode
+  projection, CI saddle, pressure, restart, parallel ownership, calculator
+  contract, and ABACUS input-validator checks. The largest reported force
+  transformation errors remain below `1e-9` in the test units.
+
+Compact record: `outputs/vcneb_current_cluster_regression_manifest.json`.
+
 ## HfO2 Level B optimizer trial (`04bf038`)
 
 - Checked `cu17` before both launches; it had no active DFT/MPI process and 40
