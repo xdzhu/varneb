@@ -133,6 +133,7 @@ python scripts/setup_hfo2_t_po_validation.py
 python examples/run_hfo2_t_po_model_vcneb.py
 python examples/run_abacus_single_image_smoke.py
 python examples/relax_abacus_endpoint.py --help
+python examples/run_vasp_single_image_smoke.py --help
 python examples/run_vcneb_convergence.py
 ```
 

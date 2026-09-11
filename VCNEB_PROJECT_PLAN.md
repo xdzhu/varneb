@@ -150,6 +150,7 @@
 - [ ] 完成单 image 能量/力/stress 解析、目录隔离、重启文件策略和错误分类。
 - [ ] 明确 VASP 的 cell relaxation 输入只用于端点预弛豫还是也用于 image calculator；避免将普通变胞弛豫误用为 NEB image 更新。
 - [ ] 做一个极小晶胞的 VASP smoke test，再做完整材料案例；两个阶段都保留 INCAR/KPOINTS/POTCAR 来源记录。
+- [ ] 已加入 `run_vasp_single_image_smoke.py`；待共享节点用旧 GaN `POTCAR` 完成真实 VASP 能量/力/stress smoke。
 
 ### 7.3 ABACUS 适配
 
