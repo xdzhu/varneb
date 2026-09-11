@@ -40,6 +40,36 @@ Compact record: `outputs/abacus_hfo2_levelB_manifest.json`.
 Compact records: `outputs/abacus_hfo2_levelB_static_diag_cu17_manifest.json` and
 `outputs/abacus_hfo2_levelB_static_diag_cu17_summary.json`.
 
+## Release-and-refine workflow (`6f88a34`)
+
+- Before the cluster run, `cu17` was checked at `2026-09-12T07:21:09+08:00`:
+  40 cores, load averages `0.04/0.56/1.73`, and no active DFT process. The
+  run used only the analytic coupled calculator and left no DFT process.
+- A projected collective-mode stage converged in 12 FIRE steps with barrier
+  `0.286000 eV` and maximum generalized force `0.009891 eV/A`.
+- Releasing the constraint and refining the same chain in the full extended
+  space converged in 37 FIRE steps with barrier `0.250044 eV` and maximum
+  generalized force `0.008655 eV/A`. The barrier dropped by `0.035956 eV`.
+- This validates the intended semantics: a constrained mechanism path can be
+  useful for searching, but its barrier must be distinguished from the final
+  unconstrained VC-NEB result.
+
+Compact records: `outputs/release_and_refine_model/manifest.json`,
+`outputs/release_and_refine_model/release_and_refine_cluster.json`, and
+`outputs/release_and_refine_model/cluster_run.log`.
+
+## CPC manuscript draft (`6f88a34`)
+
+- Added `paper/vcneb_CPC.tex` using the requested five-part structure:
+  `Introduction -> Theory -> Software -> Examples -> Conclusions/Availability`.
+  No standalone Benchmarks section was introduced.
+- The draft reports only supported results: analytic finite differences, CI and
+  fixed-cell ASE reduction, release-and-refine behavior, calculator smoke tests,
+  and the explicitly non-converged HfO2 diagnostic case.
+- Local TeX Live compilation succeeded and produced a five-page PDF. The
+  rendered pages were visually inspected; only minor underfull/overfull box
+  warnings remain for later copy editing.
+
 ## HfO2 Level B optimizer trial (`04bf038`)
 
 - Checked `cu17` before both launches; it had no active DFT/MPI process and 40

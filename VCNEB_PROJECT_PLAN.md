@@ -37,7 +37,7 @@
 - [ ] 尚未完成六个独立应变的系统有限差分误差表、随机路径/耦合势覆盖和不同 cell 参数化的完整对照；解析基准与固定 cell ASE 对照已完成首轮。
 - [ ] 尚未完成 VASP/ABACUS 两套真实 DFT 的端到端生产级 VCNEB 收敛案例。
 - [x] HfO2 T 相到 PO 相的 12 原子结构来源、原子一一映射和端点独立弛豫 trial 已保存；生产精度路径和科学能垒仍未完成。
-- [x] 已实现基础严格模式子空间和 projected-update 约束，并加入端点子空间验证；方向冲突诊断和释放后全空间精修仍未完成。
+- [x] 已实现基础严格模式子空间和 projected-update 约束，并加入端点子空间验证、方向冲突诊断和解析势 release-and-refine；真实材料对照仍未完成。
 - [ ] 尚未形成可投稿版本的误差预算、效率统计、软件发布包和论文结果表。
 
 ## 3. 阶段总览与里程碑
@@ -61,11 +61,11 @@
 
 - [ ] 为当前工作树建立一个明确的开发版本号和变更摘要；记录 `core.py`、`modes.py`、测试脚本和示例入口。
 - [x] 已在空闲的 `cu17` 上重新运行现有回归集，并将 Python、ASE、NumPy、SciPy、VASP/ABACUS 环境信息写入 `outputs/vcneb_p0_baseline_manifest.json`。
-- [ ] 以后每次启动计算前检查 `cu17`、`cu22`--`cu26` 的负载、进程和用户任务；选择空闲节点运行，忙节点不挤占。
-- [ ] 利用共享目录完成一次代码同步即可；节点无需安装 Git，运行目录必须记录对应的 Git commit。
+- [x] 以后每次启动计算前检查 `cu17`、`cu22`--`cu26` 的负载、进程和用户任务；选择空闲节点运行，忙节点不挤占。
+- [x] 利用共享目录完成一次代码同步即可；节点无需安装 Git，运行目录和 manifest 均记录对应的 Git commit。
 - [ ] 将 toy、model、VASP、ABACUS 四类示例分别标注为 `unit`、`model`、`DFT-smoke`、`production-template`，避免用户误把模板当成已收敛结果。
-- [ ] 检查当前 `/home/zhuxd/abacus/8.dielec/vcneb` 旧代码与工作树的差异，保留可借鉴算法说明和输入格式，但不复制无法验证的逻辑。
-- [ ] 规定结果目录命名：材料、端点、图像数、calculator、参数集、代码版本必须可从目录名或 manifest 读出。
+- [x] 检查当前 `/home/zhuxd/abacus/8.dielec/vcneb` 旧代码与工作树的差异，保留可借鉴算法说明和输入格式，但不复制无法验证的逻辑。
+- [x] 规定结果目录命名：材料、端点、图像数、calculator、参数集、代码版本必须可从目录名或 manifest 读出。
 
 ### 产出与验收
 
@@ -163,10 +163,10 @@
 
 ### 7.4 可恢复运行
 
-- [ ] 每轮保存 manifest、每 image 结构、energy、force、stress、广义梯度、切线、弹簧力和收敛指标。
+- [x] driver 已支持保存 manifest、每 image 结构、energy、force、stress、cell 指标、真实/弹簧/NEB 力分解和收敛指标；每轮广义切线仍作为后续增强项。
 - [ ] 支持从中断 image 级恢复、从最后完整 iteration 恢复和只重算失败 image。
 - [ ] 增加 dry-run、validate-only、single-image 和 N-image smoke test 命令。
-- [ ] 生成机器可读的 summary JSON 和人类可读的 Markdown/CSV 结果。
+- [x] 生成机器可读的 summary JSON 和人类可读的文本摘要；CSV/Markdown 汇总仍作为发布增强项。
 
 ### 出口标准
 
@@ -195,7 +195,7 @@
 ### 8.3 参考实现与理论对照
 
 - [x] 固定 cell：与 ASE NEB/CINEB 在同一 calculator、同一端点和同一 image 数下比较；解析模型逐 image 能量一致，能垒差为 9.33e-6 eV。
-- [ ] 变胞：依据 Qian 等 VCNEB 论文的广义坐标、cell 力和弹簧思想逐项对照；每处差异写出理由。
+- [x] 变胞：依据 Qian 等 VCNEB 论文的广义坐标、cell 力和弹簧思想完成首轮逐项对照；有限变形 stress measure 和大应变差异仍需补充。
 - [ ] 依据 USPEX VCNEB 公开手册对比输入语义和用户流程；不声称复现其内部实现，因为当前获得的安装包不含可审计源码。
 - [ ] 对比旧 `/home/zhuxd/abacus/8.dielec/vcneb` 实现的结果和失败模式，保留可复现实验而非凭印象判断。
 
@@ -264,7 +264,7 @@
 - [x] `Mode-guided initialization`：用声子/软模/用户模式改善初始路径，只影响初始 images。
 - [x] `Mode-projected VCNEB`：每轮将允许的广义力和更新投影到模式子空间，适用于研究指定机制。
 - [x] `Directional constraints`：已提供原子方向和 cell 方向的 basis 构造入口，并通过 `direction_basis_conflicts()` 诊断部分裁剪、完全失活和秩损失。
-- [ ] `Release-and-refine`：先约束搜索机制路径，再解除约束做全空间 VCNEB 精修，报告两者能垒差异。
+- [x] `Release-and-refine`：已加入解析耦合势示例，先做 projected 模式约束搜索，再解除约束做全空间 VCNEB 精修并报告能垒差异；真实材料对照仍待完成。
 
 ### 验收
 

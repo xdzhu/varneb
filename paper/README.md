@@ -22,7 +22,19 @@
 
 ## 当前稿件拆分
 
-- `vcneb_CPC.tex`：在 P4 验证结果稳定后建立的主稿件。
+- `vcneb_CPC.tex`：按 `Introduction -> Theory -> Software -> Examples -> Conclusions/Availability` 组织的当前主稿件草稿；不单列 Benchmarks。
+- `vcneb.bib`：当前稿件引用，正式投稿前需继续补齐软件和材料案例的准确书目信息。
+- `zstar-elsarticle-num.bst`：从本地 CPC 模板复制的参考文献样式。
 - `figures/`：路径、cell 演化、收敛和 calculator 对比图。
 - `data/`：论文使用的汇总 CSV/JSON，不放入大体积 DFT restart 文件。
 - `reproduce/`：从 manifest 复现表格和图的脚本。
+
+## 当前编译
+
+在仓库根目录执行：
+
+```bash
+python C:/Users/zhu/.codex/plugins/cache/openai-bundled/latex/0.2.6/scripts/compile_latex.py paper/vcneb_CPC.tex --output-directory paper/build --json
+```
+
+当前草稿已用本机 TeX Live 2023 编译为 `paper/build/vcneb_CPC.pdf`。PDF 和中间文件属于构建产物，不作为论文源文件提交；所有数值结果仍需以 `outputs/` 下的 manifest 和原始集群目录为准。

@@ -1,0 +1,380 @@
+% !TEX TS-program = pdflatex
+\documentclass[final,3p,times]{elsarticle}
+\pdfminorversion=7
+
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{listings}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+\usepackage{placeins}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  breakatwhitespace=false,
+  showstringspaces=false,
+  columns=fullflexible
+}
+
+\bibliographystyle{zstar-elsarticle-num}
+\journal{Computer Physics Communications}
+
+\begin{document}
+
+\begin{frontmatter}
+\title{VCNEB: A calculator-agnostic Python toolkit for variable-cell nudged elastic band calculations}
+
+\author{Xudong Zhu}
+\address{VCNEB developers, China}
+
+\begin{abstract}
+Solid--solid phase transitions often involve coupled atomic rearrangements,
+shear, and changes in the simulation cell.  A fixed-cell nudged elastic band
+(NEB) calculation can therefore constrain the mechanism or assign an
+ambiguous energetic cost to the transition.  We present VCNEB, a pure Python
+toolkit that extends NEB to an explicit atomic--cell configuration space while
+keeping the electronic-structure calculator behind an ASE-compatible contract.
+The implementation uses fractional atomic coordinates and a deformation
+gradient, converts calculator stress to a work-consistent cell force, and
+reuses mature ASE optimizers for FIRE, BFGS, and LBFGS updates.  It provides
+climbing images, pressure-dependent enthalpy paths, cell and atomic component
+masks, mode-guided initialization, strict or projected mode constraints,
+restartable trajectories, image-level parallel ownership, and structured
+force/stress diagnostics.  VASP and ABACUS adapters are included.  Analytic
+finite-difference tests, a coupled atomic--cell double-well, a fixed-cell ASE
+comparison, and a release-and-refine mode workflow validate the implementation.
+A mapped 12-atom HfO$_2$ tetragonal-to-polar-orthorhombic case demonstrates the
+cluster workflow and exposes the diagnostics required before a production
+barrier is reported.  VCNEB is intended as an open, reproducible software
+foundation for variable-cell transition-state studies rather than as a claim
+that the variable-cell NEB algorithm itself is new.
+\end{abstract}
+
+\begin{keyword}
+variable-cell NEB \sep solid--solid phase transition \sep stress \sep
+climbing image \sep ASE \sep VASP \sep ABACUS
+\end{keyword}
+\end{frontmatter}
+
+{\bf PROGRAM SUMMARY}
+\begin{small}
+\noindent
+{\em Program Title: VCNEB} \\
+{\em CPC Library link to program files:} to be added under proof \\
+{\em Developer's repository link:} \url{https://github.com/xdzhu/vcneb} \\
+{\em Licensing provisions:} to be selected before release \\
+{\em Programming language:} Python \\
+{\em Nature of problem:} Calculation of minimum-energy paths and transition-state candidates for crystal transformations involving both atomic motion and changes of the simulation cell. \\
+{\em Solution method:} VCNEB combines fractional atomic coordinates with a deformation-gradient cell representation, transforms calculator stress into a generalized cell force, applies NEB/CI-NEB projections in the resulting extended metric, and delegates numerical updates to established ASE optimizers. \\
+\end{small}
+
+\section{Introduction}
+\label{sec:introduction}
+
+The nudged elastic band method (NEB) is a standard approach for finding a
+minimum-energy path between two local minima \cite{Henkelman2000}.  In a
+crystal, however, the endpoints of a transformation may differ in lattice
+vectors as well as atomic positions.  A fixed-cell path can then hide a shear,
+volume change, or cell-mediated collective coordinate and can produce a
+mechanism that is appropriate only for an imposed boundary condition.
+
+Several variable-cell or solid-state NEB formulations already exist.  Qian
+\emph{et al.} introduced a variable-cell NEB method (VC-NEB) for structural
+phase transitions \cite{Qian2013}; generalized solid-state NEB (G-SSNEB) uses a
+closely related extended configuration space \cite{Sheppard2012}; and finite
+deformation NEB makes the work-conjugate stress measure explicit
+\cite{Ghasemi2019}.  Implementations are also available in USPEX, TSASE,
+VTST, FLOS, ABINIT, and commercial atomistic simulation environments.  These
+efforts establish the physical and algorithmic basis of cell-aware NEB, but
+their practical workflows differ in calculator support, distribution model,
+restart semantics, and diagnostic detail.
+
+The purpose of VCNEB is therefore not to claim the first variable-cell NEB
+algorithm.  It is to provide a small, auditable, calculator-agnostic Python
+layer that can be placed between modern electronic-structure engines and
+reproducible path workflows.  The project uses ASE for structure objects and
+optimizers, but keeps VASP- and ABACUS-specific input generation outside the
+path mechanics.  The same design also separates three meanings of a specified
+vibrational mode: bending an initial path, projecting optimization updates,
+and restricting the path to a hard subspace.
+
+The remainder of this paper follows five sections.  Section~\ref{sec:theory}
+defines the extended coordinates, stress transformation, NEB forces, and mode
+constraints.  Section~\ref{sec:software} describes the software architecture,
+calculator contract, restart model, and command-line workflow.
+Section~\ref{sec:examples} presents numerical verification, model results,
+calculator smoke tests, and the HfO$_2$ case study.  Section~\ref{sec:conclusions}
+concludes with availability, limitations, and the path toward a production
+release.
+
+\section{Theory}
+\label{sec:theory}
+
+\subsection{Extended configuration space}
+
+Let $h$ be the $3\times3$ cell matrix whose rows are the Cartesian cell
+vectors, and let $s_a$ be the fractional coordinate of atom $a$.  VCNEB uses
+the row-vector convention
+\begin{equation}
+  h = h_0 F^{\mathsf T}, \qquad r_a=s_a h,
+  \label{eq:cell_convention}
+\end{equation}
+where $h_0$ is the reference cell and $F$ is a deformation gradient.  An
+image is represented by $(s,F)$, or by a length-like generalized coordinate
+\begin{equation}
+  x = \left(\operatorname{vec}(s h_0),
+       \operatorname{vec}\left[\lambda_c(F-I)\right]\right).
+  \label{eq:extended_coordinate}
+\end{equation}
+The scale $\lambda_c$ has units of length and makes atomic and cell
+components numerically comparable.  The default is the cube root of the
+reference-cell volume, while users can supply a physically motivated value.
+The interpolation operates on unwrapped fractional coordinates and linearly
+interpolates $F$.  A positive determinant is required for every endpoint and
+interpolated cell; global cell rotation is removed during the default endpoint
+alignment.
+
+\subsection{Enthalpy gradient and cell force}
+
+Under hydrostatic pressure $P$, the path objective is the enthalpy
+\begin{equation}
+  H(s,F)=E(s,F)+P\Omega(F),
+  \qquad \Omega=\det(h).
+  \label{eq:enthalpy}
+\end{equation}
+Forces returned by a calculator are Cartesian forces $f_a=-\partial E/\partial
+r_a$, and the fractional-coordinate force used by VCNEB is
+\begin{equation}
+  f_s = f_{\rm cart} h^{\mathsf T}.
+  \label{eq:fractional_force}
+\end{equation}
+With the ASE stress convention and positive $P$ denoting compression, define
+\begin{equation}
+  W=-\Omega(\sigma+PI), \qquad
+  G=\operatorname{solve}(F,W^{\mathsf T})^{\mathsf T}.
+  \label{eq:cell_force}
+\end{equation}
+Here $G$ is conjugate to the components of $F$.  VCNEB maps $f_s$ and $G$ to
+the generalized coordinate in Eq.~\eqref{eq:extended_coordinate}; the cell
+block is divided by $\lambda_c$.  The signs and transposes in
+Eq.~\eqref{eq:cell_force} are tested by central finite differences for
+nonorthogonal cells and nonzero pressure.  The code rejects a variable-cell
+run when an attached calculator does not expose stress.
+
+\subsection{NEB and climbing-image forces}
+
+For internal image $i$, let $\hat\tau_i$ be an energy-weighted tangent in the
+extended coordinate space, and let $g_i$ be the true generalized enthalpy
+force after component or mode projection.  With neighboring distances
+$d_i^-$ and $d_i^+$, the non-climbing NEB force is
+\begin{equation}
+  F_i^{\rm NEB} = g_i- (g_i\cdot\hat\tau_i)\hat\tau_i
+       + k_i(d_i^+-d_i^-)\hat\tau_i .
+  \label{eq:neb_force}
+\end{equation}
+For the highest-energy interior image, the climbing-image force is
+\begin{equation}
+  F_i^{\rm CI}=g_i-2(g_i\cdot\hat\tau_i)\hat\tau_i,
+  \label{eq:ci_force}
+\end{equation}
+so that the spring force is removed and the tangential physical force is
+reversed.  Endpoints are never updated.  The primary optimizer criterion is
+the maximum norm of the three-component blocks of the generalized force; the
+software also reports maximum raw atomic force, stress, cell force, path
+spacing, and a true/spring/NEB decomposition for every image.
+
+\subsection{Modes and directional constraints}
+
+Let $v_m$ be a normalized mode in the same extended metric as $x$.  A
+mode-guided initial path is generated as
+\begin{equation}
+  x_i=x_i^{\rm lin}+A\,b(i/(N-1))v_m,
+  \qquad b(0)=b(1)=0,
+  \label{eq:guided_path}
+\end{equation}
+and is subsequently optimized without a constraint.  This is distinct from
+projected dynamics, which applies the orthogonal projector
+$\Pi=VV^{\mathsf T}$ to the true force and optimizer update, and from a hard
+subspace path, for which the endpoints and all images are restricted to an
+affine subspace.  Multiple nonorthogonal modes are orthogonalized by SVD.
+Atomic masks and cell masks are applied before the mode projector, and a
+diagnostic reports partially clipped or fully inactive basis columns.
+
+The resulting constrained saddle is a saddle on the selected subspace, not
+necessarily a first-order saddle of the full potential-energy surface.  The
+recommended workflow is consequently to use a mode or directional constraint
+to search for a mechanism, then release the constraint and refine the same
+chain in the full extended space.
+
+\section{Software}
+\label{sec:software}
+
+\subsection{Architecture and public interfaces}
+
+The core package depends only on NumPy and ASE.  The central object,
+\texttt{VCNEB}, exposes an ASE-compatible optimizable object whose coordinates
+contain all internal images.  ASE's FIRE, BFGS, or LBFGS classes perform the
+actual numerical update; VCNEB supplies the generalized forces and handles
+cell validity, constraints, climbing images, and endpoint ownership.
+
+The calculator contract is deliberately small: each image must provide
+\texttt{get\_potential\_energy()}, \texttt{get\_forces()}, and
+\texttt{get\_stress(voigt=False)}.  A preflight validator checks declared
+capabilities and, where requested, unique per-image directories.  Runtime
+errors include the image index, calculator type, working directory, launcher,
+and original exception.  The VASP adapter copies source input settings while
+forcing static image evaluations; the ABACUS adapter enforces
+\texttt{cal\_force=1}, \texttt{cal\_stress=1}, and \texttt{out\_stru=1}.
+
+\subsection{Interpolation, restart, and provenance}
+
+Structures must have equal atom counts, chemical symbols, and atom order.  The
+interpolator supports periodic minimum-image fractional displacements, cell
+alignment, positive-volume guards, and exact endpoint preservation.  Every
+optimizer callback can write a complete chain snapshot and a flat ASE
+trajectory.  Resume logic counts only complete groups of $N$ image frames, so
+a truncated tail does not corrupt the restart chain.  Example drivers record
+the source commit, node check, calculator settings, work directory, summary
+JSON, and human-readable log.
+
+\subsection{Typical use}
+
+The following fragment is sufficient for a custom ASE calculator:
+\begin{lstlisting}[language=Python]
+from vcneb import interpolate_vcneb, run_vcneb
+
+images = interpolate_vcneb(initial, final, n_images=9, mic=True)
+for image, calculator in zip(images, calculators):
+    image.calc = calculator
+
+chain, optimizer = run_vcneb(
+    images, k=0.10, climb=True, optimizer="FIRE",
+    fmax=0.05, steps=300,
+    trajectory="vcneb.traj", snapshot_dir="snapshots",
+)
+print(chain.barrier())
+print(chain.path_diagnostics())
+\end{lstlisting}
+
+The command-line ABACUS driver accepts endpoint structures, pseudopotential
+and orbital mappings, an MPI launcher, and the optimizer settings.  The VASP
+driver follows the same path mechanics while copying INCAR, KPOINTS, and
+POTCAR from an endpoint template.  These adapters are optional runtime
+configurations rather than core dependencies.
+
+\section{Examples}
+\label{sec:examples}
+
+All numerical examples reported here are tied to a repository commit and an
+input/output manifest.  Long electronic-structure jobs were executed on the
+shared 40-core nodes through gateway 235; no DFT or NEB production calculation
+was run on the workstation.
+
+\subsection{Differential tests and fixed-cell reduction}
+
+Central finite-difference tests on a nonorthogonal cell give maximum absolute
+errors of $3.18\times10^{-11}$ for the fractional force and
+$5.66\times10^{-11}$ for the cell force in the current regression suite.  The
+pressure-dependent enthalpy derivative and the cell/atomic mask behavior are
+also covered.  In a coupled atomic--cell double-well with a known saddle,
+CI-VCNEB recovers the $0.25$ eV barrier, the saddle at
+$(q_x,\epsilon_{xx})=(0.5,0.125)$, a generalized residual below $0.01$ eV/Å,
+and negative local tangent curvature.
+
+Setting the cell mask to zero reduces VCNEB to a fixed-cell NEB in the same
+extended coordinate convention.  Using an identical seven-image analytic
+path, VCNEB gives a barrier of $0.28116144$ eV, compared with $0.28117077$ eV
+from ASE CINEB; the absolute difference is $9.33\times10^{-6}$ eV.  The
+remaining difference is attributable to optimizer stopping histories rather
+than a different physical calculator.
+
+\subsection{Mode-guided search and release-and-refine}
+
+The analytic workflow starts with a transverse mode perturbation, performs a
+projected collective-mode search, and then releases the constraint.  On the
+cluster, the constrained stage converged in 12 FIRE steps with a barrier of
+0.286000 eV and a maximum generalized force of 0.009891 eV/Å.  The released
+full-space refinement converged in 37 steps with a barrier of 0.250044 eV and
+a maximum generalized force of 0.008655 eV/Å.  The 0.035956 eV decrease is a
+direct demonstration that a constrained mechanism barrier must not be
+reported as the unconstrained transition barrier.
+
+\subsection{Calculator smoke tests and HfO$_2$ diagnostic case}
+
+The VASP adapter was tested on a small GaN cell and returned finite energy,
+forces, and stress using VASP 6.3.2.  The ABACUS adapter was tested on the
+mapped HfO$_2$ endpoint using Dojo-NC-FR pseudopotentials, 60 Ry, 1$\times$1$\times$1
+k points, and an SCF threshold of $10^{-6}$.  The single-image result was
+finite and passed the stress validator.  These are calculator smoke tests,
+not convergence claims for a phase-transition barrier.
+
+The material fixture contains 12 atoms with an explicit T-to-PO atom mapping.
+Independent loose endpoint relaxations reached maximum atomic forces below
+0.1 eV/Å in the recorded trial.  A seven-image variable-cell path was then
+run as an engineering trial.  A 40-step FIRE branch and an LBFGS recovery
+branch both failed to converge; a conservative FIRE retry with
+\texttt{maxstep=0.05} still increased the residual from 0.617654 to
+0.725727 eV/Å in seven complete steps.  A zero-step static evaluation of its
+latest chain found image 3 as the highest enthalpy image (relative enthalpy
+0.305708 eV), while image 2 carried the largest raw interior force
+(0.674825 eV/Å) and stress component (0.016611 eV/Å$^3$).  The mismatch is
+useful evidence that the current linear/restarted path requires a
+mechanism-aware improvement; none of these HfO$_2$ values is reported as a
+production transition barrier.
+
+\begin{table}[!htbp]
+\centering
+\caption{Representative verification and diagnostic results.}
+\label{tab:examples}
+\begin{tabularx}{\linewidth}{l>{\raggedleft\arraybackslash}X>{\raggedleft\arraybackslash}X}
+\toprule
+Case & Main result & Status \\
+\midrule
+Finite difference & $3.18\times10^{-11}$ / $5.66\times10^{-11}$ & Passed \\
+Analytic CI double well & $0.250000$ eV barrier & Passed \\
+ASE fixed-cell comparison & $9.33\times10^{-6}$ eV difference & Passed \\
+Release and refine & $0.286000\rightarrow0.250044$ eV & Passed \\
+HfO$_2$ variable-cell trial & residual $0.622$ eV/Å & Diagnostic only \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\FloatBarrier
+\section{Conclusions/Availability}
+\label{sec:conclusions}
+
+VCNEB provides a compact pure Python implementation of a variable-cell NEB
+workflow with explicit cell coordinates, stress-derived generalized forces,
+climbing images, mode and direction controls, calculator adapters, restart
+snapshots, and per-image diagnostics.  The numerical tests establish the
+force transformation and fixed-cell reduction, while the release-and-refine
+example establishes the intended semantics of constrained mechanism searches.
+The HfO$_2$ trial demonstrates that a real material calculation can be
+launched, resumed, audited, and stopped without confusing an unconverged
+engineering path with a physical barrier.
+
+The repository is available at
+\url{https://github.com/xdzhu/vcneb}.  It contains the source package, tests,
+examples, endpoint structures and mapping files, calculation manifests,
+cluster logs, and this manuscript draft.  The current development version is
+not yet a production release.  Before publication, we will add a clean
+installation test, continuous integration for the non-DFT suite, a second
+material case, stricter endpoint and electronic-structure convergence, and a
+work-conjugate finite-deformation stress option.  A final release should also
+freeze the license and citation metadata, provide an API tutorial, and include
+the raw calculator inputs needed to reproduce every paper result.
+
+The principal limitations are the requirement for a one-to-one endpoint atom
+mapping, the linear deformation-gradient interpolation, the current
+hydrostatic-pressure formulation, and the absence of a converged production
+HfO$_2$ or perovskite barrier.  Large reconstructive transitions may require
+multiple initial paths, finite-wavevector supercells, magnetic or electronic
+state controls, and a stress measure matched to the chosen finite-deformation
+coordinate.  These are scientific controls on the calculation, not details
+that can be hidden behind a generic optimizer interface.
+
+\bibliography{vcneb}
+\end{document}
