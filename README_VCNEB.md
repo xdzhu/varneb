@@ -86,6 +86,25 @@ This is a constrained calculation when used during optimization.  A
 mode-guided initial path by itself is not constrained and should be preferred
 when the final result is intended to be a full MEP.
 
+For strict mode-subspace dynamics, first build a basis in the same extended
+coordinate space as VCNEB:
+
+```python
+from vcneb import Mode, build_mode_basis
+
+basis = build_mode_basis(Mode([[1.0, 0.0, 0.0]]), initial)
+chain = VCNEB(images, mode_basis=basis, constraint_mode="subspace")
+```
+
+`constraint_mode="subspace"` requires the endpoint displacement to lie in the
+supplied basis and projects the initial interior images and every optimizer
+update into that affine subspace.  Use `constraint_mode="projected"` when the
+non-mode part of an existing initial path should remain fixed while only the
+optimization update is projected.  `build_direction_basis()` provides the same
+interface for one allowed direction per atom or arbitrary atomic direction
+combinations.  These are constrained transition paths; a constrained saddle
+is not automatically a first-order saddle in the full configuration space.
+
 ## Local checks
 
 ```bash
@@ -192,9 +211,9 @@ python scripts/validate_vcneb_inputs.py \
   phase-transition work still needs careful endpoint matching.
 - Stress can only drive physical strain components; arbitrary cell rotations
   are a gauge, not a real force degree of freedom.
-- The current mode interface provides mode-guided seeds and post-processing;
-  strict arbitrary mode-subspace MEPs still need an explicit constrained-MEP
-  implementation and endpoint-subspace validation.
+- Strict mode-subspace and projected-update constraints are available through
+  `mode_basis`; direction-basis conflict diagnostics, generalized sparse
+  projectors, and release-then-refine workflows are still under development.
 - This is a working prototype, not yet a published SSNEB implementation.  Treat
   DFT results as research data: compare against fixed-cell NEB and endpoint
   cell-relax results before trusting barriers.

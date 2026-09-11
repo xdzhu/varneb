@@ -1,5 +1,39 @@
 # VC-NEB Iteration Log
 
+## 2026-09-12 03:09 +08:00
+
+Focus: implement and document explicit mode-constrained VCNEB semantics.
+
+Changes:
+
+- Added `build_mode_basis()` for atomic/cell mode vectors in the extended
+  VCNEB coordinate space.
+- Added `build_direction_basis()` for per-atom directions and cell-direction
+  basis vectors.
+- Added `mode_basis` and `constraint_mode` to `VCNEB` and `run_vcneb`.
+  `subspace` validates endpoint compatibility and projects interior images and
+  updates into one affine subspace; `projected` preserves each initial image's
+  non-mode component while projecting its updates.
+- Added regression checks for strict subspace endpoint rejection, force/update
+  projection and direction-basis layout.
+- Updated the README, theory draft and project plan to distinguish guided
+  initial paths, projected dynamics and strict subspace paths.
+
+Verification:
+
+- Local Python syntax and `git diff --check` passed.
+- After checking `cu17` occupancy (load average `0.00, 0.01, 0.05`, 40 cores,
+  no visible user jobs), synchronized commit `36493a0` to the shared project
+  directory and ran the full regression suite.
+- All existing checks plus `mode_subspace_constraint_regression=ok` and
+  `projected_mode_constraint_regression=ok` passed.
+
+Remaining work:
+
+- Verify strict mode projection against a reduced-coordinate implementation and
+  finite differences.
+- Add sparse projector/conflict diagnostics and release-then-refine workflow.
+
 ## 2026-09-12 02:58 +08:00
 
 Manuscript organization decision:
