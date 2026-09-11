@@ -1,5 +1,41 @@
 # VC-NEB Iteration Log
 
+## 2026-09-12 02:45 +08:00
+
+Focus: establish the GitHub-synced project baseline and validate it on the
+shared cluster filesystem.
+
+Changes:
+
+- Initialized the local research directory as a Git worktree and connected it
+  to `https://github.com/xdzhu/vcneb`.
+- Pushed baseline commit `31b1b40` to `origin/main`.
+- Added `.gitignore` rules that keep DFT restart/output files, caches and
+  generated workspaces out of the source repository.
+- Added `VCNEB_PROJECT_PLAN.md` with P0--P7 milestones and acceptance criteria.
+- Confirmed the CPC reference package at
+  `D:\Work\Zstar\zstar-article\submission_packages\ZStar_CPC_pdflatex` and its
+  `elsarticle` structure for the future VCNEB manuscript.
+
+Cluster verification:
+
+- Checked `cu17` before use: 40 cores, load average approximately
+  `0.00, 0.01, 0.05`, no user jobs visible.
+- Synced the tracked baseline to the shared path
+  `/home/zhuxd/abacus/agent-runs/20260912-vcneb-p0`.
+- Ran `/home/zhuxd/Software/anaconda3/envs/icu/bin/python3
+  tests/check_vcneb_forces.py` on `cu17`; all 11 regression checks passed.
+- The node image does not provide `git`, so source synchronization used a
+  `git archive` generated from commit `31b1b40`. The project nodes share the
+  same filesystem and program environment; future runs need only one shared
+  source sync plus a fresh pre-run occupancy check.
+
+Status:
+
+- P0 baseline freeze: source and regression baseline established.
+- P1 theory specification: next critical task, starting with cell-force/stress
+  finite-difference conventions and the `cell_scale` metric.
+
 ## 2026-09-12
 
 Focus: USPEX 10.6 implementation forensics and mode-guided VC-NEB support.

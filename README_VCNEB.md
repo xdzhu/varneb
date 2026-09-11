@@ -37,6 +37,16 @@ and with any ASE calculator that provides `energy`, `forces`, and `stress`.
 - `scripts/validate_vcneb_inputs.py`: static dry-run validator for VASP/ABACUS VC-NEB image directories.
 - `tests/check_vcneb_forces.py`: finite-difference checks for force/stress transforms.
 
+## Cluster execution policy
+
+For long NEB or DFT runs, use the shared cluster only. Log in through `235`,
+inspect the load and existing processes on a candidate node, and run only on a
+currently idle node among `cu17`, `cu22`, `cu23`, `cu24`, `cu25`, and `cu26`.
+Each node has 40 cores, and the nodes share the project directory and software
+environment, so a source sync to the shared `/home/zhuxd` path is sufficient.
+Do not run long jobs on `235` or in local WSL, and do not use `qsub`/PBS for
+this project.
+
 ## Mode-guided paths and component constraints
 
 The mode feature is intentionally split into an initial-path generator and a
