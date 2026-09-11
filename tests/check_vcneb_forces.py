@@ -19,7 +19,7 @@ if str(ROOT) not in sys.path:
 from examples.run_toy_vcneb import ToyPhaseTransition
 from scripts.validate_vcneb_inputs import validate_abacus
 from vcneb import apply_chain_state, interpolate_vcneb, read_chain_trajectory, run_vcneb
-from vcneb import Mode, mode_guided_path, project_path_onto_modes
+from vcneb import Mode, build_direction_basis, build_mode_basis, mode_guided_path, project_path_onto_modes
 from vcneb.abacus import make_ase_abacus_factory
 from vcneb.core import VCNEB, cell_force, cell_from_deformation, deformation_from_cell, fractional_force
 import vcneb.core as core_module
@@ -99,6 +99,73 @@ def check_mode_guided_path() -> None:
     projection = project_path_onto_modes(images, initial, mode)
     if abs(projection[1, 0] - 0.4) > 1e-12:
         raise SystemExit("project_path_onto_modes returned the wrong modal amplitude")
+
+
+def check_mode_subspace_constraint() -> None:
+    reference_cell = np.diag([5.0, 5.0, 5.0])
+    initial = Atoms("Ar", scaled_positions=[[0.25, 0.5, 0.5]], cell=reference_cell, pbc=True)
+    final = Atoms("Ar", scaled_positions=[[0.75, 0.5, 0.5]], cell=reference_cell, pbc=True)
+    images = interpolate_vcneb(initial, final, n_images=3, align_cells=False)
+    for image in images:
+        image.calc = ToyPhaseTransition(reference_cell)
+
+    basis = build_mode_basis(Mode([[1.0, 0.0, 0.0]]), initial)
+    chain = VCNEB(images, k=1.0, climb=False, mode_basis=basis)
+    before = chain.images[1].get_positions().copy()
+    trial = chain.get_x()
+    trial[1] += 1.75
+    chain.set_x(trial)
+    after = chain.images[1].get_positions()
+    if not np.allclose(after[0, 1], before[0, 1], rtol=0.0, atol=1e-12):
+        raise SystemExit("strict mode subspace did not remove an out-of-subspace update")
+
+    force_x = chain._compute_forces()
+    if abs(force_x[1]) > 1e-12:
+        raise SystemExit("strict mode subspace leaked force outside the mode basis")
+
+    incompatible = Atoms("Ar", scaled_positions=[[0.75, 0.6, 0.5]], cell=reference_cell, pbc=True)
+    incompatible_images = interpolate_vcneb(initial, incompatible, n_images=3, align_cells=False)
+    for image in incompatible_images:
+        image.calc = ToyPhaseTransition(reference_cell)
+    try:
+        VCNEB(incompatible_images, climb=False, mode_basis=basis)
+    except ValueError as error:
+        if "cannot connect the endpoints" not in str(error):
+            raise SystemExit("strict mode subspace reported the wrong endpoint error")
+    else:
+        raise SystemExit("strict mode subspace accepted incompatible endpoints")
+
+
+def check_projected_mode_constraint_and_direction_basis() -> None:
+    reference_cell = np.diag([5.0, 5.0, 5.0])
+    initial = Atoms("Ar", scaled_positions=[[0.25, 0.5, 0.5]], cell=reference_cell, pbc=True)
+    final = Atoms("Ar", scaled_positions=[[0.75, 0.5, 0.5]], cell=reference_cell, pbc=True)
+    images = interpolate_vcneb(initial, final, n_images=3, align_cells=False)
+    for image in images:
+        image.calc = ToyPhaseTransition(reference_cell)
+
+    basis = build_mode_basis(Mode([[0.0, 1.0, 0.0]]), initial)
+    chain = VCNEB(
+        images,
+        k=1.0,
+        climb=False,
+        mode_basis=basis,
+        constraint_mode="projected",
+    )
+    before = chain.images[1].get_positions().copy()
+    trial = chain.get_x()
+    trial[1] += 0.50
+    chain.set_x(trial)
+    after = chain.images[1].get_positions()
+    if abs(after[0, 1] - before[0, 1] - 0.50) > 1e-12:
+        raise SystemExit("projected mode constraint did not retain an allowed update")
+    force_x = chain._compute_forces()
+    if np.max(np.abs(np.delete(force_x, 1))) > 1e-12:
+        raise SystemExit("projected mode constraint leaked force outside the mode basis")
+
+    direction_basis = build_direction_basis(np.array([[0.0, 0.0, 1.0]]))
+    if direction_basis.shape != (12, 1) or abs(direction_basis[2, 0] - 1.0) > 1e-12:
+        raise SystemExit("direction basis has the wrong extended-coordinate layout")
 
 
 def check_trajectory_resume() -> None:
@@ -412,6 +479,10 @@ def main() -> None:
     print("atom_mask_regression=ok")
     check_mode_guided_path()
     print("mode_guided_path_regression=ok")
+    check_mode_subspace_constraint()
+    print("mode_subspace_constraint_regression=ok")
+    check_projected_mode_constraint_and_direction_basis()
+    print("projected_mode_constraint_regression=ok")
     check_trajectory_resume()
     print("trajectory_resume_regression=ok")
     check_snapshot_append_resume()

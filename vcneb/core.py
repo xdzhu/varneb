@@ -210,6 +210,8 @@ class VCNEB:
         cell_scale: Optional[float] = None,
         atom_mask: Optional[Array] = None,
         cell_mask: Optional[Array] = None,
+        mode_basis: Optional[Array] = None,
+        constraint_mode: Optional[str] = None,
         mic: bool = False,
         wrap_positions: bool = False,
         parallel: bool = False,
@@ -235,6 +237,9 @@ class VCNEB:
         )
         if self.cell_scale <= 0.0:
             raise ValueError("cell_scale must be positive")
+        self.mic = bool(mic)
+        self.wrap_positions = bool(wrap_positions)
+        self.parallel = bool(parallel)
         self.atom_mask = None
         if atom_mask is not None:
             atom_mask_array = np.asarray(atom_mask, dtype=float)
@@ -242,9 +247,28 @@ class VCNEB:
                 raise ValueError("atom_mask must have shape (n_atoms, 3)")
             self.atom_mask = atom_mask_array.reshape(self.n_atoms, 3).copy()
         self.cell_mask = None if cell_mask is None else np.asarray(cell_mask, dtype=float).reshape(3, 3)
-        self.mic = bool(mic)
-        self.wrap_positions = bool(wrap_positions)
-        self.parallel = bool(parallel)
+        if self.cell_mask is not None and not np.all(np.isfinite(self.cell_mask)):
+            raise ValueError("cell_mask contains non-finite values")
+        if constraint_mode is None:
+            constraint_mode = "subspace" if mode_basis is not None else "none"
+        constraint_mode = str(constraint_mode).lower()
+        if constraint_mode not in {"none", "subspace", "projected"}:
+            raise ValueError("constraint_mode must be 'none', 'subspace', or 'projected'")
+        if constraint_mode != "none" and mode_basis is None:
+            raise ValueError("mode_basis is required when constraint_mode is enabled")
+        if constraint_mode == "none" and mode_basis is not None:
+            raise ValueError("constraint_mode must be enabled when mode_basis is supplied")
+        self.constraint_mode = constraint_mode
+        self.mode_basis = self._prepare_mode_basis(mode_basis)
+        self._constraint_origin = self._image_x(0) if self.mode_basis is not None else None
+        self._constraint_references = (
+            [self._image_x(index) for index in range(self.n_images)]
+            if self.mode_basis is not None
+            else None
+        )
+        if self.mode_basis is not None and self.constraint_mode == "subspace":
+            self._validate_endpoint_subspace()
+            self._project_initial_interior_images()
         self.dynamic_relaxation = float(dynamic_relaxation)
         self.dynamic_energy_scale = float(dynamic_energy_scale)
         if not 0.0 <= self.dynamic_relaxation <= 1.0:
@@ -320,6 +344,68 @@ class VCNEB:
         ).reshape(-1)
         return np.concatenate([atom_mask, cell_mask])
 
+    def _prepare_mode_basis(self, mode_basis: Optional[Array]) -> Optional[Array]:
+        if mode_basis is None:
+            return None
+        basis = np.asarray(mode_basis, dtype=float)
+        if basis.ndim == 1:
+            basis = basis.reshape((-1, 1))
+        if basis.ndim != 2 or basis.shape[0] != self.image_ndofs:
+            raise ValueError(f"mode_basis must have shape ({self.image_ndofs}, n_modes)")
+        if not np.all(np.isfinite(basis)):
+            raise ValueError("mode_basis contains non-finite values")
+        basis = basis * self._active_x_mask()[:, None]
+        if not np.any(np.abs(basis) > 0.0):
+            raise ValueError("mode_basis has no active components after masks")
+        left_vectors, singular_values, _ = np.linalg.svd(basis, full_matrices=False)
+        if singular_values.size == 0:
+            raise ValueError("mode_basis is empty")
+        tolerance = max(basis.shape) * np.finfo(float).eps * singular_values[0] * 100.0
+        rank = singular_values > tolerance
+        if not np.any(rank):
+            raise ValueError("mode_basis is numerically rank deficient")
+        return left_vectors[:, rank].copy()
+
+    def _project_constraint(self, x: Array, image_index: int) -> Array:
+        if self.mode_basis is None:
+            return np.asarray(x, dtype=float)
+        if self.constraint_mode == "subspace":
+            assert self._constraint_origin is not None
+            reference = self._constraint_origin
+        else:
+            assert self._constraint_references is not None
+            reference = self._constraint_references[image_index]
+        delta = np.asarray(x, dtype=float) - reference
+        return reference + self.mode_basis @ (self.mode_basis.T @ delta)
+
+    def _project_constraint_force(self, force: Array) -> Array:
+        if self.mode_basis is None:
+            return np.asarray(force, dtype=float)
+        return self.mode_basis @ (self.mode_basis.T @ np.asarray(force, dtype=float))
+
+    def _validate_endpoint_subspace(self) -> None:
+        assert self.mode_basis is not None
+        endpoint_delta = self._image_x(self.n_images - 1) - self._image_x(0)
+        residual = endpoint_delta - self.mode_basis @ (self.mode_basis.T @ endpoint_delta)
+        tolerance = 1e-8 * max(1.0, float(np.linalg.norm(endpoint_delta)))
+        if np.linalg.norm(residual) > tolerance:
+            raise ValueError(
+                "VCNEB subspace constraint cannot connect the endpoints: "
+                f"residual={np.linalg.norm(residual):.3e} > {tolerance:.3e}"
+            )
+
+    def _project_initial_interior_images(self) -> None:
+        for image_index in range(1, self.n_images - 1):
+            projected = self._project_constraint(self._image_x(image_index), image_index)
+            if np.allclose(projected, self._image_x(image_index), rtol=0.0, atol=1e-14):
+                continue
+            apply_state(
+                self.images[image_index],
+                self._x_to_state(projected, image_index),
+                self.reference_cell,
+                wrap_positions=self.wrap_positions,
+            )
+
     def _x_to_state(self, x: Array, image_index: int) -> VCNEBState:
         atom_size = 3 * self.n_atoms
         x_atoms = x[:atom_size].reshape(self.n_atoms, 3)
@@ -367,9 +453,10 @@ class VCNEB:
         for offset, image_index in enumerate(range(1, self.n_images - 1)):
             lo = offset * self.image_ndofs
             hi = lo + self.image_ndofs
+            x_image = self._project_constraint(x[lo:hi], image_index)
             apply_state(
                 self.images[image_index],
-                self._x_to_state(x[lo:hi], image_index),
+                self._x_to_state(x_image, image_index),
                 self.reference_cell,
                 wrap_positions=self.wrap_positions,
             )
@@ -473,6 +560,7 @@ class VCNEB:
         for offset, image_index in enumerate(range(1, self.n_images - 1)):
             tangent = self._tangent(image_index, enthalpies, image_x_active)
             true_force = true_forces[image_index] * active_mask
+            true_force = self._project_constraint_force(true_force) * active_mask
             true_parallel = np.dot(true_force, tangent) * tangent
             force_perp = true_force - true_parallel
 
@@ -483,6 +571,7 @@ class VCNEB:
 
             if self.climb and image_index == climbing_image:
                 neb_force = true_force - 2.0 * true_parallel
+            neb_force = self._project_constraint_force(neb_force)
             neb_force *= weights[image_index] * active_mask
 
             lo = offset * self.image_ndofs
@@ -654,6 +743,8 @@ def run_vcneb(
     cell_scale: Optional[float] = None,
     atom_mask: Optional[Array] = None,
     cell_mask: Optional[Array] = None,
+    mode_basis: Optional[Array] = None,
+    constraint_mode: Optional[str] = None,
     mic: bool = False,
     wrap_positions: bool = False,
     parallel: bool = False,
@@ -677,6 +768,8 @@ def run_vcneb(
         cell_scale=cell_scale,
         atom_mask=atom_mask,
         cell_mask=cell_mask,
+        mode_basis=mode_basis,
+        constraint_mode=constraint_mode,
         mic=mic,
         wrap_positions=wrap_positions,
         parallel=parallel,

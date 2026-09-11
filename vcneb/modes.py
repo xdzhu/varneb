@@ -288,4 +288,113 @@ def project_path_onto_modes(
     return result
 
 
-__all__ = ["Mode", "mode_guided_path", "project_path_onto_modes"]
+def build_mode_basis(
+    modes: Mode | Iterable[Mode | Array],
+    reference: Atoms,
+    *,
+    cell_scale: float | None = None,
+    normalize: bool = True,
+    masses: Array | None = None,
+    mass_weighted_input: bool = False,
+    remove_translation: bool = False,
+) -> Array:
+    """Build an extended-coordinate basis for strict mode constraints.
+
+    The returned array has shape ``(3*n_atoms + 9, n_modes)``.  Each column
+    uses the same coordinate convention as :class:`vcneb.core.VCNEB`: atomic
+    Cartesian components followed by ``cell_scale * deformation``
+    components.  ``VCNEB`` orthonormalizes and combines this basis with any
+    atom/cell masks before projecting updates.
+    """
+
+    if isinstance(modes, Mode):
+        mode_list = [modes]
+    else:
+        mode_list = [mode if isinstance(mode, Mode) else Mode(mode) for mode in modes]
+    if not mode_list:
+        raise ValueError("At least one mode is required")
+    if any(len(mode.atomic) != len(reference) for mode in mode_list):
+        raise ValueError("All modes must match the reference atom count")
+
+    ref_cell = cell_matrix(reference)
+    if cell_scale is None:
+        cell_scale = abs(np.linalg.det(ref_cell)) ** (1.0 / 3.0)
+    if cell_scale <= 0.0:
+        raise ValueError("cell_scale must be positive")
+
+    prepared = [
+        mode.normalized(
+            masses=masses,
+            mass_weighted_input=mass_weighted_input,
+            remove_translation=remove_translation,
+            cell_scale=cell_scale,
+        )
+        if normalize
+        else mode
+        for mode in mode_list
+    ]
+    vectors = []
+    for mode in prepared:
+        cell = np.zeros((3, 3)) if mode.cell is None else mode.cell
+        vectors.append(
+            np.concatenate([mode.atomic.reshape(-1), (cell * cell_scale).reshape(-1)])
+        )
+    return np.asarray(vectors, dtype=float).T
+
+
+def build_direction_basis(directions: Array, *, cell_basis: Array | None = None) -> Array:
+    """Build a generalized-coordinate basis from atomic directions.
+
+    ``directions`` may have shape ``(n_atoms, 3)`` for one allowed direction
+    per atom, or ``(n_atoms, 3, n_modes)`` for arbitrary linear combinations.
+    Optional ``cell_basis`` supplies cell deformation directions with shape
+    ``(3, 3)``, ``(9,)`` or ``(3, 3, n_modes)``.  The result can be passed to
+    ``VCNEB(mode_basis=..., constraint_mode=...)``.
+    """
+
+    atomic = np.asarray(directions, dtype=float)
+    if atomic.ndim == 2:
+        if atomic.shape[1] != 3:
+            raise ValueError("directions must have shape (n_atoms, 3)")
+        atomic_basis = np.zeros((3 * len(atomic), len(atomic)), dtype=float)
+        for index, direction in enumerate(atomic):
+            atomic_basis[3 * index : 3 * index + 3, index] = direction
+        atomic = atomic_basis
+    elif atomic.ndim == 3 and atomic.shape[1] == 3:
+        atomic = atomic.reshape((3 * atomic.shape[0], atomic.shape[2]))
+    else:
+        raise ValueError("directions must have shape (n_atoms, 3) or (n_atoms, 3, n_modes)")
+
+    if not np.all(np.isfinite(atomic)):
+        raise ValueError("directions contains non-finite values")
+
+    if cell_basis is None:
+        cell = np.zeros((9, atomic.shape[1]), dtype=float)
+    else:
+        raw_cell = np.asarray(cell_basis, dtype=float)
+        if raw_cell.shape == (3, 3):
+            raw_cell = raw_cell.reshape(9, 1)
+        elif raw_cell.shape == (9,):
+            raw_cell = raw_cell.reshape(9, 1)
+        elif raw_cell.ndim == 3 and raw_cell.shape[:2] == (3, 3):
+            raw_cell = raw_cell.reshape(9, raw_cell.shape[2])
+        elif raw_cell.ndim == 2 and raw_cell.shape[0] == 9:
+            pass
+        else:
+            raise ValueError("cell_basis must have shape (3, 3), (9,), (9, n_modes), or (3, 3, n_modes)")
+        if not np.all(np.isfinite(raw_cell)):
+            raise ValueError("cell_basis contains non-finite values")
+        if raw_cell.shape[1] not in (1, atomic.shape[1]):
+            raise ValueError("cell_basis mode count must be one or match directions")
+        cell = np.repeat(raw_cell, atomic.shape[1], axis=1) if raw_cell.shape[1] == 1 else raw_cell
+
+    return np.vstack([atomic, cell])
+
+
+__all__ = [
+    "Mode",
+    "mode_guided_path",
+    "project_path_onto_modes",
+    "build_mode_basis",
+    "build_direction_basis",
+]
