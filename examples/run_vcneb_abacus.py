@@ -9,6 +9,7 @@ calculator per image directory.
 from __future__ import annotations
 
 import argparse
+import json
 import os
 from pathlib import Path
 import sys
@@ -121,9 +122,36 @@ def main() -> None:
         trajectory_mode="a" if args.resume and resume_path == traj_path and traj_path.exists() else "w",
         snapshot_dir=workdir / "snapshots",
     )
+    for image_index, image in enumerate(chain.images):
+        write(workdir / f"{image_index:02d}" / "POSCAR.final", image, format="vasp", direct=True, vasp5=True)
     chain.plot_band(workdir / "vcneb_barrier.png")
     barrier, delta = chain.barrier()
-    print(f"[DONE] barrier={barrier:.6f} eV delta={delta:.6f} eV workdir={workdir}")
+    max_force = chain.gradient_norm(-chain.get_forces())
+    summary = {
+        "workdir": str(workdir),
+        "n_images": args.n_images,
+        "optimizer": args.optimizer,
+        "steps_requested": args.steps,
+        "fmax_target_eV_per_A": args.fmax,
+        "final_max_generalized_force_eV_per_A": max_force,
+        "barrier_enthalpy_eV": barrier,
+        "reaction_enthalpy_eV": delta,
+        "image_enthalpies_eV": [float(value) for value in chain.enthalpies],
+        "calculator": "ASE ABACUS",
+        "stress_required": True,
+    }
+    (workdir / "vcneb_summary.json").write_text(
+        json.dumps(summary, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+    )
+    with (workdir / "vcneb_summary.txt").open("w", encoding="utf-8") as handle:
+        handle.write(f"Forward barrier (enthalpy) = {barrier:.8f} eV\n")
+        handle.write(f"Reaction enthalpy          = {delta:.8f} eV\n")
+        handle.write(f"Final max generalized force = {max_force:.8f} eV/A\n")
+        handle.write("Image enthalpies (eV)      = " + " ".join(f"{value:.8f}" for value in chain.enthalpies) + "\n")
+    print(
+        f"[DONE] barrier={barrier:.6f} eV delta={delta:.6f} eV "
+        f"max_force={max_force:.6f} eV/A workdir={workdir}"
+    )
 
 
 if __name__ == "__main__":
