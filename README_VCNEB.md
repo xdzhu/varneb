@@ -23,6 +23,13 @@ optimizing an extended coordinate vector:
 The implementation works with normal ASE optimizers (`FIRE`, `BFGS`, `LBFGS`)
 and with any ASE calculator that provides `energy`, `forces`, and `stress`.
 
+The package is installable without MATLAB or USPEX:
+
+```bash
+python -m pip install .
+vcneb --version
+```
+
 Before an optimization, `run_vcneb()` checks every image calculator for this
 contract. Missing stress is a hard error because a variable-cell calculation
 must not silently replace the cell force by zero. The same preflight report is

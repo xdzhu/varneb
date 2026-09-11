@@ -1,5 +1,16 @@
 # VC-NEB Iteration Log
 
+## Installable package skeleton (`0.1.0.dev0`)
+
+- Added `pyproject.toml`, package version metadata, `vcneb --version`, and
+  `python -m vcneb --version` entry points.
+- The core dependency set is only ASE and NumPy; plotting and development
+  packages are optional extras.  VASP/ABACUS remain runtime calculator
+  configurations rather than mandatory package dependencies.
+- Local packaging verification built
+  `vcneb-0.1.0.dev0-py3-none-any.whl` successfully and both version entry
+  points returned `0.1.0.dev0`.
+
 ## Fixed-cell ASE comparison (`818a87f`)
 
 - Added `examples/run_fixed_cell_ase_comparison.py`, which sends the same
@@ -12,6 +23,15 @@
 - The result confirms the fixed-cell reduction at the energy/path level for
   this analytic calculator.  It does not replace a physical DFT comparison.
 - Compact record: `outputs/fixed_cell_ase_comparison.json`.
+
+## Direction-basis conflict diagnostics (`91380bb`)
+
+- Added `direction_basis_conflicts()` for atomic/cell direction bases
+  combined with component masks.  It reports partially clipped columns, fully
+  inactive columns, rank loss, and removed-component norms without hiding the
+  conflict inside a later SVD failure.
+- Added regression coverage for partial clipping and complete deactivation.
+  The full suite passed on `cu26` after the change.
 
 ## CI saddle diagnostics (`7c58250`)
 

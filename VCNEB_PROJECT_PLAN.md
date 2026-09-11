@@ -283,7 +283,7 @@
 ### 11.2 软件发布
 
 - [ ] 选定正式名称、Python 包名、许可证、版本策略和引用方式；当前暂用项目代号 `pyVCNEB`，名称未最终确定。
-- [ ] 整理 `pyproject.toml`、依赖上限/下限、可选依赖组（ASE、VASP、ABACUS）、命令行入口和版本信息。
+- [x] 已整理 `pyproject.toml`、核心依赖和 plot/dev 可选依赖，并提供 `vcneb --version` 入口；VASP/ABACUS 继续作为 ASE calculator 运行时配置，不强制打包进核心依赖。
 - [ ] 增加最小安装测试、API 文档、tutorial、calculator adapter 文档和故障排查页。
 - [ ] 将核心测试放入持续集成；真实 DFT 作为可选的集群复现实验，不要求 CI 内运行。
 - [ ] 提供最小可运行案例、HfO2 案例输入模板、模式文件模板和结果解析脚本。

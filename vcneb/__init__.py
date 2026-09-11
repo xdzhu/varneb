@@ -1,5 +1,6 @@
 """Variable-cell nudged elastic band helpers built on ASE."""
 
+from .version import __version__
 from .core import VCNEB, VCNEBState, apply_chain_state, interpolate_vcneb, read_chain_trajectory, run_vcneb
 from .calculator import (
     CalculatorCapabilities,
@@ -19,6 +20,7 @@ from .modes import (
 
 __all__ = [
     "VCNEB",
+    "__version__",
     "VCNEBState",
     "apply_chain_state",
     "interpolate_vcneb",
