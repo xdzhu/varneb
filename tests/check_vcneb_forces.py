@@ -188,19 +188,30 @@ def check_pressure_enthalpy_gradient() -> None:
     )
     pressure = 0.017
     atoms = make_atoms(reference_cell, q, deform)
+    analytic_zero = cell_force(atoms, reference_cell)
     analytic = cell_force(atoms, reference_cell, pressure=pressure)
     eps = 1e-6
+    max_zero_error = 0.0
+    max_pressure_error = 0.0
     max_error = 0.0
+    volume = atoms.get_volume()
+    pressure_term = -pressure * volume * np.linalg.inv(deform).T
     for row in range(3):
         for col in range(3):
             dd = np.zeros((3, 3))
             dd[row, col] = eps
             plus = make_atoms(reference_cell, q, deform + dd)
             minus = make_atoms(reference_cell, q, deform - dd)
-            e_plus = plus.get_potential_energy() + pressure * plus.get_volume()
-            e_minus = minus.get_potential_energy() + pressure * minus.get_volume()
-            numeric = -(e_plus - e_minus) / (2.0 * eps)
+            e_plus = plus.get_potential_energy()
+            e_minus = minus.get_potential_energy()
+            numeric_zero = -(e_plus - e_minus) / (2.0 * eps)
+            numeric_volume = -(plus.get_volume() - minus.get_volume()) / (2.0 * eps)
+            numeric = numeric_zero + numeric_volume * pressure
+            max_zero_error = max(max_zero_error, abs(numeric_zero - analytic_zero[row, col]))
+            max_pressure_error = max(max_pressure_error, abs(numeric_volume * pressure - pressure_term[row, col]))
             max_error = max(max_error, abs(numeric - analytic[row, col]))
+    print(f"max_zero_pressure_cell_force_error={max_zero_error:.3e}")
+    print(f"max_pressure_volume_force_error={max_pressure_error:.3e}")
     print(f"max_pressure_cell_force_error={max_error:.3e}")
     if max_error > 1e-7:
         raise SystemExit("pressure enthalpy cell-force finite difference failed")
