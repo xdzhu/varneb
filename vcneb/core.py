@@ -41,6 +41,13 @@ def cell_matrix(atoms: Atoms) -> Array:
     return atoms.cell.array.copy()
 
 
+def _validate_cell_matrix(cell: Array, *, context: str = "cell") -> None:
+    matrix = np.asarray(cell, dtype=float)
+    determinant = float(np.linalg.det(matrix)) if matrix.shape == (3, 3) else 0.0
+    if matrix.shape != (3, 3) or not np.all(np.isfinite(matrix)) or determinant <= 1e-12:
+        raise ValueError(f"{context} must be a finite 3x3 cell with positive determinant")
+
+
 def deformation_from_cell(cell: Array, reference_cell: Array) -> Array:
     """Return deformation gradient F for ASE row-vector cells.
 
@@ -120,6 +127,8 @@ def interpolate_vcneb(
         raise ValueError("Initial and final structures have different atom counts")
     if initial.get_chemical_symbols() != final.get_chemical_symbols():
         raise ValueError("Initial and final structures must use the same atom order")
+    _validate_cell_matrix(cell_matrix(initial), context="initial cell")
+    _validate_cell_matrix(cell_matrix(final), context="final cell")
 
     first = initial.copy()
     last = final.copy()
@@ -140,6 +149,10 @@ def interpolate_vcneb(
         state = VCNEBState(
             q=q0 + lam * dq,
             deform=(1.0 - lam) * deform0 + lam * deform1,
+        )
+        _validate_cell_matrix(
+            cell_from_deformation(state.deform, reference_cell),
+            context=f"interpolated cell at image {index}",
         )
         apply_state(image, state, reference_cell, wrap_positions=wrap_positions)
         images.append(image)
@@ -166,6 +179,7 @@ def cell_force(
     """
 
     stress = np.asarray(atoms.get_stress(voigt=False))
+    _validate_cell_matrix(cell_matrix(atoms), context="current cell")
     volume = atoms.get_volume()
     virial = -volume * (stress + np.eye(3) * pressure)
     deform = deformation_from_cell(cell_matrix(atoms), reference_cell)
@@ -229,6 +243,8 @@ class VCNEB:
 
         self.images = list(images)
         self.n_images = len(self.images)
+        for image_index, image in enumerate(self.images):
+            _validate_cell_matrix(cell_matrix(image), context=f"image {image_index} cell")
         self.reference_cell = cell_matrix(self.images[0])
         self.pressure = float(pressure)
         self.climb = bool(climb)
@@ -430,6 +446,10 @@ class VCNEB:
         if self.cell_mask is not None:
             current = deformation_from_cell(cell_matrix(self.images[image_index]), self.reference_cell)
             deform = np.eye(3) + (deform - np.eye(3)) * self.cell_mask + (current - np.eye(3)) * (1.0 - self.cell_mask)
+        _validate_cell_matrix(
+            cell_from_deformation(deform, self.reference_cell),
+            context=f"proposed cell for image {image_index}",
+        )
         return VCNEBState(q=q, deform=deform)
 
     def _force_to_x(self, force: VCNEBState) -> Array:

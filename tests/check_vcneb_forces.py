@@ -155,6 +155,36 @@ def check_mask_validation() -> None:
         raise SystemExit(f"{keyword} accepted a non-binary mask")
 
 
+def check_cell_validity_guards() -> None:
+    reference_cell = np.diag([5.0, 5.0, 5.0])
+    initial = make_atoms(reference_cell, np.array([0.25, 0.5, 0.5]), np.eye(3))
+    final = make_atoms(reference_cell, np.array([0.75, 0.5, 0.5]), np.eye(3))
+    invalid_final = final.copy()
+    invalid_deform = np.eye(3)
+    invalid_deform[0, 0] = 0.0
+    invalid_final.set_cell(cell_from_deformation(invalid_deform, reference_cell), scale_atoms=False)
+    try:
+        interpolate_vcneb(initial, invalid_final, n_images=3, align_cells=False)
+    except ValueError:
+        pass
+    else:
+        raise SystemExit("interpolation accepted a singular endpoint cell")
+
+    images = interpolate_vcneb(initial, final, n_images=3, align_cells=False)
+    for image in images:
+        image.calc = ToyPhaseTransition(reference_cell)
+    chain = VCNEB(images, climb=False)
+    trial = chain.get_x()
+    cell_offset = 3 * len(images[1])
+    trial[cell_offset] = -1.5 * chain.cell_scale
+    try:
+        chain.set_x(trial)
+    except ValueError:
+        pass
+    else:
+        raise SystemExit("VCNEB accepted an optimizer update with non-positive cell determinant")
+
+
 def check_mode_subspace_constraint() -> None:
     reference_cell = np.diag([5.0, 5.0, 5.0])
     initial = Atoms("Ar", scaled_positions=[[0.25, 0.5, 0.5]], cell=reference_cell, pbc=True)
@@ -595,6 +625,8 @@ def main() -> None:
     print("nonorthogonal_mode_projection_regression=ok")
     check_mask_validation()
     print("mask_validation_regression=ok")
+    check_cell_validity_guards()
+    print("cell_validity_guard_regression=ok")
     check_mode_subspace_constraint()
     print("mode_subspace_constraint_regression=ok")
     check_projected_mode_constraint_and_direction_basis()
