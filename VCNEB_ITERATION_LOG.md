@@ -1,5 +1,48 @@
 # VC-NEB Iteration Log
 
+## 2026-09-12 05:00 +08:00
+
+Focus: compare an independent fresh CI-VCNEB branch against the resumed
+no-climb branch.
+
+- Checked `cu24` immediately before launch; it had no active ABACUS/VASP/MPI
+  process. Started from the relaxed-endpoint linear path in a new directory,
+  with climbing enabled, so the previous no-climb run was not overwritten.
+- The 7-image, 20-step ABACUS CI smoke completed with barrier `0.784444 eV`,
+  reaction enthalpy `-0.747857 eV`, and final generalized force
+  `0.504943 eV/A`. Its validator report was `ok` and it produced 21 complete
+  snapshots.
+- The no-climb branch after 30 total resumed steps had barrier `0 eV` because
+  all internal images were below the higher-energy T endpoint, while its
+  generalized force was still `0.390162 eV/A`. This is a non-converged path,
+  not evidence of a zero physical barrier.
+- The fresh CI branch retained an internal high-energy image, demonstrating
+  why a climbing image and independent branch comparison are required.
+
+Both branches remain explicitly marked as low-precision, non-converged
+engineering data in `outputs/abacus_hfo2_relaxed_endpoint_manifest.json`.
+
+## 2026-09-12 04:03 +08:00
+
+Focus: relax the HfO2 endpoints and run a variable-cell band from the relaxed
+structures.
+
+- Checked `cu17` before endpoint work and `cu24` before the band; both had no
+  active DFT task at launch. Each node has 40 cores.
+- Used ASE `FrechetCellFilter` with ABACUS Dojo-NC-FR at `60 Ry`, `1x1x1`
+  k points and 40 MPI ranks. Thirty-step endpoint trials reached
+  `0.0383 eV/A` for T and `0.0788 eV/A` for PO at the loose `0.1 eV/A`
+  target; their volumes were `143.833` and `138.589 A^3`.
+- Used the two endpoint `CONTCAR` files for a 7-image, 10-step, no-climb
+  VC-NEB smoke on `cu24`. Energy decreased overall, all seven image
+  directories and SCF logs were produced, and the ABACUS validator passed.
+- The final generalized force was `0.5130 eV/A`; the returned barrier
+  `0.786010 eV` is not converged and is not a physical claim.
+- The ABACUS driver now writes summary JSON/TXT and final POSCAR files, so the
+  same `vcneb.traj` can be used for a later resume test.
+
+Evidence is recorded in `outputs/abacus_hfo2_relaxed_endpoint_manifest.json`.
+
 ## 2026-09-12 03:44 +08:00
 
 Focus: complete the corrected analytic convergence matrix.

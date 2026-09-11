@@ -1,0 +1,95 @@
+{
+  "project": "vcneb",
+  "commit": "f59ac77",
+  "gateway": "235",
+  "compute_nodes": ["cu17", "cu24"],
+  "shared_source_path": "/home/zhuxd/abacus/agent-runs/20260912-vcneb-p0",
+  "runtime": {
+    "python": "/home/zhuxd/Software/anaconda3/envs/icu/bin/python3",
+    "ase": "3.23.1b1",
+    "abacus": "/home/zhuxd/Software/abacus/INSTALL/3.10.0-LTS/bin/abacus",
+    "mpi_ranks": 40,
+    "pseudo_family": "ABACUS Dojo-NC-FR",
+    "ecutwfc_Ry": 60.0,
+    "kpts": [1, 1, 1]
+  },
+  "endpoint_relaxation_trial": {
+    "node": "cu17",
+    "node_checked_before_run": "2026-09-12T03:49:32+08:00",
+    "optimizer": "FIRE + FrechetCellFilter",
+    "steps": 30,
+    "fmax_target_eV_per_A": 0.1,
+    "T": {
+      "workdir": "validation/hfo2_t_to_po/abacus_relax_T",
+      "energy_eV": -9778.5572489,
+      "max_force_eV_per_A": 0.0383300179,
+      "max_abs_stress_eV_per_A3": 0.007942001214289595,
+      "volume_A3": 143.83264421384223,
+      "converged": true
+    },
+    "PO": {
+      "workdir": "validation/hfo2_t_to_po/abacus_relax_PO",
+      "energy_eV": -9779.3051056,
+      "max_force_eV_per_A": 0.07880855079261988,
+      "max_abs_stress_eV_per_A3": 0.0020797126185977113,
+      "volume_A3": 138.58866586925234,
+      "converged": true
+    },
+    "status": "low_precision_trial_passed"
+  },
+  "vcneb_trial": {
+    "node": "cu24",
+    "node_checked_before_run": "2026-09-12T03:53:12+08:00",
+    "initial": "validation/hfo2_t_to_po/abacus_relax_T/CONTCAR",
+    "final": "validation/hfo2_t_to_po/abacus_relax_PO/CONTCAR",
+    "workdir": "validation/hfo2_t_to_po/abacus_vcneb_relaxed_7img_10step",
+    "n_images": 7,
+    "steps": 10,
+    "fmax_target_eV_per_A": 0.1,
+    "final_max_generalized_force_eV_per_A": 0.513045339462286,
+    "barrier_enthalpy_eV": 0.7860104999999749,
+    "reaction_enthalpy_eV": -0.7478566999998293,
+    "image_enthalpies_eV": [
+      -9778.5572489,
+      -9778.4813078,
+      -9777.973164,
+      -9777.7712384,
+      -9778.3954863,
+      -9779.0603848,
+      -9779.3051056
+    ],
+    "image_count_with_scf_log": 7,
+    "validator": "ok",
+    "converged": false,
+    "status": "engineering_smoke_passed_physics_pending"
+  },
+  "ci_trial": {
+    "node": "cu24",
+    "node_checked_before_run": "2026-09-12T04:43:53+08:00",
+    "initial": "validation/hfo2_t_to_po/abacus_relax_T/CONTCAR",
+    "final": "validation/hfo2_t_to_po/abacus_relax_PO/CONTCAR",
+    "seed_trajectory": "validation/hfo2_t_to_po/abacus_vcneb_relaxed_7img_10step/vcneb.traj",
+    "workdir": "validation/hfo2_t_to_po/abacus_vcneb_relaxed_7img_ci_fresh_20step",
+    "n_images": 7,
+    "steps": 20,
+    "climbing_image": true,
+    "fmax_target_eV_per_A": 0.1,
+    "final_max_generalized_force_eV_per_A": 0.5049428936078224,
+    "barrier_enthalpy_eV": 0.7844437000003381,
+    "reaction_enthalpy_eV": -0.7478566999998293,
+    "image_enthalpies_eV": [
+      -9778.5572489,
+      -9778.7709067,
+      -9778.0302287,
+      -9777.7728052,
+      -9778.4927959,
+      -9779.1416574,
+      -9779.3051056
+    ],
+    "snapshot_count": 21,
+    "validator": "ok",
+    "converged": false,
+    "status": "ci_engineering_smoke_passed_physics_pending"
+  },
+  "interpretation": "The low-precision ABACUS endpoint relaxation and variable-cell NEB path are operational and reproducible from shared files. The endpoint trial threshold is loose, the VC-NEB band has not converged, and the reported barrier is not a publication-quality HfO2 result. Further work requires tighter endpoint and electronic convergence, more VC-NEB steps, image/cell-scale sensitivity, and an independent second path."
+}
