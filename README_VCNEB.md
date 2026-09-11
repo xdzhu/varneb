@@ -23,6 +23,11 @@ optimizing an extended coordinate vector:
 The implementation works with normal ASE optimizers (`FIRE`, `BFGS`, `LBFGS`)
 and with any ASE calculator that provides `energy`, `forces`, and `stress`.
 
+Before an optimization, `run_vcneb()` checks every image calculator for this
+contract. Missing stress is a hard error because a variable-cell calculation
+must not silently replace the cell force by zero. The same preflight report is
+available through `inspect_calculator()` and `validate_image_calculators()`.
+
 ## Files
 
 - `vcneb/core.py`: VC-NEB algorithm and optimizer-compatible object.
@@ -69,6 +74,19 @@ images = mode_guided_path(
 )
 modal_coordinates = project_path_onto_modes(images, initial, mode)
 ```
+
+For an explicit preflight before creating an optimizer:
+
+```python
+from vcneb import validate_image_calculators
+
+reports = validate_image_calculators(images)
+```
+
+Each VASP or ABACUS image should have its own calculator directory. A custom
+launcher can additionally call
+`validate_image_calculators(images, require_directory=True,
+require_unique_directories=True)`.
 
 Text mode files contain `n_atoms` rows of three numbers or a flattened `3N`
 vector.  JSON and NPZ files can also carry an optional `cell` 3x3 deformation

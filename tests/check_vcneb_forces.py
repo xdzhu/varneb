@@ -19,7 +19,15 @@ if str(ROOT) not in sys.path:
 
 from examples.run_toy_vcneb import ToyPhaseTransition
 from scripts.validate_vcneb_inputs import validate_abacus
-from vcneb import apply_chain_state, interpolate_vcneb, read_chain_trajectory, run_vcneb
+from vcneb import (
+    CalculatorCapabilityError,
+    apply_chain_state,
+    inspect_calculator,
+    interpolate_vcneb,
+    read_chain_trajectory,
+    run_vcneb,
+    validate_image_calculators,
+)
 from vcneb import Mode, build_direction_basis, build_mode_basis, mode_guided_path, project_path_onto_modes
 from vcneb.abacus import make_ase_abacus_factory
 from vcneb.core import VCNEB, cell_force, cell_from_deformation, deformation_from_cell, fractional_force
@@ -153,6 +161,79 @@ def check_mask_validation() -> None:
         except ValueError:
             continue
         raise SystemExit(f"{keyword} accepted a non-binary mask")
+
+
+def check_calculator_contract() -> None:
+    reference_cell = np.diag([5.0, 5.0, 5.0])
+    initial = make_atoms(reference_cell, np.array([0.25, 0.5, 0.5]), np.eye(3))
+    final = make_atoms(reference_cell, np.array([0.75, 0.5, 0.5]), np.eye(3))
+    images = interpolate_vcneb(initial, final, n_images=3, align_cells=False)
+    for image in images:
+        image.calc = ToyPhaseTransition(reference_cell)
+
+    report = inspect_calculator(images[1].calc)
+    if not report.ok or not report.has_stress or not report.variable_cell:
+        raise SystemExit("calculator contract rejected a valid energy/force/stress calculator")
+    if "stress" not in report.declared_properties:
+        raise SystemExit("calculator contract did not expose declared stress capability")
+    reports = validate_image_calculators(images)
+    if len(reports) != len(images):
+        raise SystemExit("calculator contract returned an incomplete image report")
+
+    class MissingStress(Calculator):
+        implemented_properties = ["energy", "forces"]
+
+        def calculate(self, atoms=None, properties=("energy",), system_changes=all_changes):
+            super().calculate(atoms, properties, system_changes)
+            self.results["energy"] = 0.0
+            self.results["forces"] = np.zeros((len(self.atoms), 3))
+
+    images[1].calc = MissingStress()
+    try:
+        validate_image_calculators(images)
+    except CalculatorCapabilityError as exc:
+        message = str(exc)
+        if "image 1" not in message or "stress" not in message:
+            raise SystemExit("calculator contract error omitted image and stress context")
+    else:
+        raise SystemExit("calculator contract accepted a calculator without stress")
+
+    try:
+        run_vcneb(images, steps=0, logfile=None, trajectory=None)
+    except CalculatorCapabilityError:
+        pass
+    else:
+        raise SystemExit("run_vcneb did not preflight calculator capabilities")
+
+
+def check_calculator_runtime_diagnostics() -> None:
+    reference_cell = np.diag([5.0, 5.0, 5.0])
+
+    class FailingCalculator(Calculator):
+        implemented_properties = ["energy", "forces", "stress"]
+
+        def __init__(self):
+            super().__init__(directory="runtime-image")
+            self.command = "mpirun -np 4 fake-dft"
+
+        def calculate(self, atoms=None, properties=("energy",), system_changes=all_changes):
+            raise RuntimeError("SCF did not converge")
+
+    initial = Atoms("Ar", scaled_positions=[[0.25, 0.5, 0.5]], cell=reference_cell, pbc=True)
+    final = initial.copy()
+    final.set_scaled_positions([[0.75, 0.5, 0.5]])
+    images = interpolate_vcneb(initial, final, n_images=3, align_cells=False)
+    for image in images:
+        image.calc = FailingCalculator()
+    try:
+        VCNEB(images, climb=False).get_forces()
+    except RuntimeError as exc:
+        message = str(exc)
+        for token in ["image 0", "runtime-image", "fake-dft", "SCF did not converge"]:
+            if token not in message:
+                raise SystemExit(f"runtime calculator diagnostic omitted {token!r}")
+    else:
+        raise SystemExit("runtime calculator failure was not propagated")
 
 
 def check_cell_validity_guards() -> None:
@@ -623,6 +704,10 @@ def main() -> None:
     print("mode_guided_path_regression=ok")
     check_nonorthogonal_mode_projection()
     print("nonorthogonal_mode_projection_regression=ok")
+    check_calculator_contract()
+    print("calculator_contract_regression=ok")
+    check_calculator_runtime_diagnostics()
+    print("calculator_runtime_diagnostics_regression=ok")
     check_mask_validation()
     print("mask_validation_regression=ok")
     check_cell_validity_guards()

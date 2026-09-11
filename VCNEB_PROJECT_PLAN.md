@@ -138,10 +138,11 @@
 
 ### 7.1 Calculator contract
 
-- [ ] 固化最小 calculator 协议：输入结构、能量、原子力、应力/virial、单位和计算状态。
-- [ ] 实现 calculator capability 检查：是否支持 stress、是否支持 variable cell、是否能返回每 image 独立目录。
+- [x] 固化最小 calculator 协议：输入结构、能量、原子力、应力/virial、单位和计算状态；新增 `vcneb.calculator` 预检与机器可读报告。
+- [x] 实现 calculator capability 检查：是否支持 stress、是否支持 variable cell、是否能返回每 image 独立目录；支持重复目录检测。
 - [ ] 将核心与 VASP/ABACUS 命令行、环境变量、MPI 命令完全隔离；命令 profile 只负责启动和结果解析。
-- [ ] 明确 stress 缺失时的行为：拒绝 VCNEB，不能静默把 cell force 当成零。
+- [x] 明确 stress 缺失时的行为：`run_vcneb()` 预检直接拒绝，不能静默把 cell force 当成零。
+- [x] 运行时 calculator 异常会保留 image 编号、目录和命令上下文，并由回归测试覆盖。
 
 ### 7.2 VASP 适配
 
@@ -166,7 +167,7 @@
 
 - [ ] VASP 与 ABACUS 各至少完成一个单 image smoke test。
 - [ ] 断开后恢复不会丢失已完成 image，也不会重复覆盖有效结果。
-- [ ] calculator 失败时错误信息包含 image 编号、输入目录、命令和建议动作。
+- [x] calculator 失败时错误信息包含 image 编号、输入目录和命令上下文；建议动作由上层 launcher 根据 calculator 类型补充。
 
 ## 8. P4：数值正确性与收敛验证
 

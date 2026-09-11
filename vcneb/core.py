@@ -20,6 +20,8 @@ from ase.optimize import BFGS, FIRE, LBFGS
 from ase.parallel import world
 from ase.units import GPa
 
+from .calculator import calculator_context, validate_image_calculators
+
 
 Array = np.ndarray
 
@@ -509,15 +511,21 @@ class VCNEB:
         f_cell: Optional[Array] = None
         if self._own_image(image_index):
             atoms = self.images[image_index]
-            energy = atoms.get_potential_energy()
-            enthalpy = float(energy + self.pressure * atoms.get_volume())
-            f_q = fractional_force(atoms)
-            f_cell = cell_force(
-                atoms,
-                self.reference_cell,
-                pressure=self.pressure,
-                mask=self.cell_mask,
-            )
+            try:
+                energy = atoms.get_potential_energy()
+                enthalpy = float(energy + self.pressure * atoms.get_volume())
+                f_q = fractional_force(atoms)
+                f_cell = cell_force(
+                    atoms,
+                    self.reference_cell,
+                    pressure=self.pressure,
+                    mask=self.cell_mask,
+                )
+            except Exception as exc:
+                raise RuntimeError(
+                    f"VC-NEB evaluation failed for image {image_index} "
+                    f"({calculator_context(atoms.calc)}): {exc}"
+                ) from exc
         enthalpy = _sum_scalar(enthalpy)
         if f_q is None:
             f_q = np.zeros((self.n_atoms, 3), dtype=float)
@@ -784,9 +792,17 @@ def run_vcneb(
     trajectory_mode: str = "w",
     snapshot_dir: str | Path | None = None,
     snapshot_start: Optional[int] = None,
+    validate_calculators: bool = True,
     log: Optional[Callable[[str], None]] = None,
 ) -> tuple[VCNEB, object]:
     """Run a VC-NEB optimization with an ASE optimizer."""
+
+    if validate_calculators:
+        validate_image_calculators(
+            images,
+            require_stress=True,
+            require_variable_cell=True,
+        )
 
     chain = VCNEB(
         images,
