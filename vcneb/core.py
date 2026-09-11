@@ -646,6 +646,66 @@ class VCNEB:
         assert self._last_enthalpies is not None
         return self._last_enthalpies.copy()
 
+    def highest_image_index(self) -> int | None:
+        """Return the highest-energy interior image, or ``None`` for no interior."""
+
+        if self.n_images <= 2:
+            return None
+        return int(1 + np.argmax(self.enthalpies[1:-1]))
+
+    def saddle_diagnostics(self) -> dict:
+        """Summarize the current highest-image/saddle quality.
+
+        The curvature is a local finite-difference estimate along the current
+        extended-coordinate path.  It is a diagnostic, not a replacement for
+        a Hessian calculation.
+        """
+
+        if self.n_images <= 2:
+            return {
+                "image_index": None,
+                "is_climbing": False,
+                "relative_enthalpy_eV": None,
+                "residual_generalized_force_eV_per_A": 0.0,
+                "tangential_force_eV_per_A": 0.0,
+                "perpendicular_force_eV_per_A": 0.0,
+                "tangent_curvature_eV_per_A2": None,
+            }
+
+        self._compute_forces()
+        assert self._last_enthalpies is not None
+        assert self._last_forces_x is not None
+        image_index = self.highest_image_index()
+        assert image_index is not None
+        active_mask = self._active_x_mask()
+        image_x = [self._image_x(index) for index in range(self.n_images)]
+        image_x_active = [x * active_mask for x in image_x]
+        tangent = self._tangent(image_index, self._last_enthalpies, image_x_active)
+        offset = (image_index - 1) * self.image_ndofs
+        residual = self._last_forces_x[offset : offset + self.image_ndofs]
+        tangential = float(np.dot(residual, tangent))
+        perpendicular = residual - tangential * tangent
+        residual_norm = float(np.linalg.norm(residual.reshape(-1, 3), axis=1).max())
+        perpendicular_norm = float(np.linalg.norm(perpendicular))
+
+        d_minus = float(np.linalg.norm(image_x_active[image_index] - image_x_active[image_index - 1]))
+        d_plus = float(np.linalg.norm(image_x_active[image_index + 1] - image_x_active[image_index]))
+        curvature = None
+        if d_minus > 1e-14 and d_plus > 1e-14:
+            slope_plus = (self._last_enthalpies[image_index + 1] - self._last_enthalpies[image_index]) / d_plus
+            slope_minus = (self._last_enthalpies[image_index] - self._last_enthalpies[image_index - 1]) / d_minus
+            curvature = float(2.0 * (slope_plus - slope_minus) / (d_plus + d_minus))
+
+        return {
+            "image_index": image_index,
+            "is_climbing": bool(self.climb),
+            "relative_enthalpy_eV": float(self._last_enthalpies[image_index] - self._last_enthalpies[0]),
+            "residual_generalized_force_eV_per_A": residual_norm,
+            "tangential_force_eV_per_A": tangential,
+            "perpendicular_force_eV_per_A": perpendicular_norm,
+            "tangent_curvature_eV_per_A2": curvature,
+        }
+
     def reaction_coordinate(self) -> Array:
         coords = [0.0]
         active_mask = self._active_x_mask()

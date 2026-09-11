@@ -333,6 +333,53 @@ def check_projected_mode_constraint_and_direction_basis() -> None:
         raise SystemExit("direction basis has the wrong extended-coordinate layout")
 
 
+def check_climbing_image_saddle_diagnostics() -> None:
+    reference_cell = np.diag([5.0, 5.0, 5.0])
+    initial = Atoms("Ar", scaled_positions=[[0.25, 0.5, 0.5]], cell=reference_cell, pbc=True)
+    final = Atoms("Ar", scaled_positions=[[0.75, 0.5, 0.5]], cell=reference_cell, pbc=True)
+    final_cell = reference_cell.copy()
+    final_cell[0, 0] *= 1.25
+    final.set_cell(final_cell, scale_atoms=True)
+    images = interpolate_vcneb(initial, final, n_images=7, align_cells=False)
+    for index, image in enumerate(images[1:-1], start=1):
+        scaled = image.get_scaled_positions(wrap=False)
+        scaled[0, 1] += 0.04 * np.sin(index)
+        image.set_scaled_positions(scaled)
+        image.calc = ToyPhaseTransition(reference_cell)
+    images[0].calc = ToyPhaseTransition(reference_cell)
+    images[-1].calc = ToyPhaseTransition(reference_cell)
+
+    chain, _ = run_vcneb(
+        images,
+        k=0.15,
+        climb=True,
+        optimizer="FIRE",
+        fmax=0.01,
+        steps=300,
+        logfile=None,
+        trajectory=None,
+        snapshot_dir=None,
+    )
+    barrier, reaction = chain.barrier()
+    diagnostics = chain.saddle_diagnostics()
+    image_index = diagnostics["image_index"]
+    if image_index is None:
+        raise SystemExit("CI diagnostics did not identify an interior image")
+    q = chain.images[image_index].get_scaled_positions(wrap=False)
+    deform = deformation_from_cell(chain.images[image_index].cell.array, reference_cell)
+    saddle_y = np.array([q[0, 0], deform[0, 0] - 1.0])
+    if abs(barrier - 0.25) > 5e-3 or abs(reaction) > 5e-6:
+        raise SystemExit(f"CI did not recover the analytic barrier: {barrier}, {reaction}")
+    if np.linalg.norm(saddle_y - np.array([0.5, 0.125])) > 5e-3:
+        raise SystemExit(f"CI saddle coordinate is inaccurate: {saddle_y}")
+    if diagnostics["residual_generalized_force_eV_per_A"] > 0.01:
+        raise SystemExit("CI saddle residual force exceeded the requested tolerance")
+    curvature = diagnostics["tangent_curvature_eV_per_A2"]
+    if curvature is None or curvature >= 0.0:
+        raise SystemExit(f"CI saddle curvature is not negative: {curvature}")
+    print("climbing_image_saddle_regression=ok")
+
+
 def check_pressure_enthalpy_gradient() -> None:
     reference_cell = np.array(
         [
@@ -716,6 +763,7 @@ def main() -> None:
     print("mode_subspace_constraint_regression=ok")
     check_projected_mode_constraint_and_direction_basis()
     print("projected_mode_constraint_regression=ok")
+    check_climbing_image_saddle_diagnostics()
     check_pressure_enthalpy_gradient()
     print("pressure_enthalpy_gradient_regression=ok")
     check_trajectory_resume()
