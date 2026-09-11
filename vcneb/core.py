@@ -245,10 +245,18 @@ class VCNEB:
             atom_mask_array = np.asarray(atom_mask, dtype=float)
             if atom_mask_array.size != 3 * self.n_atoms:
                 raise ValueError("atom_mask must have shape (n_atoms, 3)")
+            if not np.all(np.isfinite(atom_mask_array)) or not np.all(
+                np.isclose(atom_mask_array, 0.0) | np.isclose(atom_mask_array, 1.0)
+            ):
+                raise ValueError("atom_mask must contain only finite 0/1 values")
             self.atom_mask = atom_mask_array.reshape(self.n_atoms, 3).copy()
         self.cell_mask = None if cell_mask is None else np.asarray(cell_mask, dtype=float).reshape(3, 3)
         if self.cell_mask is not None and not np.all(np.isfinite(self.cell_mask)):
             raise ValueError("cell_mask contains non-finite values")
+        if self.cell_mask is not None and not np.all(
+            np.isclose(self.cell_mask, 0.0) | np.isclose(self.cell_mask, 1.0)
+        ):
+            raise ValueError("cell_mask must contain only finite 0/1 values")
         if constraint_mode is None:
             constraint_mode = "subspace" if mode_basis is not None else "none"
         constraint_mode = str(constraint_mode).lower()

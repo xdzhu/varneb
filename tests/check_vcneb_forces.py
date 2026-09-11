@@ -126,6 +126,35 @@ def check_mode_guided_path() -> None:
         raise SystemExit("project_path_onto_modes returned the wrong modal amplitude")
 
 
+def check_nonorthogonal_mode_projection() -> None:
+    reference_cell = np.diag([5.0, 5.0, 5.0])
+    reference = Atoms("Ar", scaled_positions=[[0.25, 0.5, 0.5]], cell=reference_cell, pbc=True)
+    image = reference.copy()
+    scaled = image.get_scaled_positions(wrap=False)
+    scaled[0, :2] += [0.20, 0.10]
+    image.set_scaled_positions(scaled)
+    modes = [Mode([[1.0, 0.0, 0.0]]), Mode([[1.0, 1.0, 0.0]])]
+    coefficients = project_path_onto_modes([reference, image], reference, modes)
+    expected = np.array([0.50, 0.50])
+    if not np.allclose(coefficients[1], expected, rtol=0.0, atol=1e-12):
+        raise SystemExit("non-orthogonal mode projection did not return least-squares coefficients")
+
+
+def check_mask_validation() -> None:
+    reference_cell = np.diag([5.0, 5.0, 5.0])
+    initial = make_atoms(reference_cell, np.array([0.25, 0.5, 0.5]), np.eye(3))
+    final = make_atoms(reference_cell, np.array([0.75, 0.5, 0.5]), np.eye(3))
+    images = interpolate_vcneb(initial, final, n_images=3, align_cells=False)
+    for image in images:
+        image.calc = ToyPhaseTransition(reference_cell)
+    for keyword, value in [("atom_mask", [[1.0, 0.5, 0.0]]), ("cell_mask", np.full((3, 3), 0.5))]:
+        try:
+            VCNEB(images, **{keyword: value})
+        except ValueError:
+            continue
+        raise SystemExit(f"{keyword} accepted a non-binary mask")
+
+
 def check_mode_subspace_constraint() -> None:
     reference_cell = np.diag([5.0, 5.0, 5.0])
     initial = Atoms("Ar", scaled_positions=[[0.25, 0.5, 0.5]], cell=reference_cell, pbc=True)
@@ -562,6 +591,10 @@ def main() -> None:
     print("atom_mask_regression=ok")
     check_mode_guided_path()
     print("mode_guided_path_regression=ok")
+    check_nonorthogonal_mode_projection()
+    print("nonorthogonal_mode_projection_regression=ok")
+    check_mask_validation()
+    print("mask_validation_regression=ok")
     check_mode_subspace_constraint()
     print("mode_subspace_constraint_regression=ok")
     check_projected_mode_constraint_and_direction_basis()
