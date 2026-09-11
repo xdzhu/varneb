@@ -795,6 +795,24 @@ Remaining limitations / next actions:
 
 Focus: USPEX 10.6 implementation forensics and mode-guided VC-NEB support.
 
+## VASP single-image smoke (05:28, `b470f52`)
+
+- Before the run, `cu26` was checked through gateway `235`: 40 cores, load average
+  `0.07/0.04/0.05`, and no active ABACUS/VASP/MPI process.
+- Synced the repository at commit `b470f52` into the shared run directory and used
+  the legacy GaN `POSCAR/POTCAR` from `/home/zhuxd/abacus/8.dielec/vcneb/vasp`.
+- Generated a minimal static VASP template with `IBRION=-1`, `NSW=0`, `ISIF=2`,
+  `ISYM=0`, `EDIFF=1E-5`, and a Gamma-centered `2x2x2` mesh.  The run used
+  `mpirun -np 40 .../vasp_std` with VASP 6.3.2.
+- ASE calculator preflight reported energy, forces, stress, variable-cell support,
+  an image-local directory, and a unique directory; all issues were empty.
+- Result: 4 atoms, energy `-22.57971864 eV`, maximum force
+  `0.19039522 eV/A`, finite stress matrix, volume `45.72832351 A^3`.
+- `scripts/validate_vcneb_inputs.py --mode vasp` returned `status=ok` for the
+  template and generated image directory.  The result is an interface smoke only,
+  not a converged GaN or HfO2 VC-NEB barrier.
+- Compact record: `outputs/vasp_gan_single_image_manifest.json`.
+
 Findings:
 
 - `H:\\ReSearch\\VCNEB\\USPEX\\USPEX_v10.6.tar.gz` is a MATLAB Runtime self-extracting ELF distribution, not a readable source archive.
