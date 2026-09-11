@@ -143,6 +143,7 @@
 - [ ] 将核心与 VASP/ABACUS 命令行、环境变量、MPI 命令完全隔离；命令 profile 只负责启动和结果解析。
 - [x] 明确 stress 缺失时的行为：`run_vcneb()` 预检直接拒绝，不能静默把 cell force 当成零。
 - [x] 运行时 calculator 异常会保留 image 编号、目录和命令上下文，并由回归测试覆盖。
+- [ ] 新增物理 HfO2 单 image ABACUS smoke 入口；待集群完成真实 SCF、原子力和 stress 验证后再勾选。
 
 ### 7.2 VASP 适配
 

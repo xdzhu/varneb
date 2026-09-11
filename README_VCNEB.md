@@ -34,6 +34,7 @@ available through `inspect_calculator()` and `validate_image_calculators()`.
 - `vcneb/modes.py`: mode-guided initial paths and modal path projections.
 - `vcneb/vasp.py`: VASP input parsing and per-image calculator setup.
 - `vcneb/abacus.py`: ABACUS calculator factory adapter.
+- `vcneb/calculator.py`: capability preflight and image-aware calculator diagnostics.
 - `examples/run_toy_vcneb.py`: analytic smoke test with a known 0.25 eV barrier.
 - `examples/run_hfo2_t_po_model_vcneb.py`: mapped 12-atom HfO2 T -> PO geometry smoke test with a synthetic endpoint double-well calculator.
 - `examples/run_vcneb_vasp.py`: VASP driver based on the existing endpoint layout.
@@ -130,6 +131,7 @@ python tests/check_vcneb_forces.py
 python examples/run_toy_vcneb.py
 python scripts/setup_hfo2_t_po_validation.py
 python examples/run_hfo2_t_po_model_vcneb.py
+python examples/run_abacus_single_image_smoke.py
 ```
 
 Expected toy output:
