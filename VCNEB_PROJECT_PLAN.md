@@ -228,6 +228,7 @@
 - [x] Level A 的 model/低精度 DFT smoke 分支已确认输入、路径、计算器、每 image 目录、输出解析、恢复和 CI 独立分支；生产精度仍待完成。
 - [ ] Level B：生产精度 VCNEB，完成无约束路径和 CI-VCNEB。
 - [x] Level B 首轮已在 cu17 完整执行 7-image/40-step FIRE，并从完整轨迹尝试 LBFGS 恢复；两条分支均明确记录为未收敛，不能作为物理能垒。
+- [x] 已补做输入预检失败诊断和 `FIRE(maxstep=0.05)` 保守步长重试；预检在 ABACUS 启动前正确拒绝错误 basis 路径，重试仍在前五步出现残余力单调增长，因此暂停继续消耗 DFT 资源，转入路径/应力诊断。
 - [ ] Level C：加密 image、提高电子精度和改变初始路径，验证能垒与 saddle 的稳定性。
 - [x] Level A 的 model/低精度 DFT smoke 已记录 Git 版本、节点、核数、输入、输出和结果摘要；Level B/C manifest 仍待补充。
 
@@ -261,7 +262,7 @@
 
 - [x] `Mode-guided initialization`：用声子/软模/用户模式改善初始路径，只影响初始 images。
 - [x] `Mode-projected VCNEB`：每轮将允许的广义力和更新投影到模式子空间，适用于研究指定机制。
-- [x] `Directional constraints`：已提供原子方向和 cell 方向的 basis 构造入口；冲突诊断和稀疏 projector 仍待完成。
+- [x] `Directional constraints`：已提供原子方向和 cell 方向的 basis 构造入口，并通过 `direction_basis_conflicts()` 诊断部分裁剪、完全失活和秩损失。
 - [ ] `Release-and-refine`：先约束搜索机制路径，再解除约束做全空间 VCNEB 精修，报告两者能垒差异。
 
 ### 验收

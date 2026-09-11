@@ -1,6 +1,6 @@
 {
   "project": "vcneb",
-  "commit": "04bf038",
+  "commit": "fab47e8",
   "gateway": "235",
   "compute_node": "cu17",
   "node_check": {
@@ -55,6 +55,29 @@
     "logged_fmax_eV_per_A": [0.617654, 0.624439, 0.883145, 1.542518, 0.921749, 0.593001],
     "status": "stopped_unstable",
     "interpretation": "Stopped after the early force increase; no summary was generated. Six complete snapshots/log lines remain for diagnostics."
+  },
+  "input_diagnostic_trial": {
+    "workdir": "/home/zhuxd/abacus/agent-runs/20260912-vcneb-p0/validation/hfo2_t_to_po/abacus_hfo2_input_diagnostic_trial",
+    "status": "preflight_rejected_before_dft",
+    "failure": "A misspelled basis-directory setting was rejected by the calculator preflight for image 0.",
+    "dft_processes_started": 0,
+    "interpretation": "The runtime diagnostic identified the image, isolated work directory, launcher context, and missing basis path before ABACUS was launched."
+  },
+  "fire05_retry": {
+    "compute_node": "cu26",
+    "checked_before_run": "2026-09-12T06:54:53+08:00",
+    "load_average_1_5_15": [0.04, 0.20, 0.20],
+    "active_dft_processes_before_run": 0,
+    "workdir": "/home/zhuxd/abacus/agent-runs/20260912-vcneb-p0/validation/hfo2_t_to_po/abacus_hfo2_levelB_fire05_20step_retry",
+    "source_trajectory": "validation/hfo2_t_to_po/abacus_hfo2_levelB_7img_40step/vcneb.traj",
+    "optimizer": "FIRE",
+    "maxstep_A": 0.05,
+    "steps_requested": 20,
+    "steps_completed": 5,
+    "logged_fmax_eV_per_A": [0.617654, 0.622142, 0.633117, 0.652366, 0.678677],
+    "status": "stopped_early_force_increase",
+    "dft_processes_after_cleanup": 0,
+    "interpretation": "Corrected input and a conservative FIRE step did not arrest the initial force growth. The trial was stopped after five complete steps and is retained for diagnosis, not as a transition barrier."
   },
   "interpretation": "The real HfO2 variable-cell path, stress channel, per-image directories, restart read, and optimizer switching all executed. The FIRE and LBFGS trials are not converged and their barriers must not be reported as the HfO2 transition barrier."
 }

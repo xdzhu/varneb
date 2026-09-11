@@ -1,5 +1,24 @@
 # VC-NEB Iteration Log
 
+## HfO2 conservative-step retry and preflight diagnostic (`fab47e8`)
+
+- A deliberately malformed basis-directory setting was tested first. The
+  calculator preflight rejected image 0 before ABACUS launched and reported the
+  image, isolated work directory, launcher context, and missing basis path;
+  this directory is retained as a negative validation record.
+- Before the corrected retry, `cu26` was checked at `2026-09-12T06:54:53+08:00`:
+  40 cores, load averages `0.04/0.20/0.20`, and no active DFT process.
+- A new branch resumed the complete FIRE-40 trajectory with
+  `FIRE(maxstep=0.05 A)`. The first five complete steps had maximum
+  generalized forces `0.617654`, `0.622142`, `0.633117`, `0.652366`, and
+  `0.678677 eV/A`. The force continued to increase, so the run was stopped
+  early and all processes belonging to this work directory were cleaned up.
+- This isolates two facts: the calculator error path is actionable, but a
+  smaller optimizer step alone does not make the current HfO2 path convergent.
+  The trial is diagnostic data only and is not a transition barrier.
+
+Compact record: `outputs/abacus_hfo2_levelB_manifest.json`.
+
 ## HfO2 Level B optimizer trial (`04bf038`)
 
 - Checked `cu17` before both launches; it had no active DFT/MPI process and 40
