@@ -27,7 +27,7 @@ from vcneb import Mode, build_mode_basis, mode_guided_path, run_vcneb
 
 def attach_calculators(images: list[Atoms], reference_cell: np.ndarray) -> None:
     for image in images:
-        image.calc = ToyPhaseTransition(reference_cell)
+        image.calc = ToyPhaseTransition(reference_cell, k_rest=20.0)
 
 
 def main() -> None:
