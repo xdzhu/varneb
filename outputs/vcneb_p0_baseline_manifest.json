@@ -1,0 +1,48 @@
+{
+  "project": "vcneb",
+  "repository": "https://github.com/xdzhu/vcneb",
+  "commit": "611e3d5",
+  "baseline_stage": "P0",
+  "checked_at": "2026-09-12T02:30:20+08:00",
+  "gateway": "235",
+  "compute_node": "cu17",
+  "shared_source_path": "/home/zhuxd/abacus/agent-runs/20260912-vcneb-p0",
+  "node": {
+    "cores": 40,
+    "load_average_1_5_15": [0.09, 0.05, 0.05],
+    "visible_user_jobs": 0
+  },
+  "environment": {
+    "python": "3.10.9",
+    "ase": "3.23.0b1",
+    "numpy": "1.26.4",
+    "scipy": "1.14.0",
+    "vasp_std": "/home/zhuxd/Software/src/vasp/6.3.2/bin/vasp_std",
+    "abacus": "/home/zhuxd/Software/abacus/INSTALL/3.10.0-LTS/bin/abacus",
+    "git_on_compute_node": false
+  },
+  "verification": {
+    "command": "/home/zhuxd/Software/anaconda3/envs/icu/bin/python3 tests/check_vcneb_forces.py",
+    "compileall": "passed",
+    "status": "passed",
+    "checks": [
+      "max_fractional_force_error=3.178e-11",
+      "max_cell_force_error=5.657e-11",
+      "cell_mask_regression=ok",
+      "atom_mask_regression=ok",
+      "mode_guided_path_regression=ok",
+      "trajectory_resume_regression=ok",
+      "snapshot_append_regression=ok",
+      "optimizer_api_shapes_regression=ok",
+      "set_x_cache_invalidation_regression=ok",
+      "parallel_endpoint_ownership_regression=ok",
+      "abacus_command_profile_regression=ok",
+      "abacus_validator_required_flags_regression=ok"
+    ]
+  },
+  "limitations": [
+    "No production VASP or ABACUS DFT calculation was launched for this baseline.",
+    "Strict arbitrary mode-subspace dynamics is not yet implemented.",
+    "The shared cluster clock is ahead of the local workstation clock; tar emitted future-timestamp warnings during sync without affecting file contents."
+  ]
+}

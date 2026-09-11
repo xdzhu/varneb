@@ -13,6 +13,8 @@ Changes:
 - Added `.gitignore` rules that keep DFT restart/output files, caches and
   generated workspaces out of the source repository.
 - Added `VCNEB_PROJECT_PLAN.md` with P0--P7 milestones and acceptance criteria.
+- Added `outputs/vcneb_p0_baseline_manifest.json` with the node, environment,
+  commit and regression results.
 - Confirmed the CPC reference package at
   `D:\Work\Zstar\zstar-article\submission_packages\ZStar_CPC_pdflatex` and its
   `elsarticle` structure for the future VCNEB manuscript.
