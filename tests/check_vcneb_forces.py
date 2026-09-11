@@ -194,6 +194,8 @@ def check_pressure_enthalpy_gradient() -> None:
     max_zero_error = 0.0
     max_pressure_error = 0.0
     max_error = 0.0
+    zero_errors = np.zeros((3, 3))
+    pressure_errors = np.zeros((3, 3))
     volume = atoms.get_volume()
     pressure_term = -pressure * volume * np.linalg.inv(deform).T
     for row in range(3):
@@ -207,13 +209,17 @@ def check_pressure_enthalpy_gradient() -> None:
             numeric_zero = -(e_plus - e_minus) / (2.0 * eps)
             numeric_volume = -(plus.get_volume() - minus.get_volume()) / (2.0 * eps)
             numeric = numeric_zero + numeric_volume * pressure
-            max_zero_error = max(max_zero_error, abs(numeric_zero - analytic_zero[row, col]))
-            max_pressure_error = max(max_pressure_error, abs(numeric_volume * pressure - pressure_term[row, col]))
+            zero_errors[row, col] = abs(numeric_zero - analytic_zero[row, col])
+            pressure_errors[row, col] = abs(numeric_volume * pressure - pressure_term[row, col])
+            max_zero_error = max(max_zero_error, zero_errors[row, col])
+            max_pressure_error = max(max_pressure_error, pressure_errors[row, col])
             max_error = max(max_error, abs(numeric - analytic[row, col]))
     print(f"max_zero_pressure_cell_force_error={max_zero_error:.3e}")
     print(f"max_pressure_volume_force_error={max_pressure_error:.3e}")
     print(f"max_pressure_cell_force_error={max_error:.3e}")
     if max_error > 1e-7:
+        print("zero_pressure_error_matrix=" + np.array2string(zero_errors, precision=6))
+        print("pressure_volume_error_matrix=" + np.array2string(pressure_errors, precision=6))
         raise SystemExit("pressure enthalpy cell-force finite difference failed")
 
 
