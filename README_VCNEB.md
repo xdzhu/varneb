@@ -271,8 +271,11 @@ python scripts/validate_vcneb_inputs.py \
   are a gauge, not a real force degree of freedom.
 - Strict mode-subspace and projected-update constraints are available through
   `mode_basis`; direction-basis conflict diagnostics are available through
-  `direction_basis_conflicts()`, while generalized sparse projectors and
-  release-then-refine workflows are still under development.
+  `direction_basis_conflicts()`.  `VCNEB.path_diagnostics()` reports per-image
+  cell metrics, raw atomic force/stress, cell force, and the true/spring/NEB
+  force decomposition needed to audit a variable-cell path.  Generalized
+  sparse projectors and release-then-refine workflows are still under
+  development.
 - This is a working prototype, not yet a published SSNEB implementation.  Treat
   DFT results as research data: compare against fixed-cell NEB and endpoint
   cell-relax results before trusting barriers.

@@ -138,6 +138,8 @@ def main() -> None:
     chain.plot_band(workdir / "vcneb_barrier.png")
     barrier, delta = chain.barrier()
     max_force = chain.gradient_norm(-chain.get_forces())
+    diagnostics = chain.path_diagnostics()
+    saddle = chain.saddle_diagnostics()
     summary = {
         "workdir": str(workdir),
         "n_images": args.n_images,
@@ -150,6 +152,8 @@ def main() -> None:
         "image_enthalpies_eV": [float(value) for value in chain.enthalpies],
         "calculator": "ASE ABACUS",
         "stress_required": True,
+        "saddle_diagnostics": saddle,
+        "path_diagnostics": diagnostics,
     }
     (workdir / "vcneb_summary.json").write_text(
         json.dumps(summary, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
@@ -158,6 +162,12 @@ def main() -> None:
         handle.write(f"Forward barrier (enthalpy) = {barrier:.8f} eV\n")
         handle.write(f"Reaction enthalpy          = {delta:.8f} eV\n")
         handle.write(f"Final max generalized force = {max_force:.8f} eV/A\n")
+        handle.write(
+            "Highest image diagnostics    = "
+            + json.dumps(saddle, ensure_ascii=False, sort_keys=True)
+            + "\n"
+        )
+        handle.write("Per-image physical diagnostics = vcneb_summary.json[path_diagnostics]\n")
         handle.write("Image enthalpies (eV)      = " + " ".join(f"{value:.8f}" for value in chain.enthalpies) + "\n")
     print(
         f"[DONE] barrier={barrier:.6f} eV delta={delta:.6f} eV "

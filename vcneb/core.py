@@ -706,6 +706,102 @@ class VCNEB:
             "tangent_curvature_eV_per_A2": curvature,
         }
 
+    def path_diagnostics(self) -> dict:
+        """Return per-image physical and NEB force diagnostics.
+
+        The physical force fields are reported separately from the projected
+        NEB residual.  This distinction is important for variable-cell runs:
+        a small NEB residual does not imply small raw atomic forces or stress,
+        and a large residual can be caused by the cell block rather than atoms.
+        In parallel mode, image-local arrays are reduced so every rank receives
+        the same JSON-serializable result.
+        """
+
+        self._compute_forces()
+        assert self._last_enthalpies is not None
+        assert self._last_forces_x is not None
+        active_mask = self._active_x_mask()
+        image_x = [self._image_x(index) for index in range(self.n_images)]
+        image_x_active = [x * active_mask for x in image_x]
+        physical: list[tuple[VCNEBState, Array, Array]] = []
+        for image_index in range(self.n_images):
+            _, force_state = self._enthalpy_and_force(image_index)
+            atom_forces = np.zeros((self.n_atoms, 3), dtype=float)
+            stress = np.zeros((3, 3), dtype=float)
+            if self._own_image(image_index):
+                atoms = self.images[image_index]
+                atom_forces = np.asarray(atoms.get_forces(), dtype=float)
+                stress = np.asarray(atoms.get_stress(voigt=False), dtype=float)
+            physical.append((force_state, _sum_array(atom_forces), _sum_array(stress)))
+
+        climbing_image = self.highest_image_index()
+        image_records = []
+        for image_index, (force_state, atom_forces, stress) in enumerate(physical):
+            true_force_x = self._force_to_x(force_state)
+            true_force_norm = float(np.linalg.norm(true_force_x.reshape(-1, 3), axis=1).max())
+            cell_force_x = true_force_x[3 * self.n_atoms :]
+            record = {
+                "image_index": image_index,
+                "interior": 0 < image_index < self.n_images - 1,
+                "enthalpy_eV": float(self._last_enthalpies[image_index]),
+                "relative_enthalpy_eV": float(self._last_enthalpies[image_index] - self._last_enthalpies[0]),
+                "volume_A3": float(self.images[image_index].get_volume()),
+                "cell_lengths_A": [float(value) for value in self.images[image_index].cell.lengths()],
+                "cell_angles_deg": [float(value) for value in self.images[image_index].cell.angles()],
+                "max_atom_force_eV_per_A": float(np.linalg.norm(atom_forces, axis=1).max()),
+                "max_stress_eV_per_A3": float(np.max(np.abs(stress))),
+                "stress_eV_per_A3": stress.tolist(),
+                "cell_force_eV": force_state.deform.tolist(),
+                "max_cell_force_eV": float(np.max(np.abs(force_state.deform))),
+                "max_true_generalized_force_eV_per_A": true_force_norm,
+                "cell_generalized_force_norm_eV_per_A": float(np.linalg.norm(cell_force_x)),
+            }
+            if 0 < image_index < self.n_images - 1:
+                tangent = self._tangent(image_index, self._last_enthalpies, image_x_active)
+                constrained_true = self._project_constraint_force(true_force_x * active_mask) * active_mask
+                true_parallel = float(np.dot(constrained_true, tangent))
+                true_perpendicular = constrained_true - true_parallel * tangent
+                d_plus = float(np.linalg.norm(image_x_active[image_index + 1] - image_x_active[image_index]))
+                d_minus = float(np.linalg.norm(image_x_active[image_index] - image_x_active[image_index - 1]))
+                spring = self.k[image_index - 1] * (d_plus - d_minus) * tangent
+                offset = (image_index - 1) * self.image_ndofs
+                residual = self._last_forces_x[offset : offset + self.image_ndofs]
+                record.update(
+                    {
+                        "is_climbing_image": bool(self.climb and image_index == climbing_image),
+                        "spacing_minus_A": d_minus,
+                        "spacing_plus_A": d_plus,
+                        "true_tangential_force_eV_per_A": true_parallel,
+                        "true_perpendicular_force_eV_per_A": float(np.linalg.norm(true_perpendicular)),
+                        "spring_force_eV_per_A": float(np.linalg.norm(spring)),
+                        "neb_residual_generalized_force_eV_per_A": float(
+                            np.linalg.norm(residual.reshape(-1, 3), axis=1).max()
+                        ),
+                    }
+                )
+            else:
+                record.update(
+                    {
+                        "is_climbing_image": False,
+                        "spacing_minus_A": None,
+                        "spacing_plus_A": None,
+                        "true_tangential_force_eV_per_A": None,
+                        "true_perpendicular_force_eV_per_A": None,
+                        "spring_force_eV_per_A": None,
+                        "neb_residual_generalized_force_eV_per_A": None,
+                    }
+                )
+            image_records.append(record)
+
+        return {
+            "n_images": self.n_images,
+            "n_atoms": self.n_atoms,
+            "pressure_eV_per_A3": self.pressure,
+            "cell_scale_A": self.cell_scale,
+            "highest_image_index": climbing_image,
+            "images": image_records,
+        }
+
     def reaction_coordinate(self) -> Array:
         coords = [0.0]
         active_mask = self._active_x_mask()

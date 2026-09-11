@@ -243,6 +243,37 @@ def check_calculator_runtime_diagnostics() -> None:
         raise SystemExit("runtime calculator failure was not propagated")
 
 
+def check_path_diagnostics() -> None:
+    reference_cell = np.diag([5.0, 5.0, 5.0])
+    initial = make_atoms(reference_cell, np.array([0.25, 0.5, 0.5]), np.eye(3))
+    final_deform = np.eye(3)
+    final_deform[0, 0] = 1.25
+    final = make_atoms(reference_cell, np.array([0.75, 0.5, 0.5]), final_deform)
+    images = interpolate_vcneb(initial, final, n_images=5, align_cells=False)
+    for image in images:
+        image.calc = ToyPhaseTransition(reference_cell)
+    chain = VCNEB(images, k=0.5, climb=True)
+    diagnostics = chain.path_diagnostics()
+    if len(diagnostics["images"]) != 5 or diagnostics["highest_image_index"] is None:
+        raise SystemExit("path diagnostics returned an incomplete image table")
+    interior = diagnostics["images"][2]
+    required = {
+        "volume_A3",
+        "cell_lengths_A",
+        "cell_angles_deg",
+        "max_atom_force_eV_per_A",
+        "max_stress_eV_per_A3",
+        "max_cell_force_eV",
+        "true_perpendicular_force_eV_per_A",
+        "spring_force_eV_per_A",
+        "neb_residual_generalized_force_eV_per_A",
+    }
+    if not required.issubset(interior):
+        raise SystemExit("path diagnostics omitted physical or NEB force fields")
+    if not np.isfinite(interior["max_stress_eV_per_A3"]):
+        raise SystemExit("path diagnostics returned a non-finite stress summary")
+
+
 def check_cell_validity_guards() -> None:
     reference_cell = np.diag([5.0, 5.0, 5.0])
     initial = make_atoms(reference_cell, np.array([0.25, 0.5, 0.5]), np.eye(3))
@@ -777,6 +808,8 @@ def main() -> None:
     print("calculator_contract_regression=ok")
     check_calculator_runtime_diagnostics()
     print("calculator_runtime_diagnostics_regression=ok")
+    check_path_diagnostics()
+    print("path_diagnostics_regression=ok")
     check_mask_validation()
     print("mask_validation_regression=ok")
     check_cell_validity_guards()
