@@ -243,9 +243,11 @@ def project_path_onto_modes(
 ) -> Array:
     """Project every path image onto one or more mode vectors.
 
-    Returns an array with shape ``(n_images, n_modes)``.  Atomic components use
-    Angstrom and cell components use ``cell_scale * (F-I)`` so the result is
-    compatible with the extended VC-NEB coordinate metric.
+    Returns an array with shape ``(n_images, n_modes)`` containing least-squares
+    coefficients in the normalized mode basis.  Atomic components use Angstrom
+    and cell components use ``cell_scale * (F-I)`` so the result is compatible
+    with the extended VC-NEB coordinate metric.  For non-orthogonal modes this
+    solves the Gram-matrix projection instead of returning raw overlaps.
     """
 
     if isinstance(modes, Mode):

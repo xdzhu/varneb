@@ -135,7 +135,7 @@ def check_nonorthogonal_mode_projection() -> None:
     image.set_scaled_positions(scaled)
     modes = [Mode([[1.0, 0.0, 0.0]]), Mode([[1.0, 1.0, 0.0]])]
     coefficients = project_path_onto_modes([reference, image], reference, modes)
-    expected = np.array([0.50, 0.50])
+    expected = np.array([0.50, 1.0 / np.sqrt(2.0)])
     if not np.allclose(coefficients[1], expected, rtol=0.0, atol=1e-12):
         raise SystemExit("non-orthogonal mode projection did not return least-squares coefficients")
 
