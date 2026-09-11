@@ -9,6 +9,7 @@ import types
 
 import numpy as np
 from ase import Atoms
+from ase.calculators.calculator import Calculator, all_changes
 from ase.io import write
 from ase.io.trajectory import Trajectory
 
@@ -29,6 +30,30 @@ def make_atoms(reference_cell, q, deform):
     atoms = Atoms("Ar", scaled_positions=[q], cell=cell_from_deformation(deform, reference_cell), pbc=True)
     atoms.calc = ToyPhaseTransition(reference_cell)
     return atoms
+
+
+class MetricCellCalculator(Calculator):
+    """Rotation-invariant elastic model for non-diagonal cell tests."""
+
+    implemented_properties = ["energy", "forces", "stress"]
+
+    def __init__(self, reference_cell, *, stiffness=0.8):
+        super().__init__()
+        self.reference_cell = np.asarray(reference_cell, dtype=float)
+        self.stiffness = float(stiffness)
+
+    def calculate(self, atoms=None, properties=("energy",), system_changes=all_changes):
+        super().calculate(atoms, properties, system_changes)
+        deform = deformation_from_cell(atoms.cell.array, self.reference_cell)
+        metric = deform @ deform.T
+        delta = metric - np.eye(3)
+        energy = 0.5 * self.stiffness * float(np.sum(delta * delta))
+        grad_deform = 2.0 * self.stiffness * delta @ deform
+        generalized_force = -grad_deform
+        virial = generalized_force @ deform.T
+        self.results["energy"] = energy
+        self.results["forces"] = np.zeros((len(atoms), 3), dtype=float)
+        self.results["stress"] = -virial / atoms.get_volume()
 
 
 def check_cell_mask_regression() -> None:
@@ -187,7 +212,8 @@ def check_pressure_enthalpy_gradient() -> None:
         dtype=float,
     )
     pressure = 0.017
-    atoms = make_atoms(reference_cell, q, deform)
+    atoms = Atoms("Ar", scaled_positions=[q], cell=cell_from_deformation(deform, reference_cell), pbc=True)
+    atoms.calc = MetricCellCalculator(reference_cell)
     analytic_zero = cell_force(atoms, reference_cell)
     analytic = cell_force(atoms, reference_cell, pressure=pressure)
     eps = 1e-6
@@ -202,8 +228,10 @@ def check_pressure_enthalpy_gradient() -> None:
         for col in range(3):
             dd = np.zeros((3, 3))
             dd[row, col] = eps
-            plus = make_atoms(reference_cell, q, deform + dd)
-            minus = make_atoms(reference_cell, q, deform - dd)
+            plus = Atoms("Ar", scaled_positions=[q], cell=cell_from_deformation(deform + dd, reference_cell), pbc=True)
+            minus = Atoms("Ar", scaled_positions=[q], cell=cell_from_deformation(deform - dd, reference_cell), pbc=True)
+            plus.calc = MetricCellCalculator(reference_cell)
+            minus.calc = MetricCellCalculator(reference_cell)
             e_plus = plus.get_potential_energy()
             e_minus = minus.get_potential_energy()
             numeric_zero = -(e_plus - e_minus) / (2.0 * eps)
