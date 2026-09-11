@@ -561,6 +561,7 @@ def check_optimizer_api_shapes() -> None:
             k=0.15,
             climb=False,
             optimizer=optimizer,
+            optimizer_kwargs={"maxstep": 0.05},
             fmax=0.01,
             steps=1,
             logfile=None,

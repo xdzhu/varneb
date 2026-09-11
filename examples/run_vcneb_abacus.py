@@ -49,6 +49,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--mixing-beta", type=float, default=None)
     parser.add_argument("--kpts", type=int, nargs=3, default=None, metavar=("NX", "NY", "NZ"))
     parser.add_argument("--optimizer", choices=["FIRE", "BFGS", "LBFGS"], default="FIRE")
+    parser.add_argument(
+        "--maxstep",
+        type=float,
+        default=None,
+        help="Optional ASE optimizer maxstep in Angstrom-like extended coordinates",
+    )
     parser.add_argument("--mic", action="store_true")
     parser.add_argument("--no-climb", action="store_true")
     parser.add_argument("--resume", action="store_true", help="Resume from the latest complete chain in vcneb.traj")
@@ -119,6 +125,7 @@ def main() -> None:
         k=args.k,
         climb=not args.no_climb,
         optimizer=args.optimizer,
+        optimizer_kwargs={} if args.maxstep is None else {"maxstep": args.maxstep},
         fmax=args.fmax,
         steps=args.steps,
         logfile=workdir / "vcneb.opt.log",

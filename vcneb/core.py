@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Callable, Iterable, Iterator, Optional, Sequence
+from typing import Callable, Iterable, Iterator, Mapping, Optional, Sequence
 
 import numpy as np
 
@@ -799,14 +799,20 @@ def _validate_chain_compatibility(images: Sequence[Atoms]) -> None:
             raise ValueError(f"Image {image_index} has an invalid 3D cell")
 
 
-def _make_optimizer(name: str, chain: VCNEB, logfile: str | Path | None):
+def _make_optimizer(
+    name: str,
+    chain: VCNEB,
+    logfile: str | Path | None,
+    optimizer_kwargs: Optional[Mapping[str, object]] = None,
+):
+    kwargs = {} if optimizer_kwargs is None else dict(optimizer_kwargs)
     key = name.upper()
     if key == "FIRE":
-        return FIRE(chain, logfile=logfile)
+        return FIRE(chain, logfile=logfile, **kwargs)
     if key == "LBFGS":
-        return LBFGS(chain, logfile=logfile)
+        return LBFGS(chain, logfile=logfile, **kwargs)
     if key == "BFGS":
-        return BFGS(chain, logfile=logfile)
+        return BFGS(chain, logfile=logfile, **kwargs)
     raise ValueError(f"Unknown optimizer {name!r}; choose BFGS, LBFGS, or FIRE")
 
 
@@ -845,6 +851,7 @@ def run_vcneb(
     wrap_positions: bool = False,
     parallel: bool = False,
     optimizer: str = "FIRE",
+    optimizer_kwargs: Optional[Mapping[str, object]] = None,
     fmax: float = 0.05,
     steps: int = 300,
     logfile: str | Path | None = "vcneb-opt.log",
@@ -879,7 +886,7 @@ def run_vcneb(
         parallel=parallel,
         log=log,
     )
-    opt = _make_optimizer(optimizer, chain, logfile)
+    opt = _make_optimizer(optimizer, chain, logfile, optimizer_kwargs)
 
     if trajectory_mode not in {"w", "a"}:
         raise ValueError("trajectory_mode must be 'w' or 'a'")
