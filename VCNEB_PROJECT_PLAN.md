@@ -36,7 +36,7 @@
 
 - [ ] 尚未完成六个独立应变的系统有限差分误差表、随机路径/耦合势覆盖和不同 cell 参数化的完整对照；解析基准与固定 cell ASE 对照已完成首轮。
 - [ ] 尚未完成 VASP/ABACUS 两套真实 DFT 的端到端生产级 VCNEB 收敛案例。
-- [ ] 尚未完成 HfO2 T 相到 PO 相的结构来源、原子一一映射、端点独立弛豫和科学结果复核。
+- [x] HfO2 T 相到 PO 相的 12 原子结构来源、原子一一映射和端点独立弛豫 trial 已保存；生产精度路径和科学能垒仍未完成。
 - [x] 已实现基础严格模式子空间和 projected-update 约束，并加入端点子空间验证；方向冲突诊断和释放后全空间精修仍未完成。
 - [ ] 尚未形成可投稿版本的误差预算、效率统计、软件发布包和论文结果表。
 
@@ -145,7 +145,7 @@
 - [ ] 将核心与 VASP/ABACUS 命令行、环境变量、MPI 命令完全隔离；命令 profile 只负责启动和结果解析。
 - [x] 明确 stress 缺失时的行为：`run_vcneb()` 预检直接拒绝，不能静默把 cell force 当成零。
 - [x] 运行时 calculator 异常会保留 image 编号、目录和命令上下文，并由回归测试覆盖。
-- [ ] 新增物理 HfO2 单 image ABACUS smoke 入口；待集群完成真实 SCF、原子力和 stress 验证后再勾选。
+- [x] 新增物理 HfO2 单 image ABACUS smoke 入口；已在集群完成真实 SCF、原子力和 stress 验证。
 
 ### 7.2 VASP 适配
 
@@ -157,7 +157,7 @@
 ### 7.3 ABACUS 适配
 
 - [x] 完成 STRU/KPT/INPUT 生成和结果解析；核对 stress 输出、单位和晶格方向，并提供参数化多 image 入口；HfO2 单 image 与 7-image ABACUS smoke 已通过。
-- [ ] 已加入 `relax_abacus_endpoint.py`，使用 ASE `FrechetCellFilter` 做独立端点原子/cell 弛豫；待在 HfO2 两端点完成并记录。
+- [x] 已加入 `relax_abacus_endpoint.py`，使用 ASE `FrechetCellFilter` 完成 HfO2 两端点的低精度、宽松阈值独立原子/cell 弛豫 trial 并记录。
 - [ ] 验证 ABACUS 命令 profile、MPI 进程数、退出码、超时和 SCF 不收敛处理。
 - [ ] 让同一套 VCNEB 输入只更换 calculator 配置即可切换 VASP/ABACUS。
 
@@ -228,9 +228,10 @@
 - [x] Level A 的 model/低精度 DFT smoke 分支已确认输入、路径、计算器、每 image 目录、输出解析、恢复和 CI 独立分支；生产精度仍待完成。
 - [ ] Level B：生产精度 VCNEB，完成无约束路径和 CI-VCNEB。
 - [x] Level B 首轮已在 cu17 完整执行 7-image/40-step FIRE，并从完整轨迹尝试 LBFGS 恢复；两条分支均明确记录为未收敛，不能作为物理能垒。
-- [x] 已补做输入预检失败诊断和 `FIRE(maxstep=0.05)` 保守步长重试；预检在 ABACUS 启动前正确拒绝错误 basis 路径，重试仍在前五步出现残余力单调增长，因此暂停继续消耗 DFT 资源，转入路径/应力诊断。
+- [x] 已补做输入预检失败诊断和 `FIRE(maxstep=0.05)` 保守步长重试；预检在 ABACUS 启动前正确拒绝错误 basis 路径，重试仍在前七步出现残余力单调增长，因此暂停继续消耗 DFT 资源，转入路径/应力诊断。
+- [x] 已对最新完整重启轨迹做 7-image 零步静态力/应力诊断；image 2 的最大原子力/应力与 image 3 的最高焓错位，结果已进入 manifest，下一步优先改进机制路径。
 - [ ] Level C：加密 image、提高电子精度和改变初始路径，验证能垒与 saddle 的稳定性。
-- [x] Level A 的 model/低精度 DFT smoke 已记录 Git 版本、节点、核数、输入、输出和结果摘要；Level B/C manifest 仍待补充。
+- [x] Level A 的 model/低精度 DFT smoke 与 Level B 诊断 trial 已记录 Git 版本、节点、核数、输入、输出和结果摘要；Level C 仍待开展。
 
 ### 9.3 集群执行规范
 
@@ -268,7 +269,8 @@
 ### 验收
 
 - [x] 一个可解析验证的单模式模型，证明禁止方向的位移和力均为零。
-- [ ] 一个多模式非正交输入，证明正交化和投影结果与显式线性代数一致。
+- [x] 一个多模式非正交输入，证明正交化和投影结果与显式线性代数一致。
+- [x] 已加入解析势的 `projected` 约束搜索到全空间 release-and-refine 示例；真实材料对照仍待完成。
 - [ ] 一个真实材料案例，比较无约束、模式引导、严格模式约束和释放后精修。
 - [ ] 文档明确：约束路径得到的是受限路径上的鞍点，未必是全空间的一阶鞍点。
 

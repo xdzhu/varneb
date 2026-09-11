@@ -9,15 +9,36 @@
 - Before the corrected retry, `cu26` was checked at `2026-09-12T06:54:53+08:00`:
   40 cores, load averages `0.04/0.20/0.20`, and no active DFT process.
 - A new branch resumed the complete FIRE-40 trajectory with
-  `FIRE(maxstep=0.05 A)`. The first five complete steps had maximum
-  generalized forces `0.617654`, `0.622142`, `0.633117`, `0.652366`, and
-  `0.678677 eV/A`. The force continued to increase, so the run was stopped
-  early and all processes belonging to this work directory were cleaned up.
+  `FIRE(maxstep=0.05 A)`. The seven complete steps had maximum generalized
+  forces `0.617654`, `0.622142`, `0.633117`, `0.652366`, `0.678677`,
+  `0.705180`, and `0.725727 eV/A`. The force continued to increase, so the
+  run was stopped early and all processes belonging to this work directory
+  were cleaned up.
 - This isolates two facts: the calculator error path is actionable, but a
   smaller optimizer step alone does not make the current HfO2 path convergent.
   The trial is diagnostic data only and is not a transition barrier.
 
 Compact record: `outputs/abacus_hfo2_levelB_manifest.json`.
+
+## HfO2 static force/stress diagnostic (`9d79e72`)
+
+- Before the run, `cu17` was checked at `2026-09-12T07:07:47+08:00`:
+  40 cores, load averages `0.08/0.03/1.97`, and no active DFT process. The
+  run completed with no remaining DFT process.
+- The latest complete seven-image FIRE retry trajectory was evaluated with
+  zero optimizer steps at Dojo-NC-FR, 60 Ry, 1x1x1 k points, and `scf_thr=1e-6`.
+  The highest image was image 3 with relative enthalpy `0.305708 eV` and
+  NEB residual `0.621982 eV/A`.
+- Image 2, rather than the highest-energy image, carried the largest interior
+  raw atomic force (`0.674825 eV/A`) and stress component
+  (`0.016611 eV/A^3`). This spatial mismatch is a concrete indicator that
+  the current linear/restarted path needs a mechanism-aware path improvement
+  before a production VC-NEB barrier is attempted.
+- The generated summary contains cell metrics and true/spring/NEB force
+  decompositions for every image. It is diagnostic data only.
+
+Compact records: `outputs/abacus_hfo2_levelB_static_diag_cu17_manifest.json` and
+`outputs/abacus_hfo2_levelB_static_diag_cu17_summary.json`.
 
 ## HfO2 Level B optimizer trial (`04bf038`)
 

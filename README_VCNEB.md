@@ -154,6 +154,7 @@ python examples/relax_abacus_endpoint.py --help
 python examples/run_vasp_single_image_smoke.py --help
 python examples/run_fixed_cell_ase_comparison.py
 python examples/run_vcneb_convergence.py
+python examples/run_release_and_refine.py
 ```
 
 Expected toy output:
@@ -275,7 +276,8 @@ python scripts/validate_vcneb_inputs.py \
   cell metrics, raw atomic force/stress, cell force, and the true/spring/NEB
   force decomposition needed to audit a variable-cell path.  Generalized
   sparse projectors and release-then-refine workflows are still under
-  development.
+  development.  `examples/run_release_and_refine.py` demonstrates the
+  supported two-stage workflow on an analytic coupled potential.
 - This is a working prototype, not yet a published SSNEB implementation.  Treat
   DFT results as research data: compare against fixed-cell NEB and endpoint
   cell-relax results before trusting barriers.

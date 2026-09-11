@@ -773,10 +773,17 @@ class VCNEB:
                         "spacing_plus_A": d_plus,
                         "true_tangential_force_eV_per_A": true_parallel,
                         "true_perpendicular_force_eV_per_A": float(np.linalg.norm(true_perpendicular)),
+                        "true_perpendicular_force_max_vector_eV_per_A": float(
+                            np.linalg.norm(true_perpendicular.reshape(-1, 3), axis=1).max()
+                        ),
                         "spring_force_eV_per_A": float(np.linalg.norm(spring)),
+                        "spring_force_max_vector_eV_per_A": float(
+                            np.linalg.norm(spring.reshape(-1, 3), axis=1).max()
+                        ),
                         "neb_residual_generalized_force_eV_per_A": float(
                             np.linalg.norm(residual.reshape(-1, 3), axis=1).max()
                         ),
+                        "neb_residual_force_euclidean_eV_per_A": float(np.linalg.norm(residual)),
                     }
                 )
             else:
@@ -787,8 +794,11 @@ class VCNEB:
                         "spacing_plus_A": None,
                         "true_tangential_force_eV_per_A": None,
                         "true_perpendicular_force_eV_per_A": None,
+                        "true_perpendicular_force_max_vector_eV_per_A": None,
                         "spring_force_eV_per_A": None,
+                        "spring_force_max_vector_eV_per_A": None,
                         "neb_residual_generalized_force_eV_per_A": None,
+                        "neb_residual_force_euclidean_eV_per_A": None,
                     }
                 )
             image_records.append(record)

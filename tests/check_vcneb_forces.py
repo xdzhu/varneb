@@ -265,8 +265,11 @@ def check_path_diagnostics() -> None:
         "max_stress_eV_per_A3",
         "max_cell_force_eV",
         "true_perpendicular_force_eV_per_A",
+        "true_perpendicular_force_max_vector_eV_per_A",
         "spring_force_eV_per_A",
+        "spring_force_max_vector_eV_per_A",
         "neb_residual_generalized_force_eV_per_A",
+        "neb_residual_force_euclidean_eV_per_A",
     }
     if not required.issubset(interior):
         raise SystemExit("path diagnostics omitted physical or NEB force fields")
