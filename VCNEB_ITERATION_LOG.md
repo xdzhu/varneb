@@ -1,5 +1,31 @@
 # VC-NEB Iteration Log
 
+## 2026-09-12 03:31 +08:00
+
+Focus: validate the physical ABACUS path before production VC-NEB.
+
+Execution:
+
+- Checked `cu17` immediately before each calculation; it had 40 cores, no
+  active VASP/ABACUS job and low load at the single-image and multi-image
+  launch points.
+- Ran the HfO2 12-atom T endpoint with ABACUS Dojo-NC-FR, 40 MPI ranks,
+  `ecutwfc=60 Ry`, `1x1x1` k points, and `cal_force=cal_stress=out_stru=1`.
+- The single-image calculation returned energy, finite stress and atomic
+  forces; the generated inputs passed the static ABACUS validator.
+- Ran a seven-image, two-step VC-NEB smoke from the mapped T endpoint to the
+  mapped PO endpoint. Every image produced its own ABACUS work directory and
+  the driver completed with an output band and trajectory.
+
+Evidence:
+
+- Results and node metadata are stored in `outputs/abacus_hfo2_smoke_manifest.json`.
+- Single-image smoke passed. The multi-image run is an engineering smoke only:
+  final optimizer `fmax` was about `1.805086 eV/A`, so the barrier
+  `0.677095 eV` is explicitly not a converged physical result.
+- The ABACUS driver now writes `vcneb_summary.json`, `vcneb_summary.txt`,
+  final POSCAR files and a band plot for future runs.
+
 ## 2026-09-12 03:28 +08:00
 
 Focus: run the updated analytic model cases on the shared cluster.

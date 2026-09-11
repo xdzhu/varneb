@@ -1,0 +1,61 @@
+{
+  "project": "vcneb",
+  "commit": "596fa3c",
+  "gateway": "235",
+  "compute_node": "cu17",
+  "shared_source_path": "/home/zhuxd/abacus/agent-runs/20260912-vcneb-p0",
+  "runtime": {
+    "python": "/home/zhuxd/Software/anaconda3/envs/icu/bin/python3",
+    "ase": "3.23.1b1",
+    "abacus": "/home/zhuxd/Software/abacus/INSTALL/3.10.0-LTS/bin/abacus",
+    "mpi_command": "mpirun -np 40 /home/zhuxd/Software/abacus/INSTALL/3.10.0-LTS/bin/abacus",
+    "pseudo_family": "ABACUS Dojo-NC-FR",
+    "ecutwfc_Ry": 60.0,
+    "kpts": [1, 1, 1]
+  },
+  "single_image": {
+    "node_check": {
+      "checked_before_run": "2026-09-12T03:22:43+08:00",
+      "cores": 40,
+      "load_average_1_5_15": [0.01, 0.10, 0.11],
+      "active_dft_processes": 0
+    },
+    "structure": "validation/hfo2_t_to_po/image_00/POSCAR",
+    "workdir": "validation/hfo2_t_to_po/abacus_single_image_smoke",
+    "natoms": 12,
+    "energy_eV": -9777.3830543,
+    "max_force_eV_per_A": 1.5009181256,
+    "stress_eV_per_A3": [
+      [0.010619096884527451, -0.0, -0.0],
+      [-0.0, 0.010619096884527451, 0.0],
+      [-0.0, 0.0, -0.07358213888830452]
+    ],
+    "stress_finite": true,
+    "validator": "ok",
+    "status": "passed"
+  },
+  "vcneb_smoke": {
+    "node_check": {
+      "checked_before_run": "2026-09-12T03:27:19+08:00",
+      "cores": 40,
+      "load_average_1_5_15": [0.38, 0.62, 0.36],
+      "active_dft_processes": 0
+    },
+    "initial": "validation/hfo2_t_to_po/image_00/POSCAR",
+    "final": "validation/hfo2_t_to_po/image_06/POSCAR",
+    "workdir": "validation/hfo2_t_to_po/abacus_vcneb_smoke",
+    "n_images": 7,
+    "steps": 2,
+    "optimizer": "FIRE",
+    "fmax_target_eV_per_A": 0.5,
+    "optimizer_log_final_fmax_eV_per_A": 1.805086,
+    "barrier_enthalpy_eV": 0.677095,
+    "reaction_enthalpy_eV": -1.304312,
+    "image_directories": ["00", "01", "02", "03", "04", "05", "06"],
+    "atoms_per_image": 12,
+    "validator": "ok",
+    "converged": false,
+    "status": "engineering_smoke_passed_physics_pending"
+  },
+  "interpretation": "The ABACUS calculator contract, MPI launch, generated INPUT/KPT/STRU files, stress parsing, per-image directories and two-step VC-NEB execution passed. The band is not converged and the reported barrier must not be used as a physical HfO2 transition barrier. Independent endpoint relaxation and image/cell/electronic convergence remain required."
+}

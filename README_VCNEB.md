@@ -132,6 +132,7 @@ python examples/run_toy_vcneb.py
 python scripts/setup_hfo2_t_po_validation.py
 python examples/run_hfo2_t_po_model_vcneb.py
 python examples/run_abacus_single_image_smoke.py
+python examples/run_vcneb_convergence.py
 ```
 
 Expected toy output:
