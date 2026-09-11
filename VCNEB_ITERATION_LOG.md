@@ -1,5 +1,39 @@
 # VC-NEB Iteration Log
 
+## 2026-09-12 03:20 +08:00
+
+Focus: strengthen generalized cell-force validation and multi-mode handling.
+
+Changes:
+
+- Added a rotation-invariant metric-cell analytic calculator to the regression
+  suite, so non-diagonal deformation and non-zero pressure are tested against
+  a physically symmetric stress tensor.
+- Added pressure/enthalpy finite-difference diagnostics that separate the zero-
+  pressure stress contribution from the `P dV` contribution.
+- Added least-squares coefficients for `project_path_onto_modes()` when the
+  supplied modes are not orthogonal; array and iterable mode inputs are both
+  accepted.
+- Added finite 0/1 validation for `atom_mask` and `cell_mask`.
+
+Verification:
+
+- On the shared `cu17` environment, after a fresh occupancy check, the full
+  regression suite passed with
+  `max_zero_pressure_cell_force_error=3.156e-11`,
+  `max_pressure_volume_force_error=8.380e-10`, and
+  `max_pressure_cell_force_error=8.343e-10`.
+- The mode-subspace, projected-mode, non-orthogonal-mode and mask-validation
+  regressions also passed.
+
+Interpretation:
+
+- The earlier `1.546e-02` discrepancy was a test-model defect: the toy model
+  supplied a non-symmetric stress for an energy depending on rotational cell
+  components, while ASE exposes the physical symmetric stress tensor. The
+  core cell-force formula was not changed; the corrected physical test now
+  validates it to numerical precision.
+
 ## 2026-09-12 03:09 +08:00
 
 Focus: implement and document explicit mode-constrained VCNEB semantics.

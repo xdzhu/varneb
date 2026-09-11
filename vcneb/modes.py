@@ -250,8 +250,10 @@ def project_path_onto_modes(
 
     if isinstance(modes, Mode):
         mode_list = [modes]
+    elif isinstance(modes, np.ndarray):
+        mode_list = [Mode(modes)]
     else:
-        mode_list = list(modes)
+        mode_list = [mode if isinstance(mode, Mode) else Mode(mode) for mode in modes]
     if not mode_list:
         raise ValueError("At least one mode is required")
     if any(len(mode.atomic) != len(reference) for mode in mode_list):
@@ -272,6 +274,8 @@ def project_path_onto_modes(
         cell = np.zeros((3, 3)) if mode.cell is None else mode.cell
         vectors.append(np.concatenate([mode.atomic.reshape(-1), (cell * cell_scale).reshape(-1)]))
     basis = np.asarray(vectors, dtype=float)
+    gram = basis @ basis.T
+    gram_pinv = np.linalg.pinv(gram, rcond=1e-12)
     result = np.zeros((len(images), len(prepared)), dtype=float)
     ref_state = state_from_atoms(reference, ref_cell)
     ref_x = np.concatenate([
@@ -284,7 +288,8 @@ def project_path_onto_modes(
             (state.q @ ref_cell).reshape(-1),
             (state.deform - np.eye(3)).reshape(-1) * cell_scale,
         ])
-        result[image_index] = basis @ (x - ref_x)
+        overlaps = basis @ (x - ref_x)
+        result[image_index] = gram_pinv @ overlaps
     return result
 
 
