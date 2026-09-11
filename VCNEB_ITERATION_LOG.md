@@ -1,5 +1,34 @@
 # VC-NEB Iteration Log
 
+## 2026-09-12 03:28 +08:00
+
+Focus: run the updated analytic model cases on the shared cluster.
+
+Execution:
+
+- Checked `cu17` immediately before use: 40 cores, load average
+  `0.08, 0.06, 0.05`, no visible user jobs.
+- Ran `examples/run_toy_vcneb.py` and
+  `examples/run_hfo2_t_po_model_vcneb.py` from the shared project directory
+  using the ICU Python environment.
+- Toy model result: barrier `0.250004 eV`, endpoint difference `0.000000 eV`.
+- HfO2 12-atom T->PO synthetic model result: barrier `0.800023 eV`, endpoint
+  difference approximately zero.
+- Saved the result and limitation statement in
+  `outputs/vcneb_model_case_manifest.json`.
+
+Verification:
+
+- The same node then passed the complete regression suite, including the
+  non-diagonal/pressure cell-force checks, mode constraints, mask validation,
+  and cell-validity guards; `compileall` also passed.
+
+Scientific boundary:
+
+- These are analytic/synthetic model cases. They verify end-to-end mechanics,
+  not a physical VASP/ABACUS phase-transition barrier. Production DFT remains
+  a separate P3/P5 task.
+
 ## 2026-09-12 03:20 +08:00
 
 Focus: strengthen generalized cell-force validation and multi-mode handling.

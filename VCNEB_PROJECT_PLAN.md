@@ -179,7 +179,7 @@
 
 ### 8.2 解析模型
 
-- [ ] 构造含原子坐标和 cell 变量的可控多井势，已知 minimum、saddle 和能垒。
+- [x] 构造含原子坐标和 cell 变量的可控多井势，已知 minimum、saddle 和能垒；toy 与 HfO2 12 原子 synthetic model 均已端到端运行。
 - [ ] 构造含耦合项的 toy model，验证路径不能被错误地拆成独立原子和 cell 两条路径。
 - [ ] 对比无弹簧、不同弹簧常数、不同 image 数、FIRE/LBFGS 等设置。
 - [ ] 测试 CI-VCNEB 是否把最高 image 推向 saddle，并统计 saddle 一阶负曲率/力残差等诊断。
@@ -217,7 +217,7 @@
 
 ### 9.2 分层运行策略
 
-- [ ] Level A：model/低精度 DFT，确认输入、路径、计算器、恢复功能和输出解析。
+- [x] Level A 的 model 分支：toy 与 HfO2 synthetic model 已确认输入、路径、calculator、恢复功能和输出解析；低精度 DFT 分支仍待完成。
 - [ ] Level B：生产精度 VCNEB，完成无约束路径和 CI-VCNEB。
 - [ ] Level C：加密 image、提高电子精度和改变初始路径，验证能垒与 saddle 的稳定性。
 - [ ] 对每一层分别记录 `input_manifest.json`、Git/版本标识、节点、核数、开始/结束时间、失败重试和结果摘要。

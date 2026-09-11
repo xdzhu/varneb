@@ -1,0 +1,41 @@
+{
+  "project": "vcneb",
+  "commit": "e12d0a5",
+  "gateway": "235",
+  "compute_node": "cu17",
+  "shared_source_path": "/home/zhuxd/abacus/agent-runs/20260912-vcneb-p0",
+  "node_check": {
+    "cores": 40,
+    "load_average_1_5_15": [0.08, 0.06, 0.05],
+    "visible_user_jobs": 0,
+    "checked_before_run": "2026-09-12T03:01:58+08:00"
+  },
+  "runtime": {
+    "python": "/home/zhuxd/Software/anaconda3/envs/icu/bin/python3",
+    "commands": [
+      "python3 examples/run_toy_vcneb.py",
+      "python3 examples/run_hfo2_t_po_model_vcneb.py"
+    ],
+    "calculator_type": "analytic synthetic model",
+    "dft_launched": false
+  },
+  "cases": [
+    {
+      "name": "toy_phase_transition",
+      "result_directory": "toy_vcneb_run",
+      "barrier_eV": 0.250004,
+      "forward_energy_difference_eV": 0.0,
+      "expected_barrier_eV": 0.25,
+      "status": "passed"
+    },
+    {
+      "name": "hfo2_t_to_po_12_atom_model",
+      "result_directory": "validation/hfo2_t_to_po/model_vcneb_run",
+      "barrier_eV": 0.800023,
+      "forward_energy_difference_eV": 0.0,
+      "expected_barrier_eV": 0.8,
+      "status": "passed"
+    }
+  ],
+  "interpretation": "The model cases verify end-to-end path construction, cell degrees of freedom, optimizer integration, output writing and known synthetic barriers. They do not validate VASP/ABACUS stress noise, electronic convergence or a physical phase-transition barrier."
+}
