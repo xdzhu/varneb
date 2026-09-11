@@ -8,7 +8,14 @@ from .calculator import (
     validate_calculator,
     validate_image_calculators,
 )
-from .modes import Mode, build_direction_basis, build_mode_basis, mode_guided_path, project_path_onto_modes
+from .modes import (
+    Mode,
+    build_direction_basis,
+    build_mode_basis,
+    direction_basis_conflicts,
+    mode_guided_path,
+    project_path_onto_modes,
+)
 
 __all__ = [
     "VCNEB",
@@ -25,6 +32,7 @@ __all__ = [
     "Mode",
     "build_mode_basis",
     "build_direction_basis",
+    "direction_basis_conflicts",
     "mode_guided_path",
     "project_path_onto_modes",
 ]

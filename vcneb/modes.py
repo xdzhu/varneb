@@ -398,10 +398,79 @@ def build_direction_basis(directions: Array, *, cell_basis: Array | None = None)
     return np.vstack([atomic, cell])
 
 
+def direction_basis_conflicts(
+    basis: Array,
+    *,
+    atom_mask: Array | None = None,
+    cell_mask: Array | None = None,
+    tolerance: float = 1e-12,
+) -> dict:
+    """Report direction components removed by atomic or cell masks.
+
+    The returned indices refer to columns of the supplied extended basis.
+    A partially clipped column may still be usable, while a fully inactive
+    column cannot contribute to a constrained VC-NEB path.
+    """
+
+    matrix = np.asarray(basis, dtype=float)
+    if matrix.ndim != 2 or matrix.shape[0] < 9 or (matrix.shape[0] - 9) % 3:
+        raise ValueError("basis must have shape (3*n_atoms + 9, n_modes)")
+    if not np.all(np.isfinite(matrix)):
+        raise ValueError("basis contains non-finite values")
+    if tolerance <= 0.0:
+        raise ValueError("tolerance must be positive")
+
+    n_atoms = (matrix.shape[0] - 9) // 3
+    active = np.ones(matrix.shape[0], dtype=float)
+    if atom_mask is not None:
+        atomic = np.asarray(atom_mask, dtype=float)
+        if atomic.size != 3 * n_atoms:
+            raise ValueError(f"atom_mask must have shape ({n_atoms}, 3)")
+        atomic = atomic.reshape(n_atoms, 3)
+        if not np.all(np.isfinite(atomic)) or not np.all(
+            np.isclose(atomic, 0.0) | np.isclose(atomic, 1.0)
+        ):
+            raise ValueError("atom_mask must contain only finite 0/1 values")
+        active[: 3 * n_atoms] = atomic.reshape(-1)
+    if cell_mask is not None:
+        cell = np.asarray(cell_mask, dtype=float)
+        if cell.size != 9:
+            raise ValueError("cell_mask must have shape (3, 3)")
+        cell = cell.reshape(3, 3)
+        if not np.all(np.isfinite(cell)) or not np.all(
+            np.isclose(cell, 0.0) | np.isclose(cell, 1.0)
+        ):
+            raise ValueError("cell_mask must contain only finite 0/1 values")
+        active[3 * n_atoms :] = cell.reshape(-1)
+
+    projected = matrix * active[:, None]
+    before_norm = np.linalg.norm(matrix, axis=0)
+    removed_norm = np.linalg.norm(matrix - projected, axis=0)
+    after_norm = np.linalg.norm(projected, axis=0)
+    partially_clipped = np.flatnonzero(
+        (removed_norm > tolerance) & (after_norm > tolerance)
+    ).tolist()
+    fully_inactive = np.flatnonzero(
+        (before_norm > tolerance) & (after_norm <= tolerance)
+    ).tolist()
+    rank_before = int(np.linalg.matrix_rank(matrix, tol=tolerance))
+    rank_after = int(np.linalg.matrix_rank(projected, tol=tolerance))
+    return {
+        "has_conflict": bool(np.any(removed_norm > tolerance)),
+        "partially_clipped_columns": partially_clipped,
+        "fully_inactive_columns": fully_inactive,
+        "rank_before": rank_before,
+        "rank_after": rank_after,
+        "rank_loss": rank_before - rank_after,
+        "removed_component_norms": removed_norm.tolist(),
+    }
+
+
 __all__ = [
     "Mode",
     "mode_guided_path",
     "project_path_onto_modes",
     "build_mode_basis",
     "build_direction_basis",
+    "direction_basis_conflicts",
 ]

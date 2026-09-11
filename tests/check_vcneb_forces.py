@@ -28,7 +28,14 @@ from vcneb import (
     run_vcneb,
     validate_image_calculators,
 )
-from vcneb import Mode, build_direction_basis, build_mode_basis, mode_guided_path, project_path_onto_modes
+from vcneb import (
+    Mode,
+    build_direction_basis,
+    build_mode_basis,
+    direction_basis_conflicts,
+    mode_guided_path,
+    project_path_onto_modes,
+)
 from vcneb.abacus import make_ase_abacus_factory
 from vcneb.core import VCNEB, cell_force, cell_from_deformation, deformation_from_cell, fractional_force
 import vcneb.core as core_module
@@ -331,6 +338,20 @@ def check_projected_mode_constraint_and_direction_basis() -> None:
     direction_basis = build_direction_basis(np.array([[0.0, 0.0, 1.0]]))
     if direction_basis.shape != (12, 1) or abs(direction_basis[2, 0] - 1.0) > 1e-12:
         raise SystemExit("direction basis has the wrong extended-coordinate layout")
+
+    mixed_basis = build_direction_basis(np.array([[1.0, 1.0, 1.0]]))
+    conflict = direction_basis_conflicts(
+        mixed_basis,
+        atom_mask=np.array([[1.0, 1.0, 0.0]]),
+    )
+    if not conflict["has_conflict"] or conflict["partially_clipped_columns"] != [0]:
+        raise SystemExit("direction basis did not report a partially clipped component")
+    fully_inactive = direction_basis_conflicts(
+        mixed_basis,
+        atom_mask=np.array([[0.0, 0.0, 0.0]]),
+    )
+    if fully_inactive["fully_inactive_columns"] != [0] or fully_inactive["rank_loss"] != 1:
+        raise SystemExit("direction basis did not report a fully inactive component")
 
 
 def check_climbing_image_saddle_diagnostics() -> None:
