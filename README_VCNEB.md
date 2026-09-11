@@ -129,8 +129,11 @@ update into that affine subspace.  Use `constraint_mode="projected"` when the
 non-mode part of an existing initial path should remain fixed while only the
 optimization update is projected.  `build_direction_basis()` provides the same
 interface for one allowed direction per atom or arbitrary atomic direction
-combinations.  These are constrained transition paths; a constrained saddle
-is not automatically a first-order saddle in the full configuration space.
+  combinations.  Call `direction_basis_conflicts()` before combining a
+direction basis with component masks; it reports partially clipped columns,
+fully inactive columns, and rank loss.  These are constrained transition
+paths; a constrained saddle is not automatically a first-order saddle in the
+full configuration space.
 
 ## Local checks
 
@@ -260,8 +263,9 @@ python scripts/validate_vcneb_inputs.py \
 - Stress can only drive physical strain components; arbitrary cell rotations
   are a gauge, not a real force degree of freedom.
 - Strict mode-subspace and projected-update constraints are available through
-  `mode_basis`; direction-basis conflict diagnostics, generalized sparse
-  projectors, and release-then-refine workflows are still under development.
+  `mode_basis`; direction-basis conflict diagnostics are available through
+  `direction_basis_conflicts()`, while generalized sparse projectors and
+  release-then-refine workflows are still under development.
 - This is a working prototype, not yet a published SSNEB implementation.  Treat
   DFT results as research data: compare against fixed-cell NEB and endpoint
   cell-relax results before trusting barriers.

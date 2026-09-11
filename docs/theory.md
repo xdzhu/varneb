@@ -217,8 +217,9 @@ VCNEB 的扩展 `x` 坐标列向量，再用 SVD 得到数值正交基；`constr
 
 方向约束可以表示为每个原子的投影矩阵 `P_a`，或更一般的稀疏线性约束矩阵。
 当前 `build_direction_basis()` 已支持每个原子一个方向、多个方向组合以及 cell deformation
-方向，并交由 `VCNEB(mode_basis=...)` 完成正交化和投影；与 atom mask 的冲突诊断、稀疏大体系实现
-以及投影发生顺序的完整敏感性分析仍需补齐。
+方向，并交由 `VCNEB(mode_basis=...)` 完成正交化和投影。新增
+`direction_basis_conflicts()` 会报告 mask 删除的分量、完全失活的 basis 列以及 mask 前后的秩损失；
+它不替代大体系所需的稀疏 projector，也不改变先投影再进行 NEB 分解的当前顺序。
 
 ## 8. 收敛判据
 
