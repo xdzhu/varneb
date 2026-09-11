@@ -168,6 +168,44 @@ def check_projected_mode_constraint_and_direction_basis() -> None:
         raise SystemExit("direction basis has the wrong extended-coordinate layout")
 
 
+def check_pressure_enthalpy_gradient() -> None:
+    reference_cell = np.array(
+        [
+            [4.7, 0.2, 0.0],
+            [0.4, 5.1, 0.3],
+            [0.1, 0.2, 5.4],
+        ],
+        dtype=float,
+    )
+    q = np.array([0.42, 0.57, 0.48], dtype=float)
+    deform = np.array(
+        [
+            [1.08, 0.02, 0.01],
+            [0.00, 0.97, 0.03],
+            [0.01, 0.00, 1.03],
+        ],
+        dtype=float,
+    )
+    pressure = 0.017
+    atoms = make_atoms(reference_cell, q, deform)
+    analytic = cell_force(atoms, reference_cell, pressure=pressure)
+    eps = 1e-6
+    max_error = 0.0
+    for row in range(3):
+        for col in range(3):
+            dd = np.zeros((3, 3))
+            dd[row, col] = eps
+            plus = make_atoms(reference_cell, q, deform + dd)
+            minus = make_atoms(reference_cell, q, deform - dd)
+            e_plus = plus.get_potential_energy() + pressure * plus.get_volume()
+            e_minus = minus.get_potential_energy() + pressure * minus.get_volume()
+            numeric = -(e_plus - e_minus) / (2.0 * eps)
+            max_error = max(max_error, abs(numeric - analytic[row, col]))
+    print(f"max_pressure_cell_force_error={max_error:.3e}")
+    if max_error > 1e-7:
+        raise SystemExit("pressure enthalpy cell-force finite difference failed")
+
+
 def check_trajectory_resume() -> None:
     reference_cell = np.diag([5.0, 5.0, 5.0])
     initial = make_atoms(reference_cell, np.array([0.25, 0.5, 0.5]), np.eye(3))
@@ -483,6 +521,8 @@ def main() -> None:
     print("mode_subspace_constraint_regression=ok")
     check_projected_mode_constraint_and_direction_basis()
     print("projected_mode_constraint_regression=ok")
+    check_pressure_enthalpy_gradient()
+    print("pressure_enthalpy_gradient_regression=ok")
     check_trajectory_resume()
     print("trajectory_resume_regression=ok")
     check_snapshot_append_resume()
