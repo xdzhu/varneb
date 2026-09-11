@@ -1,5 +1,19 @@
 # VC-NEB Iteration Log
 
+## CI saddle diagnostics (`7c58250`)
+
+- Added `VCNEB.highest_image_index()` and `VCNEB.saddle_diagnostics()`.
+  The latter reports the highest interior image, residual generalized force,
+  tangent/normal residuals, and a nonuniform-spacing local tangent-curvature
+  estimate.  The documentation explicitly limits this curvature to a path
+  diagnostic rather than a full Hessian.
+- Extended `tests/check_vcneb_forces.py` with a seven-image coupled atom/cell
+  double-well test.  The cluster run on `cu26` passed the complete regression
+  suite, including `climbing_image_saddle_regression=ok`.
+- The analytic CI path recovered the known `0.25 eV` barrier, the saddle at
+  `(q_x, strain_xx)=(0.5, 0.125)` within tolerance, a residual generalized
+  force below `0.01 eV/A`, and negative local tangent curvature.
+
 ## 2026-09-12 05:00 +08:00
 
 Focus: compare an independent fresh CI-VCNEB branch against the resumed

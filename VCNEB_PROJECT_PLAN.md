@@ -115,7 +115,7 @@
 
 - [ ] 复核切线在能量单调、能量拐点和平坦区的行为；对比简单切线、能量加权切线和 improved tangent。
 - [ ] 复核弹簧力在扩展空间的定义，保证原子与 cell 部分使用同一反应坐标度量。
-- [ ] 实现 CI-VCNEB，并验证 climbing image 不引入端点漂移或错误的 cell 方向。
+- [x] 实现 CI-VCNEB，并在联合原子-cell 解析势上验证 climbing image 不引入端点漂移或错误的 cell 方向；真实 DFT CI 仍待收敛案例。
 - [ ] 优先复用成熟优化器 API；核心只提供广义坐标、梯度和约束投影，不重复实现通用 LBFGS/FIRE 数值细节。
 - [ ] 增加 line search 失败、calculator 异常、SCF 不收敛、NaN/Inf 和 cell 奇异的可恢复处理。
 - [ ] 设计 image 级缓存和原子写入；中断后可以从最近快照继续，且不会混用不同参数集的结果。
@@ -168,7 +168,7 @@
 
 ### 出口标准
 
-- [ ] VASP 与 ABACUS 各至少完成一个单 image smoke test。
+- [x] VASP 与 ABACUS 各至少完成一个单 image smoke test；结果分别记录在 `outputs/vasp_gan_single_image_manifest.json` 和 `outputs/abacus_hfo2_smoke_manifest.json`。
 - [ ] 断开后恢复不会丢失已完成 image，也不会重复覆盖有效结果。
 - [x] calculator 失败时错误信息包含 image 编号、输入目录和命令上下文；建议动作由上层 launcher 根据 calculator 类型补充。
 
@@ -188,7 +188,7 @@
 - [x] 在解析模型上对比不同弹簧常数、不同 image 数、FIRE/LBFGS 和 `cell_scale`；无弹簧与真实 DFT 组合仍待补充。
 - [x] `examples/run_vcneb_convergence.py` 已在指定集群完成 54 组收敛矩阵并记录结果。
 - [x] 收敛矩阵首次运行暴露并修正了测试端点漏设最终 cell strain 的问题；修正版 54/54 通过。
-- [ ] 测试 CI-VCNEB 是否把最高 image 推向 saddle，并统计 saddle 一阶负曲率/力残差等诊断。
+- [x] 解析双井模型验证 CI-VCNEB 将最高 image 推向已知 saddle，并通过 `saddle_diagnostics()` 给出负切线曲率和力残差；真实 DFT 鞍点诊断仍待收敛路径。
 
 ### 8.3 参考实现与理论对照
 
@@ -208,7 +208,7 @@
 ### P4 出口标准
 
 - [ ] 所有梯度/应力微分测试通过，并有误差表。
-- [x] 解析模型的能垒和端点反应能在目标容差内恢复；saddle 位置/负曲率诊断仍待补充。
+- [x] 解析模型的能垒、端点反应能、saddle 位置和负切线曲率在目标容差内恢复；完整 Hessian 诊断仍不在当前实现范围内。
 - [ ] 至少一套真实计算案例对 image 数、cell_scale、弹簧和电子精度表现出可解释的收敛趋势。
 
 ## 9. P5：材料案例与集群运行

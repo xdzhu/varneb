@@ -28,6 +28,12 @@ contract. Missing stress is a hard error because a variable-cell calculation
 must not silently replace the cell force by zero. The same preflight report is
 available through `inspect_calculator()` and `validate_image_calculators()`.
 
+After a run, `chain.saddle_diagnostics()` reports the highest interior image,
+its relative enthalpy, residual generalized force, tangent/normal force
+components, and a local finite-difference tangent curvature.  The curvature is
+only a path-local diagnostic, not a full Hessian or a proof of first-order
+saddle character.
+
 ## Files
 
 - `vcneb/core.py`: VC-NEB algorithm and optimizer-compatible object.
@@ -38,6 +44,7 @@ available through `inspect_calculator()` and `validate_image_calculators()`.
 - `examples/run_toy_vcneb.py`: analytic smoke test with a known 0.25 eV barrier.
 - `examples/run_hfo2_t_po_model_vcneb.py`: mapped 12-atom HfO2 T -> PO geometry smoke test with a synthetic endpoint double-well calculator.
 - `examples/run_vcneb_vasp.py`: VASP driver based on the existing endpoint layout.
+- `examples/run_vasp_single_image_smoke.py`: real VASP energy/force/stress smoke driver.
 - `examples/run_vcneb_abacus.py`: ABACUS driver skeleton.
 - `scripts/setup_hfo2_t_po_validation.py`: builds the HfO2 T -> PO validation fixture from local source structures or portable copies.
 - `scripts/validate_vcneb_inputs.py`: static dry-run validator for VASP/ABACUS VC-NEB image directories.
