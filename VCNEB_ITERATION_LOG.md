@@ -1,5 +1,18 @@
 # VC-NEB Iteration Log
 
+## Fixed-cell ASE comparison (`818a87f`)
+
+- Added `examples/run_fixed_cell_ase_comparison.py`, which sends the same
+  perturbed seven-image path and analytic calculator to ASE CINEB and to
+  VCNEB with a zero cell mask.
+- The cluster run on `cu26` used ASE `3.23.1b1`, FIRE, and `fmax=0.01 eV/A`.
+  The two paths had the same endpoint reaction energy `0.1774 eV`; barriers
+  were `0.28117077 eV` (ASE) and `0.28116144 eV` (VCNEB), an absolute
+  difference of `9.33e-6 eV`.
+- The result confirms the fixed-cell reduction at the energy/path level for
+  this analytic calculator.  It does not replace a physical DFT comparison.
+- Compact record: `outputs/fixed_cell_ase_comparison.json`.
+
 ## CI saddle diagnostics (`7c58250`)
 
 - Added `VCNEB.highest_image_index()` and `VCNEB.saddle_diagnostics()`.

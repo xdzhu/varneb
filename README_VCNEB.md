@@ -44,6 +44,7 @@ saddle character.
 - `examples/run_toy_vcneb.py`: analytic smoke test with a known 0.25 eV barrier.
 - `examples/run_hfo2_t_po_model_vcneb.py`: mapped 12-atom HfO2 T -> PO geometry smoke test with a synthetic endpoint double-well calculator.
 - `examples/run_vcneb_vasp.py`: VASP driver based on the existing endpoint layout.
+- `examples/run_fixed_cell_ase_comparison.py`: ASE CINEB versus fixed-cell VCNEB comparison.
 - `examples/run_vasp_single_image_smoke.py`: real VASP energy/force/stress smoke driver.
 - `examples/run_vcneb_abacus.py`: ABACUS driver skeleton.
 - `scripts/setup_hfo2_t_po_validation.py`: builds the HfO2 T -> PO validation fixture from local source structures or portable copies.
@@ -141,6 +142,7 @@ python examples/run_hfo2_t_po_model_vcneb.py
 python examples/run_abacus_single_image_smoke.py
 python examples/relax_abacus_endpoint.py --help
 python examples/run_vasp_single_image_smoke.py --help
+python examples/run_fixed_cell_ase_comparison.py
 python examples/run_vcneb_convergence.py
 ```
 

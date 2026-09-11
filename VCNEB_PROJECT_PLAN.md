@@ -28,11 +28,13 @@
 - [x] 已加入 `atom_mask`，可冻结部分原子自由度。
 - [x] 已有 VASP、ABACUS 和 toy/model 案例入口。
 - [x] 已通过当前回归检查：fractional force、cell force、cell mask、atom mask、mode-guided path、trajectory resume、snapshot append、optimizer API、cache invalidation、parallel endpoint ownership、ABACUS command profile 和 validator flags。
+- [x] 已完成解析 CI 鞍点诊断和固定 cell ASE CINEB 对照；前者恢复 0.25 eV 联合势鞍点，后者逐 image 能量一致且能垒差为 9.33e-6 eV。
+- [x] 已完成 VASP 与 ABACUS 单 image 真实 calculator smoke；两者均返回有限 energy/forces/stress，并保留独立运行目录与输入验证记录。
 - [x] 上述回归曾在 `235` 和 `cu05` 环境验证通过；后续正式验证统一迁移到本项目指定的 `cu17`、`cu22`--`cu26` 节点。
 
 ### 尚未宣称完成
 
-- [ ] 尚未完成系统的有限差分梯度验证、解析势基准、固定 cell ASE 对照和不同 cell 参数化对照。
+- [ ] 尚未完成六个独立应变的系统有限差分误差表、随机路径/耦合势覆盖和不同 cell 参数化的完整对照；解析基准与固定 cell ASE 对照已完成首轮。
 - [ ] 尚未完成 VASP/ABACUS 两套真实 DFT 的端到端生产级 VCNEB 收敛案例。
 - [ ] 尚未完成 HfO2 T 相到 PO 相的结构来源、原子一一映射、端点独立弛豫和科学结果复核。
 - [x] 已实现基础严格模式子空间和 projected-update 约束，并加入端点子空间验证；方向冲突诊断和释放后全空间精修仍未完成。
@@ -192,7 +194,7 @@
 
 ### 8.3 参考实现与理论对照
 
-- [ ] 固定 cell：与 ASE NEB/CINEB 在同一 calculator、同一端点和同一 image 数下比较。
+- [x] 固定 cell：与 ASE NEB/CINEB 在同一 calculator、同一端点和同一 image 数下比较；解析模型逐 image 能量一致，能垒差为 9.33e-6 eV。
 - [ ] 变胞：依据 Qian 等 VCNEB 论文的广义坐标、cell 力和弹簧思想逐项对照；每处差异写出理由。
 - [ ] 依据 USPEX VCNEB 公开手册对比输入语义和用户流程；不声称复现其内部实现，因为当前获得的安装包不含可审计源码。
 - [ ] 对比旧 `/home/zhuxd/abacus/8.dielec/vcneb` 实现的结果和失败模式，保留可复现实验而非凭印象判断。
