@@ -52,6 +52,11 @@ Select the MPI width from an explicit scaling/SCF timing check and record it in
 the run manifest; for example, override the template default with
 `sbatch --ntasks=16 ...` when that measurement supports it.
 
+The HfO2 template defaults to a `0.25` deformation preflight threshold because
+the independently relaxed 12-atom endpoints give a measured path deformation
+of about `0.124`; override `MAXIMUM_DEFORMATION` downward when the physical
+case justifies a stricter path gate.
+
 An independent nine-image run can use a distinct work directory:
 
 ```bash

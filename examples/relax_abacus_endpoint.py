@@ -23,7 +23,7 @@ from vcneb.calculator import validate_image_calculators
 
 DEFAULT_PSEUDO_DIR = "/home/zhuxd/abacus/PSEUDO/ABACUS-orbitals/Dojo-NC-FR/Pseudopotential"
 DEFAULT_BASIS_DIR = "/home/zhuxd/abacus/PSEUDO/ABACUS-orbitals/Dojo-NC-FR/selected_Orbs"
-DEFAULT_COMMAND = "mpirun -np 40 /home/zhuxd/Software/abacus/INSTALL/3.10.0-LTS/bin/abacus"
+DEFAULT_COMMAND = os.environ.get("ABACUS_COMMAND", "abacus")
 
 
 def parse_species_files(values: list[str], option: str) -> dict[str, str]:
@@ -118,9 +118,11 @@ def main() -> None:
     energy = float(atoms.get_potential_energy())
     forces = np.asarray(atoms.get_forces(), dtype=float)
     stress = np.asarray(atoms.get_stress(voigt=False), dtype=float)
+    generalized_forces = np.asarray(target.get_forces(), dtype=float)
     write(workdir / "CONTCAR", atoms, format="vasp", direct=True, vasp5=True)
     write(workdir / "POSCAR.final", atoms, format="vasp", direct=True, vasp5=True)
     max_force = float(np.linalg.norm(forces, axis=1).max())
+    max_generalized_force = float(np.linalg.norm(generalized_forces, axis=1).max())
     summary = {
         "structure": str(structure),
         "workdir": str(workdir),
@@ -133,10 +135,11 @@ def main() -> None:
         "fmax_target_eV_per_A": args.fmax,
         "energy_eV": energy,
         "max_force_eV_per_A": max_force,
+        "max_generalized_force_eV_per_A": max_generalized_force,
         "max_abs_stress_eV_per_A3": float(np.abs(stress).max()),
         "stress_eV_per_A3": stress.tolist(),
         "volume_A3": float(atoms.get_volume()),
-        "converged": bool(max_force < args.fmax),
+        "converged": bool(max_generalized_force < args.fmax),
     }
     (workdir / "relax_summary.json").write_text(
         json.dumps(summary, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"

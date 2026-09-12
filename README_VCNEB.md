@@ -314,7 +314,7 @@ python examples/run_vcneb_vasp.py \
   --fmax 0.05 \
   --steps 300 \
   --vasp-bin /home/zhuxd/Software/src/vasp/6.3.2/bin/vasp_std \
-  --ncores 40
+  --ncores 8
 ```
 
 The script reads `CONTCAR`/`POSCAR` endpoints, interpolates fractional
@@ -367,7 +367,7 @@ python examples/run_vcneb_abacus.py \
   --initial validation/hfo2_t_to_po/image_00/POSCAR \
   --final validation/hfo2_t_to_po/image_06/POSCAR \
   --workdir validation/hfo2_t_to_po/abacus_vcneb_smoke \
-  --command "mpirun -np 40 /home/zhuxd/Software/abacus/INSTALL/3.10.0-LTS/bin/abacus" \
+  --command "srun -n ${SLURM_NTASKS:-8} /home/zhuxd/Software/abacus/INSTALL/3.10.0-LTS/bin/abacus" \
   --pseudo-dir /home/zhuxd/abacus/PSEUDO/ABACUS-orbitals/Dojo-NC-FR/Pseudopotential \
   --basis-dir /home/zhuxd/abacus/PSEUDO/ABACUS-orbitals/Dojo-NC-FR/selected_Orbs \
   --pp Hf=Hf.upf --pp O=O.upf \

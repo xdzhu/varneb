@@ -1,0 +1,58 @@
+{
+  "case": "HfO2 tetragonal to polar orthorhombic",
+  "status": "endpoint_relaxations_completed",
+  "calculator": "ASE ABACUS",
+  "cluster": {
+    "host": "hf",
+    "partition": "hfacnormal01",
+    "jobs": {
+      "T": {"job_id": "27674084", "node": "node62", "ntasks": 8, "elapsed": "00:18:06"},
+      "PO": {"job_id": "27674085", "node": "node112", "ntasks": 8, "elapsed": "00:16:07"}
+    },
+    "occupancy_checked_before_submission": true
+  },
+  "code_commit": "ee5217f",
+  "settings": {
+    "optimizer": "FIRE",
+    "steps_max": 100,
+    "fmax_target_eV_per_A": 0.05,
+    "maxstep_A": 0.02,
+    "ecutwfc_Ry": 60,
+    "kpoints": [1, 1, 1],
+    "scf_threshold": 1e-6,
+    "scf_nmax": 100,
+    "mixing_beta": 0.7,
+    "variable_cell": true
+  },
+  "endpoints": {
+    "T": {
+      "summary": "outputs/hfo2_endpoints_levelA/T_relax_summary.json",
+      "structure": "outputs/hfo2_endpoints_levelA/T_CONTCAR",
+      "energy_eV": -9778.5632194,
+      "volume_A3": 142.63636015808154,
+      "max_force_eV_per_A": 0.0106876833,
+      "max_generalized_force_eV_per_A": 0.04538,
+      "max_abs_stress_eV_per_A3": 0.0038178489,
+      "converged": true
+    },
+    "PO": {
+      "summary": "outputs/hfo2_endpoints_levelA/PO_relax_summary.json",
+      "structure": "outputs/hfo2_endpoints_levelA/PO_CONTCAR",
+      "energy_eV": -9779.3065759,
+      "volume_A3": 138.20714652366436,
+      "max_force_eV_per_A": 0.0253914252,
+      "max_generalized_force_eV_per_A": 0.039455,
+      "max_abs_stress_eV_per_A3": 0.0034248004,
+      "converged": true
+    }
+  },
+  "energy_difference_PO_minus_T_eV": -0.7433565,
+  "path_preflight": {
+    "summary": "outputs/hfo2_endpoints_levelA/path_preflight.json",
+    "minimum_interatomic_distance_over_path_A": 1.993821,
+    "maximum_deformation_norm": 0.123796,
+    "preflight_thresholds": {"minimum_distance_A": 1.6, "maximum_deformation": 0.25},
+    "valid": true
+  },
+  "next_step": "staged no-climb VCNEB"
+}

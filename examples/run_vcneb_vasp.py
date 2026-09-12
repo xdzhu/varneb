@@ -45,7 +45,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--pressure-gpa", type=float, default=0.0)
     parser.add_argument("--optimizer", choices=["FIRE", "BFGS", "LBFGS"], default="FIRE")
     parser.add_argument("--vasp-bin", default=os.environ.get("VASP_BIN", "vasp_std"))
-    parser.add_argument("--ncores", type=int, default=int(os.environ.get("NP", "40")))
+    parser.add_argument("--ncores", type=int, default=int(os.environ.get("NP", "8")))
     parser.add_argument("--mic", action="store_true")
     parser.add_argument("--no-climb", action="store_true")
     parser.add_argument("--resume", action="store_true", help="Resume from the latest complete chain in vcneb.traj")

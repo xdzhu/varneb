@@ -30,6 +30,8 @@ mixing_beta=${MIXING_BETA:-0.7}
 kpt_x=${KPT_X:-1}
 kpt_y=${KPT_Y:-1}
 kpt_z=${KPT_Z:-1}
+minimum_distance=${MINIMUM_DISTANCE:-1.6}
+maximum_deformation=${MAXIMUM_DEFORMATION:-0.25}
 workdir=${WORKDIR:-validation/hfo2_t_to_po/vcneb_n${n_images}_${optimizer,,}_levelA}
 
 module purge
@@ -61,6 +63,6 @@ exec "${python}" examples/run_vcneb_abacus.py \
   --ecutwfc "${ecutwfc}" --scf-thr "${scf_thr}" --scf-nmax "${scf_nmax}" \
   --mixing-beta "${mixing_beta}" --kpts "${kpt_x}" "${kpt_y}" "${kpt_z}" \
   --mic --cell-interpolation log_strain --mapping auto --align-translation \
-  --minimum-distance 1.6 --maximum-deformation 0.10 \
+  --minimum-distance "${minimum_distance}" --maximum-deformation "${maximum_deformation}" \
   --climb-after "${climb_after}" \
   "${climb_args[@]}" "${resume_args[@]}"
