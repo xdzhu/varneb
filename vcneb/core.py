@@ -549,6 +549,13 @@ def interpolate_vcneb(
         log_deform0 = _symmetric_matrix_log(deform0, context="initial deformation")
         log_deform1 = _symmetric_matrix_log(deform1, context="final deformation")
 
+    path_metadata = {
+        "mapping": [int(value) for value in resolved_mapping],
+        "translation_fractional_final_cell": [float(value) for value in translation],
+        "align_translation": bool(align_translation),
+        "cell_interpolation": "callable" if callable(cell_interpolation) else str(cell_interpolation),
+        "mic": bool(mic),
+    }
     images = []
     for index in range(n_images):
         lam = index / (n_images - 1)
@@ -569,6 +576,7 @@ def interpolate_vcneb(
             context=f"interpolated cell at image {index}",
         )
         apply_state(image, state, reference_cell, wrap_positions=wrap_positions)
+        image.info["vcneb_path_metadata"] = path_metadata.copy()
         images.append(image)
     if minimum_distance is not None or maximum_deformation is not None:
         validate_path_geometry(

@@ -190,6 +190,7 @@ def main() -> None:
         "minimum_distance_threshold_A": args.minimum_distance,
         "maximum_deformation_threshold": args.maximum_deformation,
         "initial_path_geometry": initial_geometry,
+        "initial_path_metadata": images[0].info.get("vcneb_path_metadata", {}),
         "optimizer": args.optimizer,
         "steps_requested": args.steps,
         "fmax_target_eV_per_A": args.fmax,

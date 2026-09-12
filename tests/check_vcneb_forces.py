@@ -339,6 +339,9 @@ def check_periodic_translation_alignment() -> None:
         )
     if not np.allclose(aligned[0].positions, initial.positions):
         raise SystemExit("periodic translation alignment changed the initial endpoint")
+    metadata = aligned[0].info.get("vcneb_path_metadata", {})
+    if metadata.get("mapping") != [0, 1, 4, 3, 2] or not metadata.get("align_translation"):
+        raise SystemExit(f"periodic path metadata lost the chosen gauge: {metadata}")
     print("periodic_translation_alignment_regression=ok")
 
 
