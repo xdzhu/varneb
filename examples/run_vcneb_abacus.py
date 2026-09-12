@@ -86,6 +86,12 @@ def parse_args() -> argparse.Namespace:
         help="Reject initial paths whose Frobenius deformation exceeds this threshold",
     )
     parser.add_argument("--no-climb", action="store_true")
+    parser.add_argument(
+        "--climb-after",
+        type=int,
+        default=None,
+        help="Enable CI after this many completed ordinary-NEB optimizer steps",
+    )
     parser.add_argument("--resume", action="store_true", help="Resume from the latest complete chain in vcneb.traj")
     parser.add_argument("--resume-trajectory", default=None, help="Trajectory to resume from; defaults to workdir/vcneb.traj")
     return parser.parse_args()
@@ -165,6 +171,7 @@ def main() -> None:
         pressure_gpa=args.pressure_gpa,
         k=args.k,
         climb=not args.no_climb,
+        climb_after=args.climb_after,
         optimizer=args.optimizer,
         optimizer_kwargs={} if args.maxstep is None else {"maxstep": args.maxstep},
         fmax=args.fmax,
@@ -189,6 +196,7 @@ def main() -> None:
         "align_translation": args.align_translation,
         "minimum_distance_threshold_A": args.minimum_distance,
         "maximum_deformation_threshold": args.maximum_deformation,
+        "climb_after": args.climb_after,
         "initial_path_geometry": initial_geometry,
         "initial_path_metadata": images[0].info.get("vcneb_path_metadata", {}),
         "optimizer": args.optimizer,

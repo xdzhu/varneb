@@ -22,6 +22,7 @@ fmax=${FMAX:-0.03}
 spring=${SPRING:-0.2}
 optimizer=${OPTIMIZER:-FIRE}
 maxstep=${MAXSTEP:-0.02}
+climb_after=${CLIMB_AFTER:-100}
 workdir=${WORKDIR:-validation/batio3_cubic_to_tetragonal/vcneb_n${n_images}_${optimizer,,}_pbe100}
 
 module purge
@@ -31,7 +32,7 @@ export I_MPI_PMI_LIBRARY=/opt/gridview/slurm/lib/libpmi.so
 cd "${repo}"
 
 climb_args=()
-if [[ "${NO_CLIMB:-1}" != 0 ]]; then
+if [[ "${NO_CLIMB:-0}" != 0 ]]; then
   climb_args+=(--no-climb)
 fi
 resume_args=()
@@ -53,4 +54,5 @@ exec "${python}" examples/run_vcneb_abacus.py \
   --ecutwfc 100 --scf-thr 1e-8 --scf-nmax 150 --mixing-beta 0.3 \
   --kpts 4 4 4 --mic --cell-interpolation log_strain --mapping auto --align-translation \
   --minimum-distance 1.6 --maximum-deformation 0.10 \
+  --climb-after "${climb_after}" \
   "${climb_args[@]}" "${resume_args[@]}"
