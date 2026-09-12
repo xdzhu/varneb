@@ -66,6 +66,9 @@ def run_case(interpolation: str, seed: int, *, fmax: float, steps: int) -> dict:
     )
     barrier, reaction = chain.barrier()
     final_force = chain.gradient_norm(-chain.get_forces())
+    saddle = chain.saddle_diagnostics()
+    physical_diagnostics = chain.path_diagnostics()["images"]
+    saddle_physical = physical_diagnostics[saddle["image_index"]]
     path = []
     for image in chain.images:
         scaled = image.get_scaled_positions(wrap=False)
@@ -86,7 +89,15 @@ def run_case(interpolation: str, seed: int, *, fmax: float, steps: int) -> dict:
         "final_max_generalized_force_eV_per_A": final_force,
         "optimizer_steps": int(getattr(optimizer, "nsteps", -1)),
         "converged": bool(final_force < fmax),
-        "saddle": chain.saddle_diagnostics(),
+        "saddle": saddle,
+        "saddle_physical": {
+            "max_true_generalized_force_eV_per_A": saddle_physical["max_true_generalized_force_eV_per_A"],
+            "true_tangential_force_eV_per_A": saddle_physical["true_tangential_force_eV_per_A"],
+            "true_perpendicular_force_eV_per_A": saddle_physical["true_perpendicular_force_eV_per_A"],
+            "neb_residual_generalized_force_eV_per_A": saddle_physical[
+                "neb_residual_generalized_force_eV_per_A"
+            ],
+        },
         "final_path": path,
     }
 
