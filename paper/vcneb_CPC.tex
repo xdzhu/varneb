@@ -231,9 +231,12 @@ forcing static image evaluations; the ABACUS adapter enforces
 
 \subsection{Interpolation, restart, and provenance}
 
-Structures must have equal atom counts, chemical symbols, and atom order.  The
-interpolator supports periodic minimum-image fractional displacements, cell
-alignment, positive-volume guards, and exact endpoint preservation.  Every
+Structures must have equal atom counts and elemental composition.  The default
+identity order remains backward compatible, while an explicit permutation or
+an element-grouped geometry mapping can be requested and saved as a report.
+The interpolator supports periodic minimum-image fractional displacements,
+cell alignment, linear or logarithmic-strain cell paths, user callbacks,
+positive-volume guards, and exact endpoint preservation.  Every
 optimizer callback can write a complete chain snapshot and a flat ASE
 trajectory.  Resume logic counts only complete groups of $N$ image frames, so
 a truncated tail does not corrupt the restart chain.  Example drivers record

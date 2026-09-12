@@ -112,6 +112,188 @@ def _fractional_delta(a: Array, b: Array, pbc: Sequence[bool], mic: bool) -> Arr
     return delta
 
 
+def _minimum_cost_assignment(cost: Array) -> list[int]:
+    """Solve a finite square assignment problem without a SciPy dependency."""
+
+    matrix = np.asarray(cost, dtype=float)
+    if matrix.ndim != 2 or matrix.shape[0] != matrix.shape[1] or matrix.shape[0] == 0:
+        raise ValueError("assignment cost must be a non-empty square matrix")
+    if not np.all(np.isfinite(matrix)):
+        raise ValueError("assignment cost contains non-finite entries")
+
+    size = matrix.shape[0]
+    row_potentials = np.zeros(size + 1)
+    column_potentials = np.zeros(size + 1)
+    matched_row = np.zeros(size + 1, dtype=int)
+    predecessor = np.zeros(size + 1, dtype=int)
+    for row in range(1, size + 1):
+        matched_row[0] = row
+        column = 0
+        minimum = np.full(size + 1, np.inf)
+        used = np.zeros(size + 1, dtype=bool)
+        while True:
+            used[column] = True
+            current_row = matched_row[column]
+            delta = np.inf
+            next_column = 0
+            for candidate in range(1, size + 1):
+                if used[candidate]:
+                    continue
+                reduced = (
+                    matrix[current_row - 1, candidate - 1]
+                    - row_potentials[current_row]
+                    - column_potentials[candidate]
+                )
+                if reduced < minimum[candidate]:
+                    minimum[candidate] = reduced
+                    predecessor[candidate] = column
+                if minimum[candidate] < delta:
+                    delta = minimum[candidate]
+                    next_column = candidate
+            if not np.isfinite(delta):
+                raise ValueError("atom mapping assignment has no finite solution")
+            for candidate in range(size + 1):
+                if used[candidate]:
+                    row_potentials[matched_row[candidate]] += delta
+                    column_potentials[candidate] -= delta
+                else:
+                    minimum[candidate] -= delta
+            column = next_column
+            if matched_row[column] == 0:
+                break
+        while True:
+            previous = predecessor[column]
+            matched_row[column] = matched_row[previous]
+            column = previous
+            if column == 0:
+                break
+
+    assignment = [0] * size
+    for column in range(1, size + 1):
+        assignment[matched_row[column] - 1] = column - 1
+    return assignment
+
+
+def _mapping_cost_matrix(
+    initial: Atoms,
+    final: Atoms,
+    initial_indices: Sequence[int],
+    final_indices: Sequence[int],
+    *,
+    mic: bool,
+) -> Array:
+    q0 = initial.get_scaled_positions(wrap=False)
+    q1 = final.get_scaled_positions(wrap=False)
+    distance_cell = 0.5 * (cell_matrix(initial) + cell_matrix(final))
+    costs = np.zeros((len(initial_indices), len(final_indices)), dtype=float)
+    for row, initial_index in enumerate(initial_indices):
+        for column, final_index in enumerate(final_indices):
+            delta = _fractional_delta(
+                q1[final_index : final_index + 1],
+                q0[initial_index : initial_index + 1],
+                initial.pbc,
+                mic,
+            )[0]
+            # A tiny stable tie-breaker makes repeated coordinates deterministic.
+            costs[row, column] = float(np.linalg.norm(delta @ distance_cell)) + 1e-12 * column
+    return costs
+
+
+def infer_atom_mapping(initial: Atoms, final: Atoms, *, mic: bool = True) -> list[int]:
+    """Infer a final-atom permutation by element and periodic Cartesian distance.
+
+    The result is indexed by the initial atom order: ``mapping[i]`` is the
+    corresponding atom index in ``final``.  This is a geometry-based heuristic,
+    not a proof of chemical identity; inspect the returned report or provide an
+    explicit permutation when a phase transition contains substantial atom
+    rearrangement.
+    """
+
+    if len(initial) != len(final):
+        raise ValueError("Initial and final structures have different atom counts")
+    initial_symbols = initial.get_chemical_symbols()
+    final_symbols = final.get_chemical_symbols()
+    if sorted(initial_symbols) != sorted(final_symbols):
+        raise ValueError("Initial and final structures do not contain the same elements")
+    mapping = [-1] * len(initial)
+    for symbol in sorted(set(initial_symbols)):
+        initial_indices = [index for index, value in enumerate(initial_symbols) if value == symbol]
+        final_indices = [index for index, value in enumerate(final_symbols) if value == symbol]
+        assignment = _minimum_cost_assignment(
+            _mapping_cost_matrix(initial, final, initial_indices, final_indices, mic=mic)
+        )
+        for row, final_column in enumerate(assignment):
+            mapping[initial_indices[row]] = final_indices[final_column]
+    return mapping
+
+
+def validate_atom_mapping(
+    initial: Atoms,
+    final: Atoms,
+    mapping: Sequence[int] | str | None = None,
+    *,
+    mic: bool = True,
+    maximum_displacement: float | None = None,
+) -> dict:
+    """Validate and report an explicit or geometry-inferred atom mapping."""
+
+    if mapping is None:
+        resolved = list(range(len(initial)))
+        source = "identity"
+    elif isinstance(mapping, str):
+        if mapping.lower() != "auto":
+            raise ValueError("mapping string must be 'auto'")
+        resolved = infer_atom_mapping(initial, final, mic=mic)
+        source = "auto"
+    else:
+        resolved = [int(value) for value in mapping]
+        source = "explicit"
+    if len(resolved) != len(initial) or sorted(resolved) != list(range(len(final))):
+        raise ValueError("mapping must be a permutation of all final atom indices")
+    if initial.get_chemical_symbols() != [final.get_chemical_symbols()[index] for index in resolved]:
+        raise ValueError("mapping pairs atoms with different chemical elements")
+    if maximum_displacement is not None and maximum_displacement <= 0.0:
+        raise ValueError("maximum_displacement must be positive when provided")
+
+    q0 = initial.get_scaled_positions(wrap=False)
+    q1 = final.get_scaled_positions(wrap=False)
+    distance_cell = 0.5 * (cell_matrix(initial) + cell_matrix(final))
+    records = []
+    for initial_index, final_index in enumerate(resolved):
+        delta = _fractional_delta(
+            q1[final_index : final_index + 1],
+            q0[initial_index : initial_index + 1],
+            initial.pbc,
+            mic,
+        )[0]
+        distance = float(np.linalg.norm(delta @ distance_cell))
+        records.append(
+            {
+                "initial_index": initial_index,
+                "final_index": final_index,
+                "element": initial.get_chemical_symbols()[initial_index],
+                "fractional_delta": delta.tolist(),
+                "distance_A": distance,
+            }
+        )
+    maximum = max((record["distance_A"] for record in records), default=0.0)
+    issues = []
+    if maximum_displacement is not None and maximum > maximum_displacement:
+        issues.append(
+            f"maximum mapped displacement {maximum:.6g} A exceeds "
+            f"{maximum_displacement:.6g} A"
+        )
+    return {
+        "source": source,
+        "mapping": resolved,
+        "maximum_displacement_A": maximum,
+        "maximum_displacement_threshold_A": maximum_displacement,
+        "records": records,
+        "issues": issues,
+        "valid": not issues,
+    }
+
+
 def _symmetric_matrix_log(matrix: Array, *, context: str) -> Array:
     """Return the real matrix logarithm for a symmetric positive matrix."""
 
@@ -183,6 +365,7 @@ def interpolate_vcneb(
     mic: bool = False,
     wrap_positions: bool = False,
     cell_interpolation: str | Callable[[float, Array, Array], Array] = "linear",
+    mapping: Sequence[int] | str | None = None,
     minimum_distance: float | None = None,
     maximum_deformation: float | None = None,
 ) -> list[Atoms]:
@@ -193,6 +376,9 @@ def interpolate_vcneb(
     matrix logarithm of symmetric-positive deformation gradients; this is
     well-defined after the default global-rotation alignment.  A callable is
     given ``(lambda, deform0, deform1)`` and must return a finite 3x3 matrix.
+    ``mapping`` is ``None`` for the backward-compatible identity mapping,
+    ``"auto"`` for an element-grouped geometry assignment, or a permutation
+    indexed by the initial atom order.
     ``minimum_distance`` and ``maximum_deformation`` are optional preflight
     thresholds.  They are useful for rejecting an unphysical initial path
     before any calculator is invoked; the default keeps the historical
@@ -203,13 +389,12 @@ def interpolate_vcneb(
         raise ValueError("n_images must include endpoints and be at least 2")
     if len(initial) != len(final):
         raise ValueError("Initial and final structures have different atom counts")
-    if initial.get_chemical_symbols() != final.get_chemical_symbols():
-        raise ValueError("Initial and final structures must use the same atom order")
     _validate_cell_matrix(cell_matrix(initial), context="initial cell")
     _validate_cell_matrix(cell_matrix(final), context="final cell")
 
     first = initial.copy()
-    last = final.copy()
+    mapping_report = validate_atom_mapping(initial, final, mapping, mic=mic)
+    last = final[mapping_report["mapping"]].copy()
     if align_cells:
         remove_global_rotation(first, last)
 

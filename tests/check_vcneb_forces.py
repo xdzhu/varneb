@@ -35,8 +35,10 @@ from vcneb import (
     build_direction_basis,
     build_mode_basis,
     direction_basis_conflicts,
+    infer_atom_mapping,
     mode_guided_path,
     project_path_onto_modes,
+    validate_atom_mapping,
 )
 from vcneb.abacus import make_ase_abacus_factory
 from vcneb.core import VCNEB, cell_force, cell_from_deformation, deformation_from_cell, fractional_force
@@ -209,6 +211,44 @@ def check_cell_interpolation_strategies() -> None:
         pass
     else:
         raise SystemExit("log_strain accepted an unaligned rigid rotation")
+
+
+def check_atom_mapping() -> None:
+    reference_cell = np.diag([5.0, 5.0, 5.0])
+    initial = Atoms(
+        "HHe",
+        scaled_positions=[[0.10, 0.20, 0.30], [0.40, 0.50, 0.60]],
+        cell=reference_cell,
+        pbc=True,
+    )
+    final = Atoms(
+        "HeH",
+        scaled_positions=[[0.41, 0.50, 0.60], [0.10, 0.20, 0.30]],
+        cell=reference_cell,
+        pbc=True,
+    )
+    inferred = infer_atom_mapping(initial, final, mic=True)
+    if inferred != [1, 0]:
+        raise SystemExit(f"auto atom mapping returned {inferred}, expected [1, 0]")
+    report = validate_atom_mapping(initial, final, "auto", mic=True)
+    if report["mapping"] != [1, 0] or report["maximum_displacement_A"] > 0.1:
+        raise SystemExit("atom mapping report did not preserve the expected permutation")
+    images = interpolate_vcneb(
+        initial,
+        final,
+        n_images=3,
+        mapping="auto",
+        align_cells=False,
+        mic=True,
+    )
+    if images[-1].get_chemical_symbols() != initial.get_chemical_symbols():
+        raise SystemExit("interpolate_vcneb did not apply the inferred atom permutation")
+    try:
+        validate_atom_mapping(initial, final, [0, 1])
+    except ValueError:
+        pass
+    else:
+        raise SystemExit("atom mapping accepted pairs with different elements")
 
 
 def check_nonorthogonal_mode_projection() -> None:
@@ -947,6 +987,8 @@ def main() -> None:
     print("mode_guided_path_regression=ok")
     check_cell_interpolation_strategies()
     print("cell_interpolation_regression=ok")
+    check_atom_mapping()
+    print("atom_mapping_regression=ok")
     check_nonorthogonal_mode_projection()
     print("nonorthogonal_mode_projection_regression=ok")
     check_calculator_contract()

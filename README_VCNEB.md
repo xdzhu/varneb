@@ -113,6 +113,23 @@ rejects unsuitable non-positive or non-symmetric deformation gradients.  A
 custom callback must return a finite 3x3 deformation matrix; every resulting
 cell is still checked for a positive determinant.
 
+The endpoint atom order can be kept explicitly or inferred by element and
+periodic geometry.  The inferred permutation is returned by
+`validate_atom_mapping()` and should be saved with the run manifest:
+
+```python
+from vcneb import validate_atom_mapping
+
+mapping_report = validate_atom_mapping(initial, final, "auto", mic=True)
+images = interpolate_vcneb(
+    initial, final, n_images=9, mapping=mapping_report["mapping"], mic=True,
+)
+```
+
+Automatic mapping is a geometry heuristic, not a chemical identity proof.  For
+large reconstructive transitions, inspect `mapping_report` or provide an
+explicit final-atom permutation.
+
 The mode feature is intentionally split into an initial-path generator and a
 diagnostic projection.  The former bends the interior images with an
 endpoint-zero envelope, then a normal unconstrained NEB calculation can relax

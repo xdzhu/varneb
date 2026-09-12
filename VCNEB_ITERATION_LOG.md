@@ -1,5 +1,19 @@
 # VC-NEB Iteration Log
 
+## Endpoint atom mapping API (`working tree`)
+
+- Added `infer_atom_mapping()` and `validate_atom_mapping()` for explicit or
+  element-grouped automatic endpoint mapping.  The automatic path solves a
+  finite square assignment problem per element using periodic Cartesian
+  distances and returns an auditable per-atom displacement report.
+- `interpolate_vcneb(mapping="auto")` applies the inferred final-atom
+  permutation before interpolation; the default `None` remains identity for
+  backward compatibility.  Large reconstructive transitions are documented as
+  cases where an explicit chemical mapping is still required.
+- Added regression coverage for swapped endpoint element order, auto mapping,
+  explicit mismatch rejection, and preservation of the initial atom order.
+  Formal cluster verification follows after source synchronization.
+
 ## Cell interpolation strategy selector (`97240fe`)
 
 - Added an explicit `cell_interpolation` argument to `interpolate_vcneb()`.
