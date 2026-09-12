@@ -577,6 +577,20 @@ def check_path_geometry_preflight() -> None:
     valid = validate_path_geometry(images, minimum_distance=0.2)
     if not valid["valid"] or len(valid["images"]) != 3:
         raise SystemExit("path geometry preflight rejected a valid path")
+    folded = [
+        Atoms("Ar", scaled_positions=[[qx, 0.5, 0.5]], cell=reference_cell, pbc=True)
+        for qx in (0.25, 0.45, 0.35, 0.60, 0.75)
+    ]
+    folded_report = path_geometry_diagnostics(folded, fold_cosine_threshold=0.0)
+    if not folded_report["folded_junctions"] or 2 not in folded_report["folded_junctions"]:
+        raise SystemExit("path geometry diagnostics missed a folded path")
+    try:
+        validate_path_geometry(folded, fold_cosine_threshold=0.0)
+    except ValueError as exc:
+        if "path fold" not in str(exc):
+            raise SystemExit("fold preflight omitted path-fold context")
+    else:
+        raise SystemExit("folded path preflight unexpectedly succeeded")
 
 
 def check_cell_validity_guards() -> None:

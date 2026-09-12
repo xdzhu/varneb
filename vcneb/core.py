@@ -593,6 +593,8 @@ def path_geometry_diagnostics(
     reference_cell: Array | None = None,
     minimum_distance: float | None = None,
     maximum_deformation: float | None = None,
+    cell_scale: float | None = None,
+    fold_cosine_threshold: float | None = None,
 ) -> dict:
     """Report image volumes, cell deformation, and MIC atom separations.
 
@@ -600,7 +602,9 @@ def path_geometry_diagnostics(
     with the shortest distinct-atom distance under periodic MIC.  For a path
     with fewer than two atoms, the minimum distance is reported as infinity.
     ``maximum_deformation`` is a Frobenius-norm threshold on ``F-I`` relative
-    to ``reference_cell``.
+    to ``reference_cell``.  If ``fold_cosine_threshold`` is supplied, adjacent
+    extended-coordinate segments with a cosine below that threshold are
+    reported as path folds and make validation fail.
     """
 
     if len(images) < 2:
@@ -609,17 +613,36 @@ def path_geometry_diagnostics(
         raise ValueError("minimum_distance must be positive when provided")
     if maximum_deformation is not None and maximum_deformation <= 0.0:
         raise ValueError("maximum_deformation must be positive when provided")
+    if cell_scale is not None and cell_scale <= 0.0:
+        raise ValueError("cell_scale must be positive when provided")
+    if fold_cosine_threshold is not None and not -1.0 <= fold_cosine_threshold <= 1.0:
+        raise ValueError("fold_cosine_threshold must be between -1 and 1")
     reference = (
         cell_matrix(images[0]) if reference_cell is None else np.asarray(reference_cell, dtype=float)
     )
     _validate_cell_matrix(reference, context="reference cell")
+    coordinate_scale = (
+        float(abs(np.linalg.det(reference)) ** (1.0 / 3.0))
+        if cell_scale is None
+        else float(cell_scale)
+    )
 
     records = []
     issues = []
+    extended_coordinates = []
     for image_index, image in enumerate(images):
         cell = cell_matrix(image)
         _validate_cell_matrix(cell, context=f"image {image_index} cell")
         deform = deformation_from_cell(cell, reference)
+        q = image.get_scaled_positions(wrap=False)
+        extended_coordinates.append(
+            np.concatenate(
+                [
+                    (q @ reference).reshape(-1),
+                    (coordinate_scale * (deform - np.eye(3))).reshape(-1),
+                ]
+            )
+        )
         minimum = float("inf")
         for atom_index in range(len(image)):
             for other_index in range(atom_index + 1, len(image)):
@@ -643,11 +666,49 @@ def path_geometry_diagnostics(
                 f"exceeds {maximum_deformation:.6g}"
             )
         records.append(record)
+    segment_lengths = []
+    for left, right in zip(extended_coordinates[:-1], extended_coordinates[1:]):
+        segment_lengths.append(float(np.linalg.norm(right - left)))
+    adjacent_cosines = []
+    zero_length_segments = []
+    folded_junctions = []
+    for junction in range(1, len(extended_coordinates) - 1):
+        left = extended_coordinates[junction] - extended_coordinates[junction - 1]
+        right = extended_coordinates[junction + 1] - extended_coordinates[junction]
+        left_norm = float(np.linalg.norm(left))
+        right_norm = float(np.linalg.norm(right))
+        if left_norm <= 1e-14 or right_norm <= 1e-14:
+            adjacent_cosines.append(None)
+            if left_norm <= 1e-14:
+                zero_length_segments.append(junction - 1)
+            if right_norm <= 1e-14:
+                zero_length_segments.append(junction)
+            continue
+        cosine = float(np.dot(left, right) / (left_norm * right_norm))
+        adjacent_cosines.append(cosine)
+        if fold_cosine_threshold is not None and cosine < fold_cosine_threshold:
+            folded_junctions.append(junction)
+    zero_length_segments = sorted(set(zero_length_segments))
+    if fold_cosine_threshold is not None:
+        for junction in folded_junctions:
+            issues.append(
+                f"path fold at image {junction}: adjacent extended-coordinate "
+                f"segment cosine {adjacent_cosines[junction - 1]:.6g} is below "
+                f"{fold_cosine_threshold:.6g}"
+            )
+        for segment in zero_length_segments:
+            issues.append(f"zero-length extended-coordinate segment between images {segment} and {segment + 1}")
     return {
         "n_images": len(images),
         "minimum_distance_threshold_A": minimum_distance,
         "maximum_deformation_threshold": maximum_deformation,
+        "cell_scale_A": coordinate_scale,
         "images": records,
+        "segment_lengths_A": segment_lengths,
+        "adjacent_segment_cosines": adjacent_cosines,
+        "zero_length_segments": zero_length_segments,
+        "fold_cosine_threshold": fold_cosine_threshold,
+        "folded_junctions": folded_junctions,
         "issues": issues,
         "valid": not issues,
     }
@@ -659,6 +720,8 @@ def validate_path_geometry(
     reference_cell: Array | None = None,
     minimum_distance: float | None = None,
     maximum_deformation: float | None = None,
+    cell_scale: float | None = None,
+    fold_cosine_threshold: float | None = None,
 ) -> dict:
     """Validate a calculator-independent initial path and return its report."""
 
@@ -667,6 +730,8 @@ def validate_path_geometry(
         reference_cell=reference_cell,
         minimum_distance=minimum_distance,
         maximum_deformation=maximum_deformation,
+        cell_scale=cell_scale,
+        fold_cosine_threshold=fold_cosine_threshold,
     )
     if report["issues"]:
         detail = "\n".join(f"- {issue}" for issue in report["issues"])
