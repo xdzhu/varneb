@@ -563,6 +563,29 @@ def check_path_diagnostics() -> None:
         raise SystemExit("path diagnostics omitted physical or NEB force fields")
     if not np.isfinite(interior["max_stress_eV_per_A3"]):
         raise SystemExit("path diagnostics returned a non-finite stress summary")
+    if not diagnostics["has_interior_barrier"] or diagnostics["interior_barrier_indices"] != [2]:
+        raise SystemExit("path diagnostics failed to identify the analytic interior barrier")
+
+
+def check_barrierless_path_diagnostics() -> None:
+    """A monotonic band must not be reported as a validated transition state."""
+
+    reference_cell = np.diag([5.0, 5.0, 5.0])
+    initial = Atoms("Ar", scaled_positions=[[0.25, 0.5, 0.5]], cell=reference_cell, pbc=True)
+    final = Atoms("Ar", scaled_positions=[[0.75, 0.5, 0.5]], cell=reference_cell, pbc=True)
+    images = interpolate_vcneb(initial, final, n_images=5, align_cells=False)
+    for image in images:
+        image.calc = LinearCoordinateCalculator()
+    chain = VCNEB(images, k=0.2, climb=True)
+    diagnostics = chain.path_diagnostics()
+    saddle = chain.saddle_diagnostics()
+    if diagnostics["has_interior_barrier"] or diagnostics["interior_peak_indices"]:
+        raise SystemExit("monotonic path was incorrectly classified as an interior barrier")
+    if saddle["is_local_peak"] or saddle["has_interior_barrier"]:
+        raise SystemExit("monotonic path was incorrectly classified as a saddle")
+    if not saddle["ci_warning"]:
+        raise SystemExit("monotonic CI diagnostic omitted its warning")
+    print("barrierless_path_diagnostics_regression=ok")
 
 
 def check_path_geometry_preflight() -> None:
@@ -1255,6 +1278,7 @@ def main() -> None:
     print("calculator_runtime_diagnostics_regression=ok")
     check_path_diagnostics()
     print("path_diagnostics_regression=ok")
+    check_barrierless_path_diagnostics()
     check_path_geometry_preflight()
     print("path_geometry_preflight_regression=ok")
     check_mask_validation()

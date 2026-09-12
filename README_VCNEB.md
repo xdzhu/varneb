@@ -37,9 +37,12 @@ available through `inspect_calculator()` and `validate_image_calculators()`.
 
 After a run, `chain.saddle_diagnostics()` reports the highest interior image,
 its relative enthalpy, residual generalized force, tangent/normal force
-components, and a local finite-difference tangent curvature.  The curvature is
-only a path-local diagnostic, not a full Hessian or a proof of first-order
-saddle character.
+components, a local finite-difference tangent curvature, and whether an
+interior peak rises above both endpoints.  A negative curvature alone is not
+enough: a monotonic band can make the highest interior image look like a CI
+candidate even though no transition-state barrier is present.  The curvature
+and peak flags are path-local diagnostics, not a full Hessian or proof of
+first-order saddle character.
 
 ## Files
 
@@ -258,6 +261,12 @@ adjacent extended-coordinate segment cosines; pass
 `fold_cosine_threshold=0.0` to `validate_path_geometry()` when a folded path
 must be rejected.  The default remains diagnostic-only so existing workflows
 are not silently changed.
+
+For a physically interpretable CI result, require
+`saddle_diagnostics()["has_interior_barrier"]` and inspect
+`path_diagnostics()["ci_warning"]`.  If the band is monotonic or its interior
+peak is below an endpoint, report a barrierless/unresolved path rather than
+calling the highest interior image a transition state.
 
 ## Local checks
 

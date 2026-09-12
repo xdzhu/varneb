@@ -1231,6 +1231,20 @@ class VCNEB:
             return None
         return int(1 + np.argmax(self.enthalpies[1:-1]))
 
+    def _interior_peak_indices(self, enthalpies: Array, tolerance: float = 1e-8) -> list[int]:
+        """Return strict-enough local interior peaks in the current band."""
+
+        peaks: list[int] = []
+        for image_index in range(1, self.n_images - 1):
+            energy = float(enthalpies[image_index])
+            left = float(enthalpies[image_index - 1])
+            right = float(enthalpies[image_index + 1])
+            is_not_lower = energy >= left - tolerance and energy >= right - tolerance
+            is_higher_on_one_side = energy > left + tolerance or energy > right + tolerance
+            if is_not_lower and is_higher_on_one_side:
+                peaks.append(image_index)
+        return peaks
+
     def saddle_diagnostics(self) -> dict:
         """Summarize the current highest-image/saddle quality.
 
@@ -1243,6 +1257,11 @@ class VCNEB:
             return {
                 "image_index": None,
                 "is_climbing": False,
+                "is_local_peak": False,
+                "has_interior_barrier": False,
+                "interior_peak_indices": [],
+                "interior_barrier_indices": [],
+                "ci_warning": "At least three images are required for an interior saddle candidate",
                 "relative_enthalpy_eV": None,
                 "residual_generalized_force_eV_per_A": 0.0,
                 "tangential_force_eV_per_A": 0.0,
@@ -1255,6 +1274,13 @@ class VCNEB:
         assert self._last_forces_x is not None
         image_index = self.highest_image_index()
         assert image_index is not None
+        interior_peak_indices = self._interior_peak_indices(self._last_enthalpies)
+        interior_barrier_indices = [
+            index
+            for index in interior_peak_indices
+            if self._last_enthalpies[index]
+            > max(self._last_enthalpies[0], self._last_enthalpies[-1]) + 1e-8
+        ]
         active_mask = self._active_x_mask()
         image_x = [self._image_x(index) for index in range(self.n_images)]
         image_x_active = [x * active_mask for x in image_x]
@@ -1277,6 +1303,15 @@ class VCNEB:
         return {
             "image_index": image_index,
             "is_climbing": bool(self.climb),
+            "is_local_peak": bool(image_index in interior_peak_indices),
+            "has_interior_barrier": bool(interior_barrier_indices),
+            "interior_peak_indices": interior_peak_indices,
+            "interior_barrier_indices": interior_barrier_indices,
+            "ci_warning": (
+                None
+                if interior_barrier_indices
+                else "No interior energy peak rises above both endpoints; CI is not a validated transition-state search"
+            ),
             "relative_enthalpy_eV": float(self._last_enthalpies[image_index] - self._last_enthalpies[0]),
             "residual_generalized_force_eV_per_A": residual_norm,
             "tangential_force_eV_per_A": tangential,
@@ -1313,6 +1348,13 @@ class VCNEB:
             physical.append((force_state, _sum_array(atom_forces), _sum_array(stress)))
 
         climbing_image = self.highest_image_index()
+        interior_peak_indices = self._interior_peak_indices(self._last_enthalpies)
+        interior_barrier_indices = [
+            index
+            for index in interior_peak_indices
+            if self._last_enthalpies[index]
+            > max(self._last_enthalpies[0], self._last_enthalpies[-1]) + 1e-8
+        ]
         image_records = []
         for image_index, (force_state, atom_forces, stress) in enumerate(physical):
             true_force_x = self._force_to_x(force_state)
@@ -1387,6 +1429,14 @@ class VCNEB:
             "pressure_eV_per_A3": self.pressure,
             "cell_scale_A": self.cell_scale,
             "highest_image_index": climbing_image,
+            "interior_peak_indices": interior_peak_indices,
+            "interior_barrier_indices": interior_barrier_indices,
+            "has_interior_barrier": bool(interior_barrier_indices),
+            "ci_warning": (
+                None
+                if interior_barrier_indices
+                else "No interior energy peak rises above both endpoints; inspect the path before interpreting CI output"
+            ),
             "images": image_records,
         }
 

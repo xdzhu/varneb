@@ -122,6 +122,8 @@
 - [x] 实现 CI-VCNEB，并在联合原子-cell 解析势上验证 climbing image 不引入端点漂移或错误的 cell 方向；真实 DFT CI 仍待收敛案例。
 - [x] 优先复用成熟优化器 API；核心只提供广义坐标、梯度和约束投影，不重复实现通用 LBFGS/FIRE 数值细节。
 - [x] 将“普通 NEB 松弛后再 CI”固化为 `run_vcneb(climb_after=N)`，并加入折返线段 cosine 诊断及硬拒绝选项。
+- [x] 增加局部峰/内部势垒诊断：单调路径或内部峰低于端点时明确给出
+  `has_interior_barrier=false` 和 `ci_warning`，避免把无势垒路径误报为过渡态。
 - [ ] 增加 line search 失败、calculator 异常、SCF 不收敛、NaN/Inf 和 cell 奇异的可恢复处理。
 - [ ] 设计 image 级缓存和原子写入；中断后可以从最近快照继续，且不会混用不同参数集的结果。
 
