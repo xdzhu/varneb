@@ -173,6 +173,24 @@ def check_mode_guided_path() -> None:
     projection = project_path_onto_modes(images, initial, mode)
     if abs(projection[1, 0] - 0.4) > 1e-12:
         raise SystemExit("project_path_onto_modes returned the wrong modal amplitude")
+    cell_mode = Mode(np.zeros((1, 3)), cell=np.diag([0.2, 0.0, 0.0]))
+    cell_images = mode_guided_path(
+        initial,
+        final,
+        3,
+        cell_mode,
+        amplitude=0.5,
+        normalize=False,
+        align_cells=False,
+    )
+    if not np.allclose(cell_images[0].cell.array, initial.cell.array) or not np.allclose(
+        cell_images[-1].cell.array, final.cell.array
+    ):
+        raise SystemExit("cell mode changed a mode-guided endpoint")
+    cell_midpoint = deformation_from_cell(cell_images[1].cell.array, reference_cell)
+    expected_cell_midpoint = np.eye(3) + 0.5 * cell_mode.cell / 5.0
+    if not np.allclose(cell_midpoint, expected_cell_midpoint, rtol=0.0, atol=1e-12):
+        raise SystemExit("mode_guided_path did not apply the cell mode component")
 
 
 def check_cell_interpolation_strategies() -> None:
