@@ -45,7 +45,6 @@ exec "${python}" examples/run_vcneb_abacus.py \
   --workdir "${workdir}" --n-images "${n_images}" --fmax "${fmax}" \
   --steps "${steps}" --k "${spring}" --optimizer "${optimizer}" \
   --maxstep "${maxstep}" --command "srun --mpi=pmix_v3 -n ${SLURM_NTASKS} ${abacus}" \
-  --cell-interpolation log_strain --mapping auto --mic \
   --pseudo-dir "${pseudo_dir}" --basis-dir "${basis_dir}" \
   --pp Ba=Ba.upf --pp Ti=Ti.upf --pp O=O.upf \
   --basis Ba=Ba_gga_10au_100Ry_4s2p1d.orb \
