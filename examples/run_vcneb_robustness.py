@@ -16,7 +16,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from examples.run_toy_vcneb import ToyPhaseTransition
-from vcneb import interpolate_vcneb, run_vcneb
+from vcneb import interpolate_vcneb, path_geometry_diagnostics, run_vcneb
 from vcneb.core import deformation_from_cell
 
 
@@ -80,6 +80,12 @@ def run_case(interpolation: str, seed: int, *, fmax: float, steps: int) -> dict:
     saddle = chain.saddle_diagnostics()
     physical_diagnostics = chain.path_diagnostics()["images"]
     saddle_physical = physical_diagnostics[saddle["image_index"]]
+    geometry = path_geometry_diagnostics(
+        chain.images,
+        reference_cell=reference_cell,
+        cell_scale=chain.cell_scale,
+        fold_cosine_threshold=0.0,
+    )
     path = []
     for image in chain.images:
         scaled = image.get_scaled_positions(wrap=False)
@@ -112,6 +118,15 @@ def run_case(interpolation: str, seed: int, *, fmax: float, steps: int) -> dict:
             "neb_residual_generalized_force_eV_per_A": saddle_physical[
                 "neb_residual_generalized_force_eV_per_A"
             ],
+        },
+        "path_geometry": {
+            "valid": geometry["valid"],
+            "folded_junctions": geometry["folded_junctions"],
+            "zero_length_segments": geometry["zero_length_segments"],
+            "minimum_segment_length_A": min(geometry["segment_lengths_A"]),
+            "minimum_adjacent_segment_cosine": min(
+                cosine for cosine in geometry["adjacent_segment_cosines"] if cosine is not None
+            ),
         },
         "final_path": path,
     }

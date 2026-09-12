@@ -1,5 +1,16 @@
 # VC-NEB Iteration Log
 
+## Core staged-CI and path-fold guard (`d9f3f82`)
+
+- Added `run_vcneb(..., climb_after=N)`: the chain starts with ordinary NEB
+  and enables CI after `N` completed optimizer steps.
+- Extended `path_geometry_diagnostics()` with adjacent extended-coordinate
+  segment lengths/cosines, zero-length segments, and optional fold rejection
+  through `fold_cosine_threshold`.
+- The full HF regression suite passes, including the staged-CI API and a
+  folded-path negative test.  The default remains backward-compatible:
+  diagnostics do not reject a path unless a fold threshold is requested.
+
 ## Random-path robustness and staged CI (`c0a6275`)
 
 - The first direct-`climb=True` robustness run exposed a real failure mode:

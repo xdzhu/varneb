@@ -111,7 +111,7 @@
 - [x] 实现分数坐标最小镜像插值，避免跨周期边界产生长路径，并加入公共周期平移与 mapping 联合预处理。
 - [x] 实现 cell 插值策略选择器：线性、正定 deformation 的对数应变插值和用户自定义插值，并对不适用的 log 路径明确报错。
 - [x] 对每个中间 image 检查 cell determinant、原子重叠、最小距离和异常应变；异常时在初始化阶段明确失败。
-- [x] 已加入 calculator-free 的路径几何审计，报告体积、周期 MIC 最短距离和 deformation；可通过插值参数在初始化阶段硬拒绝碰撞/异常 deformation。
+- [x] 已加入 calculator-free 的路径几何审计，报告体积、周期 MIC 最短距离、deformation 和扩展坐标折返 cosine；可通过插值参数在初始化阶段硬拒绝碰撞/异常 deformation，也可通过 `fold_cosine_threshold` 拒绝折返。
 - [x] 已加入通用 `linear`/`log_strain` 初始路径比较脚本，固定 image 数和端点映射后输出体积、最短距离和 deformation 分布，并可复用于 HfO2/BaTiO3；BaTiO3 预检已发现并修正 identity 映射导致的 O 原子近重合。
 - [ ] 增加基于模式的初始路径组合：结构插值 + 模式位移 + cell 模式，并保持端点严格一致。
 
@@ -121,6 +121,7 @@
 - [x] 复核弹簧力在扩展空间的定义，保证原子与 cell 部分使用同一反应坐标度量；已用非均匀 image 间距逐项回归。
 - [x] 实现 CI-VCNEB，并在联合原子-cell 解析势上验证 climbing image 不引入端点漂移或错误的 cell 方向；真实 DFT CI 仍待收敛案例。
 - [x] 优先复用成熟优化器 API；核心只提供广义坐标、梯度和约束投影，不重复实现通用 LBFGS/FIRE 数值细节。
+- [x] 将“普通 NEB 松弛后再 CI”固化为 `run_vcneb(climb_after=N)`，并加入折返线段 cosine 诊断及硬拒绝选项。
 - [ ] 增加 line search 失败、calculator 异常、SCF 不收敛、NaN/Inf 和 cell 奇异的可恢复处理。
 - [ ] 设计 image 级缓存和原子写入；中断后可以从最近快照继续，且不会混用不同参数集的结果。
 

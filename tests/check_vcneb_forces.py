@@ -821,6 +821,37 @@ def check_climbing_image_saddle_diagnostics() -> None:
     print("climbing_image_saddle_regression=ok")
 
 
+def check_staged_climbing_protocol() -> None:
+    reference_cell = np.diag([5.0, 5.0, 5.0])
+    initial = Atoms("Ar", scaled_positions=[[0.25, 0.5, 0.5]], cell=reference_cell, pbc=True)
+    final = Atoms("Ar", scaled_positions=[[0.75, 0.5, 0.5]], cell=reference_cell, pbc=True)
+    final_cell = reference_cell.copy()
+    final_cell[0, 0] *= 1.25
+    final.set_cell(final_cell, scale_atoms=True)
+    images = interpolate_vcneb(initial, final, n_images=7, align_cells=False)
+    for index, image in enumerate(images[1:-1], start=1):
+        scaled = image.get_scaled_positions(wrap=False)
+        scaled[0, 1] += 0.08 * np.sin(index)
+        image.set_scaled_positions(scaled)
+        image.calc = ToyPhaseTransition(reference_cell)
+    images[0].calc = ToyPhaseTransition(reference_cell)
+    images[-1].calc = ToyPhaseTransition(reference_cell)
+    chain, optimizer = run_vcneb(
+        images,
+        k=0.15,
+        climb=True,
+        climb_after=2,
+        optimizer="FIRE",
+        fmax=0.01,
+        steps=12,
+        logfile=None,
+        trajectory=None,
+        snapshot_dir=None,
+    )
+    if not chain.climb or int(getattr(optimizer, "nsteps", 0)) < 2:
+        raise SystemExit("staged climbing protocol did not enable CI after the requested steps")
+
+
 def check_pressure_enthalpy_gradient() -> None:
     reference_cell = np.array(
         [
@@ -1219,6 +1250,8 @@ def main() -> None:
     check_projected_mode_constraint_and_direction_basis()
     print("projected_mode_constraint_regression=ok")
     check_climbing_image_saddle_diagnostics()
+    check_staged_climbing_protocol()
+    print("staged_climbing_protocol_regression=ok")
     check_pressure_enthalpy_gradient()
     print("pressure_enthalpy_gradient_regression=ok")
     check_trajectory_resume()

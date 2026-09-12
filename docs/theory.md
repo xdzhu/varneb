@@ -285,7 +285,12 @@ image 可能在路径尚未成形时被错误选中，导致图像折返但投�
 在调用计算器之前，`path_geometry_diagnostics()` 可以对每个 image 做与计算器无关的
 几何审计，包含正体积、周期 MIC 最短原子间距和相对参考 cell 的 deformation 范数。
 `interpolate_vcneb()` 的 `minimum_distance` 和 `maximum_deformation` 参数可以把这些
-量提升为初始化阶段的硬阈值；默认不启用阈值，以保持旧接口兼容。
+量提升为初始化阶段的硬阈值；`fold_cosine_threshold=0.0` 可额外拒绝折返路径。
+默认不启用这些阈值，以保持旧接口兼容。
+
+折返 cosine 使用与 VCNEB 相同的扩展坐标：原子 Cartesian 坐标与
+`cell_scale*(F-I)` 拼接后计算相邻线段夹角。它是几何有效性检查，不是额外的物理
+约束；复杂重构路径可以先报告而不拒绝，再结合化学映射和路径可视化判断。
 
 ## 9. 必须完成的理论验证
 

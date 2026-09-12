@@ -249,6 +249,14 @@ analytic `0.25 eV` barrier in all eight cases.  Always inspect
 projected NEB force and is not, by itself, a proof that the physical path is a
 valid MEP.  The record is `outputs/vcneb_robustness_staged_hf.json`.
 
+The same protocol is available directly through `run_vcneb(...,
+climb_after=N)`: the first `N` completed optimizer steps use ordinary NEB and
+CI is then enabled automatically.  `path_geometry_diagnostics()` reports
+adjacent extended-coordinate segment cosines; pass
+`fold_cosine_threshold=0.0` to `validate_path_geometry()` when a folded path
+must be rejected.  The default remains diagnostic-only so existing workflows
+are not silently changed.
+
 ## Local checks
 
 ```bash

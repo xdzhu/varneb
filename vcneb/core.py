@@ -1526,6 +1526,7 @@ def run_vcneb(
     pressure_gpa: float = 0.0,
     k: float | Iterable[float] = 0.2,
     climb: bool = True,
+    climb_after: int | None = None,
     cell_scale: Optional[float] = None,
     atom_mask: Optional[Array] = None,
     cell_mask: Optional[Array] = None,
@@ -1546,7 +1547,20 @@ def run_vcneb(
     validate_calculators: bool = True,
     log: Optional[Callable[[str], None]] = None,
 ) -> tuple[VCNEB, object]:
-    """Run a VC-NEB optimization with an ASE optimizer."""
+    """Run a VC-NEB optimization with an ASE optimizer.
+
+    When ``climb_after`` is provided with ``climb=True``, ordinary NEB is
+    used for that many completed optimizer steps before the climbing-image
+    force is enabled.  This prevents a noisy initial path from selecting a
+    wrong climbing image too early.
+    """
+
+    if climb_after is not None:
+        if isinstance(climb_after, bool) or int(climb_after) != climb_after or climb_after < 0:
+            raise ValueError("climb_after must be a non-negative integer or None")
+        climb_after = int(climb_after)
+    if not climb:
+        climb_after = None
 
     if validate_calculators:
         validate_image_calculators(
@@ -1559,7 +1573,7 @@ def run_vcneb(
         images,
         pressure=pressure_gpa * GPa,
         k=k,
-        climb=climb,
+        climb=bool(climb and (climb_after is None or climb_after == 0)),
         cell_scale=cell_scale,
         atom_mask=atom_mask,
         cell_mask=cell_mask,
@@ -1590,6 +1604,12 @@ def run_vcneb(
         step_counter["value"] += 1
 
     opt.attach(save_snapshot, interval=1)
+    if climb_after is not None and climb_after > 0:
+        def enable_climbing_image() -> None:
+            if getattr(opt, "nsteps", 0) >= climb_after:
+                chain.climb = True
+
+        opt.attach(enable_climbing_image, interval=1)
     opt.run(fmax=fmax, steps=steps)
     if traj is not None:
         traj.close()
