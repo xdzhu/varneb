@@ -70,6 +70,25 @@ this project.
 
 ## Mode-guided paths and component constraints
 
+Before attaching an expensive calculator, an interpolated path can be checked
+for cell and atom geometry:
+
+```python
+from vcneb import interpolate_vcneb, path_geometry_diagnostics
+
+images = interpolate_vcneb(
+    initial, final, n_images=9, mic=True,
+    minimum_distance=1.0,
+    maximum_deformation=0.8,
+)
+report = path_geometry_diagnostics(images)
+```
+
+The optional thresholds on `interpolate_vcneb()` raise a `ValueError` with the
+image index when a path violates them.  The report itself is calculator-free
+and contains the per-image volume, shortest periodic interatomic distance, and
+deformation norm.
+
 The mode feature is intentionally split into an initial-path generator and a
 diagnostic projection.  The former bends the interior images with an
 endpoint-zero envelope, then a normal unconstrained NEB calculation can relax

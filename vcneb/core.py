@@ -120,8 +120,16 @@ def interpolate_vcneb(
     align_cells: bool = True,
     mic: bool = False,
     wrap_positions: bool = False,
+    minimum_distance: float | None = None,
+    maximum_deformation: float | None = None,
 ) -> list[Atoms]:
-    """Create an initial variable-cell band, including both endpoints."""
+    """Create an initial variable-cell band, including both endpoints.
+
+    ``minimum_distance`` and ``maximum_deformation`` are optional preflight
+    thresholds.  They are useful for rejecting an unphysical initial path
+    before any calculator is invoked; the default keeps the historical
+    interpolation behavior unchanged.
+    """
 
     if n_images < 2:
         raise ValueError("n_images must include endpoints and be at least 2")
@@ -158,7 +166,100 @@ def interpolate_vcneb(
         )
         apply_state(image, state, reference_cell, wrap_positions=wrap_positions)
         images.append(image)
+    if minimum_distance is not None or maximum_deformation is not None:
+        validate_path_geometry(
+            images,
+            minimum_distance=minimum_distance,
+            maximum_deformation=maximum_deformation,
+        )
     return images
+
+
+def path_geometry_diagnostics(
+    images: Sequence[Atoms],
+    *,
+    reference_cell: Array | None = None,
+    minimum_distance: float | None = None,
+    maximum_deformation: float | None = None,
+) -> dict:
+    """Report image volumes, cell deformation, and MIC atom separations.
+
+    The report is calculator-independent.  ``minimum_distance`` is compared
+    with the shortest distinct-atom distance under periodic MIC.  For a path
+    with fewer than two atoms, the minimum distance is reported as infinity.
+    ``maximum_deformation`` is a Frobenius-norm threshold on ``F-I`` relative
+    to ``reference_cell``.
+    """
+
+    if len(images) < 2:
+        raise ValueError("At least two images are required for path geometry diagnostics")
+    if minimum_distance is not None and minimum_distance <= 0.0:
+        raise ValueError("minimum_distance must be positive when provided")
+    if maximum_deformation is not None and maximum_deformation <= 0.0:
+        raise ValueError("maximum_deformation must be positive when provided")
+    reference = (
+        cell_matrix(images[0]) if reference_cell is None else np.asarray(reference_cell, dtype=float)
+    )
+    _validate_cell_matrix(reference, context="reference cell")
+
+    records = []
+    issues = []
+    for image_index, image in enumerate(images):
+        cell = cell_matrix(image)
+        _validate_cell_matrix(cell, context=f"image {image_index} cell")
+        deform = deformation_from_cell(cell, reference)
+        minimum = float("inf")
+        for atom_index in range(len(image)):
+            for other_index in range(atom_index + 1, len(image)):
+                distance = float(image.get_distance(atom_index, other_index, mic=True))
+                minimum = min(minimum, distance)
+        deformation_norm = float(np.linalg.norm(deform - np.eye(3)))
+        record = {
+            "image_index": image_index,
+            "volume_A3": float(image.get_volume()),
+            "minimum_interatomic_distance_A": minimum,
+            "deformation_from_reference_frobenius": deformation_norm,
+        }
+        if minimum_distance is not None and minimum < minimum_distance:
+            issues.append(
+                f"image {image_index} minimum interatomic distance {minimum:.6g} A "
+                f"is below {minimum_distance:.6g} A"
+            )
+        if maximum_deformation is not None and deformation_norm > maximum_deformation:
+            issues.append(
+                f"image {image_index} deformation norm {deformation_norm:.6g} "
+                f"exceeds {maximum_deformation:.6g}"
+            )
+        records.append(record)
+    return {
+        "n_images": len(images),
+        "minimum_distance_threshold_A": minimum_distance,
+        "maximum_deformation_threshold": maximum_deformation,
+        "images": records,
+        "issues": issues,
+        "valid": not issues,
+    }
+
+
+def validate_path_geometry(
+    images: Sequence[Atoms],
+    *,
+    reference_cell: Array | None = None,
+    minimum_distance: float | None = None,
+    maximum_deformation: float | None = None,
+) -> dict:
+    """Validate a calculator-independent initial path and return its report."""
+
+    report = path_geometry_diagnostics(
+        images,
+        reference_cell=reference_cell,
+        minimum_distance=minimum_distance,
+        maximum_deformation=maximum_deformation,
+    )
+    if report["issues"]:
+        detail = "\n".join(f"- {issue}" for issue in report["issues"])
+        raise ValueError(f"VC-NEB path geometry preflight failed:\n{detail}")
+    return report
 
 
 def fractional_force(atoms: Atoms) -> Array:

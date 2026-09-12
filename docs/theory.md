@@ -243,6 +243,11 @@ VCNEB 的扩展 `x` 坐标列向量，再用 SVD 得到数值正交基；`constr
 按 `fmax` 定义的最大三分量向量范数，避免把两个不同的收敛口径混在一起。它用于区分
 “路径残余力变小”和“原始 DFT 应力/原子力已经收敛”这两个不同判据。
 
+在调用计算器之前，`path_geometry_diagnostics()` 可以对每个 image 做与计算器无关的
+几何审计，包含正体积、周期 MIC 最短原子间距和相对参考 cell 的 deformation 范数。
+`interpolate_vcneb()` 的 `minimum_distance` 和 `maximum_deformation` 参数可以把这些
+量提升为初始化阶段的硬阈值；默认不启用阈值，以保持旧接口兼容。
+
 ## 9. 必须完成的理论验证
 
 以下验证完成前，本文件中的方程只能作为实现草稿：

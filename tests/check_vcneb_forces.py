@@ -24,8 +24,10 @@ from vcneb import (
     apply_chain_state,
     inspect_calculator,
     interpolate_vcneb,
+    path_geometry_diagnostics,
     read_chain_trajectory,
     run_vcneb,
+    validate_path_geometry,
     validate_image_calculators,
 )
 from vcneb import (
@@ -275,6 +277,38 @@ def check_path_diagnostics() -> None:
         raise SystemExit("path diagnostics omitted physical or NEB force fields")
     if not np.isfinite(interior["max_stress_eV_per_A3"]):
         raise SystemExit("path diagnostics returned a non-finite stress summary")
+
+
+def check_path_geometry_preflight() -> None:
+    reference_cell = np.diag([5.0, 5.0, 5.0])
+    initial = Atoms(
+        "Ar2",
+        scaled_positions=[[0.10, 0.5, 0.5], [0.16, 0.5, 0.5]],
+        cell=reference_cell,
+        pbc=True,
+    )
+    final = initial.copy()
+    final.set_scaled_positions([[0.20, 0.5, 0.5], [0.26, 0.5, 0.5]])
+    images = interpolate_vcneb(initial, final, n_images=3, align_cells=False)
+    report = path_geometry_diagnostics(images, minimum_distance=0.5)
+    if report["valid"] or not report["issues"]:
+        raise SystemExit("path geometry diagnostics missed an atom collision")
+    try:
+        interpolate_vcneb(
+            initial,
+            final,
+            n_images=3,
+            align_cells=False,
+            minimum_distance=0.5,
+        )
+    except ValueError as exc:
+        if "image" not in str(exc) or "distance" not in str(exc):
+            raise SystemExit("path geometry preflight omitted image distance context")
+    else:
+        raise SystemExit("path geometry preflight accepted an overlapping path")
+    valid = validate_path_geometry(images, minimum_distance=0.2)
+    if not valid["valid"] or len(valid["images"]) != 3:
+        raise SystemExit("path geometry preflight rejected a valid path")
 
 
 def check_cell_validity_guards() -> None:
@@ -813,6 +847,8 @@ def main() -> None:
     print("calculator_runtime_diagnostics_regression=ok")
     check_path_diagnostics()
     print("path_diagnostics_regression=ok")
+    check_path_geometry_preflight()
+    print("path_geometry_preflight_regression=ok")
     check_mask_validation()
     print("mask_validation_regression=ok")
     check_cell_validity_guards()
