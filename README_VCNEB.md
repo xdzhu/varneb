@@ -238,6 +238,17 @@ HF record is `outputs/mode_path_variants_hf.json`.  This comparison is an
 algorithm test: a strict constrained saddle must still be interpreted as a
 saddle in the constrained space, not automatically as a full-space saddle.
 
+For a perturbed or noisy initial path, use a two-stage CI protocol: first call
+`run_vcneb(..., climb=False)` to relax the path, then call it again on the same
+images with `climb=True` for saddle refinement.  Starting CI immediately can
+select a wrong image and produce a folded, projection-stationary path.  The
+robustness example tests four deterministic perturbation seeds with both
+`linear` and `log_strain` cell interpolation; the staged protocol recovers the
+analytic `0.25 eV` barrier in all eight cases.  Always inspect
+`path_diagnostics()` in addition to the optimizer residual: the latter is the
+projected NEB force and is not, by itself, a proof that the physical path is a
+valid MEP.  The record is `outputs/vcneb_robustness_staged_hf.json`.
+
 ## Local checks
 
 ```bash

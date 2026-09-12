@@ -1,5 +1,23 @@
 # VC-NEB Iteration Log
 
+## Random-path robustness and staged CI (`c0a6275`)
+
+- The first direct-`climb=True` robustness run exposed a real failure mode:
+  one deterministic perturbation converged to a folded, projection-stationary
+  image chain with a spurious `0.7911 eV` barrier.  Its small NEB residual did
+  not certify a physical MEP.
+- The test was changed to the standard two-stage protocol: relax with
+  `climb=False`, then restart on the same images with `climb=True`.  Four
+  deterministic perturbation seeds and both `linear` and `log_strain` cell
+  interpolation were run on HF using only `ToyPhaseTransition`.
+- All 8/8 cases converged.  The largest barrier error was `1.2801e-4 eV`, the
+  largest final generalized force was `1.9951e-3 eV/A`, and all final paths
+  preserved the correct endpoint ordering.  The report also records raw
+  atomic force, stress, cell-force, and final reaction-coordinate diagnostics.
+- Record: `outputs/vcneb_robustness_staged_hf.json`.  The earlier direct-CI
+  failure remains an important negative control and is not treated as a valid
+  convergence result.
+
 ## Three mode-path semantics (`1badaa0`)
 
 - Ran `examples/compare_mode_path_variants.py` on `hf` using only the coupled
