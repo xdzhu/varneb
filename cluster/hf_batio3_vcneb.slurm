@@ -7,7 +7,7 @@
 #SBATCH -o /public/home/iai806/abacus/agent-runs/20260912-vcneb-hf/slurm-%x-%j.out
 #SBATCH -e /public/home/iai806/abacus/agent-runs/20260912-vcneb-hf/slurm-%x-%j.err
 
-set -euo pipefail
+set -eo pipefail
 
 repo=/public/home/iai806/abacus/agent-runs/20260912-vcneb-hf
 env_script=/public/home/iai806/apprepo/abacus/v3.10.0LTS-intelmpi2025/scripts/env.sh
