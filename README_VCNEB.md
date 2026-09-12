@@ -63,13 +63,15 @@ saddle character.
 
 ## Cluster execution policy
 
-For long NEB or DFT runs, use the shared cluster only. Log in through `235`,
-inspect the load and existing processes on a candidate node, and run only on a
-currently idle node among `cu17`, `cu22`, `cu23`, `cu24`, `cu25`, and `cu26`.
-Each node has 40 cores, and the nodes share the project directory and software
-environment, so a source sync to the shared `/home/zhuxd` path is sufficient.
-Do not run long jobs on `235` or in local WSL, and do not use `qsub`/PBS for
-this project.
+For long NEB or DFT runs, use the shared cluster only. The current production
+entry point is Hefei through `ssh hf` and Slurm. Before every submission,
+inspect `sinfo`, `squeue`, and the account's own jobs, then select a suitable
+partition, node allocation, and task count from the actual calculator cost.
+Do not mechanically request 40 cores: small cells and cheap settings may use
+fewer tasks, while a large k-point/plane-wave calculation may justify more.
+Record the partition, node, task count, elapsed time, and input version with
+each result. Do not run long jobs on the gateway or in local WSL, and do not
+use `qsub`/PBS for this project.
 
 ## Mode-guided paths and component constraints
 

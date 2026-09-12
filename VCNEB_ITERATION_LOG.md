@@ -1,5 +1,26 @@
 # VC-NEB Iteration Log
 
+## ABACUS high-precision BaTiO3 staged-CI diagnostic (`27673595`)
+
+- After the algorithm-first path preflight, ran a seven-image BaTiO3
+  cubic-to-tetragonal ABACUS branch on `hf` with 100 Ry, `4x4x4` k points,
+  `SCF_THR=1e-8`, `FIRE(maxstep=0.005)`, and `climb_after=15`.
+- Occupancy was checked before submission. The run used 16 tasks on `node77`
+  because of the high plane-wave/k-point cost; task count remains a per-run
+  resource choice rather than a fixed 40-core policy.
+- The ordinary stage reduced `fmax` from `0.619` to `0.309 eV/A`; after CI
+  activation the residual eventually reached `0.213 eV/A` at step 30. The
+  selected CI image had negative tangent curvature (`-4.954 eV/A^2`), proving
+  the staged-CI branch executed, but the requested `0.05 eV/A` convergence was
+  not reached.
+- The path was monotonic and downhill (`Delta H=-0.099232 eV`), so the stored
+  forward barrier is `0 eV` for this unconverged path and is not a physical
+  transition-state result. This is a valid ABACUS/VCNEB execution diagnostic,
+  not a completed material barrier.
+- Records: `outputs/batio3_vcneb_pbe100_v2_summary.json`,
+  `outputs/batio3_vcneb_pbe100_v2_summary.txt`, and
+  `outputs/batio3_vcneb_pbe100_v2_manifest.json`.
+
 ## Core staged-CI and path-fold guard (`d9f3f82`)
 
 - Added `run_vcneb(..., climb_after=N)`: the chain starts with ordinary NEB

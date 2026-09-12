@@ -33,8 +33,9 @@ preflight, and a reproducible ABACUS VCNEB run must be recorded separately.
 
 ## Cluster diagnostic record
 
-The shared ABACUS assets were used on the permitted 40-core nodes with PBE,
-100 Ry, `1x1x1` k points, and SCF threshold `1e-6`.  Independent variable-cell
+The first diagnostic branch used the shared ABACUS assets with PBE, 100 Ry,
+`1x1x1` k points, and SCF threshold `1e-6`; its task count was chosen for that
+low-cost setup and is not a project-wide resource requirement.  Independent variable-cell
 FIRE endpoint trials gave:
 
 | endpoint | energy (eV) | volume (A^3) | max force (eV/A) | max stress (eV/A^3) |
@@ -71,5 +72,24 @@ minimum periodic distance improved from `1.328 A` to `1.797 A`, with maximum
 deformation `0.0631`; the configured hard thresholds are `1.6 A` and `0.10`.
 The machine-readable record is
 `outputs/batio3/batio3_hf_algorithm_preflight.json`.  The corresponding DFT
-NEB job was intentionally cancelled before optimization while the algorithm
-verification is being prioritized.
+NEB job was then run as a high-precision staged-CI diagnostic.
+
+## HF high-precision staged-CI diagnostic
+
+The seven-image ABACUS branch used PBE, 100 Ry, `4x4x4` k points,
+`SCF_THR=1e-8`, `SCF_NMAX=150`, `mixing_beta=0.3`, `log_strain`
+interpolation, automatic mapping, translation alignment, `FIRE(maxstep=0.005)`,
+and `climb_after=15`.  The allocation was 16 tasks on `node77`, selected for
+this high-cost setting after checking cluster occupancy; this is a recorded
+choice, not a fixed VCNEB default.
+
+The ordinary NEB stage reduced the maximum generalized force from `0.619` to
+`0.309 eV/A` by step 15.  CI then became active; the residual rose temporarily
+and later fell to `0.213 eV/A` at step 30.  The CI image had negative tangent
+curvature (`-4.954 eV/A^2`) but the requested `0.05 eV/A` threshold was not
+reached.  The path energy was monotonic, with reaction enthalpy `-0.099232 eV`
+and forward barrier `0 eV` for this unconverged path.  Therefore this run
+validates the ABACUS calculator/VCNEB/staged-CI execution chain, but it is not a
+converged physical BaTiO3 transition barrier.  The machine-readable summary
+and run manifest are `outputs/batio3_vcneb_pbe100_v2_summary.json` and
+`outputs/batio3_vcneb_pbe100_v2_manifest.json`.
