@@ -17,6 +17,7 @@ if str(ROOT) not in sys.path:
 
 from examples.run_toy_vcneb import ToyPhaseTransition
 from vcneb import interpolate_vcneb, run_vcneb
+from vcneb.core import deformation_from_cell
 
 
 def build_endpoints(reference_cell: np.ndarray) -> tuple[Atoms, Atoms]:
@@ -65,6 +66,17 @@ def run_case(interpolation: str, seed: int, *, fmax: float, steps: int) -> dict:
     )
     barrier, reaction = chain.barrier()
     final_force = chain.gradient_norm(-chain.get_forces())
+    path = []
+    for image in chain.images:
+        scaled = image.get_scaled_positions(wrap=False)
+        deform = deformation_from_cell(image.cell.array, reference_cell)
+        path.append(
+            {
+                "qx": float(scaled[0, 0]),
+                "exx": float(deform[0, 0] - 1.0),
+                "energy_eV": float(image.get_potential_energy()),
+            }
+        )
     return {
         "cell_interpolation": interpolation,
         "seed": seed,
@@ -75,6 +87,7 @@ def run_case(interpolation: str, seed: int, *, fmax: float, steps: int) -> dict:
         "optimizer_steps": int(getattr(optimizer, "nsteps", -1)),
         "converged": bool(final_force < fmax),
         "saddle": chain.saddle_diagnostics(),
+        "final_path": path,
     }
 
 
