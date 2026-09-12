@@ -21,6 +21,10 @@ sbatch --export=ALL,N_IMAGES=7,STEPS=300,FMAX=0.03,MAXSTEP=0.02 \
   cluster/hf_batio3_vcneb.slurm
 ```
 
+The BaTiO3 template uses symmetric-positive `log_strain` cell interpolation,
+automatic same-species endpoint mapping, and minimum-image atom displacements
+so that the initial path follows the tested variable-cell geometry.
+
 The scripts use `${SLURM_NTASKS}` in the `srun` command, so the actual
 allocation controls the MPI width.  For this small cell start with 16 tasks;
 after a timing check, a larger run can request 32 tasks without changing the
