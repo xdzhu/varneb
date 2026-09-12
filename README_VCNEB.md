@@ -55,6 +55,8 @@ saddle character.
 - `examples/run_fixed_cell_ase_comparison.py`: ASE CINEB versus fixed-cell VCNEB comparison.
 - `examples/run_vasp_single_image_smoke.py`: real VASP energy/force/stress smoke driver.
 - `examples/run_vcneb_abacus.py`: ABACUS driver skeleton.
+- `examples/relax_abacus_endpoint.py`: independent ABACUS endpoint relaxation
+  with optional variable-cell filtering and explicit optimizer step control.
 - `scripts/setup_hfo2_t_po_validation.py`: builds the HfO2 T -> PO validation fixture from local source structures or portable copies.
 - `scripts/validate_vcneb_inputs.py`: static dry-run validator for VASP/ABACUS VC-NEB image directories.
 - `tests/check_vcneb_forces.py`: finite-difference checks for force/stress transforms.
@@ -327,7 +329,10 @@ python scripts/validate_vcneb_inputs.py \
 
 ## Current limitations
 
-- Endpoints must have the same atom count, symbols, and atom order.
+- Endpoints must have the same atom count and composition.  Identity order is
+  supported for audited structures; `mapping="auto"` provides an
+  element-grouped periodic geometry heuristic, and explicit permutations are
+  recommended for reconstructive transitions.
 - The code removes a global cell rotation during interpolation, but production
   phase-transition work still needs careful endpoint matching.
 - Stress can only drive physical strain components; arbitrary cell rotations

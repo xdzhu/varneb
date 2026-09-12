@@ -1,0 +1,68 @@
+{
+  "case": "BaTiO3 cubic Pm-3m to tetragonal P4mm",
+  "status": "diagnostic_unconverged",
+  "code_commit_for_cluster_runs": "d57b7fa",
+  "nodes": {
+    "cubic_endpoint_relax": "cu24",
+    "tetragonal_endpoint_relax": "cu17",
+    "unrelaxed_path_trials": ["cu17", "cu26"],
+    "relaxed_endpoint_vcneb": "cu25"
+  },
+  "calculator": {
+    "backend": "ASE ABACUS",
+    "functional": "PBE",
+    "ecutwfc_Ry": 100,
+    "kpoints": [1, 1, 1],
+    "scf_threshold_eV": 1e-6,
+    "mpi_cores": 40,
+    "stress_required": true
+  },
+  "endpoint_relaxation": {
+    "optimizer": "FIRE",
+    "steps_requested": 40,
+    "cubic": {
+      "steps": 18,
+      "energy_eV": -3721.3893887895,
+      "volume_A3": 90.81047810665387,
+      "max_force_eV_per_A": 0.0,
+      "max_abs_stress_eV_per_A3": 0.0012487613542887619,
+      "converged_by_driver": true
+    },
+    "tetragonal": {
+      "steps": 40,
+      "energy_eV": -3734.9715063,
+      "volume_A3": 89.20827802341196,
+      "max_force_eV_per_A": 0.0562049125,
+      "max_abs_stress_eV_per_A3": 0.00631198965426821,
+      "converged_by_driver": false
+    }
+  },
+  "mapping_and_geometry": {
+    "mapping": [0, 1, 3, 2, 4],
+    "n_images": 7,
+    "cell_interpolation": "log_strain",
+    "identity_min_distance_A": 0.07236480889631669,
+    "auto_mapping_min_distance_A": 1.3469616173148091,
+    "auto_mapping_max_deformation": 0.03170617466994881
+  },
+  "relaxed_endpoint_vcneb": {
+    "optimizer": "FIRE",
+    "maxstep_A": 0.02,
+    "steps": 40,
+    "climbing_image": false,
+    "final_max_generalized_force_eV_per_A": 3.380059550936723,
+    "formal_forward_barrier_eV": 0.0,
+    "reaction_enthalpy_eV": -13.58211706,
+    "highest_interior_image": 1,
+    "highest_interior_relative_enthalpy_eV": -11.777860560800036,
+    "scientific_use": "engineering diagnostic only; not a converged phase-transition barrier"
+  },
+  "artifacts": [
+    "batio3_relaxed_endpoints_fire40_summary.json",
+    "batio3_relaxed_endpoints_fire40.traj",
+    "batio3_initial_path_comparison_identity_cluster.json",
+    "batio3_initial_path_comparison_auto_cluster.json",
+    "batio3_endpoint_cubic_relax_summary.json",
+    "batio3_endpoint_tetragonal_relax_summary.json"
+  ]
+}

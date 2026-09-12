@@ -330,6 +330,28 @@ useful evidence that the current linear/restarted path requires a
 mechanism-aware improvement; none of these HfO$_2$ values is reported as a
 production transition barrier.
 
+\subsection{BaTiO$_3$ endpoint and variable-cell diagnostic}
+
+As a compact perovskite test, we also prepared a five-atom cubic-to-tetragonal
+BaTiO$_3$ pair.  The endpoint cells differ in the tetragonal axis and the
+oxygen order is nontrivial: the identity path reaches a minimum periodic
+interatomic distance of only $0.072$~\AA, whereas the element-grouped mapping
+\texttt{[0,1,3,2,4]} gives $1.347$~\AA.  This is a small but concrete example
+of why endpoint mapping must be audited before a calculator is attached.
+
+Independent variable-cell endpoint trials with the shared PBE/LCAO ABACUS
+setup produced volumes of $90.8105$ and $89.2083$~\AA$^3$ for the cubic and
+tetragonal endpoints, respectively.  A subsequent seven-image logarithmic
+strain VCNEB trial used FIRE with \texttt{maxstep=0.02} for 40 steps.  Its
+maximum generalized residual was $3.380$~eV/\AA; all interior images were below
+the cubic endpoint, giving a formal forward barrier of zero and a reaction
+enthalpy of $-13.582$~eV.  This is an engineering and adapter diagnostic, not
+a physical BaTiO$_3$ barrier: the tetragonal endpoint itself remained just
+above the force target, the interior residual was large, and the low-cost
+electronic setup changes the equilibrium volume substantially.  The complete
+summary, endpoint data, logs, and initial-path reports are included under
+\texttt{outputs/batio3/}.
+
 \begin{table}[!htbp]
 \centering
 \caption{Representative verification and diagnostic results.}
@@ -343,6 +365,7 @@ Analytic CI double well & $0.250000$ eV barrier & Passed \\
 ASE fixed-cell comparison & $9.33\times10^{-6}$ eV difference & Passed \\
 Release and refine & $0.286000\rightarrow0.250044$ eV & Passed \\
 HfO$_2$ variable-cell trial & residual $0.622$ eV/Å & Diagnostic only \\
+BaTiO$_3$ relaxed-endpoint trial & residual $3.380$ eV/Å & Diagnostic only \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -357,9 +380,11 @@ climbing images, mode and direction controls, calculator adapters, restart
 snapshots, and per-image diagnostics.  The numerical tests establish the
 force transformation and fixed-cell reduction, while the release-and-refine
 example establishes the intended semantics of constrained mechanism searches.
-The HfO$_2$ trial demonstrates that a real material calculation can be
-launched, resumed, audited, and stopped without confusing an unconverged
-engineering path with a physical barrier.
+The HfO$_2$ and BaTiO$_3$ trials demonstrate that real material calculations
+can be launched, resumed, audited, and stopped without confusing an
+unconverged engineering path with a physical barrier.  The BaTiO$_3$ case also
+shows why endpoint mapping and independent stress-aware relaxation belong in
+the standard workflow.
 
 The repository is available at
 \url{https://github.com/xdzhu/vcneb}.  It contains the source package, tests,
@@ -373,9 +398,9 @@ freeze the license and citation metadata, provide an API tutorial, and include
 the raw calculator inputs needed to reproduce every paper result.
 
 The principal limitations are the requirement for a one-to-one endpoint atom
-mapping, the linear deformation-gradient interpolation, the current
-hydrostatic-pressure formulation, and the absence of a converged production
-HfO$_2$ or perovskite barrier.  Large reconstructive transitions may require
+mapping, the current linear/logarithmic deformation-gradient interpolation,
+the current hydrostatic-pressure formulation, and the absence of a converged
+production HfO$_2$ or perovskite barrier.  Large reconstructive transitions may require
 multiple initial paths, finite-wavevector supercells, magnetic or electronic
 state controls, and a stress measure matched to the chosen finite-deformation
 coordinate.  These are scientific controls on the calculation, not details

@@ -55,6 +55,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--fmax", type=float, default=0.05)
     parser.add_argument("--steps", type=int, default=100)
     parser.add_argument("--optimizer", choices=["FIRE", "BFGS", "LBFGS"], default="FIRE")
+    parser.add_argument(
+        "--maxstep",
+        type=float,
+        default=None,
+        help="Optional ASE optimizer maximum step in Angstrom-like coordinates",
+    )
     parser.add_argument("--fixed-cell", action="store_true")
     return parser.parse_args()
 
@@ -101,11 +107,13 @@ def main() -> None:
 
     target = atoms if args.fixed_cell else FrechetCellFilter(atoms)
     optimizer_class = {"FIRE": FIRE, "BFGS": BFGS, "LBFGS": LBFGS}[args.optimizer]
-    optimizer = optimizer_class(
-        target,
-        logfile=str(workdir / "relax.log"),
-        trajectory=str(workdir / "relax.traj"),
-    )
+    optimizer_kwargs = {
+        "logfile": str(workdir / "relax.log"),
+        "trajectory": str(workdir / "relax.traj"),
+    }
+    if args.maxstep is not None:
+        optimizer_kwargs["maxstep"] = args.maxstep
+    optimizer = optimizer_class(target, **optimizer_kwargs)
     optimizer.run(fmax=args.fmax, steps=args.steps)
     energy = float(atoms.get_potential_energy())
     forces = np.asarray(atoms.get_forces(), dtype=float)
@@ -121,6 +129,7 @@ def main() -> None:
         "optimizer": args.optimizer,
         "steps_requested": args.steps,
         "optimizer_steps": int(getattr(optimizer, "nsteps", -1)),
+        "maxstep": args.maxstep,
         "fmax_target_eV_per_A": args.fmax,
         "energy_eV": energy,
         "max_force_eV_per_A": max_force,
