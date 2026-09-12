@@ -340,8 +340,12 @@ def check_periodic_translation_alignment() -> None:
     if not np.allclose(aligned[0].positions, initial.positions):
         raise SystemExit("periodic translation alignment changed the initial endpoint")
     metadata = aligned[0].info.get("vcneb_path_metadata", {})
-    if metadata.get("mapping") != [0, 1, 4, 3, 2] or not metadata.get("align_translation"):
+    mapping = metadata.get("mapping", [])
+    translation = np.asarray(metadata.get("translation_fractional_final_cell", []), dtype=float)
+    if sorted(mapping) != list(range(len(initial))) or not metadata.get("align_translation"):
         raise SystemExit(f"periodic path metadata lost the chosen gauge: {metadata}")
+    if translation.shape != (3,) or np.linalg.norm(translation) < 1e-8:
+        raise SystemExit(f"periodic path metadata lost the chosen translation: {metadata}")
     print("periodic_translation_alignment_regression=ok")
 
 
