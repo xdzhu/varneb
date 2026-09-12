@@ -61,7 +61,7 @@
 
 - [x] 为当前工作树建立一个明确的开发版本号和变更摘要；记录 `core.py`、`modes.py`、测试脚本和示例入口。
 - [x] 已在空闲的 `cu17` 上重新运行现有回归集，并将 Python、ASE、NumPy、SciPy、VASP/ABACUS 环境信息写入 `outputs/vcneb_p0_baseline_manifest.json`。
-- [x] 以后每次启动计算前检查 `cu17`、`cu22`--`cu26` 的负载、进程和用户任务；选择空闲节点运行，忙节点不挤占。
+- [x] 历史 cu 试算均在启动前检查负载、进程和用户任务；后续 HF Slurm 任务按 `sinfo`/`squeue` 和实际 scaling 选择资源，忙节点不挤占。
 - [x] 利用共享目录完成一次代码同步即可；节点无需安装 Git，运行目录和 manifest 均记录对应的 Git commit。
 - [ ] 将 toy、model、VASP、ABACUS 四类示例分别标注为 `unit`、`model`、`DFT-smoke`、`production-template`，避免用户误把模板当成已收敛结果。
 - [x] 检查当前 `/home/zhuxd/abacus/8.dielec/vcneb` 旧代码与工作树的差异，保留可借鉴算法说明和输入格式，但不复制无法验证的逻辑。
