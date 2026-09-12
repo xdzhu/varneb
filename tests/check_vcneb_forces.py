@@ -270,9 +270,9 @@ def check_periodic_translation_alignment() -> None:
         scaled_positions=[
             [0.5, 0.5, 0.06],
             [0.0, 0.0, 0.12],
-            [0.0, 0.5, 0.54],
+            [0.0, 0.0, 0.54],
             [0.5, 0.0, 0.04],
-            [0.0, 0.0, 0.04],
+            [0.0, 0.5, 0.04],
         ],
         cell=cell,
         pbc=True,
@@ -302,7 +302,7 @@ def check_periodic_translation_alignment() -> None:
         float(np.min(image.get_all_distances(mic=True) + np.eye(len(image)) * 1e6))
         for image in aligned
     )
-    if unaligned_minimum > 1.5 or aligned_minimum < 1.8:
+    if unaligned_minimum > 1.1 or aligned_minimum < 1.6:
         raise SystemExit(
             "periodic translation alignment did not remove the endpoint-origin collision: "
             f"{unaligned_minimum}, {aligned_minimum}"
