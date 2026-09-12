@@ -48,8 +48,9 @@ def run_case(interpolation: str, seed: int, *, fmax: float, steps: int) -> dict:
         cell[2, 0] += 0.08 * rng.normal()
         image.set_cell(cell, scale_atoms=False)
         image.calc = ToyPhaseTransition(reference_cell)
-    initial.calc = ToyPhaseTransition(reference_cell)
-    final.calc = ToyPhaseTransition(reference_cell)
+    for image in images:
+        if image.calc is None:
+            image.calc = ToyPhaseTransition(reference_cell)
 
     chain, optimizer = run_vcneb(
         images,
