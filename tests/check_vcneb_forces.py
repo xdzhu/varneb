@@ -75,6 +75,36 @@ class MetricCellCalculator(Calculator):
         self.results["stress"] = -virial / atoms.get_volume()
 
 
+class LinearCoordinateCalculator(Calculator):
+    """Energy linear in one fractional coordinate, with no cell force."""
+
+    implemented_properties = ["energy", "forces", "stress"]
+
+    def __init__(self, slope=0.7):
+        super().__init__()
+        self.slope = float(slope)
+
+    def calculate(self, atoms=None, properties=("energy",), system_changes=all_changes):
+        super().calculate(atoms, properties, system_changes)
+        atoms = self.atoms
+        q = atoms.get_scaled_positions(wrap=False)
+        gradient = np.zeros_like(q)
+        gradient[0, 0] = self.slope
+        self.results["energy"] = float(self.slope * q[0, 0])
+        self.results["forces"] = -gradient @ np.linalg.inv(atoms.cell.array.T)
+        self.results["stress"] = np.zeros((3, 3), dtype=float)
+
+
+class ZeroCalculator(Calculator):
+    implemented_properties = ["energy", "forces", "stress"]
+
+    def calculate(self, atoms=None, properties=("energy",), system_changes=all_changes):
+        super().calculate(atoms, properties, system_changes)
+        self.results["energy"] = 0.0
+        self.results["forces"] = np.zeros((len(self.atoms), 3), dtype=float)
+        self.results["stress"] = np.zeros((3, 3), dtype=float)
+
+
 def check_cell_mask_regression() -> None:
     reference_cell = np.diag([5.0, 5.0, 5.0])
     initial = make_atoms(reference_cell, np.array([0.25, 0.5, 0.5]), np.eye(3))
@@ -310,6 +340,35 @@ def check_periodic_translation_alignment() -> None:
     if not np.allclose(aligned[0].positions, initial.positions):
         raise SystemExit("periodic translation alignment changed the initial endpoint")
     print("periodic_translation_alignment_regression=ok")
+
+
+def check_tangent_and_spring_components() -> None:
+    cell = np.diag([5.0, 5.0, 5.0])
+    monotonic = [
+        Atoms("Ar", positions=[[5.0 * coordinate, 0.0, 0.0]], cell=cell, pbc=True)
+        for coordinate in np.linspace(0.0, 1.0, 5)
+    ]
+    for image in monotonic:
+        image.calc = LinearCoordinateCalculator()
+    chain = VCNEB(monotonic, k=0.0, climb=False)
+    force = chain._compute_forces()
+    if np.max(np.abs(force)) > 1e-12:
+        raise SystemExit(f"monotonic tangent did not remove parallel force: {force}")
+
+    nonuniform = [
+        Atoms("Ar", positions=[[5.0 * coordinate, 0.0, 0.0]], cell=cell, pbc=True)
+        for coordinate in [0.0, 0.2, 0.7, 0.8, 1.0]
+    ]
+    for image in nonuniform:
+        image.calc = ZeroCalculator()
+    chain = VCNEB(nonuniform, k=1.0, climb=False)
+    force = chain._compute_forces().reshape(3, 12)
+    expected_x = np.array([1.5, -2.0, 0.5])
+    if not np.allclose(force[:, 0], expected_x, rtol=0.0, atol=1e-12):
+        raise SystemExit(f"spring force has the wrong extended-coordinate spacing: {force[:, 0]}")
+    if np.max(np.abs(force[:, 1:])) > 1e-12:
+        raise SystemExit("spring force leaked outside the path tangent")
+    print("tangent_and_spring_regression=ok")
 
 
 def check_nonorthogonal_mode_projection() -> None:
@@ -1051,6 +1110,7 @@ def main() -> None:
     check_atom_mapping()
     print("atom_mapping_regression=ok")
     check_periodic_translation_alignment()
+    check_tangent_and_spring_components()
     check_nonorthogonal_mode_projection()
     print("nonorthogonal_mode_projection_regression=ok")
     check_calculator_contract()
