@@ -259,6 +259,10 @@ VCNEB 的扩展 `x` 坐标列向量，再用 SVD 得到数值正交基；`constr
 5. 不同 `cell_scale` 下扩展度量、路径长度和收敛行为的敏感性分析。
 6. 严格模式投影与约化坐标实现的数值等价性。
 
+`examples/run_finite_difference_report.py` 对三条正应变和三条对称剪切应变扫描多个
+有限差分步长，并同时测试零压力与 `0.5 GPa` 外压。剪切变量的定义是同时扰动
+`F_ij` 与 `F_ji`，因此比较对象是对应两个 cell force 分量之和。
+
 ## 10. 文献和实现定位
 
 算法思想以变胞 NEB 文献中的扩展构型空间、cell 自由度和广义弹性带为理论背景；实现层参考 ASE 的 optimizer/calculator 契约、ASE UnitCellFilter 的应力到广义力处理，以及公开的 USPEX VCNEB 用户语义。最终论文必须逐项说明本项目与这些实现的坐标、cell 参数化、约束和 calculator 适配差异，不声称在没有源码证据时复现 USPEX 内部实现。
