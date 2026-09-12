@@ -341,6 +341,44 @@ def check_cell_validity_guards() -> None:
         raise SystemExit("VCNEB accepted an optimizer update with non-positive cell determinant")
 
 
+def check_nonorthogonal_cell_force_regression() -> None:
+    reference_cell = np.array(
+        [[4.7, 0.2, 0.0], [0.4, 5.1, 0.3], [0.1, 0.2, 5.4]],
+        dtype=float,
+    )
+    deform = np.array(
+        [[1.08, 0.12, 0.03], [0.02, 0.97, 0.08], [0.04, 0.01, 1.03]],
+        dtype=float,
+    )
+    q = np.array([0.42, 0.57, 0.48], dtype=float)
+
+    def build(deformation: np.ndarray) -> Atoms:
+        atoms = Atoms(
+            "Ar",
+            scaled_positions=[q],
+            cell=cell_from_deformation(deformation, reference_cell),
+            pbc=True,
+        )
+        atoms.calc = MetricCellCalculator(reference_cell)
+        return atoms
+
+    atoms = build(deform)
+    analytic = cell_force(atoms, reference_cell)
+    epsilon = 1e-6
+    max_error = 0.0
+    for row in range(3):
+        for col in range(3):
+            direction = np.zeros((3, 3))
+            direction[row, col] = 1.0
+            numeric = -(
+                build(deform + epsilon * direction).get_potential_energy()
+                - build(deform - epsilon * direction).get_potential_energy()
+            ) / (2.0 * epsilon)
+            max_error = max(max_error, abs(numeric - analytic[row, col]))
+    if max_error > 1e-7:
+        raise SystemExit(f"nonorthogonal cell-force regression failed: {max_error}")
+
+
 def check_mode_subspace_constraint() -> None:
     reference_cell = np.diag([5.0, 5.0, 5.0])
     initial = Atoms("Ar", scaled_positions=[[0.25, 0.5, 0.5]], cell=reference_cell, pbc=True)
@@ -853,6 +891,8 @@ def main() -> None:
     print("mask_validation_regression=ok")
     check_cell_validity_guards()
     print("cell_validity_guard_regression=ok")
+    check_nonorthogonal_cell_force_regression()
+    print("nonorthogonal_cell_force_regression=ok")
     check_mode_subspace_constraint()
     print("mode_subspace_constraint_regression=ok")
     check_projected_mode_constraint_and_direction_basis()

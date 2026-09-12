@@ -14,14 +14,38 @@ import sys
 
 import numpy as np
 from ase import Atoms
+from ase.calculators.calculator import Calculator, all_changes
 from ase.units import GPa
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from examples.run_toy_vcneb import ToyPhaseTransition
 from vcneb.core import cell_force, cell_from_deformation
+
+
+class MetricCellCalculator(Calculator):
+    """Rotation-invariant elastic energy with a symmetric Cauchy stress."""
+
+    implemented_properties = ["energy", "forces", "stress"]
+
+    def __init__(self, reference_cell: np.ndarray, *, stiffness: float = 0.8):
+        super().__init__()
+        self.reference_cell = np.asarray(reference_cell, dtype=float)
+        self.stiffness = float(stiffness)
+
+    def calculate(self, atoms=None, properties=("energy",), system_changes=all_changes):
+        super().calculate(atoms, properties, system_changes)
+        deform = np.linalg.solve(self.reference_cell, self.atoms.cell.array).T
+        metric = deform @ deform.T
+        delta = metric - np.eye(3)
+        energy = 0.5 * self.stiffness * float(np.sum(delta * delta))
+        grad_deform = 2.0 * self.stiffness * delta @ deform
+        generalized_force = -grad_deform
+        virial = generalized_force @ deform.T
+        self.results["energy"] = energy
+        self.results["forces"] = np.zeros((len(self.atoms), 3), dtype=float)
+        self.results["stress"] = -virial / self.atoms.get_volume()
 
 
 def make_atoms(reference_cell: np.ndarray, q: np.ndarray, deform: np.ndarray) -> Atoms:
@@ -31,7 +55,7 @@ def make_atoms(reference_cell: np.ndarray, q: np.ndarray, deform: np.ndarray) ->
         cell=cell_from_deformation(deform, reference_cell),
         pbc=True,
     )
-    atoms.calc = ToyPhaseTransition(reference_cell)
+    atoms.calc = MetricCellCalculator(reference_cell)
     return atoms
 
 
