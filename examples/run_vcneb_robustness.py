@@ -53,6 +53,17 @@ def run_case(interpolation: str, seed: int, *, fmax: float, steps: int) -> dict:
         if image.calc is None:
             image.calc = ToyPhaseTransition(reference_cell)
 
+    relaxed_chain, pre_optimizer = run_vcneb(
+        images,
+        k=0.15,
+        climb=False,
+        optimizer="FIRE",
+        fmax=fmax,
+        steps=steps,
+        logfile=None,
+        trajectory=None,
+        snapshot_dir=None,
+    )
     chain, optimizer = run_vcneb(
         images,
         k=0.15,
@@ -87,11 +98,15 @@ def run_case(interpolation: str, seed: int, *, fmax: float, steps: int) -> dict:
         "barrier_error_eV": abs(barrier - 0.25),
         "reaction_energy_eV": reaction,
         "final_max_generalized_force_eV_per_A": final_force,
+        "pre_relaxation_steps": int(getattr(pre_optimizer, "nsteps", -1)),
         "optimizer_steps": int(getattr(optimizer, "nsteps", -1)),
         "converged": bool(final_force < fmax),
         "saddle": saddle,
         "saddle_physical": {
+            "max_atom_force_eV_per_A": saddle_physical["max_atom_force_eV_per_A"],
+            "max_stress_eV_per_A3": saddle_physical["max_stress_eV_per_A3"],
             "max_true_generalized_force_eV_per_A": saddle_physical["max_true_generalized_force_eV_per_A"],
+            "cell_generalized_force_norm_eV_per_A": saddle_physical["cell_generalized_force_norm_eV_per_A"],
             "true_tangential_force_eV_per_A": saddle_physical["true_tangential_force_eV_per_A"],
             "true_perpendicular_force_eV_per_A": saddle_physical["true_perpendicular_force_eV_per_A"],
             "neb_residual_generalized_force_eV_per_A": saddle_physical[
