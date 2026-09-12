@@ -228,6 +228,16 @@ fully inactive columns, and rank loss.  These are constrained transition
 paths; a constrained saddle is not automatically a first-order saddle in the
 full configuration space.
 
+The three semantics are compared reproducibly by
+`examples/compare_mode_path_variants.py`: an unconstrained path, a
+mode-guided initial path followed by unconstrained VCNEB, and a strict
+atomic-plus-cell mode subspace.  On the coupled analytic toy surface, using
+seven images and `fmax=0.002 eV/A`, all three recover the same `0.25 eV`
+barrier within `2.6e-5 eV`; the strict case is exactly on the known MEP.  The
+HF record is `outputs/mode_path_variants_hf.json`.  This comparison is an
+algorithm test: a strict constrained saddle must still be interpreted as a
+saddle in the constrained space, not automatically as a full-space saddle.
+
 ## Local checks
 
 ```bash

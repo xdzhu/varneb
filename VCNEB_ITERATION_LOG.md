@@ -1,5 +1,17 @@
 # VC-NEB Iteration Log
 
+## Three mode-path semantics (`1badaa0`)
+
+- Ran `examples/compare_mode_path_variants.py` on `hf` using only the coupled
+  analytic `ToyPhaseTransition` calculator; no DFT job was submitted.
+- With seven images and `fmax=0.002 eV/A`, the unconstrained, mode-guided then
+  released, and strict coupled-mode branches give barriers `0.2500058`,
+  `0.2500251`, and `0.2500000 eV`, respectively, against the exact `0.25 eV`
+  reference.  All locate image 3 as the saddle with negative tangent
+  curvature; the strict branch is already converged at initialization.
+- Records: `outputs/mode_path_variants_hf.json` and
+  `outputs/mode_path_variants_hf_manifest.json`.
+
 ## Algorithm-first periodic endpoint gauge validation (`d710cb9`)
 
 - The first HF 7-image DFT trial was stopped after the initial force audit:
