@@ -56,3 +56,20 @@ The original unrelaxed-endpoint trial is retained separately: LBFGS oscillated
 after recovery, while FIRE reached a residual plateau near `1.25 eV/A`; this is
 useful for testing restart and optimizer diagnostics, not for a scientific
 barrier.
+
+## HF algorithm-first preflight
+
+The relaxed endpoints were recomputed on Hefei Slurm with 16 tasks per job,
+without exclusive-node allocation.  The cubic endpoint converged in 6 FIRE
+steps at `-3737.466765 eV` and `65.2741 A^3`; the tetragonal endpoint
+converged in 39 steps at `-3737.566081 eV` and `67.6792 A^3`, with maximum
+force `0.0041 eV/A`.
+
+Before restarting a DFT band, the calculator-free path check was run with
+`log_strain`, `mapping="auto"`, `align_translation=True`, and 7 images.  The
+minimum periodic distance improved from `1.328 A` to `1.797 A`, with maximum
+deformation `0.0631`; the configured hard thresholds are `1.6 A` and `0.10`.
+The machine-readable record is
+`outputs/batio3/batio3_hf_algorithm_preflight.json`.  The corresponding DFT
+NEB job was intentionally cancelled before optimization while the algorithm
+verification is being prioritized.

@@ -133,6 +133,24 @@ Automatic mapping is a geometry heuristic, not a chemical identity proof.  For
 large reconstructive transitions, inspect `mapping_report` or provide an
 explicit final-atom permutation.
 
+For periodic crystals whose endpoint coordinate origins differ by a lattice
+translation, enable the joint translation/mapping alignment before any
+calculator is attached:
+
+```python
+images = interpolate_vcneb(
+    initial, final, n_images=9, mapping="auto", mic=True,
+    align_translation=True, cell_interpolation="log_strain",
+    minimum_distance=1.0,
+)
+```
+
+This changes only the periodic coordinate gauge of the final endpoint.  The
+translation is chosen together with the element-grouped assignment, because
+independent MIC choices can otherwise create artificial short bonds in the
+interior path.  Always inspect the resulting mapping and geometry report for
+reconstructive transitions.
+
 The mode feature is intentionally split into an initial-path generator and a
 diagnostic projection.  The former bends the interior images with an
 endpoint-zero envelope, then a normal unconstrained NEB calculation can relax
