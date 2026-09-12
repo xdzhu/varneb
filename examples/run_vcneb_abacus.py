@@ -68,6 +68,11 @@ def parse_args() -> argparse.Namespace:
         default="identity",
         help="Endpoint atom mapping strategy",
     )
+    parser.add_argument(
+        "--align-translation",
+        action="store_true",
+        help="Optimize a common periodic endpoint translation with atom mapping",
+    )
     parser.add_argument("--no-climb", action="store_true")
     parser.add_argument("--resume", action="store_true", help="Resume from the latest complete chain in vcneb.traj")
     parser.add_argument("--resume-trajectory", default=None, help="Trajectory to resume from; defaults to workdir/vcneb.traj")
@@ -107,6 +112,7 @@ def main() -> None:
             mic=args.mic,
             cell_interpolation=args.cell_interpolation,
             mapping=None if args.mapping == "identity" else "auto",
+            align_translation=args.align_translation,
         )
     write(workdir / "initial-vcneb.traj", images)
 

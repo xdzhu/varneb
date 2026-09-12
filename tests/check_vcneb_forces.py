@@ -251,6 +251,67 @@ def check_atom_mapping() -> None:
         raise SystemExit("atom mapping accepted pairs with different elements")
 
 
+def check_periodic_translation_alignment() -> None:
+    cell = np.diag([4.0, 4.0, 4.0])
+    initial = Atoms(
+        "BaTiO3",
+        scaled_positions=[
+            [0.0, 0.0, 0.0],
+            [0.5, 0.5, 0.5],
+            [0.5, 0.5, 0.0],
+            [0.0, 0.5, 0.5],
+            [0.5, 0.0, 0.5],
+        ],
+        cell=cell,
+        pbc=True,
+    )
+    final = Atoms(
+        "BaTiO3",
+        scaled_positions=[
+            [0.5, 0.5, 0.06],
+            [0.0, 0.0, 0.12],
+            [0.0, 0.5, 0.54],
+            [0.5, 0.0, 0.04],
+            [0.0, 0.0, 0.04],
+        ],
+        cell=cell,
+        pbc=True,
+    )
+    unaligned = interpolate_vcneb(
+        initial,
+        final,
+        n_images=7,
+        align_cells=False,
+        mic=True,
+        mapping="auto",
+    )
+    aligned = interpolate_vcneb(
+        initial,
+        final,
+        n_images=7,
+        align_cells=False,
+        mic=True,
+        mapping="auto",
+        align_translation=True,
+    )
+    unaligned_minimum = min(
+        float(np.min(image.get_all_distances(mic=True) + np.eye(len(image)) * 1e6))
+        for image in unaligned
+    )
+    aligned_minimum = min(
+        float(np.min(image.get_all_distances(mic=True) + np.eye(len(image)) * 1e6))
+        for image in aligned
+    )
+    if unaligned_minimum > 1.5 or aligned_minimum < 1.8:
+        raise SystemExit(
+            "periodic translation alignment did not remove the endpoint-origin collision: "
+            f"{unaligned_minimum}, {aligned_minimum}"
+        )
+    if not np.allclose(aligned[0].positions, initial.positions):
+        raise SystemExit("periodic translation alignment changed the initial endpoint")
+    print("periodic_translation_alignment_regression=ok")
+
+
 def check_nonorthogonal_mode_projection() -> None:
     reference_cell = np.diag([5.0, 5.0, 5.0])
     reference = Atoms("Ar", scaled_positions=[[0.25, 0.5, 0.5]], cell=reference_cell, pbc=True)
@@ -989,6 +1050,7 @@ def main() -> None:
     print("cell_interpolation_regression=ok")
     check_atom_mapping()
     print("atom_mapping_regression=ok")
+    check_periodic_translation_alignment()
     check_nonorthogonal_mode_projection()
     print("nonorthogonal_mode_projection_regression=ok")
     check_calculator_contract()

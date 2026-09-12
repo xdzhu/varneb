@@ -181,9 +181,12 @@ def _mapping_cost_matrix(
     final_indices: Sequence[int],
     *,
     mic: bool,
+    translation: Array | None = None,
 ) -> Array:
     q0 = initial.get_scaled_positions(wrap=False)
     q1 = final.get_scaled_positions(wrap=False)
+    if translation is not None:
+        q1 = q1 + np.asarray(translation, dtype=float)
     distance_cell = 0.5 * (cell_matrix(initial) + cell_matrix(final))
     costs = np.zeros((len(initial_indices), len(final_indices)), dtype=float)
     for row, initial_index in enumerate(initial_indices):
@@ -197,6 +200,113 @@ def _mapping_cost_matrix(
             # A tiny stable tie-breaker makes repeated coordinates deterministic.
             costs[row, column] = float(np.linalg.norm(delta @ distance_cell)) + 1e-12 * column
     return costs
+
+
+def _translation_candidates(
+    initial: Atoms,
+    final: Atoms,
+    pairs: Sequence[tuple[int, int]],
+) -> list[Array]:
+    """Generate deterministic fractional translations from matched atom pairs."""
+
+    q0 = initial.get_scaled_positions(wrap=False)
+    q1 = final.get_scaled_positions(wrap=False)
+    pbc = np.asarray(initial.pbc, dtype=bool)
+    candidates = [np.zeros(3, dtype=float)]
+    for initial_index, final_index in pairs:
+        shift = q0[initial_index] - q1[final_index]
+        shift = np.asarray(shift, dtype=float)
+        shift[pbc] -= np.floor(shift[pbc])
+        shift[~pbc] = 0.0
+        if not any(np.allclose(shift, previous, rtol=0.0, atol=1e-12) for previous in candidates):
+            candidates.append(shift)
+    return candidates
+
+
+def _translation_cost(
+    initial: Atoms,
+    final: Atoms,
+    mapping: Sequence[int],
+    translation: Array,
+    *,
+    mic: bool,
+) -> float:
+    q0 = initial.get_scaled_positions(wrap=False)
+    q1 = final.get_scaled_positions(wrap=False) + np.asarray(translation, dtype=float)
+    distance_cell = 0.5 * (cell_matrix(initial) + cell_matrix(final))
+    total = 0.0
+    for initial_index, final_index in enumerate(mapping):
+        delta = _fractional_delta(
+            q1[final_index : final_index + 1],
+            q0[initial_index : initial_index + 1],
+            initial.pbc,
+            mic,
+        )[0]
+        total += float(np.linalg.norm(delta @ distance_cell))
+    return total
+
+
+def _infer_mapping_and_translation(
+    initial: Atoms,
+    final: Atoms,
+    *,
+    mic: bool,
+) -> tuple[list[int], Array]:
+    """Infer atom assignment and a common periodic translation together."""
+
+    symbols0 = initial.get_chemical_symbols()
+    symbols1 = final.get_chemical_symbols()
+    if sorted(symbols0) != sorted(symbols1):
+        raise ValueError("Initial and final structures do not contain the same elements")
+    pairs = [
+        (initial_index, final_index)
+        for initial_index, symbol0 in enumerate(symbols0)
+        for final_index, symbol1 in enumerate(symbols1)
+        if symbol0 == symbol1
+    ]
+    best_cost = np.inf
+    best_mapping: list[int] | None = None
+    best_translation: Array | None = None
+    for translation in _translation_candidates(initial, final, pairs):
+        mapping = [-1] * len(initial)
+        total = 0.0
+        for symbol in sorted(set(symbols0)):
+            initial_indices = [index for index, value in enumerate(symbols0) if value == symbol]
+            final_indices = [index for index, value in enumerate(symbols1) if value == symbol]
+            costs = _mapping_cost_matrix(
+                initial,
+                final,
+                initial_indices,
+                final_indices,
+                mic=mic,
+                translation=translation,
+            )
+            assignment = _minimum_cost_assignment(costs)
+            for row, final_column in enumerate(assignment):
+                mapping[initial_indices[row]] = final_indices[final_column]
+                total += float(costs[row, final_column])
+        if total < best_cost - 1e-12:
+            best_cost = total
+            best_mapping = mapping
+            best_translation = translation.copy()
+    if best_mapping is None or best_translation is None:
+        raise ValueError("could not infer a finite atom mapping and translation")
+    return best_mapping, best_translation
+
+
+def _infer_translation_for_mapping(
+    initial: Atoms,
+    final: Atoms,
+    mapping: Sequence[int],
+    *,
+    mic: bool,
+) -> Array:
+    pairs = list(enumerate(mapping))
+    candidates = _translation_candidates(initial, final, pairs)
+    return min(
+        candidates,
+        key=lambda translation: _translation_cost(initial, final, mapping, translation, mic=mic),
+    ).copy()
 
 
 def infer_atom_mapping(initial: Atoms, final: Atoms, *, mic: bool = True) -> list[int]:
@@ -362,6 +472,7 @@ def interpolate_vcneb(
     n_images: int,
     *,
     align_cells: bool = True,
+    align_translation: bool = False,
     mic: bool = False,
     wrap_positions: bool = False,
     cell_interpolation: str | Callable[[float, Array, Array], Array] = "linear",
@@ -378,7 +489,9 @@ def interpolate_vcneb(
     given ``(lambda, deform0, deform1)`` and must return a finite 3x3 matrix.
     ``mapping`` is ``None`` for the backward-compatible identity mapping,
     ``"auto"`` for an element-grouped geometry assignment, or a permutation
-    indexed by the initial atom order.
+    indexed by the initial atom order.  With ``align_translation=True``, a
+    common periodic endpoint translation is optimized together with an
+    automatic mapping (or separately for an explicit mapping).
     ``minimum_distance`` and ``maximum_deformation`` are optional preflight
     thresholds.  They are useful for rejecting an unphysical initial path
     before any calculator is invoked; the default keeps the historical
@@ -393,10 +506,32 @@ def interpolate_vcneb(
     _validate_cell_matrix(cell_matrix(final), context="final cell")
 
     first = initial.copy()
-    mapping_report = validate_atom_mapping(initial, final, mapping, mic=mic)
-    last = final[mapping_report["mapping"]].copy()
+    last_source = final.copy()
     if align_cells:
-        remove_global_rotation(first, last)
+        remove_global_rotation(first, last_source)
+
+    if align_translation and (mapping is None or str(mapping).lower() == "auto"):
+        resolved_mapping, translation = _infer_mapping_and_translation(
+            first,
+            last_source,
+            mic=mic,
+        )
+    else:
+        mapping_report = validate_atom_mapping(first, last_source, mapping, mic=mic)
+        resolved_mapping = mapping_report["mapping"]
+        translation = (
+            _infer_translation_for_mapping(
+                first,
+                last_source,
+                resolved_mapping,
+                mic=mic,
+            )
+            if align_translation
+            else np.zeros(3, dtype=float)
+        )
+    last = last_source[resolved_mapping].copy()
+    if align_translation:
+        last.set_scaled_positions(last.get_scaled_positions(wrap=False) + translation)
 
     reference_cell = cell_matrix(first)
     q0 = first.get_scaled_positions(wrap=False)
