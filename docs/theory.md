@@ -217,6 +217,8 @@ determinant。
 \]
 
 其中 `b` 可取 `sin(pi lambda)`、`4 lambda(1-lambda)` 或线性包络。端点严格不变；后续普通 VC-NEB 仍在全空间优化。因此它是初始路径生成器，不是约束 MEP。
+该接口复用结构插值的 `cell_interpolation`、`mapping`、`align_translation` 和几何阈值参数，
+因此模式引导不会绕过周期端点 gauge 对齐或 calculator-free 路径预检。
 
 ### 7.2 严格模式子空间
 

@@ -172,6 +172,11 @@ images = mode_guided_path(
 modal_coordinates = project_path_onto_modes(images, initial, mode)
 ```
 
+`mode_guided_path()` accepts the same `cell_interpolation`, `mapping`,
+`align_translation`, `minimum_distance`, and `maximum_deformation` controls as
+`interpolate_vcneb()`, so a mode-guided path cannot silently bypass endpoint
+mapping or calculator-free geometry checks.
+
 For an explicit preflight before creating an optimizer:
 
 ```python
