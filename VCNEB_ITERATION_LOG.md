@@ -19,6 +19,16 @@
   path checks are considered complete.  See
   `outputs/batio3/batio3_hf_algorithm_preflight.json`.
 
+## Fixed-cell ASE reference comparison (`7259657`)
+
+- The analytic coupled toy surface was run with the same seven images and
+  climbing-image settings through ASE CINEB and VCNEB with `cell_mask=0`.
+- ASE returned a barrier of `0.2811707727 eV`; VCNEB returned
+  `0.2811614404 eV`, an absolute difference of `9.33e-6 eV`.  The reaction
+  energy was `0.1774 eV` in both paths, and both identified image 4 as the
+  saddle with negative tangent curvature.
+- The machine-readable comparison is `outputs/fixed_cell_ase_comparison_hf.json`.
+
 ## HfO2 linear versus logarithmic-strain preflight (`403d06b`)
 
 - Before the run, `cu17` was checked at `2026-09-12T08:15:51+08:00`:
