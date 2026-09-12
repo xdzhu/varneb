@@ -20,7 +20,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from vcneb import interpolate_vcneb, read_chain_trajectory, run_vcneb
+from vcneb import interpolate_vcneb, path_geometry_diagnostics, read_chain_trajectory, run_vcneb
 from vcneb.abacus import attach_abacus_calculators, make_ase_abacus_factory
 
 
@@ -129,6 +129,7 @@ def main() -> None:
             maximum_deformation=args.maximum_deformation,
         )
     write(workdir / "initial-vcneb.traj", images)
+    initial_geometry = path_geometry_diagnostics(images)
 
     parameters = {
         "calculation": "scf",
@@ -185,6 +186,10 @@ def main() -> None:
         "n_images": args.n_images,
         "cell_interpolation": args.cell_interpolation,
         "mapping": args.mapping,
+        "align_translation": args.align_translation,
+        "minimum_distance_threshold_A": args.minimum_distance,
+        "maximum_deformation_threshold": args.maximum_deformation,
+        "initial_path_geometry": initial_geometry,
         "optimizer": args.optimizer,
         "steps_requested": args.steps,
         "fmax_target_eV_per_A": args.fmax,
