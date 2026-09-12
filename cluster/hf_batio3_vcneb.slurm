@@ -41,8 +41,8 @@ if [[ "${RESUME:-0}" != 0 ]]; then
 fi
 
 exec "${python}" examples/run_vcneb_abacus.py \
-  --initial validation/batio3_cubic_to_tetragonal/endpoint_relax_cubic/CONTCAR \
-  --final validation/batio3_cubic_to_tetragonal/endpoint_relax_tetragonal/CONTCAR \
+  --initial validation/batio3_cubic_to_tetragonal/hf_endpoint_relax_cubic/CONTCAR \
+  --final validation/batio3_cubic_to_tetragonal/hf_endpoint_relax_tetragonal/CONTCAR \
   --workdir "${workdir}" --n-images "${n_images}" --fmax "${fmax}" \
   --steps "${steps}" --k "${spring}" --optimizer "${optimizer}" \
   --maxstep "${maxstep}" --command "srun --mpi=pmix_v3 -n ${SLURM_NTASKS} ${abacus}" \
