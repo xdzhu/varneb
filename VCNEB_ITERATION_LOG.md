@@ -40,6 +40,11 @@
 - Records: `outputs/vcneb_algorithm_matrix_hf.json` and
   `outputs/vcneb_algorithm_matrix_hf_manifest.json`.
 
+The tangent regression now also exercises a non-collinear path in monotonic,
+peak, and valley energy regimes.  It confirms the expected energy-weighted
+improved-tangent direction in the same extended coordinate space used by the
+spring test.
+
 ## HfO2 linear versus logarithmic-strain preflight (`403d06b`)
 
 - Before the run, `cu17` was checked at `2026-09-12T08:15:51+08:00`:
