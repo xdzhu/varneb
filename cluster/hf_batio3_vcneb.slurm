@@ -2,9 +2,8 @@
 #SBATCH -J vcneb-bto-neb
 #SBATCH -p hfacnormal01
 #SBATCH -N 1
-#SBATCH --ntasks=40
+#SBATCH --ntasks=16
 #SBATCH --cpus-per-task=1
-#SBATCH --exclusive
 #SBATCH -o /public/home/iai806/abacus/agent-runs/20260912-vcneb-hf/slurm-%x-%j.out
 #SBATCH -e /public/home/iai806/abacus/agent-runs/20260912-vcneb-hf/slurm-%x-%j.err
 
@@ -45,7 +44,7 @@ exec "${python}" examples/run_vcneb_abacus.py \
   --final validation/batio3_cubic_to_tetragonal/endpoint_relax_tetragonal/CONTCAR \
   --workdir "${workdir}" --n-images "${n_images}" --fmax "${fmax}" \
   --steps "${steps}" --k "${spring}" --optimizer "${optimizer}" \
-  --maxstep "${maxstep}" --command "srun --mpi=pmix_v3 -n 40 ${abacus}" \
+  --maxstep "${maxstep}" --command "srun --mpi=pmix_v3 -n ${SLURM_NTASKS} ${abacus}" \
   --pseudo-dir "${pseudo_dir}" --basis-dir "${basis_dir}" \
   --pp Ba=Ba.upf --pp Ti=Ti.upf --pp O=O.upf \
   --basis Ba=Ba_gga_10au_100Ry_4s2p1d.orb \

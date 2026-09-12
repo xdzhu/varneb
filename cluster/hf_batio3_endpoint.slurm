@@ -2,9 +2,8 @@
 #SBATCH -J vcneb-bto-end
 #SBATCH -p hfacnormal01
 #SBATCH -N 1
-#SBATCH --ntasks=40
+#SBATCH --ntasks=16
 #SBATCH --cpus-per-task=1
-#SBATCH --exclusive
 #SBATCH -o /public/home/iai806/abacus/agent-runs/20260912-vcneb-hf/slurm-%x-%j.out
 #SBATCH -e /public/home/iai806/abacus/agent-runs/20260912-vcneb-hf/slurm-%x-%j.err
 
@@ -33,7 +32,7 @@ cd "${repo}"
 exec "${python}" examples/relax_abacus_endpoint.py \
   --structure "validation/batio3_cubic_to_tetragonal/source_structures/${structure}" \
   --workdir "validation/batio3_cubic_to_tetragonal/endpoint_relax_${endpoint}" \
-  --command "srun --mpi=pmix_v3 -n 40 ${abacus}" \
+  --command "srun --mpi=pmix_v3 -n ${SLURM_NTASKS} ${abacus}" \
   --pseudo-dir "${pseudo_dir}" \
   --basis-dir "${basis_dir}" \
   --pp Ba=Ba.upf --pp Ti=Ti.upf --pp O=O.upf \

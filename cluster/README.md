@@ -1,8 +1,9 @@
 # Cluster launch templates
 
 The Slurm templates in this directory are for the Hefei cluster.  They use
-one exclusive 40-task node per job and run ABACUS through `srun`, while the
-Python driver evaluates the images sequentially.  The templates assume the
+one 16-task allocation by default and run ABACUS through `srun`, while the
+Python driver evaluates the images sequentially.  The 128-CPU nodes are not
+reserved exclusively for these small five-atom tests.  The templates assume the
 shared `/public/home/iai806` layout and the `hfacnormal01` partition.
 
 From `ssh hf`, after checking `sinfo` and `squeue`, sync the repository and
@@ -19,6 +20,20 @@ After both `CONTCAR` files exist, a no-climb preconvergence run is:
 sbatch --export=ALL,N_IMAGES=7,STEPS=300,FMAX=0.03,MAXSTEP=0.02 \
   cluster/hf_batio3_vcneb.slurm
 ```
+
+The scripts use `${SLURM_NTASKS}` in the `srun` command, so the actual
+allocation controls the MPI width.  For this small cell start with 16 tasks;
+after a timing check, a larger run can request 32 tasks without changing the
+workflow:
+
+```bash
+sbatch --ntasks=32 --export=ALL,N_IMAGES=7,STEPS=300 \
+  cluster/hf_batio3_vcneb.slurm
+```
+
+Do not request `--exclusive` for these small tests.  For a larger HfO2 cell,
+select the MPI width from an explicit scaling test and record it in the run
+manifest.
 
 An independent nine-image run can use a distinct work directory:
 
