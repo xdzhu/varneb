@@ -378,6 +378,39 @@ def check_tangent_and_spring_components() -> None:
     print("tangent_and_spring_regression=ok")
 
 
+def check_energy_weighted_tangent_regimes() -> None:
+    cell = np.diag([5.0, 5.0, 5.0])
+    images = [
+        Atoms("Ar", positions=[[0.0, 0.0, 0.0]], cell=cell, pbc=True)
+        for _ in range(5)
+    ]
+    for image in images:
+        image.calc = ZeroCalculator()
+    chain = VCNEB(images, k=0.0, climb=False)
+    image_x = []
+    for x, y in [(0.0, 0.0), (1.0, 0.0), (2.0, 0.0), (2.5, 1.0), (3.0, 2.0)]:
+        vector = np.zeros(chain.image_ndofs)
+        vector[:2] = [x, y]
+        image_x.append(vector)
+
+    tangent = chain._tangent(2, np.array([0.0, 1.0, 3.0, 2.0, 0.0]), image_x)
+    expected = np.array([2.5, 1.0])
+    expected /= np.linalg.norm(expected)
+    if not np.allclose(tangent[:2], expected, rtol=0.0, atol=1e-12):
+        raise SystemExit(f"energy-weighted peak tangent is wrong: {tangent[:2]}")
+
+    tangent = chain._tangent(2, np.array([0.0, 3.0, 1.0, 2.0, 0.0]), image_x)
+    if not np.allclose(tangent[:2], expected, rtol=0.0, atol=1e-12):
+        raise SystemExit(f"energy-weighted valley tangent is wrong: {tangent[:2]}")
+
+    monotonic = chain._tangent(2, np.array([0.0, 1.0, 2.0, 3.0, 4.0]), image_x)
+    expected_monotonic = np.array([0.5, 1.0])
+    expected_monotonic /= np.linalg.norm(expected_monotonic)
+    if not np.allclose(monotonic[:2], expected_monotonic, rtol=0.0, atol=1e-12):
+        raise SystemExit(f"monotonic tangent is wrong: {monotonic[:2]}")
+    print("energy_weighted_tangent_regression=ok")
+
+
 def check_nonorthogonal_mode_projection() -> None:
     reference_cell = np.diag([5.0, 5.0, 5.0])
     reference = Atoms("Ar", scaled_positions=[[0.25, 0.5, 0.5]], cell=reference_cell, pbc=True)
@@ -1118,6 +1151,7 @@ def main() -> None:
     print("atom_mapping_regression=ok")
     check_periodic_translation_alignment()
     check_tangent_and_spring_components()
+    check_energy_weighted_tangent_regimes()
     check_nonorthogonal_mode_projection()
     print("nonorthogonal_mode_projection_regression=ok")
     check_calculator_contract()
