@@ -56,6 +56,18 @@ def parse_args() -> argparse.Namespace:
         help="Optional ASE optimizer maxstep in Angstrom-like extended coordinates",
     )
     parser.add_argument("--mic", action="store_true")
+    parser.add_argument(
+        "--cell-interpolation",
+        choices=["linear", "log_strain"],
+        default="linear",
+        help="Cell deformation path used for initial images",
+    )
+    parser.add_argument(
+        "--mapping",
+        choices=["identity", "auto"],
+        default="identity",
+        help="Endpoint atom mapping strategy",
+    )
     parser.add_argument("--no-climb", action="store_true")
     parser.add_argument("--resume", action="store_true", help="Resume from the latest complete chain in vcneb.traj")
     parser.add_argument("--resume-trajectory", default=None, help="Trajectory to resume from; defaults to workdir/vcneb.traj")
@@ -87,7 +99,15 @@ def main() -> None:
         images = read_chain_trajectory(resume_path, n_images=args.n_images)
         print(f"[OK] resumed latest complete {args.n_images}-image chain from {resume_path}")
     else:
-        images = interpolate_vcneb(initial, final, n_images=args.n_images, align_cells=True, mic=args.mic)
+        images = interpolate_vcneb(
+            initial,
+            final,
+            n_images=args.n_images,
+            align_cells=True,
+            mic=args.mic,
+            cell_interpolation=args.cell_interpolation,
+            mapping=None if args.mapping == "identity" else "auto",
+        )
     write(workdir / "initial-vcneb.traj", images)
 
     parameters = {
@@ -143,6 +163,8 @@ def main() -> None:
     summary = {
         "workdir": str(workdir),
         "n_images": args.n_images,
+        "cell_interpolation": args.cell_interpolation,
+        "mapping": args.mapping,
         "optimizer": args.optimizer,
         "steps_requested": args.steps,
         "fmax_target_eV_per_A": args.fmax,

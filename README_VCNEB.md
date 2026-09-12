@@ -50,7 +50,7 @@ saddle character.
 - `vcneb/calculator.py`: capability preflight and image-aware calculator diagnostics.
 - `examples/run_toy_vcneb.py`: analytic smoke test with a known 0.25 eV barrier.
 - `examples/run_hfo2_t_po_model_vcneb.py`: mapped 12-atom HfO2 T -> PO geometry smoke test with a synthetic endpoint double-well calculator.
-- `examples/compare_hfo2_initial_paths.py`: calculator-free comparison of linear and logarithmic-strain HfO2 initial paths.
+- `examples/compare_initial_cell_paths.py`: calculator-free comparison of linear and logarithmic-strain initial paths for any ASE-readable endpoint pair (defaults to HfO2); supports `--mapping auto`.
 - `examples/run_vcneb_vasp.py`: VASP driver based on the existing endpoint layout.
 - `examples/run_fixed_cell_ase_comparison.py`: ASE CINEB versus fixed-cell VCNEB comparison.
 - `examples/run_vasp_single_image_smoke.py`: real VASP energy/force/stress smoke driver.

@@ -1,4 +1,4 @@
-"""Compare calculator-free initial cell paths for the HfO2 fixture."""
+"""Compare calculator-free initial cell paths for an endpoint pair."""
 
 from __future__ import annotations
 
@@ -24,6 +24,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--initial", default=str(FIXTURE / "T_HfO2_12.vasp"))
     parser.add_argument("--final", default=str(FIXTURE / "PO_HfO2_12_mapped.vasp"))
     parser.add_argument("--n-images", type=int, default=7)
+    parser.add_argument("--mapping", choices=["identity", "auto"], default="identity")
     parser.add_argument(
         "--output",
         default=str(ROOT / "outputs" / "hfo2_initial_path_comparison.json"),
@@ -56,7 +57,8 @@ def main() -> None:
     args = parse_args()
     initial = read(args.initial)
     final = read(args.final)
-    mapping_report = validate_atom_mapping(initial, final, None, mic=True)
+    mapping_value = None if args.mapping == "identity" else "auto"
+    mapping_report = validate_atom_mapping(initial, final, mapping_value, mic=True)
     result = {
         "initial": str(Path(args.initial).resolve()),
         "final": str(Path(args.final).resolve()),
@@ -73,6 +75,7 @@ def main() -> None:
             align_cells=True,
             mic=True,
             cell_interpolation=strategy,
+            mapping=mapping_value,
         )
         result["paths"][strategy] = summarize(images)
         if trajectory_directory is not None:

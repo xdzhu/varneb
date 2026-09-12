@@ -112,7 +112,7 @@
 - [x] 实现 cell 插值策略选择器：线性、正定 deformation 的对数应变插值和用户自定义插值，并对不适用的 log 路径明确报错。
 - [ ] 对每个中间 image 检查 cell determinant、原子重叠、最小距离和异常应变；异常时在初始化阶段明确失败。
 - [x] 已加入 calculator-free 的路径几何审计，报告体积、周期 MIC 最短距离和 deformation；可通过插值参数在初始化阶段硬拒绝碰撞/异常 deformation。
-- [x] 已加入 HfO2 `linear`/`log_strain` 初始路径比较脚本，固定 image 数和端点映射后输出体积、最短距离和 deformation 分布。
+- [x] 已加入通用 `linear`/`log_strain` 初始路径比较脚本，固定 image 数和端点映射后输出体积、最短距离和 deformation 分布，并可复用于 HfO2/BaTiO3；BaTiO3 预检已发现并修正 identity 映射导致的 O 原子近重合。
 - [ ] 增加基于模式的初始路径组合：结构插值 + 模式位移 + cell 模式，并保持端点严格一致。
 
 ### 6.2 NEB/VCNEB 力与优化
