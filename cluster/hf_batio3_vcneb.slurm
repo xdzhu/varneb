@@ -23,6 +23,13 @@ spring=${SPRING:-0.2}
 optimizer=${OPTIMIZER:-FIRE}
 maxstep=${MAXSTEP:-0.02}
 climb_after=${CLIMB_AFTER:-100}
+ecutwfc=${ECUTWFC:-100}
+scf_thr=${SCF_THR:-1e-8}
+scf_nmax=${SCF_NMAX:-150}
+mixing_beta=${MIXING_BETA:-0.3}
+kpt_x=${KPT_X:-4}
+kpt_y=${KPT_Y:-4}
+kpt_z=${KPT_Z:-4}
 workdir=${WORKDIR:-validation/batio3_cubic_to_tetragonal/vcneb_n${n_images}_${optimizer,,}_pbe100}
 
 module purge
@@ -51,8 +58,9 @@ exec "${python}" examples/run_vcneb_abacus.py \
   --basis Ba=Ba_gga_10au_100Ry_4s2p1d.orb \
   --basis Ti=Ti_gga_8au_100Ry_4s2p2d1f.orb \
   --basis O=O_gga_7au_100Ry_2s2p1d.orb \
-  --ecutwfc 100 --scf-thr 1e-8 --scf-nmax 150 --mixing-beta 0.3 \
-  --kpts 4 4 4 --mic --cell-interpolation log_strain --mapping auto --align-translation \
+  --ecutwfc "${ecutwfc}" --scf-thr "${scf_thr}" --scf-nmax "${scf_nmax}" \
+  --mixing-beta "${mixing_beta}" --kpts "${kpt_x}" "${kpt_y}" "${kpt_z}" \
+  --mic --cell-interpolation log_strain --mapping auto --align-translation \
   --minimum-distance 1.6 --maximum-deformation 0.10 \
   --climb-after "${climb_after}" \
   "${climb_args[@]}" "${resume_args[@]}"
