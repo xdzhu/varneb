@@ -108,9 +108,9 @@
 ### 6.1 插值与结构路径
 
 - [x] 实现端点原子自动映射检查：按元素分组、用周期最小镜像几何代价求 permutation，并允许用户显式提供 mapping；`validate_atom_mapping()` 返回可审计位移报告。
-- [ ] 实现分数坐标最小镜像插值，避免跨周期边界产生长路径。
+- [x] 实现分数坐标最小镜像插值，避免跨周期边界产生长路径，并加入公共周期平移与 mapping 联合预处理。
 - [x] 实现 cell 插值策略选择器：线性、正定 deformation 的对数应变插值和用户自定义插值，并对不适用的 log 路径明确报错。
-- [ ] 对每个中间 image 检查 cell determinant、原子重叠、最小距离和异常应变；异常时在初始化阶段明确失败。
+- [x] 对每个中间 image 检查 cell determinant、原子重叠、最小距离和异常应变；异常时在初始化阶段明确失败。
 - [x] 已加入 calculator-free 的路径几何审计，报告体积、周期 MIC 最短距离和 deformation；可通过插值参数在初始化阶段硬拒绝碰撞/异常 deformation。
 - [x] 已加入通用 `linear`/`log_strain` 初始路径比较脚本，固定 image 数和端点映射后输出体积、最短距离和 deformation 分布，并可复用于 HfO2/BaTiO3；BaTiO3 预检已发现并修正 identity 映射导致的 O 原子近重合。
 - [ ] 增加基于模式的初始路径组合：结构插值 + 模式位移 + cell 模式，并保持端点严格一致。
@@ -188,7 +188,7 @@
 ### 8.2 解析模型
 
 - [x] 构造含原子坐标和 cell 变量的可控多井势，已知 minimum、saddle 和能垒；toy 与 HfO2 12 原子 synthetic model 均已端到端运行。
-- [ ] 构造含耦合项的 toy model，验证路径不能被错误地拆成独立原子和 cell 两条路径。
+- [x] 构造含耦合项的 toy model，验证路径不能被错误地拆成独立原子和 cell 两条路径；`ToyPhaseTransition` 的双井方向同时含原子与 cell strain。
 - [x] 在解析模型上对比不同弹簧常数、不同 image 数、FIRE/LBFGS 和 `cell_scale`；无弹簧与真实 DFT 组合仍待补充。
 - [x] `examples/run_vcneb_convergence.py` 已在指定集群完成 54 组收敛矩阵并记录结果。
 - [x] 收敛矩阵首次运行暴露并修正了测试端点漏设最终 cell strain 的问题；修正版 54/54 通过。

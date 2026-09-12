@@ -1,5 +1,24 @@
 # VC-NEB Iteration Log
 
+## Algorithm-first periodic endpoint gauge validation (`d710cb9`)
+
+- The first HF 7-image DFT trial was stopped after the initial force audit:
+  the relaxed BaTiO3 endpoints had a periodic origin mismatch, and direct
+  interpolation produced a shortest Ti-O distance of `1.328 A` with an
+  initial generalized force of `39.018558 eV/A`.
+- Implemented optional `align_translation=True`, which jointly optimizes a
+  common periodic fractional translation and the element-grouped atom
+  assignment.  The aligned calculator-free path has minimum distance
+  `1.797 A` and maximum deformation `0.0631`; the CLI exposes hard geometry
+  thresholds before any calculator is invoked.
+- The complete regression suite passes, including the new periodic translation
+  test.  The coupled analytic toy VCNEB/CI run recovers the known barrier as
+  `0.250004 eV` versus `0.25 eV` and converges at step 47.
+- The HF endpoint relaxations are retained as versioned fixtures and the
+  subsequent DFT NEB run was intentionally cancelled until the algorithmic
+  path checks are considered complete.  See
+  `outputs/batio3/batio3_hf_algorithm_preflight.json`.
+
 ## HfO2 linear versus logarithmic-strain preflight (`403d06b`)
 
 - Before the run, `cu17` was checked at `2026-09-12T08:15:51+08:00`:
