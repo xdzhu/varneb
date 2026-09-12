@@ -45,6 +45,11 @@ peak, and valley energy regimes.  It confirms the expected energy-weighted
 improved-tangent direction in the same extended coordinate space used by the
 spring test.
 
+The strict-mode regression now includes a coupled atomic/cell mode whose
+endpoint displacement lies exactly in the allowed subspace.  CI-VCNEB recovers
+the analytic barrier and saddle residual without requiring an artificial
+optimizer step when the initial path is already converged.
+
 ## HfO2 linear versus logarithmic-strain preflight (`403d06b`)
 
 - Before the run, `cu17` was checked at `2026-09-12T08:15:51+08:00`:
