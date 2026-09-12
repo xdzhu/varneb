@@ -681,6 +681,40 @@ def check_mode_subspace_constraint() -> None:
     else:
         raise SystemExit("strict mode subspace accepted incompatible endpoints")
 
+    coupled_initial = Atoms("Ar", scaled_positions=[[0.25, 0.5, 0.5]], cell=reference_cell, pbc=True)
+    coupled_final = Atoms("Ar", scaled_positions=[[0.75, 0.5, 0.5]], cell=reference_cell, pbc=True)
+    coupled_cell = reference_cell.copy()
+    coupled_cell[0, 0] *= 1.25
+    coupled_final.set_cell(coupled_cell, scale_atoms=True)
+    coupled_images = interpolate_vcneb(coupled_initial, coupled_final, n_images=7, align_cells=False)
+    for image in coupled_images:
+        image.calc = ToyPhaseTransition(reference_cell)
+    coupled_mode = Mode([[1.0, 0.0, 0.0]], cell=np.diag([0.1, 0.0, 0.0]))
+    coupled_basis = build_mode_basis(coupled_mode, coupled_initial, cell_scale=5.0)
+    coupled_chain, coupled_optimizer = run_vcneb(
+        coupled_images,
+        k=0.15,
+        climb=True,
+        mode_basis=coupled_basis,
+        optimizer="FIRE",
+        fmax=0.01,
+        steps=300,
+        logfile=None,
+        trajectory=None,
+        snapshot_dir=None,
+    )
+    coupled_barrier, coupled_reaction = coupled_chain.barrier()
+    coupled_saddle = coupled_chain.saddle_diagnostics()
+    if abs(coupled_barrier - 0.25) > 5e-3 or abs(coupled_reaction) > 5e-6:
+        raise SystemExit(
+            f"coupled strict mode changed the known barrier: {coupled_barrier}, {coupled_reaction}"
+        )
+    if coupled_saddle["residual_generalized_force_eV_per_A"] > 0.01:
+        raise SystemExit("coupled strict mode saddle residual exceeded tolerance")
+    if getattr(coupled_optimizer, "nsteps", -1) <= 0:
+        raise SystemExit("coupled strict mode optimizer did not run")
+    print("coupled_mode_constraint_regression=ok")
+
 
 def check_projected_mode_constraint_and_direction_basis() -> None:
     reference_cell = np.diag([5.0, 5.0, 5.0])
