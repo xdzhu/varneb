@@ -19,7 +19,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 import json
 from pathlib import Path
-from typing import Iterable, Sequence
+from typing import Callable, Iterable, Sequence
 
 import numpy as np
 
@@ -181,8 +181,13 @@ def mode_guided_path(
     amplitude: float = 0.25,
     envelope: str = "sin",
     align_cells: bool = True,
+    align_translation: bool = False,
     mic: bool = False,
     wrap_positions: bool = False,
+    cell_interpolation: str | Callable[[float, Array, Array], Array] = "linear",
+    mapping: Sequence[int] | str | None = None,
+    minimum_distance: float | None = None,
+    maximum_deformation: float | None = None,
     normalize: bool = True,
     masses: Array | None = None,
     mass_weighted_input: bool = False,
@@ -204,8 +209,13 @@ def mode_guided_path(
         final,
         n_images,
         align_cells=align_cells,
+        align_translation=align_translation,
         mic=mic,
         wrap_positions=False,
+        cell_interpolation=cell_interpolation,
+        mapping=mapping,
+        minimum_distance=minimum_distance,
+        maximum_deformation=maximum_deformation,
     )
     reference_cell = cell_matrix(images[0])
     cell_scale = abs(np.linalg.det(reference_cell)) ** (1.0 / 3.0)
