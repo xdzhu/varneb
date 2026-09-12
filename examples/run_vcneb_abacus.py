@@ -73,6 +73,18 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Optimize a common periodic endpoint translation with atom mapping",
     )
+    parser.add_argument(
+        "--minimum-distance",
+        type=float,
+        default=None,
+        help="Reject initial paths whose periodic atom separation is below this Angstrom threshold",
+    )
+    parser.add_argument(
+        "--maximum-deformation",
+        type=float,
+        default=None,
+        help="Reject initial paths whose Frobenius deformation exceeds this threshold",
+    )
     parser.add_argument("--no-climb", action="store_true")
     parser.add_argument("--resume", action="store_true", help="Resume from the latest complete chain in vcneb.traj")
     parser.add_argument("--resume-trajectory", default=None, help="Trajectory to resume from; defaults to workdir/vcneb.traj")
@@ -113,6 +125,8 @@ def main() -> None:
             cell_interpolation=args.cell_interpolation,
             mapping=None if args.mapping == "identity" else "auto",
             align_translation=args.align_translation,
+            minimum_distance=args.minimum_distance,
+            maximum_deformation=args.maximum_deformation,
         )
     write(workdir / "initial-vcneb.traj", images)
 

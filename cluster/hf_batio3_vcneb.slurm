@@ -52,4 +52,5 @@ exec "${python}" examples/run_vcneb_abacus.py \
   --basis O=O_gga_7au_100Ry_2s2p1d.orb \
   --ecutwfc 100 --scf-thr 1e-8 --scf-nmax 150 --mixing-beta 0.3 \
   --kpts 4 4 4 --mic --cell-interpolation log_strain --mapping auto --align-translation \
+  --minimum-distance 1.6 --maximum-deformation 0.10 \
   "${climb_args[@]}" "${resume_args[@]}"
