@@ -269,6 +269,7 @@ python examples/relax_abacus_endpoint.py --help
 python examples/run_vasp_single_image_smoke.py --help
 python examples/run_fixed_cell_ase_comparison.py
 python examples/run_vcneb_convergence.py
+python examples/run_vcneb_robustness.py
 python examples/run_release_and_refine.py
 python examples/run_finite_difference_report.py
 ```
