@@ -1,6 +1,6 @@
 # VC-NEB Iteration Log
 
-## Endpoint atom mapping API (`working tree`)
+## Endpoint atom mapping API (`266c8ea`)
 
 - Added `infer_atom_mapping()` and `validate_atom_mapping()` for explicit or
   element-grouped automatic endpoint mapping.  The automatic path solves a
@@ -12,7 +12,10 @@
   cases where an explicit chemical mapping is still required.
 - Added regression coverage for swapped endpoint element order, auto mapping,
   explicit mismatch rejection, and preservation of the initial atom order.
-  Formal cluster verification follows after source synchronization.
+- After checking `cu17` at `2026-09-12T08:10:17+08:00` (40 cores, load
+  averages `0.08/0.03/0.11`, no active DFT process), the synchronized source
+  passed the complete regression suite on the cluster.  The post-run check at
+  `2026-09-12T08:11:47+08:00` found no VASP, ABACUS or MPI process remaining.
 
 ## Cell interpolation strategy selector (`97240fe`)
 
