@@ -56,13 +56,24 @@ NEB 的端点必须有相同原子数、元素顺序和可审计的原子映射�
 
 这一定义把原子部分和 cell 部分放进同一欧氏空间，但 `c` 是度量选择，不是材料常数。改变 `c` 会改变 NEB 的路径几何和弹簧分配，必须作为收敛/敏感性参数报告。
 
-当前实现的 cell 插值是在 `F` 中线性进行：
+当前实现默认在 `F` 中线性插值：
 
 \[
  F(\lambda)=(1-\lambda)F_0+\lambda F_1.
 \]
 
-由于 `F_0=I`，只要中间 determinant 保持正值，该插值具有明确的数值含义。对大剪切、晶格等价变换或近奇异端点，后续需要增加应变/对数晶格参数化，并通过对照测试决定默认策略。
+由于 `F_0=I`，只要中间 determinant 保持正值，该插值具有明确的数值含义。
+`interpolate_vcneb(..., cell_interpolation="log_strain")` 还支持在对齐整体
+旋转后，对称正定 deformation gradient 的矩阵对数插值：
+
+\[
+ F(\lambda)=\exp\left[(1-\lambda)\log F_0+\lambda\log F_1\right].
+\]
+
+该策略保持正定 deformation 的几何平均路径，并在非正定或含有未移除整体旋转
+时明确报错；用户可以传入 `(lambda, F0, F1) -> F` 的自定义回调处理更一般的
+晶格路径。线性方式仍是默认兼容选项，所有策略都在每个 image 检查正的 cell
+determinant。
 
 ## 3. 能量、焓和广义力
 

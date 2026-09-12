@@ -112,6 +112,68 @@ def _fractional_delta(a: Array, b: Array, pbc: Sequence[bool], mic: bool) -> Arr
     return delta
 
 
+def _symmetric_matrix_log(matrix: Array, *, context: str) -> Array:
+    """Return the real matrix logarithm for a symmetric positive matrix."""
+
+    value = np.asarray(matrix, dtype=float)
+    if value.shape != (3, 3) or not np.all(np.isfinite(value)):
+        raise ValueError(f"{context} must be a finite 3x3 matrix")
+    if not np.allclose(value, value.T, rtol=1e-10, atol=1e-10):
+        raise ValueError(
+            f"{context} must be symmetric for log_strain interpolation; "
+            "use align_cells=True or provide a custom interpolator"
+        )
+    eigenvalues, eigenvectors = np.linalg.eigh(value)
+    if np.any(eigenvalues <= 1e-12):
+        raise ValueError(
+            f"{context} must be positive definite for log_strain interpolation"
+        )
+    return (eigenvectors * np.log(eigenvalues)) @ eigenvectors.T
+
+
+def _symmetric_matrix_exp(matrix: Array) -> Array:
+    eigenvalues, eigenvectors = np.linalg.eigh(np.asarray(matrix, dtype=float))
+    return (eigenvectors * np.exp(eigenvalues)) @ eigenvectors.T
+
+
+def _interpolate_deformation(
+    lam: float,
+    deform0: Array,
+    deform1: Array,
+    *,
+    strategy: str | Callable[[float, Array, Array], Array],
+    log_deform0: Array | None = None,
+    log_deform1: Array | None = None,
+) -> Array:
+    """Interpolate two deformation gradients with an explicit strategy."""
+
+    if lam <= 0.0:
+        return np.asarray(deform0, dtype=float).copy()
+    if lam >= 1.0:
+        return np.asarray(deform1, dtype=float).copy()
+    if callable(strategy):
+        value = strategy(
+            float(lam),
+            np.asarray(deform0, dtype=float).copy(),
+            np.asarray(deform1, dtype=float).copy(),
+        )
+        result = np.asarray(value, dtype=float)
+        if result.shape != (3, 3) or not np.all(np.isfinite(result)):
+            raise ValueError("custom cell interpolation must return a finite 3x3 matrix")
+        return result
+
+    name = str(strategy).lower().replace("-", "_")
+    if name in {"linear", "affine"}:
+        return (1.0 - lam) * deform0 + lam * deform1
+    if name in {"log", "log_strain", "logarithmic"}:
+        if log_deform0 is None or log_deform1 is None:
+            raise RuntimeError("log_strain interpolation was not initialized")
+        return _symmetric_matrix_exp((1.0 - lam) * log_deform0 + lam * log_deform1)
+    raise ValueError(
+        "cell_interpolation must be 'linear', 'log_strain', or a callable"
+    )
+
+
 def interpolate_vcneb(
     initial: Atoms,
     final: Atoms,
@@ -120,11 +182,17 @@ def interpolate_vcneb(
     align_cells: bool = True,
     mic: bool = False,
     wrap_positions: bool = False,
+    cell_interpolation: str | Callable[[float, Array, Array], Array] = "linear",
     minimum_distance: float | None = None,
     maximum_deformation: float | None = None,
 ) -> list[Atoms]:
     """Create an initial variable-cell band, including both endpoints.
 
+    ``cell_interpolation`` selects the path in deformation-gradient space.
+    ``linear`` is the historical default.  ``log_strain`` interpolates the
+    matrix logarithm of symmetric-positive deformation gradients; this is
+    well-defined after the default global-rotation alignment.  A callable is
+    given ``(lambda, deform0, deform1)`` and must return a finite 3x3 matrix.
     ``minimum_distance`` and ``maximum_deformation`` are optional preflight
     thresholds.  They are useful for rejecting an unphysical initial path
     before any calculator is invoked; the default keeps the historical
@@ -151,6 +219,15 @@ def interpolate_vcneb(
     dq = _fractional_delta(q1, q0, first.pbc, mic)
     deform0 = deformation_from_cell(cell_matrix(first), reference_cell)
     deform1 = deformation_from_cell(cell_matrix(last), reference_cell)
+    log_deform0 = None
+    log_deform1 = None
+    if not callable(cell_interpolation) and str(cell_interpolation).lower().replace("-", "_") in {
+        "log",
+        "log_strain",
+        "logarithmic",
+    }:
+        log_deform0 = _symmetric_matrix_log(deform0, context="initial deformation")
+        log_deform1 = _symmetric_matrix_log(deform1, context="final deformation")
 
     images = []
     for index in range(n_images):
@@ -158,7 +235,14 @@ def interpolate_vcneb(
         image = first.copy()
         state = VCNEBState(
             q=q0 + lam * dq,
-            deform=(1.0 - lam) * deform0 + lam * deform1,
+            deform=_interpolate_deformation(
+                lam,
+                deform0,
+                deform1,
+                strategy=cell_interpolation,
+                log_deform0=log_deform0,
+                log_deform1=log_deform1,
+            ),
         )
         _validate_cell_matrix(
             cell_from_deformation(state.deform, reference_cell),

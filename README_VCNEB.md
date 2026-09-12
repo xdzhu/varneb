@@ -89,6 +89,30 @@ image index when a path violates them.  The report itself is calculator-free
 and contains the per-image volume, shortest periodic interatomic distance, and
 deformation norm.
 
+The cell path can use the historical linear deformation interpolation, a
+logarithmic strain path for aligned symmetric-positive deformation gradients,
+or a project-specific callback:
+
+```python
+images = interpolate_vcneb(
+    initial, final, n_images=9, mic=True,
+    cell_interpolation="log_strain",
+)
+
+def interpolate_cell(lam, deform0, deform1):
+    return (1.0 - lam) * deform0 + lam * deform1
+
+images = interpolate_vcneb(
+    initial, final, n_images=9,
+    cell_interpolation=interpolate_cell,
+)
+```
+
+`log_strain` removes the relative rigid rotation when `align_cells=True` and
+rejects unsuitable non-positive or non-symmetric deformation gradients.  A
+custom callback must return a finite 3x3 deformation matrix; every resulting
+cell is still checked for a positive determinant.
+
 The mode feature is intentionally split into an initial-path generator and a
 diagnostic projection.  The former bends the interior images with an
 endpoint-zero envelope, then a normal unconstrained NEB calculation can relax

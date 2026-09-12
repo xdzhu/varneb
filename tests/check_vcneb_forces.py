@@ -143,6 +143,74 @@ def check_mode_guided_path() -> None:
         raise SystemExit("project_path_onto_modes returned the wrong modal amplitude")
 
 
+def check_cell_interpolation_strategies() -> None:
+    reference_cell = np.diag([5.0, 5.0, 5.0])
+    initial = make_atoms(reference_cell, np.array([0.25, 0.5, 0.5]), np.eye(3))
+    final_deform = np.diag([1.6, 0.8, 1.2])
+    final = make_atoms(reference_cell, np.array([0.75, 0.5, 0.5]), final_deform)
+
+    linear = interpolate_vcneb(
+        initial,
+        final,
+        n_images=3,
+        align_cells=False,
+        cell_interpolation="linear",
+    )
+    logarithmic = interpolate_vcneb(
+        initial,
+        final,
+        n_images=3,
+        align_cells=False,
+        cell_interpolation="log_strain",
+    )
+    if not np.allclose(linear[-1].cell.array, final.cell.array) or not np.allclose(
+        logarithmic[-1].cell.array, final.cell.array
+    ):
+        raise SystemExit("cell interpolation changed an endpoint")
+    expected_log_midpoint = np.diag(np.sqrt(np.diag(final_deform)))
+    log_midpoint = deformation_from_cell(logarithmic[1].cell.array, reference_cell)
+    if not np.allclose(log_midpoint, expected_log_midpoint, rtol=0.0, atol=1e-12):
+        raise SystemExit("log_strain interpolation returned the wrong geometric midpoint")
+    if np.allclose(linear[1].cell.array, logarithmic[1].cell.array):
+        raise SystemExit("linear and log_strain interpolation unexpectedly matched")
+
+    callback_calls = []
+
+    def custom_interpolator(parameter, deform0, deform1):
+        callback_calls.append(parameter)
+        return (1.0 - parameter) * deform0 + parameter * deform1
+
+    custom = interpolate_vcneb(
+        initial,
+        final,
+        n_images=4,
+        align_cells=False,
+        cell_interpolation=custom_interpolator,
+    )
+    if len(callback_calls) != 2 or not np.allclose(
+        deformation_from_cell(custom[2].cell.array, reference_cell), 2.0 * final_deform / 3.0 + np.eye(3) / 3.0
+    ):
+        raise SystemExit("custom cell interpolation callback was not applied correctly")
+
+    rotated = make_atoms(
+        reference_cell,
+        np.array([0.75, 0.5, 0.5]),
+        np.array([[0.0, -1.0, 0.0], [1.0, 0.0, 0.0], [0.0, 0.0, 1.0]]),
+    )
+    try:
+        interpolate_vcneb(
+            initial,
+            rotated,
+            n_images=3,
+            align_cells=False,
+            cell_interpolation="log_strain",
+        )
+    except ValueError:
+        pass
+    else:
+        raise SystemExit("log_strain accepted an unaligned rigid rotation")
+
+
 def check_nonorthogonal_mode_projection() -> None:
     reference_cell = np.diag([5.0, 5.0, 5.0])
     reference = Atoms("Ar", scaled_positions=[[0.25, 0.5, 0.5]], cell=reference_cell, pbc=True)
@@ -877,6 +945,8 @@ def main() -> None:
     print("atom_mask_regression=ok")
     check_mode_guided_path()
     print("mode_guided_path_regression=ok")
+    check_cell_interpolation_strategies()
+    print("cell_interpolation_regression=ok")
     check_nonorthogonal_mode_projection()
     print("nonorthogonal_mode_projection_regression=ok")
     check_calculator_contract()

@@ -1,5 +1,20 @@
 # VC-NEB Iteration Log
 
+## Cell interpolation strategy selector (`working tree`)
+
+- Added an explicit `cell_interpolation` argument to `interpolate_vcneb()`.
+  The default `linear` path remains backward compatible; `log_strain` uses a
+  matrix-log/geometric path for symmetric-positive deformation gradients, and
+  a user callback can supply a project-specific deformation path.
+- The logarithmic strategy is intentionally conservative: it removes the
+  relative rigid rotation when `align_cells=True`, rejects non-symmetric or
+  non-positive deformation gradients, and leaves the existing positive-cell
+  determinant guard in place for every image.
+- Added regression coverage for exact endpoints, the geometric midpoint,
+  callback execution, and rejection of an unaligned rigid rotation.  The full
+  local regression suite passes; formal cluster verification follows after
+  source synchronization.
+
 ## Formal six-strain finite-difference validation (`404cbad`)
 
 - Before the run, `cu17` was checked at `2026-09-12T07:48:54+08:00`:
