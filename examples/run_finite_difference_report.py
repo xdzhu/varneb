@@ -97,7 +97,7 @@ def main() -> None:
     output.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     for pressure in pressures:
         subset = [item for item in results if item["pressure_GPa"] == pressure / GPa]
-        best = min(subset, key=lambda item: item["epsilon"])
+        best = min(subset, key=lambda item: item["max_six_component_error_eV"])
         print(
             f"pressure_GPa={pressure / GPa:.6g} epsilon={best['epsilon']:.1e} "
             f"max_six_component_error_eV={best['max_six_component_error_eV']:.3e}"
