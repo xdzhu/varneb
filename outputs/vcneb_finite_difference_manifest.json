@@ -1,0 +1,40 @@
+{
+  "source_commit": "404cbad",
+  "repository": "https://github.com/xdzhu/vcneb",
+  "execution": {
+    "gateway": "235",
+    "node": "cu17",
+    "cores": 40,
+    "python": "/home/zhuxd/Software/anaconda3/envs/icu/bin/python3",
+    "command": "python3 examples/run_finite_difference_report.py",
+    "preflight": {
+      "timestamp": "2026-09-12T07:48:54+08:00",
+      "load_average": [0.0, 0.02, 0.32],
+      "active_dft_process": false
+    },
+    "postflight": {
+      "timestamp": "2026-09-12T07:51:03+08:00",
+      "load_average": [0.09, 0.07, 0.30],
+      "active_dft_process": false
+    }
+  },
+  "report": {
+    "path": "outputs/vcneb_finite_difference_report.json",
+    "sha256": "58890CA0EB49B02C74DC37400636283A7D168BCD2FF466512D63AB3AE4D8A1C0",
+    "calculator": "rotation-invariant analytic MetricCellCalculator",
+    "cell_convention": "h = h0 F.T",
+    "directions": "three diagonal strains plus three symmetric shear strains",
+    "epsilon_scan": [0.01, 0.001, 0.0001, 0.00001, 0.000001, 0.0000001],
+    "pressures_GPa": [0.0, 0.5],
+    "best_epsilon": 0.000001,
+    "max_six_component_error_eV": {
+      "0.0": 3.155875560878485e-11,
+      "0.5": 1.3528556053188368e-10
+    }
+  },
+  "status": "passed",
+  "notes": [
+    "The test uses a rotation-invariant metric cell energy so the symmetric ASE stress is the correct work-conjugate quantity.",
+    "The report is an analytic force/stress transformation validation, not a DFT production calculation."
+  ]
+}

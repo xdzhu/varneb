@@ -1,5 +1,29 @@
 # VC-NEB Iteration Log
 
+## Formal six-strain finite-difference validation (`404cbad`)
+
+- Before the run, `cu17` was checked at `2026-09-12T07:48:54+08:00`:
+  40 cores, load averages `0.00/0.02/0.32`, and no active DFT process.
+- The latest source passed `compileall` and the complete regression suite on
+  `cu17`, including the nonorthogonal cell-force regression.  The formal
+  six-direction strain report then scanned three diagonal and three symmetric
+  shear perturbations at six central-difference steps for zero pressure and
+  `0.5 GPa`.
+- The stable step was `epsilon=1e-6`.  The maximum six-component error was
+  `3.1559e-11 eV` at zero pressure and `1.3529e-10 eV` at `0.5 GPa`.  The
+  smallest step showed the expected round-off increase, so the report keeps
+  the full step scan rather than presenting a single tuned number.
+- The test uses a rotation-invariant metric cell energy.  This is important:
+  ASE's symmetric Cauchy stress is appropriate for the physical symmetric
+  strain directions, whereas a deliberately rotation-sensitive artificial
+  energy would also contain antisymmetric work that the stress tensor cannot
+  represent.
+- The post-run check at `2026-09-12T07:51:03+08:00` found no VASP, ABACUS or
+  MPI process remaining.
+
+Compact records: `outputs/vcneb_finite_difference_report.json` and
+`outputs/vcneb_finite_difference_manifest.json`.
+
 ## HfO2 conservative-step retry and preflight diagnostic (`fab47e8`)
 
 - A deliberately malformed basis-directory setting was tested first. The
