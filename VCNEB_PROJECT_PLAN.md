@@ -59,7 +59,7 @@
 
 ### 任务
 
-- [ ] 为当前工作树建立一个明确的开发版本号和变更摘要；记录 `core.py`、`modes.py`、测试脚本和示例入口。
+- [x] 为当前工作树建立一个明确的开发版本号和变更摘要；记录 `core.py`、`modes.py`、测试脚本和示例入口。
 - [x] 已在空闲的 `cu17` 上重新运行现有回归集，并将 Python、ASE、NumPy、SciPy、VASP/ABACUS 环境信息写入 `outputs/vcneb_p0_baseline_manifest.json`。
 - [x] 以后每次启动计算前检查 `cu17`、`cu22`--`cu26` 的负载、进程和用户任务；选择空闲节点运行，忙节点不挤占。
 - [x] 利用共享目录完成一次代码同步即可；节点无需安装 Git，运行目录和 manifest 均记录对应的 Git commit。

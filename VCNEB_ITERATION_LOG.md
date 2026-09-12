@@ -83,6 +83,15 @@ Compact records: `outputs/release_and_refine_model/manifest.json`,
 
 Compact record: `outputs/vcneb_current_cluster_regression_manifest.json`.
 
+## Latest cluster regression (`adaeb32`)
+
+- Before the run, `cu17` was checked at `2026-09-12T07:37:08+08:00` and had
+  40 cores with no active DFT process. The latest source passed compileall and
+  the complete non-DFT suite, including path geometry preflight. A check at
+  `2026-09-12T07:38:11+08:00` found no remaining VASP/ABACUS/MPI process.
+
+Compact record: `outputs/vcneb_latest_cluster_regression_manifest.json`.
+
 ## HfO2 Level B optimizer trial (`04bf038`)
 
 - Checked `cu17` before both launches; it had no active DFT/MPI process and 40
