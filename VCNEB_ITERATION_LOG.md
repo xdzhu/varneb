@@ -29,6 +29,17 @@
   saddle with negative tangent curvature.
 - The machine-readable comparison is `outputs/fixed_cell_ase_comparison_hf.json`.
 
+## Current-version analytic convergence matrix (`eb83831`)
+
+- Re-ran the 54-case analytic matrix on `hf` using 5/7/9 images, springs
+  `0.05/0.10/0.20 eV/A^2`, `cell_scale=4/5/6 A`, and FIRE/LBFGS, with
+  `fmax=0.005 eV/A` and 300 optimizer steps.
+- All 54 cases converged.  The known `0.25 eV` barrier was recovered with
+  zero error at the stored output precision; the largest final generalized
+  force was about `0.004988 eV/A`.
+- Records: `outputs/vcneb_algorithm_matrix_hf.json` and
+  `outputs/vcneb_algorithm_matrix_hf_manifest.json`.
+
 ## HfO2 linear versus logarithmic-strain preflight (`403d06b`)
 
 - Before the run, `cu17` was checked at `2026-09-12T08:15:51+08:00`:
