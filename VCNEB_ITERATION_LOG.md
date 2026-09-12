@@ -1,5 +1,23 @@
 # VC-NEB Iteration Log
 
+## HfO2 linear versus logarithmic-strain preflight (`403d06b`)
+
+- Before the run, `cu17` was checked at `2026-09-12T08:15:51+08:00`:
+  40 cores, load averages `0.08/0.03/0.08`, and no active DFT process.
+- The calculator-free seven-image comparison used the mapped 12-atom HfO2
+  fixture and held the endpoint order, MIC convention, and image count fixed.
+  Both `linear` and `log_strain` paths were valid and retained positive cell
+  determinants.
+- The minimum interatomic distance changed only from `2.013034 A` (linear) to
+  `2.012914 A` (logarithmic strain), while the maximum deformation norm stayed
+  `0.049608`.  Thus changing cell interpolation alone does not resolve the
+  current mechanism-path problem; no new DFT run was started on this result.
+- The post-run check at `2026-09-12T08:17:28+08:00` found no VASP, ABACUS or
+  MPI process remaining.
+
+Compact records: `outputs/hfo2_initial_path_comparison_cluster.json` and
+`outputs/hfo2_initial_path_comparison_manifest.json`.
+
 ## Endpoint atom mapping API (`266c8ea`)
 
 - Added `infer_atom_mapping()` and `validate_atom_mapping()` for explicit or
