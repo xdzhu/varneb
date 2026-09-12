@@ -38,6 +38,8 @@ def optimize(
     reference_cell: np.ndarray,
     *,
     mode_basis: np.ndarray | None = None,
+    fmax: float = 0.002,
+    steps: int = 600,
 ) -> dict:
     attach(images, reference_cell)
     chain, optimizer = run_vcneb(
@@ -46,8 +48,8 @@ def optimize(
         climb=True,
         mode_basis=mode_basis,
         optimizer="FIRE",
-        fmax=0.01,
-        steps=300,
+        fmax=fmax,
+        steps=steps,
         logfile=None,
         trajectory=None,
         snapshot_dir=None,
@@ -66,6 +68,8 @@ def optimize(
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", default=str(ROOT / "outputs" / "mode_path_variants.json"))
+    parser.add_argument("--fmax", type=float, default=0.002)
+    parser.add_argument("--steps", type=int, default=600)
     return parser.parse_args()
 
 
@@ -97,10 +101,18 @@ def main() -> None:
         "calculator": "analytic ToyPhaseTransition",
         "n_images": 7,
         "expected_barrier_eV": 0.25,
+        "fmax_eV_per_A": args.fmax,
+        "max_steps": args.steps,
         "variants": {
-            "ordinary_unconstrained": optimize(direct, reference_cell),
-            "mode_guided_then_released": optimize(guided, reference_cell),
-            "strict_coupled_mode": optimize(strict, reference_cell, mode_basis=strict_basis),
+            "ordinary_unconstrained": optimize(direct, reference_cell, fmax=args.fmax, steps=args.steps),
+            "mode_guided_then_released": optimize(guided, reference_cell, fmax=args.fmax, steps=args.steps),
+            "strict_coupled_mode": optimize(
+                strict,
+                reference_cell,
+                mode_basis=strict_basis,
+                fmax=args.fmax,
+                steps=args.steps,
+            ),
         },
     }
     output = Path(args.output).resolve()
