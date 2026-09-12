@@ -1,6 +1,6 @@
 # VC-NEB Iteration Log
 
-## Cell interpolation strategy selector (`working tree`)
+## Cell interpolation strategy selector (`97240fe`)
 
 - Added an explicit `cell_interpolation` argument to `interpolate_vcneb()`.
   The default `linear` path remains backward compatible; `log_strain` uses a
@@ -12,8 +12,12 @@
   determinant guard in place for every image.
 - Added regression coverage for exact endpoints, the geometric midpoint,
   callback execution, and rejection of an unaligned rigid rotation.  The full
-  local regression suite passes; formal cluster verification follows after
-  source synchronization.
+  local regression suite passes.
+- After checking `cu17` at `2026-09-12T08:01:47+08:00` (40 cores, load
+  averages `0.08/0.03/0.16`, no active DFT process), the synchronized source
+  passed compileall and the complete regression suite on the cluster.  The
+  post-run check at `2026-09-12T08:03:00+08:00` found no VASP, ABACUS or MPI
+  process remaining.
 
 ## Formal six-strain finite-difference validation (`404cbad`)
 
