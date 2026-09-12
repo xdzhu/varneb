@@ -1,10 +1,12 @@
 # Cluster launch templates
 
-The Slurm templates in this directory are for the Hefei cluster.  They use
-one 16-task allocation by default and run ABACUS through `srun`, while the
-Python driver evaluates the images sequentially.  The 128-CPU nodes are not
-reserved exclusively for these small five-atom tests.  The templates assume the
-shared `/public/home/iai806` layout and the `hfacnormal01` partition.
+The Slurm templates in this directory are for the Hefei cluster.  They run
+ABACUS through `srun`, while the Python driver evaluates images sequentially.
+The BaTiO3 template defaults to 16 tasks and the 12-atom HfO2 templates to 8
+tasks; these are starting points, not a fixed project-wide allocation.  Select
+the task count after checking the actual queue and calculator timing.  The
+templates assume the shared `/public/home/iai806` layout and the
+`hfacnormal01` partition.
 
 From `ssh hf`, after checking `sinfo` and `squeue`, sync the repository and
 submit the two endpoint relaxations independently:
@@ -37,9 +39,18 @@ sbatch --ntasks=32 --export=ALL,N_IMAGES=7,STEPS=300 \
   cluster/hf_batio3_vcneb.slurm
 ```
 
-Do not request `--exclusive` for these small tests.  For a larger HfO2 cell,
-select the MPI width from an explicit scaling test and record it in the run
-manifest.
+Do not request `--exclusive` for these small tests.  For the 12-atom HfO2
+fixture, after endpoint relaxations complete, a staged no-climb preconvergence
+run is:
+
+```bash
+sbatch --export=ALL,N_IMAGES=7,STEPS=300,FMAX=0.05,NO_CLIMB=1 \
+  cluster/hf_hfo2_vcneb.slurm
+```
+
+Select the MPI width from an explicit scaling/SCF timing check and record it in
+the run manifest; for example, override the template default with
+`sbatch --ntasks=16 ...` when that measurement supports it.
 
 An independent nine-image run can use a distinct work directory:
 
