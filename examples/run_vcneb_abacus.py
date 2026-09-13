@@ -38,7 +38,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--initial", required=True, help="ASE-readable initial endpoint")
     parser.add_argument("--final", required=True, help="ASE-readable final endpoint")
     parser.add_argument("--workdir", default="abacus_vcneb_run")
-    parser.add_argument("--n-images", type=int, default=7)
+    parser.add_argument(
+        "--n-images",
+        type=int,
+        default=7,
+        help="Total images including the two fixed endpoints (7 means 5 interior images)",
+    )
     parser.add_argument("--fmax", type=float, default=0.05)
     parser.add_argument("--steps", type=int, default=300)
     parser.add_argument("--k", type=float, default=0.10)
@@ -279,10 +284,15 @@ def main() -> None:
     )
     metadata = _run_metadata(args, workdir)
     metadata["image_manifest"] = str(image_manifest) if args.image_workers else None
+    metadata["n_interior_images"] = max(0, int(args.n_images) - 2)
+    metadata["endpoint_evaluation_policy"] = (
+        "fixed_cached_once" if args.image_workers else "ASE_calculator_cache"
+    )
     preflight = {
         **metadata,
         "status": "ok",
         "n_images": args.n_images,
+        "n_interior_images": max(0, int(args.n_images) - 2),
         "initial_path_geometry": initial_geometry,
         "calculator_reports": [report.to_dict() for report in calculator_reports],
         "calculator_parameters": parameters,
@@ -329,6 +339,8 @@ def main() -> None:
         "status": "completed",
         "workdir": str(workdir),
         "n_images": args.n_images,
+        "n_interior_images": max(0, int(args.n_images) - 2),
+        "endpoint_evaluation_policy": metadata["endpoint_evaluation_policy"],
         "cell_interpolation": args.cell_interpolation,
         "mapping": args.mapping,
         "align_translation": args.align_translation,

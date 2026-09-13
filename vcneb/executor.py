@@ -89,15 +89,30 @@ class ThreadedCalculatorExecutor:
         except Exception as exc:
             raise RuntimeError(f"parallel calculator evaluation failed for image {image_index}: {exc}") from exc
 
-    def evaluate(self, images: Sequence[Atoms]) -> list[ImageEvaluation]:
+    def evaluate(
+        self,
+        images: Sequence[Atoms],
+        *,
+        indices: Sequence[int] | None = None,
+    ) -> list[ImageEvaluation]:
+        """Evaluate a batch, optionally identified by chain ``indices``."""
         if not images:
             return []
+        if indices is None:
+            image_indices = list(range(len(images)))
+        else:
+            image_indices = [int(index) for index in indices]
+            if len(image_indices) != len(images):
+                raise ValueError("indices must have the same length as images")
+            if len(set(image_indices)) != len(image_indices):
+                raise ValueError("indices must be unique")
         workers = min(self.max_workers, len(images))
         self.last_attempts = {}
         started = time.monotonic()
         record = {
             "timestamp_utc": datetime.now(timezone.utc).isoformat(),
             "image_count": len(images),
+            "image_indices": image_indices,
             "workers": workers,
             "max_retries": self.max_retries,
         }
@@ -122,7 +137,10 @@ class ThreadedCalculatorExecutor:
 
         try:
             with ThreadPoolExecutor(max_workers=workers, thread_name_prefix="vcneb-image") as pool:
-                futures = [pool.submit(evaluate_with_retry, index, image) for index, image in enumerate(images)]
+                futures = [
+                    pool.submit(evaluate_with_retry, image_index, image)
+                    for image_index, image in zip(image_indices, images)
+                ]
                 results = [future.result() for future in futures]
         except Exception as exc:
             record.update(

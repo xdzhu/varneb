@@ -81,6 +81,28 @@ this identity ordering, preventing concurrent parser races.  Use the serial
 template for non-identity ordering unless the calculator supplies a
 directory-local sort-file implementation.
 
+For seven total images (five interior images) in one wave, use
+`hf_hfo2_vcneb_distributed.slurm`.  It requests two 128-CPU nodes (160 worker
+tasks),
+keeps one Python VCNEB manager, and launches five isolated 32-MPI ABACUS
+workers through `srun --exclusive --nodes=1`; the two fixed endpoints are
+evaluated once and cached by the manager.  This removes the 4+3 worker waves
+of the one-node template while preserving the same calculator settings:
+
+```bash
+sbatch --export=ALL,N_IMAGES=7,IMAGE_WORKERS=5,IMAGE_MPI=32,STEPS=300,\
+RESUME=1,RESUME_TRAJECTORY=/path/to/vcneb.traj,RESUME_STEP=-1 \
+  cluster/hf_hfo2_vcneb_distributed.slurm
+```
+
+`N_IMAGES` always includes both endpoints, so the number of worker images is
+`N_IMAGES-2` (the template derives this automatically when `IMAGE_WORKERS` is
+omitted).  The distributed template is the preferred production layout for
+seven total images;
+the one-node four-worker template remains useful for smoke tests and limited
+allocations.  `--nodes=1` on each worker step is intentional: it prevents a
+single 32-rank image calculation from being split across both nodes.
+
 Do not request `--exclusive` for these small tests.  For the 12-atom HfO2
 fixture, after endpoint relaxations complete, a staged no-climb preconvergence
 run is:

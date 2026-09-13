@@ -929,6 +929,9 @@ class VCNEB:
         self._last_enthalpies: Optional[Array] = None
         self._last_forces_x: Optional[Array] = None
         self._last_evaluations: Optional[list[ImageEvaluation]] = None
+        # Endpoints are fixed during VC-NEB; cache their evaluations and only
+        # dispatch interior images to the worker executor on later iterations.
+        self._endpoint_evaluations: dict[int, ImageEvaluation] = {}
         self._owners = self._assign_image_owners()
 
     def __ase_optimizable__(self) -> "VCNEB":
@@ -1125,7 +1128,7 @@ class VCNEB:
     def _enthalpy_and_force(self, image_index: int) -> tuple[float, VCNEBState]:
         if self.image_executor is not None:
             if self._last_evaluations is None:
-                self._last_evaluations = self._evaluate_images()
+                self._ensure_executor_evaluations()
             evaluation = self._last_evaluations[image_index]
             atoms = self.images[image_index]
             enthalpy = float(evaluation.energy + self.pressure * atoms.get_volume())
@@ -1169,15 +1172,25 @@ class VCNEB:
     def _evaluate_images(self) -> list[ImageEvaluation]:
         """Evaluate all images through the optional image-level executor."""
 
+        return self._evaluate_image_indices(range(self.n_images))
+
+    def _evaluate_image_indices(self, indices: Sequence[int]) -> list[ImageEvaluation]:
+        """Evaluate a selected subset through the image-level executor."""
+
         if self.image_executor is None:
-            raise RuntimeError("_evaluate_images called without an image executor")
-        raw = self.image_executor.evaluate(self.images)
-        if len(raw) != self.n_images:
+            raise RuntimeError("_evaluate_image_indices called without an image executor")
+        indices = [int(index) for index in indices]
+        if any(index < 0 or index >= self.n_images for index in indices):
+            raise IndexError("image index is outside the VC-NEB chain")
+        raw = self.image_executor.evaluate(
+            [self.images[index] for index in indices], indices=indices
+        )
+        if len(raw) != len(indices):
             raise ValueError(
-                f"image executor returned {len(raw)} evaluations for {self.n_images} images"
+                f"image executor returned {len(raw)} evaluations for {len(indices)} images"
             )
         evaluations: list[ImageEvaluation] = []
-        for image_index, value in enumerate(raw):
+        for image_index, value in zip(indices, raw):
             if isinstance(value, ImageEvaluation):
                 evaluation = value
             else:
@@ -1193,6 +1206,35 @@ class VCNEB:
                     ) from exc
             evaluations.append(evaluation.validate(image_index=image_index, n_atoms=self.n_atoms))
         return evaluations
+
+    def _evaluate_fixed_endpoint(self, image_index: int) -> ImageEvaluation:
+        """Evaluate one fixed endpoint once and retain its validated result."""
+
+        cached = self._endpoint_evaluations.get(image_index)
+        if cached is not None:
+            return cached
+        atoms = self.images[image_index]
+        try:
+            evaluation = ImageEvaluation(
+                float(atoms.get_potential_energy()),
+                np.asarray(atoms.get_forces(), dtype=float),
+                np.asarray(atoms.get_stress(voigt=False), dtype=float),
+            ).validate(image_index=image_index, n_atoms=self.n_atoms)
+        except Exception as exc:
+            raise RuntimeError(
+                f"VC-NEB endpoint evaluation failed for image {image_index} "
+                f"({calculator_context(atoms.calc)}): {exc}"
+            ) from exc
+        self._endpoint_evaluations[image_index] = evaluation
+        return evaluation
+
+    def _ensure_executor_evaluations(self) -> None:
+        """Refresh interiors while reusing the fixed endpoint evaluations."""
+
+        first = self._evaluate_fixed_endpoint(0)
+        last = self._evaluate_fixed_endpoint(self.n_images - 1)
+        interior = self._evaluate_image_indices(range(1, self.n_images - 1))
+        self._last_evaluations = [first, *interior, last]
 
     def _tangent(self, image_index: int, enthalpies: Array, image_x: list[Array]) -> Array:
         d_minus = image_x[image_index] - image_x[image_index - 1]
@@ -1233,7 +1275,7 @@ class VCNEB:
 
     def _compute_forces(self) -> Array:
         if self.image_executor is not None:
-            self._last_evaluations = self._evaluate_images()
+            self._ensure_executor_evaluations()
         else:
             self._last_evaluations = None
         enthalpies = np.zeros(self.n_images)
@@ -1290,6 +1332,10 @@ class VCNEB:
 
     def get_value(self) -> float:
         if self._last_enthalpies is None:
+            if self.image_executor is not None:
+                self._compute_forces()
+                assert self._last_enthalpies is not None
+                return float(self._last_enthalpies.max())
             enthalpies = [self._enthalpy_and_force(i)[0] for i in range(self.n_images)]
             self._last_enthalpies = np.asarray(enthalpies, dtype=float)
         return float(self._last_enthalpies.max())

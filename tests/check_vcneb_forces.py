@@ -1133,11 +1133,21 @@ def check_threaded_image_executor() -> None:
         return images
 
     serial_chain = VCNEB(build_images(), k=0.15, climb=False)
+    class RecordingExecutor(ThreadedCalculatorExecutor):
+        def __init__(self):
+            super().__init__(max_workers=2)
+            self.batches = []
+
+        def evaluate(self, images, *, indices=None):
+            self.batches.append(list(range(len(images))) if indices is None else list(indices))
+            return super().evaluate(images, indices=indices)
+
+    recording_executor = RecordingExecutor()
     threaded_chain = VCNEB(
         build_images(),
         k=0.15,
         climb=False,
-        image_executor=ThreadedCalculatorExecutor(max_workers=2),
+        image_executor=recording_executor,
     )
     serial_forces = serial_chain.get_forces()
     threaded_forces = threaded_chain.get_forces()
@@ -1146,6 +1156,16 @@ def check_threaded_image_executor() -> None:
     diagnostics = threaded_chain.path_diagnostics()
     if len(threaded_chain._last_evaluations or []) != 4:
         raise SystemExit("threaded image executor did not retain one result per image")
+    if not recording_executor.batches or any(batch != [1, 2] for batch in recording_executor.batches):
+        raise SystemExit(f"executor evaluated non-interior images: {recording_executor.batches}")
+    endpoint_cache = dict(threaded_chain._endpoint_evaluations)
+    batches_before_reset = len(recording_executor.batches)
+    threaded_chain.set_x(threaded_chain.get_x())
+    threaded_chain.get_forces()
+    if len(recording_executor.batches) != batches_before_reset + 1 or recording_executor.batches[-1] != [1, 2]:
+        raise SystemExit(f"executor batch did not stay interior-only: {recording_executor.batches}")
+    if any(threaded_chain._endpoint_evaluations[index] is not endpoint_cache[index] for index in (0, 3)):
+        raise SystemExit("fixed endpoint evaluations were not reused")
     if diagnostics["n_images"] != 4 or not all(np.isfinite(record["enthalpy_eV"]) for record in diagnostics["images"]):
         raise SystemExit("threaded image executor produced invalid diagnostics")
 
