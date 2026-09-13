@@ -6,7 +6,7 @@
 - 项目正式名称：`VARNEB`，上游仓库为 `https://github.com/xdzhu/varneb`；算法仍称 VC-NEB，Python 导入包暂保留为 `vcneb` 以维持兼容。
 - 总目标：按 `VCNEB_PROJECT_PLAN.md` 推进至完整可用，包括理论推导、核心算法与模式/方向约束升级、VASP/ABACUS 计算器适配、集群典型晶体相变验证、与文献/参考实现对比、CPC 论文草稿及可复现发布材料。
 - 长时间计算约束：BTO 主线统一使用合肥 `hfacnormal01`，每个 image worker 使用 32 MPI；每次提交前检查 `sinfo`/`squeue`，避免抢占用户任务。旧 `cu*` 记录仅作历史基线。
-- 发布状态：版本已切到 `0.0.1`，提交 `35c0dbb` 与标签 `v0.0.1` 已推送；`.github/workflows/publish-pypi.yml` 仅由版本标签、已发布 Release 或手动确认触发。PyPI Trusted Publisher 注册/Action 结果仍待确认。
+- 发布状态：版本已切到 `0.0.1`，提交 `35c0dbb` 与标签 `v0.0.1` 已推送；`.github/workflows/publish-pypi.yml` 仅由版本标签、已发布 Release 或手动确认触发。首轮 build 成功但 publish 返回 `invalid-publisher`；待按 OIDC 实际声明修正 PyPI pending publisher（owner `xdzhu`、repo `varneb`、workflow `publish-pypi.yml`、environment `pypi`）后重跑。
 
 ## 原线程中断原因
 

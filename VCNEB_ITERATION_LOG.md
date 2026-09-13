@@ -9,6 +9,11 @@
   manually confirmed `publish=true` dispatch; ordinary pushes do not publish.
 - Commit `35c0dbb` and tag `v0.0.1` were pushed to `xdzhu/varneb`. PyPI
   visibility remains pending the repository's Trusted Publisher registration.
+- The first tag-triggered run (`34763435900`) built successfully but the publish
+  job returned `invalid-publisher`. The OIDC claims confirm the exact expected
+  repository/workflow/environment tuple: `xdzhu/varneb`,
+  `.github/workflows/publish-pypi.yml`, `pypi`. After correcting the pending
+  publisher, rerun the failed publish job or dispatch this workflow manually.
 
 ## VARNEB repository rename (`2026-09-13`)
 
