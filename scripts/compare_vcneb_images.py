@@ -22,8 +22,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--reaction-coordinate-tol",
         type=float,
-        default=0.25,
-        help="allowed highest-image coordinate shift as a fraction of the local segment",
+        default=0.5,
+        help="allowed highest-image coordinate shift as a fraction of the local segment (default: half a segment)",
     )
     parser.add_argument("--output", type=Path, help="optional JSON report path")
     return parser.parse_args()

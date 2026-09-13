@@ -469,6 +469,12 @@ python scripts/validate_vcneb_inputs.py \
   --image-root path/to/vcneb/images
 ```
 
+To compare completed image-count branches without rerunning DFT, use
+`scripts/compare_vcneb_images.py`.  The default barrier spread gate is 0.02 eV;
+the discrete highest-image coordinate gate allows half of the smallest local
+reaction-coordinate segment, since the sampled peak can move by a fraction of
+one image when the band is refined.
+
 ## Current limitations
 
 - Endpoints must have the same atom count and composition.  Identity order is
