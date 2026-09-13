@@ -64,6 +64,7 @@
 - 新验证作业 `27678218` 已在 `hfacnormal01` 的 `node[381-382]` 启动，`NumTasks=160`、`NumCPUs=192`，首个 manifest 已确认只包含 image 1--5；从 `27678004` 的 step 15 完整轨迹恢复。此前错误布局的 `27678137`/`27678176` 已取消，不纳入物理结果。
 - `27678218` 已完成（Slurm `COMPLETED`、`01:08:38`、exit `0`）：7 总帧（5 个 interior image）普通 VCNEB 在 FIRE `fmax_target=0.05 eV/A` 下达到 `final_max_generalized_force=0.0455156 eV/A`。最终正向焓垒 `0.1567509 eV`、反应焓 `-0.3252848 eV`，内部峰为 image 2（`has_interior_barrier=true`，未启用 CI）；manifest 共 96 条记录且每条只含 image 1--5，5 个 worker、每 worker 32 MPI，7 个 ABACUS image 目录无错误退出。
 - 远端 `scripts/audit_vcneb_result.py --max-min-distance 2.0` 审计返回 `status=ok`、`issues=[]`：最小路径距离 `2.026335 A`、最大形变 `0.04894`、几何有效；summary 记录 `endpoint_evaluation_policy=fixed_cached_once`，确认端点未在 VCNEB 迭代中重复派发。结果文件为 `vcneb_summary.json/.txt`、`vcneb.traj`、`vcneb_barrier.png`、snapshots 和 worker manifest。
+- 为补齐 HfO₂ 的 image-count 对照，已提交普通无 CI 作业 `27678406`（5 总帧=3 interior，1 节点×96 ranks）与 `27678407`（9 总帧=7 interior，2 节点×224 ranks）；两者均使用 100 Ry/10 au、32-MPI worker、固定端点一次缓存，独立工作目录分别为 `vcneb_n5_fire_distributed_cmp` 与 `vcneb_n9_fire_distributed_cmp`。
 
 ## 建议的新线程第一步
 
