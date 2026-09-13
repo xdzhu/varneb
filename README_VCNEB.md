@@ -1,5 +1,7 @@
 # VARNEB — Variable-Cell NEB
 
+> VARiable-cell Nudged Elastic Band code with universal first-principles calculators
+
 This repository now contains the calculator-agnostic VARNEB (VC-NEB) toolkit in
 `vcneb/`.  It is meant for crystal phase-transition barriers where the cell
 changes along the path.
