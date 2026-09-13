@@ -63,7 +63,7 @@
 - [x] 已在空闲的 `cu17` 上重新运行现有回归集，并将 Python、ASE、NumPy、SciPy、VASP/ABACUS 环境信息写入 `outputs/vcneb_p0_baseline_manifest.json`。
 - [x] 历史 cu 试算均在启动前检查负载、进程和用户任务；后续 HF Slurm 任务按 `sinfo`/`squeue` 和实际 scaling 选择资源，忙节点不挤占。
 - [x] 利用共享目录完成一次代码同步即可；节点无需安装 Git，运行目录和 manifest 均记录对应的 Git commit。
-- [ ] 将 toy、model、VASP、ABACUS 四类示例分别标注为 `unit`、`model`、`DFT-smoke`、`production-template`，避免用户误把模板当成已收敛结果。
+- [x] README 已将 toy、model、VASP/ABACUS DFT-smoke 与 production-template 示例显式标注，避免把模板误读为已收敛结果。
 - [x] 检查当前 `/home/zhuxd/abacus/8.dielec/vcneb` 旧代码与工作树的差异，保留可借鉴算法说明和输入格式，但不复制无法验证的逻辑。
 - [x] 规定结果目录命名：材料、端点、图像数、calculator、参数集、代码版本必须可从目录名或 manifest 读出。
 

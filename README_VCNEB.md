@@ -57,14 +57,14 @@ first-order saddle character.
 - `vcneb/executor.py`: optional image-level concurrent calculator executor; the
   controller remains single-process and each external calculator job step must
   use isolated directories (and `srun --exclusive` on Slurm).
-- `examples/run_toy_vcneb.py`: analytic smoke test with a known 0.25 eV barrier.
-- `examples/run_hfo2_t_po_model_vcneb.py`: mapped 12-atom HfO2 T -> PO geometry smoke test with a synthetic endpoint double-well calculator.
-- `examples/compare_initial_cell_paths.py`: calculator-free comparison of linear and logarithmic-strain initial paths for any ASE-readable endpoint pair (defaults to HfO2); supports `--mapping auto`.
-- `examples/run_vcneb_vasp.py`: VASP driver based on the existing endpoint layout.
-- `examples/run_fixed_cell_ase_comparison.py`: ASE CINEB versus fixed-cell VCNEB comparison.
-- `examples/run_vasp_single_image_smoke.py`: real VASP energy/force/stress smoke driver.
-- `examples/run_vcneb_abacus.py`: ABACUS driver skeleton.
-- `examples/relax_abacus_native.py`: ABACUS-native atomic/cell endpoint
+- `[unit] examples/run_toy_vcneb.py`: analytic smoke test with a known 0.25 eV barrier.
+- `[model] examples/run_hfo2_t_po_model_vcneb.py`: mapped 12-atom HfO2 T -> PO geometry smoke test with a synthetic endpoint double-well calculator.
+- `[model] examples/compare_initial_cell_paths.py`: calculator-free comparison of linear and logarithmic-strain initial paths for any ASE-readable endpoint pair (defaults to HfO2); supports `--mapping auto`.
+- `[production-template] examples/run_vcneb_vasp.py`: VASP driver based on the existing endpoint layout.
+- `[model] examples/run_fixed_cell_ase_comparison.py`: ASE CINEB versus fixed-cell VCNEB comparison.
+- `[DFT-smoke] examples/run_vasp_single_image_smoke.py`: real VASP energy/force/stress smoke driver.
+- `[production-template] examples/run_vcneb_abacus.py`: ABACUS driver skeleton.
+- `[production-template] examples/relax_abacus_native.py`: ABACUS-native atomic/cell endpoint
   relaxation (`calculation cell-relax`, `relax_method bfgs`); ASE is used only
   for structure conversion and final `CONTCAR` export.
 - `scripts/audit_native_endpoint.py`: read-only endpoint gate for native
@@ -72,7 +72,7 @@ first-order saddle character.
 - `scripts/promote_hfo2_endpoints.py`: validates both endpoint summaries and
   atomically publishes only passing `CONTCAR` files to the production
   `relaxed_T/` and `relaxed_PO/` directories.
-- `examples/relax_abacus_endpoint.py`: ASE-driven endpoint adapter.  It is a
+- `[DFT-smoke] examples/relax_abacus_endpoint.py`: ASE-driven endpoint adapter.  It is a
   numerically equivalent fallback to native `cell-relax` when the latter has
   step-control trouble; pass `--stress-kbar` to require a force-and-stress gate.
 - `scripts/setup_hfo2_t_po_validation.py`: builds the HfO2 T -> PO validation fixture from local source structures or portable copies.

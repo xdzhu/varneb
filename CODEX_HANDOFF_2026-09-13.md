@@ -78,6 +78,7 @@
 - `run_vcneb()` 现在可通过 `failure_report=` 原子写出 optimizer/calculator 中断报告（异常类型、已完成步数、trajectory/snapshot 位置和恢复提示），同时保持原异常继续抛出；对应回归已通过。line-search/ABACUS SCF 专用分类仍是未完成项。
 - `examples/run_vcneb_abacus.py` 与 `examples/run_vcneb_vasp.py` 已默认把该 failure report 写入各自 workdir 的 `vcneb_failure.json`，因此集群模板发生中断时可直接定位恢复入口。
 - 已按当前 `docs/theory.md`、README、代码和回归证据同步 `VCNEB_PROJECT_PLAN.md`：广义坐标/单位/切线/收敛判据、模式投影顺序、约束释放、VASP 静态 image 语义、calculator 切换和 dry-run/validate-only 现标为完成；ABACUS 专用 SCF 分类、USPEX/旧实现对比、真实材料模式对照、论文图表等仍保留为未完成。
+- README 的 Files 清单已为 `unit`、`model`、`DFT-smoke`、`production-template` 示例加上显式标签，并同步勾销 P0 对应计划项。
 
 ## 建议的新线程第一步
 
