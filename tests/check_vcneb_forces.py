@@ -1236,6 +1236,18 @@ def check_threaded_image_executor() -> None:
             or cache_records[1]["cache_misses"] != []
         ):
             raise SystemExit("image cache hit/miss provenance was not persisted")
+        cache_files = list(cache_dir.glob("image_*.npz"))
+        if len(cache_files) != 1:
+            raise SystemExit("image cache did not write exactly one evaluation record")
+        cache_files[0].write_bytes(b"partial-cache-record")
+        retry_calc.reset()
+        calls_before_corrupt = retry_calc.calls
+        cache_executor.evaluate([retry_image])
+        if retry_calc.calls != calls_before_corrupt + 1:
+            raise SystemExit("corrupt image cache entry was not recomputed")
+        cache_records = [json.loads(line) for line in cache_manifest.read_text(encoding="utf-8").splitlines()]
+        if cache_records[-1]["cache_misses"] != [0]:
+            raise SystemExit("corrupt image cache recovery was not recorded as a miss")
         try:
             ThreadedCalculatorExecutor(max_workers=1, cache_dir=cache_dir, cache_namespace="wrong-settings")
         except ValueError:
