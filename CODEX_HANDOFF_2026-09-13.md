@@ -97,7 +97,7 @@
 - 已新增 `outputs/legacy_vcneb_comparison.md`：基于历史迭代日志记录旧实现的可证实差异和 MIC 失败模式；旧目录当前不可访问，定量同条件 benchmark 明确保留为未完成。
 - 已新增 `scripts/plot_vcneb_metrics.py` 与 `tests/check_vcneb_plot.py`：从已归档的逐 image CSV 生成焓垒、晶格、体积和广义力四联图；回归通过，未调用任何 DFT 计算器。
 - 新增 `tests/test_regression_scripts.py` 作为 pytest 收集入口，复用全部 `tests/check_*.py` 脚本；`python -m pytest -q` 已通过 `10 passed`，未启动 DFT。
-- 27678924 的线性 cell 插值对照仍在运行：截至本轮已完成 step 38，fmax 从 0.965655 降至 0.136148 eV/A，连续下降；最新 manifest 仍只记录 interior image 1--5 且无失败。必须继续观察多个完整 step，完成后再与 log-strain 7/9-image 结果比较，不因单次回弹提前取消，也不在该分支启动 CI。
+- 27678924 的线性 cell 插值对照仍在运行：截至本轮已完成 step 43，fmax 从 0.965655 降至 0.085043 eV/A，连续下降；最新 manifest 仍只记录 interior image 1--5 且无失败。必须继续观察多个完整 step，完成后再与 log-strain 7/9-image 结果比较，不因单次回弹提前取消，也不在该分支启动 CI。
 
 ## 建议的新线程第一步
 
