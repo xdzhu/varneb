@@ -1,0 +1,106 @@
+{
+  "material": "HfO2",
+  "transition": "tetragonal T -> polar orthorhombic PO",
+  "endpoint_convention": {
+    "atom_count": 12,
+    "stoichiometry": "Hf4O8",
+    "tetragonal": "sqrt(2) x sqrt(2) x 1 conventional-cell-compatible supercell",
+    "polar_orthorhombic": "12-atom conventional cell",
+    "mapping": "explicit audited element-preserving order"
+  },
+  "calculator": {
+    "code": "ABACUS through ASE",
+    "functional": "PBE",
+    "ecutwfc_Ry": 100,
+    "orbital_policy": "full 10 au DZP for Hf/O",
+    "kpoints": [2, 2, 2],
+    "scf_thr": 1e-8,
+    "scf_nmax": 150,
+    "mixing_beta": 0.3,
+    "spring_k_eV_per_A2": 0.2,
+    "endpoint_evaluation_policy": "fixed_cached_once",
+    "partition": "hfacnormal01",
+    "worker_mpi": 32
+  },
+  "endpoints": [
+    {
+      "label": "T",
+      "job_id": "27677491",
+      "max_force_eV_per_A": 0.00049882,
+      "max_stress_kbar": 0.01841,
+      "status": "completed"
+    },
+    {
+      "label": "PO",
+      "job_id": "27677918",
+      "max_force_eV_per_A": 0.0004973,
+      "max_stress_kbar": 0.07076,
+      "status": "completed"
+    }
+  ],
+  "path_jobs": [
+    {
+      "label": "ordinary_n5",
+      "job_ids": ["27678406", "27678689"],
+      "n_images_total": 5,
+      "n_interior_images": 3,
+      "resources": "1 node, 3 workers x 32 MPI = 96 tasks",
+      "status": "not_converged",
+      "best_final_force_eV_per_A": 0.098970,
+      "notes": "Extended rebound window and smaller-step continuation retained; no physical barrier claimed."
+    },
+    {
+      "label": "ordinary_n7",
+      "job_id": "27678218",
+      "n_images_total": 7,
+      "n_interior_images": 5,
+      "resources": "2 nodes, 5 workers x 32 MPI = 160 tasks",
+      "status": "completed",
+      "final_max_generalized_force_eV_per_A": 0.0455155873,
+      "barrier_enthalpy_eV": 0.1567509,
+      "reaction_enthalpy_eV": -0.3252848,
+      "highest_image_index": 2,
+      "audit": "ok",
+      "local_artifacts": "vcneb_n7_fire_distributed_job27678218/"
+    },
+    {
+      "label": "ordinary_n9",
+      "job_id": "27678407",
+      "n_images_total": 9,
+      "n_interior_images": 7,
+      "resources": "2 nodes, 7 workers x 32 MPI = 224 tasks",
+      "status": "completed",
+      "final_max_generalized_force_eV_per_A": 0.0497190884,
+      "barrier_enthalpy_eV": 0.1562092,
+      "reaction_enthalpy_eV": -0.3252848,
+      "highest_image_index": 3,
+      "audit": "ok",
+      "local_artifacts": "vcneb_n9_fire_distributed_cmp_job27678407/"
+    },
+    {
+      "label": "ci_n7",
+      "job_id": "27678507",
+      "n_images_total": 7,
+      "n_interior_images": 5,
+      "resources": "2 nodes, 5 workers x 32 MPI = 160 tasks",
+      "status": "completed",
+      "climb_after": 0,
+      "final_max_generalized_force_eV_per_A": 0.0295475450,
+      "barrier_enthalpy_eV": 0.1291722,
+      "reaction_enthalpy_eV": -0.3252848,
+      "highest_image_index": 2,
+      "climbing_image": true,
+      "audit": "ok",
+      "local_artifacts": "vcneb_n7_ci_refine_job27678507/"
+    }
+  ],
+  "comparison": {
+    "ordinary_7_vs_9_barrier_spread_eV": 0.0005417,
+    "ordinary_7_vs_9_barrier_relative_fraction": 0.00345,
+    "ordinary_image_comparison": "ordinary_image_comparison.json",
+    "endpoint_not_recomputed_each_iteration": true,
+    "ci_started_only_after_ordinary_interior_barrier": true
+  },
+  "authoritative_remote_root": "/public/home/iai806/abacus/agent-runs/20260912-vcneb-hf/validation/hfo2_t_to_po",
+  "source_repository": "https://github.com/xdzhu/varneb"
+}
