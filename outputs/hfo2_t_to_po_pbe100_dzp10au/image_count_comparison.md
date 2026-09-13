@@ -21,7 +21,7 @@ peak-coordinate spread of `0.04639`, and no topology or geometry failure.  The
 machine-readable report is `cell_interpolation_comparison.json` and was
 generated with the explicit `--allow-duplicate-image-counts` option.
 
-Each completed 7/9-image branch passed `scripts/audit_vcneb_result.py --max-min-distance 2.0` with `status=ok` and no issues. The copied machine-readable summaries, audits, preflight reports, and worker manifests are in:
+Each completed branch listed above passed `scripts/audit_vcneb_result.py --max-min-distance 2.0` with `status=ok` and no issues. The copied machine-readable summaries, audits, preflight reports, and worker manifests are in:
 
 - `vcneb_n7_ci_refine_job27678507/`
 - `vcneb_n7_fire_distributed_linear_job27678924/`
