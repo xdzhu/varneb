@@ -286,18 +286,18 @@
 
 ### 11.1 论文结构
 
-- [ ] Introduction：晶体相变能垒、固定 cell NEB 的局限、现有 VCNEB/USPEX/ABINIT/ASE 生态和纯 Python 的需求。
-- [ ] Theory：广义坐标、cell 度量、应力到 cell force、切线、弹簧力、CI、约束和收敛判据。
-- [ ] Software：核心数据模型、calculator contract、VASP/ABACUS adapter、重启、并行 image 运行和模式 API。
-- [ ] Examples：HfO2 T->PO、钙钛矿案例、模式引导与释放精修、能垒和路径结构；解析势、有限差分、ASE fixed-cell 对照、收敛矩阵和旧实现/公开方法的差异作为本节的小节、表格或图展示。
-- [ ] Conclusions/Availability：应力精度、cell 参数化、原子映射、磁性/电子态、多路径问题和计算成本，以及版本、许可证、输入、结构、脚本、manifest、原始输出和复现命令。
+- [~] Introduction：晶体相变能垒、固定 cell NEB 的局限、现有 VCNEB/USPEX/ABINIT/ASE 生态和纯 Python 的需求（论文草稿已写）。
+- [x] Theory：广义坐标、cell 度量、应力到 cell force、切线、弹簧力、CI、约束和收敛判据。
+- [~] Software：核心数据模型、calculator contract、VASP/ABACUS adapter、重启、并行 image 运行和模式 API（论文草稿已写，VASP 生产级路径仍待补）。
+- [~] Examples：HfO2 T->PO、钙钛矿案例、模式引导与释放精修、能垒和路径结构；解析势、有限差分、ASE fixed-cell 对照、收敛矩阵和公开方法差异已纳入草稿，论文图表与旧实现定量对比仍待补。
+- [~] Conclusions/Availability：应力精度、cell 参数化、原子映射、磁性/电子态、多路径问题、计算成本、版本、许可证、输入、结构、脚本、manifest 和复现命令已纳入草稿；完整发布包仍待补。
 
 ### 11.2 软件发布
 
-- [~] 正式项目/发行名称已定为 `VARNEB`，上游仓库为 `xdzhu/varneb`；Python 导入包继续使用 `vcneb` 兼容名。许可证、版本策略和引用方式仍待发布前最终定稿。
+- [x] 正式项目/发行名称已定为 `VARNEB`，上游仓库为 `xdzhu/varneb`；Python 导入包继续使用 `vcneb` 兼容名；许可证为 GPL-3.0-or-later，版本策略已落到 0.0.1。
 - [x] 已整理 `pyproject.toml`、核心依赖和 plot/dev 可选依赖，并提供 `varneb --version` 入口（兼容保留 `vcneb` 别名）；VASP/ABACUS 继续作为 ASE calculator 运行时配置，不强制打包进核心依赖。
 - [x] 已完成最小安装烟测（wheel 安装、toy VCNEB、CLI 帮助）；API/adapter/故障排查内容已并入 README 与 validation protocol。
-- [ ] 将核心测试放入持续集成；真实 DFT 作为可选的集群复现实验，不要求 CI 内运行。
+- [ ] 将核心测试放入持续集成；真实 DFT 作为可选的集群复现实验，不要求 CI 内运行（尚未按要求开启 GitHub CI）。
 - [ ] 提供最小可运行案例、HfO2 案例输入模板、模式文件模板和结果解析脚本。
 - [~] 干净环境安装与从快照恢复测试已通过；干净节点运行仍以 HfO2 100 Ry/10au 端点和后续路径为最后验收项。
 

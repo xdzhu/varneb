@@ -88,6 +88,11 @@
 - README 的 Files 清单已为 `unit`、`model`、`DFT-smoke`、`production-template` 示例加上显式标签，并同步勾销 P0 对应计划项。
 - `docs/theory.md` 已补齐可执行的 manager/worker VCNEB 伪代码和核心公共参数表（默认值、单位、合法域与 CI 时序）；calculator-specific 经验参数和磁性/占据敏感性仍保持未完成标记。
 
+## 本轮新增（2026-09-14）
+
+- 论文草稿已同步到当前生产证据并提交为 `e7d315a`：HfO2 普通 7/9-image、CI（含延长回弹观察）和 BaTiO3 5/7/9-image barrierless 矩阵均已写入；Program Summary 固定为 GPL-3.0-or-later、包版本 0.0.1。LaTeX 编译 exit 0（6 页）；输出 PDF 为本地生成物，未作为源码结果提交。
+- 27678924 的线性 cell 插值对照仍在运行：截至本轮已完成 step 7，fmax 从 0.965655 降至 0.557819 eV/A；必须继续观察多个完整 step，完成后再与 log-strain 7/9-image 结果比较，不因单次回弹提前取消，也不在该分支启动 CI。
+
 ## 建议的新线程第一步
 
 1. 新计算先检查 `sinfo`/`squeue`，并使用 `hfacnormal01` 的 32-MPI image worker 资源模型。
