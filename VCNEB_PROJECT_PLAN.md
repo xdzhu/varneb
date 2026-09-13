@@ -38,7 +38,7 @@
 - [~] ABACUS 已完成 HfO₂ 100 Ry/10 au 生产级 VCNEB（普通 7/9-image 与 CI）；VASP 真实端到端生产级 VCNEB 仍待完成。
 - [x] HfO₂ T 相到 PO 相的 12 原子结构来源、原子一一映射、端点独立弛豫和生产精度路径/能垒已保存并通过审计。
 - [x] 已实现基础严格模式子空间和 projected-update 约束，并加入端点子空间验证、方向冲突诊断和解析势 release-and-refine；真实材料对照仍未完成。
-- [ ] 尚未形成可投稿版本的误差预算、效率统计、软件发布包和论文结果表。
+- [~] 已形成初版误差预算与资源效率记录（`outputs/hfo2_t_to_po_pbe100_dzp10au/error_budget_and_efficiency.md`）及论文结果表；完整投稿数据包和正式图表仍待补。
 
 ## 3. 阶段总览与里程碑
 
