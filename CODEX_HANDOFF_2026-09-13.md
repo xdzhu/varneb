@@ -79,6 +79,7 @@
 - `examples/run_vcneb_abacus.py` 与 `examples/run_vcneb_vasp.py` 已默认把该 failure report 写入各自 workdir 的 `vcneb_failure.json`，因此集群模板发生中断时可直接定位恢复入口。
 - 已按当前 `docs/theory.md`、README、代码和回归证据同步 `VCNEB_PROJECT_PLAN.md`：广义坐标/单位/切线/收敛判据、模式投影顺序、约束释放、VASP 静态 image 语义、calculator 切换和 dry-run/validate-only 现标为完成；ABACUS 专用 SCF 分类、USPEX/旧实现对比、真实材料模式对照、论文图表等仍保留为未完成。
 - README 的 Files 清单已为 `unit`、`model`、`DFT-smoke`、`production-template` 示例加上显式标签，并同步勾销 P0 对应计划项。
+- `docs/theory.md` 已补齐可执行的 manager/worker VCNEB 伪代码和核心公共参数表（默认值、单位、合法域与 CI 时序）；calculator-specific 经验参数和磁性/占据敏感性仍保持未完成标记。
 
 ## 建议的新线程第一步
 

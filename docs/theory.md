@@ -317,3 +317,52 @@ image 可能在路径尚未成形时被错误选中，导致图像折返但投�
 ## 10. 文献和实现定位
 
 算法思想以变胞 NEB 文献中的扩展构型空间、cell 自由度和广义弹性带为理论背景；实现层参考 ASE 的 optimizer/calculator 契约、ASE UnitCellFilter 的应力到广义力处理，以及公开的 USPEX VCNEB 用户语义。最终论文必须逐项说明本项目与这些实现的坐标、cell 参数化、约束和 calculator 适配差异，不声称在没有源码证据时复现 USPEX 内部实现。
+
+## 11. 实现协议（伪代码）
+
+下面的顺序是 `run_vcneb()` 与 image executor 的公共行为约定；端点只在一次
+初始化评估中进入 calculator，后续迭代只刷新内部 image：
+
+```text
+validate endpoint atom count/order, cell, mapping and path geometry
+validate every calculator provides energy, forces, stress and isolated directory
+evaluate endpoint 0 and endpoint M-1 once; retain their validated results
+for optimizer step = 1 ... steps:
+    evaluate interior images 1 ... M-2 (parallel workers or serial backend)
+    form H=E+P*V, common extended coordinates, tangents and spring forces
+    project active masks/mode subspace, then decompose NEB force
+    if climb and (climb_after is None or completed_steps >= climb_after):
+        replace the highest interior image force with the CI force
+    optimizer updates only interior generalized coordinates
+    atomically append trajectory and complete-chain snapshot
+    stop when the requested generalized-force threshold is met
+on calculator/optimizer error:
+    atomically write failure_report with error, completed steps and recovery paths
+    propagate the original exception; preserve successful sibling cache entries
+```
+
+## 12. 公共参数与经验范围
+
+下表给出核心 API 的单位、默认值和合法域；应用层可以选更严格的阈值，但不能
+改变坐标和应力符号约定。
+
+| 参数 | 默认值 | 合法域/单位 | 作用 |
+|---|---:|---|---|
+| `n_images` | — | integer ≥ 2（含两个端点） | 总帧数；实际 calculator worker 数为 `n_images-2` |
+| `k` | 0.2 | ≥ 0, eV/Å²（或逐段数组） | 扩展坐标弹簧常数 |
+| `cell_scale` | 参考 cell 体积的立方根 | > 0, Å | 原子位移与 cell 变形的联合度量尺度 |
+| `pressure_gpa` | 0 | 任意有限值, GPa | 静水压力焓项 `P V` |
+| `fmax` | 0.05 | > 0, eV/Å | 最大内部广义力收敛阈值 |
+| `steps` | 300 | integer ≥ 0 | optimizer 步数上限 |
+| `cell_interpolation` | `linear` | `linear`/`log_strain`/custom | 初始 cell 路径；log-strain 要求正定 deformation |
+| `mapping` | `identity` | `identity`/`auto`/显式 permutation | 端点原子配对和周期分支 |
+| `minimum_distance` | none | > 0, Å | 初始化路径的 MIC 最短距离硬门槛 |
+| `maximum_deformation` | none | > 0 | 初始化路径的 deformation 范数硬门槛 |
+| `fold_cosine_threshold` | none | [-1, 1] | 相邻扩展坐标线段折返硬门槛 |
+| `image_workers` | 0 | integer ≥ 0 | 并发 interior worker 数；Slurm 每 worker 使用独立 MPI step |
+| `image_retries` | 0 | integer ≥ 0 | 单 image calculator 失败的额外尝试次数 |
+| `cache_namespace` | none | calculator 参数标识 | exact-state cache 的参数隔离键 |
+
+`climb_after` 是已完成普通 NEB step 的整数计数；设置为 `0` 表示第一轮即启用
+CI，默认 `None` 表示由 `climb` 直接决定。生产路径仍建议先普通 NEB，再 CI；
+`failure_report` 只控制异常报告位置，不会吞掉 calculator/optimizer 异常。
