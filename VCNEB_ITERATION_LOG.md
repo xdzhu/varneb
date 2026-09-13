@@ -43,9 +43,10 @@
   the complete step-2 chain snapshot with the same 128-task/4x32-MPI/no-CI
   settings.  Its first resumed evaluation is `fmax=0.800934 eV/A` and is
   running without the previous parser warning.
-- At the latest poll the resumed job has reached ordinary steps 0--6 with
+- At the latest poll the resumed job has reached ordinary steps 0--12 with
   `fmax=0.800934, 0.738536, 0.677679, 0.626060, 0.591285, 0.559697,
-  0.514160 eV/A`; all worker
+  0.514160, 0.484308, 0.455166, 0.426022, 0.399780, 0.390533,
+  0.379974 eV/A`; all worker
   batches remain `status=ok` and the Slurm stderr is empty.
 
 ## HfO₂ endpoint gate passed; ordinary VCNEB launched (`2026-09-13`)
