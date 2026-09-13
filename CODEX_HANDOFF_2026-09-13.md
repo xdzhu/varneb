@@ -48,13 +48,13 @@
 
 - PO 续算 `27677874`/`27677918` 已完成，最终 `fmax=0.0004973 eV/A`、最大应力 `0.07076 kbar`；T/PO 均为 12 原子 `Hf4O8` conventional cell，已由 `endpoint_promotion_gate.json` 原子晋级。
 - 7-image calculator-free preflight 已通过：最小距离 `2.02496 A`、最大 deformation `0.04841`，无折返；所有 image 的 ABACUS 计算器能力检查通过。
-- 原普通 HfO₂ 作业 `27677945` 因并行解析竞态失败；修复后的续算作业 `27678004` 仍在 `node50` RUNNING：128-task controller allocation，4 个并行 image worker，每 worker 32 MPI；100 Ry、Orb-DZP-10au、2x2x2、FIRE、无 CI。续算已推进至 step 13，当前 `fmax=0.368642 eV/A`，只属于预收敛过程。
+- 原普通 HfO₂ 作业 `27677945` 因并行解析竞态失败；修复后的旧布局续算作业 `27678004` 已安全 CANCELLED（保留其完整 step 15 轨迹作为分布式迁移的恢复源）：128-task controller allocation，4 个并行 image worker，每 worker 32 MPI；100 Ry、Orb-DZP-10au、2x2x2、FIRE、无 CI。该轨迹只属于预收敛过程。
 
 ## 并行恢复修复（最新）
 
 - `27677945` 后续因 ASE-ABACUS 的进程级 `ase_sort.dat` 竞态在 image 3 解析失败；已保留 step 2 链快照、manifest 和错误日志，未把该作业当作物理失败。
 - `vcneb/abacus.py` 已加入 identity species-order 的安全补丁，并新增 `tests/check_abacus_parallel_sort.py`；远程 ICU 测试通过。旧全局 `ase_sort.dat` 已移到 `.stale_job27677945`。
-- 修复后的续算作业 `27678004` 已从 step 2 恢复，128 task / 4×32 MPI / no-CI 配置不变；截至 step 13 的完整批次均正常完成，当前没有解析警告或错误。
+- 修复后的旧布局续算作业 `27678004` 曾从 step 2 恢复，128 task / 4×32 MPI / no-CI；在迁移到按 image 分布式布局后已安全取消，作为恢复源的 step 15 完整轨迹和日志均保留。
 
 ## 分布式 image 语义与资源优化（最新）
 
@@ -62,7 +62,7 @@
 - VCNEB manager 现在首次读取端点的 energy/forces/stress 后缓存，后续迭代只通过 image executor 评估 `image_indices=[1,2,...,n_images-2]`；worker manifest 会记录 `image_count=n_images-2`，用于审计端点未重复计算。
 - 分布式模板 `cluster/hf_hfo2_vcneb_distributed.slurm` 已改为默认 `IMAGE_WORKERS=N_IMAGES-2`、每 worker 32 MPI；7-image 默认 5 workers/160 tasks，仍需 2 个节点（单节点 128 核不足），不再为两个端点启动 worker。
 - 新验证作业 `27678218` 已在 `hfacnormal01` 的 `node[381-382]` 启动，`NumTasks=160`、`NumCPUs=192`，首个 manifest 已确认只包含 image 1--5；从 `27678004` 的 step 15 完整轨迹恢复。此前错误布局的 `27678137`/`27678176` 已取消，不纳入物理结果。
-- 截至 2026-09-14 00:10 检查，`27678218` 仍为 RUNNING，已写入完整 VCNEB step 18，`fmax=0.153534 eV/A`；manifest 共 58 条批次记录，均只含 image 1--5，7 个 ABACUS image 目录均确认 32 MPI、无错误退出。当前正在进行 step 19 的 5-image worker 波次。
+- 截至 2026-09-14 00:14:49 检查，`27678218` 仍为 RUNNING，已写入完整 VCNEB step 20，`fmax=0.132727 eV/A`；manifest 共 64 条批次记录，均只含 image 1--5，7 个 ABACUS image 目录均确认 32 MPI、无错误退出。当前继续进行后续 5-image worker 波次。
 
 ## 建议的新线程第一步
 
