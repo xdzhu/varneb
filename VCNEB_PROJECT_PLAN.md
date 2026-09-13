@@ -297,6 +297,7 @@
 - [x] 正式项目/发行名称已定为 `VARNEB`，上游仓库为 `xdzhu/varneb`；Python 导入包继续使用 `vcneb` 兼容名；许可证为 GPL-3.0-or-later，版本策略已落到 0.0.1。
 - [x] 已整理 `pyproject.toml`、核心依赖和 plot/dev 可选依赖，并提供 `varneb --version` 入口（兼容保留 `vcneb` 别名）；VASP/ABACUS 继续作为 ASE calculator 运行时配置，不强制打包进核心依赖。
 - [x] 已完成最小安装烟测（wheel 安装、toy VCNEB、CLI 帮助）；API/adapter/故障排查内容已并入 README 与 validation protocol。
+- [x] GitHub About 与 `pyproject.toml` 的 Summary 已统一为 `VARiable-cell Nudged Elastic Band code with universal first-frinciples calculators`；已发布的 PyPI `0.0.1` 不可覆盖，下一次发布必须递增版本号，workflow 会把新简介写入 wheel/sdist。
 - [ ] 将核心测试放入持续集成；真实 DFT 作为可选的集群复现实验，不要求 CI 内运行（尚未按要求开启 GitHub CI）。
 - [ ] 提供最小可运行案例、HfO2 案例输入模板、模式文件模板和结果解析脚本。
 - [~] 干净环境安装与从快照恢复测试已通过；干净节点运行仍以 HfO2 100 Ry/10au 端点和后续路径为最后验收项。
