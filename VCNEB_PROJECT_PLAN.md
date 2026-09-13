@@ -124,7 +124,7 @@
 - [x] 将“普通 NEB 松弛后再 CI”固化为 `run_vcneb(climb_after=N)`，并加入折返线段 cosine 诊断及硬拒绝选项。
 - [x] 增加局部峰/内部势垒诊断：单调路径或内部峰低于端点时明确给出
   `has_interior_barrier=false` 和 `ci_warning`，避免把无势垒路径误报为过渡态。
-- [~] calculator 异常、NaN/Inf 和 cell 奇异现在会保留带恢复提示的 failure report；并发 image 失败批次会保留已完成 sibling 结果。line-search 失败和 ABACUS SCF 不收敛的专用分类/自动重试仍待补齐。
+- [~] calculator 异常、NaN/Inf、非法 cell、SCF/超时/MPI 关键词现在会保留带 `failure_category` 和恢复提示的 failure report；并发 image 失败批次会保留已完成 sibling 结果。line-search 自动重试和基于 ABACUS 原始 stdout 的专用分类仍待补齐。
 - [x] 设计 image 级缓存和原子写入；中断后可以从最近快照继续，且不会混用不同参数集的结果；并发批次发生单 image 失败时，已完成的 sibling image 结果仍会先写入缓存。
 
 ### 6.3 严格模式子空间

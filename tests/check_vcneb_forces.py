@@ -31,6 +31,7 @@ from vcneb import (
     validate_path_geometry,
     validate_image_calculators,
 )
+from vcneb.calculator import classify_calculator_failure
 from vcneb import (
     Mode,
     build_direction_basis,
@@ -1076,11 +1077,25 @@ def check_optimizer_failure_report() -> None:
         if (
             report.get("status") != "failed"
             or report.get("error_type") != "RuntimeError"
+            or report.get("failure_category") != "calculator_or_optimizer_error"
             or report.get("optimizer_steps_completed") != 0
             or report.get("n_images") != 3
             or report.get("trajectory") != str(trajectory_path)
         ):
             raise SystemExit(f"failure report fields are incomplete: {report}")
+
+
+def check_failure_classification() -> None:
+    cases = {
+        "SCF iteration not converged": "scf_nonconvergence",
+        "srun: error: task timed out": "timeout",
+        "MPI_ABORT was invoked": "mpi_failure",
+        "cell determinant is non-positive": "invalid_cell",
+        "energy contains NaN": "nonfinite_evaluation",
+    }
+    for message, expected in cases.items():
+        if classify_calculator_failure(RuntimeError(message)) != expected:
+            raise SystemExit(f"failure category mismatch for {message!r}")
 
 
 def check_optimizer_api_shapes() -> None:
@@ -1550,6 +1565,8 @@ def main() -> None:
     print("snapshot_append_regression=ok")
     check_optimizer_failure_report()
     print("optimizer_failure_report_regression=ok")
+    check_failure_classification()
+    print("failure_classification_regression=ok")
     check_optimizer_api_shapes()
     print("optimizer_api_shapes_regression=ok")
     check_set_x_cache_invalidation()

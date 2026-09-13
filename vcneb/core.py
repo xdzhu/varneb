@@ -24,7 +24,7 @@ from ase.optimize import BFGS, FIRE, LBFGS
 from ase.parallel import world
 from ase.units import GPa
 
-from .calculator import calculator_context, validate_image_calculators
+from .calculator import calculator_context, classify_calculator_failure, validate_image_calculators
 from .executor import ImageEvaluation
 
 
@@ -1865,6 +1865,7 @@ def run_vcneb(
             payload = {
                 "status": "failed",
                 "error_type": type(exc).__name__,
+                "failure_category": classify_calculator_failure(exc),
                 "error": str(exc),
                 "optimizer": str(optimizer),
                 "optimizer_steps_completed": int(getattr(opt, "nsteps", 0)),

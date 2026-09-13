@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass
 from pathlib import Path
+import re
 from typing import Iterable, Sequence
 
 from ase import Atoms
@@ -208,10 +209,40 @@ def calculator_context(calculator: object) -> str:
     return ", ".join(details)
 
 
+def classify_calculator_failure(error: BaseException) -> str:
+    """Return a stable recovery category for calculator/optimizer failures.
+
+    ASE adapters wrap external-process diagnostics in distribution-specific
+    exception types, so classification intentionally uses conservative message
+    tokens and remains independent of any one DFT code.
+    """
+
+    parts: list[str] = []
+    current: BaseException | None = error
+    seen: set[int] = set()
+    while current is not None and id(current) not in seen:
+        seen.add(id(current))
+        parts.append(str(current))
+        current = current.__cause__ or current.__context__
+    text = " ".join(parts).lower()
+    if re.search(r"\b(?:nan|inf|infinity|nonfinite|non-finite)\b", text) or "not finite" in text:
+        return "nonfinite_evaluation"
+    if any(token in text for token in ("timeout", "timed out", "time limit", "deadline")):
+        return "timeout"
+    if "mpi" in text or "srun" in text or "mpirun" in text:
+        return "mpi_failure"
+    if "scf" in text and any(token in text for token in ("converg", "not converge", "failed")):
+        return "scf_nonconvergence"
+    if any(token in text for token in ("singular", "determinant", "invalid cell", "non-positive volume")):
+        return "invalid_cell"
+    return "calculator_or_optimizer_error"
+
+
 __all__ = [
     "CalculatorCapabilities",
     "CalculatorCapabilityError",
     "calculator_context",
+    "classify_calculator_failure",
     "inspect_calculator",
     "validate_calculator",
     "validate_image_calculators",
