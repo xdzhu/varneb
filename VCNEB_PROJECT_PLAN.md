@@ -76,27 +76,27 @@
 
 ### 5.1 广义坐标与几何
 
-- [ ] 明确周期结构的基本对象：原子分数坐标 `s`、cell 矩阵 `h`、元素/质量、周期边界和原子映射。
-- [ ] 明确路径变量是 `(s, h)` 还是 `(r, h)`；给出两者转换、最小镜像处理以及 cell 改变时原子笛卡尔位置的定义。
-- [ ] 固化扩展空间内积，例如原子位移与 cell 变形的加权 Frobenius 度量；记录 `cell_scale` 的物理单位和默认选择依据。
-- [ ] 规定 cell 插值的合法域：体积为正、避免奇异 cell、处理整数等价变换和不必要的整体旋转。
+- [x] `docs/theory.md` 明确周期结构对象：原子分数坐标 `s`、cell 矩阵 `h`、元素/质量、周期边界和原子映射。
+- [x] `docs/theory.md` 明确路径变量采用 `(s,F)` 并给出与 `(r,h)` 的转换、最小镜像分支和变胞时的笛卡尔位置定义。
+- [x] `docs/theory.md` 固化扩展空间内积、原子与 cell 的联合欧氏度量，并记录 `cell_scale` 的长度单位、默认值和敏感性要求。
+- [x] `docs/theory.md` 规定 cell 插值的正体积/非奇异域、正定 log-strain 条件和整体旋转处理；初始化阶段有几何硬审计。
 - [x] 已评估线性 cell 插值与对数/指数晶格插值；`interpolate_vcneb()` 提供 `linear`、正定 deformation 的 `log_strain` 和自定义回调，并保留线性方式作为兼容默认选项。
 
 ### 5.2 力、应力与 NEB 方程
 
-- [ ] 统一能量单位、原子力单位、应力单位和 cell 广义力的符号约定。
+- [x] `docs/theory.md` 统一能量、原子力、应力和 cell 广义力的单位/符号约定，并由有限差分回归覆盖。
 - [x] 从能量对 `(s, h)` 的导数推导原子广义力和 cell 广义力，明确应力到 cell force 的转换、体积因子以及张量转置约定，并用非对角 deformation/外压有限差分验证。
-- [ ] 定义切线选择、真实力的垂直投影、弹簧力的平行分量、端点处理和 climbing-image 规则。
-- [ ] 明确 VC-NEB 的收敛量：最大真实广义力、最大原子力、最大 cell force/stress、能量变化和路径几何变化。
-- [ ] 明确固定 cell、固定原子、固定原子方向、固定 cell 分量、软约束和硬约束之间的差别。
+- [x] `docs/theory.md` 定义能量加权切线、真实力垂直投影、弹簧平行分量、固定端点和 climbing-image 规则。
+- [x] `docs/theory.md` 明确最大广义力、原子力、cell force/stress、能量和路径几何等收敛量；`path_diagnostics()` 输出对应字段。
+- [x] `docs/theory.md` 区分固定 cell、固定原子/方向、cell 分量 mask、软模式和硬子空间约束，并有对应 API/测试。
 
 ### 5.3 模式与方向约束语义
 
-- [ ] 将模式功能拆为三种模式并在 API 中显式命名：`guided_initial_path`、`projected_dynamics`、`hard_subspace_constraint`。
-- [ ] 定义模式在笛卡尔空间、分数坐标空间和质量加权空间的含义；定义多个模式正交化、归一化和线性组合规则。
-- [ ] 支持原子方向 mask/投影矩阵；记录它与“冻结原子”的差别。
+- [x] 模式引导、`projected` 更新和 `subspace` 硬约束已在 API 与 `docs/theory.md` 中分层命名和说明。
+- [x] 已定义模式在 Cartesian/fractional/扩展空间中的转换、归一化、多模式正交化与质量加权输入处理；严格动力学质量度量的进一步验证仍单列。
+- [x] 已支持原子方向 mask/投影矩阵，并在文档中区分方向约束与冻结原子。
 - [ ] 调研并记录 ABINIT GeoConstraints/directional constraints 的可复用语义，但不把 ABINIT 输入格式强行暴露给核心 API。
-- [ ] 定义约束后的力是先投影再做 NEB 切向分解，还是先做 NEB 力分解再投影；选择一种并用有限差分验证。
+- [x] 已固定“先投影广义力，再做 NEB 切向/弹簧分解”的顺序，并由模式投影与有限差分回归验证。
 
 ### 出口标准
 
@@ -133,7 +133,7 @@
 - [x] 实现约束优化：每一步更新后回投影到允许子空间；约化变量优化仍可作为后续性能优化。
 - [x] 实现方向约束投影矩阵，与 atom mask/cell mask 组合时通过 `direction_basis_conflicts()` 给出部分裁剪、完全失活和秩损失诊断。
 - [x] 对比三种结果：无约束 VCNEB、模式引导但最终无约束、严格模式约束；已在耦合解析势上以 `2.6e-5 eV` 以内的能垒差完成对照，文档明确三者不能互相替代。
-- [ ] 加入约束释放功能，使用户可以先在模式子空间寻找路径，再切换到全空间做最终精修。
+- [x] `examples/run_release_and_refine.py` 已提供先模式子空间搜索、再解除约束做全空间精修的可复现实例；真实材料对照仍待完成。
 
 ### P2 出口标准
 
@@ -155,7 +155,7 @@
 ### 7.2 VASP 适配
 
 - [x] 完成单 image 能量/力/stress 解析、目录隔离、重启文件策略和错误分类；真实 GaN VASP smoke 已记录到 `outputs/vasp_gan_single_image_manifest.json`。
-- [ ] 明确 VASP 的 cell relaxation 输入只用于端点预弛豫还是也用于 image calculator；避免将普通变胞弛豫误用为 NEB image 更新。
+- [x] 已明确 VASP 的 cell-relax 输入只用于端点预弛豫；VC-NEB image calculator 使用静态 `IBRION=-1`、`NSW=0`、`ISIF=2`、`ISYM=0`，cell 更新由 VCNEB 控制。
 - [x] 完成极小晶胞的 VASP 单 image smoke，并保留 INCAR/KPOINTS/POTCAR 来源记录；完整材料案例仍待开展。
 - [x] `run_vasp_single_image_smoke.py` 已在 `cu26` 用 40 核 VASP 6.3.2 实跑，energy/forces/stress 与静态输入验证均通过。
 
@@ -165,7 +165,7 @@
 - [x] 已加入 native endpoint 只读闸门审计器 `scripts/audit_native_endpoint.py`，对退出码、收敛标志、原子数/化学计量、最大原子力和应力缺失或超阈值直接判定为证据不足。
 - [x] 已加入 `relax_abacus_endpoint.py`，使用 ASE `FrechetCellFilter` 完成 HfO2 两端点的低精度、宽松阈值独立原子/cell 弛豫 trial 并记录。
 - [ ] 验证 ABACUS 命令 profile、MPI 进程数、退出码、超时和 SCF 不收敛处理。
-- [ ] 让同一套 VCNEB 输入只更换 calculator 配置即可切换 VASP/ABACUS。
+- [x] `run_vcneb()` 只依赖 ASE energy/forces/stress contract，VASP 与 ABACUS 示例通过替换 calculator factory 切换，核心路径参数不变。
 
 ### 7.4 可恢复运行
 
@@ -173,7 +173,7 @@
 - [x] 已加入可选 image-level 并发执行器；主控制器通过独立 Slurm job steps 并发 image calculator，真实 BTO `27675909` 完成 4×32 MPI smoke 并生成正常 summary/trajectory。
 - [x] 并发 executor 支持显式 per-image retry；fail-once 回归确认只重算失败 image。
 - [x] 已加入 image-worker JSONL manifest（每个控制器 evaluation batch 记录状态、耗时、重试次数和失败信息），并加入 `--resume-step`/`RESUME_STEP` 精确恢复完整 chain snapshot；`ThreadedCalculatorExecutor` 现在支持可选的跨作业 exact-state image cache、namespace 锁定、原子写入、命中/未命中 provenance 和损坏条目回退。
-- [ ] 增加 dry-run、validate-only、single-image 和 N-image smoke test 命令。
+- [x] 已提供 `validate_vcneb_inputs.py` dry-run、ABACUS `--validate-only`、VASP/ABACUS single-image smoke，以及 `--n-images` 路径入口；发布前元数据回归也已加入。
 - [x] 生成机器可读的 summary JSON 和人类可读的文本摘要；CSV/Markdown 汇总仍作为发布增强项。
 
 ### 出口标准
