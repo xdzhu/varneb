@@ -94,7 +94,7 @@
 - 隔离环境 `python -m build` 已成功生成 `varneb-0.0.1` sdist/wheel，包内 `METADATA` 的 Summary 与 GitHub About 完全一致；仅有 setuptools 对旧式 license table 的弃用警告，未阻断构建。
 - 已新增 `outputs/hfo2_t_to_po_pbe100_dzp10au/error_budget_and_efficiency.md`，分开记录 image-count、CI 路径选择、端点残差、电子精度和资源效率，避免把不同物理/数值因素合并成单一误差条。
 - 已新增 `outputs/legacy_vcneb_comparison.md`：基于历史迭代日志记录旧实现的可证实差异和 MIC 失败模式；旧目录当前不可访问，定量同条件 benchmark 明确保留为未完成。
-- 27678924 的线性 cell 插值对照仍在运行：截至本轮已完成 step 20，fmax 从 0.965655 降至 0.312284 eV/A，连续下降且 64 个 worker manifest 记录均为 ok；必须继续观察多个完整 step，完成后再与 log-strain 7/9-image 结果比较，不因单次回弹提前取消，也不在该分支启动 CI。
+- 27678924 的线性 cell 插值对照仍在运行：截至本轮已完成 step 21，fmax 从 0.965655 降至 0.300280 eV/A，连续下降且 67 个 worker manifest 记录均为 ok；必须继续观察多个完整 step，完成后再与 log-strain 7/9-image 结果比较，不因单次回弹提前取消，也不在该分支启动 CI。
 
 ## 建议的新线程第一步
 
