@@ -16,6 +16,7 @@ from .core import (
 from .calculator import (
     CalculatorCapabilities,
     CalculatorCapabilityError,
+    classify_calculator_failure,
     inspect_calculator,
     validate_calculator,
     validate_image_calculators,
@@ -44,6 +45,7 @@ __all__ = [
     "validate_path_geometry",
     "CalculatorCapabilities",
     "CalculatorCapabilityError",
+    "classify_calculator_failure",
     "inspect_calculator",
     "validate_calculator",
     "validate_image_calculators",
