@@ -62,7 +62,7 @@
 - VCNEB manager 现在首次读取端点的 energy/forces/stress 后缓存，后续迭代只通过 image executor 评估 `image_indices=[1,2,...,n_images-2]`；worker manifest 会记录 `image_count=n_images-2`，用于审计端点未重复计算。
 - 分布式模板 `cluster/hf_hfo2_vcneb_distributed.slurm` 已改为默认 `IMAGE_WORKERS=N_IMAGES-2`、每 worker 32 MPI；7-image 默认 5 workers/160 tasks，仍需 2 个节点（单节点 128 核不足），不再为两个端点启动 worker。
 - 新验证作业 `27678218` 已在 `hfacnormal01` 的 `node[381-382]` 启动，`NumTasks=160`、`NumCPUs=192`，首个 manifest 已确认只包含 image 1--5；从 `27678004` 的 step 15 完整轨迹恢复。此前错误布局的 `27678137`/`27678176` 已取消，不纳入物理结果。
-- 截至 2026-09-14 00:04 检查，`27678218` 仍为 RUNNING，已写入完整 VCNEB step 15，`fmax=0.183236 eV/A`；manifest 共 49 条批次记录，均只含 image 1--5，7 个 ABACUS image 目录均确认 32 MPI、无错误退出。当前正在进行 step 16 的 5-image worker 波次。
+- 截至 2026-09-14 00:06 检查，`27678218` 仍为 RUNNING，已写入完整 VCNEB step 16，`fmax=0.173666 eV/A`；manifest 共 52 条批次记录，均只含 image 1--5，7 个 ABACUS image 目录均确认 32 MPI、无错误退出。当前正在进行 step 17 的 5-image worker 波次。
 
 ## 建议的新线程第一步
 
