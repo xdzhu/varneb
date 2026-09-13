@@ -74,6 +74,7 @@
 - `scripts/compare_vcneb_images.py` 已用半个局部反应坐标段作为离散峰位默认容差，7/9-image 普通对照报告 `status=ok`、能垒 spread `0.0005417 eV`；机器可读结果为 `outputs/hfo2_t_to_po_pbe100_dzp10au/ordinary_image_comparison.json`。
 - 新增 `outputs/hfo2_t_to_po_pbe100_dzp10au/hfo2_validation_provenance.json`，集中记录 12 原子端点、100 Ry/10 au、32-MPI worker 资源、5/7/9-image 与 CI 作业 ID、结果和本地/远端 artifact 位置。
 - 已从 7/9-image 完成 summary 导出逐 image `vcneb_metrics.csv`，包含反应坐标、焓、晶格长度/角度、体积、应力和 NEB 力分解，可直接用于结构—能量图和论文表格。
+- 项目计划的 DoD 已按现有证据更新：有限差分/ASE 对照、解析模型、VASP/ABACUS smoke、ABACUS 生产路径、HfO₂/BTO 收敛矩阵和纯 Python 最小案例均已勾选；真实材料模式约束、论文 claim 映射、VASP 生产级路径和更完整敏感性仍未完成。
 - 代码工程化增量已在本地回归全通过并推送为 `31318f5`（功能主体 `0735990`）：新增可选 exact-state image cache、calculator namespace 锁定、原子 cache 写入、损坏条目回退以及 manifest 命中/未命中 provenance；远端源文件已同步，当前运行作业不受影响。
 - 后续工程化修复已提交：`ThreadedCalculatorExecutor` 在并发 batch 的某个 image 失败时仍收集并原子保存已完成 sibling image，随后再返回 batch 错误；新增恢复回归确认成功 image 不丢失、重启不重复计算，manifest 保留失败与后续 cache hit provenance。
 - `run_vcneb()` 现在可通过 `failure_report=` 原子写出 optimizer/calculator 中断报告（异常类型、已完成步数、trajectory/snapshot 位置和恢复提示），同时保持原异常继续抛出；对应回归已通过。line-search/ABACUS SCF 专用分类仍是未完成项。

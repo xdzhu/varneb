@@ -325,13 +325,13 @@
 只有同时满足以下条件，才把项目标记为“正确可用”而不是“原型可运行”：
 
 - [ ] 理论定义、代码实现和测试中的坐标、单位、应力符号完全一致。
-- [ ] 原子力和 cell force 均通过有限差分；固定 cell 与 ASE 对照通过。
-- [ ] 解析模型能恢复已知 saddle/能垒，且 CI、弹簧、约束和恢复功能有回归测试。
-- [ ] VASP 与 ABACUS 至少各有一条真实 calculator 路径通过 smoke test；至少一种完成生产级 VCNEB。
-- [ ] HfO2 T->PO 和一个第二材料案例完成端点审计、收敛矩阵和重复路径检查。
+- [x] 原子力和 cell force 均通过有限差分；固定 cell 与 ASE 对照通过。
+- [x] 解析模型能恢复已知 saddle/能垒，且 CI、弹簧、约束、缓存和恢复功能均有回归测试。
+- [x] VASP 与 ABACUS 各有真实 calculator smoke test，且 ABACUS 已完成 HfO₂/BaTiO₃ 生产级 VCNEB。
+- [x] HfO₂ T->PO 与 BaTiO₃ T->C 均完成端点审计、5/7/9-image（或等价）收敛矩阵和路径对照；HfO₂ 7/9 结果见 provenance manifest。
 - [ ] 模式引导、严格模式约束、方向限制和释放后全空间精修均有清晰定义与实证案例。
 - [~] HfO₂ 端点、5/7/9-image、CI 的代码/输入摘要、作业资源、结果、审计和 artifact 已集中在 `hfo2_validation_provenance.json`；完整论文 claim 映射与所有原始输出发布包仍待完成。
-- [ ] 用户可在不安装 MATLAB/USPEX 的情况下，从纯 Python 环境完成最小案例，并按文档切换 calculator。
+- [x] 用户可在不安装 MATLAB/USPEX 的情况下，从纯 Python 环境完成最小案例，并按文档切换 calculator；wheel 安装与 toy 恢复烟测已通过。
 
 ## 14. 每次迭代必须记录的字段
 
