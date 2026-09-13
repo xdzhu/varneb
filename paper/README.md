@@ -28,6 +28,7 @@
 - `figures/`：路径、cell 演化、收敛和 calculator 对比图。
 - `data/`：论文使用的汇总 CSV/JSON，不放入大体积 DFT restart 文件。
 - `reproduce/`：从 manifest 复现表格和图的脚本。
+- `claim_evidence.md`：将主稿件 claim 映射到代码、回归测试、作业和归档结果，并明确当前证据边界。
 
 ## 当前编译
 
