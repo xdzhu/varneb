@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import inspect
+import json
 import os
 from pathlib import Path
 import tempfile
@@ -1739,6 +1740,28 @@ def _next_snapshot_step(directory: str | Path) -> int:
     return next_step
 
 
+def _write_json_atomic(path: str | Path, payload: Mapping[str, object]) -> None:
+    """Persist a small machine-readable report without exposing partial JSON."""
+
+    destination = Path(path)
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    fd, temporary = tempfile.mkstemp(
+        prefix=f".{destination.name}.", suffix=".tmp", dir=destination.parent
+    )
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            json.dump(payload, handle, indent=2, ensure_ascii=False, sort_keys=True)
+            handle.write("\n")
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, destination)
+    finally:
+        try:
+            os.unlink(temporary)
+        except FileNotFoundError:
+            pass
+
+
 def run_vcneb(
     images: Sequence[Atoms],
     *,
@@ -1764,6 +1787,7 @@ def run_vcneb(
     trajectory_mode: str = "w",
     snapshot_dir: str | Path | None = None,
     snapshot_start: Optional[int] = None,
+    failure_report: str | Path | None = None,
     validate_calculators: bool = True,
     log: Optional[Callable[[str], None]] = None,
 ) -> tuple[VCNEB, object]:
@@ -1831,7 +1855,36 @@ def run_vcneb(
                 chain.climb = True
 
         opt.attach(enable_climbing_image, interval=1)
-    opt.run(fmax=fmax, steps=steps)
-    if traj is not None:
-        traj.close()
+    try:
+        opt.run(fmax=fmax, steps=steps)
+    except Exception as exc:
+        if traj is not None:
+            traj.close()
+            traj = None
+        if failure_report is not None:
+            payload = {
+                "status": "failed",
+                "error_type": type(exc).__name__,
+                "error": str(exc),
+                "optimizer": str(optimizer),
+                "optimizer_steps_completed": int(getattr(opt, "nsteps", 0)),
+                "snapshot_steps_written": max(0, int(step_counter["value"])),
+                "n_images": len(chain.images),
+                "trajectory": str(trajectory) if trajectory is not None else None,
+                "snapshot_dir": str(snapshot_dir) if snapshot_dir is not None else None,
+                "recovery_hint": (
+                    "Inspect the preserved trajectory/snapshots, correct the calculator or "
+                    "optimizer settings, then resume from the latest complete chain snapshot."
+                ),
+            }
+            try:
+                _write_json_atomic(failure_report, payload)
+            except Exception:
+                # Preserve the original calculator/optimizer exception if the
+                # optional diagnostic path itself is unavailable.
+                pass
+        raise
+    finally:
+        if traj is not None:
+            traj.close()
     return chain, opt

@@ -448,6 +448,10 @@ directory-local sort file.
 For reproducible recovery from a known complete snapshot, combine
 `--resume --resume-step N` with `--resume-trajectory`; negative `N` counts from
 the end and `-1` means the latest complete chain.
+Library callers can pass `failure_report=PATH` to `run_vcneb()`; if an optimizer
+or calculator exception interrupts the run, an atomically written JSON report
+records the exception, completed optimizer steps, and the trajectory/snapshot
+locations to use for recovery.  The original exception is still propagated.
 The Hefei BTO template `cluster/hf_batio3_vcneb_parallel.slurm` demonstrates
 four 32-MPI workers in a 128-task allocation.
 

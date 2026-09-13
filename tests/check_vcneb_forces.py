@@ -1033,6 +1033,56 @@ def check_snapshot_append_resume() -> None:
             raise SystemExit("append-mode snapshots did not continue at the next step index")
 
 
+def check_optimizer_failure_report() -> None:
+    class ExplodingCalculator(Calculator):
+        implemented_properties = ["energy", "forces", "stress"]
+
+        def calculate(self, atoms=None, properties=("energy",), system_changes=all_changes):
+            super().calculate(atoms, properties, system_changes)
+            raise RuntimeError("intentional optimizer-time calculator failure")
+
+    reference_cell = np.diag([5.0, 5.0, 5.0])
+    initial = Atoms("Ar", scaled_positions=[[0.25, 0.5, 0.5]], cell=reference_cell, pbc=True)
+    final = Atoms("Ar", scaled_positions=[[0.75, 0.5, 0.5]], cell=reference_cell, pbc=True)
+    images = interpolate_vcneb(initial, final, n_images=3, align_cells=False)
+    images[0].calc = ZeroCalculator()
+    images[1].calc = ExplodingCalculator()
+    images[2].calc = ZeroCalculator()
+
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        report_path = root / "failure.json"
+        trajectory_path = root / "chain.traj"
+        try:
+            run_vcneb(
+                images,
+                k=0.15,
+                climb=False,
+                optimizer="FIRE",
+                fmax=0.01,
+                steps=1,
+                logfile=None,
+                trajectory=trajectory_path,
+                failure_report=report_path,
+            )
+        except RuntimeError as exc:
+            if "optimizer-time calculator failure" not in str(exc):
+                raise SystemExit("optimizer failure report test saw the wrong exception")
+        else:
+            raise SystemExit("optimizer failure report test unexpectedly succeeded")
+        if not report_path.exists():
+            raise SystemExit("run_vcneb did not write its failure report")
+        report = json.loads(report_path.read_text(encoding="utf-8"))
+        if (
+            report.get("status") != "failed"
+            or report.get("error_type") != "RuntimeError"
+            or report.get("optimizer_steps_completed") != 0
+            or report.get("n_images") != 3
+            or report.get("trajectory") != str(trajectory_path)
+        ):
+            raise SystemExit(f"failure report fields are incomplete: {report}")
+
+
 def check_optimizer_api_shapes() -> None:
     reference_cell = np.diag([5.0, 5.0, 5.0])
     initial = make_atoms(reference_cell, np.array([0.25, 0.5, 0.5]), np.eye(3))
@@ -1498,6 +1548,8 @@ def main() -> None:
     print("trajectory_resume_regression=ok")
     check_snapshot_append_resume()
     print("snapshot_append_regression=ok")
+    check_optimizer_failure_report()
+    print("optimizer_failure_report_regression=ok")
     check_optimizer_api_shapes()
     print("optimizer_api_shapes_regression=ok")
     check_set_x_cache_invalidation()
