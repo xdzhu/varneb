@@ -1,0 +1,70 @@
+{
+  "material": "BaTiO3",
+  "transition": "tetragonal T -> cubic C",
+  "calculator": {
+    "code": "ABACUS through ASE",
+    "functional": "PBE",
+    "ecutwfc_Ry": 100,
+    "orbital_policy": "full Ba/Ti/O 10 au DZP",
+    "kpoints": [4, 4, 4],
+    "scf_thr": 1e-8,
+    "cell_interpolation": "log_strain",
+    "path_optimizer": "FIRE",
+    "maxstep_A": 0.003,
+    "worker_model": "4 interior workers x 32 MPI",
+    "partition": "hfacnormal01",
+    "endpoint_evaluation_policy": "fixed_cached_once"
+  },
+  "endpoint_jobs": ["27675330", "27675331"],
+  "ordinary_forward": [
+    {
+      "job_id": "27676251",
+      "n_images_total": 5,
+      "n_interior_images": 3,
+      "final_max_generalized_force_eV_per_A": 0.0191050,
+      "reaction_enthalpy_eV": 0.0871289,
+      "has_interior_barrier": false,
+      "audit": "ok"
+    },
+    {
+      "job_id": "27676310",
+      "n_images_total": 7,
+      "n_interior_images": 5,
+      "final_max_generalized_force_eV_per_A": 0.0196710,
+      "reaction_enthalpy_eV": 0.0871289,
+      "has_interior_barrier": false,
+      "audit": "ok"
+    },
+    {
+      "job_id": "27676513",
+      "n_images_total": 9,
+      "n_interior_images": 7,
+      "final_max_generalized_force_eV_per_A": 0.0199074,
+      "reaction_enthalpy_eV": 0.0871289,
+      "has_interior_barrier": false,
+      "audit": "ok"
+    }
+  ],
+  "ordinary_reverse": {
+    "job_ids": ["27676299", "27676485"],
+    "n_images_total": 5,
+    "n_interior_images": 3,
+    "final_max_generalized_force_eV_per_A": 0.0195577,
+    "reaction_enthalpy_eV": -0.0872206,
+    "has_interior_barrier": false,
+    "audit": "ok"
+  },
+  "ci_gate": {
+    "started": false,
+    "decision": "withheld",
+    "reason": "all ordinary paths are monotonic/barrierless"
+  },
+  "precision_sensitivity": {
+    "tightened_kpoints": [6, 6, 6],
+    "tightened_scf_thr": 1e-9,
+    "tightened_reaction_energy_eV": 0.0724,
+    "absolute_reaction_energy_shift_eV": 0.01476,
+    "barrierless_topology_robust": true
+  },
+  "source_repository": "https://github.com/xdzhu/varneb"
+}

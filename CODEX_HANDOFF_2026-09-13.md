@@ -73,6 +73,7 @@
 - HfO₂ image-count 对照已归档于 `outputs/hfo2_t_to_po_pbe100_dzp10au/image_count_comparison.md`；收敛的普通 7/9-image 焓垒只差 `0.0005417 eV`（约 0.35%），但 5-image 分支未收敛，因此不纳入物理能垒比较。已从远端复制 7-image CI 与 9-image 普通路径的 summary、audit、preflight 和 worker manifest；完整 ABACUS scratch 仍保留在 hfacnormal01。
 - `scripts/compare_vcneb_images.py` 已用半个局部反应坐标段作为离散峰位默认容差，7/9-image 普通对照报告 `status=ok`、能垒 spread `0.0005417 eV`；机器可读结果为 `outputs/hfo2_t_to_po_pbe100_dzp10au/ordinary_image_comparison.json`。
 - 新增 `outputs/hfo2_t_to_po_pbe100_dzp10au/hfo2_validation_provenance.json`，集中记录 12 原子端点、100 Ry/10 au、32-MPI worker 资源、5/7/9-image 与 CI 作业 ID、结果和本地/远端 artifact 位置。
+- BTO 当前生产矩阵也新增 `outputs/batio3_t_to_c_pbe100_dzp10au/bto_validation_provenance.json`；它明确 100 Ry、Ba/Ti/O 全套 10 au DZP、5/7/9 总帧、反向路径、CI withheld 与 6³/1e-9 精度对照，并标明旧 `outputs/batio3/` manifest 仅为诊断记录。
 - 已从 7/9-image 完成 summary 导出逐 image `vcneb_metrics.csv`，包含反应坐标、焓、晶格长度/角度、体积、应力和 NEB 力分解，可直接用于结构—能量图和论文表格。
 - 项目计划的 DoD 已按现有证据更新：有限差分/ASE 对照、解析模型、VASP/ABACUS smoke、ABACUS 生产路径、HfO₂/BTO 收敛矩阵和纯 Python 最小案例均已勾选；真实材料模式约束、论文 claim 映射、VASP 生产级路径和更完整敏感性仍未完成。
 - USPEX/ABINIT 语义对照条目也已按既有 `outputs/uspex_vcneb_mode_analysis.md` 证据勾选；旧 `/home/zhuxd/abacus/8.dielec/vcneb` 的可复现实验结果对比仍未宣称完成。
