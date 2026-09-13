@@ -14,6 +14,9 @@
   repository/workflow/environment tuple: `xdzhu/varneb`,
   `.github/workflows/publish-pypi.yml`, `pypi`. After correcting the pending
   publisher, rerun the failed publish job or dispatch this workflow manually.
+- After the pending publisher was added, rerunning `34763435900` completed
+  successfully. `pip index versions varneb` and a clean `pip download` now
+  resolve `varneb==0.0.1` from PyPI.
 
 ## VARNEB repository rename (`2026-09-13`)
 
