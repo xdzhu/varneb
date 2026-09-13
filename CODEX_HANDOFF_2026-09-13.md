@@ -66,6 +66,7 @@
 - 远端 `scripts/audit_vcneb_result.py --max-min-distance 2.0` 审计返回 `status=ok`、`issues=[]`：最小路径距离 `2.026335 A`、最大形变 `0.04894`、几何有效；summary 记录 `endpoint_evaluation_policy=fixed_cached_once`，确认端点未在 VCNEB 迭代中重复派发。结果文件为 `vcneb_summary.json/.txt`、`vcneb.traj`、`vcneb_barrier.png`、snapshots 和 worker manifest。
 - 为补齐 HfO₂ 的 image-count 对照，已提交普通无 CI 作业 `27678406`（5 总帧=3 interior，1 节点×96 ranks）与 `27678407`（9 总帧=7 interior，2 节点×224 ranks）；两者均使用 100 Ry/10 au、32-MPI worker、固定端点一次缓存，独立工作目录分别为 `vcneb_n5_fire_distributed_cmp` 与 `vcneb_n9_fire_distributed_cmp`。
 - 截至 2026-09-14 00:58:30，`27678406` 已完成 step 4（`fmax=0.661063 eV/A`），`27678407` 已完成 step 2（`fmax=0.846545 eV/A`）；两条作业仍 RUNNING，manifest 分别记录 `[1,2,3]` 与 `[1,2,3,4,5,6,7]`，ABACUS 错误计数均为 0。
+- 由于 7-image 普通路径已达到真实内部峰且 `fmax<0.05 eV/A`，CI 精修作业 `27678507` 已提交：7 总帧/5 interior、2 节点×160 tasks、每 worker 32 MPI、`MAXSTEP=0.01`、`FMAX=0.03`、`CLIMB_AFTER=0`，从 `27678218` 的完整 `vcneb.traj` 恢复，工作目录为 `vcneb_n7_ci_refine`。该作业是首次真实 HfO₂ CI，不用于 BTO。
 
 ## 建议的新线程第一步
 
