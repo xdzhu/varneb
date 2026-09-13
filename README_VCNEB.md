@@ -83,7 +83,10 @@ first-order saddle character.
   common stress threshold in addition to the generalized-force gate.
 - `scripts/compare_vcneb_images.py`: calculator-free comparison of completed
   5/7/9-image summaries, including shared calculator settings and explicit
-  handling of consistent barrierless paths.
+  handling of consistent barrierless paths.  Pass
+  `--allow-duplicate-image-counts` when comparing same-resolution variants
+  such as `linear` versus `log_strain`; image-count convergence keeps the
+  default uniqueness gate.
 - `scripts/export_vcneb_metrics.py`: export completed summary diagnostics to a
   per-image CSV containing reaction coordinate, enthalpy, cell lengths/angles,
   volume, stress and NEB force components for plotting or paper tables.
@@ -455,8 +458,9 @@ the end and `-1` means the latest complete chain.
 The bundled VASP and ABACUS drivers write `vcneb_failure.json` in their work
 directory on such an interruption.  Library callers can pass `failure_report=PATH` to `run_vcneb()`; if an optimizer
 or calculator exception interrupts the run, an atomically written JSON report
-records the exception, completed optimizer steps, and the trajectory/snapshot
-locations to use for recovery.  The original exception is still propagated.
+records the exception, completed optimizer steps, the trajectory/snapshot
+locations to use for recovery, and any existing calculator log paths used for
+bounded failure classification.  The original exception is still propagated.
 The Hefei BTO template `cluster/hf_batio3_vcneb_parallel.slurm` demonstrates
 four 32-MPI workers in a 128-task allocation.
 
@@ -478,7 +482,8 @@ To compare completed image-count branches without rerunning DFT, use
 `scripts/compare_vcneb_images.py`.  The default barrier spread gate is 0.02 eV;
 the discrete highest-image coordinate gate allows half of the smallest local
 reaction-coordinate segment, since the sampled peak can move by a fraction of
-one image when the band is refined.
+one image when the band is refined.  Same-image-count parameterization or
+optimizer variants must opt in to duplicate counts explicitly.
 
 ## Current limitations
 
