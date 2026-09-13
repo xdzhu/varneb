@@ -1,8 +1,11 @@
 name: Publish VARNEB to PyPI
 
 on:
-  # Publishing is deliberate: either publish a GitHub Release or explicitly
-  # run this workflow with publish=true. Ordinary pushes never publish.
+  # Publishing is deliberate: either push a version tag, publish a GitHub
+  # Release, or explicitly run this workflow with publish=true. Ordinary
+  # branch pushes and repository synchronization never publish.
+  push:
+    tags: ["v*"]
   release:
     types: [published]
   workflow_dispatch:
@@ -38,7 +41,7 @@ jobs:
 
   publish:
     needs: build
-    if: ${{ github.event_name == 'release' || inputs.publish == true }}
+    if: ${{ github.event_name == 'push' || github.event_name == 'release' || inputs.publish == true }}
     runs-on: ubuntu-latest
     environment:
       name: pypi
