@@ -21,6 +21,7 @@ from ase import Atoms
 from ase.io import write
 from ase.io.trajectory import Trajectory
 from ase.optimize import BFGS, FIRE, LBFGS
+from ase.optimize.bfgslinesearch import BFGSLineSearch
 from ase.parallel import world
 from ase.units import GPa
 
@@ -1744,7 +1745,54 @@ def _make_optimizer(
         return LBFGS(chain, logfile=logfile, **kwargs)
     if key == "BFGS":
         return BFGS(chain, logfile=logfile, **kwargs)
-    raise ValueError(f"Unknown optimizer {name!r}; choose BFGS, LBFGS, or FIRE")
+    if key in {"BFGSLINESEARCH", "BFGS_LINESEARCH", "BFGS-LINESEARCH"}:
+        return BFGSLineSearch(chain, logfile=logfile, **kwargs)
+    raise ValueError(
+        f"Unknown optimizer {name!r}; choose FIRE, BFGS, LBFGS, or BFGSLineSearch"
+    )
+
+
+def _is_line_search_failure(error: BaseException) -> bool:
+    """Return whether an optimizer error is the recoverable ASE line-search failure."""
+
+    message = str(error).lower().replace("-", " ")
+    return "line search failed" in message or "linesearch failed" in message
+
+
+def _optimizer_uses_line_search(name: str, optimizer_kwargs: Mapping[str, object]) -> bool:
+    """Return whether the selected ASE optimizer owns an explicit line search."""
+
+    key = str(name).upper().replace("-", "_")
+    if key in {"BFGSLINESEARCH", "BFGS_LINESEARCH"}:
+        return True
+    return key == "LBFGS" and bool(optimizer_kwargs.get("use_line_search", False))
+
+
+def _line_search_retry_kwargs(
+    optimizer_kwargs: Mapping[str, object],
+    *,
+    retry_index: int,
+    factor: float,
+    optimizer_key: str,
+) -> dict[str, object]:
+    """Reduce the ASE line-search step cap for one fresh optimizer attempt."""
+
+    kwargs = dict(optimizer_kwargs)
+    scale = factor ** int(retry_index)
+    maxstep = kwargs.get("maxstep")
+    if maxstep is None:
+        # ASE's BFGSLineSearch default is 0.2 Angstrom.  Materialize the
+        # reduced value so a retry is deterministic rather than relying on a
+        # version-dependent default.
+        kwargs["maxstep"] = 0.2 * scale
+    else:
+        kwargs["maxstep"] = float(maxstep) * scale
+    if "stpmax" in kwargs:
+        kwargs["stpmax"] = float(kwargs["stpmax"]) * scale
+    elif optimizer_key in {"BFGSLINESEARCH", "BFGS_LINESEARCH", "BFGS-LINESEARCH"}:
+        # BFGSLineSearch defaults to 50.0; make the retry cap explicit.
+        kwargs["stpmax"] = 50.0 * scale
+    return kwargs
 
 
 def _next_snapshot_step(directory: str | Path) -> int:
@@ -1807,6 +1855,8 @@ def run_vcneb(
     image_executor: object | None = None,
     optimizer: str = "FIRE",
     optimizer_kwargs: Optional[Mapping[str, object]] = None,
+    line_search_retries: int = 0,
+    line_search_retry_factor: float = 0.5,
     fmax: float = 0.05,
     steps: int = 300,
     logfile: str | Path | None = "vcneb-opt.log",
@@ -1828,6 +1878,12 @@ def run_vcneb(
     If ``failure_report`` is supplied, optimizer/calculator exceptions are
     recorded atomically with the completed-step count and recovery locations
     before the original exception is propagated.
+
+    ``line_search_retries`` enables a bounded recovery for ASE's explicit
+    line-search optimizers.  On a ``LineSearch failed!`` exception, the
+    optimizer is recreated at the last complete image state with a reduced
+    ``maxstep``/``stpmax`` and only the remaining steps are attempted.  Other
+    optimizer or calculator errors are never retried automatically.
     """
 
     if climb_after is not None:
@@ -1836,6 +1892,15 @@ def run_vcneb(
         climb_after = int(climb_after)
     if not climb:
         climb_after = None
+    if isinstance(line_search_retries, bool) or int(line_search_retries) != line_search_retries or line_search_retries < 0:
+        raise ValueError("line_search_retries must be a non-negative integer")
+    line_search_retries = int(line_search_retries)
+    try:
+        line_search_retry_factor = float(line_search_retry_factor)
+    except (TypeError, ValueError) as exc:
+        raise ValueError("line_search_retry_factor must be a finite number in (0, 1)") from exc
+    if not np.isfinite(line_search_retry_factor) or not 0.0 < line_search_retry_factor < 1.0:
+        raise ValueError("line_search_retry_factor must be a finite number in (0, 1)")
 
     if validate_calculators:
         validate_image_calculators(
@@ -1860,7 +1925,9 @@ def run_vcneb(
         image_executor=image_executor,
         log=log,
     )
-    opt = _make_optimizer(optimizer, chain, logfile, optimizer_kwargs)
+    base_optimizer_kwargs = {} if optimizer_kwargs is None else dict(optimizer_kwargs)
+    line_search_enabled = _optimizer_uses_line_search(optimizer, base_optimizer_kwargs)
+    opt = _make_optimizer(optimizer, chain, logfile, base_optimizer_kwargs)
 
     if trajectory_mode not in {"w", "a"}:
         raise ValueError("trajectory_mode must be 'w' or 'a'")
@@ -1879,15 +1946,60 @@ def run_vcneb(
             chain.write_step_directory(snapshot_dir, step_counter["value"])
         step_counter["value"] += 1
 
-    opt.attach(save_snapshot, interval=1)
-    if climb_after is not None and climb_after > 0:
-        def enable_climbing_image() -> None:
-            if getattr(opt, "nsteps", 0) >= climb_after:
-                chain.climb = True
+    def attach_observers(current_optimizer: object) -> None:
+        current_optimizer.attach(save_snapshot, interval=1)
+        if climb_after is not None and climb_after > 0:
+            def enable_climbing_image() -> None:
+                if getattr(opt, "nsteps", 0) >= climb_after:
+                    chain.climb = True
 
-        opt.attach(enable_climbing_image, interval=1)
+            current_optimizer.attach(enable_climbing_image, interval=1)
+
+    attach_observers(opt)
+    retry_history: list[dict[str, object]] = []
+    completed_steps = 0
     try:
-        opt.run(fmax=fmax, steps=steps)
+        while True:
+            try:
+                opt.run(fmax=fmax, steps=max(0, int(steps) - completed_steps))
+                break
+            except Exception as exc:
+                completed_steps = int(getattr(opt, "nsteps", completed_steps))
+                if (
+                    len(retry_history) >= line_search_retries
+                    or not line_search_enabled
+                    or not _is_line_search_failure(exc)
+                ):
+                    raise
+                retry_index = len(retry_history) + 1
+                retry_kwargs = _line_search_retry_kwargs(
+                    base_optimizer_kwargs,
+                    retry_index=retry_index,
+                    factor=line_search_retry_factor,
+                    optimizer_key=str(optimizer).upper(),
+                )
+                retry_history.append(
+                    {
+                        "retry_index": retry_index,
+                        "failed_step": completed_steps,
+                        "error": str(exc),
+                        "optimizer_kwargs": retry_kwargs,
+                    }
+                )
+                if log is not None:
+                    log(
+                        f"line_search_retry={retry_index} failed_step={completed_steps} "
+                        f"maxstep={retry_kwargs.get('maxstep')} stpmax={retry_kwargs.get('stpmax')}"
+                    )
+                close = getattr(opt, "close", None)
+                if callable(close):
+                    close()
+                opt = _make_optimizer(optimizer, chain, logfile, retry_kwargs)
+                # ASE counts successful optimizer steps in ``nsteps``.  Carry
+                # that count into the fresh instance so observers, staged CI,
+                # and the remaining-step budget retain global semantics.
+                opt.nsteps = completed_steps
+                attach_observers(opt)
     except Exception as exc:
         if traj is not None:
             traj.close()
@@ -1904,6 +2016,9 @@ def run_vcneb(
                 "error": str(exc),
                 "optimizer": str(optimizer),
                 "optimizer_steps_completed": int(getattr(opt, "nsteps", 0)),
+                "line_search_retries_allowed": line_search_retries,
+                "line_search_retries_used": len(retry_history),
+                "line_search_retry_history": retry_history,
                 "snapshot_steps_written": max(0, int(step_counter["value"])),
                 "n_images": len(chain.images),
                 "trajectory": str(trajectory) if trajectory is not None else None,
@@ -1924,4 +2039,9 @@ def run_vcneb(
     finally:
         if traj is not None:
             traj.close()
+    # Expose recovery provenance on the returned ASE optimizer without
+    # changing ASE's public state model.  A zero-length list is the common
+    # no-retry case and is safe for callers to serialize directly.
+    setattr(opt, "line_search_retries_used", len(retry_history))
+    setattr(opt, "line_search_retry_history", list(retry_history))
     return chain, opt

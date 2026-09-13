@@ -81,8 +81,9 @@
 - 为修复共享目录无 `.git` 时 provenance 的 `git_revision=null`，ABACUS driver 现在优先读取 `VCNEB_GIT_REVISION`，分布式模板也将其导出（未提供时记录 `remote-sync-unknown`）；后续提交任务应在 `--export` 中显式带当前源码 commit。
 - 代码工程化增量已在本地回归全通过并推送为 `31318f5`（功能主体 `0735990`）：新增可选 exact-state image cache、calculator namespace 锁定、原子 cache 写入、损坏条目回退以及 manifest 命中/未命中 provenance；远端源文件已同步，当前运行作业不受影响。
 - 后续工程化修复已提交：`ThreadedCalculatorExecutor` 在并发 batch 的某个 image 失败时仍收集并原子保存已完成 sibling image，随后再返回 batch 错误；新增恢复回归确认成功 image 不丢失、重启不重复计算，manifest 保留失败与后续 cache hit provenance。
-- `run_vcneb()` 现在可通过 `failure_report=` 原子写出 optimizer/calculator 中断报告（异常类型、已完成步数、trajectory/snapshot 位置、诊断日志路径和恢复提示），同时保持原异常继续抛出；对应回归已通过。line-search 自动重试仍未实现。
-- failure report 现在额外包含保守的 `failure_category`（`scf_nonconvergence`、`timeout`、`mpi_failure`、`nonfinite_evaluation`、`invalid_cell` 或 `calculator_or_optimizer_error`），分类会读取显式 image calculator 目录下日志的有限尾部，并由回归覆盖 ABACUS SCF 日志与关键词边界；它仍不替代完整 ABACUS/VASP stdout，也不自动重试 line-search。
+- `run_vcneb()` 现在可通过 `failure_report=` 原子写出 optimizer/calculator 中断报告（异常类型、已完成步数、trajectory/snapshot 位置、诊断日志路径和恢复提示），同时保持原异常继续抛出；对应回归已通过。显式 line-search 的有界重试见后文。
+- failure report 现在额外包含保守的 `failure_category`（`scf_nonconvergence`、`timeout`、`mpi_failure`、`nonfinite_evaluation`、`invalid_cell` 或 `calculator_or_optimizer_error`），分类会读取显式 image calculator 目录下日志的有限尾部，并由回归覆盖 ABACUS SCF 日志与关键词边界；它仍不替代完整 ABACUS/VASP stdout。
+- `run_vcneb()` 新增显式 `BFGSLineSearch` 与有界 `line_search_retries`：仅对精确的 `LineSearch failed!` 在最后完整链状态重建 optimizer、缩小 `maxstep`/`stpmax` 后重试；其他 calculator/optimizer 异常仍直接抛出，回归覆盖失败一次后续跑与全局步数保持。
 - `examples/run_vcneb_abacus.py` 与 `examples/run_vcneb_vasp.py` 已默认把该 failure report 写入各自 workdir 的 `vcneb_failure.json`，因此集群模板发生中断时可直接定位恢复入口。
 - 已按当前 `docs/theory.md`、README、代码和回归证据同步 `VCNEB_PROJECT_PLAN.md`：广义坐标/单位/切线/收敛判据、模式投影顺序、约束释放、VASP 静态 image 语义、calculator 切换和 dry-run/validate-only 现标为完成；ABACUS 专用 SCF 分类、USPEX/旧实现对比、真实材料模式对照、论文图表等仍保留为未完成。
 - README 的 Files 清单已为 `unit`、`model`、`DFT-smoke`、`production-template` 示例加上显式标签，并同步勾销 P0 对应计划项。

@@ -338,8 +338,12 @@ for optimizer step = 1 ... steps:
     stop when the requested generalized-force threshold is met
 on calculator/optimizer error:
     classify the conservative failure category (SCF/timeout/MPI/nonfinite/cell/other)
-    atomically write failure_report with category, error, completed steps and recovery paths
-    propagate the original exception; preserve successful sibling cache entries
+    if the error is exactly ASE ``LineSearch failed!`` and retries remain:
+        rebuild the optimizer at the last complete chain state with smaller step caps
+        continue with the remaining global step budget
+    otherwise:
+        atomically write failure_report with category, error, completed steps and recovery paths
+        propagate the original exception; preserve successful sibling cache entries
 ```
 
 ## 12. 公共参数与经验范围
@@ -363,6 +367,8 @@ on calculator/optimizer error:
 | `image_workers` | 0 | integer ≥ 0 | 并发 interior worker 数；Slurm 每 worker 使用独立 MPI step |
 | `image_retries` | 0 | integer ≥ 0 | 单 image calculator 失败的额外尝试次数 |
 | `cache_namespace` | none | calculator 参数标识 | exact-state cache 的参数隔离键 |
+| `line_search_retries` | 0 | integer ≥ 0 | 仅对显式 line-search 失败启用的有界重试次数 |
+| `line_search_retry_factor` | 0.5 | `0 < factor < 1` | 每次重试缩小 `maxstep`/`stpmax` 的比例 |
 
 `climb_after` 是已完成普通 NEB step 的整数计数；设置为 `0` 表示第一轮即启用
 CI，默认 `None` 表示由 `climb` 直接决定。生产路径仍建议先普通 NEB，再 CI；
@@ -370,4 +376,6 @@ CI，默认 `None` 表示由 `climb` 直接决定。生产路径仍建议先普�
 报告中的 `failure_category` 是基于错误文本和显式 calculator 目录下日志尾部的保守分类；
 实现最多读取每个指定日志的最后 64 KiB，不会扫描整个输出树，也不能替代完整的
 ABACUS/VASP stdout。`scf_nonconvergence`、`timeout` 和 `mpi_failure` 仍应结合外部作业
-日志与退出码后再决定重试参数；当前实现不自动执行 line-search 重试。
+日志与退出码后再决定 calculator 重试参数。对显式 ASE `BFGSLineSearch`，
+`line_search_retries` 才会对精确的 `LineSearch failed!` 进行有界重建式重试；
+每次重试从最后一个完整 image 状态开始并缩小步长上限，其他异常仍直接抛出。

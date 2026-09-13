@@ -24,6 +24,11 @@ optimizing an extended coordinate vector:
 
 The implementation works with normal ASE optimizers (`FIRE`, `BFGS`, `LBFGS`)
 and with any ASE calculator that provides `energy`, `forces`, and `stress`.
+For ASE's explicit line-search optimizer, use `optimizer="BFGSLineSearch"`;
+set `line_search_retries=N` to retry only a reported `LineSearch failed!` at
+the last complete chain state, shrinking the step cap by
+`line_search_retry_factor` on each bounded retry.  Calculator failures and
+other optimizer errors are never silently retried.
 
 The package is installable without MATLAB or USPEX:
 
@@ -293,6 +298,22 @@ adjacent extended-coordinate segment cosines; pass
 must be rejected.  The default remains diagnostic-only so existing workflows
 are not silently changed.
 
+If an explicit ASE line search is useful for a calculator, select
+`optimizer="BFGSLineSearch"` and opt into a small bounded recovery budget:
+
+```python
+run_vcneb(
+    images,
+    optimizer="BFGSLineSearch",
+    line_search_retries=2,
+    line_search_retry_factor=0.5,
+)
+```
+
+Only ASE's exact `LineSearch failed!` condition is retried.  Each retry starts
+from the last complete chain state with smaller step caps; SCF, MPI, timeout,
+invalid-cell, and unrelated optimizer errors remain visible to the caller.
+
 For a physically interpretable CI result, require
 `saddle_diagnostics()["has_interior_barrier"]` and inspect
 `path_diagnostics()["ci_warning"]`.  If the band is monotonic or its interior
@@ -461,7 +482,9 @@ directory on such an interruption.  Library callers can pass `failure_report=PAT
 or calculator exception interrupts the run, an atomically written JSON report
 records the exception, completed optimizer steps, the trajectory/snapshot
 locations to use for recovery, and any existing calculator log paths used for
-bounded failure classification.  The original exception is still propagated.
+bounded failure classification.  If bounded line-search recovery was enabled,
+the report also records each retry's reduced step cap.  The original exception
+is still propagated when the retry budget is exhausted.
 The Hefei BTO template `cluster/hf_batio3_vcneb_parallel.slurm` demonstrates
 four 32-MPI workers in a 128-task allocation.
 
