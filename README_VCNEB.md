@@ -298,6 +298,7 @@ calling the highest interior image a transition state.
 ## Local checks
 
 ```bash
+python -m pytest -q  # discovers and runs every non-DFT regression check
 python tests/check_vcneb_forces.py
 python examples/run_toy_vcneb.py
 python scripts/setup_hfo2_t_po_validation.py
