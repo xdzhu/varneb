@@ -62,6 +62,29 @@ def main() -> None:
         far = compare(close_dirs, barrier_tol=0.02, reaction_coordinate_tol=0.5)
         if far["status"] != "failed" or not any("coordinate spread" in issue for issue in far["issues"]):
             raise SystemExit("large saddle-coordinate shift was not rejected")
+
+        variant_dir = root / "linear-variant"
+        variant_dir.mkdir()
+        variant_summary = _summary(7, barrier=0.1575, peak_index=2, segment=1.0)
+        variant_summary["cell_interpolation"] = "linear"
+        (variant_dir / "vcneb_summary.json").write_text(json.dumps(variant_summary), encoding="utf-8")
+        log_variant_dir = root / "log-variant"
+        log_variant_dir.mkdir()
+        log_variant_summary = _summary(7, barrier=0.1567, peak_index=2, segment=1.0)
+        log_variant_summary["cell_interpolation"] = "log_strain"
+        (log_variant_dir / "vcneb_summary.json").write_text(
+            json.dumps(log_variant_summary), encoding="utf-8"
+        )
+        variant = compare(
+            [log_variant_dir, variant_dir],
+            barrier_tol=0.02,
+            reaction_coordinate_tol=0.5,
+            require_unique_image_counts=False,
+        )
+        if variant["status"] != "ok" or variant["image_count_uniqueness_required"]:
+            raise SystemExit("same-image-count interpolation variants were not accepted explicitly")
+        if variant["records"][0]["cell_interpolation"] is None:
+            raise SystemExit("interpolation metadata was not retained in comparison records")
     print("image_comparison_regression=ok")
 
 

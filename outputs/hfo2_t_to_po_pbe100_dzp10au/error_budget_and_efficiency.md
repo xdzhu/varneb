@@ -10,6 +10,7 @@ the evidence supports.
 | contribution | evidence | scale |
 | --- | --- | ---: |
 | ordinary image-count spread | 7 vs 9 total images, both audited | 0.0005417 eV (0.35%) |
+| cell interpolation control | 7-image linear vs log-strain, same endpoints/settings | 0.0029263 eV (1.87%) |
 | CI refinement shift | ordinary 7-image to CI 7-image | 0.0275787 eV |
 | endpoint residual | T/PO independent BFGS endpoints | max force 0.000499 eV/A; max stress 0.07076 kbar |
 | geometry validity | independent path audit | min distance 2.026--2.036 A; no audit issues |

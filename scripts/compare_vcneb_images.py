@@ -20,6 +20,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("workdirs", nargs="+", type=Path, help="completed VC-NEB work directories")
     parser.add_argument("--barrier-tol", type=float, default=0.02, help="allowed barrier spread in eV")
     parser.add_argument(
+        "--allow-duplicate-image-counts",
+        action="store_true",
+        help="allow variants with the same n_images (for interpolation/optimizer comparisons)",
+    )
+    parser.add_argument(
         "--reaction-coordinate-tol",
         type=float,
         default=0.5,
@@ -62,6 +67,8 @@ def _record(workdir: Path, summary: dict) -> dict:
     return {
         "workdir": str(workdir),
         "n_images": int(summary.get("n_images", diagnostics.get("n_images", 0))),
+        "cell_interpolation": summary.get("cell_interpolation"),
+        "optimizer": summary.get("optimizer"),
         "status": summary.get("status"),
         "barrier_enthalpy_eV": summary.get("barrier_enthalpy_eV"),
         "reaction_enthalpy_eV": summary.get("reaction_enthalpy_eV"),
@@ -80,11 +87,17 @@ def _record(workdir: Path, summary: dict) -> dict:
     }
 
 
-def compare(workdirs: list[Path], *, barrier_tol: float, reaction_coordinate_tol: float) -> dict:
+def compare(
+    workdirs: list[Path],
+    *,
+    barrier_tol: float,
+    reaction_coordinate_tol: float,
+    require_unique_image_counts: bool = True,
+) -> dict:
     records = [_record(workdir, _summary(workdir)) for workdir in workdirs]
     records.sort(key=lambda item: item["n_images"])
     issues: list[str] = []
-    if len({record["n_images"] for record in records}) != len(records):
+    if require_unique_image_counts and len({record["n_images"] for record in records}) != len(records):
         issues.append("duplicate image counts supplied")
     reference = records[0]["calculator_parameters"]
     for record in records[1:]:
@@ -116,6 +129,7 @@ def compare(workdirs: list[Path], *, barrier_tol: float, reaction_coordinate_tol
         "issues": issues,
         "barrier_tolerance_eV": barrier_tol,
         "reaction_coordinate_tolerance_fraction": reaction_coordinate_tol,
+        "image_count_uniqueness_required": require_unique_image_counts,
         "barrier_spread_eV": barrier_spread,
         "highest_image_coordinate_spread": coordinate_spread,
         "records": records,
@@ -142,7 +156,12 @@ def write_atomic(path: Path, payload: dict) -> None:
 def main() -> int:
     args = parse_args()
     try:
-        report = compare(args.workdirs, barrier_tol=args.barrier_tol, reaction_coordinate_tol=args.reaction_coordinate_tol)
+        report = compare(
+            args.workdirs,
+            barrier_tol=args.barrier_tol,
+            reaction_coordinate_tol=args.reaction_coordinate_tol,
+            require_unique_image_counts=not args.allow_duplicate_image_counts,
+        )
     except ValueError as exc:
         print(f"[ERROR] {exc}", file=sys.stderr)
         return 2
