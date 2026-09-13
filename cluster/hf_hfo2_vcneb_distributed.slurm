@@ -89,6 +89,7 @@ source "${env_script}"
 export OMP_NUM_THREADS=1
 export I_MPI_PMI_LIBRARY=/opt/gridview/slurm/lib/libpmi.so
 cd "${repo}"
+export VCNEB_GIT_REVISION="${VCNEB_GIT_REVISION:-remote-sync-unknown}"
 
 climb_args=()
 if [[ "${NO_CLIMB:-0}" != 0 ]]; then

@@ -162,6 +162,9 @@ def parse_species_files(values: list[str], option: str) -> dict[str, str]:
 
 
 def _git_revision() -> str | None:
+    declared = os.environ.get("VCNEB_GIT_REVISION")
+    if declared:
+        return declared
     try:
         result = subprocess.run(
             ["git", "rev-parse", "HEAD"],

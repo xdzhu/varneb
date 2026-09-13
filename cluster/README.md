@@ -114,6 +114,9 @@ The production default is `CELL_INTERPOLATION=log_strain`; to perform an
 independent initial-path check without changing the endpoints, set
 `CELL_INTERPOLATION=linear` and use a distinct `WORKDIR`.  `MAPPING=auto` and
 `ALIGN_TRANSLATION=1` remain the default audited endpoint gauge.
+When the shared source directory is not a Git checkout, pass
+`VCNEB_GIT_REVISION=<commit>` in `--export` so the preflight and summary retain
+the exact source revision; otherwise they record `remote-sync-unknown`.
 
 Do not request `--exclusive` for these small tests.  For the 12-atom HfO2
 fixture, after endpoint relaxations complete, a staged no-climb preconvergence
