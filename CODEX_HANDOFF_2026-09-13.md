@@ -62,7 +62,8 @@
 - VCNEB manager 现在首次读取端点的 energy/forces/stress 后缓存，后续迭代只通过 image executor 评估 `image_indices=[1,2,...,n_images-2]`；worker manifest 会记录 `image_count=n_images-2`，用于审计端点未重复计算。
 - 分布式模板 `cluster/hf_hfo2_vcneb_distributed.slurm` 已改为默认 `IMAGE_WORKERS=N_IMAGES-2`、每 worker 32 MPI；7-image 默认 5 workers/160 tasks，仍需 2 个节点（单节点 128 核不足），不再为两个端点启动 worker。
 - 新验证作业 `27678218` 已在 `hfacnormal01` 的 `node[381-382]` 启动，`NumTasks=160`、`NumCPUs=192`，首个 manifest 已确认只包含 image 1--5；从 `27678004` 的 step 15 完整轨迹恢复。此前错误布局的 `27678137`/`27678176` 已取消，不纳入物理结果。
-- 截至 2026-09-14 00:14:49 检查，`27678218` 仍为 RUNNING，已写入完整 VCNEB step 20，`fmax=0.132727 eV/A`；manifest 共 64 条批次记录，均只含 image 1--5，7 个 ABACUS image 目录均确认 32 MPI、无错误退出。当前继续进行后续 5-image worker 波次。
+- `27678218` 已完成（Slurm `COMPLETED`、`01:08:38`、exit `0`）：7 总帧（5 个 interior image）普通 VCNEB 在 FIRE `fmax_target=0.05 eV/A` 下达到 `final_max_generalized_force=0.0455156 eV/A`。最终正向焓垒 `0.1567509 eV`、反应焓 `-0.3252848 eV`，内部峰为 image 2（`has_interior_barrier=true`，未启用 CI）；manifest 共 96 条记录且每条只含 image 1--5，5 个 worker、每 worker 32 MPI，7 个 ABACUS image 目录无错误退出。
+- 远端 `scripts/audit_vcneb_result.py --max-min-distance 2.0` 审计返回 `status=ok`、`issues=[]`：最小路径距离 `2.026335 A`、最大形变 `0.04894`、几何有效；summary 记录 `endpoint_evaluation_policy=fixed_cached_once`，确认端点未在 VCNEB 迭代中重复派发。结果文件为 `vcneb_summary.json/.txt`、`vcneb.traj`、`vcneb_barrier.png`、snapshots 和 worker manifest。
 
 ## 建议的新线程第一步
 
