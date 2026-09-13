@@ -69,7 +69,8 @@
 - 截至 2026-09-14 03:50 左右，`27678407` 已完成 step 55（`fmax=0.065946 eV/A`，从 step 0 持续下降），仍为 RUNNING；manifest 只记录 `[1,2,3,4,5,6,7]`，当前未见 ABACUS 错误 task。
 - 由于 7-image 普通路径已达到真实内部峰且 `fmax<0.05 eV/A`，CI 精修作业 `27678507` 已提交：7 总帧/5 interior、2 节点×160 tasks、每 worker 32 MPI、`MAXSTEP=0.01`、`FMAX=0.03`、`CLIMB_AFTER=0`，从 `27678218` 的完整 `vcneb.traj` 恢复，工作目录为 `vcneb_n7_ci_refine`。该作业是首次真实 HfO₂ CI，不用于 BTO。
 - CI `27678507` 已于 2026-09-14 04:14 左右正常完成（Slurm `COMPLETED`、`03:12:03`、exit `0`）。它在经历 step 15--80 的回弹/平台窗口后继续推进，于 step 91 达到 `final_max_generalized_force=0.0295475 eV/A`（目标 `0.03`），没有因首次回弹提前停止。CI 结果的正向焓垒为 `0.1291722 eV`，反应焓 `-0.3252848 eV`，最高/攀爬 image 为 2，`has_interior_barrier=true`；`endpoint_evaluation_policy=fixed_cached_once`、`climb_after=0`。独立审计返回 `status=ok`、`issues=[]`，最小路径距离 `2.035829 A`、最大形变 `0.0489263`、最大应力 `1.76792 kbar`。image worker manifest 共 279 条、状态全为 `ok`，只含 interior `[1,2,3,4,5]`，5 个 worker、每 worker 32 MPI；结果目录为 `vcneb_n7_ci_refine`。
-- 截至 2026-09-14 04:26 左右，9-image 普通无 CI 作业 `27678407` 仍为 `RUNNING`，已完成 step 66，`fmax=0.050281 eV/A`，由 step 0 持续下降且尚未触发 `0.05 eV/A` 停止条件；继续等待自动终态，不把当前值当作收敛结果。
+- 9-image 普通无 CI 作业 `27678407` 已于 2026-09-14 04:30 左右正常完成（Slurm `COMPLETED`、`03:47:07`、exit `0`）：9 总帧/7 interior，最终 `fmax=0.0497191 eV/A`，正向焓垒 `0.1562092 eV`，反应焓 `-0.3252848 eV`，最高内部峰为 image 3。独立审计 `status=ok`、`issues=[]`，最小路径距离 `2.027974 A`、最大形变 `0.0496014`、最大应力 `5.38872 kbar`；manifest 207 条记录全为 `ok`，只含 image 1--7，7 个 worker、每 worker 32 MPI。
+- HfO₂ image-count 对照已归档于 `outputs/hfo2_t_to_po_pbe100_dzp10au/image_count_comparison.md`；收敛的普通 7/9-image 焓垒只差 `0.0005417 eV`（约 0.35%），但 5-image 分支未收敛，因此不纳入物理能垒比较。已从远端复制 7-image CI 与 9-image 普通路径的 summary、audit、preflight 和 worker manifest；完整 ABACUS scratch 仍保留在 hfacnormal01。
 - 代码工程化增量已在本地回归全通过并推送为 `31318f5`（功能主体 `0735990`）：新增可选 exact-state image cache、calculator namespace 锁定、原子 cache 写入、损坏条目回退以及 manifest 命中/未命中 provenance；远端源文件已同步，当前运行作业不受影响。
 
 ## 建议的新线程第一步
