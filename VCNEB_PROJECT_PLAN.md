@@ -205,7 +205,7 @@
 - [x] 固定 cell：与 ASE NEB/CINEB 在同一 calculator、同一端点和同一 image 数下比较；解析模型逐 image 能量一致，能垒差为 9.33e-6 eV。
 - [x] 变胞：依据 Qian 等 VCNEB 论文的广义坐标、cell 力和弹簧思想完成首轮逐项对照；有限变形 stress measure 和大应变差异仍需补充。
 - [x] `outputs/uspex_vcneb_mode_analysis.md` 已依据公开 USPEX VCNEB 手册对比输入语义/用户流程，并明确安装包无可审计源码、不声称复现内部实现。
-- [ ] 对比旧 `/home/zhuxd/abacus/8.dielec/vcneb` 实现的结果和失败模式，保留可复现实验而非凭印象判断。
+- [~] 已依据历史迭代日志整理旧 `/home/zhuxd/abacus/8.dielec/vcneb` 的实现/失败模式对照（`outputs/legacy_vcneb_comparison.md`）；旧目录当前不可访问，定量同条件重跑仍待补。
 
 ### 8.4 收敛矩阵
 
