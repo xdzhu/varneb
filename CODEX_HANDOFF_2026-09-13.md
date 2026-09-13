@@ -55,6 +55,13 @@
 - `vcneb/abacus.py` 已加入 identity species-order 的安全补丁，并新增 `tests/check_abacus_parallel_sort.py`；远程 ICU 测试通过。旧全局 `ase_sort.dat` 已移到 `.stale_job27677945`。
 - 修复后的续算作业 `27678004` 已从 step 2 恢复，128 task / 4×32 MPI / no-CI 配置不变；截至 step 13 的完整批次均正常完成，当前没有解析警告或错误。
 
+## 分布式 image 语义与资源优化（最新）
+
+- `n_images` 的定义是总帧数，始终包含两个固定端点；因此“7-image”=2 个端点+5 个 interior image，不是 7 个中间帧。
+- VCNEB manager 现在首次读取端点的 energy/forces/stress 后缓存，后续迭代只通过 image executor 评估 `image_indices=[1,2,...,n_images-2]`；worker manifest 会记录 `image_count=n_images-2`，用于审计端点未重复计算。
+- 分布式模板 `cluster/hf_hfo2_vcneb_distributed.slurm` 已改为默认 `IMAGE_WORKERS=N_IMAGES-2`、每 worker 32 MPI；7-image 默认 5 workers/160 tasks，仍需 2 个节点（单节点 128 核不足），不再为两个端点启动 worker。
+- 新验证作业 `27678218` 已在 `hfacnormal01` 的 `node[381-382]` 启动，`NumTasks=160`、`NumCPUs=192`，首个 manifest 已确认只包含 image 1--5；从 `27678004` 的 step 15 完整轨迹恢复。此前错误布局的 `27678137`/`27678176` 已取消，不纳入物理结果。
+
 ## 建议的新线程第一步
 
 1. 新计算先检查 `sinfo`/`squeue`，并使用 `hfacnormal01` 的 32-MPI image worker 资源模型。
