@@ -24,6 +24,40 @@ REQUIRED_VCNEB_PARAMETERS = {
 }
 
 
+def _install_parallel_safe_sort_writer() -> None:
+    """Avoid ASE-ABACUS's process-global ``ase_sort.dat`` race for identity order.
+
+    Recent ASE ABACUS adapters write ``ase_sort.dat`` in the Python process's
+    current directory even though each calculator has an isolated directory.
+    Concurrent image workers can therefore truncate one another's sort file.
+    Our production fixtures keep atoms grouped by species, so the sort is the
+    identity permutation and the file is unnecessary: the ABACUS force order
+    already matches the ASE order.  Preserve the upstream writer for genuinely
+    non-identity permutations (serial execution remains supported).
+    """
+
+    try:
+        import ase.io.abacus as abacus_io
+    except Exception:  # pragma: no cover - optional external adapter
+        return
+    if getattr(abacus_io, "_vcneb_sort_writer_patched", False):
+        return
+    original = abacus_io.write_input_stru_sort
+
+    def safe_write_input_stru_sort(atoms_sort=None):
+        if atoms_sort is not None:
+            values = [int(value) for value in atoms_sort]
+            if values == list(range(len(values))):
+                return None
+        return original(atoms_sort)
+
+    abacus_io.write_input_stru_sort = safe_write_input_stru_sort
+    abacus_io._vcneb_sort_writer_patched = True
+
+
+_install_parallel_safe_sort_writer()
+
+
 def attach_abacus_calculators(
     images: list[Atoms],
     *,

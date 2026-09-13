@@ -8,7 +8,9 @@ calculator that can provide energy, forces, and stress can be used.
 from __future__ import annotations
 
 from dataclasses import dataclass
+import os
 from pathlib import Path
+import tempfile
 from typing import Callable, Iterable, Iterator, Mapping, Optional, Sequence
 
 import numpy as np
@@ -21,6 +23,7 @@ from ase.parallel import world
 from ase.units import GPa
 
 from .calculator import calculator_context, validate_image_calculators
+from .executor import ImageEvaluation
 
 
 Array = np.ndarray
@@ -742,7 +745,13 @@ def validate_path_geometry(
 def fractional_force(atoms: Atoms) -> Array:
     """Convert Cartesian forces to forces conjugate to fractional coordinates."""
 
-    return np.asarray(atoms.get_forces()) @ cell_matrix(atoms).T
+    return fractional_force_from_arrays(atoms.get_forces(), cell_matrix(atoms))
+
+
+def fractional_force_from_arrays(forces: Array, cell: Array) -> Array:
+    """Convert a Cartesian force array to fractional-coordinate forces."""
+
+    return np.asarray(forces, dtype=float) @ np.asarray(cell, dtype=float).T
 
 
 def cell_force(
@@ -758,11 +767,33 @@ def cell_force(
     pressure are in eV/A^3; pressure is positive for compression.
     """
 
-    stress = np.asarray(atoms.get_stress(voigt=False))
-    _validate_cell_matrix(cell_matrix(atoms), context="current cell")
+    return cell_force_from_arrays(
+        atoms.get_stress(voigt=False),
+        atoms,
+        reference_cell,
+        pressure=pressure,
+        mask=mask,
+    )
+
+
+def cell_force_from_arrays(
+    stress: Array,
+    atoms: Atoms,
+    reference_cell: Array,
+    *,
+    pressure: float = 0.0,
+    mask: Optional[Array] = None,
+) -> Array:
+    """Convert a full stress array to deformation-gradient forces."""
+
+    stress = np.asarray(stress, dtype=float)
+    current_cell = cell_matrix(atoms)
+    _validate_cell_matrix(current_cell, context="current cell")
+    if stress.shape != (3, 3):
+        raise ValueError(f"stress must have shape (3, 3), got {stress.shape}")
     volume = atoms.get_volume()
     virial = -volume * (stress + np.eye(3) * pressure)
-    deform = deformation_from_cell(cell_matrix(atoms), reference_cell)
+    deform = deformation_from_cell(current_cell, reference_cell)
     force = np.linalg.solve(deform, virial.T).T
     if mask is not None:
         force = force * np.asarray(mask, dtype=float)
@@ -809,6 +840,7 @@ class VCNEB:
         mic: bool = False,
         wrap_positions: bool = False,
         parallel: bool = False,
+        image_executor: object | None = None,
         dynamic_relaxation: float = 1.0,
         dynamic_energy_scale: float = 0.5,
         log: Optional[Callable[[str], None]] = None,
@@ -836,6 +868,11 @@ class VCNEB:
         self.mic = bool(mic)
         self.wrap_positions = bool(wrap_positions)
         self.parallel = bool(parallel)
+        if image_executor is not None and self.parallel and world.size > 1:
+            raise ValueError("image_executor cannot be combined with MPI parallel=True")
+        if image_executor is not None and not callable(getattr(image_executor, "evaluate", None)):
+            raise TypeError("image_executor must provide evaluate(images)")
+        self.image_executor = image_executor
         self.atom_mask = None
         if atom_mask is not None:
             atom_mask_array = np.asarray(atom_mask, dtype=float)
@@ -891,6 +928,7 @@ class VCNEB:
 
         self._last_enthalpies: Optional[Array] = None
         self._last_forces_x: Optional[Array] = None
+        self._last_evaluations: Optional[list[ImageEvaluation]] = None
         self._owners = self._assign_image_owners()
 
     def __ase_optimizable__(self) -> "VCNEB":
@@ -1070,6 +1108,7 @@ class VCNEB:
             )
         self._last_enthalpies = None
         self._last_forces_x = None
+        self._last_evaluations = None
 
     def get_positions(self) -> Array:
         return self.get_x().reshape((-1, 3))
@@ -1084,6 +1123,22 @@ class VCNEB:
         yield from self.images
 
     def _enthalpy_and_force(self, image_index: int) -> tuple[float, VCNEBState]:
+        if self.image_executor is not None:
+            if self._last_evaluations is None:
+                self._last_evaluations = self._evaluate_images()
+            evaluation = self._last_evaluations[image_index]
+            atoms = self.images[image_index]
+            enthalpy = float(evaluation.energy + self.pressure * atoms.get_volume())
+            f_q = fractional_force_from_arrays(evaluation.forces, cell_matrix(atoms))
+            f_cell = cell_force_from_arrays(
+                evaluation.stress,
+                atoms,
+                self.reference_cell,
+                pressure=self.pressure,
+                mask=self.cell_mask,
+            )
+            return enthalpy, VCNEBState(q=f_q, deform=f_cell)
+
         enthalpy = 0.0
         f_q: Optional[Array] = None
         f_cell: Optional[Array] = None
@@ -1110,6 +1165,34 @@ class VCNEB:
         if f_cell is None:
             f_cell = np.zeros((3, 3), dtype=float)
         return enthalpy, VCNEBState(q=_sum_array(f_q), deform=_sum_array(f_cell))
+
+    def _evaluate_images(self) -> list[ImageEvaluation]:
+        """Evaluate all images through the optional image-level executor."""
+
+        if self.image_executor is None:
+            raise RuntimeError("_evaluate_images called without an image executor")
+        raw = self.image_executor.evaluate(self.images)
+        if len(raw) != self.n_images:
+            raise ValueError(
+                f"image executor returned {len(raw)} evaluations for {self.n_images} images"
+            )
+        evaluations: list[ImageEvaluation] = []
+        for image_index, value in enumerate(raw):
+            if isinstance(value, ImageEvaluation):
+                evaluation = value
+            else:
+                try:
+                    evaluation = ImageEvaluation(
+                        float(value.energy),
+                        np.asarray(value.forces, dtype=float),
+                        np.asarray(value.stress, dtype=float),
+                    )
+                except AttributeError as exc:
+                    raise TypeError(
+                        f"image executor result {image_index} is not an ImageEvaluation"
+                    ) from exc
+            evaluations.append(evaluation.validate(image_index=image_index, n_atoms=self.n_atoms))
+        return evaluations
 
     def _tangent(self, image_index: int, enthalpies: Array, image_x: list[Array]) -> Array:
         d_minus = image_x[image_index] - image_x[image_index - 1]
@@ -1149,6 +1232,10 @@ class VCNEB:
         return -self._compute_forces()
 
     def _compute_forces(self) -> Array:
+        if self.image_executor is not None:
+            self._last_evaluations = self._evaluate_images()
+        else:
+            self._last_evaluations = None
         enthalpies = np.zeros(self.n_images)
         true_forces = []
         image_x = []
@@ -1341,7 +1428,12 @@ class VCNEB:
             _, force_state = self._enthalpy_and_force(image_index)
             atom_forces = np.zeros((self.n_atoms, 3), dtype=float)
             stress = np.zeros((3, 3), dtype=float)
-            if self._own_image(image_index):
+            if self.image_executor is not None:
+                assert self._last_evaluations is not None
+                evaluation = self._last_evaluations[image_index]
+                atom_forces = np.asarray(evaluation.forces, dtype=float)
+                stress = np.asarray(evaluation.stress, dtype=float)
+            elif self._own_image(image_index):
                 atoms = self.images[image_index]
                 atom_forces = np.asarray(atoms.get_forces(), dtype=float)
                 stress = np.asarray(atoms.get_stress(voigt=False), dtype=float)
@@ -1423,11 +1515,13 @@ class VCNEB:
                 )
             image_records.append(record)
 
+        geometry = path_geometry_diagnostics(self.images, cell_scale=self.cell_scale)
         return {
             "n_images": self.n_images,
             "n_atoms": self.n_atoms,
             "pressure_eV_per_A3": self.pressure,
             "cell_scale_A": self.cell_scale,
+            "geometry": geometry,
             "highest_image_index": climbing_image,
             "interior_peak_indices": interior_peak_indices,
             "interior_barrier_indices": interior_barrier_indices,
@@ -1458,11 +1552,31 @@ class VCNEB:
     def write_step_directory(self, directory: str | Path, step: int) -> None:
         root = Path(directory)
         root.mkdir(parents=True, exist_ok=True)
-        write(str(root / f"chain_step_{step:04d}.traj"), self.images)
+        chain_path = root / f"chain_step_{step:04d}.traj"
+        chain_fd, chain_tmp = tempfile.mkstemp(prefix=f".{chain_path.name}.", suffix=".tmp", dir=root)
+        os.close(chain_fd)
+        try:
+            write(chain_tmp, self.images, format="traj")
+            os.replace(chain_tmp, chain_path)
+        finally:
+            try:
+                os.unlink(chain_tmp)
+            except FileNotFoundError:
+                pass
         step_dir = root / f"step_{step:04d}"
         step_dir.mkdir(exist_ok=True)
         for image_index, image in enumerate(self.images):
-            write(str(step_dir / f"POSCAR_{image_index:02d}"), image, format="vasp", direct=True, vasp5=True)
+            poscar_path = step_dir / f"POSCAR_{image_index:02d}"
+            fd, temporary = tempfile.mkstemp(prefix=f".{poscar_path.name}.", suffix=".tmp", dir=step_dir)
+            os.close(fd)
+            try:
+                write(temporary, image, format="vasp", direct=True, vasp5=True)
+                os.replace(temporary, poscar_path)
+            finally:
+                try:
+                    os.unlink(temporary)
+                except FileNotFoundError:
+                    pass
 
     def plot_band(self, filename: str | Path) -> None:
         import matplotlib.pyplot as plt
@@ -1585,6 +1699,7 @@ def run_vcneb(
     mic: bool = False,
     wrap_positions: bool = False,
     parallel: bool = False,
+    image_executor: object | None = None,
     optimizer: str = "FIRE",
     optimizer_kwargs: Optional[Mapping[str, object]] = None,
     fmax: float = 0.05,
@@ -1632,6 +1747,7 @@ def run_vcneb(
         mic=mic,
         wrap_positions=wrap_positions,
         parallel=parallel,
+        image_executor=image_executor,
         log=log,
     )
     opt = _make_optimizer(optimizer, chain, logfile, optimizer_kwargs)

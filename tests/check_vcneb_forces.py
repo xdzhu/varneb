@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 import sys
 import tempfile
@@ -42,6 +43,7 @@ from vcneb import (
 )
 from vcneb.abacus import make_ase_abacus_factory
 from vcneb.core import VCNEB, cell_force, cell_from_deformation, deformation_from_cell, fractional_force
+from vcneb.executor import ThreadedCalculatorExecutor
 import vcneb.core as core_module
 
 
@@ -544,6 +546,9 @@ def check_path_diagnostics() -> None:
     diagnostics = chain.path_diagnostics()
     if len(diagnostics["images"]) != 5 or diagnostics["highest_image_index"] is None:
         raise SystemExit("path diagnostics returned an incomplete image table")
+    geometry = diagnostics.get("geometry", {})
+    if not geometry.get("valid") or len(geometry.get("images", [])) != 5:
+        raise SystemExit("path diagnostics omitted final-path geometry audit")
     interior = diagnostics["images"][2]
     required = {
         "volume_A3",
@@ -1116,6 +1121,66 @@ def check_parallel_endpoint_ownership() -> None:
         core_module.world = original_world
 
 
+def check_threaded_image_executor() -> None:
+    reference_cell = np.diag([5.0, 5.0, 5.0])
+
+    def build_images():
+        initial = make_atoms(reference_cell, np.array([0.25, 0.5, 0.5]), np.eye(3))
+        final = make_atoms(reference_cell, np.array([0.75, 0.5, 0.5]), np.eye(3))
+        images = interpolate_vcneb(initial, final, n_images=4, align_cells=False)
+        for image in images:
+            image.calc = ToyPhaseTransition(reference_cell)
+        return images
+
+    serial_chain = VCNEB(build_images(), k=0.15, climb=False)
+    threaded_chain = VCNEB(
+        build_images(),
+        k=0.15,
+        climb=False,
+        image_executor=ThreadedCalculatorExecutor(max_workers=2),
+    )
+    serial_forces = serial_chain.get_forces()
+    threaded_forces = threaded_chain.get_forces()
+    if not np.allclose(serial_forces, threaded_forces, rtol=1e-11, atol=1e-11):
+        raise SystemExit("threaded image executor changed VC-NEB forces")
+    diagnostics = threaded_chain.path_diagnostics()
+    if len(threaded_chain._last_evaluations or []) != 4:
+        raise SystemExit("threaded image executor did not retain one result per image")
+    if diagnostics["n_images"] != 4 or not all(np.isfinite(record["enthalpy_eV"]) for record in diagnostics["images"]):
+        raise SystemExit("threaded image executor produced invalid diagnostics")
+
+    class FailOnceCalculator(Calculator):
+        implemented_properties = ["energy", "forces", "stress"]
+
+        def __init__(self):
+            super().__init__()
+            self.calls = 0
+
+        def calculate(self, atoms=None, properties=("energy",), system_changes=all_changes):
+            super().calculate(atoms, properties, system_changes)
+            self.calls += 1
+            if self.calls == 1:
+                raise RuntimeError("intentional one-time image failure")
+            self.results["energy"] = 0.0
+            self.results["forces"] = np.zeros((len(self.atoms), 3), dtype=float)
+            self.results["stress"] = np.zeros((3, 3), dtype=float)
+
+    retry_image = Atoms("Ar", positions=[[0.0, 0.0, 0.0]], cell=np.eye(3) * 5.0, pbc=True)
+    retry_calc = FailOnceCalculator()
+    retry_image.calc = retry_calc
+    with tempfile.TemporaryDirectory() as tmp:
+        manifest_path = Path(tmp) / "worker-manifest.jsonl"
+        retry_executor = ThreadedCalculatorExecutor(
+            max_workers=1, max_retries=1, manifest_path=manifest_path
+        )
+        retry_result = retry_executor.evaluate([retry_image])[0]
+        if retry_result.energy != 0.0 or retry_executor.last_attempts.get(0) != 2:
+            raise SystemExit("threaded image executor did not retry a failed image exactly once")
+        records = [json.loads(line) for line in manifest_path.read_text(encoding="utf-8").splitlines()]
+        if len(records) != 1 or records[0]["status"] != "ok" or records[0]["attempts"] != {"0": 2}:
+            raise SystemExit("threaded image executor did not persist retry manifest")
+
+
 def check_abacus_command_profile_factory() -> None:
     original_module = sys.modules.get("ase.calculators.abacus")
     fake_module = types.ModuleType("ase.calculators.abacus")
@@ -1306,6 +1371,8 @@ def main() -> None:
     print("set_x_cache_invalidation_regression=ok")
     check_parallel_endpoint_ownership()
     print("parallel_endpoint_ownership_regression=ok")
+    check_threaded_image_executor()
+    print("threaded_image_executor_regression=ok")
     check_abacus_command_profile_factory()
     print("abacus_command_profile_regression=ok")
     check_abacus_validator_required_flags()

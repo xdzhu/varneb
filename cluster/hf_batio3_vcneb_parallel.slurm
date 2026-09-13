@@ -1,8 +1,10 @@
 #!/bin/bash
-#SBATCH -J vcneb-bto-neb
+# One VCNEB controller with concurrent image-level Slurm job steps.
+# Four 32-MPI image workers fill one 128-CPU hfacnormal01 node.
+#SBATCH -J vcneb-bto-par
 #SBATCH -p hfacnormal01
 #SBATCH -N 1
-#SBATCH --ntasks=32
+#SBATCH --ntasks=128
 #SBATCH --cpus-per-task=1
 #SBATCH -o /public/home/iai806/abacus/agent-runs/20260912-vcneb-hf/slurm-%x-%j.out
 #SBATCH -e /public/home/iai806/abacus/agent-runs/20260912-vcneb-hf/slurm-%x-%j.err
@@ -17,6 +19,9 @@ pseudo_dir=/public/home/iai806/abacus/PSEUDO/ABACUS-orbitals/Dojo-NC-FR/Pseudopo
 basis_dir=/public/home/iai806/abacus/PSEUDO/ABACUS-orbitals/Dojo-NC-FR/Orb-DZP-10au
 
 n_images=${N_IMAGES:-7}
+image_workers=${IMAGE_WORKERS:-4}
+image_mpi=${IMAGE_MPI:-32}
+image_retries=${IMAGE_RETRIES:-0}
 steps=${STEPS:-300}
 fmax=${FMAX:-0.03}
 spring=${SPRING:-0.2}
@@ -32,6 +37,17 @@ kpt_y=${KPT_Y:-4}
 kpt_z=${KPT_Z:-4}
 direction=${DIRECTION:-tetragonal_to_cubic}
 endpoint_tag=${ENDPOINT_TAG:-pbe100_dzp10au}
+workdir=${WORKDIR:-validation/batio3_cubic_to_tetragonal/vcneb_${direction}_n${n_images}_${optimizer,,}_${endpoint_tag}_parallel}
+
+if (( image_workers < 1 || image_mpi < 1 )); then
+  echo "IMAGE_WORKERS and IMAGE_MPI must be positive" >&2
+  exit 2
+fi
+if (( image_workers * image_mpi > SLURM_NTASKS )); then
+  echo "IMAGE_WORKERS*IMAGE_MPI exceeds allocated tasks: ${image_workers}*${image_mpi} > ${SLURM_NTASKS}" >&2
+  exit 2
+fi
+
 case "${direction}" in
   tetragonal_to_cubic)
     initial_endpoint="tetragonal"
@@ -42,11 +58,10 @@ case "${direction}" in
     final_endpoint="tetragonal"
     ;;
   *)
-    echo "unsupported DIRECTION=${direction}; use tetragonal_to_cubic or cubic_to_tetragonal" >&2
+    echo "unsupported DIRECTION=${direction}" >&2
     exit 2
     ;;
 esac
-workdir=${WORKDIR:-validation/batio3_cubic_to_tetragonal/vcneb_${direction}_n${n_images}_${optimizer,,}_${endpoint_tag}}
 
 module purge
 source "${env_script}"
@@ -64,6 +79,9 @@ if [[ "${RESUME:-0}" != 0 ]]; then
   if [[ -n "${RESUME_TRAJECTORY:-}" ]]; then
     resume_args+=(--resume-trajectory "${RESUME_TRAJECTORY}")
   fi
+  if [[ -n "${RESUME_STEP:-}" ]]; then
+    resume_args+=(--resume-step "${RESUME_STEP}")
+  fi
 fi
 
 exec "${python}" examples/run_vcneb_abacus.py \
@@ -71,7 +89,8 @@ exec "${python}" examples/run_vcneb_abacus.py \
   --final "validation/batio3_cubic_to_tetragonal/endpoint_relax_${final_endpoint}_${endpoint_tag}/CONTCAR" \
   --workdir "${workdir}" --n-images "${n_images}" --fmax "${fmax}" \
   --steps "${steps}" --k "${spring}" --optimizer "${optimizer}" \
-  --maxstep "${maxstep}" --command "srun --mpi=pmix_v3 -n ${SLURM_NTASKS} ${abacus}" \
+  --maxstep "${maxstep}" --image-workers "${image_workers}" --image-retries "${image_retries}" \
+  --command "srun --exclusive --mpi=pmix_v3 -n ${image_mpi} ${abacus}" \
   --pseudo-dir "${pseudo_dir}" --basis-dir "${basis_dir}" \
   --pp Ba=Ba.upf --pp Ti=Ti.upf --pp O=O.upf \
   --basis Ba=Ba_gga_10au_100Ry_4s2p1d.orb \

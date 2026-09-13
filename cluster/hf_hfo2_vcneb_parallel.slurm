@@ -1,8 +1,12 @@
 #!/bin/bash
-#SBATCH -J vcneb-hfo2
+# One VCNEB controller with concurrent image-level Slurm job steps.
+# Default: four 32-MPI HfO2 image workers on one 128-task hfacnormal01 node.
+# The controller itself remains one Python process; each image has an isolated
+# calculator directory and an exclusive 32-MPI job step.
+#SBATCH -J vcneb-hfo2-par
 #SBATCH -p hfacnormal01
 #SBATCH -N 1
-#SBATCH --ntasks=32
+#SBATCH --ntasks=128
 #SBATCH --cpus-per-task=1
 #SBATCH -o /public/home/iai806/abacus/agent-runs/20260912-vcneb-hf/slurm-%x-%j.out
 #SBATCH -e /public/home/iai806/abacus/agent-runs/20260912-vcneb-hf/slurm-%x-%j.err
@@ -17,6 +21,9 @@ pseudo_dir=/public/home/iai806/abacus/PSEUDO/ABACUS-orbitals/Dojo-NC-FR/Pseudopo
 basis_dir=/public/home/iai806/abacus/PSEUDO/ABACUS-orbitals/Dojo-NC-FR/Orb-DZP-10au
 
 n_images=${N_IMAGES:-7}
+image_workers=${IMAGE_WORKERS:-4}
+image_mpi=${IMAGE_MPI:-32}
+image_retries=${IMAGE_RETRIES:-0}
 steps=${STEPS:-300}
 fmax=${FMAX:-0.05}
 spring=${SPRING:-0.2}
@@ -30,11 +37,18 @@ mixing_beta=${MIXING_BETA:-0.3}
 kpt_x=${KPT_X:-2}
 kpt_y=${KPT_Y:-2}
 kpt_z=${KPT_Z:-2}
-minimum_distance=${MINIMUM_DISTANCE:-1.6}
-maximum_deformation=${MAXIMUM_DEFORMATION:-0.25}
-workdir=${WORKDIR:-validation/hfo2_t_to_po/vcneb_n${n_images}_${optimizer,,}_levelA}
+workdir=${WORKDIR:-validation/hfo2_t_to_po/vcneb_n${n_images}_${optimizer,,}_parallel}
 initial_endpoint=${INITIAL_ENDPOINT:-validation/hfo2_t_to_po/relaxed_T/CONTCAR}
 final_endpoint=${FINAL_ENDPOINT:-validation/hfo2_t_to_po/relaxed_PO/CONTCAR}
+
+if (( image_workers < 1 || image_mpi < 1 )); then
+  echo "IMAGE_WORKERS and IMAGE_MPI must be positive" >&2
+  exit 2
+fi
+if (( image_workers * image_mpi > SLURM_NTASKS )); then
+  echo "IMAGE_WORKERS*IMAGE_MPI exceeds allocated tasks: ${image_workers}*${image_mpi} > ${SLURM_NTASKS}" >&2
+  exit 2
+fi
 
 module purge
 source "${env_script}"
@@ -49,6 +63,12 @@ fi
 resume_args=()
 if [[ "${RESUME:-0}" != 0 ]]; then
   resume_args+=(--resume)
+  if [[ -n "${RESUME_TRAJECTORY:-}" ]]; then
+    resume_args+=(--resume-trajectory "${RESUME_TRAJECTORY}")
+  fi
+  if [[ -n "${RESUME_STEP:-}" ]]; then
+    resume_args+=(--resume-step "${RESUME_STEP}")
+  fi
 fi
 
 exec "${python}" examples/run_vcneb_abacus.py \
@@ -56,8 +76,10 @@ exec "${python}" examples/run_vcneb_abacus.py \
   --final "${final_endpoint}" \
   --workdir "${workdir}" --n-images "${n_images}" --fmax "${fmax}" \
   --steps "${steps}" --k "${spring}" --optimizer "${optimizer}" \
-  --maxstep "${maxstep}" \
-  --command "srun --mpi=pmix_v3 -n ${SLURM_NTASKS} ${abacus}" \
+  --maxstep "${maxstep}" --image-workers "${image_workers}" \
+  --image-retries "${image_retries}" \
+  --image-manifest "${workdir}/image_worker_manifest.jsonl" \
+  --command "srun --exclusive --mpi=pmix_v3 -n ${image_mpi} ${abacus}" \
   --pseudo-dir "${pseudo_dir}" --basis-dir "${basis_dir}" \
   --pp Hf=Hf.upf --pp O=O.upf \
   --basis Hf=Hf_gga_10au_100Ry_4s2p2d1f.orb \
@@ -65,6 +87,6 @@ exec "${python}" examples/run_vcneb_abacus.py \
   --ecutwfc "${ecutwfc}" --scf-thr "${scf_thr}" --scf-nmax "${scf_nmax}" \
   --mixing-beta "${mixing_beta}" --kpts "${kpt_x}" "${kpt_y}" "${kpt_z}" \
   --mic --cell-interpolation log_strain --mapping auto --align-translation \
-  --minimum-distance "${minimum_distance}" --maximum-deformation "${maximum_deformation}" \
+  --minimum-distance 1.6 --maximum-deformation 0.25 \
   --climb-after "${climb_after}" \
   "${climb_args[@]}" "${resume_args[@]}"

@@ -214,6 +214,13 @@ def main() -> None:
     t_primitive = read(t_source)
     t_12 = tetragonal_12_atom_cell(t_primitive)
     o_12 = sort_by_species(read_abacus_stru(o_source))
+    if len(t_12) != len(o_12):
+        raise RuntimeError(
+            "T and PO endpoints must use the same commensurate cell atom count: "
+            f"T has {len(t_12)}, PO has {len(o_12)}"
+        )
+    if sorted(t_12.get_chemical_symbols()) != sorted(o_12.get_chemical_symbols()):
+        raise RuntimeError("T and PO endpoints must have identical elemental composition")
     o_mapped, mapping = reorder_final_to_initial(t_12, o_12)
 
     images = interpolate_vcneb(t_12, o_mapped, n_images=7, align_cells=True, mic=True)
@@ -234,6 +241,13 @@ def main() -> None:
         },
         "tetragonal_12_cellpar": [float(x) for x in t_12.cell.cellpar()],
         "orthorhombic_12_cellpar": [float(x) for x in o_mapped.cell.cellpar()],
+        "atom_count": len(t_12),
+        "composition": {symbol: int(t_12.get_chemical_symbols().count(symbol)) for symbol in sorted(set(t_12.get_chemical_symbols()))},
+        "cell_representation": {
+            "tetragonal": "12-atom sqrt(2) x sqrt(2) x 1 commensurate supercell of the 6-atom tetragonal parent",
+            "orthorhombic": "12-atom conventional polar/orthorhombic cell",
+            "same_atom_count_required": True,
+        },
         "symbols": t_12.get_chemical_symbols(),
         "mapping": mapping,
         "path_segment_distances_A": path_distances(images),

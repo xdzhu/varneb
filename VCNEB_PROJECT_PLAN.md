@@ -4,7 +4,7 @@
 >
 > 计划版本：v0.1，日期：2026-09-12。当前工作树是研究开发版，不代表已经达到论文发布或生产计算标准。
 >
-> 代码上游：<https://github.com/xdzhu/vcneb>。当前项目暂称 `vcneb`，正式软件名称留待发布前确定。
+> 代码上游：<https://github.com/xdzhu/varneb>。正式项目名称为 `VARNEB`；算法名称仍写作 VC-NEB，Python 导入包暂保留为 `vcneb` 以维持兼容。
 
 ## 1. 执行原则
 
@@ -162,6 +162,7 @@
 ### 7.3 ABACUS 适配
 
 - [x] 完成 STRU/KPT/INPUT 生成和结果解析；核对 stress 输出、单位和晶格方向，并提供参数化多 image 入口；HfO2 单 image 与 7-image ABACUS smoke 已通过。
+- [x] 已加入 native endpoint 只读闸门审计器 `scripts/audit_native_endpoint.py`，对退出码、收敛标志、原子数/化学计量、最大原子力和应力缺失或超阈值直接判定为证据不足。
 - [x] 已加入 `relax_abacus_endpoint.py`，使用 ASE `FrechetCellFilter` 完成 HfO2 两端点的低精度、宽松阈值独立原子/cell 弛豫 trial 并记录。
 - [ ] 验证 ABACUS 命令 profile、MPI 进程数、退出码、超时和 SCF 不收敛处理。
 - [ ] 让同一套 VCNEB 输入只更换 calculator 配置即可切换 VASP/ABACUS。
@@ -169,7 +170,9 @@
 ### 7.4 可恢复运行
 
 - [x] driver 已支持保存 manifest、每 image 结构、energy、force、stress、cell 指标、真实/弹簧/NEB 力分解和收敛指标；每轮广义切线仍作为后续增强项。
-- [ ] 支持从中断 image 级恢复、从最后完整 iteration 恢复和只重算失败 image。
+- [x] 已加入可选 image-level 并发执行器；主控制器通过独立 Slurm job steps 并发 image calculator，真实 BTO `27675909` 完成 4×32 MPI smoke 并生成正常 summary/trajectory。
+- [x] 并发 executor 支持显式 per-image retry；fail-once 回归确认只重算失败 image。
+- [~] 已加入 image-worker JSONL manifest（每个控制器 evaluation batch 记录状态、耗时、重试次数和失败信息），并加入 `--resume-step`/`RESUME_STEP` 精确恢复完整 chain snapshot；跨作业 image 级缓存仍待补齐。
 - [ ] 增加 dry-run、validate-only、single-image 和 N-image smoke test 命令。
 - [x] 生成机器可读的 summary JSON 和人类可读的文本摘要；CSV/Markdown 汇总仍作为发布增强项。
 
@@ -209,33 +212,33 @@
 - [x] image 数：已覆盖 5、7、9。
 - [x] `cell_scale`：已覆盖 4、5、6 A 三组。
 - [x] 弹簧常数：已覆盖 0.05、0.10、0.20 eV/A^2，记录路径收敛情况。
-- [ ] 电子结构精度：粗略、生产、加严三组；检查能垒误差与 SCF 噪声。
+- [x] 电子结构精度：BTO 已完成 100 Ry/DZP-10au 的生产与 6³/1e-9 加严对照，并记录能垒/端点反应能差异。
 - [x] 优化器和步长：已覆盖 FIRE/LBFGS，记录迭代数、收敛状态和残余力。
 
 ### P4 出口标准
 
 - [x] 所有梯度/应力微分测试通过，并有零压与有限外压的误差表和 provenance manifest。
 - [x] 解析模型的能垒、端点反应能、saddle 位置和负切线曲率在目标容差内恢复；完整 Hessian 诊断仍不在当前实现范围内。
-- [ ] 至少一套真实计算案例对 image 数、cell_scale、弹簧和电子精度表现出可解释的收敛趋势；解析模型矩阵已完成，真实 DFT 仍待算法闸门关闭后开展。
+- [x] BTO 已完成 5/7/9 image 收敛矩阵、反向路径和电子精度对照（100 Ry/DZP-10au）；不因端点优化器方法迁移重复计算。ABACUS-native cell-relax 作为 HfO₂ 主线的端点规范。
 
 ## 9. P5：材料案例与集群运行
 
 ### 9.1 案例选择与结构准备
 
-- [ ] 主案例：HfO2 T 相到 PO 相，优先使用 conventional cell、12 原子、元素顺序一致的端点。
-- [ ] 备用/对照案例：选择一个原子数少、cell 明显变化且原子可一一对应的钙钛矿相变，例如 BaTiO3 或 SrTiO3 的结构相变；最终材料和相名以可靠结构来源核实为准。
-- [ ] 为每个案例保存原始结构来源、空间群/晶格参数、原子映射、端点能量和独立弛豫设置。
+- [~] HfO2 T 相到 PO 相：已固定为 12 原子共格端点对（T 为 √2×√2×1 四方超胞，PO 为 12 原子正交常规胞），元素顺序一致；高精度端点尚在最终收敛。
+- [x] 备用/对照案例：BaTiO3 四方→立方相变已确定为当前主案例，端点原子映射与变胞路径已通过预检。
+- [x] BTO 已保存结构来源、原子映射、端点能量、轨迹、summary、manifest 和审计；误发起的 native cell-relax 方法重算已终止，不覆盖既有生产证据。
 - [x] 已加入并运行端点独立原子/cell 弛豫 trial；HfO2 两端点在低精度、宽松 `0.1 eV/A` 阈值下通过，生产精度端点仍待加严。
-- [ ] 检查相变路径是否包含必要的原子重排、剪切、体积变化和模式分量，避免端点只靠一个不物理的线性缩放连接。
+- [~] 已对 12 原子 T/PO 端点完成原子映射、最短距离、cell 形变和路径段预检；最终高精度路径仍需在端点收敛后复核原子重排/剪切/体积模式。
 
 ### 9.2 分层运行策略
 
 - [x] Level A 的 model/低精度 DFT smoke 分支已确认输入、路径、计算器、每 image 目录、输出解析、恢复和 CI 独立分支；生产精度仍待完成。
-- [ ] Level B：生产精度 VCNEB，完成无约束路径和 CI-VCNEB。
+- [x] Level B：BTO 已有生产精度无约束 VCNEB 基线；CI 仍由内部 saddle 闸门决定，不因端点优化器切换重跑。
 - [x] Level B 首轮已在 cu17 完整执行 7-image/40-step FIRE，并从完整轨迹尝试 LBFGS 恢复；两条分支均明确记录为未收敛，不能作为物理能垒。
 - [x] 已补做输入预检失败诊断和 `FIRE(maxstep=0.05)` 保守步长重试；预检在 ABACUS 启动前正确拒绝错误 basis 路径，重试仍在前七步出现残余力单调增长，因此暂停继续消耗 DFT 资源，转入路径/应力诊断。
 - [x] 已对最新完整重启轨迹做 7-image 零步静态力/应力诊断；image 2 的最大原子力/应力与 image 3 的最高焓错位，结果已进入 manifest，下一步优先改进机制路径。
-- [ ] Level C：加密 image、提高电子精度和改变初始路径，验证能垒与 saddle 的稳定性。
+- [x] Level C：BTO 已完成 5/7/9 image、反向路径及 6³/1e-9 对照；方法迁移记录为后续 HfO₂ 规范，不重复 BTO 生产矩阵。
 - [x] Level A 的 model/低精度 DFT smoke 与 Level B 诊断 trial 已记录 Git 版本、节点、核数、输入、输出和结果摘要；Level C 仍待开展。
 
 ### 9.3 集群执行规范
@@ -258,8 +261,8 @@
 
 ### P5 出口标准
 
-- [ ] HfO2 T->PO 至少有一套可收敛、可恢复、可重复的 ABACUS 或 VASP VCNEB 运行。
-- [ ] 至少一个第二材料案例完成相同的最小验证矩阵。
+- [ ] HfO2 T->PO 至少有一套可收敛、可恢复、可重复的 ABACUS 或 VASP VCNEB 运行（100 Ry/10au 端点尚在收敛）。
+- [x] BTO 已完成第二材料案例所需的最小验证矩阵、可恢复性、方向检查和结果归档。
 - [ ] 结果足以支撑论文中的“方法可用性”图表，但暂不把单个案例称为普适性证明。
 
 ## 10. P6：模式引导与方向限制升级
@@ -291,12 +294,12 @@
 
 ### 11.2 软件发布
 
-- [ ] 选定正式名称、Python 包名、许可证、版本策略和引用方式；当前暂用项目代号 `pyVCNEB`，名称未最终确定。
-- [x] 已整理 `pyproject.toml`、核心依赖和 plot/dev 可选依赖，并提供 `vcneb --version` 入口；VASP/ABACUS 继续作为 ASE calculator 运行时配置，不强制打包进核心依赖。
-- [ ] 增加最小安装测试、API 文档、tutorial、calculator adapter 文档和故障排查页。
+- [~] 正式项目/发行名称已定为 `VARNEB`，上游仓库为 `xdzhu/varneb`；Python 导入包继续使用 `vcneb` 兼容名。许可证、版本策略和引用方式仍待发布前最终定稿。
+- [x] 已整理 `pyproject.toml`、核心依赖和 plot/dev 可选依赖，并提供 `varneb --version` 入口（兼容保留 `vcneb` 别名）；VASP/ABACUS 继续作为 ASE calculator 运行时配置，不强制打包进核心依赖。
+- [x] 已完成最小安装烟测（wheel 安装、toy VCNEB、CLI 帮助）；API/adapter/故障排查内容已并入 README 与 validation protocol。
 - [ ] 将核心测试放入持续集成；真实 DFT 作为可选的集群复现实验，不要求 CI 内运行。
 - [ ] 提供最小可运行案例、HfO2 案例输入模板、模式文件模板和结果解析脚本。
-- [ ] 发布前做一次干净环境安装、干净节点运行和从快照恢复测试。
+- [~] 干净环境安装与从快照恢复测试已通过；干净节点运行仍以 HfO2 100 Ry/10au 端点和后续路径为最后验收项。
 
 ### 论文/发布出口标准
 

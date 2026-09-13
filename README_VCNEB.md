@@ -1,6 +1,6 @@
-# Variable-Cell NEB Prototype
+# VARNEB — Variable-Cell NEB
 
-This repository now contains a calculator-agnostic VC-NEB prototype in
+This repository now contains the calculator-agnostic VARNEB (VC-NEB) toolkit in
 `vcneb/`.  It is meant for crystal phase-transition barriers where the cell
 changes along the path.
 
@@ -27,7 +27,8 @@ The package is installable without MATLAB or USPEX:
 
 ```bash
 python -m pip install .
-vcneb --version
+varneb --version
+# ``vcneb`` remains a compatible legacy console alias.
 ```
 
 Before an optimization, `run_vcneb()` checks every image calculator for this
@@ -51,6 +52,9 @@ first-order saddle character.
 - `vcneb/vasp.py`: VASP input parsing and per-image calculator setup.
 - `vcneb/abacus.py`: ABACUS calculator factory adapter.
 - `vcneb/calculator.py`: capability preflight and image-aware calculator diagnostics.
+- `vcneb/executor.py`: optional image-level concurrent calculator executor; the
+  controller remains single-process and each external calculator job step must
+  use isolated directories (and `srun --exclusive` on Slurm).
 - `examples/run_toy_vcneb.py`: analytic smoke test with a known 0.25 eV barrier.
 - `examples/run_hfo2_t_po_model_vcneb.py`: mapped 12-atom HfO2 T -> PO geometry smoke test with a synthetic endpoint double-well calculator.
 - `examples/compare_initial_cell_paths.py`: calculator-free comparison of linear and logarithmic-strain initial paths for any ASE-readable endpoint pair (defaults to HfO2); supports `--mapping auto`.
@@ -58,10 +62,28 @@ first-order saddle character.
 - `examples/run_fixed_cell_ase_comparison.py`: ASE CINEB versus fixed-cell VCNEB comparison.
 - `examples/run_vasp_single_image_smoke.py`: real VASP energy/force/stress smoke driver.
 - `examples/run_vcneb_abacus.py`: ABACUS driver skeleton.
-- `examples/relax_abacus_endpoint.py`: independent ABACUS endpoint relaxation
-  with optional variable-cell filtering and explicit optimizer step control.
+- `examples/relax_abacus_native.py`: ABACUS-native atomic/cell endpoint
+  relaxation (`calculation cell-relax`, `relax_method bfgs`); ASE is used only
+  for structure conversion and final `CONTCAR` export.
+- `scripts/audit_native_endpoint.py`: read-only endpoint gate for native
+  summaries (return code, convergence flag, composition, force and stress).
+- `scripts/promote_hfo2_endpoints.py`: validates both endpoint summaries and
+  atomically publishes only passing `CONTCAR` files to the production
+  `relaxed_T/` and `relaxed_PO/` directories.
+- `examples/relax_abacus_endpoint.py`: ASE-driven endpoint adapter.  It is a
+  numerically equivalent fallback to native `cell-relax` when the latter has
+  step-control trouble; pass `--stress-kbar` to require a force-and-stress gate.
 - `scripts/setup_hfo2_t_po_validation.py`: builds the HfO2 T -> PO validation fixture from local source structures or portable copies.
 - `scripts/validate_vcneb_inputs.py`: static dry-run validator for VASP/ABACUS VC-NEB image directories.
+- `scripts/audit_vcneb_result.py`: calculator-free audit of a completed summary,
+  including generalized-force, barrier, volume, geometry and interior-barrier gates.
+  Use `--max-stress-kbar` when the production endpoint/path policy requires a
+  common stress threshold in addition to the generalized-force gate.
+- `scripts/compare_vcneb_images.py`: calculator-free comparison of completed
+  5/7/9-image summaries, including shared calculator settings and explicit
+  handling of consistent barrierless paths.
+- `docs/batio3_validation_protocol.md`: fixed BTO settings, image-count
+  convergence gates, CI staging and recovery/archive requirements.
 - `tests/check_vcneb_forces.py`: finite-difference checks for force/stress transforms.
 
 ## Cluster execution policy
@@ -277,12 +299,14 @@ python scripts/setup_hfo2_t_po_validation.py
 python examples/run_hfo2_t_po_model_vcneb.py
 python examples/run_abacus_single_image_smoke.py
 python examples/relax_abacus_endpoint.py --help
+python examples/relax_abacus_native.py --help
 python examples/run_vasp_single_image_smoke.py --help
 python examples/run_fixed_cell_ase_comparison.py
 python examples/run_vcneb_convergence.py
 python examples/run_vcneb_robustness.py
 python examples/run_release_and_refine.py
 python examples/run_finite_difference_report.py
+python scripts/audit_vcneb_result.py path/to/completed_vcneb_workdir
 ```
 
 Expected toy output:
@@ -380,7 +404,38 @@ The driver enforces `cal_force=1`, `cal_stress=1`, and `out_stru=1`, which are
 required for VC-NEB.
 
 ABACUS runs support the same `--resume` and `--resume-trajectory` options as
-the VASP driver.
+the VASP driver. Before a costly run, `--validate-only` creates the image
+directories, checks energy/force/stress capability and unique per-image
+directories, and writes `vcneb_preflight.json` without launching ABACUS.
+Completed runs include the calculator report, Slurm metadata and Git revision
+in an atomically updated `vcneb_summary.json`; resuming does not overwrite the
+original `initial-vcneb.traj`.
+
+For image-level concurrency, pass `--image-workers N`.  The controller remains
+one Python process and evaluates up to `N` independent calculators concurrently;
+on Slurm the calculator command must use `srun --exclusive`, and the allocation
+must provide `N` times the MPI width requested by one calculator.  The default
+is `0` (serial images), so ordinary runs retain the reference execution path.
+`--image-retries K` retries only a failed image evaluation (default `0`); the
+calculator must be restart-safe in its per-image directory when this is enabled.
+Parallel runs append `image_worker_manifest.jsonl` (or the path supplied by
+`--image-manifest`) after each controller evaluation batch, including status,
+elapsed time and per-image attempt counts.
+The bundled ABACUS adapter also disables ASE's process-global `ase_sort.dat`
+write when the input atoms are already grouped by species (as in the BTO and
+HfO₂ fixtures).  This avoids a thread-level parser race; non-identity atom
+orders should use the serial image backend or an adapter that provides a
+directory-local sort file.
+For reproducible recovery from a known complete snapshot, combine
+`--resume --resume-step N` with `--resume-trajectory`; negative `N` counts from
+the end and `-1` means the latest complete chain.
+The Hefei BTO template `cluster/hf_batio3_vcneb_parallel.slurm` demonstrates
+four 32-MPI workers in a 128-task allocation.
+
+The HfO₂ production template `cluster/hf_hfo2_vcneb_parallel.slurm` uses the
+same controller/worker layout (four isolated image workers × 32 MPI by
+default), with the 100-Ry and Orb-DZP-10au Hf/O inputs. It remains a template
+until both native `cell-relax` endpoints pass their force and stress gates.
 
 For an ABACUS template directory, the dry static check is:
 

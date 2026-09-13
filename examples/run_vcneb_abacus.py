@@ -12,7 +12,9 @@ import argparse
 import json
 import os
 from pathlib import Path
+import subprocess
 import sys
+import tempfile
 
 from ase.io import read, write
 
@@ -20,8 +22,15 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from vcneb import interpolate_vcneb, path_geometry_diagnostics, read_chain_trajectory, run_vcneb
+from vcneb import (
+    interpolate_vcneb,
+    path_geometry_diagnostics,
+    read_chain_trajectory,
+    run_vcneb,
+    validate_image_calculators,
+)
 from vcneb.abacus import attach_abacus_calculators, make_ase_abacus_factory
+from vcneb.executor import ThreadedCalculatorExecutor
 
 
 def parse_args() -> argparse.Namespace:
@@ -94,6 +103,34 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--resume", action="store_true", help="Resume from the latest complete chain in vcneb.traj")
     parser.add_argument("--resume-trajectory", default=None, help="Trajectory to resume from; defaults to workdir/vcneb.traj")
+    parser.add_argument(
+        "--resume-step",
+        type=int,
+        default=None,
+        help="complete chain snapshot index to resume (negative counts from the end; default latest)",
+    )
+    parser.add_argument(
+        "--validate-only",
+        action="store_true",
+        help="Build the path and calculator directories, run preflight, write a report, and skip DFT",
+    )
+    parser.add_argument(
+        "--image-workers",
+        type=int,
+        default=0,
+        help="concurrently evaluate this many image calculators; 0 keeps serial evaluation",
+    )
+    parser.add_argument(
+        "--image-retries",
+        type=int,
+        default=0,
+        help="retry a failed image calculator this many times when image-workers is enabled",
+    )
+    parser.add_argument(
+        "--image-manifest",
+        default=None,
+        help="append one JSONL record per controller image-evaluation batch",
+    )
     return parser.parse_args()
 
 
@@ -109,8 +146,67 @@ def parse_species_files(values: list[str], option: str) -> dict[str, str]:
     return result
 
 
+def _git_revision() -> str | None:
+    try:
+        result = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except (OSError, subprocess.CalledProcessError):
+        return None
+    return result.stdout.strip() or None
+
+
+def _write_json_atomic(path: Path, payload: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fd, temporary = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=path.parent)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            json.dump(payload, handle, indent=2, ensure_ascii=False)
+            handle.write("\n")
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, path)
+    finally:
+        try:
+            os.unlink(temporary)
+        except FileNotFoundError:
+            pass
+
+
+def _run_metadata(args: argparse.Namespace, workdir: Path) -> dict:
+    slurm_keys = (
+        "SLURM_JOB_ID",
+        "SLURM_JOB_NAME",
+        "SLURM_JOB_NODELIST",
+        "SLURM_NTASKS",
+        "SLURM_CPUS_PER_TASK",
+        "SLURM_MEM_PER_NODE",
+        "SLURM_JOB_PARTITION",
+    )
+    return {
+        "git_revision": _git_revision(),
+        "workdir": str(workdir),
+        "command_line": sys.argv,
+        "slurm": {key: os.environ[key] for key in slurm_keys if os.environ.get(key)},
+        "resume": bool(args.resume),
+        "resume_trajectory": str(args.resume_trajectory) if args.resume_trajectory else None,
+        "resume_step": args.resume_step,
+        "image_workers": int(args.image_workers),
+        "image_retries": int(args.image_retries),
+        "image_manifest": str(args.image_manifest) if args.image_manifest else None,
+    }
+
+
 def main() -> None:
     args = parse_args()
+    if args.image_workers < 0:
+        raise ValueError("--image-workers must be non-negative")
+    if args.image_retries < 0:
+        raise ValueError("--image-retries must be non-negative")
     workdir = Path(args.workdir).resolve()
     workdir.mkdir(parents=True, exist_ok=True)
 
@@ -119,8 +215,10 @@ def main() -> None:
     traj_path = workdir / "vcneb.traj"
     resume_path = Path(args.resume_trajectory).resolve() if args.resume_trajectory else traj_path
     if args.resume:
-        images = read_chain_trajectory(resume_path, n_images=args.n_images)
-        print(f"[OK] resumed latest complete {args.n_images}-image chain from {resume_path}")
+        resume_step = -1 if args.resume_step is None else args.resume_step
+        images = read_chain_trajectory(resume_path, n_images=args.n_images, step=resume_step)
+        label = "latest complete" if resume_step == -1 else f"complete step {resume_step}"
+        print(f"[OK] resumed {label} {args.n_images}-image chain from {resume_path}")
     else:
         images = interpolate_vcneb(
             initial,
@@ -134,7 +232,9 @@ def main() -> None:
             minimum_distance=args.minimum_distance,
             maximum_deformation=args.maximum_deformation,
         )
-    write(workdir / "initial-vcneb.traj", images)
+    initial_trajectory = workdir / "initial-vcneb.traj"
+    if not args.resume or not initial_trajectory.exists():
+        write(initial_trajectory, images)
     initial_geometry = path_geometry_diagnostics(images)
 
     parameters = {
@@ -165,13 +265,49 @@ def main() -> None:
     parameters.update({key: value for key, value in optional_parameters.items() if value is not None})
     factory = make_ase_abacus_factory(parameters=parameters, command=args.command)
     attach_abacus_calculators(images, workdir=workdir, factory=factory)
+    calculator_reports = validate_image_calculators(
+        images,
+        require_stress=True,
+        require_variable_cell=True,
+        require_directory=True,
+        require_unique_directories=True,
+    )
+    image_manifest = (
+        Path(args.image_manifest).resolve()
+        if args.image_manifest
+        else workdir / "image_worker_manifest.jsonl"
+    )
+    metadata = _run_metadata(args, workdir)
+    metadata["image_manifest"] = str(image_manifest) if args.image_workers else None
+    preflight = {
+        **metadata,
+        "status": "ok",
+        "n_images": args.n_images,
+        "initial_path_geometry": initial_geometry,
+        "calculator_reports": [report.to_dict() for report in calculator_reports],
+        "calculator_parameters": parameters,
+    }
+    _write_json_atomic(workdir / "vcneb_preflight.json", preflight)
+    if args.validate_only:
+        print(f"[OK] calculator preflight passed; report={workdir / 'vcneb_preflight.json'}")
+        return
 
+    image_executor = (
+        ThreadedCalculatorExecutor(
+            args.image_workers,
+            max_retries=args.image_retries,
+            manifest_path=image_manifest,
+        )
+        if args.image_workers
+        else None
+    )
     chain, _ = run_vcneb(
         images,
         pressure_gpa=args.pressure_gpa,
         k=args.k,
         climb=not args.no_climb,
         climb_after=args.climb_after,
+        image_executor=image_executor,
         optimizer=args.optimizer,
         optimizer_kwargs={} if args.maxstep is None else {"maxstep": args.maxstep},
         fmax=args.fmax,
@@ -189,6 +325,8 @@ def main() -> None:
     diagnostics = chain.path_diagnostics()
     saddle = chain.saddle_diagnostics()
     summary = {
+        **metadata,
+        "status": "completed",
         "workdir": str(workdir),
         "n_images": args.n_images,
         "cell_interpolation": args.cell_interpolation,
@@ -206,14 +344,15 @@ def main() -> None:
         "barrier_enthalpy_eV": barrier,
         "reaction_enthalpy_eV": delta,
         "image_enthalpies_eV": [float(value) for value in chain.enthalpies],
+        "image_manifest": str(image_manifest) if image_executor is not None else None,
         "calculator": "ASE ABACUS",
+        "calculator_parameters": parameters,
+        "calculator_reports": [report.to_dict() for report in calculator_reports],
         "stress_required": True,
         "saddle_diagnostics": saddle,
         "path_diagnostics": diagnostics,
     }
-    (workdir / "vcneb_summary.json").write_text(
-        json.dumps(summary, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
-    )
+    _write_json_atomic(workdir / "vcneb_summary.json", summary)
     with (workdir / "vcneb_summary.txt").open("w", encoding="utf-8") as handle:
         handle.write(f"Forward barrier (enthalpy) = {barrier:.8f} eV\n")
         handle.write(f"Reaction enthalpy          = {delta:.8f} eV\n")

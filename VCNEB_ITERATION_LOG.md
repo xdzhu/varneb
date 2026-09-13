@@ -1,5 +1,330 @@
 # VC-NEB Iteration Log
 
+## VARNEB repository rename (`2026-09-13`)
+
+- Upstream repository is now `https://github.com/xdzhu/varneb`; local `origin`
+  fetch/push URLs were updated without pushing or starting CI.
+- The distribution/project name in `pyproject.toml` is now `varneb`.  The
+  `varneb` console entry point is primary, while the `vcneb` console alias and
+  Python import package remain for backwards compatibility.
+
+## HfO₂ parallel parser race fixed and resumed (`2026-09-13`)
+
+- Initial ordinary parallel VCNEB job `27677945` completed three ordinary
+  steps (`fmax=0.966334 -> 0.800934 eV/A`) before failing in image 3 with an
+  empty force array.  ABACUS SCF itself completed; the traceback and worker
+  manifest are retained remotely under the same workdir, so this is not a
+  physical path failure.
+- Root cause was the installed ASE ABACUS adapter writing the process-global
+  `ase_sort.dat` while four image threads were concurrently preparing inputs.
+  The adapter now suppresses that file for identity species ordering (the
+  Hf4O8 fixtures are grouped Hf then O), while preserving upstream behavior
+  for non-identity serial calculations.  A regression check passes on the
+  remote ICU Python environment.
+- The stale global sort file was moved aside, and job `27678004` resumed from
+  the complete step-2 chain snapshot with the same 128-task/4x32-MPI/no-CI
+  settings.  Its first resumed evaluation is `fmax=0.800934 eV/A` and is
+  running without the previous parser warning.
+- At the latest poll the resumed job has reached ordinary steps 0--6 with
+  `fmax=0.800934, 0.738536, 0.677679, 0.626060, 0.591285, 0.559697,
+  0.514160 eV/A`; all worker
+  batches remain `status=ok` and the Slurm stderr is empty.
+
+## HfO₂ endpoint gate passed; ordinary VCNEB launched (`2026-09-13`)
+
+- PO continuation jobs `27677874` and `27677918` completed normally from the
+  same trajectory.  The final PO summary passes the strict gate with
+  `max_generalized_force=0.0004973 eV/A` and `max_abs_stress=0.07076 kbar`;
+  T `27677491` passes with `0.0004988 eV/A` and `0.01841 kbar`.  Both promoted
+  structures are 12-atom `Hf4O8` conventional-cell endpoints; the promotion
+  report is `validation/hfo2_t_to_po/endpoint_promotion_gate.json` on `hf`.
+- A calculator-free preflight on the promoted endpoints passed for a 7-image
+  log-strain path: minimum distance `2.02496 A`, maximum deformation `0.04841`,
+  no folded junctions, and all seven ABACUS calculator reports expose energy,
+  forces, stress, variable-cell support, and isolated directories.  The local
+  copy is `outputs/hfo2_t_to_po_pbe100_dzp10au/vcneb_n7_preflight_hfo2/`.
+- Ordinary HfO₂ VCNEB job `27677945` is now RUNNING on `hfacnormal01` with one
+  128-task controller allocation and four concurrent 32-MPI image workers.
+  It uses 100 Ry, Hf/O Orb-DZP-10au, 2x2x2 k points, FIRE, `k=0.2`, no climb,
+  and a 300-step budget.  Step 0/1/2 residuals are `0.966334`, `0.881405`,
+  and `0.800934 eV/A`; this is an ordinary-path preconvergence, not a final
+  barrier claim.
+
+## HfO₂ endpoint fast-BFGS status (`2026-09-13`, jobs 27677491/27677467)
+
+- The T endpoint continuation `27677491` completed from the preserved trajectory
+  with ASE BFGS (`maxstep=0.005`, 100 Ry, Orb-DZP-10au, 32 MPI).  It passes the
+  common gate: maximum generalized force `0.00049882 eV/A`, maximum stress
+  `0.01841 kbar`, 12 atoms (`Hf4O8`), `converged=true`.
+- The active job `27677467` is the PO endpoint, not the high-symmetry T endpoint.
+  It is the lower-symmetry 12-atom orthorhombic conventional cell and is being
+  relaxed in the same variable-cell space.  At the latest poll (20:10 runtime)
+  it reached BFGS step 9 with monotonic `fmax=0.483720 -> 0.294759 eV/A` and
+  remains RUNNING on `node148` with 32 MPI.  No rebound or numerical instability
+  is present; promotion and VCNEB submission remain gated on its force and
+  stress summary.
+- The accepted T trajectory, summary, final structure, and Slurm metadata are
+  archived under `outputs/hfo2_t_to_po_pbe100_dzp10au/endpoint_relax_T_ase_bfgs_maxstep005_job27677491/`.
+
+## BTO duplicate native-endpoint submission cancelled (`2026-09-13`)
+
+- BTO already has the complete `100 Ry + Orb-DZP-10au` endpoint/path validation matrix: 5/7/9-image ordinary VCNEB, reverse direction, rebound-window continuation, and 6×6×6/1e-9 precision comparison.
+- A native ABACUS `cell-relax` endpoint rerun (`27676929` cubic, `27676930` tetragonal) was mistakenly submitted while migrating the endpoint methodology. `27676929` failed during startup and `27676930` was cancelled; neither is production evidence and no BTO VCNEB path will be rerun.
+- The native `calculation cell-relax`/BFGS migration remains required for the HfO₂ endpoint gate, where the existing external-optimizer branches did not provide a production-quality endpoint.
+- PO resume `27676977` and T resume `27676976` each reached an ABACUS trust-radius breakdown after preserving `STRU_ION_D`; this is an optimizer termination, not structure divergence. The saved geometries are being continued with ABACUS `bfgs_trad` (`27677116` PO, `27677117` T).
+- Endpoint optimizer choice is methodological, not a different target: with identical energy/cell/ionic degrees of freedom and thresholds, converged ASE and ABACUS-native relaxations target the same stationary minimum. The BTO FIRE endpoints are therefore valid; BFGS is the preferred solver for new HfO₂ production attempts, not a reason to invalidate or repeat BTO.
+- The native-driver restart parser now handles ABACUS `STRU_ION_D` labels/magnetic flags and converts dimensionless lattice vectors using `LATTICE_CONSTANT` (Bohr) to ASE Angstrom units; regression coverage is in `tests/check_native_abacus_driver.py`.
+
+## HfO₂ native endpoint continuation (`2026-09-13`, jobs 27677116/27677117)
+
+- The T and PO endpoints are continuing with ABACUS-native `calculation
+  cell-relax`, `relax_method=bfgs_trad`, 100 Ry, Hf/O Orb-DZP-10au, 2×2×2
+  k-points, and 32 MPI per endpoint on `hfacnormal01`.
+- Both Slurm jobs remain `RUNNING` with active CPU.  Native cell-relax has
+  completed several cell cycles; pressure rebounds (T approximately −28→+89
+  kbar, then decreasing; PO approximately −17→+30 kbar) are being observed as
+  multi-step optimizer windows, not treated as physical divergence or a stop
+  condition.  No endpoint has yet passed the 0.02 eV/Å and 0.1 kbar gates.
+- The future ordinary HfO₂ VCNEB controller/worker template is now
+  `cluster/hf_hfo2_vcneb_parallel.slurm` (default four isolated image workers
+  × 32 MPI in one 128-task allocation); it is synced and syntax-checked but
+  not submitted before the endpoint gate.
+- Native summaries now parse both ABACUS `Largest gradient in force` records and the `TOTAL-FORCE`/`TOTAL-STRESS` blocks emitted by `bfgs_trad`, retaining the last measured maximum force and stress for the endpoint gate.
+
+## HfO₂ native `bfgs_trad` stability audit (`2026-09-13`, jobs 27677116/27677117)
+
+- The two native jobs were observed across multiple complete cell-relax cycles,
+  rather than being stopped at the first force/pressure rebound.  They were then
+  cancelled safely after a clear numerical instability developed in the PO cell.
+  Full `OUT.ABACUS`, `STRU_ION_D`, stdout/stderr, and summaries are archived in
+  `outputs/hfo2_t_to_po_pbe100_dzp10au/endpoint_*_native_bfgs_trad_resume2_cancelled_job*/`.
+- PO ended with `converged=false`, `fmax=7.55946 eV/A`,
+  `max_stress=2856.90 kbar`, `pressure=1644.58 kbar`, and volume `98.05 A^3`.
+  T ended with `converged=false`, `fmax=0.132648 eV/A`,
+  `max_stress=27.40 kbar`, and `pressure=-26.68 kbar`.  Both retained the
+  required 12-atom `Hf4O8` composition, so the failure is an optimizer/cell-step
+  stability issue, not evidence for a different physical endpoint or a mismatch
+  between T and PO cells.
+- Endpoint method equivalence remains the governing rule: external ASE BFGS and
+  ABACUS-native `cell-relax` are alternative numerical routes to the same
+  stationary minimum when they use the same energy surface, cell/ionic degrees of
+  freedom, constraints, and force/stress tolerances.  The next HfO₂ attempt may
+  therefore use a more conservative external BFGS (or damped native restart),
+  with a hard force-and-stress gate before any VCNEB submission.  BTO remains
+  frozen; no duplicate BTO endpoint or path calculation is permitted.
+
+## HfO₂ conservative external-BFGS endpoint fallback (`2026-09-13`, jobs 27677331/27677332)
+
+- After checking `hfacnormal01` availability and an empty user queue, the
+  conservative fallback `cluster/hf_hfo2_endpoint_ase.slurm` was submitted as
+  jobs `27677331` (PO) and `27677332` (T), each with 32 MPI, 100 Ry,
+  Orb-DZP-10au, 2×2×2 k points, ASE `BFGS`, `maxstep=0.0005`, and a 300-step
+  budget. The driver now records `force_converged`, `stress_converged`, and a
+  combined `converged` flag using the common `0.02 eV/A` + `0.1 kbar` gate.
+- Two earlier submissions (`27677322/27677323` and `27677328/27677329`) exited
+  before ABACUS because of a remote script-sync path and an O-orbital filename
+  typo; they produced no DFT steps and are excluded from evidence. The corrected
+  pair is running with valid ABACUS `INPUT/KPT/STRU` and copied Hf/O assets.
+- The ASE endpoint driver now supports `--resume`/`--resume-step`, reopening the
+  latest complete `relax.traj` frame and appending to the existing trajectory;
+  this keeps endpoint continuation consistent with the VCNEB chain-resume
+  protocol.
+
+## HfO₂ maxstep revision (`2026-09-13`, jobs 27677331/27677332 → 27677466/27677467)
+
+- The `maxstep=0.0005` branch was intentionally stopped after a verified
+  multi-step window: T reached step 19 (`0.020087 eV/A`) and PO reached step 15
+  (`0.483720 eV/A`) with monotonic decrease but an impractically small cell
+  update. Full trajectories are archived under the corresponding
+  `endpoint_relax_*maxstep0005_cancelled_job*` directories.
+- The latest frames were copied without re-interpolation into jobs `27677466`
+  (T) and `27677467` (PO), using ASE BFGS `maxstep=0.005`, `fmax=0.01`, 120
+  steps, the same 100 Ry/Orb-DZP-10au/2×2×2/32-MPI settings. This is a step
+  control change only; the endpoint target and promotion gate are unchanged.
+- The reusable Slurm fallback now defaults to `maxstep=0.005`; the earlier
+  `0.0005` value is retained only as an archived diagnostic, not as the
+  production default.
+- Added `scripts/promote_hfo2_endpoints.py` plus a regression test. It validates
+  both endpoint summaries against the common force/stress gate and atomically
+  publishes only passing `CONTCAR` files to the production `relaxed_T/` and
+  `relaxed_PO/` directories.
+
+## HfO₂ production-precision endpoint gate (`2026-09-13`)
+
+- The legacy `27674272` result remains diagnostic only (60 Ry).  New endpoint
+  work uses 100 Ry, Orb-DZP-10au, 2×2×2 k points, and 32 MPI ranks.
+- T endpoint FIRE `27676731` showed five consecutive rising generalized-force
+  values (`0.5572 → 0.6284 eV/Å`) and was cancelled only after the observation
+  window; this diagnoses an unstable variable-cell optimizer setting, not a
+  physical claim that the structure itself is divergent.  Its partial trajectory
+  is archived locally.
+- A constrained-step LBFGS retry `27676767` likewise showed five rising values
+  (`0.5572 → 0.5829 eV/Å`) and was cancelled after the same observation rule;
+  this is also an optimizer/cell-coupling diagnostic.  Its partial trajectory is
+  archived locally.
+- PO endpoint FIRE `27676732` and fixed-cell T pre-relaxation `27676802` were
+  cancelled on request after preserving their partial trajectories (PO reached
+  step 32 at `0.2998 eV/Å`; fixed-cell T reached step 6 at `0.2213 eV/Å`).
+- Direct ASE variable-cell BFGS runs `27676827`/`27676828` were cancelled after
+  preserving their diagnostics.  The endpoint workflow now uses ABACUS-native
+  `calculation cell-relax` with `relax_method bfgs`: jobs `27676868` (T) and
+  `27676869` (PO) generate native `OUT.ABACUS/STRU_ION_D` and a converted
+  `CONTCAR`; no HfO₂ VCNEB path will be submitted until both pass the force gate.
+
+## BaTiO3 T→C production branch reset (`2026-09-13`)
+
+- Corrected the case-selection decision: the earlier HfO2-versus-BaTiO3 cost
+  comparison was not a fair precision comparison because the HfO2 diagnostic
+  branch used `60 Ry`/`1x1x1`/`1e-6` only as a low-cost Level-A/Level-B trial.
+  No HfO2 production claim will be made from that setting.
+- The active material branch is now BaTiO3 tetragonal→cubic.  The cluster
+  templates use the same ABACUS Dojo-NC-FR setup for endpoints and images:
+  `ecutwfc=100 Ry`, `4x4x4` k points, `scf_thr=1e-8`, and the explicit
+  `Dojo-NC-FR/Orb-DZP-10au` directory with `Ba/Ti/O` 10 au DZP orbitals.
+- The BTO VCNEB launcher now accepts `DIRECTION` (default
+  `tetragonal_to_cubic`) and `ENDPOINT_TAG`, and writes isolated work
+  directories so the old mixed-basis runs are not resumed or overwritten.
+- Fresh 100 Ry/10 au DZP endpoint relaxations completed as jobs `27675330`
+  (cubic, `node40`) and `27675331` (tetragonal, `node41`) on `hfacnormal01`.
+  The ordinary seven-image T→C no-climb run is `27675388` on `node40`; CI is
+  intentionally disabled until the ordinary path is stable.
+- Subsequent production templates now request 32 MPI ranks (one CPU per rank)
+  on `hfacnormal01`; already-running jobs retain their original allocation.
+- The ABACUS launcher now writes an atomic preflight/summary record with
+  calculator capabilities, per-image directory ownership, Slurm metadata and
+  Git revision; `scripts/audit_vcneb_result.py` provides a calculator-free
+  post-run gate.  `path_diagnostics()` now embeds final-path geometry metrics.
+- Chain snapshots and per-image POSCAR snapshots now use same-directory
+  temporary files plus `os.replace`, so an interrupted write cannot masquerade
+  as a complete recovery point.
+- The first BTO FIRE branch (`27675388`) was stopped after a force rebound;
+  the complete step-12 chain was preserved.  External-trajectory recovery
+  (`27675509`, 32 MPI, `maxstep=0.002`) reproduced the state without
+  re-interpolation, then settled near `0.05 eV/A`.  LBFGS continuation
+  (`27675598`) also plateaued/rebounded, so both branches remain diagnostic,
+  not converged MEP claims.
+- A 32-MPI static audit (`27675643`) of the best preserved chain reports a
+  monotonic T→C enthalpy rise of `0.08712890 eV`, no interior barrier, and
+  `fmax=0.057946 eV/A`; geometry remains valid (`d_min=1.8015 A`, deformation
+  `0.05168`, minimum segment cosine `0.9407`).  CI is therefore correctly
+  withheld pending a mechanism/path change rather than forced onto the highest
+  image.
+- A further 32-MPI FIRE continuation (`27675704`, `maxstep=0.003`) was started
+  from the best `maxstep=0.005` snapshot.  It improved only from
+  `0.029613` to `0.029365 eV/A`, then rebounded to `0.031914 eV/A`; the run was
+  safely cancelled after step 2 with `chain_step_0000..0002.traj` and the full
+  trajectory preserved under
+  `outputs/batio3_t_to_c_pbe100_dzp10au/vcneb_t_to_c_n7_fire_maxstep003_from_step2_cancelled/`.
+  This confirms a local optimizer plateau rather than a reason to enable CI.
+- The first image-count matrix was then submitted with the same BTO production
+  calculator and no climb: `27675759` (5 images, `node182`) and `27675760`
+  (9 images, `node383`), both 32 MPI / 59168M.  At the latest checkpoint,
+  5-image step 9 has `fmax=0.393455 eV/A` and 9-image step 4 has
+  `fmax=0.494433 eV/A`; both remain `RUNNING` with only successful ABACUS
+  image tasks.  These are active convergence branches, not yet final results.
+- Added the opt-in `ThreadedCalculatorExecutor` image backend and the
+  `cluster/hf_batio3_vcneb_parallel.slurm` controller template.  A real BTO
+  five-image one-step smoke (`27675909`) used 128 allocated tasks and launched
+  four concurrent 32-MPI exclusive job steps; all image evaluations completed
+  with exit code 0 and the controller wrote a normal summary/trajectory.  The
+  archived result is under
+  `outputs/batio3_t_to_c_pbe100_dzp10au/vcneb_t_to_c_n5_parallel_smoke_job27675909/`.
+  Its force audit is intentionally failed (`0.521268 eV/A` after one step), but
+  the image-level parallel execution and barrierless profile are validated.
+- The executor now supports optional per-image retry (`--image-retries`) and
+  tracks attempt counts in memory; a fail-once calculator regression verifies
+  that only the failed image is retried and that the successful result is retained.
+- The original 9-image serial branch was safely stopped at complete step 9
+  (`0.438473 eV/A`) and resumed through the parallel controller as `27675981`
+  (128-task allocation, four 32-MPI workers).  It has reached parallel step 16
+  at `0.259057 eV/A` with successful image steps; the original serial trajectory
+  remains archived in its own work directory.
+- The 5-image branch was similarly resumed from serial step 23 as `27676003`.
+  Its best parallel snapshot is step 11 at `0.0388197 eV/A`, followed by a
+  rebound to `0.040979 eV/A`; it was safely cancelled and statically audited
+  as job `27676030`.  The audit confirms the same monotonic barrierless profile
+  (`0.08712890 eV`) and valid geometry, but the force target is not met.  Both
+  serial branches are copied under the local BTO output archive for recovery
+  provenance.
+- Operational correction: a single FIRE rebound is not a stop condition. Future
+  ordinary-NEB branches use a 3--5 complete-step rebound observation window;
+  only persistent rebound/plateau without a new best snapshot triggers safe
+  cancellation and static audit.
+- The correction was exercised immediately in BTO: `27676180` resumed the
+  five-image best complete snapshot (step 11) for 12 steps with four 32-MPI
+  workers.  It rebounded at step 3 (`0.036197 eV/A`) but then descended to
+  `0.0231289 eV/A` at step 12, demonstrating that the earlier cancellation was
+  premature.  The run remains below the `0.02` target but is archived for the
+  rebound-window evidence.
+- Nine-image job `27675981` completed its requested 30-step first segment at
+  `0.0739323 eV/A`; it was not labeled converged and was resumed as `27676207`
+  from the complete step-30 trajectory.  Both branches use the BTO 100-Ry,
+  DZP-10au calculator and four concurrent 32-MPI image workers.
+- The five-image continuation `27676251` then crossed the ordinary-path force
+  gate at step 7 (`0.0191050 eV/A`) after the rebound-window evidence.  Its
+  calculator-free audit is `status=ok`; the 5-vs-7 comparison remains
+  `barrierless-consistent` with identical `0.0871289 eV` reaction enthalpy.
+- Seven-image continuation `27676310` crossed the same ordinary force gate at
+  step 17 (`0.0196710 eV/A`) after a real multi-step rebound window.  Its audit
+  is `status=ok`, with the same `0.0871289 eV` barrierless profile and valid
+  geometry.  Thus both 5- and 7-image ordinary paths now meet the force target.
+- Nine-image continuation `27676207` completed another 30 steps at
+  `0.0289920 eV/A` and was archived as a non-converged segment; `27676513` is
+  the next continuation from its complete step-60 trajectory.  The 5/7/9
+  calculator-free comparisons remain barrierless-consistent.
+- Reverse C→T job `27676299` reached step 20 at `0.208863 eV/A`; its continuation
+  `27676485` is being observed without early cancellation after a later rebound
+  (`0.043058 -> 0.049381 eV/A`).
+- Reverse continuation `27676485` subsequently crossed the force gate at step 34
+  (`0.0195577 eV/A`) after the rebound window.  Audit is `status=ok`, with zero
+  forward barrier, reaction enthalpy `-0.0872206 eV`, and no interior barrier.
+- The complete BTO ordinary image-count matrix is now converged: five-image
+  `27676251` (`0.0191050 eV/A`), seven-image `27676310` (`0.0196710 eV/A`),
+  and nine-image `27676513` (`0.0199074 eV/A`).  The calculator-free comparison
+  reports `barrierless-consistent`, with identical `0.0871289 eV` reaction
+  enthalpy and no geometry issues.  The CI gate is therefore explicitly
+  withheld and recorded in `bto_ci_gate.json` rather than forcing a climb on a
+  monotonic path.
+- Electronic-precision audit: `27676621` (100 Ry, 6×6×6, SCF 1e-9, zero-step
+  static path) and endpoint relaxations `27676663`/`27676664` agree on a reaction
+  energy of about `0.0724 eV` (path `0.0723553 eV`, endpoints `0.0724417 eV`).
+  This differs from the 4×4×4 production value by about `0.01476 eV`, so the
+  barrierless topology is stable but final absolute energetics should use the
+  tightened electronic setting.  Record: `bto_precision_sensitivity.json`.
+
+## HfO2 Level B continuation audit (`27674272`, 2026-09-13)
+
+- The resumed seven-image ordinary VC-NEB branch completed all 100 requested
+  FIRE steps with `climb_after=100` (CI never activated).  Slurm reports
+  `COMPLETED`, exit code `0`, partition `hfacnormal01`, 8 tasks on `node109`,
+  elapsed `03:12:04`; the exact submission used `FMAX=0.05`,
+  `SPRING=0.2`, `MAXSTEP=0.01`, `RESUME=1`, 60 Ry, 1x1x1 k points and
+  `scf_thr=1e-6`.
+- The complete remote result was archived locally under
+  `outputs/hfo2_vcneb_levelA_no_climb_v1_job27674272/`, including the final
+  `vcneb.traj`, all retrieved chain snapshots, optimizer log, summary and
+  barrier plot.  The final trajectory contains 142 complete seven-image
+  chains (994 ASE frames), so this is a valid continuation rather than a
+  re-interpolated path.
+- The path remains non-converged: final maximum generalized force is
+  `0.436268 eV/A` versus the `0.05 eV/A` target.  The provisional forward
+  enthalpy barrier is `0.619562 eV`, reaction enthalpy is `-0.743338 eV`, and
+  image 3 is the local interior peak.  Its residual generalized force is
+  `0.215015 eV/A` and perpendicular force is `0.466786 eV/A`.
+- The ordinary path is not yet stable enough for CI.  The optimizer decreases
+  `fmax` to `0.312842 eV/A` at continuation step 39, then reverses and ends at
+  `0.436268 eV/A`; this is consistent with the earlier mechanism/path
+  mismatch, not convergence.  Final image minimum MIC distance is `1.9480 A`
+  (above the `1.6 A` guard), but adjacent final extended-coordinate cosines
+  are `[-0.0751, 0.9454, 0.7933, 0.8526, 0.5920]`, so the first junction is
+  folded and the path is not a clean MEP.  Final cells remain nonsingular and
+  the largest endpoint-referenced deformation is about `0.1277`.
+- Decision: do not enable CI or submit another long DFT run from this chain.
+  Next work is mechanism-aware path construction/diagnostics (and, if needed,
+  a calculator-free or static-force test) before a fresh ordinary VC-NEB
+  production attempt.  This result must not be reported as a physical HfO2
+  transition barrier.
+
 ## ABACUS high-precision BaTiO3 staged-CI diagnostic (`27673595`)
 
 - After the algorithm-first path preflight, ran a seven-image BaTiO3
@@ -550,7 +875,7 @@ shared cluster filesystem.
 Changes:
 
 - Initialized the local research directory as a Git worktree and connected it
-  to `https://github.com/xdzhu/vcneb`.
+  to `https://github.com/xdzhu/varneb`.
 - Pushed baseline commit `31b1b40` to `origin/main`.
 - Added `.gitignore` rules that keep DFT restart/output files, caches and
   generated workspaces out of the source repository.

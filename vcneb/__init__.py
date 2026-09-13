@@ -28,6 +28,7 @@ from .modes import (
     mode_guided_path,
     project_path_onto_modes,
 )
+from .executor import ImageEvaluation, ThreadedCalculatorExecutor
 
 __all__ = [
     "VCNEB",
@@ -52,4 +53,6 @@ __all__ = [
     "direction_basis_conflicts",
     "mode_guided_path",
     "project_path_onto_modes",
+    "ImageEvaluation",
+    "ThreadedCalculatorExecutor",
 ]
