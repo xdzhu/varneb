@@ -65,9 +65,9 @@
 - `27678218` 已完成（Slurm `COMPLETED`、`01:08:38`、exit `0`）：7 总帧（5 个 interior image）普通 VCNEB 在 FIRE `fmax_target=0.05 eV/A` 下达到 `final_max_generalized_force=0.0455156 eV/A`。最终正向焓垒 `0.1567509 eV`、反应焓 `-0.3252848 eV`，内部峰为 image 2（`has_interior_barrier=true`，未启用 CI）；manifest 共 96 条记录且每条只含 image 1--5，5 个 worker、每 worker 32 MPI，7 个 ABACUS image 目录无错误退出。
 - 远端 `scripts/audit_vcneb_result.py --max-min-distance 2.0` 审计返回 `status=ok`、`issues=[]`：最小路径距离 `2.026335 A`、最大形变 `0.04894`、几何有效；summary 记录 `endpoint_evaluation_policy=fixed_cached_once`，确认端点未在 VCNEB 迭代中重复派发。结果文件为 `vcneb_summary.json/.txt`、`vcneb.traj`、`vcneb_barrier.png`、snapshots 和 worker manifest。
 - 为补齐 HfO₂ 的 image-count 对照，已提交普通无 CI 作业 `27678406`（5 总帧=3 interior，1 节点×96 ranks）与 `27678407`（9 总帧=7 interior，2 节点×224 ranks）；两者均使用 100 Ry/10 au、32-MPI worker、固定端点一次缓存，独立工作目录分别为 `vcneb_n5_fire_distributed_cmp` 与 `vcneb_n9_fire_distributed_cmp`。
-- 截至 2026-09-14 01:19:08，`27678406` 已完成 step 14（`fmax=0.356388 eV/A`），`27678407` 已完成 step 8（`fmax=0.583065 eV/A`）；两条作业仍 RUNNING，manifest 分别只记录 `[1,2,3]` 与 `[1,2,3,4,5,6,7]`，ABACUS 错误计数均为 0。
+- 截至 2026-09-14 01:23:16，`27678406` 已完成 step 16（`fmax=0.336052 eV/A`），`27678407` 已完成 step 10（`fmax=0.521322 eV/A`）；两条作业仍 RUNNING，manifest 分别只记录 `[1,2,3]` 与 `[1,2,3,4,5,6,7]`，ABACUS 错误计数均为 0。
 - 由于 7-image 普通路径已达到真实内部峰且 `fmax<0.05 eV/A`，CI 精修作业 `27678507` 已提交：7 总帧/5 interior、2 节点×160 tasks、每 worker 32 MPI、`MAXSTEP=0.01`、`FMAX=0.03`、`CLIMB_AFTER=0`，从 `27678218` 的完整 `vcneb.traj` 恢复，工作目录为 `vcneb_n7_ci_refine`。该作业是首次真实 HfO₂ CI，不用于 BTO。
-- 截至同一检查，CI `27678507` 已完成 step 5（`fmax=0.069511 eV/A`），manifest 记录 5 个内部 image；当前仍 RUNNING、无错误 task。
+- 截至同一检查，CI `27678507` 已完成 step 7（`fmax=0.063926 eV/A`），manifest 记录 5 个内部 image；当前仍 RUNNING、无错误 task。
 
 ## 建议的新线程第一步
 
