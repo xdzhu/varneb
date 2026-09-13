@@ -84,6 +84,9 @@ first-order saddle character.
 - `scripts/compare_vcneb_images.py`: calculator-free comparison of completed
   5/7/9-image summaries, including shared calculator settings and explicit
   handling of consistent barrierless paths.
+- `scripts/export_vcneb_metrics.py`: export completed summary diagnostics to a
+  per-image CSV containing reaction coordinate, enthalpy, cell lengths/angles,
+  volume, stress and NEB force components for plotting or paper tables.
 - `docs/batio3_validation_protocol.md`: fixed BTO settings, image-count
   convergence gates, CI staging and recovery/archive requirements.
 - `tests/check_vcneb_forces.py`: finite-difference checks for force/stress transforms.

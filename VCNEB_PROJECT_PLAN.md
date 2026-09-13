@@ -147,7 +147,7 @@
 
 - [x] 固化最小 calculator 协议：输入结构、能量、原子力、应力/virial、单位和计算状态；新增 `vcneb.calculator` 预检与机器可读报告。
 - [x] 实现 calculator capability 检查：是否支持 stress、是否支持 variable cell、是否能返回每 image 独立目录；支持重复目录检测。
-- [ ] 将核心与 VASP/ABACUS 命令行、环境变量、MPI 命令完全隔离；命令 profile 只负责启动和结果解析。
+- [x] 核心只依赖 ASE energy/forces/stress contract；VASP/ABACUS 命令、环境变量和 MPI launcher 均由 adapter/profile 与 cluster wrapper 注入，核心不拼接或执行外部命令。
 - [x] 明确 stress 缺失时的行为：`run_vcneb()` 预检直接拒绝，不能静默把 cell force 当成零。
 - [x] 运行时 calculator 异常会保留 image 编号、目录和命令上下文，并由回归测试覆盖。
 - [x] 新增物理 HfO2 单 image ABACUS smoke 入口；已在集群完成真实 SCF、原子力和 stress 验证。
@@ -164,7 +164,7 @@
 - [x] 完成 STRU/KPT/INPUT 生成和结果解析；核对 stress 输出、单位和晶格方向，并提供参数化多 image 入口；HfO2 单 image 与 7-image ABACUS smoke 已通过。
 - [x] 已加入 native endpoint 只读闸门审计器 `scripts/audit_native_endpoint.py`，对退出码、收敛标志、原子数/化学计量、最大原子力和应力缺失或超阈值直接判定为证据不足。
 - [x] 已加入 `relax_abacus_endpoint.py`，使用 ASE `FrechetCellFilter` 完成 HfO2 两端点的低精度、宽松阈值独立原子/cell 弛豫 trial 并记录。
-- [ ] 验证 ABACUS 命令 profile、MPI 进程数、退出码、超时和 SCF 不收敛处理。
+- [~] ABACUS command profile、32-MPI worker 宽度、Slurm 退出码和真实生产作业已验证；超时与 SCF 不收敛的专用分类/重试策略仍待补齐。
 - [x] `run_vcneb()` 只依赖 ASE energy/forces/stress contract，VASP 与 ABACUS 示例通过替换 calculator factory 切换，核心路径参数不变。
 
 ### 7.4 可恢复运行
@@ -255,7 +255,7 @@
 
 - [x] 给出端点相对能量、最高 image/saddle 能量、正向能垒、反应焓和 cell 演化；反向路径尚待单独运行。
 - [x] 代码和 ABACUS driver 已支持给出最高 image 的残余原子广义力、cell 广义力/应力、真实力与弹簧力分解；HfO2 生产路径 summary 已记录最终数值。
-- [ ] 给出路径结构图、晶格参数/体积/剪切角曲线、关键键长和模式投影。
+- [~] summary 已可通过 `scripts/export_vcneb_metrics.py` 导出逐 image 反应坐标、焓、晶格长度/角度、体积、应力和 NEB 力 CSV；论文级路径结构图、关键键长和模式投影仍待补齐。
 - [x] 已用 7/9 总帧复算 HfO₂ 普通 VCNEB，并用可复现比较器报告能垒和离散峰位变化；两组结果均保留，不挑选更漂亮的一组。
 - [ ] 对自旋、磁性、电子占据、对称性破缺和可能的中间亚稳相做敏感性检查。
 
@@ -280,7 +280,7 @@
 - [x] 一个多模式非正交输入，证明正交化和投影结果与显式线性代数一致。
 - [x] 已加入解析势的 `projected` 约束搜索到全空间 release-and-refine 示例；真实材料对照仍待完成。
 - [ ] 一个真实材料案例，比较无约束、模式引导、严格模式约束和释放后精修。
-- [ ] 文档明确：约束路径得到的是受限路径上的鞍点，未必是全空间的一阶鞍点。
+- [x] `docs/theory.md` 和 README 明确约束路径得到的是受限路径上的鞍点，不能自动解释为全空间一阶鞍点。
 
 ## 11. P7：论文、软件包与发布
 
