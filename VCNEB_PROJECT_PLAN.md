@@ -239,7 +239,7 @@
 - [x] 已补做输入预检失败诊断和 `FIRE(maxstep=0.05)` 保守步长重试；预检在 ABACUS 启动前正确拒绝错误 basis 路径，重试仍在前七步出现残余力单调增长，因此暂停继续消耗 DFT 资源，转入路径/应力诊断。
 - [x] 已对最新完整重启轨迹做 7-image 零步静态力/应力诊断；image 2 的最大原子力/应力与 image 3 的最高焓错位，结果已进入 manifest，下一步优先改进机制路径。
 - [x] Level C：BTO 已完成 5/7/9 image、反向路径及 6³/1e-9 对照；方法迁移记录为后续 HfO₂ 规范，不重复 BTO 生产矩阵。
-- [x] Level A 的 model/低精度 DFT smoke、Level B 诊断 trial 与 HfO2 生产路径均已记录 Git 版本、节点、核数、输入、输出和结果摘要；Level C 的 HfO2 image-count/重复路径扩展仍待开展。
+- [x] Level A 的 model/低精度 DFT smoke、Level B 诊断 trial 与 HfO2 生产路径均已记录 Git 版本、节点、核数、输入、输出和结果摘要；HfO2 7-image CI 精修已完成并独立审计，9-image image-count 扩展仍在运行。
 
 ### 9.3 集群执行规范
 
@@ -261,7 +261,7 @@
 
 ### P5 出口标准
 
-- [~] HfO2 T->PO 已有一套 100 Ry/10 au、7 总帧/5 内部帧、可恢复且收敛的 ABACUS VCNEB 运行（job 27678218）；独立重复运行与 image-count 扩展仍待完成。
+- [~] HfO2 T->PO 已有一套 100 Ry/10 au、7 总帧/5 内部帧、可恢复且收敛的 ABACUS VCNEB 运行（job 27678218），并有 CI 精修（job 27678507，焓垒 `0.1291722 eV`）及独立审计；5-image 分支未收敛，9-image image-count 扩展仍待完成。
 - [x] BTO 已完成第二材料案例所需的最小验证矩阵、可恢复性、方向检查和结果归档。
 - [ ] 结果足以支撑论文中的“方法可用性”图表，但暂不把单个案例称为普适性证明。
 
