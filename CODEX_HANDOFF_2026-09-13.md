@@ -75,6 +75,7 @@
 - 代码工程化增量已在本地回归全通过并推送为 `31318f5`（功能主体 `0735990`）：新增可选 exact-state image cache、calculator namespace 锁定、原子 cache 写入、损坏条目回退以及 manifest 命中/未命中 provenance；远端源文件已同步，当前运行作业不受影响。
 - 后续工程化修复已提交：`ThreadedCalculatorExecutor` 在并发 batch 的某个 image 失败时仍收集并原子保存已完成 sibling image，随后再返回 batch 错误；新增恢复回归确认成功 image 不丢失、重启不重复计算，manifest 保留失败与后续 cache hit provenance。
 - `run_vcneb()` 现在可通过 `failure_report=` 原子写出 optimizer/calculator 中断报告（异常类型、已完成步数、trajectory/snapshot 位置和恢复提示），同时保持原异常继续抛出；对应回归已通过。line-search/ABACUS SCF 专用分类仍是未完成项。
+- `examples/run_vcneb_abacus.py` 与 `examples/run_vcneb_vasp.py` 已默认把该 failure report 写入各自 workdir 的 `vcneb_failure.json`，因此集群模板发生中断时可直接定位恢复入口。
 
 ## 建议的新线程第一步
 
