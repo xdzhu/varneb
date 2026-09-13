@@ -125,7 +125,7 @@
 - [x] 增加局部峰/内部势垒诊断：单调路径或内部峰低于端点时明确给出
   `has_interior_barrier=false` 和 `ci_warning`，避免把无势垒路径误报为过渡态。
 - [ ] 增加 line search 失败、calculator 异常、SCF 不收敛、NaN/Inf 和 cell 奇异的可恢复处理。
-- [ ] 设计 image 级缓存和原子写入；中断后可以从最近快照继续，且不会混用不同参数集的结果。
+- [x] 设计 image 级缓存和原子写入；中断后可以从最近快照继续，且不会混用不同参数集的结果；并发批次发生单 image 失败时，已完成的 sibling image 结果仍会先写入缓存。
 
 ### 6.3 严格模式子空间
 
@@ -179,7 +179,7 @@
 ### 出口标准
 
 - [x] VASP 与 ABACUS 各至少完成一个单 image smoke test；结果分别记录在 `outputs/vasp_gan_single_image_manifest.json` 和 `outputs/abacus_hfo2_smoke_manifest.json`。
-- [ ] 断开后恢复不会丢失已完成 image，也不会重复覆盖有效结果。
+- [x] 断开后恢复不会丢失已完成 image，也不会重复覆盖有效结果；新增失败批次恢复回归，确认成功 image 缓存可复用且 manifest 保留命中/失败 provenance。
 - [x] calculator 失败时错误信息包含 image 编号、输入目录和命令上下文；建议动作由上层 launcher 根据 calculator 类型补充。
 
 ## 8. P4：数值正确性与收敛验证

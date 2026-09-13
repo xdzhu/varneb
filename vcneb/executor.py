@@ -245,6 +245,7 @@ class ThreadedCalculatorExecutor:
 
         try:
             if missing_images:
+                failure: Exception | None = None
                 with ThreadPoolExecutor(
                     max_workers=min(self.max_workers, len(missing_images)),
                     thread_name_prefix="vcneb-image",
@@ -253,11 +254,28 @@ class ThreadedCalculatorExecutor:
                         pool.submit(evaluate_with_retry, image_index, image)
                         for image_index, image in missing_images
                     ]
+                    # Collect every future even after one image fails.  A
+                    # successful worker may already have completed useful DFT
+                    # work; persist that result before propagating the batch
+                    # failure so a restart can reuse it from the cache.
                     for (image_index, image), future in zip(missing_images, futures):
-                        result = future.result()
-                        cached[image_index] = result
-                        self._store_cached(image_index, image, result)
+                        try:
+                            result = future.result()
+                        except Exception as exc:
+                            if failure is None:
+                                failure = exc
+                        else:
+                            cached[image_index] = result
+                            self._store_cached(image_index, image, result)
+                if failure is not None:
+                    raise failure
         except Exception as exc:
+            record["cache_hits"] = sorted(
+                index for index in image_indices if self.last_attempts.get(index) == 0
+            )
+            record["cache_misses"] = [
+                index for index in image_indices if self.last_attempts.get(index, 0) > 0
+            ]
             record.update(
                 status="failed",
                 attempts=dict(sorted(self.last_attempts.items())),

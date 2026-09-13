@@ -437,6 +437,9 @@ records, the namespace is locked in `cache_metadata.json`, and the manifest
 records `cache_hits`/`cache_misses`.  Use a separate cache directory (or a
 distinct namespace) for different pseudopotentials, orbitals, cutoffs, k-meshes
 or SCF settings; the cache never overrides the fixed-endpoint policy.
+If one image fails in a concurrent batch, completed sibling images are still
+written to the cache before the batch error is returned, so a resumed job does
+not discard successful DFT work.
 The bundled ABACUS adapter also disables ASE's process-global `ase_sort.dat`
 write when the input atoms are already grouped by species (as in the BTO and
 HfO₂ fixtures).  This avoids a thread-level parser race; non-identity atom

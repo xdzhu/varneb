@@ -72,6 +72,7 @@
 - 9-image 普通无 CI 作业 `27678407` 已于 2026-09-14 04:30 左右正常完成（Slurm `COMPLETED`、`03:47:07`、exit `0`）：9 总帧/7 interior，最终 `fmax=0.0497191 eV/A`，正向焓垒 `0.1562092 eV`，反应焓 `-0.3252848 eV`，最高内部峰为 image 3。独立审计 `status=ok`、`issues=[]`，最小路径距离 `2.027974 A`、最大形变 `0.0496014`、最大应力 `5.38872 kbar`；manifest 207 条记录全为 `ok`，只含 image 1--7，7 个 worker、每 worker 32 MPI。
 - HfO₂ image-count 对照已归档于 `outputs/hfo2_t_to_po_pbe100_dzp10au/image_count_comparison.md`；收敛的普通 7/9-image 焓垒只差 `0.0005417 eV`（约 0.35%），但 5-image 分支未收敛，因此不纳入物理能垒比较。已从远端复制 7-image CI 与 9-image 普通路径的 summary、audit、preflight 和 worker manifest；完整 ABACUS scratch 仍保留在 hfacnormal01。
 - 代码工程化增量已在本地回归全通过并推送为 `31318f5`（功能主体 `0735990`）：新增可选 exact-state image cache、calculator namespace 锁定、原子 cache 写入、损坏条目回退以及 manifest 命中/未命中 provenance；远端源文件已同步，当前运行作业不受影响。
+- 后续工程化修复已提交：`ThreadedCalculatorExecutor` 在并发 batch 的某个 image 失败时仍收集并原子保存已完成 sibling image，随后再返回 batch 错误；新增恢复回归确认成功 image 不丢失、重启不重复计算，manifest 保留失败与后续 cache hit provenance。
 
 ## 建议的新线程第一步
 

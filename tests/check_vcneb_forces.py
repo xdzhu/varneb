@@ -1255,6 +1255,64 @@ def check_threaded_image_executor() -> None:
         else:
             raise SystemExit("image cache accepted a mismatched calculator namespace")
 
+        class AlwaysFailCalculator(Calculator):
+            implemented_properties = ["energy", "forces", "stress"]
+
+            def calculate(self, atoms=None, properties=("energy",), system_changes=all_changes):
+                super().calculate(atoms, properties, system_changes)
+                raise RuntimeError("intentional persistent image failure")
+
+        def zero_image(calculator):
+            image = Atoms("Ar", positions=[[0.0, 0.0, 0.0]], cell=np.eye(3) * 5.0, pbc=True)
+            image.calc = calculator
+            return image
+
+        successful_calculators = [
+            FailOnceCalculator(),
+            FailOnceCalculator(),
+        ]
+        # The first image fails permanently while the other two complete.
+        # Their cache records must survive the failed batch for a restart.
+        failed_batch = [zero_image(AlwaysFailCalculator())]
+        failed_batch.extend(zero_image(calc) for calc in successful_calculators)
+        recovery_manifest = Path(tmp) / "recovery-manifest.jsonl"
+        recovery_cache = Path(tmp) / "recovery-cache"
+        recovery_executor = ThreadedCalculatorExecutor(
+            max_workers=3,
+            max_retries=1,
+            manifest_path=recovery_manifest,
+            cache_dir=recovery_cache,
+            cache_namespace="recovery-test",
+        )
+        try:
+            recovery_executor.evaluate(failed_batch, indices=[0, 1, 2])
+        except RuntimeError:
+            pass
+        else:
+            raise SystemExit("failed image batch unexpectedly succeeded")
+        if len(list(recovery_cache.glob("image_*.npz"))) != 2:
+            raise SystemExit("successful image results were lost after a batch failure")
+
+        replacement = zero_image(FailOnceCalculator())
+        replacement.calc.reset()
+        failed_batch[0] = replacement
+        calls_before_restart = [calc.calls for calc in successful_calculators]
+        recovered = recovery_executor.evaluate(failed_batch, indices=[0, 1, 2])
+        if len(recovered) != 3:
+            raise SystemExit("recovery did not return all image evaluations")
+        if [calc.calls for calc in successful_calculators] != calls_before_restart:
+            raise SystemExit("recovery recomputed successful cached images")
+        recovery_records = [
+            json.loads(line) for line in recovery_manifest.read_text(encoding="utf-8").splitlines()
+        ]
+        if (
+            len(recovery_records) != 2
+            or recovery_records[0]["status"] != "failed"
+            or recovery_records[1]["status"] != "ok"
+            or recovery_records[1]["cache_hits"] != [1, 2]
+        ):
+            raise SystemExit("recovery manifest did not preserve successful image provenance")
+
 
 def check_abacus_command_profile_factory() -> None:
     original_module = sys.modules.get("ase.calculators.abacus")
