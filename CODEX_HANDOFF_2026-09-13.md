@@ -66,9 +66,9 @@
 - 远端 `scripts/audit_vcneb_result.py --max-min-distance 2.0` 审计返回 `status=ok`、`issues=[]`：最小路径距离 `2.026335 A`、最大形变 `0.04894`、几何有效；summary 记录 `endpoint_evaluation_policy=fixed_cached_once`，确认端点未在 VCNEB 迭代中重复派发。结果文件为 `vcneb_summary.json/.txt`、`vcneb.traj`、`vcneb_barrier.png`、snapshots 和 worker manifest。
 - 为补齐 HfO₂ 的 image-count 对照，已提交普通无 CI 作业 `27678406`（5 总帧=3 interior，1 节点×96 ranks）与 `27678407`（9 总帧=7 interior，2 节点×224 ranks）；两者均使用 100 Ry/10 au、32-MPI worker、固定端点一次缓存，独立工作目录分别为 `vcneb_n5_fire_distributed_cmp` 与 `vcneb_n9_fire_distributed_cmp`。
 - `27678406` 已连续运行到 step 50：step 36 的最佳 `fmax=0.098970 eV/A` 后连续 14 个完整 optimizer step 回弹至 `0.188661 eV/A`。这已超过约定的 3--5 步观察窗口，因此在保留原目录、51 个完整快照和 manifest 后于 2026-09-14 02:35 左右安全取消。受控续算 `27678689` 已从旧 `vcneb.traj` 的完整 step 36 在新目录 `vcneb_n5_fire_distributed_resume_best36` 启动，仍为 5 总帧/3 interior、1 节点×96 ranks、3×32 MPI、普通无 CI，只将 `MAXSTEP` 从 0.02 降为 0.005；预检已通过且未覆盖旧证据。该续算完成 step 10（`fmax=0.112725 eV/A`）后也呈连续缓慢上升，于 2026-09-14 03:01 左右安全取消；新目录保留 11 个完整快照，step 0/旧 step36 的 `0.098970 eV/A` 是该 5-image 分支最佳证据。结论是 5 总帧在当前 100 Ry/10 au、`k=0.2`、FIRE 路径下未收敛，不把它当作最终物理能垒。
-- 截至 2026-09-14 03:25 左右，`27678407` 已完成 step 47（`fmax=0.116211 eV/A`，从 step 0 持续下降），仍为 RUNNING；manifest 只记录 `[1,2,3,4,5,6,7]`，当前未见 ABACUS 错误 task。
+- 截至 2026-09-14 03:28 左右，`27678407` 已完成 step 48（`fmax=0.108068 eV/A`，从 step 0 持续下降），仍为 RUNNING；manifest 只记录 `[1,2,3,4,5,6,7]`，当前未见 ABACUS 错误 task。
 - 由于 7-image 普通路径已达到真实内部峰且 `fmax<0.05 eV/A`，CI 精修作业 `27678507` 已提交：7 总帧/5 interior、2 节点×160 tasks、每 worker 32 MPI、`MAXSTEP=0.01`、`FMAX=0.03`、`CLIMB_AFTER=0`，从 `27678218` 的完整 `vcneb.traj` 恢复，工作目录为 `vcneb_n7_ci_refine`。该作业是首次真实 HfO₂ CI，不用于 BTO。
-- 截至 2026-09-14 03:25 左右，CI `27678507` 已完成 step 67（`fmax=0.051203 eV/A`）；step 15--67 的回弹/平台窗口已连续观察，最佳仍为 step 31（`0.045168 eV/A`）附近，manifest 记录 5 个内部 image；当前仍 RUNNING、无错误 task。按约定不因单次回弹停止，待完整窗口或作业终止后再决定是否从最佳快照续算。
+- 截至 2026-09-14 03:28 左右，CI `27678507` 已完成 step 68（`fmax=0.051038 eV/A`）；step 15--68 的回弹/平台窗口已连续观察，最佳仍为 step 31（`0.045168 eV/A`）附近，manifest 记录 5 个内部 image；当前仍 RUNNING、无错误 task。按约定不因单次回弹停止，待完整窗口或作业终止后再决定是否从最佳快照续算。
 - 代码工程化增量已在本地回归全通过并推送为 `31318f5`（功能主体 `0735990`）：新增可选 exact-state image cache、calculator namespace 锁定、原子 cache 写入、损坏条目回退以及 manifest 命中/未命中 provenance；远端源文件已同步，当前运行作业不受影响。
 
 ## 建议的新线程第一步
