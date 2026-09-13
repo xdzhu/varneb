@@ -255,7 +255,7 @@
 
 - [x] 给出端点相对能量、最高 image/saddle 能量、正向能垒、反应焓和 cell 演化；BTO 反向 5-image 路径也已独立运行并归档，HfO2 反向路径仍未纳入当前主线。
 - [x] 代码和 ABACUS driver 已支持给出最高 image 的残余原子广义力、cell 广义力/应力、真实力与弹簧力分解；HfO2 生产路径 summary 已记录最终数值。
-- [~] summary 已可通过 `scripts/export_vcneb_metrics.py` 导出逐 image 反应坐标、焓、晶格长度/角度、体积、应力和 NEB 力 CSV；论文级路径结构图、关键键长和模式投影仍待补齐。
+- [~] summary 已可通过 `scripts/export_vcneb_metrics.py` 导出逐 image 反应坐标、焓、晶格长度/角度、体积、应力和 NEB 力 CSV；`scripts/plot_vcneb_metrics.py` 已生成论文级焓垒/晶格/体积/力四联图，关键键长和模式投影仍待补齐。
 - [x] 已用 7/9 总帧复算 HfO₂ 普通 VCNEB，并用可复现比较器报告能垒和离散峰位变化；两组结果均保留，不挑选更漂亮的一组。
 - [ ] 对自旋、磁性、电子占据、对称性破缺和可能的中间亚稳相做敏感性检查。
 

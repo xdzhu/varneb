@@ -29,6 +29,7 @@
 - `data/`：论文使用的汇总 CSV/JSON，不放入大体积 DFT restart 文件。
 - `reproduce/`：从 manifest 复现表格和图的脚本。
 - `claim_evidence.md`：将主稿件 claim 映射到代码、回归测试、作业和归档结果，并明确当前证据边界。
+- 根目录 `scripts/plot_vcneb_metrics.py`：只读取已归档的逐 image CSV，生成焓垒、晶格长度、体积和广义力四联图；不重新调用计算器。
 
 ## 当前编译
 
