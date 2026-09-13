@@ -97,6 +97,7 @@
 - 已新增 `outputs/legacy_vcneb_comparison.md`：基于历史迭代日志记录旧实现的可证实差异和 MIC 失败模式；旧目录当前不可访问，定量同条件 benchmark 明确保留为未完成。
 - 已新增 `scripts/plot_vcneb_metrics.py` 与 `tests/check_vcneb_plot.py`：从已归档的逐 image CSV 生成焓垒、晶格、体积和广义力四联图；回归通过，未调用任何 DFT 计算器。
 - 新增 `tests/test_regression_scripts.py` 作为 pytest 收集入口，复用全部 `tests/check_*.py` 脚本；`python -m pytest -q` 已通过 `10 passed`，未启动 DFT。
+- 新增 `examples/mode_template.json` 及 `tests/check_mode_template.py`，提供可复制的原子/可选 cell 模式 JSON 模板；回归入口现为 `11 passed`，仍不启动 DFT。
 - 27678924 的线性 cell 插值对照已完成：Slurm `COMPLETED`、耗时 `01:51:16`、exit `0`，step 51 达到 `final_max_generalized_force=0.0495087 eV/A`；正向焓垒 `0.1596772 eV`、反应焓 `-0.3252848 eV`、最高内部峰 image 2。独立审计 `status=ok`、`issues=[]`，最小距离 `2.028435 A`、最大形变 `0.0496212`、最大应力 `3.88299 kbar`；manifest 共 159 条、全部 `ok`，只含 interior `[1,2,3,4,5]`、5 workers/32 MPI，端点策略 `fixed_cached_once`。结果已复制到 `outputs/hfo2_t_to_po_pbe100_dzp10au/vcneb_n7_fire_distributed_linear_job27678924/`。
 - 新增 `--allow-duplicate-image-counts` 及插值/优化器字段到 `scripts/compare_vcneb_images.py`，并以回归覆盖同一 image 数的 variant 比较。HfO₂ linear 7-image 与 log-strain 7/9-image 的报告为 `outputs/hfo2_t_to_po_pbe100_dzp10au/cell_interpolation_comparison.json`：barrier spread `0.0034680 eV`、最高峰反应坐标 spread `0.04639`、状态 `ok`；linear 相对 log-strain 7-image 高 `0.0029263 eV`。metrics CSV 和四联图也已生成。
 

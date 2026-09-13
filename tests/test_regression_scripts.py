@@ -19,6 +19,7 @@ CHECK_SCRIPTS = (
     "check_abacus_parallel_sort.py",
     "check_hfo2_endpoint_promotion.py",
     "check_image_comparison.py",
+    "check_mode_template.py",
     "check_native_abacus_driver.py",
     "check_native_endpoint_audit.py",
     "check_release_metadata.py",

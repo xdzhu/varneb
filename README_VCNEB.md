@@ -60,6 +60,7 @@ first-order saddle character.
 - `[unit] examples/run_toy_vcneb.py`: analytic smoke test with a known 0.25 eV barrier.
 - `[model] examples/run_hfo2_t_po_model_vcneb.py`: mapped 12-atom HfO2 T -> PO geometry smoke test with a synthetic endpoint double-well calculator.
 - `[model] examples/compare_initial_cell_paths.py`: calculator-free comparison of linear and logarithmic-strain initial paths for any ASE-readable endpoint pair (defaults to HfO2); supports `--mapping auto`.
+- `examples/mode_template.json`: copy-and-edit JSON template for an atomic mode plus an optional cell deformation mode.
 - `[production-template] examples/run_vcneb_vasp.py`: VASP driver based on the existing endpoint layout.
 - `[model] examples/run_fixed_cell_ase_comparison.py`: ASE CINEB versus fixed-cell VCNEB comparison.
 - `[DFT-smoke] examples/run_vasp_single_image_smoke.py`: real VASP energy/force/stress smoke driver.

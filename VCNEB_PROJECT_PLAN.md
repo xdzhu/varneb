@@ -299,13 +299,13 @@
 - [x] 已完成最小安装烟测（wheel 安装、toy VCNEB、CLI 帮助）；API/adapter/故障排查内容已并入 README 与 validation protocol。
 - [x] GitHub About 与 `pyproject.toml` 的 Summary 已统一为 `VARiable-cell Nudged Elastic Band code with universal first-frinciples calculators`；已发布的 PyPI `0.0.1` 不可覆盖，下一次发布必须递增版本号，workflow 会把新简介写入 wheel/sdist。
 - [ ] 将核心测试放入持续集成；真实 DFT 作为可选的集群复现实验，不要求 CI 内运行（尚未按要求开启 GitHub CI）。
-- [ ] 提供最小可运行案例、HfO2 案例输入模板、模式文件模板和结果解析脚本。
+- [x] 提供最小可运行案例、HfO2 案例输入模板、模式文件模板和结果解析脚本。
 - [~] 干净环境安装与从快照恢复测试已通过；干净节点运行仍以 HfO2 100 Ry/10au 端点和后续路径为最后验收项。
 
 ### 论文/发布出口标准
 
 - [~] 论文主要 claim 已在 `paper/claim_evidence.md` 映射到代码、测试、输入摘要和结果文件；正式投稿图表与完整原始输出发布包仍待补。
-- [ ] 新用户不阅读内部源码，仅按 README 就能完成 toy、model 和至少一个 calculator smoke test。
+- [x] 新用户不阅读内部源码，仅按 README 就能完成 toy、model 和至少一个 calculator smoke test。
 - [ ] 代码、数据和论文中使用的参数一致；没有手工修改但未记录的结果。
 
 ## 12. 立即执行顺序
