@@ -174,7 +174,7 @@
 - [x] 并发 executor 支持显式 per-image retry；fail-once 回归确认只重算失败 image。
 - [x] 已加入 image-worker JSONL manifest（每个控制器 evaluation batch 记录状态、耗时、重试次数和失败信息），并加入 `--resume-step`/`RESUME_STEP` 精确恢复完整 chain snapshot；`ThreadedCalculatorExecutor` 现在支持可选的跨作业 exact-state image cache、namespace 锁定、原子写入、命中/未命中 provenance 和损坏条目回退。
 - [x] 已提供 `validate_vcneb_inputs.py` dry-run、ABACUS `--validate-only`、VASP/ABACUS single-image smoke，以及 `--n-images` 路径入口；发布前元数据回归也已加入。
-- [x] 生成机器可读的 summary JSON 和人类可读的文本摘要；CSV/Markdown 汇总仍作为发布增强项。
+- [x] 生成机器可读的 summary JSON、人类可读的文本摘要，以及由 `scripts/export_vcneb_metrics.py` 导出的逐 image CSV；论文级图表仍作为发布增强项。
 
 ### 出口标准
 
