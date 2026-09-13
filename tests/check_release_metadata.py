@@ -24,6 +24,7 @@ def main() -> None:
     assert _project_field(pyproject, "name") == "varneb"
     assert re.fullmatch(r"\d+\.\d+\.\d+", _project_field(pyproject, "version"))
     assert _project_field(pyproject, "description") == EXPECTED_DESCRIPTION
+    assert _project_field(pyproject, "license") == "GPL-3.0-or-later"
 
     workflow = (ROOT / ".github" / "workflows" / "publish-pypi.yml").read_text(
         encoding="utf-8"
