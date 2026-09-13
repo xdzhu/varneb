@@ -1797,6 +1797,10 @@ def run_vcneb(
     used for that many completed optimizer steps before the climbing-image
     force is enabled.  This prevents a noisy initial path from selecting a
     wrong climbing image too early.
+
+    If ``failure_report`` is supplied, optimizer/calculator exceptions are
+    recorded atomically with the completed-step count and recovery locations
+    before the original exception is propagated.
     """
 
     if climb_after is not None:
