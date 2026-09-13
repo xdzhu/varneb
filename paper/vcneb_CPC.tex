@@ -49,7 +49,9 @@ comparison, and a release-and-refine mode workflow validate the implementation.
 A mapped 12-atom HfO$_2$ tetragonal-to-polar-orthorhombic case demonstrates the
 cluster workflow: ordinary seven- and nine-image paths agree to
 $5.42\times10^{-4}$~eV in barrier height, and a seven-image climbing-image
-refinement gives a $0.1292$~eV barrier.  A BaTiO$_3$ tetragonal-to-cubic matrix
+refinement gives a $0.1292$~eV barrier.  A same-resolution linear-cell control
+changes the ordinary seven-image barrier by only $0.00293$~eV while retaining
+the same interior peak.  A BaTiO$_3$ tetragonal-to-cubic matrix
 is barrierless for five, seven, and nine total images, so a CI refinement is
 withheld by the stated gate.  VCNEB is intended as an open, reproducible
 software foundation for variable-cell transition-state studies rather than as
@@ -338,7 +340,12 @@ restart state for a climbing-image refinement; after an extended rebound and
 plateau observation window, it reached 0.02955~eV/\AA and a CI barrier of
 0.1291722~eV.  All completed paths passed the endpoint, cell, distance, and
 trajectory audits.  A five-total-image branch was retained as a deliberately
-under-resolved, non-converged control and was not used to report a barrier.
+under-resolved, non-converged control and was not used to report a barrier.  To
+probe the cell metric independently of image count, a seven-total-image
+linear-cell control (job 27678924) used the same endpoints and calculator
+settings.  It converged to 0.04951~eV/\AA and a 0.1596772~eV barrier, only
+0.0029263~eV above the logarithmic-strain seven-image path; the combined
+linear/logarithmic comparison had no geometry or peak-location failure.
 
 \subsection{BaTiO$_3$ endpoint and production variable-cell matrix}
 
@@ -374,6 +381,7 @@ Analytic CI double well & $0.250000$ eV barrier & Passed \\
 ASE fixed-cell comparison & $9.33\times10^{-6}$ eV difference & Passed \\
 Release and refine & $0.286000\rightarrow0.250044$ eV & Passed \\
 HfO$_2$ ordinary, 7 total images & $0.1567509$ eV barrier & Audited \\
+HfO$_2$ linear-cell control, 7 total images & $0.1596772$ eV barrier & Audited \\
 HfO$_2$ ordinary, 9 total images & $0.1562092$ eV barrier & Audited \\
 HfO$_2$ CI, 7 total images & $0.1291722$ eV barrier & Audited \\
 BaTiO$_3$ ordinary, 5/7/9 total images & barrierless; $+0.0871289$ eV reaction & Audited \\
@@ -398,7 +406,9 @@ a transition barrier.  The HfO$_2$ image-count comparison supports seven total
 images for the reported ordinary barrier, while the five-image control remains
 explicitly non-converged.  The BaTiO$_3$ matrix shows why endpoint mapping,
 fixed endpoint caching, and independent stress-aware relaxation belong in the
-standard workflow.
+standard workflow.  The linear-cell control quantifies a separate
+parameterization sensitivity rather than being folded into the image-count
+error.
 
 The repository is available at
 \url{https://github.com/xdzhu/varneb}.  It contains the source package, tests,

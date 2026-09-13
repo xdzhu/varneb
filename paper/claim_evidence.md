@@ -15,6 +15,7 @@ manifest, trajectory summary, and independent audit are available.
 | Exact-state caching and restart preserve successful sibling work after a failed batch | vcneb/executor.py; tests/check_vcneb_forces.py cache/recovery regressions | Per-run image_worker_manifest.jsonl and snapshot directories |
 | Failure reports are atomic and classify recoverable failure classes conservatively | vcneb/core.py, vcneb/calculator.py; tests/check_vcneb_forces.py failure-report/classification regressions | vcneb_failure.json emitted by the ABACUS/VASP examples on interruption |
 | HfO2 ordinary 7/9-image paths provide an image-count check | scripts/compare_vcneb_images.py, scripts/export_vcneb_metrics.py; tests/check_image_comparison.py, tests/check_vcneb_metrics.py | outputs/hfo2_t_to_po_pbe100_dzp10au/hfo2_validation_provenance.json, image_count_comparison.md, ordinary_image_comparison.json; jobs 27678218 and 27678407 |
+| HfO2 cell interpolation sensitivity is separated from image-count convergence | scripts/compare_vcneb_images.py (`--allow-duplicate-image-counts`); tests/check_image_comparison.py | outputs/hfo2_t_to_po_pbe100_dzp10au/cell_interpolation_comparison.json; job 27678924 and archived linear-cell manifest |
 | HfO2 CI refinement is only run after a real ordinary interior peak and survives a rebound window | run_vcneb staged-CI semantics; docs/theory.md | outputs/hfo2_t_to_po_pbe100_dzp10au/vcneb_n7_ci_refine_job27678507/; job 27678507 |
 | BaTiO3 T-to-C is barrierless for the tested image counts | tests/check_vcneb_audit.py; scripts/export_vcneb_metrics.py | outputs/batio3_t_to_c_pbe100_dzp10au/bto_validation_provenance.json, bto_convergence_matrix.md; CI gate is explicitly withheld |
 | Public package metadata and release policy are deliberate | pyproject.toml, .github/workflows/publish-pypi.yml; tests/check_release_metadata.py | Isolated python -m build produces varneb-0.0.1; the next description update requires a new version because PyPI releases are immutable |
@@ -25,5 +26,5 @@ The HfO2 and BaTiO3 production evidence is an ABACUS/PBE family, not a
 universality proof. VASP is currently validated at single-image smoke-test
 level only. A five-total-image HfO2 control was deliberately retained as
 non-converged and is not used to quote a barrier. The independent linear-cell
-interpolation job 27678924 remains a sensitivity comparison until it reaches a
-terminal state and passes the same audit.
+interpolation job 27678924 is a completed, audited sensitivity comparison and
+is not folded into the image-count spread.
