@@ -31,6 +31,33 @@ from .executor import ImageEvaluation
 Array = np.ndarray
 
 
+def _calculator_diagnostic_paths(images: Sequence[Atoms]) -> list[Path]:
+    """Return existing tails worth reading when an external calculator fails."""
+
+    relative_names = (
+        Path("OUT.ABACUS") / "running_scf.log",
+        Path("running_scf.log"),
+        Path("OUTCAR"),
+        Path("vasp.out"),
+        Path("vasp.err"),
+        Path("stdout"),
+        Path("stderr"),
+    )
+    paths: list[Path] = []
+    seen: set[Path] = set()
+    for image in images:
+        directory = getattr(getattr(image, "calc", None), "directory", None)
+        if directory is None:
+            continue
+        root = Path(directory)
+        for relative in relative_names:
+            path = root / relative
+            if path.is_file() and path not in seen:
+                seen.add(path)
+                paths.append(path)
+    return paths
+
+
 @dataclass
 class VCNEBState:
     """Extended coordinates for one image.
@@ -1866,10 +1893,14 @@ def run_vcneb(
             traj.close()
             traj = None
         if failure_report is not None:
+            diagnostic_paths = _calculator_diagnostic_paths(chain.images)
             payload = {
                 "status": "failed",
                 "error_type": type(exc).__name__,
-                "failure_category": classify_calculator_failure(exc),
+                "failure_category": classify_calculator_failure(
+                    exc,
+                    diagnostic_paths=diagnostic_paths,
+                ),
                 "error": str(exc),
                 "optimizer": str(optimizer),
                 "optimizer_steps_completed": int(getattr(opt, "nsteps", 0)),
@@ -1877,6 +1908,7 @@ def run_vcneb(
                 "n_images": len(chain.images),
                 "trajectory": str(trajectory) if trajectory is not None else None,
                 "snapshot_dir": str(snapshot_dir) if snapshot_dir is not None else None,
+                "diagnostic_paths": [str(path) for path in diagnostic_paths],
                 "recovery_hint": (
                     "Inspect the preserved trajectory/snapshots, correct the calculator or "
                     "optimizer settings, then resume from the latest complete chain snapshot."

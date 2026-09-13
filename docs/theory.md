@@ -367,6 +367,7 @@ on calculator/optimizer error:
 `climb_after` 是已完成普通 NEB step 的整数计数；设置为 `0` 表示第一轮即启用
 CI，默认 `None` 表示由 `climb` 直接决定。生产路径仍建议先普通 NEB，再 CI；
 `failure_report` 只控制异常报告位置，不会吞掉 calculator/optimizer 异常。
-报告中的 `failure_category` 是基于错误文本的保守分类，不能替代读取 ABACUS/VASP
-原始 stdout；其中 `scf_nonconvergence`、`timeout` 和 `mpi_failure` 应优先检查外部
-作业日志与退出码后再决定重试参数。
+报告中的 `failure_category` 是基于错误文本和显式 calculator 目录下日志尾部的保守分类；
+实现最多读取每个指定日志的最后 64 KiB，不会扫描整个输出树，也不能替代完整的
+ABACUS/VASP stdout。`scf_nonconvergence`、`timeout` 和 `mpi_failure` 仍应结合外部作业
+日志与退出码后再决定重试参数；当前实现不自动执行 line-search 重试。

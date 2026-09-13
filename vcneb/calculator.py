@@ -209,7 +209,39 @@ def calculator_context(calculator: object) -> str:
     return ", ".join(details)
 
 
-def classify_calculator_failure(error: BaseException) -> str:
+def _diagnostic_text(paths: Iterable[str | Path], *, max_bytes: int = 65536) -> str:
+    """Read bounded tails of calculator logs for failure classification.
+
+    External calculator exceptions often contain only a generic non-zero exit
+    message.  Reading at most the final 64 KiB of explicitly supplied files
+    gives the classifier useful ABACUS/VASP evidence without loading a large
+    output tree or changing calculator state.
+    """
+
+    chunks: list[str] = []
+    seen: set[Path] = set()
+    for raw_path in paths:
+        path = Path(raw_path)
+        if path in seen or not path.is_file():
+            continue
+        seen.add(path)
+        try:
+            with path.open("rb") as handle:
+                handle.seek(0, 2)
+                size = handle.tell()
+                handle.seek(max(0, size - max_bytes))
+                data = handle.read(max_bytes)
+            chunks.append(f"{path}: {data.decode(errors='replace')}")
+        except OSError:
+            continue
+    return " ".join(chunks)
+
+
+def classify_calculator_failure(
+    error: BaseException,
+    *,
+    diagnostic_paths: Iterable[str | Path] = (),
+) -> str:
     """Return a stable recovery category for calculator/optimizer failures.
 
     ASE adapters wrap external-process diagnostics in distribution-specific
@@ -224,16 +256,32 @@ def classify_calculator_failure(error: BaseException) -> str:
         seen.add(id(current))
         parts.append(str(current))
         current = current.__cause__ or current.__context__
-    text = " ".join(parts).lower()
+    text = (" ".join(parts) + " " + _diagnostic_text(diagnostic_paths)).lower()
     if re.search(r"\b(?:nan|inf|infinity|nonfinite|non-finite)\b", text) or "not finite" in text:
         return "nonfinite_evaluation"
     if any(token in text for token in ("timeout", "timed out", "time limit", "deadline")):
         return "timeout"
-    if "mpi" in text or "srun" in text or "mpirun" in text:
+    if (
+        "mpi" in text
+        or "srun" in text
+        or "mpirun" in text
+        or "mpi_abort" in text
+        or "abort was invoked" in text
+    ):
         return "mpi_failure"
-    if "scf" in text and any(token in text for token in ("converg", "not converge", "failed")):
+    scf_failure = (
+        re.search(r"\bscf\b.{0,100}(?:not|failed|fail|unable|did not).{0,40}converg", text)
+        or re.search(r"\bscf\b.{0,100}(?:max(?:imum)?\s+iteration|iteration\s+\d+)", text)
+        or re.search(r"(?:not|failed|unable|did not).{0,40}converg.{0,40}\bscf\b", text)
+    )
+    if scf_failure:
         return "scf_nonconvergence"
-    if any(token in text for token in ("singular", "determinant", "invalid cell", "non-positive volume")):
+    if (
+        "singular cell" in text
+        or "invalid cell" in text
+        or "non-positive volume" in text
+        or re.search(r"\bcell\b.{0,40}\bdeterminant\b.{0,40}(?:non[- ]?positive|invalid|zero|negative)", text)
+    ):
         return "invalid_cell"
     return "calculator_or_optimizer_error"
 

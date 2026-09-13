@@ -1096,6 +1096,14 @@ def check_failure_classification() -> None:
     for message, expected in cases.items():
         if classify_calculator_failure(RuntimeError(message)) != expected:
             raise SystemExit(f"failure category mismatch for {message!r}")
+    with tempfile.TemporaryDirectory(prefix="vcneb-failure-log-") as tmp:
+        log = Path(tmp) / "running_scf.log"
+        log.write_text("ABACUS SCF iteration 150 did not converge\n", encoding="utf-8")
+        if classify_calculator_failure(RuntimeError("ABACUS exited with code 1"), diagnostic_paths=[log]) != "scf_nonconvergence":
+            raise SystemExit("ABACUS SCF log was not used for failure classification")
+        log.write_text("overlap determinant is negative; retrying basis\n", encoding="utf-8")
+        if classify_calculator_failure(RuntimeError("calculator failed"), diagnostic_paths=[log]) != "calculator_or_optimizer_error":
+            raise SystemExit("unrelated determinant text was misclassified as invalid cell")
 
 
 def check_optimizer_api_shapes() -> None:

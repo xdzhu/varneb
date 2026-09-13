@@ -124,7 +124,7 @@
 - [x] 将“普通 NEB 松弛后再 CI”固化为 `run_vcneb(climb_after=N)`，并加入折返线段 cosine 诊断及硬拒绝选项。
 - [x] 增加局部峰/内部势垒诊断：单调路径或内部峰低于端点时明确给出
   `has_interior_barrier=false` 和 `ci_warning`，避免把无势垒路径误报为过渡态。
-- [~] calculator 异常、NaN/Inf、非法 cell、SCF/超时/MPI 关键词现在会保留带 `failure_category` 和恢复提示的 failure report；并发 image 失败批次会保留已完成 sibling 结果。line-search 自动重试和基于 ABACUS 原始 stdout 的专用分类仍待补齐。
+- [~] calculator 异常、NaN/Inf、非法 cell、SCF/超时/MPI 关键词现在会保留带 `failure_category` 和恢复提示的 failure report；失败时会读取显式 calculator 目录下有限长度的 ABACUS/VASP 日志尾部来补充分类，并发 image 失败批次会保留已完成 sibling 结果。line-search 自动重试仍待补齐。
 - [x] 设计 image 级缓存和原子写入；中断后可以从最近快照继续，且不会混用不同参数集的结果；并发批次发生单 image 失败时，已完成的 sibling image 结果仍会先写入缓存。
 
 ### 6.3 严格模式子空间
@@ -164,7 +164,7 @@
 - [x] 完成 STRU/KPT/INPUT 生成和结果解析；核对 stress 输出、单位和晶格方向，并提供参数化多 image 入口；HfO2 单 image 与 7-image ABACUS smoke 已通过。
 - [x] 已加入 native endpoint 只读闸门审计器 `scripts/audit_native_endpoint.py`，对退出码、收敛标志、原子数/化学计量、最大原子力和应力缺失或超阈值直接判定为证据不足。
 - [x] 已加入 `relax_abacus_endpoint.py`，使用 ASE `FrechetCellFilter` 完成 HfO2 两端点的低精度、宽松阈值独立原子/cell 弛豫 trial 并记录。
-- [~] ABACUS command profile、32-MPI worker 宽度、Slurm 退出码和真实生产作业已验证；超时与 SCF 不收敛的专用分类/重试策略仍待补齐。
+- [~] ABACUS command profile、32-MPI worker 宽度、Slurm 退出码和真实生产作业已验证；超时与 SCF 不收敛现有专用日志分类，自动重试策略仍待补齐。
 - [x] `run_vcneb()` 只依赖 ASE energy/forces/stress contract，VASP 与 ABACUS 示例通过替换 calculator factory 切换，核心路径参数不变。
 
 ### 7.4 可恢复运行
