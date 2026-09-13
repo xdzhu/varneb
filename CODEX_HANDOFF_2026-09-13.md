@@ -92,10 +92,11 @@
 
 - 论文草稿已同步到当前生产证据并提交为 `e7d315a`：HfO2 普通 7/9-image、CI（含延长回弹观察）和 BaTiO3 5/7/9-image barrierless 矩阵均已写入；Program Summary 固定为 GPL-3.0-or-later、包版本 0.0.1。LaTeX 编译 exit 0（6 页）；输出 PDF 为本地生成物，未作为源码结果提交。
 - 隔离环境 `python -m build` 已成功生成 `varneb-0.0.1` sdist/wheel，包内 `METADATA` 的 Summary 与 GitHub About 完全一致；许可证已改为 SPDX `GPL-3.0-or-later` 并保留 `LICENSE` 文件，不再触发旧式 license table 弃用警告。
+- 当前 PyPI 上已存在的 `varneb==0.0.1` 仍显示发布时的旧 Summary；PyPI 不允许覆盖同版本文件，因此新的 GitHub About 只会在下一次递增版本（例如 `0.0.2`）并按需触发 Trusted Publishing 后生效。本轮未打 tag、未触发发布；`tests/check_release_metadata.py` 与隔离构建均已确认新 Summary 会进入 wheel/sdist。
 - 已新增 `outputs/hfo2_t_to_po_pbe100_dzp10au/error_budget_and_efficiency.md`，分开记录 image-count、CI 路径选择、端点残差、电子精度和资源效率，避免把不同物理/数值因素合并成单一误差条。
 - 已新增 `outputs/legacy_vcneb_comparison.md`：基于历史迭代日志记录旧实现的可证实差异和 MIC 失败模式；旧目录当前不可访问，定量同条件 benchmark 明确保留为未完成。
 - 已新增 `scripts/plot_vcneb_metrics.py` 与 `tests/check_vcneb_plot.py`：从已归档的逐 image CSV 生成焓垒、晶格、体积和广义力四联图；回归通过，未调用任何 DFT 计算器。
-- 27678924 的线性 cell 插值对照仍在运行：截至本轮已完成 step 31，fmax 从 0.965655 降至 0.197843 eV/A，连续下降；最新 manifest 仍只记录 interior image 1--5 且无失败。必须继续观察多个完整 step，完成后再与 log-strain 7/9-image 结果比较，不因单次回弹提前取消，也不在该分支启动 CI。
+- 27678924 的线性 cell 插值对照仍在运行：截至本轮已完成 step 34，fmax 从 0.965655 降至 0.174412 eV/A，连续下降；最新 manifest 仍只记录 interior image 1--5 且无失败。必须继续观察多个完整 step，完成后再与 log-strain 7/9-image 结果比较，不因单次回弹提前取消，也不在该分支启动 CI。
 
 ## 建议的新线程第一步
 
