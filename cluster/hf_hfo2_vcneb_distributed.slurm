@@ -39,6 +39,9 @@ spring=${SPRING:-0.2}
 optimizer=${OPTIMIZER:-FIRE}
 maxstep=${MAXSTEP:-0.02}
 climb_after=${CLIMB_AFTER:-100}
+cell_interpolation=${CELL_INTERPOLATION:-log_strain}
+mapping=${MAPPING:-auto}
+align_translation=${ALIGN_TRANSLATION:-1}
 ecutwfc=${ECUTWFC:-100}
 scf_thr=${SCF_THR:-1e-8}
 scf_nmax=${SCF_NMAX:-150}
@@ -72,6 +75,14 @@ if (( required_nodes > SLURM_JOB_NUM_NODES )); then
   echo "worker nodes exceed allocation: ${required_nodes} > ${SLURM_JOB_NUM_NODES}" >&2
   exit 2
 fi
+case "${cell_interpolation}" in
+  linear|log_strain) ;;
+  *) echo "CELL_INTERPOLATION must be linear or log_strain" >&2; exit 2 ;;
+esac
+case "${mapping}" in
+  identity|auto) ;;
+  *) echo "MAPPING must be identity or auto" >&2; exit 2 ;;
+esac
 
 module purge
 source "${env_script}"
@@ -102,6 +113,11 @@ if [[ -n "${image_cache_dir}" ]]; then
   fi
 fi
 
+path_args=(--mic --cell-interpolation "${cell_interpolation}" --mapping "${mapping}")
+if [[ "${align_translation}" != 0 ]]; then
+  path_args+=(--align-translation)
+fi
+
 # --nodes=1 is essential: without it Slurm may spread a 32-rank image worker
 # over both nodes, destroying the intended interior-image concurrency.
 worker_command="srun --exclusive --nodes=1 --ntasks=${image_mpi} --ntasks-per-node=${image_mpi} --cpus-per-task=1 --distribution=block:block --mpi=pmix_v3 ${abacus}"
@@ -121,7 +137,7 @@ exec "${python}" examples/run_vcneb_abacus.py \
   --basis O=O_gga_10au_100Ry_2s2p1d.orb \
   --ecutwfc "${ecutwfc}" --scf-thr "${scf_thr}" --scf-nmax "${scf_nmax}" \
   --mixing-beta "${mixing_beta}" --kpts "${kpt_x}" "${kpt_y}" "${kpt_z}" \
-  --mic --cell-interpolation log_strain --mapping auto --align-translation \
+  "${path_args[@]}" \
   --minimum-distance 1.6 --maximum-deformation 0.25 \
   --climb-after "${climb_after}" \
   "${cache_args[@]}" \

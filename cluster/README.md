@@ -110,6 +110,11 @@ the one-node four-worker template remains useful for smoke tests and limited
 allocations.  `--nodes=1` on each worker step is intentional: it prevents a
 single 32-rank image calculation from being split across both nodes.
 
+The production default is `CELL_INTERPOLATION=log_strain`; to perform an
+independent initial-path check without changing the endpoints, set
+`CELL_INTERPOLATION=linear` and use a distinct `WORKDIR`.  `MAPPING=auto` and
+`ALIGN_TRANSLATION=1` remain the default audited endpoint gauge.
+
 Do not request `--exclusive` for these small tests.  For the 12-atom HfO2
 fixture, after endpoint relaxations complete, a staged no-climb preconvergence
 run is:
