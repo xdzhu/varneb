@@ -1,5 +1,15 @@
 # VC-NEB Iteration Log
 
+## VARNEB 0.0.1 release workflow (`2026-09-13`)
+
+- `pyproject.toml` and `vcneb/version.py` now report `0.0.1`; the wheel builds
+  as `varneb-0.0.1-py3-none-any.whl`.
+- Added `.github/workflows/publish-pypi.yml` using GitHub OIDC Trusted
+  Publishing. It runs only for an explicit `v*` tag, a published Release, or a
+  manually confirmed `publish=true` dispatch; ordinary pushes do not publish.
+- Commit `35c0dbb` and tag `v0.0.1` were pushed to `xdzhu/varneb`. PyPI
+  visibility remains pending the repository's Trusted Publisher registration.
+
 ## VARNEB repository rename (`2026-09-13`)
 
 - Upstream repository is now `https://github.com/xdzhu/varneb`; local `origin`
