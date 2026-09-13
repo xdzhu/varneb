@@ -448,7 +448,8 @@ directory-local sort file.
 For reproducible recovery from a known complete snapshot, combine
 `--resume --resume-step N` with `--resume-trajectory`; negative `N` counts from
 the end and `-1` means the latest complete chain.
-Library callers can pass `failure_report=PATH` to `run_vcneb()`; if an optimizer
+The bundled VASP and ABACUS drivers write `vcneb_failure.json` in their work
+directory on such an interruption.  Library callers can pass `failure_report=PATH` to `run_vcneb()`; if an optimizer
 or calculator exception interrupts the run, an atomically written JSON report
 records the exception, completed optimizer steps, and the trajectory/snapshot
 locations to use for recovery.  The original exception is still propagated.

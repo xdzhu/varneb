@@ -93,6 +93,7 @@ def main() -> None:
         trajectory=traj_path,
         trajectory_mode="a" if args.resume and resume_path == traj_path and traj_path.exists() else "w",
         snapshot_dir=workdir / "snapshots",
+        failure_report=workdir / "vcneb_failure.json",
     )
 
     for image_index, image in enumerate(chain.images):
