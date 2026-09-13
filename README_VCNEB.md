@@ -363,6 +363,9 @@ only complete `n_images` frame groups and ignores an interrupted partial tail.
 When appending to an existing run, snapshot files under `snapshots/` continue
 from the next available `step_####` / `chain_step_####.traj` index.
 
+Here `n_images` is the total chain length, including both fixed endpoints; for
+example, `--n-images 7` means five optimizable interior images.
+
 Before launching VASP, run a dry static check:
 
 ```bash
@@ -414,7 +417,9 @@ in an atomically updated `vcneb_summary.json`; resuming does not overwrite the
 original `initial-vcneb.traj`.
 
 For image-level concurrency, pass `--image-workers N`.  The controller remains
-one Python process and evaluates up to `N` independent calculators concurrently;
+one Python process and evaluates up to `N` independent interior calculators
+concurrently; fixed endpoints are evaluated once and reused for the remainder
+of that run.  Thus a seven-image run normally uses five workers, not seven.
 on Slurm the calculator command must use `srun --exclusive`, and the allocation
 must provide `N` times the MPI width requested by one calculator.  The default
 is `0` (serial images), so ordinary runs retain the reference execution path.
