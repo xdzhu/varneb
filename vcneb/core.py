@@ -8,6 +8,7 @@ calculator that can provide energy, forces, and stress can be used.
 from __future__ import annotations
 
 from dataclasses import dataclass
+import inspect
 import os
 from pathlib import Path
 import tempfile
@@ -1182,9 +1183,17 @@ class VCNEB:
         indices = [int(index) for index in indices]
         if any(index < 0 or index >= self.n_images for index in indices):
             raise IndexError("image index is outside the VC-NEB chain")
-        raw = self.image_executor.evaluate(
-            [self.images[index] for index in indices], indices=indices
-        )
+        selected = [self.images[index] for index in indices]
+        evaluate = self.image_executor.evaluate
+        try:
+            parameters = inspect.signature(evaluate).parameters
+            supports_indices = "indices" in parameters or any(
+                parameter.kind is inspect.Parameter.VAR_KEYWORD
+                for parameter in parameters.values()
+            )
+        except (TypeError, ValueError):
+            supports_indices = True
+        raw = evaluate(selected, indices=indices) if supports_indices else evaluate(selected)
         if len(raw) != len(indices):
             raise ValueError(
                 f"image executor returned {len(raw)} evaluations for {len(indices)} images"

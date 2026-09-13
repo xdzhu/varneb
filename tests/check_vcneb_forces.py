@@ -1166,6 +1166,17 @@ def check_threaded_image_executor() -> None:
         raise SystemExit(f"executor batch did not stay interior-only: {recording_executor.batches}")
     if any(threaded_chain._endpoint_evaluations[index] is not endpoint_cache[index] for index in (0, 3)):
         raise SystemExit("fixed endpoint evaluations were not reused")
+
+    class LegacyExecutor:
+        """Pre-subset executor API: evaluate(images) only."""
+
+        def evaluate(self, images):
+            return ThreadedCalculatorExecutor(max_workers=2).evaluate(images)
+
+    legacy_chain = VCNEB(build_images(), k=0.15, climb=False, image_executor=LegacyExecutor())
+    legacy_forces = legacy_chain.get_forces()
+    if not np.allclose(legacy_forces, serial_forces, rtol=1e-11, atol=1e-11):
+        raise SystemExit("legacy image executor API lost VC-NEB force compatibility")
     if diagnostics["n_images"] != 4 or not all(np.isfinite(record["enthalpy_eV"]) for record in diagnostics["images"]):
         raise SystemExit("threaded image executor produced invalid diagnostics")
 
