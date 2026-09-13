@@ -75,6 +75,7 @@
 - 新增 `outputs/hfo2_t_to_po_pbe100_dzp10au/hfo2_validation_provenance.json`，集中记录 12 原子端点、100 Ry/10 au、32-MPI worker 资源、5/7/9-image 与 CI 作业 ID、结果和本地/远端 artifact 位置。
 - 已从 7/9-image 完成 summary 导出逐 image `vcneb_metrics.csv`，包含反应坐标、焓、晶格长度/角度、体积、应力和 NEB 力分解，可直接用于结构—能量图和论文表格。
 - 项目计划的 DoD 已按现有证据更新：有限差分/ASE 对照、解析模型、VASP/ABACUS smoke、ABACUS 生产路径、HfO₂/BTO 收敛矩阵和纯 Python 最小案例均已勾选；真实材料模式约束、论文 claim 映射、VASP 生产级路径和更完整敏感性仍未完成。
+- USPEX/ABINIT 语义对照条目也已按既有 `outputs/uspex_vcneb_mode_analysis.md` 证据勾选；旧 `/home/zhuxd/abacus/8.dielec/vcneb` 的可复现实验结果对比仍未宣称完成。
 - 在检查 hfacnormal01 负载（`10454` idle CPUs）后，已提交 HfO₂ 独立初始路径对照 `27678924`：7 总帧/5 interior、100 Ry/10 au、5×32 MPI/2 nodes、普通无 CI，唯一改变为 `CELL_INTERPOLATION=linear`（默认生产路径为 `log_strain`），工作目录 `vcneb_n7_fire_distributed_linear`；预检已返回 `status=ok`。等待其完成后与 7/9-image log-strain 结果比较。
 - 为修复共享目录无 `.git` 时 provenance 的 `git_revision=null`，ABACUS driver 现在优先读取 `VCNEB_GIT_REVISION`，分布式模板也将其导出（未提供时记录 `remote-sync-unknown`）；后续提交任务应在 `--export` 中显式带当前源码 commit。
 - 代码工程化增量已在本地回归全通过并推送为 `31318f5`（功能主体 `0735990`）：新增可选 exact-state image cache、calculator namespace 锁定、原子 cache 写入、损坏条目回退以及 manifest 命中/未命中 provenance；远端源文件已同步，当前运行作业不受影响。

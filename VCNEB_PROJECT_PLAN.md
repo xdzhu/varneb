@@ -95,7 +95,7 @@
 - [x] 模式引导、`projected` 更新和 `subspace` 硬约束已在 API 与 `docs/theory.md` 中分层命名和说明。
 - [x] 已定义模式在 Cartesian/fractional/扩展空间中的转换、归一化、多模式正交化与质量加权输入处理；严格动力学质量度量的进一步验证仍单列。
 - [x] 已支持原子方向 mask/投影矩阵，并在文档中区分方向约束与冻结原子。
-- [ ] 调研并记录 ABINIT GeoConstraints/directional constraints 的可复用语义，但不把 ABINIT 输入格式强行暴露给核心 API。
+- [x] `outputs/uspex_vcneb_mode_analysis.md` 已记录 ABINIT `iatfix/iatfixx/iatfixy/iatfixz` 与线性组合约束语义，并明确不把 ABINIT 输入格式暴露给核心 API。
 - [x] 已固定“先投影广义力，再做 NEB 切向/弹簧分解”的顺序，并由模式投影与有限差分回归验证。
 
 ### 出口标准
@@ -204,7 +204,7 @@
 
 - [x] 固定 cell：与 ASE NEB/CINEB 在同一 calculator、同一端点和同一 image 数下比较；解析模型逐 image 能量一致，能垒差为 9.33e-6 eV。
 - [x] 变胞：依据 Qian 等 VCNEB 论文的广义坐标、cell 力和弹簧思想完成首轮逐项对照；有限变形 stress measure 和大应变差异仍需补充。
-- [ ] 依据 USPEX VCNEB 公开手册对比输入语义和用户流程；不声称复现其内部实现，因为当前获得的安装包不含可审计源码。
+- [x] `outputs/uspex_vcneb_mode_analysis.md` 已依据公开 USPEX VCNEB 手册对比输入语义/用户流程，并明确安装包无可审计源码、不声称复现内部实现。
 - [ ] 对比旧 `/home/zhuxd/abacus/8.dielec/vcneb` 实现的结果和失败模式，保留可复现实验而非凭印象判断。
 
 ### 8.4 收敛矩阵
