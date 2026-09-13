@@ -31,6 +31,8 @@ image_workers=${IMAGE_WORKERS:-${n_interior}}
 image_mpi=${IMAGE_MPI:-32}
 node_capacity=${TASKS_PER_NODE:-128}
 image_retries=${IMAGE_RETRIES:-0}
+image_cache_dir=${IMAGE_CACHE_DIR:-}
+image_cache_namespace=${IMAGE_CACHE_NAMESPACE:-}
 steps=${STEPS:-300}
 fmax=${FMAX:-0.05}
 spring=${SPRING:-0.2}
@@ -92,6 +94,14 @@ if [[ "${RESUME:-0}" != 0 ]]; then
   fi
 fi
 
+cache_args=()
+if [[ -n "${image_cache_dir}" ]]; then
+  cache_args+=(--image-cache-dir "${image_cache_dir}")
+  if [[ -n "${image_cache_namespace}" ]]; then
+    cache_args+=(--image-cache-namespace "${image_cache_namespace}")
+  fi
+fi
+
 # --nodes=1 is essential: without it Slurm may spread a 32-rank image worker
 # over both nodes, destroying the intended interior-image concurrency.
 worker_command="srun --exclusive --nodes=1 --ntasks=${image_mpi} --ntasks-per-node=${image_mpi} --cpus-per-task=1 --distribution=block:block --mpi=pmix_v3 ${abacus}"
@@ -114,4 +124,5 @@ exec "${python}" examples/run_vcneb_abacus.py \
   --mic --cell-interpolation log_strain --mapping auto --align-translation \
   --minimum-distance 1.6 --maximum-deformation 0.25 \
   --climb-after "${climb_after}" \
+  "${cache_args[@]}" \
   "${climb_args[@]}" "${resume_args[@]}"

@@ -428,6 +428,15 @@ calculator must be restart-safe in its per-image directory when this is enabled.
 Parallel runs append `image_worker_manifest.jsonl` (or the path supplied by
 `--image-manifest`) after each controller evaluation batch, including status,
 elapsed time and per-image attempt counts.
+For recoveries that should reuse an exactly identical interior-image state,
+pass `--image-cache-dir CACHE` and, when the calculator settings are shared,
+`--image-cache-namespace NAME`.  Cache keys include the image index, species,
+Cartesian positions, cell and PBC flags byte-for-byte; any coordinate or cell
+change is a cache miss.  Entries are written atomically as compressed NumPy
+records, the namespace is locked in `cache_metadata.json`, and the manifest
+records `cache_hits`/`cache_misses`.  Use a separate cache directory (or a
+distinct namespace) for different pseudopotentials, orbitals, cutoffs, k-meshes
+or SCF settings; the cache never overrides the fixed-endpoint policy.
 The bundled ABACUS adapter also disables ASE's process-global `ase_sort.dat`
 write when the input atoms are already grouped by species (as in the BTO and
 HfO₂ fixtures).  This avoids a thread-level parser race; non-identity atom

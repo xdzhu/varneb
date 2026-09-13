@@ -1211,6 +1211,38 @@ def check_threaded_image_executor() -> None:
         if len(records) != 1 or records[0]["status"] != "ok" or records[0]["attempts"] != {"0": 2}:
             raise SystemExit("threaded image executor did not persist retry manifest")
 
+        cache_manifest = Path(tmp) / "cache-manifest.jsonl"
+        cache_dir = Path(tmp) / "image-cache"
+        cache_executor = ThreadedCalculatorExecutor(
+            max_workers=1,
+            manifest_path=cache_manifest,
+            cache_dir=cache_dir,
+            cache_namespace="test-ecutwfc-100",
+        )
+        retry_calc.reset()
+        calls_before_cache = retry_calc.calls
+        cache_executor.evaluate([retry_image])
+        calls_after_miss = retry_calc.calls
+        cache_executor.evaluate([retry_image])
+        if calls_after_miss != calls_before_cache + 1 or retry_calc.calls != calls_after_miss:
+            raise SystemExit("image cache did not avoid a repeated calculator evaluation")
+        if cache_executor.last_attempts.get(0) != 0:
+            raise SystemExit("image cache hit was not recorded as zero calculator attempts")
+        cache_records = [json.loads(line) for line in cache_manifest.read_text(encoding="utf-8").splitlines()]
+        if (
+            len(cache_records) != 2
+            or cache_records[0]["cache_misses"] != [0]
+            or cache_records[1]["cache_hits"] != [0]
+            or cache_records[1]["cache_misses"] != []
+        ):
+            raise SystemExit("image cache hit/miss provenance was not persisted")
+        try:
+            ThreadedCalculatorExecutor(max_workers=1, cache_dir=cache_dir, cache_namespace="wrong-settings")
+        except ValueError:
+            pass
+        else:
+            raise SystemExit("image cache accepted a mismatched calculator namespace")
+
 
 def check_abacus_command_profile_factory() -> None:
     original_module = sys.modules.get("ase.calculators.abacus")

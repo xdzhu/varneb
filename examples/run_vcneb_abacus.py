@@ -136,6 +136,16 @@ def parse_args() -> argparse.Namespace:
         default=None,
         help="append one JSONL record per controller image-evaluation batch",
     )
+    parser.add_argument(
+        "--image-cache-dir",
+        default=None,
+        help="optional durable cache directory for exact image energy/force/stress evaluations",
+    )
+    parser.add_argument(
+        "--image-cache-namespace",
+        default=None,
+        help="calculator-parameter namespace recorded with --image-cache-dir",
+    )
     return parser.parse_args()
 
 
@@ -203,6 +213,8 @@ def _run_metadata(args: argparse.Namespace, workdir: Path) -> dict:
         "image_workers": int(args.image_workers),
         "image_retries": int(args.image_retries),
         "image_manifest": str(args.image_manifest) if args.image_manifest else None,
+        "image_cache_dir": str(args.image_cache_dir) if args.image_cache_dir else None,
+        "image_cache_namespace": args.image_cache_namespace,
     }
 
 
@@ -307,6 +319,8 @@ def main() -> None:
             args.image_workers,
             max_retries=args.image_retries,
             manifest_path=image_manifest,
+            cache_dir=args.image_cache_dir,
+            cache_namespace=args.image_cache_namespace,
         )
         if args.image_workers
         else None

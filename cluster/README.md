@@ -75,6 +75,13 @@ width.  The parallel template is opt-in; the ordinary template remains the
 serial-image reference for reproducibility and debugging.
 Each parallel run also writes an image-worker JSONL manifest under its work
 directory, so failed workers and retries remain visible beyond Slurm stdout.
+For exact-state recovery across a new work directory, set
+`IMAGE_CACHE_DIR=/path/to/image-cache` and optionally
+`IMAGE_CACHE_NAMESPACE=ecut100-dzp10au-k2x2x2-scf1e-8`.  The cache is keyed by
+image index plus exact species/positions/cell/PBC bytes, rejects a namespace
+mismatch, and records hits/misses in the worker manifest.  Keep one cache
+namespace per calculator parameter set; it is opt-in and does not replace the
+fixed endpoint cache in the VCNEB controller.
 For ASE's ABACUS adapter, keep atoms grouped by species in the input order;
 the project patch suppresses the otherwise process-global `ase_sort.dat` for
 this identity ordering, preventing concurrent parser races.  Use the serial

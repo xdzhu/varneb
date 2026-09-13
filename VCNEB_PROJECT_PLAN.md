@@ -172,7 +172,7 @@
 - [x] driver 已支持保存 manifest、每 image 结构、energy、force、stress、cell 指标、真实/弹簧/NEB 力分解和收敛指标；每轮广义切线仍作为后续增强项。
 - [x] 已加入可选 image-level 并发执行器；主控制器通过独立 Slurm job steps 并发 image calculator，真实 BTO `27675909` 完成 4×32 MPI smoke 并生成正常 summary/trajectory。
 - [x] 并发 executor 支持显式 per-image retry；fail-once 回归确认只重算失败 image。
-- [~] 已加入 image-worker JSONL manifest（每个控制器 evaluation batch 记录状态、耗时、重试次数和失败信息），并加入 `--resume-step`/`RESUME_STEP` 精确恢复完整 chain snapshot；跨作业 image 级缓存仍待补齐。
+- [x] 已加入 image-worker JSONL manifest（每个控制器 evaluation batch 记录状态、耗时、重试次数和失败信息），并加入 `--resume-step`/`RESUME_STEP` 精确恢复完整 chain snapshot；`ThreadedCalculatorExecutor` 现在支持可选的跨作业 exact-state image cache、namespace 锁定、原子写入、命中/未命中 provenance 和损坏条目回退。
 - [ ] 增加 dry-run、validate-only、single-image 和 N-image smoke test 命令。
 - [x] 生成机器可读的 summary JSON 和人类可读的文本摘要；CSV/Markdown 汇总仍作为发布增强项。
 
