@@ -47,13 +47,13 @@
 
 - PO 续算 `27677874`/`27677918` 已完成，最终 `fmax=0.0004973 eV/A`、最大应力 `0.07076 kbar`；T/PO 均为 12 原子 `Hf4O8` conventional cell，已由 `endpoint_promotion_gate.json` 原子晋级。
 - 7-image calculator-free preflight 已通过：最小距离 `2.02496 A`、最大 deformation `0.04841`，无折返；所有 image 的 ABACUS 计算器能力检查通过。
-- 原普通 HfO₂ 作业 `27677945` 因并行解析竞态失败；修复后的续算作业 `27678004` 仍在 `node50` RUNNING：128-task controller allocation，4 个并行 image worker，每 worker 32 MPI；100 Ry、Orb-DZP-10au、2x2x2、FIRE、无 CI。续算已推进至 step 6，当前 `fmax=0.514160 eV/A`，只属于预收敛过程。
+- 原普通 HfO₂ 作业 `27677945` 因并行解析竞态失败；修复后的续算作业 `27678004` 仍在 `node50` RUNNING：128-task controller allocation，4 个并行 image worker，每 worker 32 MPI；100 Ry、Orb-DZP-10au、2x2x2、FIRE、无 CI。续算已推进至 step 12，当前 `fmax=0.379974 eV/A`，只属于预收敛过程。
 
 ## 并行恢复修复（最新）
 
 - `27677945` 后续因 ASE-ABACUS 的进程级 `ase_sort.dat` 竞态在 image 3 解析失败；已保留 step 2 链快照、manifest 和错误日志，未把该作业当作物理失败。
 - `vcneb/abacus.py` 已加入 identity species-order 的安全补丁，并新增 `tests/check_abacus_parallel_sort.py`；远程 ICU 测试通过。旧全局 `ase_sort.dat` 已移到 `.stale_job27677945`。
-- 修复后的续算作业 `27678004` 已从 step 2 恢复，128 task / 4×32 MPI / no-CI 配置不变；截至 22:32 的 step 6 正常完成，当前没有解析警告或错误。
+- 修复后的续算作业 `27678004` 已从 step 2 恢复，128 task / 4×32 MPI / no-CI 配置不变；截至 step 12 的完整批次均正常完成，当前没有解析警告或错误。
 
 ## 建议的新线程第一步
 
