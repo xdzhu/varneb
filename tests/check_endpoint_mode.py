@@ -9,7 +9,9 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from vcneb import Mode
+from ase.io import read
+
+from vcneb import Mode, VCNEB, build_mode_basis, interpolate_vcneb
 from scripts.derive_endpoint_mode import derive_endpoint_mode
 
 
@@ -23,9 +25,24 @@ def main() -> None:
         raise SystemExit("endpoint mode dimensions are invalid")
     if payload["semantics"] != "endpoint displacement diagnostic; not a phonon eigenvector":
         raise SystemExit("endpoint mode semantics were not recorded")
-    Mode(payload["atomic"], cell=payload["cell"])
+    mode = Mode(payload["atomic"], cell=payload["cell"])
     if payload["mapping"] is None or len(payload["mapping"]) != 12:
         raise SystemExit("endpoint mode mapping metadata is missing")
+    first = read(initial)
+    last = read(final)
+    images = interpolate_vcneb(
+        first,
+        last,
+        n_images=7,
+        align_cells=True,
+        mic=True,
+        mapping="auto",
+        align_translation=True,
+    )
+    basis = build_mode_basis(mode, images[0])
+    chain = VCNEB(images, mode_basis=basis, constraint_mode="subspace")
+    if chain.constraint_mode != "subspace" or basis.shape != (45, 1):
+        raise SystemExit("endpoint mode did not produce a strict 12-atom subspace")
     print("endpoint_mode_regression=ok")
 
 

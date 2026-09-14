@@ -22,7 +22,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from vcneb import interpolate_vcneb
-from vcneb.core import deformation_from_cell
+from vcneb.core import state_from_atoms
 
 
 def derive_endpoint_mode(
@@ -48,7 +48,8 @@ def derive_endpoint_mode(
     )
     first, last = images
     reference_cell = first.cell.array
-    deformation = deformation_from_cell(last.cell.array, reference_cell)
+    first_state = state_from_atoms(first, reference_cell)
+    last_state = state_from_atoms(last, reference_cell)
     payload = {
         "label": "endpoint-displacement-diagnostic",
         "semantics": "endpoint displacement diagnostic; not a phonon eigenvector",
@@ -58,8 +59,10 @@ def derive_endpoint_mode(
         "translation_fractional_final_cell": first.info.get("vcneb_path_metadata", {}).get(
             "translation_fractional_final_cell"
         ),
-        "atomic": (last.positions - first.positions).tolist(),
-        "cell": (deformation - np.eye(3)).tolist(),
+        "atomic": (
+            last_state.q @ reference_cell - first_state.q @ reference_cell
+        ).tolist(),
+        "cell": (last_state.deform - first_state.deform).tolist(),
         "source": {
             "initial": str(Path(initial_path).resolve()),
             "final": str(Path(final_path).resolve()),
