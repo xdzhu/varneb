@@ -17,6 +17,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 CHECK_SCRIPTS = (
     "check_abacus_parallel_sort.py",
+    "check_endpoint_mode.py",
     "check_hfo2_endpoint_promotion.py",
     "check_image_comparison.py",
     "check_geometry_metrics.py",
