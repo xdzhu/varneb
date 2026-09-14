@@ -952,6 +952,28 @@ Verification:
 - Local `py_compile` static check passed for the modified Python modules.
 - Full regression execution is reserved for `235 -> cu05` per the cluster-only calculation policy.
 
+## 2026-09-14 14:05 +08:00
+
+Focus: HfO2 T->PO real-material mode-guided, unconstrained VCNEB mechanism check.
+
+- Job `27679830` completed normally on `hfacnormal01` (2 nodes; five concurrent
+  32-MPI interior-image workers; 4:17:47 wall time; Slurm exit `0:0`).
+- It used the production ABACUS contract: 100 Ry, Hf/O 10 au DZP orbitals,
+  2x2x2 k mesh, `scf_thr=1e-8`, log-strain interpolation, and fixed cached
+  endpoints.  The endpoint-displacement vector was used for *initial-path*
+  guidance only; the subsequent NEB remained unconstrained.
+- At the 120-step cap, the run had a valid interior peak at image 2 but was not
+  converged: final generalized force `0.15452670 eV/A` versus the `0.05 eV/A`
+  target.  Its provisional forward enthalpy barrier (`0.06276200 eV`) must not
+  be reported as a converged result.
+- The independent completed-result audit passed all geometry checks: minimum
+  periodic distance `2.035416 A`, maximum deformation `0.0490254 < 0.25`, and
+  maximum image stress `4.33742 kbar`; its sole failure was the force threshold.
+- A separate static Slurm validation job, `27683186`, was submitted for a
+  recoverable continuation from complete step 43 (the best observed force,
+  `0.096890 eV/A`) with `maxstep=0.003 A`; it is intentionally a preflight,
+  not an additional DFT result.
+
 ## 2026-06-21 08:29 +08:00
 
 Focus: harden ABACUS static validation against disabled required VC-NEB outputs.
