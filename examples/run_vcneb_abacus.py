@@ -62,7 +62,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--scf-nmax", type=int, default=None)
     parser.add_argument("--mixing-beta", type=float, default=None)
     parser.add_argument("--kpts", type=int, nargs=3, default=None, metavar=("NX", "NY", "NZ"))
-    parser.add_argument("--optimizer", choices=["FIRE", "BFGS", "LBFGS"], default="FIRE")
+    parser.add_argument(
+        "--optimizer",
+        choices=["FIRE", "BFGS", "LBFGS", "BFGSLineSearch"],
+        default="FIRE",
+    )
     parser.add_argument(
         "--maxstep",
         type=float,
@@ -145,6 +149,18 @@ def parse_args() -> argparse.Namespace:
         "--image-cache-namespace",
         default=None,
         help="calculator-parameter namespace recorded with --image-cache-dir",
+    )
+    parser.add_argument(
+        "--line-search-retries",
+        type=int,
+        default=0,
+        help="bounded retries for ASE BFGSLineSearch failures only",
+    )
+    parser.add_argument(
+        "--line-search-retry-factor",
+        type=float,
+        default=0.5,
+        help="step-cap factor applied to each line-search retry",
     )
     return parser.parse_args()
 
@@ -337,6 +353,8 @@ def main() -> None:
         image_executor=image_executor,
         optimizer=args.optimizer,
         optimizer_kwargs={} if args.maxstep is None else {"maxstep": args.maxstep},
+        line_search_retries=args.line_search_retries,
+        line_search_retry_factor=args.line_search_retry_factor,
         fmax=args.fmax,
         steps=args.steps,
         logfile=workdir / "vcneb.opt.log",
@@ -368,6 +386,8 @@ def main() -> None:
         "initial_path_geometry": initial_geometry,
         "initial_path_metadata": images[0].info.get("vcneb_path_metadata", {}),
         "optimizer": args.optimizer,
+        "line_search_retries": args.line_search_retries,
+        "line_search_retry_factor": args.line_search_retry_factor,
         "steps_requested": args.steps,
         "fmax_target_eV_per_A": args.fmax,
         "final_max_generalized_force_eV_per_A": max_force,

@@ -43,7 +43,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--steps", type=int, default=300)
     parser.add_argument("--k", type=float, default=0.10)
     parser.add_argument("--pressure-gpa", type=float, default=0.0)
-    parser.add_argument("--optimizer", choices=["FIRE", "BFGS", "LBFGS"], default="FIRE")
+    parser.add_argument(
+        "--optimizer",
+        choices=["FIRE", "BFGS", "LBFGS", "BFGSLineSearch"],
+        default="FIRE",
+    )
+    parser.add_argument("--line-search-retries", type=int, default=0)
+    parser.add_argument("--line-search-retry-factor", type=float, default=0.5)
     parser.add_argument("--vasp-bin", default=os.environ.get("VASP_BIN", "vasp_std"))
     parser.add_argument("--ncores", type=int, default=int(os.environ.get("NP", "8")))
     parser.add_argument("--mic", action="store_true")
@@ -87,6 +93,8 @@ def main() -> None:
         k=args.k,
         climb=not args.no_climb,
         optimizer=args.optimizer,
+        line_search_retries=args.line_search_retries,
+        line_search_retry_factor=args.line_search_retry_factor,
         fmax=args.fmax,
         steps=args.steps,
         logfile=workdir / "vcneb.opt.log",

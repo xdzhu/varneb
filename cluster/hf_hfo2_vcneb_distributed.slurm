@@ -38,6 +38,8 @@ fmax=${FMAX:-0.05}
 spring=${SPRING:-0.2}
 optimizer=${OPTIMIZER:-FIRE}
 maxstep=${MAXSTEP:-0.02}
+line_search_retries=${LINE_SEARCH_RETRIES:-0}
+line_search_retry_factor=${LINE_SEARCH_RETRY_FACTOR:-0.5}
 climb_after=${CLIMB_AFTER:-100}
 cell_interpolation=${CELL_INTERPOLATION:-log_strain}
 mapping=${MAPPING:-auto}
@@ -130,6 +132,8 @@ exec "${python}" examples/run_vcneb_abacus.py \
   --steps "${steps}" --k "${spring}" --optimizer "${optimizer}" \
   --maxstep "${maxstep}" --image-workers "${image_workers}" \
   --image-retries "${image_retries}" \
+  --line-search-retries "${line_search_retries}" \
+  --line-search-retry-factor "${line_search_retry_factor}" \
   --image-manifest "${workdir}/image_worker_manifest.jsonl" \
   --command "${worker_command}" \
   --pseudo-dir "${pseudo_dir}" --basis-dir "${basis_dir}" \

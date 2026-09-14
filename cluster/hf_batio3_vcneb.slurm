@@ -22,6 +22,8 @@ fmax=${FMAX:-0.03}
 spring=${SPRING:-0.2}
 optimizer=${OPTIMIZER:-FIRE}
 maxstep=${MAXSTEP:-0.02}
+line_search_retries=${LINE_SEARCH_RETRIES:-0}
+line_search_retry_factor=${LINE_SEARCH_RETRY_FACTOR:-0.5}
 climb_after=${CLIMB_AFTER:-100}
 ecutwfc=${ECUTWFC:-100}
 scf_thr=${SCF_THR:-1e-8}
@@ -71,7 +73,9 @@ exec "${python}" examples/run_vcneb_abacus.py \
   --final "validation/batio3_cubic_to_tetragonal/endpoint_relax_${final_endpoint}_${endpoint_tag}/CONTCAR" \
   --workdir "${workdir}" --n-images "${n_images}" --fmax "${fmax}" \
   --steps "${steps}" --k "${spring}" --optimizer "${optimizer}" \
-  --maxstep "${maxstep}" --command "srun --mpi=pmix_v3 -n ${SLURM_NTASKS} ${abacus}" \
+  --maxstep "${maxstep}" --line-search-retries "${line_search_retries}" \
+  --line-search-retry-factor "${line_search_retry_factor}" \
+  --command "srun --mpi=pmix_v3 -n ${SLURM_NTASKS} ${abacus}" \
   --pseudo-dir "${pseudo_dir}" --basis-dir "${basis_dir}" \
   --pp Ba=Ba.upf --pp Ti=Ti.upf --pp O=O.upf \
   --basis Ba=Ba_gga_10au_100Ry_4s2p1d.orb \
