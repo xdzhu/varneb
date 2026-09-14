@@ -48,7 +48,7 @@ def _write_json_atomic(path: Path, payload: dict) -> None:
 
 
 DEFAULT_PSEUDO_DIR = "/home/zhuxd/abacus/PSEUDO/ABACUS-orbitals/Dojo-NC-FR/Pseudopotential"
-DEFAULT_BASIS_DIR = "/home/zhuxd/abacus/PSEUDO/ABACUS-orbitals/Dojo-NC-FR/selected_Orbs"
+DEFAULT_BASIS_DIR = "/home/zhuxd/abacus/PSEUDO/ABACUS-orbitals/Dojo-NC-FR/Orb-DZP-10au"
 DEFAULT_COMMAND = os.environ.get("ABACUS_COMMAND", "abacus")
 
 
@@ -73,11 +73,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--basis-dir", default=os.environ.get("ABACUS_ORBITAL_PATH"))
     parser.add_argument("--pp", action="append", default=[], metavar="SPECIES=FILE")
     parser.add_argument("--basis", action="append", default=[], metavar="SPECIES=FILE")
-    parser.add_argument("--ecutwfc", type=float, default=60.0)
-    parser.add_argument("--scf-thr", type=float, default=1e-6)
-    parser.add_argument("--scf-nmax", type=int, default=100)
-    parser.add_argument("--mixing-beta", type=float, default=0.7)
-    parser.add_argument("--kpts", type=int, nargs=3, default=[1, 1, 1], metavar=("NX", "NY", "NZ"))
+    parser.add_argument("--ecutwfc", type=float, default=100.0)
+    parser.add_argument("--scf-thr", type=float, default=1e-8)
+    parser.add_argument("--scf-nmax", type=int, default=150)
+    parser.add_argument("--mixing-beta", type=float, default=0.3)
+    parser.add_argument("--kpts", type=int, nargs=3, default=[2, 2, 2], metavar=("NX", "NY", "NZ"))
     parser.add_argument("--fmax", type=float, default=0.05)
     parser.add_argument(
         "--stress-kbar",

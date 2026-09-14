@@ -422,7 +422,8 @@ used with a different calculator configuration:
 - `basis_dir`
 - spin, smearing, van der Waals, and convergence settings
 
-For example, the HfO2 Dojo-FR setup on the shared cluster uses:
+For a production HfO2 setup on the shared cluster, use the same 100-Ry,
+full 10-au DZP policy as the archived high-accuracy paths:
 
 ```bash
 python examples/run_vcneb_abacus.py \
@@ -431,11 +432,11 @@ python examples/run_vcneb_abacus.py \
   --workdir validation/hfo2_t_to_po/abacus_vcneb_smoke \
   --command "srun -n ${SLURM_NTASKS:-8} /home/zhuxd/Software/abacus/INSTALL/3.10.0-LTS/bin/abacus" \
   --pseudo-dir /home/zhuxd/abacus/PSEUDO/ABACUS-orbitals/Dojo-NC-FR/Pseudopotential \
-  --basis-dir /home/zhuxd/abacus/PSEUDO/ABACUS-orbitals/Dojo-NC-FR/selected_Orbs \
+  --basis-dir /home/zhuxd/abacus/PSEUDO/ABACUS-orbitals/Dojo-NC-FR/Orb-DZP-10au \
   --pp Hf=Hf.upf --pp O=O.upf \
-  --basis Hf=Hf_gga_7au_100Ry_4s2p2d1f.orb \
-  --basis O=O_gga_7au_100Ry_2s2p1d.orb \
-  --ecutwfc 60 --kpts 1 1 1
+  --basis Hf=Hf_gga_10au_100Ry_4s2p2d1f.orb \
+  --basis O=O_gga_10au_100Ry_2s2p1d.orb \
+  --ecutwfc 100 --kpts 2 2 2 --scf-thr 1e-8
 ```
 
 The driver enforces `cal_force=1`, `cal_stress=1`, and `out_stru=1`, which are

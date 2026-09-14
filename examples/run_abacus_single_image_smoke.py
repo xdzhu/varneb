@@ -2,7 +2,8 @@
 
 This is deliberately separate from a VC-NEB production run.  It checks the
 calculator contract, generated INPUT/KPT/STRU files, and the stress channel on
-one mapped HfO2 endpoint before any multi-image job is launched.
+one mapped HfO2 endpoint before any multi-image job is launched.  Its defaults
+follow the production 100-Ry, full 10-au DZP policy.
 """
 
 from __future__ import annotations
@@ -24,7 +25,7 @@ from vcneb.calculator import validate_image_calculators
 
 
 DEFAULT_PSEUDO_DIR = "/home/zhuxd/abacus/PSEUDO/ABACUS-orbitals/Dojo-NC-FR/Pseudopotential"
-DEFAULT_BASIS_DIR = "/home/zhuxd/abacus/PSEUDO/ABACUS-orbitals/Dojo-NC-FR/selected_Orbs"
+DEFAULT_BASIS_DIR = "/home/zhuxd/abacus/PSEUDO/ABACUS-orbitals/Dojo-NC-FR/Orb-DZP-10au"
 DEFAULT_COMMAND = "/home/zhuxd/Software/abacus/INSTALL/3.10.0-LTS/bin/abacus"
 
 
@@ -38,8 +39,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--pseudo-dir", default=DEFAULT_PSEUDO_DIR)
     parser.add_argument("--basis-dir", default=DEFAULT_BASIS_DIR)
     parser.add_argument("--command", default=DEFAULT_COMMAND)
-    parser.add_argument("--ecutwfc", type=float, default=60.0)
-    parser.add_argument("--scf-thr", type=float, default=1e-6)
+    parser.add_argument("--ecutwfc", type=float, default=100.0)
+    parser.add_argument("--scf-thr", type=float, default=1e-8)
     return parser.parse_args()
 
 
@@ -55,14 +56,14 @@ def main() -> None:
         "dft_functional": "pbe",
         "ecutwfc": args.ecutwfc,
         "scf_thr": args.scf_thr,
-        "scf_nmax": 100,
+        "scf_nmax": 150,
         "mixing_type": "pulay",
-        "mixing_beta": 0.7,
-        "kpts": [1, 1, 1],
+        "mixing_beta": 0.3,
+        "kpts": [2, 2, 2],
         "pp": {"Hf": "Hf.upf", "O": "O.upf"},
         "basis": {
-            "Hf": "Hf_gga_7au_100Ry_4s2p2d1f.orb",
-            "O": "O_gga_7au_100Ry_2s2p1d.orb",
+            "Hf": "Hf_gga_10au_100Ry_4s2p2d1f.orb",
+            "O": "O_gga_10au_100Ry_2s2p1d.orb",
         },
         "pseudo_dir": args.pseudo_dir,
         "basis_dir": args.basis_dir,

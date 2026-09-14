@@ -102,6 +102,8 @@
 - 27678924 的线性 cell 插值对照已完成：Slurm `COMPLETED`、耗时 `01:51:16`、exit `0`，step 51 达到 `final_max_generalized_force=0.0495087 eV/A`；正向焓垒 `0.1596772 eV`、反应焓 `-0.3252848 eV`、最高内部峰 image 2。独立审计 `status=ok`、`issues=[]`，最小距离 `2.028435 A`、最大形变 `0.0496212`、最大应力 `3.88299 kbar`；manifest 共 159 条、全部 `ok`，只含 interior `[1,2,3,4,5]`、5 workers/32 MPI，端点策略 `fixed_cached_once`。结果已复制到 `outputs/hfo2_t_to_po_pbe100_dzp10au/vcneb_n7_fire_distributed_linear_job27678924/`。
 - 新增 `--allow-duplicate-image-counts` 及插值/优化器字段到 `scripts/compare_vcneb_images.py`，并以回归覆盖同一 image 数的 variant 比较。HfO₂ linear 7-image 与 log-strain 7/9-image 的报告为 `outputs/hfo2_t_to_po_pbe100_dzp10au/cell_interpolation_comparison.json`：barrier spread `0.0034680 eV`、最高峰反应坐标 spread `0.04639`、状态 `ok`；linear 相对 log-strain 7-image 高 `0.0029263 eV`。metrics CSV 和四联图也已生成。
 - 新增 `scripts/export_vcneb_structural_metrics.py` 与回归 `tests/check_geometry_metrics.py`：从最新完整 trajectory 导出指定 MIC 关键键长和扩展空间模式投影；HfO₂ linear 7-image 已生成 structural metrics CSV/JSON。端点位移投影明确不是声子软模，真实材料模式约束对照仍未宣称完成。
+- 清理生产文档中的参数歧义：README 的 HfO₂ 示例已改为 100 Ry、全套 10 au DZP、2×2×2、SCF 1e-8；论文将旧 60 Ry/低精度 HfO₂ 仅标为历史 adapter smoke provenance，生产结果只引用 100 Ry/10 au。论文 LaTeX 使用 TeX Live 编译 exit 0（6 页）。
+- HfO₂ smoke/fallback 示例默认值已统一为 100 Ry、全套 10 au DZP、2×2×2、SCF 1e-8、`mixing_beta=0.3`；新增 `tests/check_production_parameters.py` 锁定 BTO/HfO₂ 集群模板与示例的生产参数，完整回归为 `14 passed`。历史低精度 manifest 不被覆盖。
 
 ## 建议的新线程第一步
 

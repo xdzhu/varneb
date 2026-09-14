@@ -24,6 +24,7 @@ CHECK_SCRIPTS = (
     "check_mode_template.py",
     "check_native_abacus_driver.py",
     "check_native_endpoint_audit.py",
+    "check_production_parameters.py",
     "check_release_metadata.py",
     "check_vcneb_audit.py",
     "check_vcneb_forces.py",
