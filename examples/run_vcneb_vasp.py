@@ -20,6 +20,7 @@ if str(ROOT) not in sys.path:
 
 from vcneb import (
     Mode,
+    VCNEB,
     build_mode_basis,
     interpolate_vcneb,
     mode_guided_path,
@@ -124,9 +125,9 @@ def main() -> None:
             )
         else:
             images = interpolate_vcneb(initial, final, **path_kwargs)
-    write(workdir / "initial-vcneb.traj", images)
-
     mode_basis = None
+    if mode is not None and args.constraint_mode == "subspace":
+        write(workdir / "initial-vcneb-unprojected.traj", images)
     if mode is not None and args.constraint_mode != "none":
         mode_basis = build_mode_basis(
             mode,
@@ -136,6 +137,9 @@ def main() -> None:
             mass_weighted_input=args.mode_mass_weighted_input,
             remove_translation=args.mode_remove_translation,
         )
+        if args.constraint_mode == "subspace":
+            VCNEB(images, mode_basis=mode_basis, constraint_mode="subspace", k=args.k)
+    write(workdir / "initial-vcneb.traj", images)
 
     command = default_vasp_command(args.ncores, args.vasp_bin)
     attach_vasp_calculators(

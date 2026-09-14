@@ -24,6 +24,7 @@ if str(ROOT) not in sys.path:
 
 from vcneb import (
     Mode,
+    VCNEB,
     build_mode_basis,
     interpolate_vcneb,
     mode_guided_path,
@@ -350,8 +351,10 @@ def main() -> None:
         else:
             images = interpolate_vcneb(initial, final, **path_kwargs)
     initial_trajectory = workdir / "initial-vcneb.traj"
+    raw_initial_trajectory = workdir / "initial-vcneb-unprojected.traj"
     if not args.resume or not initial_trajectory.exists():
-        write(initial_trajectory, images)
+        if mode is not None and args.constraint_mode == "subspace":
+            write(raw_initial_trajectory, images)
     initial_geometry = path_geometry_diagnostics(images)
     mode_basis = None
     if mode is not None and args.constraint_mode != "none":
@@ -363,6 +366,18 @@ def main() -> None:
             mass_weighted_input=args.mode_mass_weighted_input,
             remove_translation=args.mode_remove_translation,
         )
+        if args.constraint_mode == "subspace":
+            # VCNEB projects the interior chain in its constructor.  Apply the
+            # same deterministic projection once before persisting the actual
+            # starting chain so resume/audit artifacts describe what was run.
+            VCNEB(
+                images,
+                mode_basis=mode_basis,
+                constraint_mode="subspace",
+                k=args.k,
+            )
+    if not args.resume or not initial_trajectory.exists():
+        write(initial_trajectory, images)
 
     parameters = {
         "calculation": "scf",
