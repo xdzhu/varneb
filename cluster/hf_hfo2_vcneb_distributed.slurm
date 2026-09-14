@@ -45,6 +45,7 @@ mode_guided=${MODE_GUIDED:-0}
 mode_amplitude=${MODE_AMPLITUDE:-0.25}
 mode_envelope=${MODE_ENVELOPE:-sin}
 constraint_mode=${CONSTRAINT_MODE:-none}
+validate_only=${VALIDATE_ONLY:-0}
 climb_after=${CLIMB_AFTER:-100}
 cell_interpolation=${CELL_INTERPOLATION:-log_strain}
 mapping=${MAPPING:-auto}
@@ -142,6 +143,10 @@ fi
 if [[ "${MODE_REMOVE_TRANSLATION:-0}" != 0 ]]; then
   mode_args+=(--mode-remove-translation)
 fi
+validate_args=()
+if [[ "${validate_only}" != 0 ]]; then
+  validate_args+=(--validate-only)
+fi
 
 # --nodes=1 is essential: without it Slurm may spread a 32-rank image worker
 # over both nodes, destroying the intended interior-image concurrency.
@@ -168,5 +173,6 @@ exec "${python}" examples/run_vcneb_abacus.py \
   --minimum-distance 1.6 --maximum-deformation 0.25 \
   --climb-after "${climb_after}" \
   "${mode_args[@]}" \
+  "${validate_args[@]}" \
   "${cache_args[@]}" \
   "${climb_args[@]}" "${resume_args[@]}"

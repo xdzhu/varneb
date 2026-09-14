@@ -29,6 +29,7 @@ mode_guided=${MODE_GUIDED:-0}
 mode_amplitude=${MODE_AMPLITUDE:-0.25}
 mode_envelope=${MODE_ENVELOPE:-sin}
 constraint_mode=${CONSTRAINT_MODE:-none}
+validate_only=${VALIDATE_ONLY:-0}
 climb_after=${CLIMB_AFTER:-100}
 ecutwfc=${ECUTWFC:-100}
 scf_thr=${SCF_THR:-1e-8}
@@ -89,6 +90,10 @@ fi
 if [[ "${MODE_REMOVE_TRANSLATION:-0}" != 0 ]]; then
   mode_args+=(--mode-remove-translation)
 fi
+validate_args=()
+if [[ "${validate_only}" != 0 ]]; then
+  validate_args+=(--validate-only)
+fi
 
 exec "${python}" examples/run_vcneb_abacus.py \
   --initial "validation/batio3_cubic_to_tetragonal/endpoint_relax_${initial_endpoint}_${endpoint_tag}/CONTCAR" \
@@ -109,4 +114,5 @@ exec "${python}" examples/run_vcneb_abacus.py \
   --minimum-distance 1.6 --maximum-deformation 0.10 \
   --climb-after "${climb_after}" \
   "${mode_args[@]}" \
+  "${validate_args[@]}" \
   "${climb_args[@]}" "${resume_args[@]}"

@@ -300,7 +300,10 @@ mode basis; `projected` keeps the current interior path as the affine reference
 and projects only subsequent updates.  The four Hefei Slurm templates accept
 the equivalent `MODE_FILE`, `MODE_GUIDED`, `CONSTRAINT_MODE`,
 `MODE_AMPLITUDE`, and `MODE_ENVELOPE` environment variables.  These options
-are opt-in and do not alter the default unconstrained FIRE workflow.
+are opt-in and do not alter the default unconstrained FIRE workflow.  Set
+`VALIDATE_ONLY=1` on a Slurm template to exercise path/mode/calculator
+preflight without launching ABACUS; this is useful before requesting a costly
+production allocation.
 
 For a perturbed or noisy initial path, use a two-stage CI protocol: first call
 `run_vcneb(..., climb=False)` to relax the path, then call it again on the same

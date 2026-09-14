@@ -39,7 +39,7 @@ def main() -> None:
         "hf_hfo2_vcneb_distributed.slurm",
     ):
         text = (ROOT / "cluster" / name).read_text(encoding="utf-8")
-        for marker in ("MODE_FILE", "MODE_GUIDED", "CONSTRAINT_MODE", "mode_args"):
+        for marker in ("MODE_FILE", "MODE_GUIDED", "CONSTRAINT_MODE", "VALIDATE_ONLY", "mode_args"):
             if marker not in text:
                 raise SystemExit(f"{name} is missing mode wiring: {marker}")
 
