@@ -107,6 +107,8 @@
 - `506d924` 已将显式 `BFGSLineSearch` 的有界重试参数贯通到 ABACUS/VASP 驱动及四个 Hefei Slurm 模板；默认 `LINE_SEARCH_RETRIES=0`，只有用户显式选择该优化器并设置预算时才启用，FIRE/普通 BFGS 行为不变。静态检查与完整回归仍为 `14 passed`。
 - 本轮复核作业 `27674272`：父作业已不在队列（Slurm 对已结束父作业返回 invalid job id），可见数组子任务 `.497`--`.506` 均 `COMPLETED`、exit `0`；`hfacnormal01` 当前无本人运行任务。工作树中的未跟踪项均为既有 DFT 输出/归档目录，未纳入代码提交。
 - `run_vcneb_abacus.py` 与 `run_vcneb_vasp.py` 现已提供统一的 `--mode`、`--mode-guided`、`--constraint-mode` 和模式归一化参数；四个 Hefei Slurm 模板也支持 `MODE_FILE`/`MODE_GUIDED`/`CONSTRAINT_MODE` 等环境变量。新增 CLI/模板回归后完整 pytest 为 `15 passed`，仅做接口验证，没有重跑 BTO 或启动 CI。
+- 新增端点位移模式导出器 `scripts/derive_endpoint_mode.py`；修正为 VCNEB 参考 cell 下的扩展原子坐标（不是当前 cell 的 Cartesian 差），并由 `tests/check_endpoint_mode.py` 验证 12 原子 HfO₂ 严格子空间端点可连接。该模式只作结构位移诊断，不能称为声子本征模。
+- 远端 `27679815` 的 `VALIDATE_ONLY=1` 严格模式预检通过（7 总帧、5 interior、2 节点资源，不调用 ABACUS）。首次真实模式引导作业 `27679826` 因远端核心文件滞后、在 DFT 前报 `run_vcneb() got unexpected keyword line_search_retries`，不计物理证据；同步 `vcneb/core.py` 后重试 `27679830` 正在运行，配置为 HfO₂ 7-image、5×32 MPI、模式引导后无约束普通 VCNEB、无 CI。已完成 step 0--10，`fmax` 从 `0.974822` 降至 `0.444989 eV/A`，未见回弹或 SCF/MPI 失败；须等终态 summary/audit 后再归档。
 
 ## 建议的新线程第一步
 
