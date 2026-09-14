@@ -40,6 +40,11 @@ optimizer=${OPTIMIZER:-FIRE}
 maxstep=${MAXSTEP:-0.02}
 line_search_retries=${LINE_SEARCH_RETRIES:-0}
 line_search_retry_factor=${LINE_SEARCH_RETRY_FACTOR:-0.5}
+mode_file=${MODE_FILE:-}
+mode_guided=${MODE_GUIDED:-0}
+mode_amplitude=${MODE_AMPLITUDE:-0.25}
+mode_envelope=${MODE_ENVELOPE:-sin}
+constraint_mode=${CONSTRAINT_MODE:-none}
 climb_after=${CLIMB_AFTER:-100}
 cell_interpolation=${CELL_INTERPOLATION:-log_strain}
 mapping=${MAPPING:-auto}
@@ -121,6 +126,23 @@ if [[ "${align_translation}" != 0 ]]; then
   path_args+=(--align-translation)
 fi
 
+mode_args=()
+if [[ -n "${mode_file}" ]]; then
+  mode_args+=(--mode "${mode_file}")
+fi
+if [[ "${mode_guided}" != 0 ]]; then
+  mode_args+=(--mode-guided --mode-amplitude "${mode_amplitude}" --mode-envelope "${mode_envelope}")
+fi
+if [[ "${constraint_mode}" != none ]]; then
+  mode_args+=(--constraint-mode "${constraint_mode}")
+fi
+if [[ "${MODE_MASS_WEIGHTED_INPUT:-0}" != 0 ]]; then
+  mode_args+=(--mode-mass-weighted-input)
+fi
+if [[ "${MODE_REMOVE_TRANSLATION:-0}" != 0 ]]; then
+  mode_args+=(--mode-remove-translation)
+fi
+
 # --nodes=1 is essential: without it Slurm may spread a 32-rank image worker
 # over both nodes, destroying the intended interior-image concurrency.
 worker_command="srun --exclusive --nodes=1 --ntasks=${image_mpi} --ntasks-per-node=${image_mpi} --cpus-per-task=1 --distribution=block:block --mpi=pmix_v3 ${abacus}"
@@ -145,5 +167,6 @@ exec "${python}" examples/run_vcneb_abacus.py \
   "${path_args[@]}" \
   --minimum-distance 1.6 --maximum-deformation 0.25 \
   --climb-after "${climb_after}" \
+  "${mode_args[@]}" \
   "${cache_args[@]}" \
   "${climb_args[@]}" "${resume_args[@]}"

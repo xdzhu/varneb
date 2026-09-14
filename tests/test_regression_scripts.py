@@ -21,6 +21,7 @@ CHECK_SCRIPTS = (
     "check_image_comparison.py",
     "check_geometry_metrics.py",
     "check_line_search_retry.py",
+    "check_mode_driver_cli.py",
     "check_mode_template.py",
     "check_native_abacus_driver.py",
     "check_native_endpoint_audit.py",

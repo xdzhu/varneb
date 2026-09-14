@@ -23,7 +23,10 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from vcneb import (
+    Mode,
+    build_mode_basis,
     interpolate_vcneb,
+    mode_guided_path,
     path_geometry_diagnostics,
     read_chain_trajectory,
     run_vcneb,
@@ -102,6 +105,50 @@ def parse_args() -> argparse.Namespace:
         type=float,
         default=None,
         help="Reject initial paths whose Frobenius deformation exceeds this threshold",
+    )
+    parser.add_argument(
+        "--mode",
+        default=None,
+        help="Optional JSON/NPZ/text atomic-plus-cell mode used for path guidance or constraints",
+    )
+    parser.add_argument(
+        "--mode-guided",
+        action="store_true",
+        help="Apply the supplied mode only to the initial path (subsequent VC-NEB is unconstrained unless requested)",
+    )
+    parser.add_argument(
+        "--mode-amplitude",
+        type=float,
+        default=0.25,
+        help="Mode-guided initial-path amplitude in the extended coordinate metric",
+    )
+    parser.add_argument(
+        "--mode-envelope",
+        choices=["sin", "bell", "linear"],
+        default="sin",
+        help="Endpoint-zero envelope for --mode-guided",
+    )
+    parser.add_argument(
+        "--constraint-mode",
+        choices=["none", "subspace", "projected"],
+        default="none",
+        help="Optional strict mode-subspace or projected-update constraint",
+    )
+    parser.add_argument(
+        "--mode-cell-scale",
+        type=float,
+        default=None,
+        help="Cell scale used when building a mode basis; defaults to reference-cell volume root",
+    )
+    parser.add_argument(
+        "--mode-mass-weighted-input",
+        action="store_true",
+        help="Interpret supplied atomic mode components as mass-weighted eigenvector values",
+    )
+    parser.add_argument(
+        "--mode-remove-translation",
+        action="store_true",
+        help="Remove the (mass-weighted, when available) translational component before normalization",
     )
     parser.add_argument("--no-climb", action="store_true")
     parser.add_argument(
@@ -234,6 +281,14 @@ def _run_metadata(args: argparse.Namespace, workdir: Path) -> dict:
         "image_manifest": str(args.image_manifest) if args.image_manifest else None,
         "image_cache_dir": str(args.image_cache_dir) if args.image_cache_dir else None,
         "image_cache_namespace": args.image_cache_namespace,
+        "mode": str(args.mode) if args.mode else None,
+        "mode_guided": bool(args.mode_guided),
+        "mode_amplitude": float(args.mode_amplitude),
+        "mode_envelope": args.mode_envelope,
+        "constraint_mode": args.constraint_mode,
+        "mode_cell_scale": args.mode_cell_scale,
+        "mode_mass_weighted_input": bool(args.mode_mass_weighted_input),
+        "mode_remove_translation": bool(args.mode_remove_translation),
     }
 
 
@@ -248,6 +303,20 @@ def main() -> None:
 
     initial = read(args.initial)
     final = read(args.final)
+    mode = Mode.from_file(args.mode, n_atoms=len(initial)) if args.mode else None
+    if args.mode_guided and mode is None:
+        raise ValueError("--mode-guided requires --mode")
+    if args.constraint_mode != "none" and mode is None:
+        raise ValueError("--constraint-mode requires --mode")
+    if args.mode_mass_weighted_input and mode is None:
+        raise ValueError("--mode-mass-weighted-input requires --mode")
+    if args.mode_remove_translation and mode is None:
+        raise ValueError("--mode-remove-translation requires --mode")
+    mode_masses = (
+        initial.get_masses()
+        if mode is not None and (args.mode_mass_weighted_input or args.mode_remove_translation)
+        else None
+    )
     traj_path = workdir / "vcneb.traj"
     resume_path = Path(args.resume_trajectory).resolve() if args.resume_trajectory else traj_path
     if args.resume:
@@ -256,9 +325,7 @@ def main() -> None:
         label = "latest complete" if resume_step == -1 else f"complete step {resume_step}"
         print(f"[OK] resumed {label} {args.n_images}-image chain from {resume_path}")
     else:
-        images = interpolate_vcneb(
-            initial,
-            final,
+        path_kwargs = dict(
             n_images=args.n_images,
             align_cells=True,
             mic=args.mic,
@@ -268,10 +335,34 @@ def main() -> None:
             minimum_distance=args.minimum_distance,
             maximum_deformation=args.maximum_deformation,
         )
+        if args.mode_guided:
+            images = mode_guided_path(
+                initial,
+                final,
+                mode=mode,
+                amplitude=args.mode_amplitude,
+                envelope=args.mode_envelope,
+                masses=mode_masses,
+                mass_weighted_input=args.mode_mass_weighted_input,
+                remove_translation=args.mode_remove_translation,
+                **path_kwargs,
+            )
+        else:
+            images = interpolate_vcneb(initial, final, **path_kwargs)
     initial_trajectory = workdir / "initial-vcneb.traj"
     if not args.resume or not initial_trajectory.exists():
         write(initial_trajectory, images)
     initial_geometry = path_geometry_diagnostics(images)
+    mode_basis = None
+    if mode is not None and args.constraint_mode != "none":
+        mode_basis = build_mode_basis(
+            mode,
+            initial,
+            cell_scale=args.mode_cell_scale,
+            masses=mode_masses,
+            mass_weighted_input=args.mode_mass_weighted_input,
+            remove_translation=args.mode_remove_translation,
+        )
 
     parameters = {
         "calculation": "scf",
@@ -350,6 +441,8 @@ def main() -> None:
         k=args.k,
         climb=not args.no_climb,
         climb_after=args.climb_after,
+        mode_basis=mode_basis,
+        constraint_mode=None if args.constraint_mode == "none" else args.constraint_mode,
         image_executor=image_executor,
         optimizer=args.optimizer,
         optimizer_kwargs={} if args.maxstep is None else {"maxstep": args.maxstep},
@@ -383,6 +476,13 @@ def main() -> None:
         "minimum_distance_threshold_A": args.minimum_distance,
         "maximum_deformation_threshold": args.maximum_deformation,
         "climb_after": args.climb_after,
+        "mode": str(Path(args.mode).resolve()) if args.mode else None,
+        "mode_guided": args.mode_guided,
+        "mode_amplitude": args.mode_amplitude,
+        "mode_envelope": args.mode_envelope,
+        "constraint_mode": args.constraint_mode,
+        "mode_cell_scale": args.mode_cell_scale,
+        "mode_basis_columns": int(mode_basis.shape[1]) if mode_basis is not None else 0,
         "initial_path_geometry": initial_geometry,
         "initial_path_metadata": images[0].info.get("vcneb_path_metadata", {}),
         "optimizer": args.optimizer,

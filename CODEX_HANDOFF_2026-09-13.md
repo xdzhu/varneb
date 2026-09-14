@@ -106,6 +106,7 @@
 - HfO₂ smoke/fallback 示例默认值已统一为 100 Ry、全套 10 au DZP、2×2×2、SCF 1e-8、`mixing_beta=0.3`；新增 `tests/check_production_parameters.py` 锁定 BTO/HfO₂ 集群模板与示例的生产参数，完整回归为 `14 passed`。历史低精度 manifest 不被覆盖。
 - `506d924` 已将显式 `BFGSLineSearch` 的有界重试参数贯通到 ABACUS/VASP 驱动及四个 Hefei Slurm 模板；默认 `LINE_SEARCH_RETRIES=0`，只有用户显式选择该优化器并设置预算时才启用，FIRE/普通 BFGS 行为不变。静态检查与完整回归仍为 `14 passed`。
 - 本轮复核作业 `27674272`：父作业已不在队列（Slurm 对已结束父作业返回 invalid job id），可见数组子任务 `.497`--`.506` 均 `COMPLETED`、exit `0`；`hfacnormal01` 当前无本人运行任务。工作树中的未跟踪项均为既有 DFT 输出/归档目录，未纳入代码提交。
+- `run_vcneb_abacus.py` 与 `run_vcneb_vasp.py` 现已提供统一的 `--mode`、`--mode-guided`、`--constraint-mode` 和模式归一化参数；四个 Hefei Slurm 模板也支持 `MODE_FILE`/`MODE_GUIDED`/`CONSTRAINT_MODE` 等环境变量。新增 CLI/模板回归后完整 pytest 为 `15 passed`，仅做接口验证，没有重跑 BTO 或启动 CI。
 
 ## 建议的新线程第一步
 

@@ -18,7 +18,14 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from vcneb import interpolate_vcneb, read_chain_trajectory, run_vcneb
+from vcneb import (
+    Mode,
+    build_mode_basis,
+    interpolate_vcneb,
+    mode_guided_path,
+    read_chain_trajectory,
+    run_vcneb,
+)
 from vcneb.vasp import attach_vasp_calculators, default_vasp_command
 
 
@@ -53,6 +60,19 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--vasp-bin", default=os.environ.get("VASP_BIN", "vasp_std"))
     parser.add_argument("--ncores", type=int, default=int(os.environ.get("NP", "8")))
     parser.add_argument("--mic", action="store_true")
+    parser.add_argument("--mode", default=None, help="Optional JSON/NPZ/text atomic-plus-cell mode")
+    parser.add_argument("--mode-guided", action="store_true", help="Apply the mode to the initial path")
+    parser.add_argument("--mode-amplitude", type=float, default=0.25)
+    parser.add_argument("--mode-envelope", choices=["sin", "bell", "linear"], default="sin")
+    parser.add_argument(
+        "--constraint-mode",
+        choices=["none", "subspace", "projected"],
+        default="none",
+        help="Optional strict mode-subspace or projected-update constraint",
+    )
+    parser.add_argument("--mode-cell-scale", type=float, default=None)
+    parser.add_argument("--mode-mass-weighted-input", action="store_true")
+    parser.add_argument("--mode-remove-translation", action="store_true")
     parser.add_argument("--no-climb", action="store_true")
     parser.add_argument("--resume", action="store_true", help="Resume from the latest complete chain in vcneb.traj")
     parser.add_argument("--resume-trajectory", default=None, help="Trajectory to resume from; defaults to workdir/vcneb.traj")
@@ -68,6 +88,20 @@ def main() -> None:
 
     initial = read_endpoint(initial_dir)
     final = read_endpoint(final_dir)
+    mode = Mode.from_file(args.mode, n_atoms=len(initial)) if args.mode else None
+    if args.mode_guided and mode is None:
+        raise ValueError("--mode-guided requires --mode")
+    if args.constraint_mode != "none" and mode is None:
+        raise ValueError("--constraint-mode requires --mode")
+    if args.mode_mass_weighted_input and mode is None:
+        raise ValueError("--mode-mass-weighted-input requires --mode")
+    if args.mode_remove_translation and mode is None:
+        raise ValueError("--mode-remove-translation requires --mode")
+    mode_masses = (
+        initial.get_masses()
+        if mode is not None and (args.mode_mass_weighted_input or args.mode_remove_translation)
+        else None
+    )
 
     traj_path = workdir / "vcneb.traj"
     resume_path = Path(args.resume_trajectory).resolve() if args.resume_trajectory else traj_path
@@ -75,8 +109,33 @@ def main() -> None:
         images = read_chain_trajectory(resume_path, n_images=args.n_images)
         print(f"[OK] resumed latest complete {args.n_images}-image chain from {resume_path}")
     else:
-        images = interpolate_vcneb(initial, final, n_images=args.n_images, align_cells=True, mic=args.mic)
+        path_kwargs = dict(n_images=args.n_images, align_cells=True, mic=args.mic)
+        if args.mode_guided:
+            images = mode_guided_path(
+                initial,
+                final,
+                mode=mode,
+                amplitude=args.mode_amplitude,
+                envelope=args.mode_envelope,
+                masses=mode_masses,
+                mass_weighted_input=args.mode_mass_weighted_input,
+                remove_translation=args.mode_remove_translation,
+                **path_kwargs,
+            )
+        else:
+            images = interpolate_vcneb(initial, final, **path_kwargs)
     write(workdir / "initial-vcneb.traj", images)
+
+    mode_basis = None
+    if mode is not None and args.constraint_mode != "none":
+        mode_basis = build_mode_basis(
+            mode,
+            initial,
+            cell_scale=args.mode_cell_scale,
+            masses=mode_masses,
+            mass_weighted_input=args.mode_mass_weighted_input,
+            remove_translation=args.mode_remove_translation,
+        )
 
     command = default_vasp_command(args.ncores, args.vasp_bin)
     attach_vasp_calculators(
@@ -92,6 +151,8 @@ def main() -> None:
         pressure_gpa=args.pressure_gpa,
         k=args.k,
         climb=not args.no_climb,
+        mode_basis=mode_basis,
+        constraint_mode=None if args.constraint_mode == "none" else args.constraint_mode,
         optimizer=args.optimizer,
         line_search_retries=args.line_search_retries,
         line_search_retry_factor=args.line_search_retry_factor,
