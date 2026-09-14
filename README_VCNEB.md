@@ -96,6 +96,10 @@ first-order saddle character.
 - `scripts/export_vcneb_metrics.py`: export completed summary diagnostics to a
   per-image CSV containing reaction coordinate, enthalpy, cell lengths/angles,
   volume, stress and NEB force components for plotting or paper tables.
+- `scripts/export_vcneb_structural_metrics.py`: export selected MIC key-pair
+  distances and optional extended-space mode projections from the latest
+  complete trajectory; `--derive-endpoint-mode` is explicitly a structural
+  diagnostic, not a phonon mode.
 - `docs/batio3_validation_protocol.md`: fixed BTO settings, image-count
   convergence gates, CI staging and recovery/archive requirements.
 - `tests/check_vcneb_forces.py`: finite-difference checks for force/stress transforms.
