@@ -45,6 +45,7 @@ mode_guided=${MODE_GUIDED:-0}
 mode_amplitude=${MODE_AMPLITUDE:-0.25}
 mode_envelope=${MODE_ENVELOPE:-sin}
 constraint_mode=${CONSTRAINT_MODE:-none}
+mode_cell_scale=${MODE_CELL_SCALE:-}
 validate_only=${VALIDATE_ONLY:-0}
 climb_after=${CLIMB_AFTER:-100}
 cell_interpolation=${CELL_INTERPOLATION:-log_strain}
@@ -136,6 +137,9 @@ if [[ "${mode_guided}" != 0 ]]; then
 fi
 if [[ "${constraint_mode}" != none ]]; then
   mode_args+=(--constraint-mode "${constraint_mode}")
+fi
+if [[ -n "${mode_cell_scale}" ]]; then
+  mode_args+=(--mode-cell-scale "${mode_cell_scale}")
 fi
 if [[ "${MODE_MASS_WEIGHTED_INPUT:-0}" != 0 ]]; then
   mode_args+=(--mode-mass-weighted-input)

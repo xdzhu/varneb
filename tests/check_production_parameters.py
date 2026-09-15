@@ -20,6 +20,13 @@ def main() -> None:
             if f"{element}_gga_10au_100Ry" not in text:
                 raise SystemExit(f"{label} template lacks the 10-au {element} orbital")
 
+    for fragment in (
+        "mode_cell_scale=${MODE_CELL_SCALE:-}",
+        'mode_args+=(--mode-cell-scale "${mode_cell_scale}")',
+    ):
+        if fragment not in hfo2:
+            raise SystemExit("HfO2 distributed template does not forward MODE_CELL_SCALE")
+
     smoke = (ROOT / "examples" / "run_abacus_single_image_smoke.py").read_text(encoding="utf-8")
     endpoint = (ROOT / "examples" / "relax_abacus_endpoint.py").read_text(encoding="utf-8")
     for label, text in (("HfO2 smoke", smoke), ("HfO2 endpoint fallback", endpoint)):
