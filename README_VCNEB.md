@@ -108,6 +108,12 @@ first-order saddle character.
   references rather than calculation replicas.
 - `docs/batio3_validation_protocol.md`: fixed BTO settings, image-count
   convergence gates, CI staging and recovery/archive requirements.
+- `docs/material_validation_guide.md`: accepted BTO/HfO2 material conclusions,
+  reporting boundaries, and the calculator-free command that regenerates the
+  editable validation figure and source-data tables.
+- `papar/VARNEB_CPC/`: the CPC manuscript source, bibliography, figure PDF and
+  figure source data; its evidence checklist prevents calculator-smoke or
+  energy-scale comparisons from being presented as production benchmarks.
 - `tests/check_vcneb_forces.py`: finite-difference checks for force/stress transforms.
 
 ## Cluster execution policy

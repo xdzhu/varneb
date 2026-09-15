@@ -287,10 +287,10 @@
 
 ### 11.1 论文结构
 
-- [~] Introduction：晶体相变能垒、固定 cell NEB 的局限、现有 VCNEB/USPEX/ABINIT/ASE 生态和纯 Python 的需求（论文草稿已写）。
+- [~] Introduction：晶体相变能垒、固定 cell NEB 的局限、现有 VCNEB/USPEX/ABINIT/ASE 生态和纯 Python 的需求（CPC 初稿已置于 `papar/VARNEB_CPC/`；作者、单位、基金等投稿元数据仍待确认）。
 - [x] Theory：广义坐标、cell 度量、应力到 cell force、切线、弹簧力、CI、约束和收敛判据。
-- [~] Software：核心数据模型、calculator contract、VASP/ABACUS adapter、重启、并行 image 运行和模式 API（论文草稿已写，VASP 生产级路径仍待补）。
-- [~] Examples：HfO2 T->PO、钙钛矿案例、模式引导与释放精修、能垒和路径结构；解析势、有限差分、ASE fixed-cell 对照、收敛矩阵、BTO/HfO₂ 路径和文献能垒对照图、公开方法差异已纳入草稿，旧实现定量对比及其余投稿图表仍待补。
+- [~] Software：核心数据模型、calculator contract、VASP/ABACUS adapter、重启、并行 image 运行和模式 API（CPC 初稿和 claim-to-evidence 清单已写，VASP 生产级路径仍待补）。
+- [~] Examples：HfO2 T->PO、钙钛矿案例、模式引导与释放精修、能垒和路径结构；解析势、有限差分、ASE fixed-cell 对照、收敛矩阵、BTO/HfO₂ 路径和文献能垒对照图、公开方法差异已纳入 `papar/VARNEB_CPC/` 初稿，旧实现定量对比及其余投稿图表仍待补。
 - [~] Conclusions/Availability：应力精度、cell 参数化、原子映射、磁性/电子态、多路径问题、计算成本、版本、许可证、输入、结构、脚本、manifest 和复现命令已纳入草稿；完整发布包仍待补。
 
 ### 11.2 软件发布
@@ -305,7 +305,7 @@
 
 ### 论文/发布出口标准
 
-- [~] 论文主要 claim 已在 `paper/claim_evidence.md` 映射到代码、测试、输入摘要和结果文件；正式投稿图表与完整原始输出发布包仍待补。
+- [~] 论文主要 claim 已在 `paper/claim_evidence.md` 与 `papar/VARNEB_CPC/MANUSCRIPT_EVIDENCE.md` 映射到代码、测试、输入摘要和结果文件；CPC 初稿采用可复算的 BTO/HfO₂ 图和 source data，但正式投稿图表与完整原始输出发布包仍待补。
 - [x] 新用户不阅读内部源码，仅按 README 就能完成 toy、model 和至少一个 calculator smoke test。
 - [ ] 代码、数据和论文中使用的参数一致；没有手工修改但未记录的结果。
 
