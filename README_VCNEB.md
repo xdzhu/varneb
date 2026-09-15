@@ -86,7 +86,9 @@ first-order saddle character.
 - `scripts/audit_vcneb_result.py`: calculator-free audit of a completed summary,
   including generalized-force, barrier, volume, geometry and interior-barrier gates.
   Use `--max-stress-kbar` when the production endpoint/path policy requires a
-  common stress threshold in addition to the generalized-force gate.
+  common stress threshold in addition to the generalized-force gate.  Use
+  `--fmax-target` only for an explicit re-audit under a different reported
+  threshold, for example a loose `0.10 eV/A` NEB criterion.
 - `scripts/compare_vcneb_images.py`: calculator-free comparison of completed
   5/7/9-image summaries, including shared calculator settings and explicit
   handling of consistent barrierless paths.  Pass
@@ -535,6 +537,18 @@ the discrete highest-image coordinate gate allows half of the smallest local
 reaction-coordinate segment, since the sampled peak can move by a fraction of
 one image when the band is refined.  Same-image-count parameterization or
 optimizer variants must opt in to duplicate counts explicitly.
+
+For convergence reporting, keep the run-time threshold and any later audit
+threshold distinct.  The API default `fmax=0.05 eV/A` is the strict production
+setting used for the archived HfO2 ordinary image-count table; the CI HfO2
+refinement used an even stricter `0.03 eV/A` target.  A complex DFT ordinary
+NEB branch may still be accepted under a conventional loose `0.10 eV/A`
+criterion, but the result must be labeled that way.  For example, job 27687189
+has `final_max_generalized_force=0.086679 eV/A`: it fails the recorded
+`0.05 eV/A` target, but passes a re-audit with
+`python scripts/audit_vcneb_result.py <workdir> --fmax-target 0.10`.  That
+branch is therefore reported as a loose-threshold endpoint-displacement
+mode-guided diagnostic, not mixed into the strict 7/9-image convergence table.
 
 ## Current limitations
 

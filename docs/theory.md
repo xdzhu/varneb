@@ -289,6 +289,15 @@ image 可能在路径尚未成形时被错误选中，导致图像折返但投�
 按 `fmax` 定义的最大三分量向量范数，避免把两个不同的收敛口径混在一起。它用于区分
 “路径残余力变小”和“原始 DFT 应力/原子力已经收敛”这两个不同判据。
 
+`fmax` 的数值阈值是应用层的验收口径，不是算法常数。当前公共 API 默认
+`0.05 eV/A`，适合把不同 image 数、cell 插值和 CI 精修放入同一张严格生产表；
+而对复杂 DFT 普通 NEB 或诊断性机制路径，`0.10 eV/A` 也可以作为常见的
+loose NEB 收敛阈值。使用宽松阈值时，报告必须同时写明原始 summary 中的
+`fmax_target_eV_per_A`、复审阈值和最终广义力，避免把 `0.10 eV/A` 结果与
+`0.05/0.03 eV/A` 的严格普通/CI 结果混作同一精度等级。`scripts/audit_vcneb_result.py`
+的 `--fmax-target` 只用于对已完成 summary 进行显式复审；它不修改原始轨迹、
+calculator 设置或运行时停止条件。
+
 在调用计算器之前，`path_geometry_diagnostics()` 可以对每个 image 做与计算器无关的
 几何审计，包含正体积、周期 MIC 最短原子间距和相对参考 cell 的 deformation 范数。
 `interpolate_vcneb()` 的 `minimum_distance` 和 `maximum_deformation` 参数可以把这些
@@ -357,7 +366,7 @@ on calculator/optimizer error:
 | `k` | 0.2 | ≥ 0, eV/Å²（或逐段数组） | 扩展坐标弹簧常数 |
 | `cell_scale` | 参考 cell 体积的立方根 | > 0, Å | 原子位移与 cell 变形的联合度量尺度 |
 | `pressure_gpa` | 0 | 任意有限值, GPa | 静水压力焓项 `P V` |
-| `fmax` | 0.05 | > 0, eV/Å | 最大内部广义力收敛阈值 |
+| `fmax` | 0.05 | > 0, eV/Å | 最大内部广义力收敛阈值；复杂 DFT 普通 NEB 可显式报告 `0.10 eV/Å` loose 口径 |
 | `steps` | 300 | integer ≥ 0 | optimizer 步数上限 |
 | `cell_interpolation` | `linear` | `linear`/`log_strain`/custom | 初始 cell 路径；log-strain 要求正定 deformation |
 | `mapping` | `identity` | `identity`/`auto`/显式 permutation | 端点原子配对和周期分支 |
