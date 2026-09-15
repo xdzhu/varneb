@@ -195,6 +195,37 @@
         "loose_0p10": "vcneb_n7_mode_guided_loose_job27687189/vcneb_audit_loose_0p10.json"
       },
       "notes": "Continued the latest complete small-step trajectory without recalculating endpoints. The Slurm job completed normally after 300 additional FIRE steps. It does not satisfy the stricter 0.05 eV/A target used by the main production ordinary/CI branches, but it does satisfy a conventional loose NEB threshold of 0.10 eV/A; report it only with this loose-threshold qualifier."
+    },
+    {
+      "label": "strict_subspace_to_full_space_release_n7",
+      "job_id": "27693085",
+      "resume_from_job_id": "27693064",
+      "resume_step": -1,
+      "n_images_total": 7,
+      "n_interior_images": 5,
+      "resources": "2 nodes, 5 workers x 32 MPI = 160 worker ranks (192 CPU Slurm allocation)",
+      "constraint_mode": "none",
+      "mode_semantics": "started from a strict endpoint-displacement subspace chain, then released all atomic-plus-cell degrees of freedom",
+      "optimizer": "FIRE",
+      "maxstep_A": 0.003,
+      "steps_cap": 300,
+      "status": "completed_loose_0p10_snapshot_not_strictly_converged",
+      "accepted_snapshot_step": 275,
+      "accepted_snapshot_max_generalized_force_eV_per_A": 0.097528,
+      "strict_fmax_target_eV_per_A": 0.05,
+      "loose_neb_fmax_target_eV_per_A": 0.10,
+      "accepted_snapshot_barrier_enthalpy_eV": 0.1380114,
+      "reaction_enthalpy_eV": -0.3252848,
+      "highest_image_index": 2,
+      "post_snapshot_steps_observed": 25,
+      "final_max_generalized_force_eV_per_A": 0.1083758120,
+      "audit": "geometry_valid; strict_0p05_final_force_failed; accepted only as the archived loose_0p10 snapshot",
+      "minimum_path_distance_A": 2.0222188115,
+      "maximum_deformation": 0.0491735878,
+      "maximum_stress_kbar": 4.3742647607,
+      "remote_artifacts": "vcneb_n7_mode_subspace_release/loose_acceptance_step275/",
+      "local_artifacts": "vcneb_n7_mode_subspace_release_job27693085/",
+      "notes": "The optimizer log reached its global minimum force at step 275, then was deliberately continued through step 300 to test rebound. The selected 0.10 eV/A snapshot is not a strict 0.05 eV/A VCNEB result and is not mixed into the ordinary/CI convergence table."
     }
   ],
   "comparison": {

@@ -38,6 +38,25 @@ plateaued near 0.087--0.089 eV/A, which is above the stricter 0.05 eV/A target
 but below a loose 0.10 eV/A NEB criterion.  The resulting 0.0038557 eV barrier
 may be cited only as a loose-threshold endpoint-displacement mode-guided result.
 
+## Real-material strict-subspace to full-space release diagnostic
+
+Job 27693064 first found a 7-total-image strict-subspace path; its small force
+is a projected-force quantity and is not comparable to an unconstrained force.
+Job 27693085 then resumed that chain with `constraint_mode=none`, fixed/cached
+endpoints, five 32-MPI interior workers and all atomic-plus-cell degrees of
+freedom released.  The 300-step full-space continuation is geometrically valid
+(`minimum_path_distance_A = 2.0222188115`, `maximum_deformation = 0.0491735878`,
+`maximum_stress_kbar = 4.3742647607`).
+
+The full-space generalized force reached its global minimum of `0.097528 eV/A`
+at step 275.  Following the rebound policy, the run continued for 25 more
+steps, ending at `0.108376 eV/A`; it therefore fails the strict `0.05 eV/A`
+target.  Under a conventional ordinary-NEB `0.10 eV/A` criterion, the archived
+step-275 chain is a loose acceptance snapshot with a `0.1380114 eV` barrier
+(`34.50 meV/f.u.`) and highest image 2.  It is not mixed into the strict
+ordinary/CI table.  The full trajectory, log, selected snapshot and audit are
+stored in `vcneb_n7_mode_subspace_release_job27693085/`.
+
 ## Conclusion
 
 For current HfO2 T-to-PO reporting, use:
@@ -47,6 +66,8 @@ For current HfO2 T-to-PO reporting, use:
 - CI-refined barrier: 0.1291722 eV from job 27678507;
 - endpoint-displacement mode-guided diagnostic barrier: 0.0038557 eV from job
   27687189, only under a loose 0.10 eV/A NEB force criterion;
+- strict-subspace-to-release loose snapshot: 0.1380114 eV from step 275 of job
+  27693085, only under a loose 0.10 eV/A ordinary-NEB convention;
 - reaction enthalpy: -0.3252848 eV for the shared endpoint convention.
 
 Do not mix the 0.0039 eV branch into the stricter 0.05 eV/A ordinary-image

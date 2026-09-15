@@ -182,8 +182,9 @@ and fixed-cell reduction tests \\
 Path search & Ordinary NEB, staged CI, FIRE/BFGS/LBFGS interfaces, linear or
 log-strain cell interpolation & CI requires an interior-barrier gate \\
 Mode APIs & Initial-path guidance, strict subspace and projected-update modes,
-release-and-refine analytic example & No complete real-material strict-mode
-release-and-refine comparison yet \\
+release-and-refine analytic example & A real-material release diagnostic is
+archived at a loose $0.10$ eV/\AA{} snapshot; strict $0.05$ eV/\AA{} release
+comparison remains incomplete \\
 Execution & Isolated image directories, manager/worker ownership, bounded retry,
 snapshots, resume and durable cache & Scheduler resources remain user-reviewed \\
 Calculators & ABACUS and VASP ASE-facing factories & ABACUS has material paths;
@@ -257,6 +258,13 @@ The staged 7-image CI refinement gives 0.1291722 eV per 12-atom cell, or
 encouraging but deliberately qualified by functional, pseudopotential,
 implementation, image-count, mapping, and force-norm differences.
 
+A separate real-material release diagnostic starts from a strict-subspace
+chain and then releases all degrees of freedom.  Its full-space force reached
+0.097528 eV/\AA{} at step 275 but rebounded to 0.108376 eV/\AA{} during 25
+additional observed steps.  We archive the step-275 path only under the
+conventional loose 0.10 eV/\AA{} ordinary-NEB convention; it is excluded from
+the strict ordinary/CI barrier comparison and literature discussion.
+
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\textwidth]{vcneb_material_validation.pdf}
@@ -288,8 +296,8 @@ HfO$_2$ remains sensitive to mapping, supercell size, mechanical boundary
 conditions, and possible intermediate mechanisms. The BTO case is deliberately
 barrierless and therefore validates the CI gate rather than a saddle search.
 Future work will add a production VASP path, cross-implementation comparisons,
-real-material mode-projected release-and-refine calculations, and systematic
-supercell and stress-measure benchmarks.
+strict $0.05$ eV/\AA{} real-material release-and-refine comparisons, and
+systematic supercell and stress-measure benchmarks.
 
 \section{Conclusions}
 

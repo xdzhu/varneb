@@ -527,10 +527,9 @@ is still propagated when the retry budget is exhausted.
 The Hefei BTO template `cluster/hf_batio3_vcneb_parallel.slurm` demonstrates
 four 32-MPI workers in a 128-task allocation.
 
-The HfO₂ production template `cluster/hf_hfo2_vcneb_parallel.slurm` uses the
-same controller/worker layout (four isolated image workers × 32 MPI by
-default), with the 100-Ry and Orb-DZP-10au Hf/O inputs. It remains a template
-until both native `cell-relax` endpoints pass their force and stress gates.
+The HfO₂ production template `cluster/hf_hfo2_vcneb_distributed.slurm` uses
+five isolated 32-MPI workers for seven total images (the two endpoints are
+fixed and cached), with the 100-Ry and Orb-DZP-10au Hf/O inputs.
 
 For an ABACUS template directory, the dry static check is:
 
@@ -559,6 +558,15 @@ has `final_max_generalized_force=0.086679 eV/A`: it fails the recorded
 `python scripts/audit_vcneb_result.py <workdir> --fmax-target 0.10`.  That
 branch is therefore reported as a loose-threshold endpoint-displacement
 mode-guided diagnostic, not mixed into the strict 7/9-image convergence table.
+
+The separately archived real-material subspace-to-release diagnostic
+(`outputs/hfo2_t_to_po_pbe100_dzp10au/vcneb_n7_mode_subspace_release_job27693085/`)
+starts from a strict subspace chain and then releases every degree of freedom.
+Its minimum was `0.097528 eV/A` at optimizer step 275, followed by 25 observed
+steps of rebound to `0.108376 eV/A`.  Thus its saved step-275 chain may be used
+only as a conventional loose `0.10 eV/A` ordinary-NEB snapshot; it is neither
+a strict `0.05 eV/A` result nor a substitute for the ordinary/CI image-count
+comparison.
 
 ## Current limitations
 

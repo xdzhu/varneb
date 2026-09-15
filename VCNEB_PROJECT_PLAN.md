@@ -262,7 +262,7 @@
 
 ### P5 出口标准
 
-- [~] HfO2 T->PO 已有 100 Ry/10 au、7 总帧/5 内部帧的可恢复收敛普通 VCNEB（job 27678218）、CI 精修（job 27678507，焓垒 `0.1291722 eV`）、9 总帧/7 内部帧普通对照（job 27678407，焓垒 `0.1562092 eV`）和同条件 7-image linear-cell 控制（job 27678924，焓垒 `0.1596772 eV`），均通过独立审计；5-image 分支未收敛，endpoint-displacement mode-guided 分支（至 job 27687189）几何有效且达到普通 NEB `0.10 eV/A` 宽松力阈值，但未达到主线 `0.05 eV/A` 严格阈值，已在 closure 中作为带阈值限定的诊断证据记录；独立重复路径和更广泛敏感性仍待完成。
+- [~] HfO2 T->PO 已有 100 Ry/10 au、7 总帧/5 内部帧的可恢复收敛普通 VCNEB（job 27678218）、CI 精修（job 27678507，焓垒 `0.1291722 eV`）、9 总帧/7 内部帧普通对照（job 27678407，焓垒 `0.1562092 eV`）和同条件 7-image linear-cell 控制（job 27678924，焓垒 `0.1596772 eV`），均通过独立审计；真实材料 strict-subspace 到全空间 release（job 27693085）在第 275 步达到普通 NEB `0.10 eV/A` 宽松接受快照（`0.097528 eV/A`，焓垒 `0.1380114 eV`），但继续观察 25 步后回弹至 `0.108376 eV/A`，故不构成主线 `0.05 eV/A` 严格结果；endpoint-displacement mode-guided 分支（至 job 27687189）同样仅为带阈值限定的诊断证据。独立重复路径和更广泛敏感性仍待完成。
 - [x] BTO 已完成第二材料案例所需的最小验证矩阵、可恢复性、方向检查和结果归档。
 - [ ] 结果足以支撑论文中的“方法可用性”图表，但暂不把单个案例称为普适性证明。
 
@@ -273,14 +273,14 @@
 - [x] `Mode-guided initialization`：用声子/软模/用户模式改善初始路径，只影响初始 images。
 - [x] `Mode-projected VCNEB`：每轮将允许的广义力和更新投影到模式子空间，适用于研究指定机制。
 - [x] `Directional constraints`：已提供原子方向和 cell 方向的 basis 构造入口，并通过 `direction_basis_conflicts()` 诊断部分裁剪、完全失活和秩损失。
-- [x] `Release-and-refine`：已加入解析耦合势示例，先做 projected 模式约束搜索，再解除约束做全空间 VCNEB 精修并报告能垒差异；真实材料对照仍待完成。
+- [x] `Release-and-refine`：已加入解析耦合势示例，先做 projected 模式约束搜索，再解除约束做全空间 VCNEB 精修并报告能垒差异；真实 HfO2 已完成 strict-subspace 到全空间 release 的 300 步诊断，宽松 `.10 eV/A` 快照和严格 `.05 eV/A` 未收敛边界均已归档。
 
 ### 验收
 
 - [x] 一个可解析验证的单模式模型，证明禁止方向的位移和力均为零。
 - [x] 一个多模式非正交输入，证明正交化和投影结果与显式线性代数一致。
-- [x] 已加入解析势的 `projected` 约束搜索到全空间 release-and-refine 示例；真实材料对照仍待完成。
-- [ ] 一个真实材料案例，比较无约束、模式引导、严格模式约束和释放后精修；HfO₂ endpoint-displacement mode-guided 分支已完成长续算并达到 `0.10 eV/A` 宽松 NEB 阈值，但仍不是严格模式约束或释放后精修案例，不能单独算作此验收项。
+- [x] 已加入解析势的 `projected` 约束搜索到全空间 release-and-refine 示例；真实 HfO2 strict-subspace 到全空间 release 已留下可恢复的 300 步对照与宽松 `.10 eV/A` 接受快照，但尚未达到 `.05 eV/A` 严格收敛。
+- [ ] 一个真实材料案例，比较无约束、模式引导、严格模式约束和释放后精修；HfO₂ 已覆盖 strict-subspace 和全空间 release，但当前 release 仅有 `.10 eV/A` 宽松快照，且尚缺同协议的无约束/模式引导对照，不能单独算作此完整验收项。
 - [x] `docs/theory.md` 和 README 明确约束路径得到的是受限路径上的鞍点，不能自动解释为全空间一阶鞍点。
 
 ## 11. P7：论文、软件包与发布
