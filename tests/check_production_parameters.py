@@ -27,6 +27,22 @@ def main() -> None:
         if fragment not in hfo2:
             raise SystemExit("HfO2 distributed template does not forward MODE_CELL_SCALE")
 
+    # The production layout is deliberately expressed in terms of total images:
+    # 7 total = 2 fixed endpoints + 5 independent, 32-rank interior workers.
+    # Keep endpoints out of this pool so a VCNEB iteration never needlessly
+    # recomputes them.
+    for fragment in (
+        "#SBATCH -N 2",
+        "#SBATCH --ntasks=160",
+        "n_interior=$((n_images - 2))",
+        "image_workers=${IMAGE_WORKERS:-${n_interior}}",
+        "image_mpi=${IMAGE_MPI:-32}",
+        "--nodes=1 --ntasks=${image_mpi} --ntasks-per-node=${image_mpi}",
+        "# are evaluated once by the Python manager and cached; only interiors launch",
+    ):
+        if fragment not in hfo2:
+            raise SystemExit("HfO2 distributed template drifted from the 5x32 interior-worker contract")
+
     smoke = (ROOT / "examples" / "run_abacus_single_image_smoke.py").read_text(encoding="utf-8")
     endpoint = (ROOT / "examples" / "relax_abacus_endpoint.py").read_text(encoding="utf-8")
     for label, text in (("HfO2 smoke", smoke), ("HfO2 endpoint fallback", endpoint)):
