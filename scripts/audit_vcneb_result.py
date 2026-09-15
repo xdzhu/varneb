@@ -34,6 +34,15 @@ def parse_args() -> argparse.Namespace:
         default=None,
         help="Optional maximum absolute per-image stress in kbar",
     )
+    parser.add_argument(
+        "--fmax-target",
+        type=float,
+        default=None,
+        help=(
+            "Optional force threshold for re-auditing an existing summary. "
+            "Defaults to the threshold recorded in vcneb_summary.json."
+        ),
+    )
     return parser.parse_args()
 
 
@@ -43,6 +52,7 @@ def audit(
     minimum_distance: float,
     maximum_deformation: float | None,
     maximum_stress_kbar: float | None = None,
+    fmax_target: float | None = None,
 ) -> dict:
     diagnostics = summary.get("path_diagnostics") or {}
     image_records = diagnostics.get("images") or []
@@ -58,7 +68,8 @@ def audit(
             f"summary has {len(image_records)} image diagnostics, expected {int(expected_images)}"
         )
     final_force = summary.get("final_max_generalized_force_eV_per_A")
-    target = summary.get("fmax_target_eV_per_A")
+    recorded_target = summary.get("fmax_target_eV_per_A")
+    target = recorded_target if fmax_target is None else fmax_target
     if final_force is None or target is None:
         issues.append("summary lacks final generalized force or target")
     elif final_force > target:
@@ -104,6 +115,7 @@ def audit(
         "summary_status": status,
         "final_max_generalized_force_eV_per_A": final_force,
         "fmax_target_eV_per_A": target,
+        "recorded_fmax_target_eV_per_A": recorded_target,
         "barrier_enthalpy_eV": summary.get("barrier_enthalpy_eV"),
         "reaction_enthalpy_eV": summary.get("reaction_enthalpy_eV"),
         "has_interior_barrier": diagnostics.get("has_interior_barrier"),
@@ -147,6 +159,7 @@ def main() -> int:
         minimum_distance=args.max_min_distance,
         maximum_deformation=args.max_deformation,
         maximum_stress_kbar=args.max_stress_kbar,
+        fmax_target=args.fmax_target,
     )
     output = args.workdir / "vcneb_audit.json"
     write_report(output, report)

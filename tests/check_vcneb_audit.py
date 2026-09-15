@@ -52,6 +52,23 @@ def main() -> None:
     )
     if bad["status"] != "failed" or not any("stress" in issue for issue in bad["issues"]):
         raise SystemExit("stress-gated VCNEB audit missed an over-threshold path")
+    loose_summary = _summary(1.0e-5)
+    loose_summary["final_max_generalized_force_eV_per_A"] = 0.08
+    strict = audit(
+        loose_summary,
+        minimum_distance=1.0,
+        maximum_deformation=None,
+    )
+    if strict["status"] != "failed" or strict["fmax_target_eV_per_A"] != 0.02:
+        raise SystemExit("VCNEB audit did not enforce the recorded force target")
+    loose = audit(
+        loose_summary,
+        minimum_distance=1.0,
+        maximum_deformation=None,
+        fmax_target=0.10,
+    )
+    if loose["status"] != "ok" or loose["recorded_fmax_target_eV_per_A"] != 0.02:
+        raise SystemExit("VCNEB audit did not allow an explicit loose force target")
     incomplete_summary = _summary(1.0e-5)
     incomplete_summary["status"] = "cancelled"
     incomplete = audit(

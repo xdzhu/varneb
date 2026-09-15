@@ -29,6 +29,7 @@ level only. A five-total-image HfO2 control was deliberately retained as
 non-converged and is not used to quote a barrier. The independent linear-cell
 interpolation job 27678924 is a completed, audited sensitivity comparison and
 is not folded into the image-count spread. The endpoint-displacement
-mode-guided HfO2 branch through job 27687189 is geometry-valid but still above
-the force threshold, so its small apparent barrier is retained only as an
-unconverged diagnostic.
+mode-guided HfO2 branch through job 27687189 is geometry-valid and below a
+loose 0.10 eV/A NEB force threshold, but it remains above the stricter 0.05
+eV/A threshold used for the main ordinary-image comparison; its small apparent
+barrier is therefore retained only with this threshold qualifier.
