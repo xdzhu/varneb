@@ -14,7 +14,7 @@ manifest, trajectory summary, and independent audit are available.
 | Image workers run concurrently while the manager owns the path | vcneb/executor.py; tests/check_vcneb_forces.py threaded executor and endpoint-ownership regressions | HfO2 worker manifests record interior indices only and 32-MPI workers |
 | Exact-state caching and restart preserve successful sibling work after a failed batch | vcneb/executor.py; tests/check_vcneb_forces.py cache/recovery regressions | Per-run image_worker_manifest.jsonl and snapshot directories |
 | Failure reports are atomic and classify recoverable failure classes conservatively | vcneb/core.py, vcneb/calculator.py; tests/check_vcneb_forces.py failure-report/classification regressions | vcneb_failure.json emitted by the ABACUS/VASP examples on interruption |
-| HfO2 ordinary 7/9-image paths provide an image-count check | scripts/compare_vcneb_images.py, scripts/export_vcneb_metrics.py; tests/check_image_comparison.py, tests/check_vcneb_metrics.py | outputs/hfo2_t_to_po_pbe100_dzp10au/hfo2_validation_provenance.json, image_count_comparison.md, ordinary_image_comparison.json; jobs 27678218 and 27678407 |
+| HfO2 ordinary 7/9-image paths provide an image-count check | scripts/compare_vcneb_images.py, scripts/export_vcneb_metrics.py; tests/check_image_comparison.py, tests/check_vcneb_metrics.py | outputs/hfo2_t_to_po_pbe100_dzp10au/hfo2_validation_provenance.json, hfo2_vcneb_closure.md, image_count_comparison.md, ordinary_image_comparison.json; jobs 27678218 and 27678407 |
 | HfO2 cell interpolation sensitivity is separated from image-count convergence | scripts/compare_vcneb_images.py (`--allow-duplicate-image-counts`); tests/check_image_comparison.py | outputs/hfo2_t_to_po_pbe100_dzp10au/cell_interpolation_comparison.json; job 27678924 and archived linear-cell manifest |
 | Key structural changes and modal coordinates can be inspected without rerunning DFT | scripts/export_vcneb_structural_metrics.py; tests/check_geometry_metrics.py | outputs/hfo2_t_to_po_pbe100_dzp10au/vcneb_n7_fire_distributed_linear_job27678924/vcneb_structural_metrics.csv; endpoint-displacement projection is explicitly not a phonon eigenvector |
 | HfO2 CI refinement is only run after a real ordinary interior peak and survives a rebound window | run_vcneb staged-CI semantics; docs/theory.md | outputs/hfo2_t_to_po_pbe100_dzp10au/vcneb_n7_ci_refine_job27678507/; job 27678507 |
@@ -28,4 +28,7 @@ universality proof. VASP is currently validated at single-image smoke-test
 level only. A five-total-image HfO2 control was deliberately retained as
 non-converged and is not used to quote a barrier. The independent linear-cell
 interpolation job 27678924 is a completed, audited sensitivity comparison and
-is not folded into the image-count spread.
+is not folded into the image-count spread. The endpoint-displacement
+mode-guided HfO2 branch through job 27687189 is geometry-valid but still above
+the force threshold, so its small apparent barrier is retained only as an
+unconverged diagnostic.
