@@ -38,7 +38,7 @@
 - [~] ABACUS 已完成 HfO₂ 100 Ry/10 au 生产级 VCNEB（普通 7/9-image 与 CI）；VASP 真实端到端生产级 VCNEB 仍待完成。
 - [x] HfO₂ T 相到 PO 相的 12 原子结构来源、原子一一映射、端点独立弛豫和生产精度路径/能垒已保存并通过审计。
 - [x] 已实现基础严格模式子空间和 projected-update 约束，并加入端点子空间验证、方向冲突诊断和解析势 release-and-refine；真实材料对照仍未完成。
-- [~] 已形成初版误差预算、资源效率记录（`outputs/hfo2_t_to_po_pbe100_dzp10au/error_budget_and_efficiency.md`）和 HfO₂ 生产结果 closure（`outputs/hfo2_t_to_po_pbe100_dzp10au/hfo2_vcneb_closure.md`）；完整投稿数据包和正式图表仍待补。
+- [~] 已形成初版误差预算、资源效率记录（`outputs/hfo2_t_to_po_pbe100_dzp10au/error_budget_and_efficiency.md`）、HfO₂ 生产结果 closure（`outputs/hfo2_t_to_po_pbe100_dzp10au/hfo2_vcneb_closure.md`）和可编辑的 BTO/HfO₂ 验证路径图（`outputs/vcneb_material_validation_figure/`）；完整投稿数据包和其余正式图表仍待补。
 
 ## 3. 阶段总览与里程碑
 
@@ -256,7 +256,7 @@
 
 - [x] 给出端点相对能量、最高 image/saddle 能量、正向能垒、反应焓和 cell 演化；BTO 反向 5-image 路径也已独立运行并归档，HfO2 反向路径仍未纳入当前主线。
 - [x] 代码和 ABACUS driver 已支持给出最高 image 的残余原子广义力、cell 广义力/应力、真实力与弹簧力分解；HfO2 生产路径 summary 已记录最终数值。
-- [x] summary 已可通过 `scripts/export_vcneb_metrics.py` 导出逐 image 反应坐标、焓、晶格长度/角度、体积、应力和 NEB 力 CSV；`scripts/plot_vcneb_metrics.py` 已生成论文级焓垒/晶格/体积/力四联图；`scripts/export_vcneb_structural_metrics.py` 进一步导出 MIC 关键键长与扩展空间模式投影（端点位移模式明确标注为结构诊断）。
+- [x] summary 已可通过 `scripts/export_vcneb_metrics.py` 导出逐 image 反应坐标、焓、晶格长度/角度、体积、应力和 NEB 力 CSV；`scripts/plot_vcneb_metrics.py` 已生成论文级焓垒/晶格/体积/力四联图；`scripts/plot_material_validation_figure.py` 进一步将 BTO 5/7/9-image、HfO₂ ordinary/CI/linear 控制及文献值画为可编辑 SVG/PDF，并输出 source-data CSV；`scripts/export_vcneb_structural_metrics.py` 进一步导出 MIC 关键键长与扩展空间模式投影（端点位移模式明确标注为结构诊断）。
 - [x] 已用 7/9 总帧复算 HfO₂ 普通 VCNEB，并用可复现比较器报告能垒和离散峰位变化；两组结果均保留，不挑选更漂亮的一组。
 - [ ] 对自旋、磁性、电子占据、对称性破缺和可能的中间亚稳相做敏感性检查。
 
@@ -290,7 +290,7 @@
 - [~] Introduction：晶体相变能垒、固定 cell NEB 的局限、现有 VCNEB/USPEX/ABINIT/ASE 生态和纯 Python 的需求（论文草稿已写）。
 - [x] Theory：广义坐标、cell 度量、应力到 cell force、切线、弹簧力、CI、约束和收敛判据。
 - [~] Software：核心数据模型、calculator contract、VASP/ABACUS adapter、重启、并行 image 运行和模式 API（论文草稿已写，VASP 生产级路径仍待补）。
-- [~] Examples：HfO2 T->PO、钙钛矿案例、模式引导与释放精修、能垒和路径结构；解析势、有限差分、ASE fixed-cell 对照、收敛矩阵和公开方法差异已纳入草稿，论文图表与旧实现定量对比仍待补。
+- [~] Examples：HfO2 T->PO、钙钛矿案例、模式引导与释放精修、能垒和路径结构；解析势、有限差分、ASE fixed-cell 对照、收敛矩阵、BTO/HfO₂ 路径和文献能垒对照图、公开方法差异已纳入草稿，旧实现定量对比及其余投稿图表仍待补。
 - [~] Conclusions/Availability：应力精度、cell 参数化、原子映射、磁性/电子态、多路径问题、计算成本、版本、许可证、输入、结构、脚本、manifest 和复现命令已纳入草稿；完整发布包仍待补。
 
 ### 11.2 软件发布

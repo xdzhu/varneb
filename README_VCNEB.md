@@ -102,6 +102,10 @@ first-order saddle character.
   distances and optional extended-space mode projections from the latest
   complete trajectory; `--derive-endpoint-mode` is explicitly a structural
   diagnostic, not a phonon mode.
+- `scripts/plot_material_validation_figure.py`: create an editable SVG/PDF
+  BTO/HfO2 material-validation figure plus long-form path and barrier source
+  data from completed summaries only; it labels literature values as external
+  references rather than calculation replicas.
 - `docs/batio3_validation_protocol.md`: fixed BTO settings, image-count
   convergence gates, CI staging and recovery/archive requirements.
 - `tests/check_vcneb_forces.py`: finite-difference checks for force/stress transforms.

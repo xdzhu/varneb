@@ -19,6 +19,7 @@ manifest, trajectory summary, and independent audit are available.
 | Key structural changes and modal coordinates can be inspected without rerunning DFT | scripts/export_vcneb_structural_metrics.py; tests/check_geometry_metrics.py | outputs/hfo2_t_to_po_pbe100_dzp10au/vcneb_n7_fire_distributed_linear_job27678924/vcneb_structural_metrics.csv; endpoint-displacement projection is explicitly not a phonon eigenvector |
 | HfO2 CI refinement is only run after a real ordinary interior peak and survives a rebound window | run_vcneb staged-CI semantics; docs/theory.md | outputs/hfo2_t_to_po_pbe100_dzp10au/vcneb_n7_ci_refine_job27678507/; job 27678507 |
 | BaTiO3 T-to-C is barrierless for the tested image counts | tests/check_vcneb_audit.py; scripts/export_vcneb_metrics.py | outputs/batio3_t_to_c_pbe100_dzp10au/bto_validation_provenance.json, bto_convergence_matrix.md; CI gate is explicitly withheld |
+| Material-path figures retain source data and distinguish same-method controls from literature values | scripts/plot_material_validation_figure.py; tests/check_material_validation_figure.py | outputs/vcneb_material_validation_figure/vcneb_material_validation.{svg,pdf,png}; source-data CSV files and comparison-limit README |
 | Public package metadata and release policy are deliberate | pyproject.toml, .github/workflows/publish-pypi.yml; tests/check_release_metadata.py | Isolated python -m build produces varneb-0.0.1; the next description update requires a new version because PyPI releases are immutable |
 
 ## Claim boundaries
