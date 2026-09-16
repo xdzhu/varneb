@@ -28,7 +28,7 @@ def _endpoint(directory: Path, atoms: Atoms) -> None:
     (directory / "POTCAR").write_text("test POTCAR -- no DFT\n", encoding="utf-8")
 
 
-def test_vasp_driver_validate_only_writes_static_7_image_preflight(tmp_path: Path) -> None:
+def test_vasp_driver_validate_only_writes_static_7_image_preflight(tmp_path: Path, monkeypatch) -> None:
     initial = tmp_path / "initial"
     final = tmp_path / "final"
     _endpoint(initial, Atoms("Ba", cell=[4, 4, 4], pbc=True))
@@ -37,6 +37,7 @@ def test_vasp_driver_validate_only_writes_static_7_image_preflight(tmp_path: Pat
         Atoms("Ba", scaled_positions=[[0.1, 0.0, 0.0]], cell=[4.1, 4, 4], pbc=True),
     )
     workdir = tmp_path / "run"
+    monkeypatch.setenv("VCNEB_GIT_REVISION", "remote-sync-test-vasp")
     result = subprocess.run(
         [
             sys.executable,
@@ -70,4 +71,5 @@ def test_vasp_driver_validate_only_writes_static_7_image_preflight(tmp_path: Pat
         "isym": 0,
     }
     assert len(payload["calculator_reports"]) == 7
+    assert payload["git_revision"] == "remote-sync-test-vasp"
     assert all((workdir / f"{index:02d}" / "POTCAR").exists() for index in range(7))

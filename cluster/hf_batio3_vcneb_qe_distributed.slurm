@@ -69,6 +69,7 @@ module purge
 : "${ENDPOINT_IDENTITY_GATE:?Set ENDPOINT_IDENTITY_GATE to a passing endpoint_identity_gate.json}"
 source "${QE_ENV_SCRIPT}"
 export OMP_NUM_THREADS=1
+export VCNEB_GIT_REVISION="${VCNEB_GIT_REVISION:-remote-sync-unknown}"
 cd "${repo}"
 "${python}" scripts/validate_endpoint_identity_gate.py --gate "${endpoint_identity_gate}"
 

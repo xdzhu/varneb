@@ -34,6 +34,7 @@ module purge
 : "${QE_ENV_SCRIPT:?Set QE_ENV_SCRIPT to the reviewed QE environment script}"
 source "${QE_ENV_SCRIPT}"
 export OMP_NUM_THREADS=1
+export VCNEB_GIT_REVISION="${VCNEB_GIT_REVISION:-remote-sync-unknown}"
 cd "${repo}"
 
 exec "${python}" examples/run_vcneb_qe.py \

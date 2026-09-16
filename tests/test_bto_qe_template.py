@@ -25,6 +25,7 @@ def test_bto_qe_production_template_preserves_the_five_by_32_worker_contract() -
         "${ENDPOINT_IDENTITY_GATE:?Set ENDPOINT_IDENTITY_GATE",
         "scripts/validate_endpoint_identity_gate.py",
         "QE_PP_MANIFEST",
+        "VCNEB_GIT_REVISION",
         "--pp-manifest \"${pp_manifest}\"",
         "--cell-interpolation log_strain --mapping auto --align-translation",
     ):
@@ -40,6 +41,7 @@ def test_bto_qe_preflight_template_is_one_rank_and_never_launches_pw_x() -> None
         "--steps 0",
         "--validate-only",
         "QE_PP_MANIFEST",
+        "VCNEB_GIT_REVISION",
         "--pp-manifest \"${pp_manifest}\"",
         "--no-climb",
         "--cell-interpolation log_strain --mapping auto",
@@ -57,6 +59,7 @@ def test_bto_qe_static_baseline_is_one_fixed_endpoint_32_mpi_scf() -> None:
         "--pp-manifest \"${pp_manifest}\"",
         "--ecutwfc \"${ecutwfc}\" --ecutrho \"${ecutrho}\"",
         "--static-only",
+        "VCNEB_GIT_REVISION",
         "--no-climb",
         "ecutrho=${ECUTRHO:-600}",
         "srun --exclusive --nodes=1 --ntasks=32 pw.x",

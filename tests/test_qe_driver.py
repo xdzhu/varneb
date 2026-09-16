@@ -59,7 +59,7 @@ def test_qe_driver_rejects_mixing_approved_manifest_with_manual_pp(tmp_path) -> 
     assert "either --pp-manifest" in result.stderr
 
 
-def test_qe_driver_validate_only_writes_a_7_image_preflight(tmp_path) -> None:
+def test_qe_driver_validate_only_writes_a_7_image_preflight(tmp_path, monkeypatch) -> None:
     initial = Atoms("Ba", cell=[4, 4, 4], pbc=True)
     final = Atoms("Ba", scaled_positions=[[0.1, 0.0, 0.0]], cell=[4.1, 4, 4], pbc=True)
     initial_path, final_path = tmp_path / "initial.vasp", tmp_path / "final.vasp"
@@ -67,6 +67,7 @@ def test_qe_driver_validate_only_writes_a_7_image_preflight(tmp_path) -> None:
     write(final_path, final, format="vasp")
     (tmp_path / "Ba.upf").write_text('<UPF element="Ba" functional="PBE">\n', encoding="utf-8")
     workdir = tmp_path / "run"
+    monkeypatch.setenv("VCNEB_GIT_REVISION", "remote-sync-test-qe")
     result = subprocess.run(
         [
             sys.executable, str(DRIVER), "--initial", str(initial_path), "--final", str(final_path),
@@ -89,6 +90,7 @@ def test_qe_driver_validate_only_writes_a_7_image_preflight(tmp_path) -> None:
         "calculation": "scf", "tstress": True, "tprnfor": True
     }
     assert payload["pseudopotential_reports"][0]["sha256"]
+    assert payload["git_revision"] == "remote-sync-test-qe"
 
 
 def test_qe_driver_static_only_evaluates_fixed_initial_endpoint_once(tmp_path, monkeypatch) -> None:

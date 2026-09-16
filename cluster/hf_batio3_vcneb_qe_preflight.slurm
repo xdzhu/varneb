@@ -29,6 +29,7 @@ pp_manifest=${QE_PP_MANIFEST:-}
 [[ -n "${pseudo_dir}" ]] || { echo "Set ESPRESSO_PSEUDO to the reviewed UPF directory" >&2; exit 2; }
 [[ -n "${pp_manifest}" ]] || { echo "Set QE_PP_MANIFEST to an approved MD5-pinned UPF manifest" >&2; exit 2; }
 cd "${repo}"
+export VCNEB_GIT_REVISION="${VCNEB_GIT_REVISION:-remote-sync-unknown}"
 
 exec "${python}" examples/run_vcneb_qe.py \
   --initial "validation/batio3_cubic_to_tetragonal/endpoint_relax_tetragonal_${endpoint_tag}/CONTCAR" \

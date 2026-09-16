@@ -22,6 +22,7 @@ def test_bto_vasp_template_requires_explicit_licensed_inputs_and_worker_layout()
         "five 32-MPI interior workers",
         "N_IMAGES:-7",
         "FMAX:-0.10",
+        "VCNEB_GIT_REVISION",
         "VASP_COMMAND=\"srun --exclusive --nodes=1 --ntasks=${image_mpi}",
         "--image-workers \"${image_workers}\"",
         "--no-climb --mic --cell-interpolation log_strain --mapping auto --align-translation",

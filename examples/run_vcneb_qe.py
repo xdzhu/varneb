@@ -133,10 +133,20 @@ def build_qe_parameters(
 
 
 def _git_revision() -> str | None:
+    declared = os.environ.get("VCNEB_GIT_REVISION")
+    if declared:
+        return declared
     try:
-        return subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
+        result = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
     except (OSError, subprocess.CalledProcessError):
         return None
+    return result.stdout.strip() or None
 
 
 def _write_json_atomic(path: Path, payload: dict) -> None:
