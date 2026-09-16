@@ -75,6 +75,16 @@ width.  The parallel template is opt-in; the ordinary template remains the
 serial-image reference for reproducibility and debugging.
 Each parallel run also writes an image-worker JSONL manifest under its work
 directory, so failed workers and retries remain visible beyond Slurm stdout.
+
+`hf_batio3_vcneb_qe_distributed.slurm` is the corresponding QE BTO T→C
+validation gate. It is intentionally fixed to seven total images and five
+32-MPI interior workers (160 ranks over two nodes), with `--no-climb` because
+the established ABACUS reference is barrierless. By default it runs only the
+driver's `--validate-only` preflight; set `RUN_DFT=1` only after supplying the
+reviewed `QE_ENV_SCRIPT`, `ESPRESSO_PSEUDO`, and Ba/Ti/O UPF names. The QE
+cutoffs are explicit QE/Ry parameters and must be independently converged;
+they are not a mechanical conversion of VASP settings.
+
 For exact-state recovery across a new work directory, set
 `IMAGE_CACHE_DIR=/path/to/image-cache` and optionally
 `IMAGE_CACHE_NAMESPACE=ecut100-dzp10au-k2x2x2-scf1e-8`.  The cache is keyed by
