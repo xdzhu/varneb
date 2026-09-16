@@ -97,6 +97,12 @@ Both QE templates additionally require `QE_PP_MANIFEST`: an explicitly approved
 JSON manifest that fixes every UPF basename and MD5. A candidate register is
 not accepted as a production manifest.
 
+The QE production template additionally requires `QE_STATIC_CONVERGENCE_AUDIT`:
+the passing report from at least three fixed-endpoint cutoff points. Before any
+worker starts it checks that the report's highest cutoff, initial endpoint,
+`k`-mesh, SCF threshold and explicit `VCNEB_GIT_REVISION` match the planned
+path. `remote-sync-unknown` is deliberately rejected for production.
+
 For either QE or VASP production, compare the accepted ABACUS preflight and
 the candidate preflight with `scripts/compare_vcneb_endpoint_records.py`, then
 pass its successful output as `ENDPOINT_IDENTITY_GATE`. Both 160-rank templates

@@ -24,6 +24,8 @@ def test_bto_qe_production_template_preserves_the_five_by_32_worker_contract() -
         "${QE_ENV_SCRIPT:?Set QE_ENV_SCRIPT",
         "${ENDPOINT_IDENTITY_GATE:?Set ENDPOINT_IDENTITY_GATE",
         "scripts/validate_endpoint_identity_gate.py",
+        "QE_STATIC_CONVERGENCE_AUDIT",
+        "scripts/validate_qe_static_convergence_gate.py",
         "QE_PP_MANIFEST",
         "VCNEB_GIT_REVISION",
         "--pp-manifest \"${pp_manifest}\"",

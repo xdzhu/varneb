@@ -44,6 +44,11 @@ approved manifest，不能直接启动预检或生产作业。
 审计器同时拒绝端点、UPF、代码版本、k 点或任一非-cutoff QE 设置不一致的记录。
 不能由脚本默认一个“看起来合理”的容差。
 
+QE 生产模板还要求将通过的报告传为 `QE_STATIC_CONVERGENCE_AUDIT`。模板会在
+启动任何 image worker 前检查该报告的最高 cutoff、初始端点、k 点、SCF 阈值与
+显式 `VCNEB_GIT_REVISION` 是否和本次路径一致；`remote-sync-unknown` 不能用于
+生产路径。
+
 VASP preflight 会记录初始目录 `INCAR`、`KPOINTS` 与许可 `POTCAR` 的完整
 SHA256；同一份经过审核的输入必须复制到每一个静态 image 目录。
 

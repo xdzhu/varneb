@@ -36,6 +36,7 @@ pp_ti=${PP_TI:-Ti.upf}
 pp_o=${PP_O:-O.upf}
 pp_manifest=${QE_PP_MANIFEST:-}
 endpoint_identity_gate=${ENDPOINT_IDENTITY_GATE:-}
+static_convergence_audit=${QE_STATIC_CONVERGENCE_AUDIT:-}
 endpoint_tag=${ENDPOINT_TAG:-pbe100_dzp10au}
 workdir=${WORKDIR:-validation/batio3_cubic_to_tetragonal/vcneb_tetragonal_to_cubic_n${n_images}_${optimizer,,}_qe_pbe}
 
@@ -67,11 +68,17 @@ fi
 module purge
 : "${QE_ENV_SCRIPT:?Set QE_ENV_SCRIPT to the reviewed QE environment script}"
 : "${ENDPOINT_IDENTITY_GATE:?Set ENDPOINT_IDENTITY_GATE to a passing endpoint_identity_gate.json}"
+: "${QE_STATIC_CONVERGENCE_AUDIT:?Set QE_STATIC_CONVERGENCE_AUDIT to a passing qe_static_convergence_audit.json}"
 source "${QE_ENV_SCRIPT}"
 export OMP_NUM_THREADS=1
 export VCNEB_GIT_REVISION="${VCNEB_GIT_REVISION:-remote-sync-unknown}"
 cd "${repo}"
 "${python}" scripts/validate_endpoint_identity_gate.py --gate "${endpoint_identity_gate}"
+"${python}" scripts/validate_qe_static_convergence_gate.py \
+  --audit "${static_convergence_audit}" --endpoint-gate "${endpoint_identity_gate}" \
+  --ecutwfc "${ecutwfc}" --ecutrho "${ecutrho}" \
+  --kpts "${kpt_x}" "${kpt_y}" "${kpt_z}" --scf-thr "${scf_thr}" \
+  --git-revision "${VCNEB_GIT_REVISION}"
 
 exec "${python}" examples/run_vcneb_qe.py \
   --initial "validation/batio3_cubic_to_tetragonal/endpoint_relax_tetragonal_${endpoint_tag}/CONTCAR" \
