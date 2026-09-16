@@ -3,8 +3,8 @@
 ## 本轮结论
 
 当前核心已经通过 ASE 的能量--原子力--应力契约实现了**架构上的**计算器无关性，
-但实证仍不完整：ABACUS 有 BTO/HfO2 完整路径，VASP 只有单 image smoke，QE 尚无
-适配入口或真实路径。因此论文不能把 ``calculator-agnostic`` 写成跨程序的材料验证结论。
+但实证仍不完整：ABACUS 有 BTO/HfO2 完整路径，VASP 只有单 image smoke，QE 只有
+无 DFT preflight。因此论文不能把 ``calculator-agnostic`` 写成跨程序的材料验证结论。
 
 现有 ``Mode``/路径投影功能也不是声子分析。它能读入用户给定的模式、生成模式引导
 初始路径及投影路径；它不计算力常数、频率、虚频、Hessian 或沿路径的正规坐标分解。
@@ -62,7 +62,7 @@ P0 应先完成；P1 的代码和 P2 的 calculator-free 分析实现可以并�
   mock/fake-calculator 回归，不依赖本地或 CI 中的 DFT 可执行文件。
 - [x] 已为现有 VASP factory 增加静态-image validator/test：`IBRION=-1`、`NSW=0`、
   `ISIF=2`、`ISYM=0`、独立目录和 stress 读取都必须由测试覆盖。
-- [ ] 更新 capability 表、README 和手册：ABACUS/VASP/QE 都是已实现 adapter；只有
+- [x] 更新 capability 表、README 和手册：ABACUS/VASP/QE 都是已实现 adapter；只有
   完成对应真实路径后才标为 material-path validated。
 
 ### P1.2 统一的 BTO 三后端验证（只做正向 7 total images）
@@ -102,23 +102,25 @@ smoke 状态，不提升该主张。
 
 ### P2.1 通用、calculator-free 分析层
 
-- [ ] 增加 `vcneb/phonons.py`（或等价 analysis module）：读取标准化 `.npz` 力常数
+- [x] 增加 `vcneb/phonons.py`（或等价 analysis module）：读取标准化 `.npz` 力常数
   / eigenpairs，执行质量加权对角化、声学平移投影、频率单位/符号处理、模态正交性
   与 eigenvector phase 对齐。
-- [ ] 定义跨 cell 路径坐标：以一个固定参考 cell、已审计 mapping 与周期 translation
+- [x] 定义跨 cell 路径坐标：以一个固定参考 cell、已审计 mapping 与周期 translation
   gauge 表示原子位移，再计算
   `q_nu(lambda) = e_nu^T M^(1/2) u(lambda)`；同时输出投影残差、累积解释方差和路径
   切线与 mode 的重叠，不能只画单个漂亮的 mode。
 - [ ] 增加 force-constant/eigenvector 合成模型测试：正交性、平移不变性、模式符号
   翻转不影响振幅、mapping/gauge 变换不改变投影、已知线性组合能被精确恢复。
-- [ ] 提供 CLI，导出 JSON/CSV、模式动画轨迹和可编辑图；把 `Mode` 的现有输入格式
+- [~] 已提供 `examples/analyze_path_gamma_modes.py`，导出 JSON/NPZ；CSV、模式动画与
+  可编辑图仍待真实 BTO 数据后按图稿需要补充。把 `Mode` 的现有输入格式
   与真正的 phonon provenance（结构、calculator、supercell、displacement、hash）
   明确区分。
 
 ### P2.2 BTO 首个真实示例
 
-- [~] 已提供 ABACUS BTO 端点的最小 Gamma 点有限位移/力常数 workflow（默认只生成
-  位移并写 preflight，尚未启动 SCF）；每个
+- [~] 已提供 ABACUS BTO 端点的最小 Gamma 点有限位移/力常数 workflow。预检作业
+  `27699613` 已验证只生成 6 个位移目录且未运行 ABACUS；`27704219` 正在以 32 MPI
+  对 cubic BTO 的 6 个位移顺序执行静态 SCF。每个
   displacement 均通过静态 force preflight 并独立记录。可使用 ASE/Phonopy 的有限
   位移执行，但 VARNEB 分析层只读取标准化结果，不绑定某一声子程序。
 - [ ] 以 cubic BTO 的不稳定极化模式和 tetragonal BTO 的相应稳定模式为候选，投影

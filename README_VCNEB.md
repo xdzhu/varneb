@@ -72,6 +72,9 @@ first-order saddle character.
 - `[model] examples/compare_initial_cell_paths.py`: calculator-free comparison of linear and logarithmic-strain initial paths for any ASE-readable endpoint pair (defaults to HfO2); supports `--mapping auto`.
 - `examples/mode_template.json`: copy-and-edit JSON template for an atomic mode plus an optional cell deformation mode.
 - `[production-template] examples/run_vcneb_vasp.py`: VASP driver based on the existing endpoint layout.
+- `examples/analyze_path_gamma_modes.py`: postprocess a completed chain against a
+  stationary-endpoint Gamma force-constant archive; it reports atomic normal
+  coordinates separately from the variable-cell degrees of freedom.
 - `[production-template] examples/run_vcneb_qe.py`: QE `pw.x` driver with a
   no-DFT `--validate-only` preflight; it supports 7 total images and
   manager-controlled interior-image workers.
@@ -423,6 +426,12 @@ python examples/run_vcneb_vasp.py \
 The script reads `CONTCAR`/`POSCAR` endpoints, interpolates fractional
 coordinates and cell deformation, copies `POTCAR`, and uses static single-point
 VASP settings with `IBRION=-1`, `NSW=0`, `ISIF=2`, `ISYM=0`.
+
+To build all seven isolated static image directories and record the effective
+VASP parameters without launching VASP, append `--validate-only`. The report
+is `vcneb_preflight.json`; `--image-workers N` subsequently enables a
+manager-controlled pool for interior images when the launcher reserves
+exclusive resources for each worker.
 
 To continue a stopped run from the latest complete chain snapshot:
 

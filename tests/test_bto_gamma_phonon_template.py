@@ -22,5 +22,8 @@ def test_bto_gamma_phonon_template_is_static_and_opt_in() -> None:
         "phonon_preflight.json",
         "'endpoint': __import__('os').environ['ENDPOINT']",
         "--abacus -f disp-[0-9][0-9][0-9]/OUT.ABACUS/running_scf.log",
+        "--abacus --writefc",
+        "gamma_force_constants.npz",
+        "force_constant_provenance.json",
     ):
         assert fragment in text

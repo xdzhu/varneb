@@ -113,4 +113,29 @@ done
 
 "${phonopy}" --abacus -f disp-[0-9][0-9][0-9]/OUT.ABACUS/running_scf.log
 test -s FORCE_SETS
-echo "[DONE] Gamma force constants assembled in ${PWD}/FORCE_SETS"
+"${phonopy}" --abacus --writefc
+test -s FORCE_CONSTANTS
+"${python}" - <<'PY'
+import json
+from pathlib import Path
+import numpy as np
+from phonopy import load
+
+phonon = load('phonopy_disp.yaml', force_constants_filename='FORCE_CONSTANTS')
+np.savez_compressed(
+    'gamma_force_constants.npz',
+    force_constants=np.asarray(phonon.force_constants, dtype=float),
+    masses_amu=np.asarray(phonon.unitcell.masses, dtype=float),
+)
+Path('force_constant_provenance.json').write_text(json.dumps({
+    'format_version': 1,
+    'force_constants': 'FORCE_CONSTANTS',
+    'archive': 'gamma_force_constants.npz',
+    'displacement_dataset': 'phonopy_disp.yaml',
+    'force_sets': 'FORCE_SETS',
+    'endpoint': __import__('os').environ['ENDPOINT'],
+    'supercell': [1, 1, 1],
+    'finite_difference_amplitude_A': float(__import__('os').environ.get('DELTA', '0.01')),
+}, indent=2) + '\n', encoding='utf-8')
+PY
+echo "[DONE] Gamma force constants assembled in ${PWD}/FORCE_CONSTANTS and gamma_force_constants.npz"
