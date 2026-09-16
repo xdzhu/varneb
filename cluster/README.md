@@ -79,9 +79,11 @@ directory, so failed workers and retries remain visible beyond Slurm stdout.
 `hf_batio3_vcneb_qe_distributed.slurm` is the corresponding QE BTO T→C
 validation gate. It is intentionally fixed to seven total images and five
 32-MPI interior workers (160 ranks over two nodes), with `--no-climb` because
-the established ABACUS reference is barrierless. By default it runs only the
-driver's `--validate-only` preflight; set `RUN_DFT=1` only after supplying the
-reviewed `QE_ENV_SCRIPT`, `ESPRESSO_PSEUDO`, and Ba/Ti/O UPF names. The QE
+the established ABACUS reference is barrierless. It refuses to reserve its
+160-rank allocation unless `RUN_DFT=1` and the reviewed `QE_ENV_SCRIPT`,
+`ESPRESSO_PSEUDO`, and Ba/Ti/O UPF names are supplied. First run
+`hf_batio3_vcneb_qe_preflight.slurm`, which is a one-rank no-DFT gate that
+validates the endpoint geometry, static-QE contract, and UPF identities. The QE
 cutoffs are explicit QE/Ry parameters and must be independently converged;
 they are not a mechanical conversion of VASP settings.
 

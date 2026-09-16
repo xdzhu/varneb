@@ -1,7 +1,7 @@
 #!/bin/bash
 # BTO T->C QE VCNEB: one manager and five independent 32-MPI interior workers.
-# The default is a no-DFT preflight.  Set RUN_DFT=1 only after the generated
-# manifest, QE executable and UPF files have been reviewed on hf.
+# This is the production allocation. Use the separate one-rank preflight
+# template before submitting it; RUN_DFT=1 is deliberately mandatory here.
 #SBATCH -J varneb-bto-qe
 #SBATCH -p hfacnormal01
 #SBATCH -N 2
@@ -49,23 +49,20 @@ if (( SLURM_NTASKS < image_workers * image_mpi )); then
   echo "allocated tasks are insufficient for five 32-MPI workers" >&2
   exit 2
 fi
+if [[ "${RUN_DFT:-0}" != 1 ]]; then
+  echo "Refusing a 160-rank allocation without RUN_DFT=1; use hf_batio3_vcneb_qe_preflight.slurm first" >&2
+  exit 2
+fi
 if [[ -z "${pseudo_dir}" ]]; then
   echo "Set ESPRESSO_PSEUDO to the reviewed UPF directory" >&2
   exit 2
 fi
 
 module purge
-if [[ "${RUN_DFT:-0}" == 1 ]]; then
-  : "${QE_ENV_SCRIPT:?Set QE_ENV_SCRIPT to the reviewed QE environment script}"
-  source "${QE_ENV_SCRIPT}"
-fi
+: "${QE_ENV_SCRIPT:?Set QE_ENV_SCRIPT to the reviewed QE environment script}"
+source "${QE_ENV_SCRIPT}"
 export OMP_NUM_THREADS=1
 cd "${repo}"
-
-validate_args=(--validate-only)
-if [[ "${RUN_DFT:-0}" == 1 ]]; then
-  validate_args=()
-fi
 
 exec "${python}" examples/run_vcneb_qe.py \
   --initial "validation/batio3_cubic_to_tetragonal/endpoint_relax_tetragonal_${endpoint_tag}/CONTCAR" \
@@ -78,5 +75,4 @@ exec "${python}" examples/run_vcneb_qe.py \
   --ecutwfc "${ecutwfc}" --ecutrho "${ecutrho}" --scf-thr "${scf_thr}" \
   --kpts "${kpt_x}" "${kpt_y}" "${kpt_z}" \
   --no-climb --mic --cell-interpolation log_strain --mapping auto --align-translation \
-  --minimum-distance 1.6 --maximum-deformation 0.10 \
-  "${validate_args[@]}"
+  --minimum-distance 1.6 --maximum-deformation 0.10

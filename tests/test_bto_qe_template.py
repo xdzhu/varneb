@@ -1,4 +1,4 @@
-"""Guard the no-DFT QE BTO distributed-validation template."""
+"""Guard the BTO QE production and lightweight-preflight templates."""
 
 from __future__ import annotations
 
@@ -8,7 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def test_bto_qe_template_preserves_the_five_by_32_worker_contract() -> None:
+def test_bto_qe_production_template_preserves_the_five_by_32_worker_contract() -> None:
     text = (ROOT / "cluster" / "hf_batio3_vcneb_qe_distributed.slurm").read_text(encoding="utf-8")
     for fragment in (
         "#SBATCH -N 2",
@@ -19,8 +19,24 @@ def test_bto_qe_template_preserves_the_five_by_32_worker_contract() -> None:
         "five 32-MPI interior workers (5 x 32 = 160)",
         "--n-images \"${n_images}\"",
         "--no-climb",
-        "--validate-only",
-        "if [[ \"${RUN_DFT:-0}\" == 1 ]]",
+        "if [[ \"${RUN_DFT:-0}\" != 1 ]]",
+        "Refusing a 160-rank allocation without RUN_DFT=1",
+        "${QE_ENV_SCRIPT:?Set QE_ENV_SCRIPT",
         "--cell-interpolation log_strain --mapping auto --align-translation",
     ):
         assert fragment in text
+
+
+def test_bto_qe_preflight_template_is_one_rank_and_never_launches_pw_x() -> None:
+    text = (ROOT / "cluster" / "hf_batio3_vcneb_qe_preflight.slurm").read_text(encoding="utf-8")
+    for fragment in (
+        "#SBATCH --ntasks=1",
+        "--n-images 7",
+        "--image-workers 0",
+        "--steps 0",
+        "--validate-only",
+        "--no-climb",
+        "--cell-interpolation log_strain --mapping auto",
+    ):
+        assert fragment in text
+    assert "srun" not in text
