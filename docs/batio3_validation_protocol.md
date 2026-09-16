@@ -33,6 +33,11 @@ QE 还要求 `QE_PP_MANIFEST`。该 manifest 的 `approval_status` 必须为
 文件存在、元素 metadata、PBE 标记和 MD5。仓库中的 SSSP 候选登记不是
 approved manifest，不能直接启动预检或生产作业。
 
+在 160-rank QE 路径之前，必须以 `cluster/hf_batio3_qe_static_baseline.slurm`
+在固定初始端点执行真实的 32-MPI 静态 SCF。每个 `ECUTWFC`/`ECUTRHO` 点使用
+独立 `WORKDIR`，并保存其 `qe_static_summary.json`；该作业不计算 interior image，
+不构成 NEB 迭代，也不替代随后 7-total-image 的端点一致性闸门。
+
 VASP preflight 会记录初始目录 `INCAR`、`KPOINTS` 与许可 `POTCAR` 的完整
 SHA256；同一份经过审核的输入必须复制到每一个静态 image 目录。
 
@@ -45,7 +50,7 @@ SHA256；同一份经过审核的输入必须复制到每一个静态 image 目�
 2. 以 5→7→9 顺序跑普通 NEB；普通路径稳定前不启动 CI。
 3. 同时记录正向能垒、反应焓、最高 image 的 reaction coordinate、体积/晶格
    变化、关键 image 的原子力/应力和最大广义力。
-4. 默认收敛门槛为：相邻 image 的能垒差不超过 `0.02 eV`，最高 image 的
+4. image 数收敛判据为：相邻 image 的能垒差不超过 `0.02 eV`，最高 image 的
    reaction-coordinate 位移不超过相邻 segment 长度的 `0.25`，且最高 image
    的结构/体积变化不出现新的局部极值。若 7→9 仍不满足，只在高曲率区增加
    11 或 13 image，不盲目把整条路径加密。
@@ -60,8 +65,8 @@ optimizer step 的观察窗口，并保留窗口内最佳完整 chain snapshot�
 
 ## CI 与恢复闸门
 
-- 只有普通 NEB 满足广义力目标（当前预收敛目标 `0.02 eV/A`，最终可按路径
-  噪声加严）且几何诊断通过，才从同一普通轨迹启动 staged CI。
+- 只有普通 NEB 满足默认广义力目标 `0.10 eV/A` 且几何诊断通过，才从同一
+  普通轨迹启动 staged CI；不得仅为了形式上的更小残差而把默认阈值加严。
 - CI 报告必须包含最高 image、负切线曲率、垂直力、完整物理原子力/应力和
   `has_interior_barrier`；投影 NEB residual 不能替代完整物理力。
 - 人为终止后只从最近完整 `chain_step_####.traj` 或完整 trajectory chain 恢复；

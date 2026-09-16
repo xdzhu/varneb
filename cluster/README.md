@@ -76,6 +76,12 @@ serial-image reference for reproducibility and debugging.
 Each parallel run also writes an image-worker JSONL manifest under its work
 directory, so failed workers and retries remain visible beyond Slurm stdout.
 
+`hf_batio3_qe_static_baseline.slurm` is the preceding real 32-MPI
+fixed-endpoint SCF stage. It requires `RUN_DFT=1`, a reviewed QE environment,
+and an approved MD5-pinned manifest. Use an independent `WORKDIR` for each
+explicit `ECUTWFC`/`ECUTRHO` point and retain every result; it evaluates only
+endpoint `00`, so it is neither an NEB worker nor a path calculation.
+
 `hf_batio3_vcneb_qe_distributed.slurm` is the corresponding QE BTO T→C
 validation gate. It is intentionally fixed to seven total images and five
 32-MPI interior workers (160 ranks over two nodes), with `--no-climb` because
@@ -83,9 +89,10 @@ the established ABACUS reference is barrierless. It refuses to reserve its
 160-rank allocation unless `RUN_DFT=1` and the reviewed `QE_ENV_SCRIPT`,
 `ESPRESSO_PSEUDO`, and Ba/Ti/O UPF names are supplied. First run
 `hf_batio3_vcneb_qe_preflight.slurm`, which is a one-rank no-DFT gate that
-validates the endpoint geometry, static-QE contract, and UPF identities. The QE
-cutoffs are explicit QE/Ry parameters and must be independently converged;
-they are not a mechanical conversion of VASP settings.
+validates the endpoint geometry, static-QE contract, and UPF identities; then
+run the static baseline. The QE cutoffs are explicit QE/Ry parameters and must
+be independently converged; they are not a mechanical conversion of VASP
+settings.
 Both QE templates additionally require `QE_PP_MANIFEST`: an explicitly approved
 JSON manifest that fixes every UPF basename and MD5. A candidate register is
 not accepted as a production manifest.

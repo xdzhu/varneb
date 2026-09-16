@@ -46,3 +46,19 @@ def test_bto_qe_preflight_template_is_one_rank_and_never_launches_pw_x() -> None
     ):
         assert fragment in text
     assert "srun" not in text
+
+
+def test_bto_qe_static_baseline_is_one_fixed_endpoint_32_mpi_scf() -> None:
+    text = (ROOT / "cluster" / "hf_batio3_qe_static_baseline.slurm").read_text(encoding="utf-8")
+    for fragment in (
+        "#SBATCH --ntasks=32",
+        "if [[ \"${RUN_DFT:-0}\" != 1 ]]",
+        "QE_PP_MANIFEST",
+        "--pp-manifest \"${pp_manifest}\"",
+        "--ecutwfc \"${ecutwfc}\" --ecutrho \"${ecutrho}\"",
+        "--static-only",
+        "--no-climb",
+        "ecutrho=${ECUTRHO:-600}",
+        "srun --exclusive --nodes=1 --ntasks=32 pw.x",
+    ):
+        assert fragment in text

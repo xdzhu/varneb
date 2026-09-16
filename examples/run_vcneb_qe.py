@@ -16,6 +16,7 @@ import subprocess
 import sys
 import tempfile
 
+import numpy as np
 from ase.io import read, write
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -78,6 +79,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--image-cache-dir", default=None)
     parser.add_argument("--image-cache-namespace", default=None)
     parser.add_argument("--validate-only", action="store_true")
+    parser.add_argument(
+        "--static-only",
+        action="store_true",
+        help="Evaluate fixed initial endpoint 00 once, then write qe_static_summary.json; never optimize a path",
+    )
     return parser.parse_args()
 
 
@@ -146,6 +152,8 @@ def main() -> None:
     args = parse_args()
     if args.image_workers < 0 or args.image_retries < 0:
         raise ValueError("--image-workers and --image-retries must be non-negative")
+    if args.validate_only and args.static_only:
+        raise ValueError("--validate-only and --static-only are mutually exclusive")
     if args.command is None or args.pseudo_dir is None:
         raise ValueError("QE VCNEB requires --command and --pseudo-dir (or QE_COMMAND/ESPRESSO_PSEUDO)")
     initial, final = read(args.initial), read(args.final)
@@ -224,6 +232,25 @@ def main() -> None:
     _write_json_atomic(workdir / "vcneb_preflight.json", {"status": "ok", **metadata})
     if args.validate_only:
         print(f"[OK] QE VCNEB preflight passed; report={workdir / 'vcneb_preflight.json'}")
+        return
+    if args.static_only:
+        # A real electronic baseline that does not turn a fixed endpoint into
+        # an NEB worker and never performs ionic/cell updates.
+        static_image = images[0]
+        forces = np.asarray(static_image.get_forces(), dtype=float)
+        stress = np.asarray(static_image.get_stress(), dtype=float)
+        summary = {
+            "status": "completed",
+            **metadata,
+            "execution_mode": "fixed_initial_endpoint_static_scf",
+            "evaluated_image_index": 0,
+            "potential_energy_eV": float(static_image.get_potential_energy()),
+            "forces_eV_per_A": forces.tolist(),
+            "stress_eV_per_A3_voigt": stress.tolist(),
+            "max_force_eV_per_A": float(np.linalg.norm(forces, axis=1).max()),
+        }
+        _write_json_atomic(workdir / "qe_static_summary.json", summary)
+        print(f"[DONE] QE fixed-endpoint static SCF; workdir={workdir}")
         return
     executor = ThreadedCalculatorExecutor(
         args.image_workers,

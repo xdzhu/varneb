@@ -9,6 +9,7 @@ import sys
 from pathlib import Path
 
 from ase import Atoms
+from ase.calculators.singlepoint import SinglePointCalculator
 from ase.io import write
 import pytest
 
@@ -88,3 +89,46 @@ def test_qe_driver_validate_only_writes_a_7_image_preflight(tmp_path) -> None:
         "calculation": "scf", "tstress": True, "tprnfor": True
     }
     assert payload["pseudopotential_reports"][0]["sha256"]
+
+
+def test_qe_driver_static_only_evaluates_fixed_initial_endpoint_once(tmp_path, monkeypatch) -> None:
+    module = _module()
+    initial = Atoms("Ba", cell=[4, 4, 4], pbc=True)
+    final = Atoms("Ba", scaled_positions=[[0.1, 0.0, 0.0]], cell=[4.1, 4, 4], pbc=True)
+    initial_path, final_path = tmp_path / "initial.vasp", tmp_path / "final.vasp"
+    write(initial_path, initial, format="vasp")
+    write(final_path, final, format="vasp")
+    (tmp_path / "Ba.upf").write_text('<UPF element="Ba" functional="PBE">\\n', encoding="utf-8")
+
+    calls: list[int] = []
+
+    def fake_factory(*, parameters, command, pseudo_dir):
+        def make(index, atoms, directory):
+            calls.append(index)
+            calculator = SinglePointCalculator(
+                atoms,
+                energy=-12.5,
+                forces=[[0.01, 0.0, 0.0]],
+                stress=[0.1, 0.2, 0.3, 0.0, 0.0, 0.0],
+            )
+            calculator.directory = str(directory)
+            return calculator
+        return make
+
+    monkeypatch.setattr(sys, "argv", [
+        str(DRIVER), "--initial", str(initial_path), "--final", str(final_path),
+        "--workdir", str(tmp_path / "static"), "--command", "pw.x", "--pseudo-dir", str(tmp_path),
+        "--pp", "Ba=Ba.upf", "--static-only",
+    ])
+    # runpy returns a result dictionary distinct from function.__globals__.
+    # Patch the latter so this test can exercise the real driver flow without
+    # invoking an external pw.x executable.
+    monkeypatch.setitem(module["main"].__globals__, "make_ase_espresso_factory", fake_factory)
+    module["main"]()
+
+    summary = json.loads((tmp_path / "static" / "qe_static_summary.json").read_text(encoding="utf-8"))
+    assert calls == list(range(7))  # immutable calculator directories remain auditable.
+    assert summary["execution_mode"] == "fixed_initial_endpoint_static_scf"
+    assert summary["evaluated_image_index"] == 0
+    assert summary["potential_energy_eV"] == -12.5
+    assert summary["max_force_eV_per_A"] == pytest.approx(0.01)
