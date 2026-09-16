@@ -145,6 +145,24 @@ determinant。
 
 ## 4. VC-NEB 离散力
 
+### 4.1 从普通固定 cell NEB 出发
+
+当所有 image 共享一个不变的 cell，普通 NEB 的构型仅为 Cartesian 原子坐标
+`R_i`。令 `f_i` 为真原子力、`tau_i` 为单位切线、
+`d_i^+ = ||R_{i+1}-R_i||`、`d_i^- = ||R_i-R_{i-1}||`，则
+
+\[
+f_i^{\mathrm{NEB}}=f_i-(f_i\cdot\tau_i)\tau_i+
+k_i(d_i^+-d_i^-)\tau_i.
+\]
+
+即真力只保留法向分量，弹簧只保留切向分量。CI 在普通 band 已形成真实内部能量峰
+之后，把最高内部 image 的真力切向分量反转且去除弹簧；它不是对单调路径的自动默认
+解释。将下述 cell 块全部冻结并令每个 image 使用同一 `h`，当前 VCNEB 公式严格退化为
+这一固定 cell 构造。
+
+### 4.2 扩展坐标中的 VC-NEB
+
 对内部 image `i`，记 `H_i=H(Q_i)`，`x_i=x(Q_i)`。当前实现使用能量加权的 improved tangent：
 
 \[

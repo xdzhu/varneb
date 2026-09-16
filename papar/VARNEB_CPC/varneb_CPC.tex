@@ -105,8 +105,30 @@ single-image adapter smoke test, not as a material-path benchmark. This
 separation is important: an interface feature is not itself cross-engine
 validation.
 
-\section{Method and numerical contract}
+\section{From conventional NEB to VCNEB}
 \label{sec:method}
+
+\subsection{Conventional fixed-cell NEB}
+
+For a fixed simulation cell, an image is represented only by its Cartesian
+coordinate vector $R_i\in\mathbb{R}^{3N}$.  NEB finds a discretized
+minimum-energy path by retaining the physical force perpendicular to the local
+path tangent $\hat\tau_i$ and adding a spring force parallel to it.  With
+$d_i^{\pm}=\lVert R_{i\pm1}-R_i\rVert$, the standard interior-image force is
+\begin{equation}
+ f_i^{\mathrm{NEB}}=
+ f_i-(f_i\cdot\hat\tau_i)\hat\tau_i+
+ k_i(d_i^+-d_i^-)\hat\tau_i .
+ \label{eq:fixed-neb}
+\end{equation}
+This separation prevents the true force from sliding images down the path while
+the springs control their spacing.  A climbing image replaces this expression
+only after an ordinary band has formed an interior energy maximum: it reverses
+the tangent component of the true force and removes the spring
+\cite{Henkelman2000}.  Fixed-cell NEB is therefore recovered whenever every
+image shares the same $h$ and cell degrees of freedom are inactive.
+
+\subsection{Variable-cell generalized coordinates}
 
 For an image with $N$ atoms, let $h$ be the row-vector cell matrix, $s_a$ the
 fractional coordinate of atom $a$, and $h_0$ a reference cell. VARNEB writes
@@ -129,8 +151,10 @@ contribution through
  \label{eq:cellforce}
 \end{equation}
 The atomic and cell blocks are transformed into the common coordinate in
-Eq.~\ref{eq:coordinate} before tangential projection. For internal image $i$,
-the ordinary path force is
+Eq.~\ref{eq:coordinate} before tangential projection.  Thus the fixed-cell
+construction in Eq.~\ref{eq:fixed-neb} carries over without assigning
+independent, incompatible reaction coordinates to atoms and the lattice.  For
+internal image $i$, the ordinary generalized path force is
 \begin{equation}
  g_i^{\mathrm{NEB}}=g_i-(g_i\cdot\tau_i)\tau_i+
  k_i(d_i^+-d_i^-)\tau_i.
@@ -150,14 +174,23 @@ maximum generalized force, atom-force and stress components, reaction enthalpy,
 barrier, peak identity, and CI status. An explicit post-run loose NEB re-audit
 never changes the trajectory or its calculator settings.
 
-\section{Software design and workflow}
+\section{Calculator-agnostic architecture and reproducible workflow}
 \label{sec:software}
 
-The calculator contract requires finite energy, forces, and stress for every
-image. Missing stress is a hard failure in a variable-cell calculation. The
-ABACUS and VASP factories construct one calculator directory per image; no
-worker shares mutable files with another image. A controller owns image order,
-endpoints, tangent construction, optimizer state, snapshots, and final
+The core receives no program-specific input keywords.  Its calculator contract
+requires only finite energy, Cartesian forces and stress for every image;
+missing stress is a hard failure because it makes the cell generalized force
+undefined.  A backend adapter is responsible for units, stress convention,
+static single-point semantics and a unique working directory.  In particular,
+ABACUS, VASP and QE must not perform their own ionic or cell relaxation inside
+an image: the manager is the sole owner of $Q_i$ updates.  This division lets
+the same path algorithm operate on any ASE-compatible provider while keeping
+calculator-specific pseudopotential and convergence choices visible in the
+run manifest.
+
+The ABACUS, VASP and QE factories construct one calculator directory per image;
+no worker shares mutable files with another image. A controller owns image
+order, endpoints, tangent construction, optimizer state, snapshots, and final
 summary. A threaded executor delegates only interior calculator calls.
 Endpoints are fixed and cached during a path, so a 7-total-image calculation
 has five costly interior images rather than seven repeated endpoint evaluations.
