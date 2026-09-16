@@ -365,7 +365,7 @@ on calculator/optimizer error:
 | `k` | 0.2 | ≥ 0, eV/Å²（或逐段数组） | 扩展坐标弹簧常数 |
 | `cell_scale` | 参考 cell 体积的立方根 | > 0, Å | 原子位移与 cell 变形的联合度量尺度 |
 | `pressure_gpa` | 0 | 任意有限值, GPa | 静水压力焓项 `P V` |
-| `fmax` | 0.05 | > 0, eV/Å | 最大内部广义力收敛阈值；复杂 DFT 普通 NEB 可显式报告 `0.10 eV/Å` loose 口径 |
+| `fmax` | 0.10 | > 0, eV/Å | 最大内部广义力收敛阈值；更严格的数值只能作为显式研究协议报告，不是默认物理精度 |
 | `steps` | 300 | integer ≥ 0 | optimizer 步数上限 |
 | `cell_interpolation` | `linear` | `linear`/`log_strain`/custom | 初始 cell 路径；log-strain 要求正定 deformation |
 | `mapping` | `identity` | `identity`/`auto`/显式 permutation | 端点原子配对和周期分支 |

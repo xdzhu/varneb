@@ -352,3 +352,4 @@
 - `outputs/vcneb_literature_review.md`
 - `outputs/vcneb_p0_baseline_manifest.json`
 - `docs/theory.md`
+- `docs/next_priority_plan_2026-09-16.md`（当前论文、多后端与声子分析的执行优先级）
