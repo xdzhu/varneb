@@ -21,3 +21,17 @@ def test_cu17_runner_uses_all_cores_per_serial_interior_image_and_cached_endpoin
         "scripts/audit_vcneb_result.py",
     ):
         assert fragment in text
+
+
+def test_cu17_static_runner_requires_40_cores_and_selects_one_fixed_endpoint() -> None:
+    text = (ROOT / "cluster" / "cu17_batio3_vasp_static_baseline.sh").read_text(encoding="utf-8")
+    for fragment in (
+        '"$(hostname -s)" == cu17',
+        '"$(nproc)" == 40',
+        "mpirun -np 40",
+        'STATIC_ENDPOINT must be initial or final',
+        "--static-only",
+        "--static-endpoint",
+        "--no-climb",
+    ):
+        assert fragment in text
