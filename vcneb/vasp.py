@@ -5,12 +5,14 @@ from __future__ import annotations
 import os
 import hashlib
 import json
+import re
 import shutil
 from pathlib import Path
-from typing import Mapping, Optional
+from typing import Mapping, Optional, Sequence
 
 import numpy as np
 from ase import Atoms
+from ase.calculators.calculator import Calculator, all_changes
 from ase.calculators.singlepoint import SinglePointCalculator
 from ase.calculators.vasp import Vasp
 from ase.io import write
@@ -24,6 +26,115 @@ REQUIRED_VCNEB_STATIC_PARAMETERS = {
     "isif": 2,
     "isym": 0,
 }
+
+
+def potcar_dataset_labels(path: str | Path) -> list[str]:
+    """Return dataset labels (for example ``Ba_sv``) from a POTCAR."""
+
+    text = Path(path).read_text(encoding="latin-1")
+    labels = []
+    for title in re.findall(r"^\s*TITEL\s*=\s*(.+)$", text, flags=re.MULTILINE):
+        candidates = re.findall(r"\b[A-Z][a-z]?(?:_[A-Za-z0-9]+)?\b", title)
+        candidates = [item for item in candidates if not item.startswith("PAW")]
+        if not candidates:
+            raise ValueError(f"cannot determine POTCAR dataset from TITEL={title!r}")
+        labels.append(candidates[0])
+    if not labels:
+        raise ValueError(f"no TITEL records found in POTCAR: {path}")
+    return labels
+
+
+def potcar_setups(path: str | Path) -> dict[str, str]:
+    """Translate explicit POTCAR labels into ASE setup suffixes."""
+
+    setups: dict[str, str] = {}
+    for label in potcar_dataset_labels(path):
+        match = re.fullmatch(r"([A-Z][a-z]?)(.*)", label)
+        if match is None:
+            raise ValueError(f"unsupported POTCAR dataset label: {label}")
+        symbol, suffix = match.groups()
+        if symbol in setups and setups[symbol] != suffix:
+            raise ValueError(f"multiple POTCAR setups for {symbol}: {setups[symbol]!r} and {suffix!r}")
+        setups[symbol] = suffix
+    return setups
+
+
+class ExplicitPotcarVasp(Vasp):
+    """ASE VASP calculator that restores the exact licensed source POTCAR."""
+
+    def __init__(self, *, source_potcar: str | Path, **kwargs):
+        self.source_potcar = Path(source_potcar).resolve()
+        super().__init__(**kwargs)
+
+    def write_input(self, atoms, properties=None, system_changes=None):
+        super().write_input(atoms, properties=properties, system_changes=system_changes)
+        shutil.copy2(self.source_potcar, Path(self.directory) / "POTCAR")
+
+
+def expand_virtual_site(
+    atoms: Atoms,
+    *,
+    virtual_symbol: str,
+    components: Sequence[str],
+) -> tuple[Atoms, list[list[int]]]:
+    """Expand one physical virtual site into coincident VASP components."""
+
+    indices = [index for index, symbol in enumerate(atoms.get_chemical_symbols()) if symbol == virtual_symbol]
+    if len(indices) != 1:
+        raise ValueError(f"expected exactly one {virtual_symbol} virtual site, found {len(indices)}")
+    virtual_index = indices[0]
+    symbols: list[str] = []
+    scaled_positions = []
+    physical_to_expanded: list[list[int]] = []
+    original_scaled = atoms.get_scaled_positions(wrap=False)
+    for index, (symbol, position) in enumerate(zip(atoms.get_chemical_symbols(), original_scaled)):
+        mapped = []
+        new_symbols = list(components) if index == virtual_index else [symbol]
+        for new_symbol in new_symbols:
+            mapped.append(len(symbols))
+            symbols.append(new_symbol)
+            scaled_positions.append(position)
+        physical_to_expanded.append(mapped)
+    expanded = Atoms(symbols, scaled_positions=scaled_positions, cell=atoms.cell, pbc=atoms.pbc)
+    return expanded, physical_to_expanded
+
+
+class VirtualCrystalCalculator(Calculator):
+    """Expose a VASP VCA calculation as a physical, non-overlapping Atoms model."""
+
+    implemented_properties = ["energy", "free_energy", "forces", "stress"]
+
+    def __init__(
+        self,
+        base_calculator: Calculator,
+        *,
+        virtual_symbol: str,
+        components: Sequence[str],
+    ):
+        super().__init__()
+        self.base_calculator = base_calculator
+        self.virtual_symbol = virtual_symbol
+        self.components = tuple(components)
+        self.directory = getattr(base_calculator, "directory", None)
+
+    def calculate(self, atoms=None, properties=("energy",), system_changes=all_changes):
+        super().calculate(atoms, properties, system_changes)
+        if atoms is None:
+            raise ValueError("VirtualCrystalCalculator requires atoms")
+        expanded, mapping = expand_virtual_site(
+            atoms,
+            virtual_symbol=self.virtual_symbol,
+            components=self.components,
+        )
+        expanded.calc = self.base_calculator
+        energy = float(expanded.get_potential_energy())
+        forces = np.asarray(expanded.get_forces(), dtype=float)
+        stress = np.asarray(expanded.get_stress(), dtype=float)
+        physical_forces = np.asarray([forces[indices].sum(axis=0) for indices in mapping])
+        self.results = {"energy": energy, "forces": physical_forces, "stress": stress}
+        free_energy = expanded.calc.results.get("free_energy")
+        if free_energy is not None:
+            self.results["free_energy"] = float(free_energy)
 
 
 def vasp_input_fingerprints(source_dir: str | Path) -> dict:
@@ -131,6 +242,13 @@ def prepare_vasp_static_parameters(
     )
     if overrides:
         params.update({str(key).lower(): value for key, value in dict(overrides).items()})
+    try:
+        params["setups"] = potcar_setups(potcar)
+    except ValueError as exc:
+        # ``--validate-only`` regression fixtures intentionally use a small
+        # non-PAW placeholder.  A real VASP run will still reject that file.
+        if "no TITEL records" not in str(exc):
+            raise
     return validate_vasp_static_parameters(params), potcar
 
 
@@ -141,6 +259,8 @@ def attach_vasp_calculators(
     workdir: str | Path,
     command: str,
     overrides: Optional[Mapping] = None,
+    vca_virtual_symbol: Optional[str] = None,
+    vca_components: Optional[Sequence[str]] = None,
 ) -> None:
     params, potcar = prepare_vasp_static_parameters(source_dir, overrides=overrides)
 
@@ -151,7 +271,25 @@ def attach_vasp_calculators(
         image_dir.mkdir(parents=True, exist_ok=True)
         write(image_dir / "POSCAR.start", image, format="vasp", direct=True, vasp5=True)
         shutil.copy2(potcar, image_dir / "POTCAR")
-        image.calc = Vasp(directory=str(image_dir), command=command, txt="vasp.out", **params)
+        base = ExplicitPotcarVasp(
+            source_potcar=potcar,
+            directory=str(image_dir),
+            command=command,
+            txt="vasp.out",
+            **params,
+        )
+        if vca_virtual_symbol is None and vca_components is None:
+            image.calc = base
+        elif vca_virtual_symbol is not None and vca_components:
+            if "vca" not in params:
+                raise ValueError("VCA calculator requested but the source INCAR has no VCA tag")
+            image.calc = VirtualCrystalCalculator(
+                base,
+                virtual_symbol=vca_virtual_symbol,
+                components=vca_components,
+            )
+        else:
+            raise ValueError("pass both vca_virtual_symbol and vca_components, or neither")
 
 
 def default_vasp_command(ncores: int, executable: str) -> str:

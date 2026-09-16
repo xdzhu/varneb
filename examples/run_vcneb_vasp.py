@@ -74,6 +74,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--line-search-retry-factor", type=float, default=0.5)
     parser.add_argument("--vasp-bin", default=os.environ.get("VASP_BIN", "vasp_std"))
     parser.add_argument("--ncores", type=int, default=int(os.environ.get("NP", "8")))
+    parser.add_argument("--vca-virtual-symbol", default=None, help="Physical symbol representing one virtual site, e.g. Ba")
+    parser.add_argument("--vca-components", nargs="+", default=None, help="Coincident VASP components, e.g. Ba Sr")
     parser.add_argument("--image-workers", type=int, default=0)
     parser.add_argument("--image-retries", type=int, default=0)
     parser.add_argument("--image-manifest", default=None)
@@ -231,12 +233,21 @@ def main() -> None:
         initial_dir,
         overrides={"xc": "PBE", "pp": "PBE"},
     )
+    vca_calculator_options = {}
+    if args.vca_virtual_symbol is not None or args.vca_components is not None:
+        if args.vca_virtual_symbol is None or not args.vca_components:
+            raise ValueError("pass both --vca-virtual-symbol and --vca-components")
+        vca_calculator_options = {
+            "vca_virtual_symbol": args.vca_virtual_symbol,
+            "vca_components": args.vca_components,
+        }
     attach_vasp_calculators(
         images,
         source_dir=initial_dir,
         workdir=workdir,
         command=command,
         overrides={"xc": "PBE", "pp": "PBE"},
+        **vca_calculator_options,
     )
     if args.initial_static_summary:
         images[0].calc = cached_vasp_static_endpoint_calculator(
@@ -262,7 +273,11 @@ def main() -> None:
     metadata = {
         "git_revision": _git_revision(),
         "command_line": sys.argv,
-        "calculator": "ASE VASP",
+        "calculator": "ASE VASP VCA" if args.vca_virtual_symbol else "ASE VASP",
+        "vca": (
+            {"virtual_symbol": args.vca_virtual_symbol, "components": args.vca_components}
+            if args.vca_virtual_symbol else None
+        ),
         "n_images": args.n_images,
         "n_interior_images": max(0, args.n_images - 2),
         "endpoint_evaluation_policy": (
