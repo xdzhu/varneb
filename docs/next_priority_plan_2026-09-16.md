@@ -93,10 +93,10 @@ smoke 状态，不提升该主张。
 
 - [ ] 将“路径模式分解”和“声子”分开命名。非平衡 NEB image 不是驻点，不能把其
   位移投影直接叫作 phonon；它应称为相对参考结构的**正规坐标/集体模式投影**。
-- [ ] 对平衡端点（及经充分验证的 CI 鞍点）计算或导入 Gamma 点力常数，构造
+- [x] 对平衡端点（及经充分验证的 CI 鞍点）计算或导入 Gamma 点力常数，构造
   mass-weighted dynamical matrix、频率和本征矢。虚频只在该驻点 Hessian 的明确
   约束空间内解释。
-- [ ] VCNEB 的 homogeneous cell 变化单独以对称应变分量/strain amplitude 报告。
+- [~] VCNEB 的 homogeneous cell 变化单独以对称应变分量/strain amplitude 报告。
   原子 Gamma 声子与原子--cell 联合 Hessian 不应混称；后者需要外压下的完整
   广义 Hessian，是后续扩展而非首版交付。
 
@@ -109,24 +109,26 @@ smoke 状态，不提升该主张。
   gauge 表示原子位移，再计算
   `q_nu(lambda) = e_nu^T M^(1/2) u(lambda)`；同时输出投影残差、累积解释方差和路径
   切线与 mode 的重叠，不能只画单个漂亮的 mode。
-- [ ] 增加 force-constant/eigenvector 合成模型测试：正交性、平移不变性、模式符号
+- [~] 已有质量加权、平移投影、已知线性组合、映射与 gauge 合成测试；模式符号
   翻转不影响振幅、mapping/gauge 变换不改变投影、已知线性组合能被精确恢复。
-- [~] 已提供 `examples/analyze_path_gamma_modes.py`，导出 JSON/NPZ；CSV、模式动画与
+- [~] 已提供 `examples/analyze_path_gamma_modes.py`，导出 JSON/NPZ、完整基重构残差和
+  简并子空间切线重叠；CSV、模式动画与
   可编辑图仍待真实 BTO 数据后按图稿需要补充。把 `Mode` 的现有输入格式
   与真正的 phonon provenance（结构、calculator、supercell、displacement、hash）
   明确区分。
 
 ### P2.2 BTO 首个真实示例
 
-- [~] 已提供 ABACUS BTO 端点的最小 Gamma 点有限位移/力常数 workflow。预检作业
-  `27699613` 已验证只生成 6 个位移目录且未运行 ABACUS；`27704219` 正在以 32 MPI
-  对 cubic BTO 的 6 个位移顺序执行静态 SCF。每个
+- [x] 已提供 ABACUS BTO 端点的最小 Gamma 点有限位移/力常数 workflow。预检作业
+  `27699613` 已验证只生成 6 个位移目录且未运行 ABACUS；`27704219` 已以 32 MPI
+  对 cubic BTO 的 6 个位移顺序完成静态 SCF，并由 Phonopy 组装 `FORCE_SETS` 和
+  `FORCE_CONSTANTS`。每个
   displacement 均通过静态 force preflight 并独立记录。可使用 ASE/Phonopy 的有限
   位移执行，但 VARNEB 分析层只读取标准化结果，不绑定某一声子程序。
-- [ ] 以 cubic BTO 的不稳定极化模式和 tetragonal BTO 的相应稳定模式为候选，投影
-  已完成的 ABACUS T-to-C 7-image 路径；同时画出极化 mode amplitude、Ti--O 相对
-  位移、cell strain 和能量/反应坐标。
-- [ ] 只有在残差和 mode-overlap 支持时，才写“路径主要由某软模主导”；否则报告
+- [~] cubic BTO 的三重简并不稳定 $Gamma$ 子空间（-217.474 cm$^{-1}$）已投影到
+  已完成 ABACUS T-to-C 7-image 路径；原子 mapping、非整数 gauge translation、刚性
+  平移去除与完整基残差均有记录。tetragonal 端点力常数、Ti--O/strain/energy 合图仍待补。
+- [x] 只有在残差和 mode-overlap 支持时，才写“路径主要由某软模主导”；否则报告
   多模混合，而不是强行归因。VASP/QE 的 BTO 路径可复用该分析格式，但无需先做三套
   昂贵声子计算。
 

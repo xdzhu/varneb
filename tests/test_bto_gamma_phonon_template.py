@@ -22,8 +22,11 @@ def test_bto_gamma_phonon_template_is_static_and_opt_in() -> None:
         "phonon_preflight.json",
         "'endpoint': __import__('os').environ['ENDPOINT']",
         "--abacus -f disp-[0-9][0-9][0-9]/OUT.ABACUS/running_scf.log",
-        "force_sets_filename='FORCE_SETS', calculator='abacus'",
+        "force_sets_filename='FORCE_SETS',",
+        "calculator='abacus',",
+        "is_compact_fc=False",
         "write_FORCE_CONSTANTS(phonon.force_constants)",
+        "transpose(0, 2, 1, 3)",
         "gamma_force_constants.npz",
         "force_constant_provenance.json",
     ):

@@ -123,11 +123,19 @@ from phonopy.file_IO import write_FORCE_CONSTANTS
 # Load the explicit displacement YAML.  Calling ``phonopy --writefc`` while
 # STRU is also present triggers Phonopy's legacy calculator-file path, which
 # cannot infer the supercell matrix; never rely on that ambiguous branch.
-phonon = load('phonopy_disp.yaml', force_sets_filename='FORCE_SETS', calculator='abacus')
+phonon = load(
+    'phonopy_disp.yaml',
+    force_sets_filename='FORCE_SETS',
+    calculator='abacus',
+    is_compact_fc=False,
+)
 write_FORCE_CONSTANTS(phonon.force_constants)
+# Phonopy arrays are (atom_i, atom_j, Cartesian_i, Cartesian_j); VARNEB's
+# calculator-independent archive uses (atom_i, Cartesian_i, atom_j, Cartesian_j).
+force_constants = np.asarray(phonon.force_constants, dtype=float).transpose(0, 2, 1, 3)
 np.savez_compressed(
     'gamma_force_constants.npz',
-    force_constants=np.asarray(phonon.force_constants, dtype=float),
+    force_constants=force_constants,
     masses_amu=np.asarray(phonon.unitcell.masses, dtype=float),
 )
 Path('force_constant_provenance.json').write_text(json.dumps({

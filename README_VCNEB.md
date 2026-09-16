@@ -76,7 +76,8 @@ first-order saddle character.
   stationary-endpoint Gamma force-constant archive; it reports atomic normal
   coordinates separately from the variable-cell degrees of freedom. Supply the
   recorded endpoint mapping with `--reference-permutation` when NEB reordered
-  same-species atoms.
+  same-species atoms, and `--reference-translation` when the initial-path
+  metadata records a non-integer endpoint gauge translation.
 - `[production-template] examples/run_vcneb_qe.py`: QE `pw.x` driver with a
   no-DFT `--validate-only` preflight; it supports 7 total images and
   manager-controlled interior-image workers.
