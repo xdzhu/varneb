@@ -9,7 +9,9 @@ optimizer.
 from __future__ import annotations
 
 from copy import deepcopy
+import hashlib
 from pathlib import Path
+import re
 from typing import Callable, Mapping
 
 from ase import Atoms
@@ -23,6 +25,58 @@ _REQUIRED_CONTROL = {
     "tstress": True,
     "tprnfor": True,
 }
+_UPF_ELEMENT_RE = re.compile(r"\belement\s*=\s*['\"]?([A-Za-z]{1,3})", re.IGNORECASE)
+
+
+def validate_qe_pseudopotentials(
+    pseudo_dir: str | Path,
+    pseudopotentials: Mapping[str, str],
+) -> list[dict]:
+    """Validate and fingerprint QE UPF files before a VCNEB preflight.
+
+    This is deliberately a provenance gate rather than a claim that the
+    selected potentials are converged.  It rejects missing files, a filename
+    that escapes ``pseudo_dir``, inconsistent element metadata, and files
+    without a visible PBE marker.  The complete SHA256 is retained in the run
+    report so a reviewed selection cannot silently change during a restart.
+    """
+
+    root = Path(pseudo_dir).expanduser().resolve()
+    if not root.is_dir():
+        raise FileNotFoundError(f"QE pseudopotential directory does not exist: {root}")
+    if not pseudopotentials:
+        raise ValueError("at least one QE pseudopotential mapping is required")
+    reports: list[dict] = []
+    for species, filename in sorted(pseudopotentials.items()):
+        label = str(species).strip()
+        relative = Path(str(filename))
+        if not label or relative.is_absolute() or relative.name != str(filename):
+            raise ValueError(f"QE pseudopotential for {species!r} must be a filename inside {root}")
+        if relative.suffix.lower() != ".upf":
+            raise ValueError(f"QE pseudopotential for {label} is not a .UPF file: {filename!r}")
+        path = root / relative
+        if not path.is_file():
+            raise FileNotFoundError(f"QE pseudopotential for {label} is missing: {path}")
+        header = path.read_bytes()[:65536].decode("utf-8", errors="ignore")
+        elements = {value.lower() for value in _UPF_ELEMENT_RE.findall(header)}
+        if label.lower() not in elements:
+            detail = ", ".join(sorted(elements)) if elements else "none"
+            raise ValueError(f"QE UPF {path.name} element metadata {detail!r} does not match {label}")
+        if "pbe" not in header.lower():
+            raise ValueError(f"QE UPF {path.name} has no visible PBE functional marker")
+        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        reports.append(
+            {
+                "species": label,
+                "filename": path.name,
+                "path": str(path),
+                "bytes": path.stat().st_size,
+                "sha256": digest,
+                "element_metadata": sorted(elements),
+                "functional_marker": "PBE",
+            }
+        )
+    return reports
 
 
 def static_qe_input_data(input_data: Mapping | None = None) -> dict:
@@ -119,4 +173,5 @@ __all__ = [
     "attach_qe_calculators",
     "make_ase_espresso_factory",
     "static_qe_input_data",
+    "validate_qe_pseudopotentials",
 ]

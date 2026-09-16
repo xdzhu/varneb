@@ -29,7 +29,12 @@ from vcneb import (
     validate_image_calculators,
 )
 from vcneb.executor import ThreadedCalculatorExecutor
-from vcneb.qe import attach_qe_calculators, make_ase_espresso_factory, static_qe_input_data
+from vcneb.qe import (
+    attach_qe_calculators,
+    make_ase_espresso_factory,
+    static_qe_input_data,
+    validate_qe_pseudopotentials,
+)
 
 
 def parse_args() -> argparse.Namespace:
@@ -154,6 +159,10 @@ def main() -> None:
     )
     write(workdir / "initial-vcneb.traj", images)
     parameters = build_qe_parameters(args, set(initial.get_chemical_symbols()))
+    pseudopotential_reports = validate_qe_pseudopotentials(
+        args.pseudo_dir,
+        parameters["pseudopotentials"],
+    )
     factory = make_ase_espresso_factory(
         parameters=parameters,
         command=args.command,
@@ -182,6 +191,7 @@ def main() -> None:
         "align_translation": args.align_translation,
         "fmax_target_eV_per_A": args.fmax,
         "calculator_parameters": parameters,
+        "pseudopotential_reports": pseudopotential_reports,
         "calculator_reports": [report.to_dict() for report in reports],
         "initial_path_geometry": path_geometry_diagnostics(images),
     }

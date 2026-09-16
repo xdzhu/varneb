@@ -5,7 +5,12 @@ from __future__ import annotations
 from ase import Atoms
 import pytest
 
-from vcneb.qe import attach_qe_calculators, make_ase_espresso_factory, static_qe_input_data
+from vcneb.qe import (
+    attach_qe_calculators,
+    make_ase_espresso_factory,
+    static_qe_input_data,
+    validate_qe_pseudopotentials,
+)
 
 
 def test_static_qe_input_data_enforces_scf_force_and_stress() -> None:
@@ -72,3 +77,21 @@ def test_qe_factory_requires_one_explicit_launch_path() -> None:
         make_ase_espresso_factory(parameters={})
     with pytest.raises(ValueError, match="either command or profile"):
         make_ase_espresso_factory(parameters={}, command="pw.x", pseudo_dir="/pseudo", profile=object())
+
+
+def test_qe_pseudopotential_gate_validates_element_pbe_and_sha256(tmp_path) -> None:
+    upf = tmp_path / "Ba-pbe.UPF"
+    upf.write_text('<UPF version="2.0.1" element="Ba" functional="PBE">\n', encoding="utf-8")
+    report = validate_qe_pseudopotentials(tmp_path, {"Ba": upf.name})
+    assert report[0]["species"] == "Ba"
+    assert report[0]["functional_marker"] == "PBE"
+    assert len(report[0]["sha256"]) == 64
+
+
+def test_qe_pseudopotential_gate_rejects_missing_or_wrong_metadata(tmp_path) -> None:
+    wrong = tmp_path / "wrong.UPF"
+    wrong.write_text('<UPF element="Ti" functional="LDA">\n', encoding="utf-8")
+    with pytest.raises(ValueError, match="does not match"):
+        validate_qe_pseudopotentials(tmp_path, {"Ba": wrong.name})
+    with pytest.raises(FileNotFoundError, match="missing"):
+        validate_qe_pseudopotentials(tmp_path, {"Ba": "Ba.UPF"})

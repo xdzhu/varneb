@@ -80,7 +80,9 @@ first-order saddle character.
   metadata records a non-integer endpoint gauge translation.
 - `[production-template] examples/run_vcneb_qe.py`: QE `pw.x` driver with a
   no-DFT `--validate-only` preflight; it supports 7 total images and
-  manager-controlled interior-image workers.
+  manager-controlled interior-image workers. The preflight verifies every
+  selected UPF is an in-directory PBE file with matching element metadata and
+  records its SHA256; this is a provenance gate, not a cutoff-convergence claim.
 - `[model] examples/run_fixed_cell_ase_comparison.py`: ASE CINEB versus fixed-cell VCNEB comparison.
 - `[DFT-smoke] examples/run_vasp_single_image_smoke.py`: real VASP energy/force/stress smoke driver.
 - `[production-template] examples/run_vcneb_abacus.py`: ABACUS driver skeleton.

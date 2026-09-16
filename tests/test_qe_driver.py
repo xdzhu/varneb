@@ -48,6 +48,7 @@ def test_qe_driver_validate_only_writes_a_7_image_preflight(tmp_path) -> None:
     initial_path, final_path = tmp_path / "initial.vasp", tmp_path / "final.vasp"
     write(initial_path, initial, format="vasp")
     write(final_path, final, format="vasp")
+    (tmp_path / "Ba.upf").write_text('<UPF element="Ba" functional="PBE">\n', encoding="utf-8")
     workdir = tmp_path / "run"
     result = subprocess.run(
         [
@@ -67,3 +68,4 @@ def test_qe_driver_validate_only_writes_a_7_image_preflight(tmp_path) -> None:
     assert payload["calculator_parameters"]["input_data"]["control"] == {
         "calculation": "scf", "tstress": True, "tprnfor": True
     }
+    assert payload["pseudopotential_reports"][0]["sha256"]

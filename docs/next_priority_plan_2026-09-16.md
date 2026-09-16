@@ -58,6 +58,9 @@ P0 应先完成；P1 的代码和 P2 的 calculator-free 分析实现可以并�
   command、pseudo directory、pseudopotential map、`ecutwfc/ecutrho`、k mesh、SCF
   阈值、smearing 和 image worker 设置；`ibrav=0`、`tstress=.true.`、
   `tprnfor=.true.` 必须由 validator 检查。
+- [x] QE preflight 还要求 Ba/Ti/O UPF 均在指定目录内、元素 metadata 与 mapping 一致、
+  有可见 PBE 标记，并把每个文件的 SHA256 写入 manifest；它不替代 QE 自身 cutoff/
+  赝势收敛研究。
 - [x] 已为 QE factory、目录隔离、stress capability 和 CLI 默认值增加
   mock/fake-calculator 回归，不依赖本地或 CI 中的 DFT 可执行文件。
 - [x] 已为现有 VASP factory 增加静态-image validator/test：`IBRION=-1`、`NSW=0`、
@@ -79,6 +82,9 @@ P0 应先完成；P1 的代码和 P2 的 calculator-free 分析实现可以并�
   确认资源，不启动 CI 或本地 DFT。
 - [ ] QE 采用经自身 cutoff/赝势收敛验证的 PBE 参数（100 Ry 仅在其赝势适用时保留）；
   VASP `ENCUT` 取 POTCAR 推荐值及独立收敛检查，不能把 ABACUS 的 100 Ry 机械换算。
+  当前 hfacnormal01 已确认 QE 7.0 `pw.x` 可用，但其随包 pseudo 目录没有 Ba/Ti/O
+  PBE UPF；VASP module 与此前已知 VASP 可执行路径亦不可见。因此实际 VASP/QE BTO
+  作业尚未提交，等待已授权的 VASP 安装位置和经审查的同一套 Ba/Ti/O PBE UPF。
 - [ ] 统一比较路径单调性、最高 image 身份、cell/volume 演化、reaction energy、
   最大广义力、最小距离和 wall time。不同赝势/实现的绝对能量不是逐 meV 对齐要求。
 
