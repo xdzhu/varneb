@@ -12,6 +12,14 @@ from ase.calculators.vasp import Vasp
 from ase.io import write
 
 
+REQUIRED_VCNEB_STATIC_PARAMETERS = {
+    "ibrion": -1,
+    "nsw": 0,
+    "isif": 2,
+    "isym": 0,
+}
+
+
 def collect_vasp_params(calc: Vasp) -> dict:
     params = {}
     for name in [
@@ -61,6 +69,51 @@ def read_vasp_input_params(source_dir: str | Path) -> tuple[dict, dict, Path]:
     return incar_params, kpoint_params, potcar
 
 
+def validate_vasp_static_parameters(parameters: Mapping) -> dict:
+    """Validate the VASP image contract required by manager-owned VCNEB.
+
+    A VASP image must return energy, forces and stress for the coordinates set
+    by VARNEB.  ``relax``-like VASP settings would update atoms or the cell a
+    second time and invalidate the NEB force evaluation, so they are rejected
+    before an external executable is called.
+    """
+
+    normalized = {str(key).lower(): value for key, value in dict(parameters).items()}
+    for key, expected in REQUIRED_VCNEB_STATIC_PARAMETERS.items():
+        observed = normalized.get(key)
+        try:
+            matches = int(observed) == expected
+        except (TypeError, ValueError):
+            matches = False
+        if not matches:
+            raise ValueError(
+                f"VASP VCNEB images require {key.upper()}={expected}, got {observed!r}"
+            )
+    return normalized
+
+
+def prepare_vasp_static_parameters(
+    source_dir: str | Path,
+    *,
+    overrides: Optional[Mapping] = None,
+) -> tuple[dict, Path]:
+    """Read an endpoint input and return the static VASP parameters for images."""
+
+    incar_params, kpoint_params, potcar = read_vasp_input_params(source_dir)
+    params = {str(key).lower(): value for key, value in incar_params.items()}
+    params.update({str(key).lower(): value for key, value in kpoint_params.items()})
+    params.update(
+        {
+            **REQUIRED_VCNEB_STATIC_PARAMETERS,
+            "lcharg": False,
+            "lwave": False,
+        }
+    )
+    if overrides:
+        params.update({str(key).lower(): value for key, value in dict(overrides).items()})
+    return validate_vasp_static_parameters(params), potcar
+
+
 def attach_vasp_calculators(
     images: list[Atoms],
     *,
@@ -69,21 +122,7 @@ def attach_vasp_calculators(
     command: str,
     overrides: Optional[Mapping] = None,
 ) -> None:
-    incar_params, kpoint_params, potcar = read_vasp_input_params(source_dir)
-    params = dict(incar_params)
-    params.update(kpoint_params)
-    params.update(
-        {
-            "ibrion": -1,
-            "nsw": 0,
-            "isif": 2,
-            "isym": 0,
-            "lcharg": False,
-            "lwave": False,
-        }
-    )
-    if overrides:
-        params.update(dict(overrides))
+    params, potcar = prepare_vasp_static_parameters(source_dir, overrides=overrides)
 
     root = Path(workdir)
     root.mkdir(parents=True, exist_ok=True)

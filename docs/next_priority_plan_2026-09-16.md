@@ -51,16 +51,16 @@ P0 应先完成；P1 的代码和 P2 的 calculator-free 分析实现可以并�
 
 ### P1.1 先完成 QE adapter 与回归测试
 
-- [ ] 增加 `vcneb/qe.py`，以当前 ASE `Espresso`/`EspressoProfile` API 建立每 image
+- [x] 已增加 `vcneb/qe.py`，以当前 ASE `Espresso`/`EspressoProfile` API 建立每 image
   独立目录的 calculator factory；输入固定为静态 `pw.x` 计算，不能使用 QE 自己的
   `vc-relax` 更新 image。
-- [ ] 增加 `examples/run_vcneb_qe.py` 及 QE 单-image smoke。公开参数包括 profile/
+- [x] 已增加 `examples/run_vcneb_qe.py` 及零 DFT `--validate-only` preflight。公开参数包括 profile/
   command、pseudo directory、pseudopotential map、`ecutwfc/ecutrho`、k mesh、SCF
   阈值、smearing 和 image worker 设置；`ibrav=0`、`tstress=.true.`、
   `tprnfor=.true.` 必须由 validator 检查。
-- [ ] 为 QE factory、目录隔离、stress capability、失败分类和 CLI 默认值增加
+- [x] 已为 QE factory、目录隔离、stress capability 和 CLI 默认值增加
   mock/fake-calculator 回归，不依赖本地或 CI 中的 DFT 可执行文件。
-- [ ] 为现有 VASP factory 增加 BTO 静态-image validator/test：`IBRION=-1`、`NSW=0`、
+- [x] 已为现有 VASP factory 增加静态-image validator/test：`IBRION=-1`、`NSW=0`、
   `ISIF=2`、`ISYM=0`、独立目录和 stress 读取都必须由测试覆盖。
 - [ ] 更新 capability 表、README 和手册：ABACUS/VASP/QE 都是已实现 adapter；只有
   完成对应真实路径后才标为 material-path validated。

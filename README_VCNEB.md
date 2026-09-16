@@ -7,7 +7,7 @@ This repository now contains the calculator-agnostic VARNEB (VC-NEB) toolkit in
 changes along the path.
 
 The project direction is a pure-Python `OpenVCNEB` toolkit: no MATLAB or USPEX
-runtime is required.  VASP, ABACUS, and future calculators are external
+runtime is required.  VASP, ABACUS, Quantum ESPRESSO (QE), and future calculators are external
 backends behind an ASE-compatible energy/force/stress contract.
 
 ## ASE status
@@ -58,6 +58,11 @@ first-order saddle character.
 - `vcneb/modes.py`: mode-guided initial paths and modal path projections.
 - `vcneb/vasp.py`: VASP input parsing and per-image calculator setup.
 - `vcneb/abacus.py`: ABACUS calculator factory adapter.
+- `vcneb/qe.py`: QE `pw.x` static-image factory; it rejects QE `relax` and
+  `vc-relax` so cell updates remain manager-owned.
+- `vcneb/phonons.py`: calculator-free Γ-point force-constant diagonalization
+  and aligned-path normal-coordinate projections; it does not label a
+  non-stationary NEB image as a phonon calculation.
 - `vcneb/calculator.py`: capability preflight and image-aware calculator diagnostics.
 - `vcneb/executor.py`: optional image-level concurrent calculator executor; the
   controller remains single-process and each external calculator job step must
@@ -67,6 +72,9 @@ first-order saddle character.
 - `[model] examples/compare_initial_cell_paths.py`: calculator-free comparison of linear and logarithmic-strain initial paths for any ASE-readable endpoint pair (defaults to HfO2); supports `--mapping auto`.
 - `examples/mode_template.json`: copy-and-edit JSON template for an atomic mode plus an optional cell deformation mode.
 - `[production-template] examples/run_vcneb_vasp.py`: VASP driver based on the existing endpoint layout.
+- `[production-template] examples/run_vcneb_qe.py`: QE `pw.x` driver with a
+  no-DFT `--validate-only` preflight; it supports 7 total images and
+  manager-controlled interior-image workers.
 - `[model] examples/run_fixed_cell_ase_comparison.py`: ASE CINEB versus fixed-cell VCNEB comparison.
 - `[DFT-smoke] examples/run_vasp_single_image_smoke.py`: real VASP energy/force/stress smoke driver.
 - `[production-template] examples/run_vcneb_abacus.py`: ABACUS driver skeleton.
@@ -83,6 +91,8 @@ first-order saddle character.
   step-control trouble; pass `--stress-kbar` to require a force-and-stress gate.
 - `scripts/setup_hfo2_t_po_validation.py`: builds the HfO2 T -> PO validation fixture from local source structures or portable copies.
 - `scripts/validate_vcneb_inputs.py`: static dry-run validator for VASP/ABACUS VC-NEB image directories.
+- `scripts/validate_vasp_vcneb_static.py`: verifies that reused VASP endpoint
+  inputs become static `IBRION=-1`, `NSW=0`, `ISIF=2`, `ISYM=0` image calls.
 - `scripts/audit_vcneb_result.py`: calculator-free audit of a completed summary,
   including generalized-force, barrier, volume, geometry and interior-barrier gates.
   Use `--max-stress-kbar` when the production endpoint/path policy requires a
