@@ -31,6 +31,13 @@ from .modes import (
 )
 from .executor import ImageEvaluation, ThreadedCalculatorExecutor
 from .qe import attach_qe_calculators, make_ase_espresso_factory, static_qe_input_data
+from .phonons import (
+    GammaModes,
+    diagonalize_gamma_modes,
+    load_gamma_force_constants,
+    project_displacements_onto_gamma_modes,
+    tangent_mode_overlaps,
+)
 
 __all__ = [
     "VCNEB",
@@ -61,4 +68,9 @@ __all__ = [
     "attach_qe_calculators",
     "make_ase_espresso_factory",
     "static_qe_input_data",
+    "GammaModes",
+    "diagonalize_gamma_modes",
+    "load_gamma_force_constants",
+    "project_displacements_onto_gamma_modes",
+    "tangent_mode_overlaps",
 ]
