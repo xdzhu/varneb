@@ -10,7 +10,8 @@ from pathlib import Path
 
 from ase import Atoms
 from ase.calculators.singlepoint import SinglePointCalculator
-from ase.io import write
+from ase.io import read, write
+from vcneb import endpoint_structure_record, interpolate_vcneb
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -136,3 +137,44 @@ def test_vasp_static_only_can_evaluate_fixed_final_endpoint(tmp_path: Path, monk
     summary = json.loads((tmp_path / "static-final" / "vasp_static_summary.json").read_text(encoding="utf-8"))
     assert summary["execution_mode"] == "fixed_final_endpoint_static_scf"
     assert summary["evaluated_image_index"] == 6
+
+
+def test_vasp_final_static_records_the_mapped_path_endpoint_not_raw_input(tmp_path: Path, monkeypatch) -> None:
+    module = _module()
+    initial, final = tmp_path / "initial", tmp_path / "final"
+    initial_atoms = Atoms("O2", scaled_positions=[[0.2, 0.0, 0.0], [0.7, 0.0, 0.0]], cell=[4, 4, 4], pbc=True)
+    # The same physical sites in the opposite same-species order make the
+    # distinction observable: automatic NEB mapping reorders the endpoint.
+    final_atoms = Atoms("O2", scaled_positions=[[0.7, 0.0, 0.0], [0.2, 0.0, 0.0]], cell=[4, 4, 4], pbc=True)
+    _endpoint(initial, initial_atoms)
+    _endpoint(final, final_atoms)
+
+    def fake_attach(images, *, source_dir, workdir, command, overrides):
+        for index, atoms in enumerate(images):
+            calculator = SinglePointCalculator(atoms, energy=-7.0, forces=[[0.01, 0.0, 0.0]] * len(atoms), stress=[0.0] * 6)
+            calculator.directory = str(Path(workdir) / f"{index:02d}")
+            atoms.calc = calculator
+
+    monkeypatch.setattr(sys, "argv", [
+        str(DRIVER), "--initial", str(initial), "--final", str(final),
+        "--workdir", str(tmp_path / "static-final-mapped"), "--static-only", "--static-endpoint", "final",
+        "--mapping", "auto",
+    ])
+    monkeypatch.setitem(module["main"].__globals__, "attach_vasp_calculators", fake_attach)
+    module["main"]()
+
+    summary = json.loads((tmp_path / "static-final-mapped" / "vasp_static_summary.json").read_text(encoding="utf-8"))
+    expected = interpolate_vcneb(
+        read(initial / "CONTCAR"),
+        read(final / "CONTCAR"),
+        n_images=7,
+        align_cells=True,
+        mic=True,
+        cell_interpolation="log_strain",
+        mapping="auto",
+        align_translation=True,
+        minimum_distance=1.6,
+        maximum_deformation=0.10,
+    )[-1]
+    assert summary["endpoint_structures"]["final"]["sha256"] == endpoint_structure_record(expected)["sha256"]
+    assert summary["endpoint_structures"]["final"]["sha256"] != endpoint_structure_record(read(final / "CONTCAR"))["sha256"]

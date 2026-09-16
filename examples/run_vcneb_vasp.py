@@ -281,8 +281,13 @@ def main() -> None:
         "calculator_reports": [report.to_dict() for report in reports],
         "initial_path_geometry": path_geometry_diagnostics(images),
         "endpoint_structures": {
-            "initial": endpoint_structure_record(initial),
-            "final": endpoint_structure_record(final),
+            # The cache is attached to the endpoint images actually used by
+            # VCNEB.  These can differ in atom order or a common periodic
+            # translation from the raw input endpoints after automatic
+            # mapping/alignment, so recording the raw `final` structure here
+            # would make a physically valid final static SCF unusable.
+            "initial": endpoint_structure_record(images[0]),
+            "final": endpoint_structure_record(images[-1]),
         },
     }
     _write_json_atomic(workdir / "vcneb_preflight.json", {"status": "ok", **metadata})
