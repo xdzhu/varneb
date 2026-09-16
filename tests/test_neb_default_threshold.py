@@ -13,6 +13,7 @@ from vcneb.core import run_vcneb
 ROOT = Path(__file__).resolve().parents[1]
 PUBLIC_CLI_DEFAULTS = (
     ("examples/run_vcneb_abacus.py", ("run", "--initial", "initial.stru", "--final", "final.stru")),
+    ("examples/run_vcneb_qe.py", ("run", "--initial", "initial.stru", "--final", "final.stru")),
     ("examples/run_vcneb_vasp.py", ("run",)),
     ("examples/run_fixed_cell_ase_comparison.py", ("run",)),
     ("examples/run_vcneb_convergence.py", ("run",)),
