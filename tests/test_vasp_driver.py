@@ -58,6 +58,9 @@ def test_vasp_driver_validate_only_writes_static_7_image_preflight(tmp_path: Pat
     assert payload["n_images"] == 7
     assert payload["n_interior_images"] == 5
     assert payload["fmax_target_eV_per_A"] == 0.10
+    assert payload["endpoint_structures"]["initial"]["sha256"]
+    assert payload["endpoint_structures"]["initial"]["n_atoms"] == 1
+    assert payload["endpoint_structures"]["initial"]["sha256"] != payload["endpoint_structures"]["final"]["sha256"]
     assert {key: payload["calculator_parameters"][key] for key in ("ibrion", "nsw", "isif", "isym")} == {
         "ibrion": -1,
         "nsw": 0,

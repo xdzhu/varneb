@@ -44,6 +44,7 @@ from .phonons import (
     save_phonopy_gamma_eigenpairs,
     tangent_mode_overlaps,
 )
+from .provenance import compare_endpoint_records, endpoint_structure_record
 
 __all__ = [
     "VCNEB",
@@ -85,4 +86,6 @@ __all__ = [
     "project_displacements_onto_gamma_modes",
     "save_phonopy_gamma_eigenpairs",
     "tangent_mode_overlaps",
+    "endpoint_structure_record",
+    "compare_endpoint_records",
 ]

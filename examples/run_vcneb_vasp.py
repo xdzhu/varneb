@@ -26,6 +26,7 @@ from vcneb import (
     VCNEB,
     build_mode_basis,
     interpolate_vcneb,
+    endpoint_structure_record,
     path_geometry_diagnostics,
     mode_guided_path,
     read_chain_trajectory,
@@ -240,6 +241,10 @@ def main() -> None:
         "calculator_parameters": static_parameters,
         "calculator_reports": [report.to_dict() for report in reports],
         "initial_path_geometry": path_geometry_diagnostics(images),
+        "endpoint_structures": {
+            "initial": endpoint_structure_record(initial),
+            "final": endpoint_structure_record(final),
+        },
     }
     _write_json_atomic(workdir / "vcneb_preflight.json", {"status": "ok", **metadata})
     if args.validate_only:

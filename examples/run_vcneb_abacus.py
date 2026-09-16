@@ -29,6 +29,7 @@ from vcneb import (
     interpolate_vcneb,
     mode_guided_path,
     path_geometry_diagnostics,
+    endpoint_structure_record,
     read_chain_trajectory,
     run_vcneb,
     validate_image_calculators,
@@ -425,6 +426,10 @@ def main() -> None:
     metadata["endpoint_evaluation_policy"] = (
         "fixed_cached_once" if args.image_workers else "ASE_calculator_cache"
     )
+    metadata["endpoint_structures"] = {
+        "initial": endpoint_structure_record(initial),
+        "final": endpoint_structure_record(final),
+    }
     preflight = {
         **metadata,
         "status": "ok",

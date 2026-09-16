@@ -15,6 +15,15 @@
 - 生产模板从后续作业起申请 32 MPI ranks、每 rank 1 CPU；已经运行的作业不
   中途改变资源。
 
+## 跨计算器端点一致性闸门
+
+ABACUS、QE 与 VASP 的每次 no-DFT preflight 都会在
+`vcneb_preflight.json[endpoint_structures]` 写入有序物种、PBC、晶胞和包裹
+分数坐标的 SHA256 结构指纹。QE/VASP 的 7-image 生产作业前，必须以
+`scripts/compare_vcneb_endpoint_records.py` 将其初末端点分别与接受的 ABACUS
+preflight 比较；任一端点不匹配即阻止生产提交。该规则有意保留原子顺序，避免
+未经审计的重排被误报为同一条 NEB 路径。
+
 ## Image 数量策略
 
 第一轮只比较 5、7、9 个总 image（含两个端点），保持端点、calculator、

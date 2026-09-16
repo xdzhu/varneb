@@ -24,6 +24,7 @@ if str(ROOT) not in sys.path:
 
 from vcneb import (
     interpolate_vcneb,
+    endpoint_structure_record,
     path_geometry_diagnostics,
     run_vcneb,
     validate_image_calculators,
@@ -194,6 +195,10 @@ def main() -> None:
         "pseudopotential_reports": pseudopotential_reports,
         "calculator_reports": [report.to_dict() for report in reports],
         "initial_path_geometry": path_geometry_diagnostics(images),
+        "endpoint_structures": {
+            "initial": endpoint_structure_record(initial),
+            "final": endpoint_structure_record(final),
+        },
     }
     _write_json_atomic(workdir / "vcneb_preflight.json", {"status": "ok", **metadata})
     if args.validate_only:

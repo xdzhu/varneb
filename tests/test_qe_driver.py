@@ -65,6 +65,9 @@ def test_qe_driver_validate_only_writes_a_7_image_preflight(tmp_path) -> None:
     assert payload["n_images"] == 7
     assert payload["n_interior_images"] == 5
     assert payload["fmax_target_eV_per_A"] == 0.10
+    assert payload["endpoint_structures"]["initial"]["sha256"]
+    assert payload["endpoint_structures"]["initial"]["n_atoms"] == 1
+    assert payload["endpoint_structures"]["initial"]["sha256"] != payload["endpoint_structures"]["final"]["sha256"]
     assert payload["calculator_parameters"]["input_data"]["control"] == {
         "calculation": "scf", "tstress": True, "tprnfor": True
     }
