@@ -127,6 +127,13 @@ The production template requires this completed report through
 `VASP_STATIC_BASELINE` and checks its endpoint, exact `INCAR`/`KPOINTS`/`POTCAR`
 fingerprints and explicit source revision before starting any worker.
 
+For the `235` PBS host, use `235_batio3_vasp_static_baseline.pbs`: it requests
+exactly one `gold5120` node with 28 MPI ranks and uses the locally verified
+VASP 6.3.2 executable by default. Prepare the dedicated case with
+`scripts/setup_batio3_vasp_static_case.py`; it copies only an explicitly named
+licensed PAW file and rejects endpoints that differ from the accepted ABACUS
+T-to-C reference before any PBS request.
+
 `hf_batio3_gamma_phonon_abacus.slurm` seeds the separate first-principles
 Gamma-mode analysis at the already audited cubic or tetragonal BTO endpoint.
 It uses a `1×1×1` finite-displacement cell and static 32-MPI ABACUS SCFs. The

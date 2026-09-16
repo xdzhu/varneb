@@ -59,6 +59,10 @@ SHA256；同一份经过审核的输入必须复制到每一个静态 image 目�
 `INCAR`、`KPOINTS` 与 `POTCAR` 的 SHA256，并拒绝不同端点、不同源码版本或任何
 输入文件改变的路径。
 
+在 `235` 上，静态基线使用 PBS `gold5120` 的 `nodes=1:ppn=28` 资源请求；
+不得沿用 `hf` 的 Slurm 语法或 32-rank worker 配置。VASP 路径阶段的 PBS
+manager/worker 模板应在该静态基线验收后，按同一节点 28 核的整数倍申请资源。
+
 ## Image 数量策略
 
 第一轮只比较 5、7、9 个总 image（含两个端点），保持端点、calculator、
