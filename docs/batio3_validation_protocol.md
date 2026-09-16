@@ -38,6 +38,12 @@ approved manifest，不能直接启动预检或生产作业。
 独立 `WORKDIR`，并保存其 `qe_static_summary.json`；该作业不计算 interior image，
 不构成 NEB 迭代，也不替代随后 7-total-image 的端点一致性闸门。
 
+至少完成三个明确 cutoff 点后，使用
+`scripts/audit_qe_static_convergence.py` 对最高与次高 cutoff 的能量/力/应力差
+进行审计。能量（meV/atom）、力（eV/A）和应力（GPa）容差必须在命令行显式声明；
+审计器同时拒绝端点、UPF、代码版本、k 点或任一非-cutoff QE 设置不一致的记录。
+不能由脚本默认一个“看起来合理”的容差。
+
 VASP preflight 会记录初始目录 `INCAR`、`KPOINTS` 与许可 `POTCAR` 的完整
 SHA256；同一份经过审核的输入必须复制到每一个静态 image 目录。
 
