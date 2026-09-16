@@ -25,6 +25,7 @@ spring=${SPRING:-0.2}
 optimizer=${OPTIMIZER:-FIRE}
 initial_dir=${VASP_INITIAL_DIR:-}
 final_dir=${VASP_FINAL_DIR:-}
+endpoint_identity_gate=${ENDPOINT_IDENTITY_GATE:-}
 workdir=${WORKDIR:-validation/batio3_cubic_to_tetragonal/vcneb_tetragonal_to_cubic_n${n_images}_${optimizer,,}_vasp}
 
 if [[ "${RUN_DFT:-0}" != 1 ]]; then
@@ -42,6 +43,7 @@ fi
 : "${VASP_BIN:?Set VASP_BIN to the licensed VASP executable visible on hfacnormal01}"
 : "${VASP_INITIAL_DIR:?Set VASP_INITIAL_DIR (CONTCAR, INCAR, KPOINTS, POTCAR)}"
 : "${VASP_FINAL_DIR:?Set VASP_FINAL_DIR (CONTCAR)}"
+: "${ENDPOINT_IDENTITY_GATE:?Set ENDPOINT_IDENTITY_GATE to a passing endpoint_identity_gate.json}"
 for path in "${initial_dir}/CONTCAR" "${initial_dir}/INCAR" "${initial_dir}/KPOINTS" "${initial_dir}/POTCAR" "${final_dir}/CONTCAR"; do
   [[ -f "${path}" ]] || { echo "missing required VASP input: ${path}" >&2; exit 2; }
 done
@@ -49,6 +51,7 @@ done
 export OMP_NUM_THREADS=1
 export VASP_COMMAND="srun --exclusive --nodes=1 --ntasks=${image_mpi} --ntasks-per-node=${image_mpi} ${VASP_BIN}"
 cd "${repo}"
+"${python}" scripts/validate_endpoint_identity_gate.py --gate "${endpoint_identity_gate}"
 
 exec "${python}" examples/run_vcneb_vasp.py \
   --initial "${initial_dir}" --final "${final_dir}" --workdir "${workdir}" \

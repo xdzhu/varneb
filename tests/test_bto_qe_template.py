@@ -22,6 +22,8 @@ def test_bto_qe_production_template_preserves_the_five_by_32_worker_contract() -
         "if [[ \"${RUN_DFT:-0}\" != 1 ]]",
         "Refusing a 160-rank allocation without RUN_DFT=1",
         "${QE_ENV_SCRIPT:?Set QE_ENV_SCRIPT",
+        "${ENDPOINT_IDENTITY_GATE:?Set ENDPOINT_IDENTITY_GATE",
+        "scripts/validate_endpoint_identity_gate.py",
         "--cell-interpolation log_strain --mapping auto --align-translation",
     ):
         assert fragment in text

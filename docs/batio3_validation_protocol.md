@@ -24,6 +24,10 @@ ABACUS、QE 与 VASP 的每次 no-DFT preflight 都会在
 preflight 比较；任一端点不匹配即阻止生产提交。该规则有意保留原子顺序，避免
 未经审计的重排被误报为同一条 NEB 路径。
 
+QE/VASP 的 160-rank 模板还要求将这个通过的 JSON 路径作为
+`ENDPOINT_IDENTITY_GATE` 传入；模板会在启动任一 image worker 前再次验证
+`initial` 与 `final` 两项均为通过状态。
+
 ## Image 数量策略
 
 第一轮只比较 5、7、9 个总 image（含两个端点），保持端点、calculator、

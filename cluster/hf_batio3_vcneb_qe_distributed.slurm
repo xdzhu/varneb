@@ -34,6 +34,7 @@ kpt_z=${KPT_Z:-4}
 pp_ba=${PP_BA:-Ba.upf}
 pp_ti=${PP_TI:-Ti.upf}
 pp_o=${PP_O:-O.upf}
+endpoint_identity_gate=${ENDPOINT_IDENTITY_GATE:-}
 endpoint_tag=${ENDPOINT_TAG:-pbe100_dzp10au}
 workdir=${WORKDIR:-validation/batio3_cubic_to_tetragonal/vcneb_tetragonal_to_cubic_n${n_images}_${optimizer,,}_qe_pbe}
 
@@ -60,9 +61,11 @@ fi
 
 module purge
 : "${QE_ENV_SCRIPT:?Set QE_ENV_SCRIPT to the reviewed QE environment script}"
+: "${ENDPOINT_IDENTITY_GATE:?Set ENDPOINT_IDENTITY_GATE to a passing endpoint_identity_gate.json}"
 source "${QE_ENV_SCRIPT}"
 export OMP_NUM_THREADS=1
 cd "${repo}"
+"${python}" scripts/validate_endpoint_identity_gate.py --gate "${endpoint_identity_gate}"
 
 exec "${python}" examples/run_vcneb_qe.py \
   --initial "validation/batio3_cubic_to_tetragonal/endpoint_relax_tetragonal_${endpoint_tag}/CONTCAR" \

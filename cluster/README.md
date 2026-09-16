@@ -87,6 +87,11 @@ validates the endpoint geometry, static-QE contract, and UPF identities. The QE
 cutoffs are explicit QE/Ry parameters and must be independently converged;
 they are not a mechanical conversion of VASP settings.
 
+For either QE or VASP production, compare the accepted ABACUS preflight and
+the candidate preflight with `scripts/compare_vcneb_endpoint_records.py`, then
+pass its successful output as `ENDPOINT_IDENTITY_GATE`. Both 160-rank templates
+refuse to start image workers without that passing gate.
+
 `hf_batio3_vcneb_vasp_distributed.slurm` provides the equivalent VASP BTO
 execution gate: it is fixed at seven total images and five 32-MPI interior
 workers (160 ranks over two nodes), keeps endpoints cached at the manager, and
