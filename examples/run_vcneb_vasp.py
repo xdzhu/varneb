@@ -38,6 +38,7 @@ from vcneb.vasp import (
     attach_vasp_calculators,
     default_vasp_command,
     prepare_vasp_static_parameters,
+    vasp_input_fingerprints,
 )
 
 
@@ -239,6 +240,7 @@ def main() -> None:
         "align_translation": args.align_translation,
         "fmax_target_eV_per_A": args.fmax,
         "calculator_parameters": static_parameters,
+        "licensed_input_fingerprints": vasp_input_fingerprints(initial_dir),
         "calculator_reports": [report.to_dict() for report in reports],
         "initial_path_geometry": path_geometry_diagnostics(images),
         "endpoint_structures": {

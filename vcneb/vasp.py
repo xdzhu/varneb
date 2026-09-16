@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import hashlib
 import shutil
 from pathlib import Path
 from typing import Mapping, Optional
@@ -18,6 +19,20 @@ REQUIRED_VCNEB_STATIC_PARAMETERS = {
     "isif": 2,
     "isym": 0,
 }
+
+
+def vasp_input_fingerprints(source_dir: str | Path) -> dict:
+    """Fingerprint the licensed VASP inputs copied to every VCNEB image."""
+
+    source = Path(source_dir)
+    records = {}
+    for name in ("INCAR", "KPOINTS", "POTCAR"):
+        path = source / name
+        if not path.is_file():
+            raise FileNotFoundError(path)
+        contents = path.read_bytes()
+        records[name] = {"path": str(path.resolve()), "bytes": len(contents), "sha256": hashlib.sha256(contents).hexdigest()}
+    return records
 
 
 def collect_vasp_params(calc: Vasp) -> dict:

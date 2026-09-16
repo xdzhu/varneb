@@ -33,6 +33,9 @@ QE 还要求 `QE_PP_MANIFEST`。该 manifest 的 `approval_status` 必须为
 文件存在、元素 metadata、PBE 标记和 MD5。仓库中的 SSSP 候选登记不是
 approved manifest，不能直接启动预检或生产作业。
 
+VASP preflight 会记录初始目录 `INCAR`、`KPOINTS` 与许可 `POTCAR` 的完整
+SHA256；同一份经过审核的输入必须复制到每一个静态 image 目录。
+
 ## Image 数量策略
 
 第一轮只比较 5、7、9 个总 image（含两个端点），保持端点、calculator、

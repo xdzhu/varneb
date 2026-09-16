@@ -61,6 +61,8 @@ def test_vasp_driver_validate_only_writes_static_7_image_preflight(tmp_path: Pat
     assert payload["endpoint_structures"]["initial"]["sha256"]
     assert payload["endpoint_structures"]["initial"]["n_atoms"] == 1
     assert payload["endpoint_structures"]["initial"]["sha256"] != payload["endpoint_structures"]["final"]["sha256"]
+    assert set(payload["licensed_input_fingerprints"]) == {"INCAR", "KPOINTS", "POTCAR"}
+    assert all(len(item["sha256"]) == 64 for item in payload["licensed_input_fingerprints"].values())
     assert {key: payload["calculator_parameters"][key] for key in ("ibrion", "nsw", "isif", "isym")} == {
         "ibrion": -1,
         "nsw": 0,
