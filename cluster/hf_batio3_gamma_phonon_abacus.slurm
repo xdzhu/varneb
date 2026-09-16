@@ -28,6 +28,7 @@ case "${endpoint}" in
   cubic|tetragonal) ;;
   *) echo "ENDPOINT must be cubic or tetragonal" >&2; exit 2 ;;
 esac
+export ENDPOINT="${endpoint}"
 
 source "${env_script}"
 export OMP_NUM_THREADS=1
@@ -89,7 +90,7 @@ from pathlib import Path
 root = Path('.')
 payload = {
     'status': 'prepared_no_dft',
-    'endpoint': root.name,
+    'endpoint': __import__('os').environ['ENDPOINT'],
     'supercell': [1, 1, 1],
     'finite_difference_amplitude_A': float(__import__('os').environ.get('DELTA', '0.01')),
     'displacement_directories': [str(path) for path in sorted(root.glob('disp-[0-9][0-9][0-9]'))],

@@ -20,6 +20,7 @@ def test_bto_gamma_phonon_template_is_static_and_opt_in() -> None:
         "if [[ \"${RUN_DFT:-0}\" != 1 ]]",
         "RUN_DFT=0 so no ABACUS SCF was launched",
         "phonon_preflight.json",
+        "'endpoint': __import__('os').environ['ENDPOINT']",
         "--abacus -f disp-[0-9][0-9][0-9]/OUT.ABACUS/running_scf.log",
     ):
         assert fragment in text

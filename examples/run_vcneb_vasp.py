@@ -8,9 +8,12 @@ copies INCAR/KPOINTS/POTCAR settings from the initial endpoint directory.
 from __future__ import annotations
 
 import argparse
+import json
 import os
 from pathlib import Path
+import subprocess
 import sys
+import tempfile
 
 from ase.io import read, write
 
@@ -23,11 +26,18 @@ from vcneb import (
     VCNEB,
     build_mode_basis,
     interpolate_vcneb,
+    path_geometry_diagnostics,
     mode_guided_path,
     read_chain_trajectory,
     run_vcneb,
+    validate_image_calculators,
 )
-from vcneb.vasp import attach_vasp_calculators, default_vasp_command
+from vcneb.executor import ThreadedCalculatorExecutor
+from vcneb.vasp import (
+    attach_vasp_calculators,
+    default_vasp_command,
+    prepare_vasp_static_parameters,
+)
 
 
 def read_endpoint(directory: Path):
@@ -60,7 +70,18 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--line-search-retry-factor", type=float, default=0.5)
     parser.add_argument("--vasp-bin", default=os.environ.get("VASP_BIN", "vasp_std"))
     parser.add_argument("--ncores", type=int, default=int(os.environ.get("NP", "8")))
+    parser.add_argument("--image-workers", type=int, default=0)
+    parser.add_argument("--image-retries", type=int, default=0)
+    parser.add_argument("--image-manifest", default=None)
+    parser.add_argument("--image-cache-dir", default=None)
+    parser.add_argument("--image-cache-namespace", default=None)
+    parser.add_argument("--validate-only", action="store_true")
     parser.add_argument("--mic", action="store_true")
+    parser.add_argument("--cell-interpolation", choices=["linear", "log_strain"], default="linear")
+    parser.add_argument("--mapping", choices=["identity", "auto"], default="identity")
+    parser.add_argument("--align-translation", action="store_true")
+    parser.add_argument("--minimum-distance", type=float, default=None)
+    parser.add_argument("--maximum-deformation", type=float, default=None)
     parser.add_argument("--mode", default=None, help="Optional JSON/NPZ/text atomic-plus-cell mode")
     parser.add_argument("--mode-guided", action="store_true", help="Apply the mode to the initial path")
     parser.add_argument("--mode-amplitude", type=float, default=0.25)
@@ -80,8 +101,37 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def _write_json_atomic(path: Path, payload: dict) -> None:
+    def json_default(value):
+        if isinstance(value, Path):
+            return str(value)
+        tolist = getattr(value, "tolist", None)
+        if callable(tolist):
+            return tolist()
+        item = getattr(value, "item", None)
+        if callable(item):
+            return item()
+        raise TypeError(f"cannot serialize {type(value).__name__} in VCNEB provenance")
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.NamedTemporaryFile("w", encoding="utf-8", dir=path.parent, delete=False) as handle:
+        json.dump(payload, handle, indent=2, sort_keys=True, default=json_default)
+        handle.write("\n")
+        temporary = Path(handle.name)
+    temporary.replace(path)
+
+
+def _git_revision() -> str | None:
+    try:
+        return subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
+    except (OSError, subprocess.CalledProcessError):
+        return None
+
+
 def main() -> None:
     args = parse_args()
+    if args.image_workers < 0 or args.image_retries < 0:
+        raise ValueError("--image-workers and --image-retries must be non-negative")
     initial_dir = Path(args.initial).resolve()
     final_dir = Path(args.final).resolve()
     workdir = Path(args.workdir).resolve()
@@ -110,7 +160,16 @@ def main() -> None:
         images = read_chain_trajectory(resume_path, n_images=args.n_images)
         print(f"[OK] resumed latest complete {args.n_images}-image chain from {resume_path}")
     else:
-        path_kwargs = dict(n_images=args.n_images, align_cells=True, mic=args.mic)
+        path_kwargs = dict(
+            n_images=args.n_images,
+            align_cells=True,
+            mic=args.mic,
+            cell_interpolation=args.cell_interpolation,
+            mapping=None if args.mapping == "identity" else "auto",
+            align_translation=args.align_translation,
+            minimum_distance=args.minimum_distance,
+            maximum_deformation=args.maximum_deformation,
+        )
         if args.mode_guided:
             images = mode_guided_path(
                 initial,
@@ -142,6 +201,10 @@ def main() -> None:
     write(workdir / "initial-vcneb.traj", images)
 
     command = default_vasp_command(args.ncores, args.vasp_bin)
+    static_parameters, _ = prepare_vasp_static_parameters(
+        initial_dir,
+        overrides={"xc": "PBE", "pp": "PBE"},
+    )
     attach_vasp_calculators(
         images,
         source_dir=initial_dir,
@@ -149,12 +212,59 @@ def main() -> None:
         command=command,
         overrides={"xc": "PBE", "pp": "PBE"},
     )
+    reports = validate_image_calculators(
+        images,
+        require_stress=True,
+        require_variable_cell=True,
+        require_directory=True,
+        require_unique_directories=True,
+    )
+    image_manifest = (
+        Path(args.image_manifest).resolve()
+        if args.image_manifest
+        else workdir / "image_worker_manifest.jsonl"
+    )
+    metadata = {
+        "git_revision": _git_revision(),
+        "command_line": sys.argv,
+        "calculator": "ASE VASP",
+        "n_images": args.n_images,
+        "n_interior_images": max(0, args.n_images - 2),
+        "endpoint_evaluation_policy": "fixed_cached_once" if args.image_workers else "ASE_calculator_cache",
+        "image_workers": args.image_workers,
+        "image_retries": args.image_retries,
+        "cell_interpolation": args.cell_interpolation,
+        "mapping": args.mapping,
+        "align_translation": args.align_translation,
+        "fmax_target_eV_per_A": args.fmax,
+        "calculator_parameters": static_parameters,
+        "calculator_reports": [report.to_dict() for report in reports],
+        "initial_path_geometry": path_geometry_diagnostics(images),
+    }
+    _write_json_atomic(workdir / "vcneb_preflight.json", {"status": "ok", **metadata})
+    if args.validate_only:
+        print(f"[OK] VASP VCNEB preflight passed; report={workdir / 'vcneb_preflight.json'}")
+        return
+
+    executor = (
+        ThreadedCalculatorExecutor(
+            args.image_workers,
+            max_retries=args.image_retries,
+            manifest_path=image_manifest,
+            cache_dir=args.image_cache_dir,
+            cache_namespace=args.image_cache_namespace,
+        )
+        if args.image_workers
+        else None
+    )
 
     chain, _ = run_vcneb(
         images,
         pressure_gpa=args.pressure_gpa,
         k=args.k,
         climb=not args.no_climb,
+        mic=args.mic,
+        image_executor=executor,
         mode_basis=mode_basis,
         constraint_mode=None if args.constraint_mode == "none" else args.constraint_mode,
         optimizer=args.optimizer,
@@ -173,6 +283,18 @@ def main() -> None:
         write(workdir / f"{image_index:02d}" / "POSCAR.final", image, format="vasp", direct=True, vasp5=True)
     chain.plot_band(workdir / "vcneb_barrier.png")
     barrier, delta = chain.barrier()
+    summary = {
+        "status": "completed",
+        **metadata,
+        "barrier_enthalpy_eV": barrier,
+        "reaction_enthalpy_eV": delta,
+        "final_max_generalized_force_eV_per_A": chain.gradient_norm(-chain.get_forces()),
+        "image_enthalpies_eV": [float(value) for value in chain.enthalpies],
+        "path_diagnostics": chain.path_diagnostics(),
+        "saddle_diagnostics": chain.saddle_diagnostics(),
+        "image_manifest": str(image_manifest) if executor is not None else None,
+    }
+    _write_json_atomic(workdir / "vcneb_summary.json", summary)
     with open(workdir / "vcneb_summary.txt", "w", encoding="utf-8") as handle:
         handle.write(f"Forward barrier (enthalpy) = {barrier:.8f} eV\n")
         handle.write(f"Reaction enthalpy          = {delta:.8f} eV\n")
