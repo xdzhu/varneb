@@ -194,6 +194,11 @@ order, endpoints, tangent construction, optimizer state, snapshots, and final
 summary. A threaded executor delegates only interior calculator calls.
 Endpoints are fixed and cached during a path, so a 7-total-image calculation
 has five costly interior images rather than seven repeated endpoint evaluations.
+Each no-DFT preflight records an ordered endpoint identity from species, PBC,
+cell and wrapped fractional coordinates; a cross-calculator production gate
+requires the initial and final identities to match the accepted reference
+preflight separately. Thus a silent atom reorder cannot be misreported as a
+backend comparison of the same path.
 
 The durable image cache is keyed by exact configuration plus calculator
 namespace. If a batch partially fails, completed sibling evaluations remain
