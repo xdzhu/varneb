@@ -14,9 +14,11 @@ initial_dir=${VASP_INITIAL_DIR:-${repo}/batio3_vasp_pbe_paw_static/initial}
 final_dir=${VASP_FINAL_DIR:-${repo}/batio3_vasp_pbe_paw_static/final}
 endpoint_identity_gate=${ENDPOINT_IDENTITY_GATE:-${repo}/batio3_vasp_pbe_paw_static/endpoint_identity_gate.json}
 workdir=${WORKDIR:-batio3_vasp_pbe_paw_static/static_ecut600}
+static_endpoint=${STATIC_ENDPOINT:-initial}
 
 [[ "${RUN_DFT:-0}" == 1 ]] || { echo "Set RUN_DFT=1 to submit real VASP" >&2; exit 2; }
 [[ "${PBS_NP:-0}" == 28 ]] || { echo "gold5120 static baseline requires exactly 28 MPI ranks" >&2; exit 2; }
+[[ "${static_endpoint}" == initial || "${static_endpoint}" == final ]] || { echo "STATIC_ENDPOINT must be initial or final" >&2; exit 2; }
 [[ -x "${vasp_bin}" ]] || { echo "VASP_BIN is not executable: ${vasp_bin}" >&2; exit 2; }
 : "${VCNEB_GIT_REVISION:?Set the exact source commit in VCNEB_GIT_REVISION}"
 for path in "${initial_dir}/CONTCAR" "${initial_dir}/INCAR" "${initial_dir}/KPOINTS" "${initial_dir}/POTCAR" "${final_dir}/CONTCAR" "${endpoint_identity_gate}"; do
@@ -31,4 +33,5 @@ exec "${python}" examples/run_vcneb_vasp.py \
   --initial "${initial_dir}" --final "${final_dir}" --workdir "${workdir}" \
   --n-images 7 --fmax 0.10 --steps 0 --k 0.2 --image-workers 0 \
   --no-climb --mic --cell-interpolation log_strain --mapping auto --align-translation \
-  --minimum-distance 1.6 --maximum-deformation 0.10 --static-only
+  --minimum-distance 1.6 --maximum-deformation 0.10 --static-only \
+  --static-endpoint "${static_endpoint}"

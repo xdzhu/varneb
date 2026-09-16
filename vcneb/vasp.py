@@ -4,13 +4,18 @@ from __future__ import annotations
 
 import os
 import hashlib
+import json
 import shutil
 from pathlib import Path
 from typing import Mapping, Optional
 
+import numpy as np
 from ase import Atoms
+from ase.calculators.singlepoint import SinglePointCalculator
 from ase.calculators.vasp import Vasp
 from ase.io import write
+
+from .provenance import endpoint_structure_record
 
 
 REQUIRED_VCNEB_STATIC_PARAMETERS = {
@@ -151,3 +156,43 @@ def attach_vasp_calculators(
 
 def default_vasp_command(ncores: int, executable: str) -> str:
     return os.environ.get("VASP_COMMAND", f"mpirun -np {ncores} {executable}")
+
+
+def cached_vasp_static_endpoint_calculator(
+    summary_path: str | Path,
+    atoms: Atoms,
+    *,
+    endpoint: str,
+    n_images: int,
+    source_dir: str | Path,
+    directory: str | Path,
+) -> SinglePointCalculator:
+    """Reuse a validated static endpoint so distributed workers remain interior-only."""
+
+    if endpoint not in {"initial", "final"}:
+        raise ValueError("endpoint must be 'initial' or 'final'")
+    source = Path(summary_path).resolve()
+    payload = json.loads(source.read_text(encoding="utf-8"))
+    expected_index = 0 if endpoint == "initial" else n_images - 1
+    expected_mode = f"fixed_{endpoint}_endpoint_static_scf"
+    if payload.get("status") != "completed" or payload.get("execution_mode") != expected_mode:
+        raise ValueError(f"{source} is not a completed {expected_mode} result")
+    if payload.get("evaluated_image_index") != expected_index or payload.get("n_images") != n_images:
+        raise ValueError(f"{source} does not match the requested {n_images}-image {endpoint} endpoint")
+    recorded = ((payload.get("endpoint_structures") or {}).get(endpoint) or {}).get("sha256")
+    if recorded != endpoint_structure_record(atoms).get("sha256"):
+        raise ValueError(f"{source} structure does not match the requested {endpoint} endpoint")
+    fingerprints = payload.get("licensed_input_fingerprints")
+    if not isinstance(fingerprints, Mapping):
+        raise ValueError(f"{source} lacks VASP input fingerprints")
+    for name, active in vasp_input_fingerprints(source_dir).items():
+        cached = fingerprints.get(name)
+        if not isinstance(cached, Mapping) or cached.get("sha256") != active["sha256"]:
+            raise ValueError(f"{source} {name} fingerprint does not match the active VASP input")
+    forces = np.asarray(payload.get("forces_eV_per_A"), dtype=float)
+    stress = np.asarray(payload.get("stress_eV_per_A3_voigt"), dtype=float)
+    if forces.shape != (len(atoms), 3) or stress.shape != (6,):
+        raise ValueError(f"{source} contains invalid force or stress arrays")
+    calculator = SinglePointCalculator(atoms, energy=float(payload["potential_energy_eV"]), forces=forces, stress=stress)
+    calculator.directory = str(Path(directory).resolve())
+    return calculator

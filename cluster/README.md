@@ -134,6 +134,12 @@ VASP 6.3.2 executable by default. Prepare the dedicated case with
 licensed PAW file and rejects endpoints that differ from the accepted ABACUS
 T-to-C reference before any PBS request.
 
+After both endpoint static summaries pass, `235_batio3_vasp_distributed.pbs`
+requests six `gold5120` nodes: one manager node plus five nodes carrying the
+five 28-rank interior image workers.  Its wrapper maps only image directories
+`01`--`05` to one distinct PBS node each; endpoints `00` and `06` are cached
+from the audited static summaries and never enter the worker allocation.
+
 `hf_batio3_gamma_phonon_abacus.slurm` seeds the separate first-principles
 Gamma-mode analysis at the already audited cubic or tetragonal BTO endpoint.
 It uses a `1×1×1` finite-displacement cell and static 32-MPI ABACUS SCFs. The

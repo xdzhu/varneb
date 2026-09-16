@@ -113,3 +113,26 @@ def test_vasp_static_only_evaluates_fixed_initial_endpoint_once(tmp_path: Path, 
     assert summary["evaluated_image_index"] == 0
     assert summary["potential_energy_eV"] == -8.0
     assert summary["max_force_eV_per_A"] == 0.02
+
+
+def test_vasp_static_only_can_evaluate_fixed_final_endpoint(tmp_path: Path, monkeypatch) -> None:
+    module = _module()
+    initial, final = tmp_path / "initial", tmp_path / "final"
+    _endpoint(initial, Atoms("Ba", cell=[4, 4, 4], pbc=True))
+    _endpoint(final, Atoms("Ba", scaled_positions=[[0.1, 0.0, 0.0]], cell=[4.1, 4, 4], pbc=True))
+
+    def fake_attach(images, *, source_dir, workdir, command, overrides):
+        for index, atoms in enumerate(images):
+            calculator = SinglePointCalculator(atoms, energy=-7.0, forces=[[0.01, 0.0, 0.0]], stress=[0.0] * 6)
+            calculator.directory = str(Path(workdir) / f"{index:02d}")
+            atoms.calc = calculator
+
+    monkeypatch.setattr(sys, "argv", [
+        str(DRIVER), "--initial", str(initial), "--final", str(final),
+        "--workdir", str(tmp_path / "static-final"), "--static-only", "--static-endpoint", "final",
+    ])
+    monkeypatch.setitem(module["main"].__globals__, "attach_vasp_calculators", fake_attach)
+    module["main"]()
+    summary = json.loads((tmp_path / "static-final" / "vasp_static_summary.json").read_text(encoding="utf-8"))
+    assert summary["execution_mode"] == "fixed_final_endpoint_static_scf"
+    assert summary["evaluated_image_index"] == 6

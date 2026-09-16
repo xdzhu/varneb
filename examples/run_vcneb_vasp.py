@@ -37,6 +37,7 @@ from vcneb import (
 from vcneb.executor import ThreadedCalculatorExecutor
 from vcneb.vasp import (
     attach_vasp_calculators,
+    cached_vasp_static_endpoint_calculator,
     default_vasp_command,
     prepare_vasp_static_parameters,
     vasp_input_fingerprints,
@@ -84,6 +85,9 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Evaluate fixed initial endpoint 00 once, then write vasp_static_summary.json; never optimize a path",
     )
+    parser.add_argument("--static-endpoint", choices=["initial", "final"], default="initial")
+    parser.add_argument("--initial-static-summary", default=None, help="Completed initial VASP static summary to cache")
+    parser.add_argument("--final-static-summary", default=None, help="Completed final VASP static summary to cache")
     parser.add_argument("--mic", action="store_true")
     parser.add_argument("--cell-interpolation", choices=["linear", "log_strain"], default="linear")
     parser.add_argument("--mapping", choices=["identity", "auto"], default="identity")
@@ -152,6 +156,8 @@ def main() -> None:
         raise ValueError("--image-workers and --image-retries must be non-negative")
     if args.validate_only and args.static_only:
         raise ValueError("--validate-only and --static-only are mutually exclusive")
+    if bool(args.initial_static_summary) != bool(args.final_static_summary):
+        raise ValueError("pass both --initial-static-summary and --final-static-summary, or neither")
     initial_dir = Path(args.initial).resolve()
     final_dir = Path(args.final).resolve()
     workdir = Path(args.workdir).resolve()
@@ -232,6 +238,15 @@ def main() -> None:
         command=command,
         overrides={"xc": "PBE", "pp": "PBE"},
     )
+    if args.initial_static_summary:
+        images[0].calc = cached_vasp_static_endpoint_calculator(
+            args.initial_static_summary, images[0], endpoint="initial", n_images=args.n_images,
+            source_dir=initial_dir, directory=workdir / "00",
+        )
+        images[-1].calc = cached_vasp_static_endpoint_calculator(
+            args.final_static_summary, images[-1], endpoint="final", n_images=args.n_images,
+            source_dir=initial_dir, directory=workdir / f"{args.n_images - 1:02d}",
+        )
     reports = validate_image_calculators(
         images,
         require_stress=True,
@@ -251,7 +266,7 @@ def main() -> None:
         "n_images": args.n_images,
         "n_interior_images": max(0, args.n_images - 2),
         "endpoint_evaluation_policy": (
-            "fixed_initial_endpoint_static_scf"
+            f"fixed_{args.static_endpoint}_endpoint_static_scf"
             if args.static_only
             else "fixed_cached_once" if args.image_workers else "ASE_calculator_cache"
         ),
@@ -277,14 +292,15 @@ def main() -> None:
     if args.static_only:
         # This establishes a real electronic baseline without turning the
         # fixed endpoint into an NEB worker or permitting ionic/cell updates.
-        static_image = images[0]
+        static_index = 0 if args.static_endpoint == "initial" else args.n_images - 1
+        static_image = images[static_index]
         forces = np.asarray(static_image.get_forces(), dtype=float)
         stress = np.asarray(static_image.get_stress(), dtype=float)
         summary = {
             "status": "completed",
             **metadata,
-            "execution_mode": "fixed_initial_endpoint_static_scf",
-            "evaluated_image_index": 0,
+            "execution_mode": f"fixed_{args.static_endpoint}_endpoint_static_scf",
+            "evaluated_image_index": static_index,
             "potential_energy_eV": float(static_image.get_potential_energy()),
             "forces_eV_per_A": forces.tolist(),
             "stress_eV_per_A3_voigt": stress.tolist(),
