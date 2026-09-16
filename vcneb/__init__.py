@@ -30,6 +30,7 @@ from .modes import (
     project_path_onto_modes,
 )
 from .executor import ImageEvaluation, ThreadedCalculatorExecutor
+from .qe import attach_qe_calculators, make_ase_espresso_factory, static_qe_input_data
 
 __all__ = [
     "VCNEB",
@@ -57,4 +58,7 @@ __all__ = [
     "project_path_onto_modes",
     "ImageEvaluation",
     "ThreadedCalculatorExecutor",
+    "attach_qe_calculators",
+    "make_ase_espresso_factory",
+    "static_qe_input_data",
 ]
