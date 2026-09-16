@@ -1,0 +1,43 @@
+{
+  "format_version": 1,
+  "approval_status": "candidate_requires_user_approval",
+  "purpose": "Candidate QE PBE pseudopotential selection for the BTO cross-calculator validation; not an executable production manifest.",
+  "source": {
+    "collection": "SSSP 1.3.0 PBE precision",
+    "url": "https://archive.materialscloud.org/records/rcyfm-68h65/preview/SSSP_1.3.0_PBE_precision.json?include_deleted=0"
+  },
+  "species": {
+    "Ba": {
+      "filename": "Ba.nc.z_10.oncvpsp4.dojo.v4-sp.upf",
+      "md5": "ecceda5fc736cf81896add41b7758c6c",
+      "family": "PseudoDojo",
+      "recommended_ecutwfc_Ry": 35,
+      "recommended_ecutrho_Ry": 140
+    },
+    "Ti": {
+      "filename": "ti_pbe_v1.4.uspp.F.UPF",
+      "md5": "88a00a6731bd790ddea75d31a80cb452",
+      "family": "GBRV-1.4",
+      "recommended_ecutwfc_Ry": 40,
+      "recommended_ecutrho_Ry": 320
+    },
+    "O": {
+      "filename": "O.pbe-n-kjpaw_psl.0.1.UPF",
+      "md5": "0234752ac141de4415c5fc33072bef88",
+      "family": "PSLibrary 0.3.1 PAW",
+      "recommended_ecutwfc_Ry": 75,
+      "recommended_ecutrho_Ry": 600
+    }
+  },
+  "proposed_bto_run_settings": {
+    "ecutwfc_Ry": 100,
+    "ecutrho_Ry": 600,
+    "rationale": "100 Ry preserves the project BTO wavefunction-cutoff target; 600 Ry is the largest SSSP precision density-cutoff recommendation among Ba, Ti and O."
+  },
+  "activation_requirements": [
+    "Explicit user approval of this mixed-family SSSP collection for the BTO benchmark.",
+    "Acquire UPF files from their reviewed source without renaming them.",
+    "Verify every MD5 locally on hf before the one-rank QE preflight.",
+    "Run a BTO QE cutoff-convergence check before interpreting a production VCNEB path."
+  ]
+}
