@@ -85,6 +85,16 @@ reviewed `QE_ENV_SCRIPT`, `ESPRESSO_PSEUDO`, and Ba/Ti/O UPF names. The QE
 cutoffs are explicit QE/Ry parameters and must be independently converged;
 they are not a mechanical conversion of VASP settings.
 
+`hf_batio3_vcneb_vasp_distributed.slurm` provides the equivalent VASP BTO
+execution gate: it is fixed at seven total images and five 32-MPI interior
+workers (160 ranks over two nodes), keeps endpoints cached at the manager, and
+uses ordinary no-climb NEB. It refuses to start unless `RUN_DFT=1`, a licensed
+`VASP_BIN` visible on `hfacnormal01`, and `VASP_INITIAL_DIR`/`VASP_FINAL_DIR`
+are provided. The initial directory must contain the frozen BTO `CONTCAR` plus
+reviewed `INCAR`, `KPOINTS` and `POTCAR`; it is never inferred from ABACUS
+inputs. Run `examples/run_vcneb_vasp.py --validate-only` on those directories
+before requesting the 160-rank allocation.
+
 `hf_batio3_gamma_phonon_abacus.slurm` seeds the separate first-principles
 Gamma-mode analysis at the already audited cubic or tetragonal BTO endpoint.
 It uses a `1×1×1` finite-displacement cell and static 32-MPI ABACUS SCFs. The

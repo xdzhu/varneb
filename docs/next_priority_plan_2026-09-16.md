@@ -76,6 +76,9 @@ P0 应先完成；P1 的代码和 P2 的 calculator-free 分析实现可以并�
 
 - [ ] 每个新后端先做一次单-image static preflight：energy、forces、stress 有限，
   结构和原子顺序未变，输入确为静态 image 计算。
+- [x] VASP 的 7-total-image distributed 模板已冻结为五个 32-MPI interior worker；它
+  强制 `RUN_DFT=1`、受许可的 `VASP_BIN`、明确的 VASP endpoint input 目录和静态
+  image 参数，不会从 ABACUS 输入猜测 POTCAR/INCAR。
 - [ ] VASP 与 QE 各运行一条正向 7-total-image BTO 普通 VCNEB；控制器缓存端点，
   每轮只计算 5 个 interior images。每个 interior worker 使用 32 MPI ranks，因此
   worker 池为 `5 x 32 = 160` ranks；提交前仍按 `sinfo/squeue` 和实际程序并行效率
