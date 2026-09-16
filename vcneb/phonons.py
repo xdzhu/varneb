@@ -17,6 +17,8 @@ import numpy as np
 
 Array = np.ndarray
 _FREQUENCY_FACTOR_CM1 = 521.4708986  # sqrt(eV / (Angstrom^2 amu)) -> cm^-1
+_BOHR_TO_ANGSTROM = 0.529177210903
+_THZ_TO_CM1 = 33.35640951981521
 
 
 def _as_force_constant_matrix(force_constants: Array, n_atoms: int) -> Array:
@@ -60,6 +62,29 @@ def mass_weighted_dynamical_matrix(force_constants: Array, masses: Array) -> Arr
     return matrix / np.outer(weights, weights)
 
 
+def force_constants_to_eV_per_A2(force_constants: Array, *, unit: str = "eV/angstrom^2") -> Array:
+    """Convert a documented force-constant unit to ``eV / Angstrom^2``.
+
+    Phonopy's ABACUS interface stores force constants as
+    ``eV / (Angstrom * au)`` because ABACUS structures use Bohr lattice
+    units. Treating those values as ``eV / Angstrom^2`` underestimates every
+    harmonic frequency by ``sqrt(Bohr)``. No unit is guessed: callers must
+    retain the documented source convention.
+    """
+
+    values = np.asarray(force_constants, dtype=float)
+    if not np.all(np.isfinite(values)):
+        raise ValueError("force_constants contains non-finite values")
+    normalized = unit.strip().lower().replace("ångström", "angstrom").replace("å", "angstrom")
+    if normalized in {"ev/angstrom^2", "ev/a^2"}:
+        return values.copy()
+    if normalized in {"ev/angstrom.au", "ev/(angstrom*au)", "ev/a.au"}:
+        return values / _BOHR_TO_ANGSTROM
+    raise ValueError(
+        "unsupported force-constant unit; use eV/angstrom^2 or eV/angstrom.au"
+    )
+
+
 @dataclass(frozen=True)
 class GammaModes:
     """Mass-weighted Gamma modes for one stationary reference configuration.
@@ -100,6 +125,134 @@ class GammaModes:
 
         weights = np.repeat(np.sqrt(self.masses_amu), 3)
         return self.eigenvectors / weights[:, None]
+
+
+@dataclass(frozen=True)
+class PhonopyGammaEigenpairs:
+    """Raw, auditable Gamma-point eigenpairs obtained from Phonopy.
+
+    The eigenvectors are Phonopy's mass-weighted dynamical-matrix
+    eigenvectors, with their arbitrary complex phase fixed deterministically
+    at Gamma. They are therefore directly suitable for comparison with the
+    VARNEB mass-weighted normal-coordinate convention. Degenerate-mode
+    rotations remain physically arbitrary and must be analyzed as subspaces.
+    """
+
+    frequencies_thz: Array
+    eigenvectors_mass_weighted: Array
+
+    def __post_init__(self) -> None:
+        frequencies = np.asarray(self.frequencies_thz, dtype=float).reshape(-1)
+        vectors = np.asarray(self.eigenvectors_mass_weighted, dtype=float)
+        if not len(frequencies) or vectors.shape != (len(frequencies), len(frequencies)):
+            raise ValueError("Phonopy Gamma eigenpairs must contain a square eigenvector matrix")
+        if not np.all(np.isfinite(frequencies)) or not np.all(np.isfinite(vectors)):
+            raise ValueError("Phonopy Gamma eigenpairs contain non-finite values")
+        if not np.allclose(vectors.T @ vectors, np.eye(len(frequencies)), rtol=1e-8, atol=1e-8):
+            raise ValueError("Phonopy Gamma eigenvectors are not orthonormal")
+        object.__setattr__(self, "frequencies_thz", frequencies.copy())
+        object.__setattr__(self, "eigenvectors_mass_weighted", vectors.copy())
+
+
+def phonopy_gamma_eigenpairs(phonon: object, *, imaginary_tolerance: float = 1e-10) -> PhonopyGammaEigenpairs:
+    """Obtain phase-fixed real Gamma eigenvectors directly from a Phonopy object.
+
+    ``phonon`` is deliberately duck-typed so VARNEB remains calculator and
+    Phonopy-installation independent at import time. It must provide the
+    standard ``run_qpoints`` and ``get_qpoints_dict`` methods. At exact Gamma
+    without a directional NAC request the dynamical matrix is real; a material
+    imaginary component after deterministic phase fixing is rejected rather
+    than silently discarded.
+    """
+
+    if imaginary_tolerance <= 0.0 or not np.isfinite(imaginary_tolerance):
+        raise ValueError("imaginary_tolerance must be finite and positive")
+    run_qpoints = getattr(phonon, "run_qpoints", None)
+    get_qpoints_dict = getattr(phonon, "get_qpoints_dict", None)
+    if not callable(run_qpoints) or not callable(get_qpoints_dict):
+        raise TypeError("phonon must provide Phonopy run_qpoints and get_qpoints_dict methods")
+    run_qpoints([[0.0, 0.0, 0.0]], with_eigenvectors=True)
+    result = get_qpoints_dict()
+    try:
+        frequencies = np.asarray(result["frequencies"], dtype=float)
+        vectors = np.asarray(result["eigenvectors"], dtype=complex)
+    except (KeyError, TypeError) as exc:
+        raise ValueError("Phonopy Gamma result requires frequencies and eigenvectors") from exc
+    if frequencies.shape[0] != 1 or vectors.shape[0] != 1:
+        raise ValueError("Phonopy Gamma query returned an unexpected q-point shape")
+    frequencies = frequencies[0]
+    vectors = vectors[0]
+    if vectors.shape != (len(frequencies), len(frequencies)):
+        raise ValueError("Phonopy Gamma eigenvectors have an unexpected shape")
+
+    # Eigenvectors have an arbitrary U(1) phase. Fix it using the largest
+    # component of each vector; for a real Gamma dynamical matrix this makes
+    # each vector real up to numerical noise without choosing a direction in a
+    # degenerate subspace.
+    phase_fixed = vectors.copy()
+    for mode in range(phase_fixed.shape[1]):
+        pivot = int(np.argmax(np.abs(phase_fixed[:, mode])))
+        phase_fixed[:, mode] *= np.exp(-1j * np.angle(phase_fixed[pivot, mode]))
+    scale = max(1.0, float(np.max(np.abs(phase_fixed.real))))
+    if float(np.max(np.abs(phase_fixed.imag))) > imaginary_tolerance * scale:
+        raise ValueError(
+            "Phonopy Gamma eigenvectors retain a material imaginary component; "
+            "use an exact non-directional Gamma calculation"
+        )
+    return PhonopyGammaEigenpairs(
+        frequencies_thz=frequencies,
+        eigenvectors_mass_weighted=phase_fixed.real,
+    )
+
+
+def save_phonopy_gamma_eigenpairs(path: str | Path, eigenpairs: PhonopyGammaEigenpairs) -> None:
+    """Save directly generated Phonopy Gamma eigenpairs in a portable NPZ archive."""
+
+    target = Path(path)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    np.savez_compressed(
+        target,
+        frequencies_thz=eigenpairs.frequencies_thz,
+        eigenvectors_mass_weighted=eigenpairs.eigenvectors_mass_weighted,
+    )
+
+
+def load_phonopy_gamma_eigenpairs(path: str | Path) -> PhonopyGammaEigenpairs:
+    """Load an NPZ archive written by :func:`save_phonopy_gamma_eigenpairs`."""
+
+    with np.load(Path(path), allow_pickle=False) as data:
+        if "frequencies_thz" not in data or "eigenvectors_mass_weighted" not in data:
+            raise ValueError("Phonopy Gamma archive requires frequencies_thz and eigenvectors_mass_weighted")
+        return PhonopyGammaEigenpairs(
+            frequencies_thz=np.asarray(data["frequencies_thz"], dtype=float),
+            eigenvectors_mass_weighted=np.asarray(data["eigenvectors_mass_weighted"], dtype=float),
+        )
+
+
+def gamma_modes_from_phonopy_eigenpairs(
+    eigenpairs: PhonopyGammaEigenpairs,
+    masses: Array,
+) -> GammaModes:
+    """Convert directly exported Phonopy Gamma eigenpairs to ``GammaModes``.
+
+    Phonopy reports frequencies in THz. Their conversion to signed harmonic
+    eigenvalues is used only to preserve VARNEB's common report schema; the
+    supplied Phonopy eigenvectors themselves are retained for projection.
+    """
+
+    values = _validated_masses(masses)
+    width = 3 * len(values)
+    if len(eigenpairs.frequencies_thz) != width:
+        raise ValueError("Phonopy Gamma eigenpair count is incompatible with masses")
+    frequencies_cm1 = eigenpairs.frequencies_thz * _THZ_TO_CM1
+    eigenvalues = np.sign(frequencies_cm1) * (np.abs(frequencies_cm1) / _FREQUENCY_FACTOR_CM1) ** 2
+    return GammaModes(
+        masses_amu=values,
+        eigenvalues_eV_per_A2_amu=eigenvalues,
+        frequencies_cm1=frequencies_cm1,
+        eigenvectors=eigenpairs.eigenvectors_mass_weighted,
+        translations_projected=False,
+    )
 
 
 def diagonalize_gamma_modes(
@@ -187,10 +340,16 @@ def load_gamma_force_constants(path: str | Path) -> tuple[Array, Array]:
 
 __all__ = [
     "GammaModes",
+    "PhonopyGammaEigenpairs",
     "diagonalize_gamma_modes",
+    "force_constants_to_eV_per_A2",
+    "gamma_modes_from_phonopy_eigenpairs",
     "load_gamma_force_constants",
+    "load_phonopy_gamma_eigenpairs",
     "mass_weighted_dynamical_matrix",
+    "phonopy_gamma_eigenpairs",
     "project_displacements_onto_gamma_modes",
+    "save_phonopy_gamma_eigenpairs",
     "tangent_mode_overlaps",
     "translation_basis",
 ]

@@ -28,6 +28,9 @@ def test_bto_gamma_phonon_template_is_static_and_opt_in() -> None:
         "write_FORCE_CONSTANTS(phonon.force_constants)",
         "transpose(0, 2, 1, 3)",
         "gamma_force_constants.npz",
+        "phonopy_gamma_eigenpairs.npz",
+        "phonopy_gamma_eigenpairs(phonon)",
+        "save_phonopy_gamma_eigenpairs",
         "force_constant_provenance.json",
     ):
         assert fragment in text

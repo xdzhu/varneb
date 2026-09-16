@@ -54,7 +54,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--modes",
         type=Path,
-        default=DEFAULT_OUTPUTS / "bto_tetragonal_to_cubic_n7_gamma_modes.json",
+        default=DEFAULT_OUTPUTS / "bto_tetragonal_to_cubic_n7_gamma_modes_phonopy_direct.json",
     )
     parser.add_argument(
         "--summary",

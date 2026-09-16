@@ -26,7 +26,10 @@ if str(ROOT) not in sys.path:
 
 from vcneb import (
     diagonalize_gamma_modes,
+    force_constants_to_eV_per_A2,
+    gamma_modes_from_phonopy_eigenpairs,
     load_gamma_force_constants,
+    load_phonopy_gamma_eigenpairs,
     project_displacements_onto_gamma_modes,
     read_chain_trajectory,
     tangent_mode_overlaps,
@@ -38,6 +41,17 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--reference", required=True, help="Stationary endpoint structure readable by ASE")
     parser.add_argument("--trajectory", required=True, help="Flat ASE VCNEB trajectory")
     parser.add_argument("--force-constants", required=True, help="Gamma force_constants.npz archive")
+    parser.add_argument(
+        "--force-constant-unit",
+        default="eV/angstrom^2",
+        choices=("eV/angstrom^2", "eV/angstrom.au"),
+        help="Documented unit of the supplied force-constant archive; no unit is inferred",
+    )
+    parser.add_argument(
+        "--phonopy-eigenpairs",
+        default=None,
+        help="Optional NPZ of direct Phonopy Gamma eigenpairs; uses those eigenvectors for projection",
+    )
     parser.add_argument("--n-images", type=int, default=7, help="Total images per stored chain")
     parser.add_argument("--trajectory-step", type=int, default=-1, help="Complete chain snapshot to analyze")
     parser.add_argument(
@@ -129,6 +143,18 @@ def reorder_reference_force_constants(
     return reference[permutation], reordered, np.asarray(masses_amu)[permutation], permutation
 
 
+def reorder_phonopy_eigenpairs(eigenpairs, permutation: list[int] | None):
+    """Apply the endpoint atom mapping to rows of direct Phonopy eigenvectors."""
+
+    if permutation is None:
+        return eigenpairs
+    dofs = [3 * atom + axis for atom in permutation for axis in range(3)]
+    return type(eigenpairs)(
+        frequencies_thz=eigenpairs.frequencies_thz,
+        eigenvectors_mass_weighted=eigenpairs.eigenvectors_mass_weighted[dofs, :],
+    )
+
+
 def translate_reference_fractional(reference: Atoms, translation_text: str | None) -> tuple[Atoms, list[float] | None]:
     """Apply a recorded endpoint gauge translation without modifying the cell."""
 
@@ -176,7 +202,9 @@ def make_report(
     force_constants: np.ndarray,
     masses_amu: np.ndarray,
     include_translations: bool,
+    force_constant_unit: str = "eV/angstrom^2",
     remove_translations: bool = True,
+    phonopy_eigenpairs=None,
 ) -> tuple[dict, dict[str, np.ndarray]]:
     if len(reference) != len(masses_amu):
         raise ValueError("force-constant archive mass count differs from reference structure")
@@ -186,7 +214,16 @@ def make_report(
     # accept that documented tabulation-scale difference.
     if not np.allclose(reference.get_masses(), masses_amu, rtol=1e-4, atol=1e-6):
         raise ValueError("force-constant archive masses are incompatible with reference structure")
-    modes = diagonalize_gamma_modes(force_constants, masses_amu, project_translations=True)
+    if phonopy_eigenpairs is None:
+        modes = diagonalize_gamma_modes(
+            force_constants_to_eV_per_A2(force_constants, unit=force_constant_unit),
+            masses_amu,
+            project_translations=True,
+        )
+        mode_basis = "VARNEB diagonalization of documented force constants"
+    else:
+        modes = gamma_modes_from_phonopy_eigenpairs(phonopy_eigenpairs, masses_amu)
+        mode_basis = "direct Phonopy Gamma eigenpairs"
     displacements, removed_translations = reference_cell_displacements(
         images,
         reference,
@@ -222,9 +259,16 @@ def make_report(
         "format_version": 1,
         "interpretation": {
             "reference": "stationary endpoint Gamma force constants",
+            "force_constant_unit_input": force_constant_unit,
+            "force_constant_unit_handling": (
+                "converted to eV/angstrom^2 before VARNEB diagonalization"
+                if phonopy_eigenpairs is None
+                else "handled by the direct Phonopy Gamma q-point calculation"
+            ),
+            "mode_basis": mode_basis,
             "atomic_displacement_convention": "fractional image-reference displacement MIC-mapped into the reference cell",
             "cell_degrees_of_freedom": "excluded; analyze separately through VCNEB generalized coordinates",
-            "translations_projected_before_diagonalization": True,
+            "translations_projected_before_diagonalization": bool(modes.translations_projected),
             "rigid_translations_removed_from_path": bool(remove_translations),
         },
         "n_atoms": len(reference),
@@ -264,6 +308,7 @@ def main() -> None:
     reference = read(args.reference)
     images = read_chain_trajectory(args.trajectory, n_images=args.n_images, step=args.trajectory_step)
     force_constants, masses_amu = load_gamma_force_constants(args.force_constants)
+    phonopy_eigenpairs = load_phonopy_gamma_eigenpairs(args.phonopy_eigenpairs) if args.phonopy_eigenpairs else None
     reference, translation = translate_reference_fractional(reference, args.reference_translation)
     reference, force_constants, masses_amu, permutation = reorder_reference_force_constants(
         reference,
@@ -271,6 +316,7 @@ def main() -> None:
         masses_amu,
         args.reference_permutation,
     )
+    phonopy_eigenpairs = reorder_phonopy_eigenpairs(phonopy_eigenpairs, permutation)
     report, arrays = make_report(
         reference=reference,
         images=images,
@@ -278,11 +324,14 @@ def main() -> None:
         masses_amu=masses_amu,
         include_translations=args.include_translations,
         remove_translations=not args.keep_translations,
+        force_constant_unit=args.force_constant_unit,
+        phonopy_eigenpairs=phonopy_eigenpairs,
     )
     output = Path(args.output).resolve()
     report["reference_path"] = str(Path(args.reference).resolve())
     report["trajectory_path"] = str(Path(args.trajectory).resolve())
     report["force_constant_archive"] = str(Path(args.force_constants).resolve())
+    report["phonopy_eigenpair_archive"] = str(Path(args.phonopy_eigenpairs).resolve()) if args.phonopy_eigenpairs else None
     report["trajectory_step"] = args.trajectory_step
     report["reference_atom_permutation_in_path_order"] = permutation
     report["reference_fractional_translation"] = translation

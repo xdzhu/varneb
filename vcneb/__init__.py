@@ -33,9 +33,15 @@ from .executor import ImageEvaluation, ThreadedCalculatorExecutor
 from .qe import attach_qe_calculators, make_ase_espresso_factory, static_qe_input_data
 from .phonons import (
     GammaModes,
+    PhonopyGammaEigenpairs,
     diagonalize_gamma_modes,
+    force_constants_to_eV_per_A2,
+    gamma_modes_from_phonopy_eigenpairs,
     load_gamma_force_constants,
+    load_phonopy_gamma_eigenpairs,
+    phonopy_gamma_eigenpairs,
     project_displacements_onto_gamma_modes,
+    save_phonopy_gamma_eigenpairs,
     tangent_mode_overlaps,
 )
 
@@ -69,8 +75,14 @@ __all__ = [
     "make_ase_espresso_factory",
     "static_qe_input_data",
     "GammaModes",
+    "PhonopyGammaEigenpairs",
     "diagonalize_gamma_modes",
+    "force_constants_to_eV_per_A2",
+    "gamma_modes_from_phonopy_eigenpairs",
     "load_gamma_force_constants",
+    "load_phonopy_gamma_eigenpairs",
+    "phonopy_gamma_eigenpairs",
     "project_displacements_onto_gamma_modes",
+    "save_phonopy_gamma_eigenpairs",
     "tangent_mode_overlaps",
 ]

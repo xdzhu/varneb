@@ -86,6 +86,41 @@ def test_gamma_mode_report_accepts_standard_atomic_weight_rounding() -> None:
     assert report["n_atoms"] == 1
 
 
+def test_gamma_mode_report_records_explicit_force_constant_unit() -> None:
+    module = __import__("runpy").run_path(str(DRIVER))
+    reference = Atoms("H", cell=[4, 4, 4], pbc=True)
+    report, _ = module["make_report"](
+        reference=reference,
+        images=[reference.copy(), reference.copy()],
+        force_constants=np.eye(3),
+        masses_amu=reference.get_masses(),
+        include_translations=False,
+        force_constant_unit="eV/angstrom.au",
+    )
+    assert report["interpretation"]["force_constant_unit_input"] == "eV/angstrom.au"
+    assert report["interpretation"]["force_constant_unit_handling"].startswith("converted")
+
+
+def test_direct_phonopy_basis_is_used_after_path_atom_permutation() -> None:
+    module = __import__("runpy").run_path(str(DRIVER))
+    from vcneb.phonons import PhonopyGammaEigenpairs
+
+    reference = Atoms("HHe", cell=[4, 4, 4], pbc=True)
+    raw = PhonopyGammaEigenpairs(np.array([1.0] * 6), np.eye(6))
+    reordered = module["reorder_phonopy_eigenpairs"](raw, [1, 0])
+    assert np.array_equal(reordered.eigenvectors_mass_weighted, np.eye(6)[[3, 4, 5, 0, 1, 2]])
+    report, _ = module["make_report"](
+        reference=reference[[1, 0]],
+        images=[reference[[1, 0]], reference[[1, 0]]],
+        force_constants=np.eye(6),
+        masses_amu=reference.get_masses()[[1, 0]],
+        include_translations=True,
+        phonopy_eigenpairs=reordered,
+    )
+    assert report["interpretation"]["mode_basis"] == "direct Phonopy Gamma eigenpairs"
+    assert not report["interpretation"]["translations_projected_before_diagonalization"]
+
+
 def test_reference_translation_uses_fractional_gauge_without_changing_cell() -> None:
     module = __import__("runpy").run_path(str(DRIVER))
     reference = Atoms("H", scaled_positions=[[0.1, 0.2, 0.3]], cell=[4, 5, 6], pbc=True)
