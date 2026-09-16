@@ -40,6 +40,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--force-constants", required=True, help="Gamma force_constants.npz archive")
     parser.add_argument("--n-images", type=int, default=7, help="Total images per stored chain")
     parser.add_argument("--trajectory-step", type=int, default=-1, help="Complete chain snapshot to analyze")
+    parser.add_argument(
+        "--reference-permutation",
+        default=None,
+        help="Comma-separated reference atom indices in path order; required when NEB mapping reordered atoms",
+    )
     parser.add_argument("--output", default="gamma_path_modes.json")
     parser.add_argument("--include-translations", action="store_true")
     return parser.parse_args()
@@ -71,6 +76,34 @@ def reference_cell_displacements(images: list[Atoms], reference: Atoms) -> np.nd
                 delta_q[:, axis] -= np.rint(delta_q[:, axis])
         values.append(delta_q @ reference.cell.array)
     return np.asarray(values, dtype=float)
+
+
+def reorder_reference_force_constants(
+    reference: Atoms,
+    force_constants: np.ndarray,
+    masses_amu: np.ndarray,
+    permutation_text: str | None,
+) -> tuple[Atoms, np.ndarray, np.ndarray, list[int] | None]:
+    """Apply an audited endpoint mapping to both structure and force constants."""
+
+    if permutation_text is None:
+        return reference, force_constants, masses_amu, None
+    try:
+        permutation = [int(value.strip()) for value in permutation_text.split(",")]
+    except ValueError as exc:
+        raise ValueError("--reference-permutation must be comma-separated integer indices") from exc
+    n_atoms = len(reference)
+    if len(permutation) != n_atoms or sorted(permutation) != list(range(n_atoms)):
+        raise ValueError("--reference-permutation must contain every reference atom index exactly once")
+    values = np.asarray(force_constants, dtype=float)
+    if values.shape == (n_atoms, 3, n_atoms, 3):
+        reordered = values[np.ix_(permutation, range(3), permutation, range(3))]
+    elif values.shape == (3 * n_atoms, 3 * n_atoms):
+        dofs = [3 * atom + axis for atom in permutation for axis in range(3)]
+        reordered = values[np.ix_(dofs, dofs)]
+    else:
+        raise ValueError("force_constants shape is incompatible with the reference permutation")
+    return reference[permutation], reordered, np.asarray(masses_amu)[permutation], permutation
 
 
 def _write_json_atomic(path: Path, payload: dict) -> None:
@@ -143,6 +176,12 @@ def main() -> None:
     reference = read(args.reference)
     images = read_chain_trajectory(args.trajectory, n_images=args.n_images, step=args.trajectory_step)
     force_constants, masses_amu = load_gamma_force_constants(args.force_constants)
+    reference, force_constants, masses_amu, permutation = reorder_reference_force_constants(
+        reference,
+        force_constants,
+        masses_amu,
+        args.reference_permutation,
+    )
     report, arrays = make_report(
         reference=reference,
         images=images,
@@ -155,6 +194,7 @@ def main() -> None:
     report["trajectory_path"] = str(Path(args.trajectory).resolve())
     report["force_constant_archive"] = str(Path(args.force_constants).resolve())
     report["trajectory_step"] = args.trajectory_step
+    report["reference_atom_permutation_in_path_order"] = permutation
     _write_json_atomic(output, report)
     np.savez_compressed(output.with_suffix(".npz"), **arrays)
     print(f"[DONE] projected {len(images)} images onto Gamma modes; report={output}")

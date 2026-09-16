@@ -74,7 +74,9 @@ first-order saddle character.
 - `[production-template] examples/run_vcneb_vasp.py`: VASP driver based on the existing endpoint layout.
 - `examples/analyze_path_gamma_modes.py`: postprocess a completed chain against a
   stationary-endpoint Gamma force-constant archive; it reports atomic normal
-  coordinates separately from the variable-cell degrees of freedom.
+  coordinates separately from the variable-cell degrees of freedom. Supply the
+  recorded endpoint mapping with `--reference-permutation` when NEB reordered
+  same-species atoms.
 - `[production-template] examples/run_vcneb_qe.py`: QE `pw.x` driver with a
   no-DFT `--validate-only` preflight; it supports 7 total images and
   manager-controlled interior-image workers.

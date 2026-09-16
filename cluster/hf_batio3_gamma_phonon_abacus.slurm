@@ -113,15 +113,18 @@ done
 
 "${phonopy}" --abacus -f disp-[0-9][0-9][0-9]/OUT.ABACUS/running_scf.log
 test -s FORCE_SETS
-"${phonopy}" --abacus --writefc
-test -s FORCE_CONSTANTS
 "${python}" - <<'PY'
 import json
 from pathlib import Path
 import numpy as np
 from phonopy import load
+from phonopy.file_IO import write_FORCE_CONSTANTS
 
-phonon = load('phonopy_disp.yaml', force_constants_filename='FORCE_CONSTANTS')
+# Load the explicit displacement YAML.  Calling ``phonopy --writefc`` while
+# STRU is also present triggers Phonopy's legacy calculator-file path, which
+# cannot infer the supercell matrix; never rely on that ambiguous branch.
+phonon = load('phonopy_disp.yaml', force_sets_filename='FORCE_SETS', calculator='abacus')
+write_FORCE_CONSTANTS(phonon.force_constants)
 np.savez_compressed(
     'gamma_force_constants.npz',
     force_constants=np.asarray(phonon.force_constants, dtype=float),
@@ -138,4 +141,5 @@ Path('force_constant_provenance.json').write_text(json.dumps({
     'finite_difference_amplitude_A': float(__import__('os').environ.get('DELTA', '0.01')),
 }, indent=2) + '\n', encoding='utf-8')
 PY
+test -s FORCE_CONSTANTS
 echo "[DONE] Gamma force constants assembled in ${PWD}/FORCE_CONSTANTS and gamma_force_constants.npz"

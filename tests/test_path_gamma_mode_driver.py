@@ -54,3 +54,19 @@ def test_gamma_mode_driver_projects_a_complete_path_without_dft(tmp_path: Path) 
     assert report["interpretation"]["cell_degrees_of_freedom"].startswith("excluded")
     assert len(report["normal_coordinates_sqrt_amu_A"]) == 3
     assert output.with_suffix(".npz").exists()
+
+
+def test_reference_permutation_reorders_both_force_constant_axes() -> None:
+    module = __import__("runpy").run_path(str(DRIVER))
+    reference = Atoms("HHe", cell=[4, 4, 4], pbc=True)
+    force_constants = np.arange(36.0).reshape(6, 6)
+    reordered, reordered_fc, masses, permutation = module["reorder_reference_force_constants"](
+        reference,
+        force_constants,
+        reference.get_masses(),
+        "1,0",
+    )
+    assert permutation == [1, 0]
+    assert reordered.get_chemical_symbols() == ["He", "H"]
+    assert np.array_equal(masses, reference.get_masses()[[1, 0]])
+    assert np.array_equal(reordered_fc, force_constants[np.ix_([3, 4, 5, 0, 1, 2], [3, 4, 5, 0, 1, 2])])
