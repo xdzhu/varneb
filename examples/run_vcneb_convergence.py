@@ -23,7 +23,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", default=str(ROOT / "outputs" / "vcneb_convergence_matrix.json"))
     parser.add_argument("--steps", type=int, default=300)
-    parser.add_argument("--fmax", type=float, default=0.005)
+    parser.add_argument("--fmax", type=float, default=0.10)
     parser.add_argument("--images", type=int, nargs="+", default=[5, 7, 9])
     parser.add_argument("--springs", type=float, nargs="+", default=[0.05, 0.10, 0.20])
     parser.add_argument("--cell-scales", type=float, nargs="+", default=[4.0, 5.0, 6.0])

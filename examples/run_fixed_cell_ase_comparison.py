@@ -25,7 +25,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output", default=str(ROOT / "outputs" / "fixed_cell_ase_comparison.json"))
     parser.add_argument("--images", type=int, default=7)
     parser.add_argument("--steps", type=int, default=300)
-    parser.add_argument("--fmax", type=float, default=0.01)
+    parser.add_argument("--fmax", type=float, default=0.10)
     return parser.parse_args()
 
 

@@ -1857,7 +1857,7 @@ def run_vcneb(
     optimizer_kwargs: Optional[Mapping[str, object]] = None,
     line_search_retries: int = 0,
     line_search_retry_factor: float = 0.5,
-    fmax: float = 0.05,
+    fmax: float = 0.10,
     steps: int = 300,
     logfile: str | Path | None = "vcneb-opt.log",
     trajectory: str | Path | None = "vcneb.traj",

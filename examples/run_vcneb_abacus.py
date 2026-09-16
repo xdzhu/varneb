@@ -48,7 +48,7 @@ def parse_args() -> argparse.Namespace:
         default=7,
         help="Total images including the two fixed endpoints (7 means 5 interior images)",
     )
-    parser.add_argument("--fmax", type=float, default=0.05)
+    parser.add_argument("--fmax", type=float, default=0.10, help="NEB convergence threshold in eV/A")
     parser.add_argument("--steps", type=int, default=300)
     parser.add_argument("--k", type=float, default=0.10)
     parser.add_argument("--pressure-gpa", type=float, default=0.0)

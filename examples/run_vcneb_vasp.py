@@ -47,7 +47,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--final", default=str(root / "final_state" / "relax"))
     parser.add_argument("--workdir", default=str(root / "run_VCNEB" / "run"))
     parser.add_argument("--n-images", type=int, default=7, help="Total images including endpoints")
-    parser.add_argument("--fmax", type=float, default=0.05)
+    parser.add_argument("--fmax", type=float, default=0.10, help="NEB convergence threshold in eV/A")
     parser.add_argument("--steps", type=int, default=300)
     parser.add_argument("--k", type=float, default=0.10)
     parser.add_argument("--pressure-gpa", type=float, default=0.0)

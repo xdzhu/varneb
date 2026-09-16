@@ -17,6 +17,8 @@ independently converged 12-atom Hf4O8 cells and are evaluated once/cached;
 only interior images run under the distributed controller. The canonical
 result record is
 `outputs/hfo2_t_to_po_pbe100_dzp10au/hfo2_validation_provenance.json`.
+New VARNEB NEB runs default to `fmax = 0.10 eV/A`; the stricter force targets
+listed below are historical run metadata, not the current default.
 
 | Path | Total / interior images | Job | Barrier (eV per 12-atom cell) | Reported generalized force (eV/A) |
 | --- | --- | ---: | ---: | ---: |
@@ -37,7 +39,7 @@ real-material strict-subspace chain and releases all atomic-plus-cell degrees
 of freedom before ordinary VC-NEB.  Its 300-step continuation reached a
 minimum `0.097528 eV/A` at step 275, then was deliberately observed for 25
 more steps and rebounded to `0.108376 eV/A`.  The archived step-275 chain is a
-conventional loose-`0.10 eV/A` acceptance snapshot, not a `0.05 eV/A`
+default-`0.10 eV/A` acceptance snapshot, not a historical `0.05 eV/A`
 strict-convergence result.  It has a `0.1380114 eV` barrier per 12-atom cell;
 the full trajectory, preflight and audit are under
 `outputs/hfo2_t_to_po_pbe100_dzp10au/vcneb_n7_mode_subspace_release_job27693085/`.

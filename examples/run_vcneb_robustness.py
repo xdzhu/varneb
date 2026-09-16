@@ -136,7 +136,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", default=str(ROOT / "outputs" / "vcneb_robustness.json"))
     parser.add_argument("--seeds", type=int, nargs="+", default=[0, 1, 2, 3])
-    parser.add_argument("--fmax", type=float, default=0.002)
+    parser.add_argument("--fmax", type=float, default=0.10)
     parser.add_argument("--steps", type=int, default=800)
     return parser.parse_args()
 

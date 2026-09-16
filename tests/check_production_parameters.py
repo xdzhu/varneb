@@ -14,6 +14,8 @@ def main() -> None:
     for label, text, species in (("BTO", bto, ("Ba", "Ti", "O")), ("HfO2", hfo2, ("Hf", "O"))):
         if "ecutwfc=${ECUTWFC:-100}" not in text:
             raise SystemExit(f"{label} template does not default to 100 Ry")
+        if "fmax=${FMAX:-0.10}" not in text:
+            raise SystemExit(f"{label} template does not default to 0.10 eV/A")
         if "Orb-DZP-10au" not in text:
             raise SystemExit(f"{label} template does not select Orb-DZP-10au")
         for element in species:

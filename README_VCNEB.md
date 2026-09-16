@@ -404,7 +404,7 @@ python examples/run_vcneb_vasp.py \
   --final final_state/relax \
   --workdir run_VCNEB/run \
   --n-images 7 \
-  --fmax 0.05 \
+  --fmax 0.10 \
   --steps 300 \
   --vasp-bin /home/zhuxd/Software/src/vasp/6.3.2/bin/vasp_std \
   --ncores 8
@@ -548,25 +548,24 @@ one image when the band is refined.  Same-image-count parameterization or
 optimizer variants must opt in to duplicate counts explicitly.
 
 For convergence reporting, keep the run-time threshold and any later audit
-threshold distinct.  The API default `fmax=0.05 eV/A` is the strict production
-setting used for the archived HfO2 ordinary image-count table; the CI HfO2
-refinement used an even stricter `0.03 eV/A` target.  A complex DFT ordinary
-NEB branch may still be accepted under a conventional loose `0.10 eV/A`
-criterion, but the result must be labeled that way.  For example, job 27687189
-has `final_max_generalized_force=0.086679 eV/A`: it fails the recorded
-`0.05 eV/A` target, but passes a re-audit with
+threshold distinct.  The API and production-template default is
+`fmax=0.10 eV/A`, the ordinary-NEB acceptance threshold for new VARNEB runs.
+The archived HfO2 7/9-image and CI records were intentionally run at stricter
+historical targets (`0.05` and `0.03 eV/A`, respectively); those values remain
+provenance, not the current default.  For example, job 27687189 has
+`final_max_generalized_force=0.086679 eV/A` and passes a re-audit with
 `python scripts/audit_vcneb_result.py <workdir> --fmax-target 0.10`.  That
-branch is therefore reported as a loose-threshold endpoint-displacement
-mode-guided diagnostic, not mixed into the strict 7/9-image convergence table.
+branch is therefore accepted at the default ordinary-NEB threshold, while its
+different mechanism still keeps it out of the strict historical 7/9-image
+convergence table.
 
 The separately archived real-material subspace-to-release diagnostic
 (`outputs/hfo2_t_to_po_pbe100_dzp10au/vcneb_n7_mode_subspace_release_job27693085/`)
 starts from a strict subspace chain and then releases every degree of freedom.
 Its minimum was `0.097528 eV/A` at optimizer step 275, followed by 25 observed
 steps of rebound to `0.108376 eV/A`.  Thus its saved step-275 chain may be used
-only as a conventional loose `0.10 eV/A` ordinary-NEB snapshot; it is neither
-a strict `0.05 eV/A` result nor a substitute for the ordinary/CI image-count
-comparison.
+as a `0.10 eV/A` ordinary-NEB snapshot; it is not a stricter historical
+`0.05 eV/A` result or a substitute for the ordinary/CI image-count comparison.
 
 ## Current limitations
 

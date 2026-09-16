@@ -47,9 +47,10 @@ configurations.
 3. For HfO2, keep ordinary 7/9 image-count comparison, linear-cell control,
    and CI refinement as distinct rows. Do not fold the linear-cell control
    into the image-count spread.
-4. State force semantics. The strict production table uses a maximum
-   generalized-force target of `0.05 eV/A`; the separate mode-guided diagnostic
-   is only accepted at a loose `0.10 eV/A` NEB threshold.
+4. State force semantics. New ordinary NEB runs use the default maximum
+   generalized-force target of `0.10 eV/A`. The historical strict production
+   table uses recorded `0.05 eV/A` (and CI `0.03 eV/A`) targets, which must not
+   be relabeled as current defaults.
 5. Quote HfO2 values per 12-atom cell or per formula unit, but never change
    denominator inside one comparison. Four HfO2 formula units occupy the
    present cell.

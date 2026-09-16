@@ -18,7 +18,7 @@ basis_dir=/public/home/iai806/abacus/PSEUDO/ABACUS-orbitals/Dojo-NC-FR/Orb-DZP-1
 
 n_images=${N_IMAGES:-7}
 steps=${STEPS:-300}
-fmax=${FMAX:-0.03}
+fmax=${FMAX:-0.10}
 spring=${SPRING:-0.2}
 optimizer=${OPTIMIZER:-FIRE}
 maxstep=${MAXSTEP:-0.02}

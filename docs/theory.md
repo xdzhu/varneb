@@ -290,11 +290,10 @@ image 可能在路径尚未成形时被错误选中，导致图像折返但投�
 “路径残余力变小”和“原始 DFT 应力/原子力已经收敛”这两个不同判据。
 
 `fmax` 的数值阈值是应用层的验收口径，不是算法常数。当前公共 API 默认
-`0.05 eV/A`，适合把不同 image 数、cell 插值和 CI 精修放入同一张严格生产表；
-而对复杂 DFT 普通 NEB 或诊断性机制路径，`0.10 eV/A` 也可以作为常见的
-loose NEB 收敛阈值。使用宽松阈值时，报告必须同时写明原始 summary 中的
-`fmax_target_eV_per_A`、复审阈值和最终广义力，避免把 `0.10 eV/A` 结果与
-`0.05/0.03 eV/A` 的严格普通/CI 结果混作同一精度等级。`scripts/audit_vcneb_result.py`
+`0.10 eV/A`，作为普通 NEB 的默认验收阈值；更严格的 `0.05/0.03 eV/A`
+只能作为显式指定的研究协议，而不是默认物理精度。报告必须同时写明原始
+summary 中的 `fmax_target_eV_per_A`、复审阈值和最终广义力，避免把不同阈值的
+结果混作同一精度等级。`scripts/audit_vcneb_result.py`
 的 `--fmax-target` 只用于对已完成 summary 进行显式复审；它不修改原始轨迹、
 calculator 设置或运行时停止条件。
 

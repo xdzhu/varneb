@@ -38,7 +38,7 @@ sbatch --export=ALL,ENDPOINT_TAG=pbe100_dzp10au cluster/hf_batio3_endpoint.slurm
 After both `CONTCAR` files exist, the default T→C no-climb preconvergence run is:
 
 ```bash
-sbatch --export=ALL,DIRECTION=tetragonal_to_cubic,N_IMAGES=7,STEPS=300,FMAX=0.03,MAXSTEP=0.02 \
+sbatch --export=ALL,DIRECTION=tetragonal_to_cubic,N_IMAGES=7,STEPS=300,FMAX=0.10,MAXSTEP=0.02 \
   cluster/hf_batio3_vcneb.slurm
 ```
 
@@ -123,7 +123,7 @@ fixture, after endpoint relaxations complete, a staged no-climb preconvergence
 run is:
 
 ```bash
-sbatch --export=ALL,N_IMAGES=7,STEPS=300,FMAX=0.05,NO_CLIMB=1 \
+sbatch --export=ALL,N_IMAGES=7,STEPS=300,FMAX=0.10,NO_CLIMB=1 \
   cluster/hf_hfo2_vcneb.slurm
 ```
 
@@ -138,7 +138,7 @@ case justifies a stricter path gate.
 An independent nine-image run can use a distinct work directory:
 
 ```bash
-sbatch --export=ALL,N_IMAGES=9,STEPS=300,FMAX=0.03,MAXSTEP=0.02,\
+sbatch --export=ALL,N_IMAGES=9,STEPS=300,FMAX=0.10,MAXSTEP=0.02,\
 WORKDIR=validation/batio3_cubic_to_tetragonal/vcneb_n9_fire_pbe100 \
   cluster/hf_batio3_vcneb.slurm
 ```

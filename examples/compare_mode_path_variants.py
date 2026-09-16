@@ -68,7 +68,7 @@ def optimize(
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", default=str(ROOT / "outputs" / "mode_path_variants.json"))
-    parser.add_argument("--fmax", type=float, default=0.002)
+    parser.add_argument("--fmax", type=float, default=0.10)
     parser.add_argument("--steps", type=int, default=600)
     return parser.parse_args()
 
