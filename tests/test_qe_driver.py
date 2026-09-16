@@ -42,6 +42,22 @@ def test_qe_driver_parameters_require_complete_species_and_static_cutoffs(monkey
         module["build_qe_parameters"](args, {"Ba"})
 
 
+def test_qe_driver_rejects_mixing_approved_manifest_with_manual_pp(tmp_path) -> None:
+    initial = Atoms("Ba", cell=[4, 4, 4], pbc=True)
+    endpoint = tmp_path / "endpoint.vasp"
+    write(endpoint, initial, format="vasp")
+    manifest = tmp_path / "manifest.json"
+    manifest.write_text('{"approval_status":"approved","species":{"Ba":{"filename":"Ba.UPF","md5":"00000000000000000000000000000000"}}}', encoding="utf-8")
+    result = subprocess.run(
+        [sys.executable, str(DRIVER), "--initial", str(endpoint), "--final", str(endpoint), "--command", "pw.x", "--pseudo-dir", str(tmp_path), "--pp-manifest", str(manifest), "--pp", "Ba=Ba.UPF", "--validate-only"],
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert result.returncode != 0
+    assert "either --pp-manifest" in result.stderr
+
+
 def test_qe_driver_validate_only_writes_a_7_image_preflight(tmp_path) -> None:
     initial = Atoms("Ba", cell=[4, 4, 4], pbc=True)
     final = Atoms("Ba", scaled_positions=[[0.1, 0.0, 0.0]], cell=[4.1, 4, 4], pbc=True)

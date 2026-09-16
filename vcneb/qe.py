@@ -10,6 +10,7 @@ from __future__ import annotations
 
 from copy import deepcopy
 import hashlib
+import json
 from pathlib import Path
 import re
 from typing import Callable, Mapping
@@ -26,11 +27,14 @@ _REQUIRED_CONTROL = {
     "tprnfor": True,
 }
 _UPF_ELEMENT_RE = re.compile(r"\belement\s*=\s*['\"]?([A-Za-z]{1,3})", re.IGNORECASE)
+_MD5_RE = re.compile(r"^[0-9a-f]{32}$")
 
 
 def validate_qe_pseudopotentials(
     pseudo_dir: str | Path,
     pseudopotentials: Mapping[str, str],
+    *,
+    expected_md5: Mapping[str, str] | None = None,
 ) -> list[dict]:
     """Validate and fingerprint QE UPF files before a VCNEB preflight.
 
@@ -64,7 +68,12 @@ def validate_qe_pseudopotentials(
             raise ValueError(f"QE UPF {path.name} element metadata {detail!r} does not match {label}")
         if "pbe" not in header.lower():
             raise ValueError(f"QE UPF {path.name} has no visible PBE functional marker")
-        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        contents = path.read_bytes()
+        digest = hashlib.sha256(contents).hexdigest()
+        md5 = hashlib.md5(contents).hexdigest()
+        expected = None if expected_md5 is None else expected_md5.get(label)
+        if expected is not None and md5.lower() != expected.lower():
+            raise ValueError(f"QE UPF {path.name} MD5 does not match the approved manifest for {label}")
         reports.append(
             {
                 "species": label,
@@ -72,11 +81,56 @@ def validate_qe_pseudopotentials(
                 "path": str(path),
                 "bytes": path.stat().st_size,
                 "sha256": digest,
+                "md5": md5,
+                "expected_md5": expected,
                 "element_metadata": sorted(elements),
                 "functional_marker": "PBE",
             }
         )
     return reports
+
+
+def load_approved_qe_pseudopotential_manifest(
+    path: str | Path,
+    required_species: set[str],
+) -> dict:
+    """Load an explicitly approved, MD5-pinned QE UPF manifest.
+
+    Candidate registers are intentionally rejected. This keeps a convenient
+    literature-derived selection from silently becoming a production material
+    decision merely because the JSON file is present in the repository.
+    """
+
+    source = Path(path).expanduser().resolve()
+    payload = json.loads(source.read_text(encoding="utf-8"))
+    if payload.get("approval_status") != "approved":
+        raise ValueError("QE pseudopotential manifest must have approval_status='approved'")
+    entries = payload.get("species")
+    if not isinstance(entries, Mapping):
+        raise ValueError("QE pseudopotential manifest requires a species mapping")
+    missing = sorted(required_species - set(entries))
+    extra = sorted(set(entries) - required_species)
+    if missing or extra:
+        raise ValueError(f"QE manifest species must exactly match path species; missing={missing}, extra={extra}")
+    filenames: dict[str, str] = {}
+    expected_md5: dict[str, str] = {}
+    for species in sorted(required_species):
+        entry = entries[species]
+        if not isinstance(entry, Mapping):
+            raise ValueError(f"QE manifest entry for {species} must be a mapping")
+        filename, digest = entry.get("filename"), entry.get("md5")
+        if not isinstance(filename, str) or Path(filename).name != filename:
+            raise ValueError(f"QE manifest filename for {species} must be a basename")
+        if not isinstance(digest, str) or _MD5_RE.fullmatch(digest.lower()) is None:
+            raise ValueError(f"QE manifest MD5 for {species} must be 32 hexadecimal characters")
+        filenames[species] = filename
+        expected_md5[species] = digest.lower()
+    return {
+        "path": str(source),
+        "sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
+        "pseudopotentials": filenames,
+        "expected_md5": expected_md5,
+    }
 
 
 def static_qe_input_data(input_data: Mapping | None = None) -> dict:
@@ -172,6 +226,7 @@ __all__ = [
     "CalculatorFactory",
     "attach_qe_calculators",
     "make_ase_espresso_factory",
+    "load_approved_qe_pseudopotential_manifest",
     "static_qe_input_data",
     "validate_qe_pseudopotentials",
 ]

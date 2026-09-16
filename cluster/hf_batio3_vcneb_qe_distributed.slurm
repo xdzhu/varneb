@@ -34,6 +34,7 @@ kpt_z=${KPT_Z:-4}
 pp_ba=${PP_BA:-Ba.upf}
 pp_ti=${PP_TI:-Ti.upf}
 pp_o=${PP_O:-O.upf}
+pp_manifest=${QE_PP_MANIFEST:-}
 endpoint_identity_gate=${ENDPOINT_IDENTITY_GATE:-}
 endpoint_tag=${ENDPOINT_TAG:-pbe100_dzp10au}
 workdir=${WORKDIR:-validation/batio3_cubic_to_tetragonal/vcneb_tetragonal_to_cubic_n${n_images}_${optimizer,,}_qe_pbe}
@@ -58,6 +59,10 @@ if [[ -z "${pseudo_dir}" ]]; then
   echo "Set ESPRESSO_PSEUDO to the reviewed UPF directory" >&2
   exit 2
 fi
+if [[ -z "${pp_manifest}" ]]; then
+  echo "Set QE_PP_MANIFEST to an approved MD5-pinned UPF manifest" >&2
+  exit 2
+fi
 
 module purge
 : "${QE_ENV_SCRIPT:?Set QE_ENV_SCRIPT to the reviewed QE environment script}"
@@ -74,7 +79,7 @@ exec "${python}" examples/run_vcneb_qe.py \
   --steps "${steps}" --k "${spring}" --optimizer "${optimizer}" --maxstep "${maxstep}" \
   --image-workers "${image_workers}" \
   --command "srun --exclusive --nodes=1 --ntasks=${image_mpi} --ntasks-per-node=${image_mpi} ${qe_bin}" \
-  --pseudo-dir "${pseudo_dir}" --pp "Ba=${pp_ba}" --pp "Ti=${pp_ti}" --pp "O=${pp_o}" \
+  --pseudo-dir "${pseudo_dir}" --pp-manifest "${pp_manifest}" \
   --ecutwfc "${ecutwfc}" --ecutrho "${ecutrho}" --scf-thr "${scf_thr}" \
   --kpts "${kpt_x}" "${kpt_y}" "${kpt_z}" \
   --no-climb --mic --cell-interpolation log_strain --mapping auto --align-translation \

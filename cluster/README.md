@@ -86,6 +86,9 @@ the established ABACUS reference is barrierless. It refuses to reserve its
 validates the endpoint geometry, static-QE contract, and UPF identities. The QE
 cutoffs are explicit QE/Ry parameters and must be independently converged;
 they are not a mechanical conversion of VASP settings.
+Both QE templates additionally require `QE_PP_MANIFEST`: an explicitly approved
+JSON manifest that fixes every UPF basename and MD5. A candidate register is
+not accepted as a production manifest.
 
 For either QE or VASP production, compare the accepted ABACUS preflight and
 the candidate preflight with `scripts/compare_vcneb_endpoint_records.py`, then

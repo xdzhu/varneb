@@ -33,6 +33,7 @@ from vcneb.executor import ThreadedCalculatorExecutor
 from vcneb.qe import (
     attach_qe_calculators,
     make_ase_espresso_factory,
+    load_approved_qe_pseudopotential_manifest,
     static_qe_input_data,
     validate_qe_pseudopotentials,
 )
@@ -54,6 +55,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--command", default=os.environ.get("QE_COMMAND"), help="QE launcher, e.g. 'srun pw.x'")
     parser.add_argument("--pseudo-dir", default=os.environ.get("ESPRESSO_PSEUDO"))
     parser.add_argument("--pp", action="append", default=[], metavar="SPECIES=FILE")
+    parser.add_argument("--pp-manifest", default=None, help="Approved JSON manifest that pins QE UPF filenames and MD5")
     parser.add_argument("--ecutwfc", type=float, default=100.0, help="QE wavefunction cutoff in Ry")
     parser.add_argument("--ecutrho", type=float, default=None, help="QE charge-density cutoff in Ry")
     parser.add_argument("--scf-thr", type=float, default=1e-8, help="QE electron convergence threshold in Ry")
@@ -91,8 +93,13 @@ def parse_species_files(values: list[str]) -> dict[str, str]:
     return result
 
 
-def build_qe_parameters(args: argparse.Namespace, symbols: set[str]) -> dict:
-    pseudopotentials = parse_species_files(args.pp)
+def build_qe_parameters(
+    args: argparse.Namespace,
+    symbols: set[str],
+    *,
+    pseudopotentials: dict[str, str] | None = None,
+) -> dict:
+    pseudopotentials = parse_species_files(args.pp) if pseudopotentials is None else dict(pseudopotentials)
     missing = sorted(symbols - set(pseudopotentials))
     if missing:
         raise ValueError("missing --pp mappings for " + ", ".join(missing))
@@ -159,10 +166,23 @@ def main() -> None:
         maximum_deformation=args.maximum_deformation,
     )
     write(workdir / "initial-vcneb.traj", images)
-    parameters = build_qe_parameters(args, set(initial.get_chemical_symbols()))
+    symbols = set(initial.get_chemical_symbols())
+    if args.pp_manifest and args.pp:
+        raise ValueError("pass either --pp-manifest or one or more --pp mappings, not both")
+    pp_manifest = (
+        load_approved_qe_pseudopotential_manifest(args.pp_manifest, symbols)
+        if args.pp_manifest
+        else None
+    )
+    parameters = build_qe_parameters(
+        args,
+        symbols,
+        pseudopotentials=None if pp_manifest is None else pp_manifest["pseudopotentials"],
+    )
     pseudopotential_reports = validate_qe_pseudopotentials(
         args.pseudo_dir,
         parameters["pseudopotentials"],
+        expected_md5=None if pp_manifest is None else pp_manifest["expected_md5"],
     )
     factory = make_ase_espresso_factory(
         parameters=parameters,
@@ -193,6 +213,7 @@ def main() -> None:
         "fmax_target_eV_per_A": args.fmax,
         "calculator_parameters": parameters,
         "pseudopotential_reports": pseudopotential_reports,
+        "pseudopotential_manifest": pp_manifest,
         "calculator_reports": [report.to_dict() for report in reports],
         "initial_path_geometry": path_geometry_diagnostics(images),
         "endpoint_structures": {

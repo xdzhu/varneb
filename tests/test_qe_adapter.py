@@ -8,6 +8,7 @@ import pytest
 from vcneb.qe import (
     attach_qe_calculators,
     make_ase_espresso_factory,
+    load_approved_qe_pseudopotential_manifest,
     static_qe_input_data,
     validate_qe_pseudopotentials,
 )
@@ -95,3 +96,24 @@ def test_qe_pseudopotential_gate_rejects_missing_or_wrong_metadata(tmp_path) -> 
         validate_qe_pseudopotentials(tmp_path, {"Ba": wrong.name})
     with pytest.raises(FileNotFoundError, match="missing"):
         validate_qe_pseudopotentials(tmp_path, {"Ba": "Ba.UPF"})
+
+
+def test_approved_qe_manifest_pins_filenames_and_md5(tmp_path) -> None:
+    manifest = tmp_path / "manifest.json"
+    manifest.write_text(
+        '{"approval_status":"approved","species":{"Ba":{"filename":"Ba.UPF","md5":"00000000000000000000000000000000"}}}',
+        encoding="utf-8",
+    )
+    loaded = load_approved_qe_pseudopotential_manifest(manifest, {"Ba"})
+    assert loaded["pseudopotentials"] == {"Ba": "Ba.UPF"}
+    assert loaded["expected_md5"]["Ba"] == "00000000000000000000000000000000"
+    manifest.write_text('{"approval_status":"candidate_requires_user_approval","species":{}}', encoding="utf-8")
+    with pytest.raises(ValueError, match="approval_status"):
+        load_approved_qe_pseudopotential_manifest(manifest, {"Ba"})
+
+
+def test_qe_pseudopotential_gate_rejects_a_manifest_md5_mismatch(tmp_path) -> None:
+    upf = tmp_path / "Ba.UPF"
+    upf.write_text('<UPF element="Ba" functional="PBE">\n', encoding="utf-8")
+    with pytest.raises(ValueError, match="MD5"):
+        validate_qe_pseudopotentials(tmp_path, {"Ba": upf.name}, expected_md5={"Ba": "0" * 32})

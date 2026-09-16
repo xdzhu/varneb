@@ -28,6 +28,11 @@ QE/VASP 的 160-rank 模板还要求将这个通过的 JSON 路径作为
 `ENDPOINT_IDENTITY_GATE` 传入；模板会在启动任一 image worker 前再次验证
 `initial` 与 `final` 两项均为通过状态。
 
+QE 还要求 `QE_PP_MANIFEST`。该 manifest 的 `approval_status` 必须为
+`approved`，并为 Ba/Ti/O 逐项固定 UPF basename 与 MD5；驱动会同时检查
+文件存在、元素 metadata、PBE 标记和 MD5。仓库中的 SSSP 候选登记不是
+approved manifest，不能直接启动预检或生产作业。
+
 ## Image 数量策略
 
 第一轮只比较 5、7、9 个总 image（含两个端点），保持端点、calculator、

@@ -24,6 +24,8 @@ def test_bto_qe_production_template_preserves_the_five_by_32_worker_contract() -
         "${QE_ENV_SCRIPT:?Set QE_ENV_SCRIPT",
         "${ENDPOINT_IDENTITY_GATE:?Set ENDPOINT_IDENTITY_GATE",
         "scripts/validate_endpoint_identity_gate.py",
+        "QE_PP_MANIFEST",
+        "--pp-manifest \"${pp_manifest}\"",
         "--cell-interpolation log_strain --mapping auto --align-translation",
     ):
         assert fragment in text
@@ -37,6 +39,8 @@ def test_bto_qe_preflight_template_is_one_rank_and_never_launches_pw_x() -> None
         "--image-workers 0",
         "--steps 0",
         "--validate-only",
+        "QE_PP_MANIFEST",
+        "--pp-manifest \"${pp_manifest}\"",
         "--no-climb",
         "--cell-interpolation log_strain --mapping auto",
     ):
