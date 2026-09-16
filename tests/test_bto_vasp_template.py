@@ -18,6 +18,8 @@ def test_bto_vasp_template_requires_explicit_licensed_inputs_and_worker_layout()
         "VASP_FINAL_DIR",
         "ENDPOINT_IDENTITY_GATE",
         "scripts/validate_endpoint_identity_gate.py",
+        "VASP_STATIC_BASELINE",
+        "scripts/validate_vasp_static_baseline_gate.py",
         "POTCAR",
         "five 32-MPI interior workers",
         "N_IMAGES:-7",
@@ -26,5 +28,23 @@ def test_bto_vasp_template_requires_explicit_licensed_inputs_and_worker_layout()
         "VASP_COMMAND=\"srun --exclusive --nodes=1 --ntasks=${image_mpi}",
         "--image-workers \"${image_workers}\"",
         "--no-climb --mic --cell-interpolation log_strain --mapping auto --align-translation",
+    ):
+        assert fragment in text
+
+
+def test_bto_vasp_static_baseline_is_one_fixed_endpoint_32_mpi_scf() -> None:
+    text = (ROOT / "cluster" / "hf_batio3_vasp_static_baseline.slurm").read_text(encoding="utf-8")
+    for fragment in (
+        "#SBATCH --ntasks=32",
+        "if [[ \"${RUN_DFT:-0}\" != 1 ]]",
+        "VASP_BIN",
+        "VASP_INITIAL_DIR",
+        "VASP_FINAL_DIR",
+        "ENDPOINT_IDENTITY_GATE",
+        "scripts/validate_endpoint_identity_gate.py",
+        "VCNEB_GIT_REVISION",
+        "VASP_COMMAND=\"srun --exclusive --nodes=1 --ntasks=32",
+        "--static-only",
+        "--no-climb",
     ):
         assert fragment in text

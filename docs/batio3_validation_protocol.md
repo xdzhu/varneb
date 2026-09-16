@@ -52,6 +52,13 @@ QE 生产模板还要求将通过的报告传为 `QE_STATIC_CONVERGENCE_AUDIT`�
 VASP preflight 会记录初始目录 `INCAR`、`KPOINTS` 与许可 `POTCAR` 的完整
 SHA256；同一份经过审核的输入必须复制到每一个静态 image 目录。
 
+在 VASP 160-rank 路径之前，必须以 `cluster/hf_batio3_vasp_static_baseline.slurm`
+对通过端点闸门的固定初始端点完成一次真实 32-MPI 静态 SCF，并归档
+`vasp_static_summary.json`。该阶段只计算 `00`，不构成 NEB 迭代，也不改变端点。
+生产模板必须将该文件传为 `VASP_STATIC_BASELINE`；它会在启动 worker 前重新计算
+`INCAR`、`KPOINTS` 与 `POTCAR` 的 SHA256，并拒绝不同端点、不同源码版本或任何
+输入文件改变的路径。
+
 ## Image 数量策略
 
 第一轮只比较 5、7、9 个总 image（含两个端点），保持端点、calculator、

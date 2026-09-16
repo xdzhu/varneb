@@ -118,6 +118,15 @@ reviewed `INCAR`, `KPOINTS` and `POTCAR`; it is never inferred from ABACUS
 inputs. Run `examples/run_vcneb_vasp.py --validate-only` on those directories
 before requesting the 160-rank allocation.
 
+`hf_batio3_vasp_static_baseline.slurm` is the preceding real 32-MPI VASP
+fixed-endpoint SCF stage. It requires the same licensed executable, reviewed
+input directories and passing endpoint gate as production, but evaluates only
+endpoint `00` and writes `vasp_static_summary.json`; it is neither an NEB
+worker nor a path calculation.
+The production template requires this completed report through
+`VASP_STATIC_BASELINE` and checks its endpoint, exact `INCAR`/`KPOINTS`/`POTCAR`
+fingerprints and explicit source revision before starting any worker.
+
 `hf_batio3_gamma_phonon_abacus.slurm` seeds the separate first-principles
 Gamma-mode analysis at the already audited cubic or tetragonal BTO endpoint.
 It uses a `1×1×1` finite-displacement cell and static 32-MPI ABACUS SCFs. The

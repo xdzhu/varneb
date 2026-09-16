@@ -3,11 +3,13 @@
 from __future__ import annotations
 
 import json
+import runpy
 import subprocess
 import sys
 from pathlib import Path
 
 from ase import Atoms
+from ase.calculators.singlepoint import SinglePointCalculator
 from ase.io import write
 
 
@@ -26,6 +28,10 @@ def _endpoint(directory: Path, atoms: Atoms) -> None:
     # This is deliberately not a real PAW dataset: --validate-only must not
     # parse or execute it, merely prove that every image gets an isolated file.
     (directory / "POTCAR").write_text("test POTCAR -- no DFT\n", encoding="utf-8")
+
+
+def _module():
+    return runpy.run_path(str(DRIVER))
 
 
 def test_vasp_driver_validate_only_writes_static_7_image_preflight(tmp_path: Path, monkeypatch) -> None:
@@ -73,3 +79,37 @@ def test_vasp_driver_validate_only_writes_static_7_image_preflight(tmp_path: Pat
     assert len(payload["calculator_reports"]) == 7
     assert payload["git_revision"] == "remote-sync-test-vasp"
     assert all((workdir / f"{index:02d}" / "POTCAR").exists() for index in range(7))
+
+
+def test_vasp_static_only_evaluates_fixed_initial_endpoint_once(tmp_path: Path, monkeypatch) -> None:
+    module = _module()
+    initial, final = tmp_path / "initial", tmp_path / "final"
+    _endpoint(initial, Atoms("Ba", cell=[4, 4, 4], pbc=True))
+    _endpoint(final, Atoms("Ba", scaled_positions=[[0.1, 0.0, 0.0]], cell=[4.1, 4, 4], pbc=True))
+    calls: list[int] = []
+
+    def fake_attach(images, *, source_dir, workdir, command, overrides):
+        for index, atoms in enumerate(images):
+            calls.append(index)
+            calculator = SinglePointCalculator(
+                atoms,
+                energy=-8.0,
+                forces=[[0.02, 0.0, 0.0]],
+                stress=[0.1, 0.2, 0.3, 0.0, 0.0, 0.0],
+            )
+            calculator.directory = str(Path(workdir) / f"{index:02d}")
+            atoms.calc = calculator
+
+    monkeypatch.setattr(sys, "argv", [
+        str(DRIVER), "--initial", str(initial), "--final", str(final),
+        "--workdir", str(tmp_path / "static"), "--static-only",
+    ])
+    monkeypatch.setitem(module["main"].__globals__, "attach_vasp_calculators", fake_attach)
+    module["main"]()
+
+    summary = json.loads((tmp_path / "static" / "vasp_static_summary.json").read_text(encoding="utf-8"))
+    assert calls == list(range(7))
+    assert summary["execution_mode"] == "fixed_initial_endpoint_static_scf"
+    assert summary["evaluated_image_index"] == 0
+    assert summary["potential_energy_eV"] == -8.0
+    assert summary["max_force_eV_per_A"] == 0.02

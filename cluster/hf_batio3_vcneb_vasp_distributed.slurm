@@ -26,6 +26,7 @@ optimizer=${OPTIMIZER:-FIRE}
 initial_dir=${VASP_INITIAL_DIR:-}
 final_dir=${VASP_FINAL_DIR:-}
 endpoint_identity_gate=${ENDPOINT_IDENTITY_GATE:-}
+static_baseline=${VASP_STATIC_BASELINE:-}
 workdir=${WORKDIR:-validation/batio3_cubic_to_tetragonal/vcneb_tetragonal_to_cubic_n${n_images}_${optimizer,,}_vasp}
 
 if [[ "${RUN_DFT:-0}" != 1 ]]; then
@@ -44,6 +45,7 @@ fi
 : "${VASP_INITIAL_DIR:?Set VASP_INITIAL_DIR (CONTCAR, INCAR, KPOINTS, POTCAR)}"
 : "${VASP_FINAL_DIR:?Set VASP_FINAL_DIR (CONTCAR)}"
 : "${ENDPOINT_IDENTITY_GATE:?Set ENDPOINT_IDENTITY_GATE to a passing endpoint_identity_gate.json}"
+: "${VASP_STATIC_BASELINE:?Set VASP_STATIC_BASELINE to a completed vasp_static_summary.json}"
 for path in "${initial_dir}/CONTCAR" "${initial_dir}/INCAR" "${initial_dir}/KPOINTS" "${initial_dir}/POTCAR" "${final_dir}/CONTCAR"; do
   [[ -f "${path}" ]] || { echo "missing required VASP input: ${path}" >&2; exit 2; }
 done
@@ -53,6 +55,9 @@ export VCNEB_GIT_REVISION="${VCNEB_GIT_REVISION:-remote-sync-unknown}"
 export VASP_COMMAND="srun --exclusive --nodes=1 --ntasks=${image_mpi} --ntasks-per-node=${image_mpi} ${VASP_BIN}"
 cd "${repo}"
 "${python}" scripts/validate_endpoint_identity_gate.py --gate "${endpoint_identity_gate}"
+"${python}" scripts/validate_vasp_static_baseline_gate.py \
+  --summary "${static_baseline}" --endpoint-gate "${endpoint_identity_gate}" \
+  --initial-dir "${initial_dir}" --git-revision "${VCNEB_GIT_REVISION}"
 
 exec "${python}" examples/run_vcneb_vasp.py \
   --initial "${initial_dir}" --final "${final_dir}" --workdir "${workdir}" \
