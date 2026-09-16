@@ -117,7 +117,8 @@ smoke 状态，不提升该主张。
 
 ### P2.2 BTO 首个真实示例
 
-- [ ] 先在 ABACUS BTO 端点上做最小的 Gamma 点有限位移/力常数 workflow；每个
+- [~] 已提供 ABACUS BTO 端点的最小 Gamma 点有限位移/力常数 workflow（默认只生成
+  位移并写 preflight，尚未启动 SCF）；每个
   displacement 均通过静态 force preflight 并独立记录。可使用 ASE/Phonopy 的有限
   位移执行，但 VARNEB 分析层只读取标准化结果，不绑定某一声子程序。
 - [ ] 以 cubic BTO 的不稳定极化模式和 tetragonal BTO 的相应稳定模式为候选，投影

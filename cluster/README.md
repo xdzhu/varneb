@@ -85,6 +85,13 @@ reviewed `QE_ENV_SCRIPT`, `ESPRESSO_PSEUDO`, and Ba/Ti/O UPF names. The QE
 cutoffs are explicit QE/Ry parameters and must be independently converged;
 they are not a mechanical conversion of VASP settings.
 
+`hf_batio3_gamma_phonon_abacus.slurm` seeds the separate first-principles
+Gamma-mode analysis at the already audited cubic or tetragonal BTO endpoint.
+It uses a `1×1×1` finite-displacement cell and static 32-MPI ABACUS SCFs. The
+default `RUN_DFT=0` only generates and records displacement folders; `RUN_DFT=1`
+is required to evaluate forces and assemble `FORCE_SETS`. This first workflow
+is a Gamma-mode decomposition, not a converged phonon dispersion or QHA study.
+
 For exact-state recovery across a new work directory, set
 `IMAGE_CACHE_DIR=/path/to/image-cache` and optionally
 `IMAGE_CACHE_NAMESPACE=ecut100-dzp10au-k2x2x2-scf1e-8`.  The cache is keyed by
