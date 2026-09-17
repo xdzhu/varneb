@@ -1,5 +1,11 @@
 # VCNEB 项目标准化任务清单
 
+> **研究路线更新（2026-09-16）：** 本文件保留标准化开发基线；关于表示一致度量、
+> 原子--应变模态预条件、自适应 image、多后端证据等级及论文晋级门槛，执行
+> [`docs/VARNEB_HIGH_LEVEL_RESEARCH_ROADMAP.md`](docs/VARNEB_HIGH_LEVEL_RESEARCH_ROADMAP.md)。
+> 集群可用性和运行位置以每次作业的实时检查及 committed provenance 为准，本文早期
+> 记录的固定节点策略不覆盖后续明确决策。
+
 > 项目目标：构建一个纯 Python、计算器无关、可复现的变胞 NEB（VC-NEB）工具包，支持 VASP、ABACUS 以及后续可插拔的 ASE Calculator；同时支持普通 VC-NEB、爬山图像（CI-VCNEB）、模式引导路径和严格的模式/方向约束，用于研究晶体相变过渡态与变胞能垒。
 >
 > 计划版本：v0.1，日期：2026-09-12。当前工作树是研究开发版，不代表已经达到论文发布或生产计算标准。

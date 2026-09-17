@@ -1,5 +1,11 @@
 # VARNEB 下一阶段优先级清单（2026-09-16）
 
+> **2026-09-16 后续说明：** 本文件保留当时的执行快照，其中 VASP 状态已经被
+> 后续完成的 BTO 7-total-image 材料路径超越。更深入的理论创新、加速算法、
+> 原子--应变模式分析和论文晋级路线，以
+> [`VARNEB_HIGH_LEVEL_RESEARCH_ROADMAP.md`](VARNEB_HIGH_LEVEL_RESEARCH_ROADMAP.md)
+> 为当前主规划；实时运行数字仍以 committed summary/provenance 为准。
+
 ## 本轮结论
 
 当前核心已经通过 ASE 的能量--原子力--应力契约实现了**架构上的**计算器无关性，
