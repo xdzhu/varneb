@@ -56,7 +56,10 @@ first-order saddle character.
 
 - `vcneb/core.py`: VC-NEB algorithm and optimizer-compatible object.
 - `vcneb/modes.py`: mode-guided initial paths and modal path projections.
-- `vcneb/vasp.py`: VASP input parsing and per-image calculator setup.
+- `vcneb/vasp.py`: VASP input parsing, exact-POTCAR per-image setup, and a
+  one-virtual-site VCA adapter that pulls coincident component forces back to
+  the physical site. See `docs/vasp_vca_validation.md` for validated systems
+  and its deliberately narrow applicability boundary.
 - `vcneb/abacus.py`: ABACUS calculator factory adapter.
 - `vcneb/qe.py`: QE `pw.x` static-image factory; it rejects QE `relax` and
   `vc-relax` so cell updates remain manager-owned.
@@ -132,6 +135,9 @@ first-order saddle character.
 - `papar/VARNEB_CPC/`: the CPC manuscript source, bibliography, figure PDF and
   figure source data; its evidence checklist prevents calculator-smoke or
   energy-scale comparisons from being presented as production benchmarks.
+- `docs/vasp_vca_validation.md`: VASP VCA input/force contract, committed
+  BST50/PTO/PZT50 summaries, and the boundary between isovalent VCA and
+  aliovalent defect chemistry.
 - `tests/check_vcneb_forces.py`: finite-difference checks for force/stress transforms.
 
 ## Cluster execution policy

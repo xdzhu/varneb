@@ -59,6 +59,71 @@ def potcar_setups(path: str | Path) -> dict[str, str]:
     return setups
 
 
+def _potcar_element(label: str) -> str:
+    match = re.fullmatch(r"([A-Z][a-z]?)(.*)", label)
+    if match is None:
+        raise ValueError(f"unsupported POTCAR dataset label: {label}")
+    return match.group(1)
+
+
+def validate_vca_configuration(
+    *,
+    potcar: str | Path,
+    vca_weights: Sequence[float] | None,
+    virtual_symbol: str,
+    components: Sequence[str],
+) -> None:
+    """Validate the one-site VASP-VCA contract before a run.
+
+    VARNEB currently represents one physical site by coincident component atoms.
+    The source POTCAR and its VCA vector must therefore contain exactly one
+    contiguous component block; all other POTCAR datasets retain weight one.
+    This rejects a mismatched POTCAR/INCAR pair before an expensive calculation.
+    """
+
+    component_list = [str(component) for component in components]
+    if len(component_list) < 2:
+        raise ValueError("VCA needs at least two coincident component datasets")
+    if component_list[0] != virtual_symbol:
+        raise ValueError(
+            "the physical virtual symbol must be the first VCA component "
+            f"({virtual_symbol!r} != {component_list[0]!r})"
+        )
+    if vca_weights is None:
+        raise ValueError("VCA calculator requested but the source INCAR has no VCA tag")
+
+    labels = potcar_dataset_labels(potcar)
+    elements = [_potcar_element(label) for label in labels]
+    weights = np.asarray(vca_weights, dtype=float).reshape(-1)
+    if len(weights) != len(elements):
+        raise ValueError(
+            "VCA weight count must equal the number of POTCAR datasets "
+            f"({len(weights)} != {len(elements)})"
+        )
+    if not np.isfinite(weights).all():
+        raise ValueError("VCA weights must be finite")
+
+    blocks = [
+        start
+        for start in range(len(elements) - len(component_list) + 1)
+        if elements[start : start + len(component_list)] == component_list
+    ]
+    if len(blocks) != 1:
+        raise ValueError(
+            "POTCAR must contain exactly one contiguous VCA component block "
+            f"for {component_list}; found {len(blocks)}"
+        )
+    start = blocks[0]
+    component_indices = np.arange(start, start + len(component_list))
+    component_weights = weights[component_indices]
+    if (component_weights < 0.0).any() or not np.isclose(component_weights.sum(), 1.0, atol=1e-10):
+        raise ValueError("VCA component weights must be nonnegative and sum to one")
+    noncomponent = np.ones(len(weights), dtype=bool)
+    noncomponent[component_indices] = False
+    if not np.allclose(weights[noncomponent], 1.0, atol=1e-10):
+        raise ValueError("all non-virtual POTCAR datasets must have VCA weight one")
+
+
 class ExplicitPotcarVasp(Vasp):
     """ASE VASP calculator that restores the exact licensed source POTCAR."""
 
@@ -281,8 +346,19 @@ def attach_vasp_calculators(
         if vca_virtual_symbol is None and vca_components is None:
             image.calc = base
         elif vca_virtual_symbol is not None and vca_components:
-            if "vca" not in params:
-                raise ValueError("VCA calculator requested but the source INCAR has no VCA tag")
+            validate_vca_configuration(
+                potcar=potcar,
+                vca_weights=params.get("vca"),
+                virtual_symbol=vca_virtual_symbol,
+                components=vca_components,
+            )
+            # Validate the physical structure at attachment time, not after the
+            # first costly VASP call inside the optimizer.
+            expand_virtual_site(
+                image,
+                virtual_symbol=vca_virtual_symbol,
+                components=vca_components,
+            )
             image.calc = VirtualCrystalCalculator(
                 base,
                 virtual_symbol=vca_virtual_symbol,

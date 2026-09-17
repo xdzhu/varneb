@@ -12,6 +12,7 @@
 | HfO2 T-to-PO ordinary/CI/control comparison | `outputs/hfo2_t_to_po_pbe100_dzp10au/hfo2_validation_provenance.json` | accepted production evidence |
 | Figure source data | `figures/vcneb_*_source_data.csv` | committed with manuscript |
 | VASP BTO T-to-C 7-total-image production path | remote cu17 run at commit `cdde89c`; pending committed summary/source data under `outputs/` | completed at `fmax=0.0951479 eV/A` with five interior images and cached endpoints; not manuscript-ready until repository provenance is synchronized |
+| VASP VCA backend cases (BST50, PZT50) and PTO control | `docs/vasp_vca_validation.md`, `results/bst50_vcneb_final/`, `results/pto_vcneb_final/`, `results/pzt50_vca_vcneb_final/` | backend-validation examples; all are monotonic T-to-C paths, so they do not establish a VCA transition-state barrier or enter the current manuscript without a dedicated figure/claim decision |
 | Real-material strict-mode release-and-refine | no authoritative material run | explicitly future work |
 
 The manuscript must not claim algorithmic novelty over Qian VC-NEB,

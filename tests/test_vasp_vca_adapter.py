@@ -13,6 +13,7 @@ from vcneb.vasp import (
     expand_virtual_site,
     potcar_dataset_labels,
     potcar_setups,
+    validate_vca_configuration,
 )
 
 
@@ -39,6 +40,35 @@ def test_potcar_labels_and_ase_setups_preserve_sv_choices(tmp_path: Path) -> Non
     )
     assert potcar_dataset_labels(potcar) == ["Ba_sv", "Sr_sv", "Ti_sv", "O"]
     assert potcar_setups(potcar) == {"Ba": "_sv", "Sr": "_sv", "Ti": "_sv", "O": ""}
+
+
+def test_vca_configuration_requires_matching_potcar_block_and_weights(tmp_path: Path) -> None:
+    potcar = tmp_path / "POTCAR"
+    potcar.write_text(
+        " TITEL = PAW_PBE Pb_d 06Sep2000\n TITEL = PAW_PBE Ti_sv 26Sep2005\n"
+        " TITEL = PAW_PBE Zr_sv 04Jan2005\n TITEL = PAW_PBE O 08Apr2002\n",
+        encoding="latin-1",
+    )
+    validate_vca_configuration(
+        potcar=potcar,
+        vca_weights=[1.0, 0.5, 0.5, 1.0],
+        virtual_symbol="Ti",
+        components=("Ti", "Zr"),
+    )
+    with np.testing.assert_raises_regex(ValueError, "weight one"):
+        validate_vca_configuration(
+            potcar=potcar,
+            vca_weights=[1.0, 0.5, 0.5, 0.9],
+            virtual_symbol="Ti",
+            components=("Ti", "Zr"),
+        )
+    with np.testing.assert_raises_regex(ValueError, "component block"):
+        validate_vca_configuration(
+            potcar=potcar,
+            vca_weights=[1.0, 0.5, 0.5, 1.0],
+            virtual_symbol="Ti",
+            components=("Ti", "Hf"),
+        )
 
 
 def test_explicit_potcar_is_restored_after_ase_writes_inputs(tmp_path: Path, monkeypatch) -> None:

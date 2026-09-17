@@ -11,9 +11,12 @@ an archived trajectory.
 | BaTiO3 T to C | compact, direct perovskite path | 5/7/9 total images are monotonic and consistently barrierless; CI is withheld | a finite-temperature transition rate or a first-order saddle |
 | HfO2 T to PO | 12-atom reconstructive, variable-cell path | ordinary image-count stability, linear/log-strain control, and a staged CI barrier | universality over mappings, supercells, strain states, or calculators |
 
-All production results use ABACUS/PBE and must be described as that calculator
-family. The VASP adapter has a real single-image smoke test but no production
-material path, so it cannot be presented as a cross-engine barrier benchmark.
+The ABACUS/PBE BTO/HfO2 cases remain the source of the present main material
+validation figure. VASP now has completed pure-BTO, BST50-VCA, PTO and
+PZT50-VCA T-to-C paths, but their claims are intentionally separated: the
+three VCA-related cases are backend/average-alloy validation examples, not yet
+cross-engine barrier benchmarks or main-manuscript source data. Their exact
+scope and committed summaries are in `docs/vasp_vca_validation.md`.
 
 ## Regenerate the paper figure from archived summaries
 
