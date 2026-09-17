@@ -39,11 +39,11 @@ wait_or_resume_pto_relax() {
       summary=${pto_relax}/${endpoint}/endpoint_relax_summary.json
       completed "${summary}" && continue
       [[ "${endpoint}" == tetragonal ]] && structure=${pto_case}/initial/CONTCAR || structure=${pto_case}/final/CONTCAR
-      resume=()
-      [[ -d "${pto_relax}/${endpoint}" ]] && resume=(--resume)
-      "${python}" scripts/relax_vasp_vca_endpoint.py \
+      relax_args=(
         --structure "${structure}" --source-dir "${pto_case}/initial" --workdir "${pto_relax}/${endpoint}" \
-        --fmax 0.03 --steps 100 --maxstep 0.08 --ncores 40 --vasp-bin "${vasp_bin}" "${resume[@]}"
+        --fmax 0.03 --steps 100 --maxstep 0.08 --ncores 40 --vasp-bin "${vasp_bin}")
+      [[ -d "${pto_relax}/${endpoint}" ]] && relax_args+=(--resume)
+      "${python}" scripts/relax_vasp_vca_endpoint.py "${relax_args[@]}"
     done
   done
 }
@@ -125,12 +125,12 @@ fi
 for endpoint in tetragonal cubic; do
   completed "${pzt_relax}/${endpoint}/endpoint_relax_summary.json" && continue
   [[ "${endpoint}" == tetragonal ]] && structure=${pzt_case}/initial/CONTCAR || structure=${pzt_case}/final/CONTCAR
-  resume=()
-  [[ -d "${pzt_relax}/${endpoint}" ]] && resume=(--resume)
-  "${python}" scripts/relax_vasp_vca_endpoint.py \
+  relax_args=(
     --structure "${structure}" --source-dir "${pzt_case}/initial" --workdir "${pzt_relax}/${endpoint}" \
     --virtual-symbol Ti --components Ti Zr --fmax 0.03 --steps 100 --maxstep 0.08 \
-    --ncores 40 --vasp-bin "${vasp_bin}" "${resume[@]}"
+    --ncores 40 --vasp-bin "${vasp_bin}")
+  [[ -d "${pzt_relax}/${endpoint}" ]] && relax_args+=(--resume)
+  "${python}" scripts/relax_vasp_vca_endpoint.py "${relax_args[@]}"
 done
 copy_vcneb_inputs "${pzt_case}" "${pzt_relax}"
 run_static "${pzt_case}" "${pzt_relax}" initial Ti "Ti Zr"
