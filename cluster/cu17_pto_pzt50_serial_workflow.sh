@@ -13,6 +13,7 @@ pzt_relax=${PZT_RELAX:-${repo}/pzt50_vasp_vca_relax}
 steps=${STEPS:-300}
 fmax=${FMAX:-0.10}
 spring=${SPRING:-0.20}
+max_deformation=${MAX_DEFORMATION:-0.20}
 
 [[ "${RUN_DFT:-0}" == 1 ]] || { echo "Set RUN_DFT=1 to run VASP" >&2; exit 2; }
 [[ "$(hostname -s)" == cu17 ]] || { echo "This runner is restricted to cu17" >&2; exit 2; }
@@ -58,7 +59,9 @@ prepare_vcneb_input() {
 }
 
 copy_vcneb_inputs() {
-  local case_root=$1 relax_root=$2 input_root=${relax_root}/vcneb_input
+  local case_root=$1
+  local relax_root=$2
+  local input_root="${relax_root}/vcneb_input"
   if [[ ! -d "${input_root}" ]]; then
     mkdir -p "${input_root}/initial" "${input_root}/final"
     cp "${relax_root}/tetragonal/CONTCAR" "${input_root}/initial/CONTCAR"
@@ -68,30 +71,39 @@ copy_vcneb_inputs() {
 }
 
 run_static() {
-  local case_root=$1 relax_root=$2 endpoint=$3 virtual=${4:-} components=${5:-}
-  local input_root=${relax_root}/vcneb_input static_root=${relax_root}/static_${endpoint}
+  local case_root=$1
+  local relax_root=$2
+  local endpoint=$3
+  local virtual=${4:-}
+  local components=${5:-}
+  local input_root="${relax_root}/vcneb_input"
+  local static_root="${relax_root}/static_${endpoint}"
   completed "${static_root}/vasp_static_summary.json" && return
   local args=(--initial "${input_root}/initial" --final "${input_root}/final" --workdir "${static_root}"
     --n-images 7 --steps 0 --static-only --static-endpoint "${endpoint}" --mic --cell-interpolation log_strain
-    --mapping auto --align-translation --minimum-distance 1.6 --maximum-deformation 0.10 --ncores 40 --vasp-bin "${vasp_bin}")
+    --mapping auto --align-translation --minimum-distance 1.6 --maximum-deformation "${max_deformation}" --ncores 40 --vasp-bin "${vasp_bin}")
   [[ -n "${virtual}" ]] && args+=(--vca-virtual-symbol "${virtual}" --vca-components ${components})
   "${python}" examples/run_vcneb_vasp.py "${args[@]}"
 }
 
 run_vcneb() {
-  local relax_root=$1 label=$2 virtual=${3:-} components=${4:-}
-  local input_root=${relax_root}/vcneb_input workdir=${relax_root}/vcneb_tetragonal_to_cubic_n7_cu17_serial
+  local relax_root=$1
+  local label=$2
+  local virtual=${3:-}
+  local components=${4:-}
+  local input_root="${relax_root}/vcneb_input"
+  local workdir="${relax_root}/vcneb_tetragonal_to_cubic_n7_cu17_serial"
   completed "${workdir}/vcneb_summary.json" && return
   local args=(--initial "${input_root}/initial" --final "${input_root}/final" --workdir "${workdir}"
     --n-images 7 --fmax "${fmax}" --steps "${steps}" --k "${spring}" --optimizer FIRE --image-workers 0
     --initial-static-summary "${relax_root}/static_initial/vasp_static_summary.json"
     --final-static-summary "${relax_root}/static_final/vasp_static_summary.json"
     --no-climb --mic --cell-interpolation log_strain --mapping auto --align-translation
-    --minimum-distance 1.6 --maximum-deformation 0.10 --ncores 40 --vasp-bin "${vasp_bin}")
+    --minimum-distance 1.6 --maximum-deformation "${max_deformation}" --ncores 40 --vasp-bin "${vasp_bin}")
   [[ -f "${workdir}/vcneb.traj" ]] && args+=(--resume)
   [[ -n "${virtual}" ]] && args+=(--vca-virtual-symbol "${virtual}" --vca-components ${components})
   "${python}" examples/run_vcneb_vasp.py "${args[@]}"
-  "${python}" scripts/audit_vcneb_result.py "${workdir}" --max-min-distance 1.6 --max-deformation 0.10 --fmax-target "${fmax}"
+  "${python}" scripts/audit_vcneb_result.py "${workdir}" --max-min-distance 1.6 --max-deformation "${max_deformation}" --fmax-target "${fmax}"
   echo "[DONE] ${label} VCNEB"
 }
 
