@@ -49,8 +49,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--structure", required=True, help="physical five-site endpoint structure")
     parser.add_argument("--source-dir", required=True, help="directory containing INCAR/KPOINTS/POTCAR")
     parser.add_argument("--workdir", required=True)
-    parser.add_argument("--virtual-symbol", default="Ba")
-    parser.add_argument("--components", nargs="+", default=["Ba", "Sr"])
+    parser.add_argument("--virtual-symbol", default=None, help="physical symbol representing one VCA site")
+    parser.add_argument("--components", nargs="+", default=None, help="coincident VASP components for the VCA site")
     parser.add_argument("--symprec", type=float, default=1e-4)
     parser.add_argument("--fmax", type=float, default=0.03)
     parser.add_argument("--steps", type=int, default=100)
@@ -76,10 +76,15 @@ def main() -> int:
     atoms = read(structure_path)
     atoms.set_constraint(FixSymmetry(atoms, symprec=args.symprec))
     command = default_vasp_command(args.ncores, args.vasp_bin)
+    vca_options = {}
+    if args.virtual_symbol is not None or args.components is not None:
+        if args.virtual_symbol is None or not args.components:
+            raise ValueError("pass both --virtual-symbol and --components for a VCA endpoint")
+        vca_options = {"vca_virtual_symbol": args.virtual_symbol, "vca_components": args.components}
     attach_vasp_calculators(
         [atoms], source_dir=source_dir, workdir=workdir / "vasp", command=command,
         overrides={"xc": "PBE", "pp": "PBE"},
-        vca_virtual_symbol=args.virtual_symbol, vca_components=args.components,
+        **vca_options,
     )
 
     filtered = FrechetCellFilter(atoms, scalar_pressure=0.0)
@@ -126,7 +131,7 @@ def main() -> int:
         "stress_eV_per_A3_voigt": stress.tolist(),
         "cell_A": np.asarray(atoms.cell, dtype=float).tolist(),
         "volume_A3": float(atoms.get_volume()),
-        "vca": {"virtual_symbol": args.virtual_symbol, "components": args.components},
+        "vca": ({"virtual_symbol": args.virtual_symbol, "components": args.components} if args.virtual_symbol else None),
         "licensed_input_fingerprints": vasp_input_fingerprints(source_dir),
     }
     _write_json_atomic(workdir / "endpoint_relax_summary.json", summary)
