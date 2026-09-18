@@ -12,6 +12,7 @@ case_root=${CASE_ROOT:-${repo}/gan_b4_b1_vasp_pbe_paw_qian}
 old_workdir=${OLD_WORKDIR:-${case_root}/vcneb_b4_to_b1_tetragonal_n29_cu17_serial}
 recovery_root=${RECOVERY_ROOT:-${case_root}/recovery_isym_minus1}
 pressure_gpa=${PRESSURE_GPA:-45.7}
+vasp_symprec=${VASP_SYMPREC:-1e-8}
 steps=${STEPS:-300}
 fmax=${FMAX:-0.10}
 spring=${SPRING:-0.20}
@@ -35,7 +36,7 @@ for endpoint in initial final; do
     --k "${spring}" --pressure-gpa "${pressure_gpa}" --image-workers 0 --no-climb \
     --mic --cell-interpolation linear --mapping auto --align-translation \
     --minimum-distance 1.4 --maximum-deformation 0.50 --static-only --static-endpoint "${endpoint}" \
-    --vasp-isym -1 --ncores 40 --vasp-bin "${vasp_bin}"
+    --vasp-isym -1 --vasp-symprec "${vasp_symprec}" --ncores 40 --vasp-bin "${vasp_bin}"
 done
 
 "${python}" examples/run_vcneb_vasp.py \
@@ -47,7 +48,7 @@ done
   --final-static-summary "${recovery_root}/static_final/vasp_static_summary.json" \
   --resume --resume-trajectory "${old_workdir}/vcneb.traj" \
   --no-climb --mic --cell-interpolation linear --mapping auto --align-translation \
-  --minimum-distance 1.4 --maximum-deformation 0.50 --vasp-isym -1 \
+  --minimum-distance 1.4 --maximum-deformation 0.50 --vasp-isym -1 --vasp-symprec "${vasp_symprec}" \
   --ncores 40 --vasp-bin "${vasp_bin}"
 
 "${python}" scripts/audit_vcneb_result.py \

@@ -242,10 +242,12 @@ def main() -> None:
     write(workdir / "initial-vcneb.traj", images)
 
     command = default_vasp_command(args.ncores, args.vasp_bin)
-    static_parameters, _ = prepare_vasp_static_parameters(
-        initial_dir,
-        overrides={"xc": "PBE", "pp": "PBE"},
-    )
+    vasp_overrides = {"xc": "PBE", "pp": "PBE", "isym": args.vasp_isym}
+    if args.vasp_symprec is not None:
+        if args.vasp_symprec <= 0.0:
+            raise ValueError("--vasp-symprec must be positive")
+        vasp_overrides["symprec"] = args.vasp_symprec
+    static_parameters, _ = prepare_vasp_static_parameters(initial_dir, overrides=vasp_overrides)
     vca_calculator_options = {}
     if args.vca_virtual_symbol is not None or args.vca_components is not None:
         if args.vca_virtual_symbol is None or not args.vca_components:
@@ -254,11 +256,6 @@ def main() -> None:
             "vca_virtual_symbol": args.vca_virtual_symbol,
             "vca_components": args.vca_components,
         }
-    vasp_overrides = {"xc": "PBE", "pp": "PBE", "isym": args.vasp_isym}
-    if args.vasp_symprec is not None:
-        if args.vasp_symprec <= 0.0:
-            raise ValueError("--vasp-symprec must be positive")
-        vasp_overrides["symprec"] = args.vasp_symprec
     attach_vasp_calculators(
         images,
         source_dir=initial_dir,

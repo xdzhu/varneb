@@ -56,6 +56,10 @@ def test_vasp_driver_validate_only_writes_static_7_image_preflight(tmp_path: Pat
             "--workdir",
             str(workdir),
             "--validate-only",
+            "--vasp-isym",
+            "-1",
+            "--vasp-symprec",
+            "1e-8",
         ],
         capture_output=True,
         text=True,
@@ -75,8 +79,9 @@ def test_vasp_driver_validate_only_writes_static_7_image_preflight(tmp_path: Pat
         "ibrion": -1,
         "nsw": 0,
         "isif": 2,
-        "isym": 0,
+        "isym": -1,
     }
+    assert payload["calculator_parameters"]["symprec"] == 1e-8
     assert len(payload["calculator_reports"]) == 7
     assert payload["git_revision"] == "remote-sync-test-vasp"
     assert all((workdir / f"{index:02d}" / "POTCAR").exists() for index in range(7))
