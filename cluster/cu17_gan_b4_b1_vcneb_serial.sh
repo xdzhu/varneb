@@ -52,7 +52,7 @@ for endpoint in initial final; do
     --workdir "${case_root}/static_${endpoint}" --n-images 29 --fmax "${fmax}" --steps 0 --k "${spring}" \
     --pressure-gpa "${pressure_gpa}" --image-workers 0 --no-climb --mic --cell-interpolation linear \
     --mapping auto --align-translation --minimum-distance 1.4 --maximum-deformation 0.50 \
-    --static-only --static-endpoint "${endpoint}" --ncores 40 --vasp-bin "${vasp_bin}"
+    --static-only --static-endpoint "${endpoint}" --vasp-isym -1 --ncores 40 --vasp-bin "${vasp_bin}"
 done
 
 "${python}" examples/run_vcneb_vasp.py \
@@ -63,7 +63,7 @@ done
   --initial-static-summary "${case_root}/static_initial/vasp_static_summary.json" \
   --final-static-summary "${case_root}/static_final/vasp_static_summary.json" \
   --no-climb --mic --cell-interpolation linear --mapping auto --align-translation \
-  --minimum-distance 1.4 --maximum-deformation 0.50 --ncores 40 --vasp-bin "${vasp_bin}"
+  --minimum-distance 1.4 --maximum-deformation 0.50 --vasp-isym -1 --ncores 40 --vasp-bin "${vasp_bin}"
 
 "${python}" scripts/audit_vcneb_result.py "${case_root}/vcneb_b4_to_b1_tetragonal_n29_cu17_serial" \
   --max-min-distance 1.4 --max-deformation 0.50 --fmax-target "${fmax}"

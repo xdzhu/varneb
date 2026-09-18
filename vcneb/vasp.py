@@ -278,12 +278,18 @@ def validate_vasp_static_parameters(parameters: Mapping) -> dict:
     for key, expected in REQUIRED_VCNEB_STATIC_PARAMETERS.items():
         observed = normalized.get(key)
         try:
-            matches = int(observed) == expected
+            observed_int = int(observed)
+            # ISYM=-1 fully bypasses VASP symmetry detection.  It remains a
+            # static force/stress calculation and is needed for generic
+            # low-symmetry VCNEB images, for which VASP may reject a cell it
+            # cannot classify consistently.  ISYM=0 is kept as the default.
+            matches = observed_int in {0, -1} if key == "isym" else observed_int == expected
         except (TypeError, ValueError):
             matches = False
         if not matches:
+            requirement = "ISYM=0 or -1" if key == "isym" else f"{key.upper()}={expected}"
             raise ValueError(
-                f"VASP VCNEB images require {key.upper()}={expected}, got {observed!r}"
+                f"VASP VCNEB images require {requirement}, got {observed!r}"
             )
     return normalized
 

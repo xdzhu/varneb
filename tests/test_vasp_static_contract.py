@@ -23,6 +23,11 @@ def test_vasp_static_contract_accepts_required_parameters_case_insensitively() -
     assert validated == REQUIRED_VCNEB_STATIC_PARAMETERS
 
 
+def test_vasp_static_contract_accepts_fully_disabled_symmetry_for_low_symmetry_images() -> None:
+    parameters = dict(REQUIRED_VCNEB_STATIC_PARAMETERS, isym=-1)
+    assert validate_vasp_static_parameters(parameters)["isym"] == -1
+
+
 @pytest.mark.parametrize("key, value", [("ibrion", 2), ("nsw", 5), ("isif", 3), ("isym", 2)])
 def test_vasp_static_contract_rejects_internal_relaxation(key, value) -> None:
     parameters = dict(REQUIRED_VCNEB_STATIC_PARAMETERS)

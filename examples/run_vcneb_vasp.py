@@ -74,6 +74,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--line-search-retry-factor", type=float, default=0.5)
     parser.add_argument("--vasp-bin", default=os.environ.get("VASP_BIN", "vasp_std"))
     parser.add_argument("--ncores", type=int, default=int(os.environ.get("NP", "8")))
+    parser.add_argument(
+        "--vasp-isym",
+        type=int,
+        choices=[0, -1],
+        default=0,
+        help="VASP symmetry setting for static images; use -1 for generic low-symmetry cells",
+    )
     parser.add_argument("--vca-virtual-symbol", default=None, help="Physical symbol representing one virtual site, e.g. Ba")
     parser.add_argument("--vca-components", nargs="+", default=None, help="Coincident VASP components, e.g. Ba Sr")
     parser.add_argument("--image-workers", type=int, default=0)
@@ -246,7 +253,7 @@ def main() -> None:
         source_dir=initial_dir,
         workdir=workdir,
         command=command,
-        overrides={"xc": "PBE", "pp": "PBE"},
+        overrides={"xc": "PBE", "pp": "PBE", "isym": args.vasp_isym},
         **vca_calculator_options,
     )
     if args.initial_static_summary:
