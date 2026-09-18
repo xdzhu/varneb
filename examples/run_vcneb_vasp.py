@@ -81,6 +81,12 @@ def parse_args() -> argparse.Namespace:
         default=0,
         help="VASP symmetry setting for static images; use -1 for generic low-symmetry cells",
     )
+    parser.add_argument(
+        "--vasp-symprec",
+        type=float,
+        default=None,
+        help="Optional VASP SYMPREC in Angstrom; relevant before VASP reads a near-degenerate cell",
+    )
     parser.add_argument("--vca-virtual-symbol", default=None, help="Physical symbol representing one virtual site, e.g. Ba")
     parser.add_argument("--vca-components", nargs="+", default=None, help="Coincident VASP components, e.g. Ba Sr")
     parser.add_argument("--image-workers", type=int, default=0)
@@ -248,12 +254,17 @@ def main() -> None:
             "vca_virtual_symbol": args.vca_virtual_symbol,
             "vca_components": args.vca_components,
         }
+    vasp_overrides = {"xc": "PBE", "pp": "PBE", "isym": args.vasp_isym}
+    if args.vasp_symprec is not None:
+        if args.vasp_symprec <= 0.0:
+            raise ValueError("--vasp-symprec must be positive")
+        vasp_overrides["symprec"] = args.vasp_symprec
     attach_vasp_calculators(
         images,
         source_dir=initial_dir,
         workdir=workdir,
         command=command,
-        overrides={"xc": "PBE", "pp": "PBE", "isym": args.vasp_isym},
+        overrides=vasp_overrides,
         **vca_calculator_options,
     )
     if args.initial_static_summary:
