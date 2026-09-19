@@ -27,7 +27,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--images", type=int, nargs="+", default=[5, 7, 9])
     parser.add_argument("--springs", type=float, nargs="+", default=[0.05, 0.10, 0.20])
     parser.add_argument("--cell-scales", type=float, nargs="+", default=[4.0, 5.0, 6.0])
-    parser.add_argument("--optimizers", nargs="+", choices=["FIRE", "LBFGS"], default=["FIRE", "LBFGS"])
+    parser.add_argument(
+        "--optimizers",
+        nargs="+",
+        choices=["FIRE", "BlockFIRE", "SplitFIRE", "LBFGS"],
+        default=["FIRE", "BlockFIRE", "SplitFIRE", "LBFGS"],
+    )
     return parser.parse_args()
 
 
@@ -51,6 +56,13 @@ def main() -> None:
     ):
         initial, final = build_endpoints(reference_cell)
         images = interpolate_vcneb(initial, final, n_images=n_images, align_cells=False)
+        # A linear interpolation lies exactly on this toy MEP.  Add the same
+        # smooth transverse perturbation at every resolution so the optimizer
+        # scaling test measures relaxation work instead of a zero-step path.
+        for index, image in enumerate(images[1:-1], start=1):
+            scaled = image.get_scaled_positions(wrap=False)
+            scaled[0, 1] += 0.04 * np.sin(np.pi * index / (n_images - 1))
+            image.set_scaled_positions(scaled)
         for image in images:
             image.calc = ToyPhaseTransition(reference_cell)
         chain, opt = run_vcneb(

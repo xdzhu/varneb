@@ -11,7 +11,7 @@
 
 set -eo pipefail
 
-repo=/public/home/iai806/abacus/agent-runs/20260912-vcneb-hf
+repo=${REPO:-/public/home/iai806/abacus/agent-runs/20260912-vcneb-hf}
 env_script=/public/home/iai806/apprepo/abacus/v3.10.0LTS-intelmpi2025/scripts/env.sh
 python=/public/home/iai806/.conda/envs/icu/bin/python
 abacus=/public/home/iai806/apprepo/abacus/v3.10.0LTS-intelmpi2025/app/bin/abacus
@@ -27,6 +27,7 @@ fmax=${FMAX:-0.10}
 spring=${SPRING:-0.2}
 optimizer=${OPTIMIZER:-FIRE}
 maxstep=${MAXSTEP:-0.02}
+cell_maxstep=${CELL_MAXSTEP:-}
 line_search_retries=${LINE_SEARCH_RETRIES:-0}
 line_search_retry_factor=${LINE_SEARCH_RETRY_FACTOR:-0.5}
 mode_file=${MODE_FILE:-}
@@ -112,6 +113,10 @@ validate_args=()
 if [[ "${validate_only}" != 0 ]]; then
   validate_args+=(--validate-only)
 fi
+optimizer_args=()
+if [[ -n "${cell_maxstep}" ]]; then
+  optimizer_args+=(--cell-maxstep "${cell_maxstep}")
+fi
 
 exec "${python}" examples/run_vcneb_abacus.py \
   --initial "validation/batio3_cubic_to_tetragonal/endpoint_relax_${initial_endpoint}_${endpoint_tag}/CONTCAR" \
@@ -119,6 +124,7 @@ exec "${python}" examples/run_vcneb_abacus.py \
   --workdir "${workdir}" --n-images "${n_images}" --fmax "${fmax}" \
   --steps "${steps}" --k "${spring}" --optimizer "${optimizer}" \
   --maxstep "${maxstep}" --image-workers "${image_workers}" --image-retries "${image_retries}" \
+  "${optimizer_args[@]}" \
   --line-search-retries "${line_search_retries}" --line-search-retry-factor "${line_search_retry_factor}" \
   --command "srun --exclusive --mpi=pmix_v3 -n ${image_mpi} ${abacus}" \
   --pseudo-dir "${pseudo_dir}" --basis-dir "${basis_dir}" \

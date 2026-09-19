@@ -29,6 +29,8 @@ from ase.units import GPa
 from .calculator import calculator_context, classify_calculator_failure, validate_image_calculators
 from .executor import ImageEvaluation
 from .step_control import CandidateStepRejected, CheckedFIRE
+from .block_fire import BlockFIRE
+from .scaled_fire import ImageScaledFIRE, StagedFIRE
 
 
 Array = np.ndarray
@@ -1819,6 +1821,30 @@ def _make_optimizer(
                                candidate_retry_factor=candidate_step_retry_factor,
                                candidate_manifest=candidate_step_manifest, **kwargs)
         return FIRE(chain, logfile=logfile, **kwargs)
+    if key in {"BLOCKFIRE", "BLOCK_FIRE", "BLOCK-FIRE"}:
+        return BlockFIRE(
+            chain,
+            logfile=logfile,
+            block_mode="image",
+            max_candidate_retries=candidate_step_retries,
+            candidate_retry_factor=candidate_step_retry_factor,
+            candidate_manifest=candidate_step_manifest,
+            **kwargs,
+        )
+    if key in {"SPLITFIRE", "SPLIT_FIRE", "SPLIT-FIRE"}:
+        return BlockFIRE(
+            chain,
+            logfile=logfile,
+            block_mode="atomic-cell",
+            max_candidate_retries=candidate_step_retries,
+            candidate_retry_factor=candidate_step_retry_factor,
+            candidate_manifest=candidate_step_manifest,
+            **kwargs,
+        )
+    if key in {"IMAGESCALEDFIRE", "IMAGE_SCALED_FIRE", "IMAGE-SCALED-FIRE"}:
+        return ImageScaledFIRE(chain, logfile=logfile, **kwargs)
+    if key in {"STAGEDFIRE", "STAGED_FIRE", "STAGED-FIRE"}:
+        return StagedFIRE(chain, logfile=logfile, **kwargs)
     if key == "LBFGS":
         return LBFGS(chain, logfile=logfile, **kwargs)
     if key == "BFGS":
@@ -1826,7 +1852,8 @@ def _make_optimizer(
     if key in {"BFGSLINESEARCH", "BFGS_LINESEARCH", "BFGS-LINESEARCH"}:
         return BFGSLineSearch(chain, logfile=logfile, **kwargs)
     raise ValueError(
-        f"Unknown optimizer {name!r}; choose FIRE, BFGS, LBFGS, or BFGSLineSearch"
+        f"Unknown optimizer {name!r}; choose FIRE, ImageScaledFIRE, StagedFIRE, "
+        "BlockFIRE, SplitFIRE, BFGS, LBFGS, or BFGSLineSearch"
     )
 
 
@@ -1984,8 +2011,12 @@ def run_vcneb(
         raise ValueError("candidate_step_retries must be a nonnegative integer")
     if not np.isfinite(candidate_step_retry_factor) or not 0 < candidate_step_retry_factor < 1:
         raise ValueError("candidate_step_retry_factor must be in (0, 1)")
-    if candidate_step_retries and (candidate_validator is None or optimizer.upper() != "FIRE"):
-        raise ValueError("candidate step backtracking requires a candidate validator and FIRE")
+    candidate_optimizers = {"FIRE", "BLOCKFIRE", "BLOCK_FIRE", "BLOCK-FIRE",
+                            "SPLITFIRE", "SPLIT_FIRE", "SPLIT-FIRE"}
+    if candidate_step_retries and (
+        candidate_validator is None or optimizer.upper() not in candidate_optimizers
+    ):
+        raise ValueError("candidate step backtracking requires a candidate validator and a FIRE optimizer")
     if isinstance(line_search_retries, bool) or int(line_search_retries) != line_search_retries or line_search_retries < 0:
         raise ValueError("line_search_retries must be a non-negative integer")
     line_search_retries = int(line_search_retries)

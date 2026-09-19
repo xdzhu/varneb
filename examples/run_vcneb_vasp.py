@@ -71,7 +71,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--pressure-gpa", type=float, default=0.0)
     parser.add_argument(
         "--optimizer",
-        choices=["FIRE", "BFGS", "LBFGS", "BFGSLineSearch"],
+        choices=["FIRE", "ImageScaledFIRE", "StagedFIRE", "BlockFIRE", "SplitFIRE", "BFGS", "LBFGS", "BFGSLineSearch"],
         default="FIRE",
     )
     parser.add_argument("--line-search-retries", type=int, default=0)
@@ -203,8 +203,10 @@ def main() -> None:
         raise ValueError("--image-workers and --image-retries must be non-negative")
     if args.candidate_step_retries < 0 or not np.isfinite(args.candidate_step_retry_factor) or not 0 < args.candidate_step_retry_factor < 1:
         raise ValueError("candidate step retries/factor are invalid")
-    if args.candidate_step_retries and (not args.native_lattice_probe or args.optimizer != "FIRE"):
-        raise ValueError("candidate backtracking requires --native-lattice-probe and FIRE")
+    if args.candidate_step_retries and (
+        not args.native_lattice_probe or args.optimizer not in {"FIRE", "BlockFIRE", "SplitFIRE"}
+    ):
+        raise ValueError("candidate backtracking requires --native-lattice-probe and a FIRE optimizer")
     if args.validate_only and args.static_only:
         raise ValueError("--validate-only and --static-only are mutually exclusive")
     if bool(args.initial_static_summary) != bool(args.final_static_summary):

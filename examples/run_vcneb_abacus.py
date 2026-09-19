@@ -69,7 +69,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--kpts", type=int, nargs=3, default=None, metavar=("NX", "NY", "NZ"))
     parser.add_argument(
         "--optimizer",
-        choices=["FIRE", "BFGS", "LBFGS", "BFGSLineSearch"],
+        choices=["FIRE", "ImageScaledFIRE", "StagedFIRE", "BlockFIRE", "SplitFIRE", "BFGS", "LBFGS", "BFGSLineSearch"],
         default="FIRE",
     )
     parser.add_argument(
@@ -78,6 +78,14 @@ def parse_args() -> argparse.Namespace:
         default=None,
         help="Optional ASE optimizer maxstep in Angstrom-like extended coordinates",
     )
+    parser.add_argument(
+        "--cell-maxstep",
+        type=float,
+        default=None,
+        help="Optional per-image cell-block cap for SplitFIRE",
+    )
+    parser.add_argument("--switch-fmax", type=float, default=None, help="StagedFIRE coarse-to-fine force threshold")
+    parser.add_argument("--refine-maxstep", type=float, default=None, help="StagedFIRE final global band cap")
     parser.add_argument("--mic", action="store_true")
     parser.add_argument(
         "--cell-interpolation",
@@ -455,6 +463,19 @@ def main() -> None:
         if args.image_workers
         else None
     )
+    optimizer_kwargs = {} if args.maxstep is None else {"maxstep": args.maxstep}
+    if args.cell_maxstep is not None:
+        if args.optimizer != "SplitFIRE":
+            raise ValueError("--cell-maxstep is only valid with SplitFIRE")
+        optimizer_kwargs["cell_maxstep"] = args.cell_maxstep
+    if args.switch_fmax is not None or args.refine_maxstep is not None:
+        if args.optimizer != "StagedFIRE":
+            raise ValueError("--switch-fmax/--refine-maxstep are only valid with StagedFIRE")
+        if args.switch_fmax is not None:
+            optimizer_kwargs["switch_fmax"] = args.switch_fmax
+        if args.refine_maxstep is not None:
+            optimizer_kwargs["refine_maxstep"] = args.refine_maxstep
+
     chain, _ = run_vcneb(
         images,
         pressure_gpa=args.pressure_gpa,
@@ -465,7 +486,7 @@ def main() -> None:
         constraint_mode=None if args.constraint_mode == "none" else args.constraint_mode,
         image_executor=image_executor,
         optimizer=args.optimizer,
-        optimizer_kwargs={} if args.maxstep is None else {"maxstep": args.maxstep},
+        optimizer_kwargs=optimizer_kwargs,
         line_search_retries=args.line_search_retries,
         line_search_retry_factor=args.line_search_retry_factor,
         fmax=args.fmax,
