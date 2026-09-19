@@ -78,6 +78,10 @@ def test_explicit_potcar_is_restored_after_ase_writes_inputs(tmp_path: Path, mon
     directory.mkdir()
 
     def fake_write_input(self, atoms, properties=None, system_changes=None):
+        (Path(self.directory) / "POSCAR").write_text(
+            "H\n1.0\n0 0 0\n0 0 0\n0 0 0\nH\n1\nDirect\n0 0 0\n",
+            encoding="utf-8",
+        )
         (Path(self.directory) / "POTCAR").write_bytes(b"ASE replacement")
 
     monkeypatch.setattr(Vasp, "write_input", fake_write_input)

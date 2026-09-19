@@ -18,6 +18,7 @@ from typing import Callable, Iterable, Iterator, Mapping, Optional, Sequence
 import numpy as np
 
 from ase import Atoms
+from ase.calculators.singlepoint import SinglePointCalculator
 from ase.io import write
 from ase.io.trajectory import Trajectory
 from ase.optimize import BFGS, FIRE, LBFGS
@@ -27,6 +28,7 @@ from ase.units import GPa
 
 from .calculator import calculator_context, classify_calculator_failure, validate_image_calculators
 from .executor import ImageEvaluation
+from .step_control import CandidateStepRejected, CheckedFIRE
 
 
 Array = np.ndarray
@@ -871,6 +873,7 @@ class VCNEB:
         wrap_positions: bool = False,
         parallel: bool = False,
         image_executor: object | None = None,
+        candidate_validator: Optional[Callable[[Sequence[Atoms]], None]] = None,
         dynamic_relaxation: float = 1.0,
         dynamic_energy_scale: float = 0.5,
         log: Optional[Callable[[str], None]] = None,
@@ -903,6 +906,9 @@ class VCNEB:
         if image_executor is not None and not callable(getattr(image_executor, "evaluate", None)):
             raise TypeError("image_executor must provide evaluate(images)")
         self.image_executor = image_executor
+        if candidate_validator is not None and not callable(candidate_validator):
+            raise TypeError("candidate_validator must be callable or None")
+        self.candidate_validator = candidate_validator
         self.atom_mask = None
         if atom_mask is not None:
             atom_mask_array = np.asarray(atom_mask, dtype=float)
@@ -959,10 +965,12 @@ class VCNEB:
         self._last_enthalpies: Optional[Array] = None
         self._last_forces_x: Optional[Array] = None
         self._last_evaluations: Optional[list[ImageEvaluation]] = None
+        self._last_evaluation_geometry = None
         # Endpoints are fixed during VC-NEB; cache their evaluations and only
         # dispatch interior images to the worker executor on later iterations.
         self._endpoint_evaluations: dict[int, ImageEvaluation] = {}
         self._owners = self._assign_image_owners()
+        self._validate_candidate_images([image.copy() for image in self.images])
 
     def __ase_optimizable__(self) -> "VCNEB":
         return self
@@ -1129,19 +1137,53 @@ class VCNEB:
         x = np.asarray(x, dtype=float).reshape(-1)
         if x.size != self.ndofs():
             raise ValueError(f"Expected {self.ndofs()} coordinates, got {x.size}")
+        if not np.isfinite(x).all():
+            raise ValueError("Candidate coordinates must be finite")
+        candidates = [image.copy() for image in self.images]
         for offset, image_index in enumerate(range(1, self.n_images - 1)):
             lo = offset * self.image_ndofs
             hi = lo + self.image_ndofs
             x_image = self._project_constraint(x[lo:hi], image_index)
-            apply_state(
-                self.images[image_index],
-                self._x_to_state(x_image, image_index),
-                self.reference_cell,
-                wrap_positions=self.wrap_positions,
-            )
+            try:
+                apply_state(
+                    candidates[image_index],
+                    self._x_to_state(x_image, image_index),
+                    self.reference_cell,
+                    wrap_positions=self.wrap_positions,
+                )
+            except ValueError as error:
+                if self.candidate_validator is None:
+                    raise
+                rejected = CandidateStepRejected(f"image {image_index}: {error}")
+                rejected.candidate_coordinates = x.copy()
+                raise rejected from error
+        try:
+            self._validate_candidate_images(candidates)
+        except CandidateStepRejected as error:
+            error.candidate_coordinates = x.copy()
+            raise
+        # Only commit once every image passes; preserve calculator identities,
+        # endpoints and constraints. No calculator was attached to preview copies.
+        for image_index in range(1, self.n_images - 1):
+            self.images[image_index].set_cell(candidates[image_index].cell, scale_atoms=False, apply_constraint=False)
+            self.images[image_index].set_positions(candidates[image_index].positions, apply_constraint=False)
         self._last_enthalpies = None
         self._last_forces_x = None
         self._last_evaluations = None
+        self._last_evaluation_geometry = None
+
+    def _validate_candidate_images(self, candidates: Sequence[Atoms]) -> None:
+        if self.candidate_validator is None:
+            return
+        snapshots = [(image.cell.array.copy(), image.positions.copy(), image.numbers.copy(), image.pbc.copy())
+                     for image in candidates]
+        self.candidate_validator(candidates)
+        if len(candidates) != len(snapshots):
+            raise RuntimeError("candidate_validator must not alter the number of images")
+        for image, snapshot in zip(candidates, snapshots):
+            if not all(np.array_equal(value, expected) for value, expected in
+                       zip((image.cell.array, image.positions, image.numbers, image.pbc), snapshot)):
+                raise RuntimeError("candidate_validator must not modify the candidate structures")
 
     def get_positions(self) -> Array:
         return self.get_x().reshape((-1, 3))
@@ -1273,6 +1315,32 @@ class VCNEB:
         last = self._evaluate_fixed_endpoint(self.n_images - 1)
         interior = self._evaluate_image_indices(range(1, self.n_images - 1))
         self._last_evaluations = [first, *interior, last]
+        self._last_evaluation_geometry = self._geometry_signature()
+
+    def _geometry_signature(self):
+        return tuple((image.cell.array.tobytes(), image.positions.tobytes(),
+                      image.numbers.tobytes(), image.pbc.tobytes()) for image in self.images)
+
+    def evaluated_snapshot_images(self) -> list[Atoms]:
+        """Serialize executor results, not potentially empty calculator caches.
+
+        No evaluation is initiated here and live calculators are never replaced.
+        Serial calculators retain their existing ASE writer behavior.
+        """
+        if self.image_executor is None:
+            return self.images
+        if self._last_evaluations is None or len(self._last_evaluations) != self.n_images:
+            raise RuntimeError("A complete executor evaluation is required before saving result snapshots")
+        if self._last_evaluation_geometry != self._geometry_signature():
+            raise RuntimeError("Snapshot geometry changed since the complete executor evaluation")
+        snapshots = []
+        for index, (image, value) in enumerate(zip(self.images, self._last_evaluations)):
+            evaluation = value.validate(image_index=index, n_atoms=len(image))
+            snapshot = image.copy()
+            snapshot.calc = SinglePointCalculator(snapshot, energy=evaluation.energy,
+                                                   forces=evaluation.forces, stress=evaluation.stress)
+            snapshots.append(snapshot)
+        return snapshots
 
     def _tangent(self, image_index: int, enthalpies: Array, image_x: list[Array]) -> Array:
         d_minus = image_x[image_index] - image_x[image_index - 1]
@@ -1634,13 +1702,15 @@ class VCNEB:
         write(str(path), self.images)
 
     def write_step_directory(self, directory: str | Path, step: int) -> None:
+        snapshots = (self.evaluated_snapshot_images()
+                     if self.image_executor is not None and self._last_evaluations is not None else self.images)
         root = Path(directory)
         root.mkdir(parents=True, exist_ok=True)
         chain_path = root / f"chain_step_{step:04d}.traj"
         chain_fd, chain_tmp = tempfile.mkstemp(prefix=f".{chain_path.name}.", suffix=".tmp", dir=root)
         os.close(chain_fd)
         try:
-            write(chain_tmp, self.images, format="traj")
+            write(chain_tmp, snapshots, format="traj")
             os.replace(chain_tmp, chain_path)
         finally:
             try:
@@ -1649,7 +1719,7 @@ class VCNEB:
                 pass
         step_dir = root / f"step_{step:04d}"
         step_dir.mkdir(exist_ok=True)
-        for image_index, image in enumerate(self.images):
+        for image_index, image in enumerate(snapshots):
             poscar_path = step_dir / f"POSCAR_{image_index:02d}"
             fd, temporary = tempfile.mkstemp(prefix=f".{poscar_path.name}.", suffix=".tmp", dir=step_dir)
             os.close(fd)
@@ -1736,10 +1806,18 @@ def _make_optimizer(
     chain: VCNEB,
     logfile: str | Path | None,
     optimizer_kwargs: Optional[Mapping[str, object]] = None,
+    *,
+    candidate_step_retries: int = 0,
+    candidate_step_retry_factor: float = 0.5,
+    candidate_step_manifest: str | Path | None = None,
 ):
     kwargs = {} if optimizer_kwargs is None else dict(optimizer_kwargs)
     key = name.upper()
     if key == "FIRE":
+        if chain.candidate_validator is not None:
+            return CheckedFIRE(chain, logfile=logfile, max_candidate_retries=candidate_step_retries,
+                               candidate_retry_factor=candidate_step_retry_factor,
+                               candidate_manifest=candidate_step_manifest, **kwargs)
         return FIRE(chain, logfile=logfile, **kwargs)
     if key == "LBFGS":
         return LBFGS(chain, logfile=logfile, **kwargs)
@@ -1853,6 +1931,10 @@ def run_vcneb(
     wrap_positions: bool = False,
     parallel: bool = False,
     image_executor: object | None = None,
+    candidate_validator: Optional[Callable[[Sequence[Atoms]], None]] = None,
+    candidate_step_retries: int = 0,
+    candidate_step_retry_factor: float = 0.5,
+    candidate_step_manifest: str | Path | None = None,
     optimizer: str = "FIRE",
     optimizer_kwargs: Optional[Mapping[str, object]] = None,
     line_search_retries: int = 0,
@@ -1884,6 +1966,11 @@ def run_vcneb(
     optimizer is recreated at the last complete image state with a reduced
     ``maxstep``/``stpmax`` and only the remaining steps are attempted.  Other
     optimizer or calculator errors are never retried automatically.
+
+    ``candidate_validator`` previews every image before an atomic geometry
+    commit. With FIRE, ``candidate_step_retries`` permits fixed-direction
+    geometry backtracking before DFT; accepted shortened moves reset momentum.
+    This is distinct from retrying a failed electronic calculation.
     """
 
     if climb_after is not None:
@@ -1892,6 +1979,13 @@ def run_vcneb(
         climb_after = int(climb_after)
     if not climb:
         climb_after = None
+    if (isinstance(candidate_step_retries, bool) or int(candidate_step_retries) != candidate_step_retries
+            or candidate_step_retries < 0):
+        raise ValueError("candidate_step_retries must be a nonnegative integer")
+    if not np.isfinite(candidate_step_retry_factor) or not 0 < candidate_step_retry_factor < 1:
+        raise ValueError("candidate_step_retry_factor must be in (0, 1)")
+    if candidate_step_retries and (candidate_validator is None or optimizer.upper() != "FIRE"):
+        raise ValueError("candidate step backtracking requires a candidate validator and FIRE")
     if isinstance(line_search_retries, bool) or int(line_search_retries) != line_search_retries or line_search_retries < 0:
         raise ValueError("line_search_retries must be a non-negative integer")
     line_search_retries = int(line_search_retries)
@@ -1923,11 +2017,15 @@ def run_vcneb(
         wrap_positions=wrap_positions,
         parallel=parallel,
         image_executor=image_executor,
+        candidate_validator=candidate_validator,
         log=log,
     )
     base_optimizer_kwargs = {} if optimizer_kwargs is None else dict(optimizer_kwargs)
     line_search_enabled = _optimizer_uses_line_search(optimizer, base_optimizer_kwargs)
-    opt = _make_optimizer(optimizer, chain, logfile, base_optimizer_kwargs)
+    opt = _make_optimizer(optimizer, chain, logfile, base_optimizer_kwargs,
+                          candidate_step_retries=candidate_step_retries,
+                          candidate_step_retry_factor=candidate_step_retry_factor,
+                          candidate_step_manifest=candidate_step_manifest)
 
     if trajectory_mode not in {"w", "a"}:
         raise ValueError("trajectory_mode must be 'w' or 'a'")
@@ -1939,8 +2037,9 @@ def run_vcneb(
     step_counter = {"value": int(snapshot_start)}
 
     def save_snapshot() -> None:
+        snapshots = chain.evaluated_snapshot_images()
         if traj is not None:
-            for image in chain.images:
+            for image in snapshots:
                 traj.write(image)
         if snapshot_dir is not None:
             chain.write_step_directory(snapshot_dir, step_counter["value"])
@@ -2009,13 +2108,16 @@ def run_vcneb(
             payload = {
                 "status": "failed",
                 "error_type": type(exc).__name__,
-                "failure_category": classify_calculator_failure(
+                "failure_category": "candidate_step_rejected" if isinstance(exc, CandidateStepRejected) else classify_calculator_failure(
                     exc,
                     diagnostic_paths=diagnostic_paths,
                 ),
                 "error": str(exc),
                 "optimizer": str(optimizer),
                 "optimizer_steps_completed": int(getattr(opt, "nsteps", 0)),
+                "candidate_step_retries_allowed": candidate_step_retries,
+                "candidate_step_history": getattr(opt, "candidate_step_history", []),
+                "candidate_rejection_details": exc.details if isinstance(exc, CandidateStepRejected) else [],
                 "line_search_retries_allowed": line_search_retries,
                 "line_search_retries_used": len(retry_history),
                 "line_search_retry_history": retry_history,

@@ -19,7 +19,8 @@ spring=${SPRING:-0.20}
 
 [[ "${RUN_DFT:-0}" == 1 ]] || { echo "Set RUN_DFT=1 to run VASP on cu17" >&2; exit 2; }
 [[ "$(hostname -s)" == cu17 ]] || { echo "This runner is restricted to cu17" >&2; exit 2; }
-[[ "$(nproc)" == 40 ]] || { echo "cu17 serial workflow requires exactly 40 visible CPU cores" >&2; exit 2; }
+visible_cores=$(env -u OMP_NUM_THREADS -u OMP_THREAD_LIMIT nproc)
+[[ "${visible_cores}" == 40 ]] || { echo "cu17 serial workflow requires exactly 40 visible CPU cores" >&2; exit 2; }
 [[ -x "${vasp_bin}" ]] || { echo "VASP_BIN is not executable: ${vasp_bin}" >&2; exit 2; }
 : "${VCNEB_GIT_REVISION:?Set the exact source commit in VCNEB_GIT_REVISION}"
 for path in "${smoke_template}/POSCAR" "${smoke_template}/INCAR" "${smoke_template}/KPOINTS" "${smoke_template}/POTCAR"; do

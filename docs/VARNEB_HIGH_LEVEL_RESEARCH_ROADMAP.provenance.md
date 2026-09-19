@@ -11,7 +11,7 @@
 | `docs/theory.md` | 当前 `Q=(s,F)`、`cell_scale`、广义力、NEB/CI、模式与收敛语义 | 描述当前实现，不证明候选 intensive/Hencky metric |
 | `docs/next_priority_plan_2026-09-16.md` | 多后端、BTO Γ 模、论文篇幅与工作依赖 | 其中 VASP 状态已被 2026-09-16 后续生产结果超越 |
 | `VCNEB_PROJECT_PLAN.md` | 项目范围、测试和历史决策 | 部分实时运行状态可能过时，不能代替 committed summary |
-| `papar/VARNEB_CPC/MANUSCRIPT_EVIDENCE.md` | claim-to-evidence 格式 | “VASP 无权威材料路径”一行已过时，需在 P0 更新 |
+| `paper/VARNEB_CPC/MANUSCRIPT_EVIDENCE.md` | claim-to-evidence 格式 | “VASP 无权威材料路径”一行已过时，需在 P0 更新 |
 | `vcneb/core.py` | 当前 legacy metric、路径力和运行 API | 仅作为现状基线 |
 | `vcneb/calculator.py`, `vcneb/abacus.py`, `vcneb/vasp.py`, `vcneb/qe.py` | calculator contract 和后端能力层 | OpenMX 尚未实现 |
 | `vcneb/modes.py`, `vcneb/phonons.py` | 现有模式引导、子空间、Γ 模对角化和投影 | 不等于原子--应变耦合广义 Hessian |

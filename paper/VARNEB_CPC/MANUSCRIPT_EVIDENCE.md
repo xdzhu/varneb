@@ -13,6 +13,8 @@
 | Figure source data | `figures/vcneb_*_source_data.csv` | committed with manuscript |
 | VASP BTO T-to-C 7-total-image production path | remote cu17 run at commit `cdde89c`; pending committed summary/source data under `outputs/` | completed at `fmax=0.0951479 eV/A` with five interior images and cached endpoints; not manuscript-ready until repository provenance is synchronized |
 | VASP VCA backend cases (BST50, PZT50) and PTO control | `docs/vasp_vca_validation.md`, `results/bst50_vcneb_final/`, `results/pto_vcneb_final/`, `results/pzt50_vca_vcneb_final/` | backend-validation examples; all are monotonic T-to-C paths, so they do not establish a VCA transition-state barrier or enter the current manuscript without a dedicated figure/claim decision |
+| VASP GaN B3-to-B1 production path | `docs/GAN_QIAN_2013_REPLICATION_PLAN.md`, `scripts/analyze_gan_qian_path.py`, job 27721015 | numerically converged at `fmax=0.09903 eV/A`, but the 0.9553 eV/GaN barrier exceeds the 0.57 eV/GaN literature value; backend/restart evidence only pending mapping-mechanism diagnosis |
+| VASP CdSe rock-salt-to-wurtzite paths | `docs/CDSE_SHEPPARD_2012_REPLICATION_PLAN.md`, `examples/cdse_sheppard_2012/` | running two independent initial mappings; provisional snapshots are not manuscript evidence until the 0.10 eV/A path criterion and final audit pass |
 | Real-material strict-mode release-and-refine | no authoritative material run | explicitly future work |
 
 The manuscript must not claim algorithmic novelty over Qian VC-NEB,

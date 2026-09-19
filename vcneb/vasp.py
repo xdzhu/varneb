@@ -12,19 +12,24 @@ from typing import Mapping, Optional, Sequence
 
 import numpy as np
 from ase import Atoms
-from ase.calculators.calculator import Calculator, all_changes
+from ase.calculators.calculator import Calculator, CalculationFailed, all_changes
 from ase.calculators.singlepoint import SinglePointCalculator
 from ase.calculators.vasp import Vasp
-from ase.io import write
+from ase.io import read, write
 
 from .provenance import endpoint_structure_record
+from .vasp_contract import (
+    DEFAULT_VASP_SYMMETRY_PARAMETERS, VaspInputContractError,
+    POSCAR_LATTICE_SIGNIFICANT_DIGITS, canonical_parameters, parameter_digest,
+    rewrite_poscar_lattice_exact, validate_vasp_image_geometry,
+)
 
 
 REQUIRED_VCNEB_STATIC_PARAMETERS = {
     "ibrion": -1,
     "nsw": 0,
     "isif": 2,
-    "isym": 0,
+    **DEFAULT_VASP_SYMMETRY_PARAMETERS,
 }
 
 
@@ -127,13 +132,114 @@ def validate_vca_configuration(
 class ExplicitPotcarVasp(Vasp):
     """ASE VASP calculator that restores the exact licensed source POTCAR."""
 
-    def __init__(self, *, source_potcar: str | Path, **kwargs):
+    def __init__(self, *, source_potcar: str | Path, minimum_distance=None, **kwargs):
         self.source_potcar = Path(source_potcar).resolve()
+        self.input_contract = None
+        self.minimum_distance = minimum_distance
         super().__init__(**kwargs)
 
+    def lock_input_contract(self, atoms, source_dir):
+        """Freeze inputs once, not after a failure or on each new image state."""
+        self.input_contract = {
+            "version": 1,
+            "parameters": canonical_parameters(collect_vasp_params(self)),
+            "source_dir": str(Path(source_dir).resolve()),
+            "fingerprints": vasp_input_fingerprints(source_dir),
+            "symbols": atoms.get_chemical_symbols(),
+            "initial_magmoms": atoms.get_initial_magnetic_moments().tolist(),
+            "initial_charges": atoms.get_initial_charges().tolist(),
+        }
+
+    def validate_input_contract(self, atoms):
+        if self.input_contract is None:
+            return
+        contract = self.input_contract
+        parameters = collect_vasp_params(self)
+        validate_vasp_static_parameters(parameters)
+        if canonical_parameters(parameters) != contract["parameters"]:
+            raise VaspInputContractError("VASP input contract: calculator parameters changed during the run")
+        try:
+            fingerprints = vasp_input_fingerprints(contract["source_dir"])
+        except OSError as exc:
+            raise VaspInputContractError("frozen source input is missing or unreadable") from exc
+        for name, current in fingerprints.items():
+            if current["sha256"] != contract["fingerprints"][name]["sha256"]:
+                raise VaspInputContractError(f"VASP input contract: source {name} changed during the run")
+        for key, current in (("initial_magmoms", atoms.get_initial_magnetic_moments()),
+                             ("initial_charges", atoms.get_initial_charges())):
+            if not np.array_equal(current, np.asarray(contract[key])):
+                raise VaspInputContractError(f"{key} changed during the run")
+        try:
+            potcar_elements = [_potcar_element(label) for label in potcar_dataset_labels(self.source_potcar)]
+        except ValueError as exc:
+            raise VaspInputContractError("POTCAR must contain identifiable TITEL datasets before a real calculation") from exc
+        if potcar_elements != list(dict.fromkeys(atoms.get_chemical_symbols())):
+            raise VaspInputContractError("POTCAR dataset elements/order do not match the image species blocks")
+        validate_vasp_image_geometry(
+            atoms, expected_symbols=contract["symbols"], minimum_distance=self.minimum_distance,
+        )
+
     def write_input(self, atoms, properties=None, system_changes=None):
+        self.validate_input_contract(atoms)
         super().write_input(atoms, properties=properties, system_changes=system_changes)
+        rewrite_poscar_lattice_exact(Path(self.directory) / "POSCAR", atoms.cell.array)
         shutil.copy2(self.source_potcar, Path(self.directory) / "POTCAR")
+        if self.input_contract is not None:
+            root = Path(self.directory)
+            if hashlib.sha256((root / "POTCAR").read_bytes()).hexdigest() != self.input_contract["fingerprints"]["POTCAR"]["sha256"]:
+                raise VaspInputContractError("serialized POTCAR differs from the frozen source")
+            serialized = read(root / "POSCAR", format="vasp")
+            validate_vasp_image_geometry(serialized, minimum_distance=self.minimum_distance)
+            expected = atoms[self.sort]
+            if serialized.get_chemical_symbols() != expected.get_chemical_symbols():
+                raise VaspInputContractError("VASP input contract: serialized species/order mismatch")
+            if not np.allclose(serialized.cell.array, atoms.cell.array, rtol=0, atol=1e-12) or not np.allclose(
+                serialized.positions, expected.positions, rtol=0, atol=1e-12,
+            ):
+                raise VaspInputContractError("VASP input contract: POSCAR serialization changed geometry")
+            emitted = Vasp()
+            emitted.read_incar(str(root / "INCAR"))
+            emitted_parameters = validate_vasp_static_parameters(collect_vasp_params(emitted))
+            active = collect_vasp_params(self)
+            for key in REQUIRED_VCNEB_STATIC_PARAMETERS:
+                if emitted_parameters[key] != active[key]:
+                    raise VaspInputContractError(f"serialized INCAR changed {key.upper()}")
+            record = {
+                "version": 1, "status": "input_written_and_checked",
+                "validation_scope": "calculator_free_not_bravais_certification",
+                "poscar_lattice_serialization": {
+                    "policy": "exact_binary64_roundtrip",
+                    "significant_decimal_digits": POSCAR_LATTICE_SIGNIFICANT_DIGITS,
+                },
+                "structure": endpoint_structure_record(atoms),
+                "parameter_sha256": parameter_digest(active),
+                "effective_symmetry": {key: active[key] for key in DEFAULT_VASP_SYMMETRY_PARAMETERS},
+                "input_sha256": {name: hashlib.sha256((root / name).read_bytes()).hexdigest()
+                                 for name in ("POSCAR", "INCAR", "KPOINTS", "POTCAR")},
+            }
+            temporary = root / "vasp_input_contract.json.tmp"
+            temporary.write_text(json.dumps(record, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+            temporary.replace(root / "vasp_input_contract.json")
+
+    def calculate(self, atoms=None, properties=("energy",), system_changes=all_changes):
+        super().calculate(atoms, properties, system_changes)
+        if self.input_contract is not None:
+            if not self.converged:
+                self.clear_results()
+                raise CalculationFailed("VASP SCF did not converge; results cannot enter the VCNEB chain")
+            n_atoms = len(self.atoms)
+            try:
+                energy = float(self.results["energy"])
+                forces = np.asarray(self.results["forces"], dtype=float)
+                stress = np.asarray(self.results["stress"], dtype=float)
+                valid = (np.isfinite(energy) and forces.shape == (n_atoms, 3)
+                         and stress.shape == (6,) and np.isfinite(forces).all()
+                         and np.isfinite(stress).all())
+            except (KeyError, TypeError, ValueError):
+                valid = False
+            if not valid:
+                self.clear_results()
+                raise CalculationFailed("VASP returned missing, invalid or nonfinite energy/forces/stress")
 
 
 def expand_virtual_site(
@@ -175,17 +281,27 @@ class VirtualCrystalCalculator(Calculator):
         *,
         virtual_symbol: str,
         components: Sequence[str],
+        minimum_distance: float | None = None,
     ):
         super().__init__()
         self.base_calculator = base_calculator
         self.virtual_symbol = virtual_symbol
         self.components = tuple(components)
+        self.minimum_distance = minimum_distance
         self.directory = getattr(base_calculator, "directory", None)
+
+    def validate_input_contract(self, atoms):
+        validate_vasp_image_geometry(atoms, minimum_distance=self.minimum_distance)
+        hook = getattr(self.base_calculator, "validate_input_contract", None)
+        if callable(hook):
+            expanded, _ = expand_virtual_site(atoms, virtual_symbol=self.virtual_symbol, components=self.components)
+            hook(expanded)
 
     def calculate(self, atoms=None, properties=("energy",), system_changes=all_changes):
         super().calculate(atoms, properties, system_changes)
         if atoms is None:
             raise ValueError("VirtualCrystalCalculator requires atoms")
+        self.validate_input_contract(atoms)
         expanded, mapping = expand_virtual_site(
             atoms,
             virtual_symbol=self.virtual_symbol,
@@ -277,18 +393,24 @@ def validate_vasp_static_parameters(parameters: Mapping) -> dict:
     normalized = {str(key).lower(): value for key, value in dict(parameters).items()}
     for key, expected in REQUIRED_VCNEB_STATIC_PARAMETERS.items():
         observed = normalized.get(key)
+        if key == "symprec":
+            try:
+                valid = np.isfinite(float(observed)) and float(observed) > 0
+            except (TypeError, ValueError):
+                valid = False
+            if not valid:
+                raise VaspInputContractError("VASP input contract: SYMPREC must be explicit, finite and positive")
+            continue
         try:
             observed_int = int(observed)
-            # ISYM=-1 fully bypasses VASP symmetry detection.  It remains a
-            # static force/stress calculation and is needed for generic
-            # low-symmetry VCNEB images, for which VASP may reject a cell it
-            # cannot classify consistently.  ISYM=0 is kept as the default.
-            matches = observed_int in {0, -1} if key == "isym" else observed_int == expected
-        except (TypeError, ValueError):
+            # Disabling symmetry use does NOT bypass every Bravais check.
+            matches = (float(observed) == observed_int and
+                       (observed_int in {0, -1} if key == "isym" else observed_int == expected))
+        except (TypeError, ValueError, OverflowError):
             matches = False
         if not matches:
             requirement = "ISYM=0 or -1" if key == "isym" else f"{key.upper()}={expected}"
-            raise ValueError(
+            raise VaspInputContractError(
                 f"VASP VCNEB images require {requirement}, got {observed!r}"
             )
     return normalized
@@ -332,24 +454,28 @@ def attach_vasp_calculators(
     overrides: Optional[Mapping] = None,
     vca_virtual_symbol: Optional[str] = None,
     vca_components: Optional[Sequence[str]] = None,
+    minimum_distance: float | None = 1e-6,
 ) -> None:
     params, potcar = prepare_vasp_static_parameters(source_dir, overrides=overrides)
 
     root = Path(workdir)
     root.mkdir(parents=True, exist_ok=True)
     for image_index, image in enumerate(images):
+        validate_vasp_image_geometry(image, minimum_distance=minimum_distance)
         image_dir = root / f"{image_index:02d}"
         image_dir.mkdir(parents=True, exist_ok=True)
         write(image_dir / "POSCAR.start", image, format="vasp", direct=True, vasp5=True)
         shutil.copy2(potcar, image_dir / "POTCAR")
         base = ExplicitPotcarVasp(
             source_potcar=potcar,
+            minimum_distance=minimum_distance if vca_virtual_symbol is None else None,
             directory=str(image_dir),
             command=command,
             txt="vasp.out",
             **params,
         )
         if vca_virtual_symbol is None and vca_components is None:
+            base.lock_input_contract(image, source_dir)
             image.calc = base
         elif vca_virtual_symbol is not None and vca_components:
             validate_vca_configuration(
@@ -360,15 +486,17 @@ def attach_vasp_calculators(
             )
             # Validate the physical structure at attachment time, not after the
             # first costly VASP call inside the optimizer.
-            expand_virtual_site(
+            expanded, _ = expand_virtual_site(
                 image,
                 virtual_symbol=vca_virtual_symbol,
                 components=vca_components,
             )
+            base.lock_input_contract(expanded, source_dir)
             image.calc = VirtualCrystalCalculator(
                 base,
                 virtual_symbol=vca_virtual_symbol,
                 components=vca_components,
+                minimum_distance=minimum_distance,
             )
         else:
             raise ValueError("pass both vca_virtual_symbol and vca_components, or neither")
@@ -386,6 +514,7 @@ def cached_vasp_static_endpoint_calculator(
     n_images: int,
     source_dir: str | Path,
     directory: str | Path,
+    calculator_parameters: Optional[Mapping] = None,
 ) -> SinglePointCalculator:
     """Reuse a validated static endpoint so distributed workers remain interior-only."""
 
@@ -409,10 +538,16 @@ def cached_vasp_static_endpoint_calculator(
         cached = fingerprints.get(name)
         if not isinstance(cached, Mapping) or cached.get("sha256") != active["sha256"]:
             raise ValueError(f"{source} {name} fingerprint does not match the active VASP input")
+    if calculator_parameters is not None:
+        recorded_parameters = payload.get("calculator_parameters")
+        if not isinstance(recorded_parameters, Mapping) or parameter_digest(dict(recorded_parameters)) != parameter_digest(dict(calculator_parameters)):
+            raise ValueError(f"{source} effective calculator parameters differ from the active input contract")
     forces = np.asarray(payload.get("forces_eV_per_A"), dtype=float)
     stress = np.asarray(payload.get("stress_eV_per_A3_voigt"), dtype=float)
-    if forces.shape != (len(atoms), 3) or stress.shape != (6,):
+    energy = float(payload["potential_energy_eV"])
+    if (forces.shape != (len(atoms), 3) or stress.shape != (6,) or not np.isfinite(energy)
+            or not np.isfinite(forces).all() or not np.isfinite(stress).all()):
         raise ValueError(f"{source} contains invalid force or stress arrays")
-    calculator = SinglePointCalculator(atoms, energy=float(payload["potential_energy_eV"]), forces=forces, stress=stress)
+    calculator = SinglePointCalculator(atoms, energy=energy, forces=forces, stress=stress)
     calculator.directory = str(Path(directory).resolve())
     return calculator

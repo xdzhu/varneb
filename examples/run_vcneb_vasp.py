@@ -8,6 +8,7 @@ copies INCAR/KPOINTS/POTCAR settings from the initial endpoint directory.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -33,8 +34,11 @@ from vcneb import (
     read_chain_trajectory,
     run_vcneb,
     validate_image_calculators,
+    validate_path_geometry,
 )
 from vcneb.executor import ThreadedCalculatorExecutor
+from vcneb.vasp_contract import DEFAULT_VASP_SYMMETRY_PARAMETERS, parameter_digest
+from vcneb.vasp_lattice import NativeVaspLatticeProbe, NativeVaspCandidateValidator
 from vcneb.vasp import (
     attach_vasp_calculators,
     cached_vasp_static_endpoint_calculator,
@@ -72,20 +76,23 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--line-search-retries", type=int, default=0)
     parser.add_argument("--line-search-retry-factor", type=float, default=0.5)
+    parser.add_argument("--native-lattice-probe", default=None, help="Separately licensed, validated lattice-only checker")
+    parser.add_argument("--candidate-step-retries", type=int, default=0, help="Bounded candidate-only FIRE backtracking; requires native probe")
+    parser.add_argument("--candidate-step-retry-factor", type=float, default=0.5)
     parser.add_argument("--vasp-bin", default=os.environ.get("VASP_BIN", "vasp_std"))
     parser.add_argument("--ncores", type=int, default=int(os.environ.get("NP", "8")))
     parser.add_argument(
         "--vasp-isym",
         type=int,
         choices=[0, -1],
-        default=0,
+        default=DEFAULT_VASP_SYMMETRY_PARAMETERS["isym"],
         help="VASP symmetry setting for static images; use -1 for generic low-symmetry cells",
     )
     parser.add_argument(
         "--vasp-symprec",
         type=float,
-        default=None,
-        help="Optional VASP SYMPREC in Angstrom; relevant before VASP reads a near-degenerate cell",
+        default=DEFAULT_VASP_SYMMETRY_PARAMETERS["symprec"],
+        help="Fixed SYMPREC for the whole run; does not certify Bravais consistency",
     )
     parser.add_argument("--vca-virtual-symbol", default=None, help="Physical symbol representing one virtual site, e.g. Ba")
     parser.add_argument("--vca-components", nargs="+", default=None, help="Coincident VASP components, e.g. Ba Sr")
@@ -125,7 +132,30 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--no-climb", action="store_true")
     parser.add_argument("--resume", action="store_true", help="Resume from the latest complete chain in vcneb.traj")
     parser.add_argument("--resume-trajectory", default=None, help="Trajectory to resume from; defaults to workdir/vcneb.traj")
+    parser.add_argument("--initial-trajectory", default=None, help="Explicit single initial chain; preserves atom order and unwrapped coordinates")
     return parser.parse_args()
+
+
+def read_explicit_initial_chain(path, initial, final, n_images, **geometry_limits):
+    """Load an intentional path without shortening its periodic winding."""
+    if (initial.get_chemical_symbols() != final.get_chemical_symbols()
+            or not np.array_equal(initial.pbc, final.pbc)):
+        raise ValueError("explicit path endpoint order/species/PBC mismatch")
+    images = read(path, index=":")
+    if len(images) != n_images:
+        raise ValueError("initial trajectory must contain exactly one complete chain")
+    for image in images:
+        if image.get_chemical_symbols() != initial.get_chemical_symbols() or not np.array_equal(image.pbc, initial.pbc):
+            raise ValueError("initial trajectory atom order/species/PBC mismatch")
+    for image, endpoint in ((images[0], initial), (images[-1], final)):
+        if not np.allclose(image.cell, endpoint.cell, rtol=0, atol=1e-9):
+            raise ValueError("initial trajectory endpoint cell mismatch")
+        difference = image.get_scaled_positions(wrap=False) - endpoint.get_scaled_positions(wrap=False)
+        difference[:, endpoint.pbc] -= np.rint(difference[:, endpoint.pbc])
+        if not np.allclose(difference, 0, rtol=0, atol=1e-9):
+            raise ValueError("initial trajectory endpoint atom mapping mismatch")
+    validate_path_geometry(images, **geometry_limits)
+    return images
 
 
 def _write_json_atomic(path: Path, payload: dict) -> None:
@@ -167,8 +197,14 @@ def _git_revision() -> str | None:
 
 def main() -> None:
     args = parse_args()
+    if args.initial_trajectory and (args.resume or args.mode_guided or args.mic or args.mapping != "identity" or args.align_translation):
+        raise ValueError("explicit initial trajectory cannot be combined with resume, remapping, MIC, translation alignment or mode-guided interpolation")
     if args.image_workers < 0 or args.image_retries < 0:
         raise ValueError("--image-workers and --image-retries must be non-negative")
+    if args.candidate_step_retries < 0 or not np.isfinite(args.candidate_step_retry_factor) or not 0 < args.candidate_step_retry_factor < 1:
+        raise ValueError("candidate step retries/factor are invalid")
+    if args.candidate_step_retries and (not args.native_lattice_probe or args.optimizer != "FIRE"):
+        raise ValueError("candidate backtracking requires --native-lattice-probe and FIRE")
     if args.validate_only and args.static_only:
         raise ValueError("--validate-only and --static-only are mutually exclusive")
     if bool(args.initial_static_summary) != bool(args.final_static_summary):
@@ -197,7 +233,14 @@ def main() -> None:
 
     traj_path = workdir / "vcneb.traj"
     resume_path = Path(args.resume_trajectory).resolve() if args.resume_trajectory else traj_path
-    if args.resume:
+    if args.initial_trajectory:
+        images = read_explicit_initial_chain(
+            args.initial_trajectory, initial, final, args.n_images,
+            minimum_distance=args.minimum_distance,
+            maximum_deformation=args.maximum_deformation,
+        )
+        print(f"[OK] loaded explicit initial chain from {args.initial_trajectory}")
+    elif args.resume:
         images = read_chain_trajectory(resume_path, n_images=args.n_images)
         print(f"[OK] resumed latest complete {args.n_images}-image chain from {resume_path}")
     else:
@@ -244,10 +287,19 @@ def main() -> None:
     command = default_vasp_command(args.ncores, args.vasp_bin)
     vasp_overrides = {"xc": "PBE", "pp": "PBE", "isym": args.vasp_isym}
     if args.vasp_symprec is not None:
-        if args.vasp_symprec <= 0.0:
+        if not np.isfinite(args.vasp_symprec) or args.vasp_symprec <= 0.0:
             raise ValueError("--vasp-symprec must be positive")
         vasp_overrides["symprec"] = args.vasp_symprec
     static_parameters, _ = prepare_vasp_static_parameters(initial_dir, overrides=vasp_overrides)
+    native_probe = None
+    candidate_validator = None
+    if args.native_lattice_probe:
+        native_probe = NativeVaspLatticeProbe(args.native_lattice_probe, symprec=args.vasp_symprec)
+        candidate_validator = NativeVaspCandidateValidator(
+            native_probe, minimum_distance=args.minimum_distance,
+            maximum_deformation=args.maximum_deformation,
+        )
+        candidate_validator(images)
     vca_calculator_options = {}
     if args.vca_virtual_symbol is not None or args.vca_components is not None:
         if args.vca_virtual_symbol is None or not args.vca_components:
@@ -263,15 +315,18 @@ def main() -> None:
         command=command,
         overrides=vasp_overrides,
         **vca_calculator_options,
+        minimum_distance=args.minimum_distance if args.minimum_distance is not None else 1e-6,
     )
     if args.initial_static_summary:
         images[0].calc = cached_vasp_static_endpoint_calculator(
             args.initial_static_summary, images[0], endpoint="initial", n_images=args.n_images,
             source_dir=initial_dir, directory=workdir / "00",
+            calculator_parameters=static_parameters,
         )
         images[-1].calc = cached_vasp_static_endpoint_calculator(
             args.final_static_summary, images[-1], endpoint="final", n_images=args.n_images,
             source_dir=initial_dir, directory=workdir / f"{args.n_images - 1:02d}",
+            calculator_parameters=static_parameters,
         )
     reports = validate_image_calculators(
         images,
@@ -286,6 +341,24 @@ def main() -> None:
         else workdir / "image_worker_manifest.jsonl"
     )
     metadata = {
+        "source_sha256": {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
+                          for name in ("vcneb/core.py", "vcneb/step_control.py", "vcneb/vasp_lattice.py",
+                                       "vcneb/vasp.py", "vcneb/vasp_contract.py", "vcneb/executor.py",
+                                       "examples/run_vcneb_vasp.py")},
+        "candidate_step_policy": {
+            "native_lattice_probe": None if native_probe is None else native_probe.descriptor(),
+            "retries": args.candidate_step_retries,
+            "retry_factor": args.candidate_step_retry_factor,
+            "accepted_backtracked_step_momentum": "reset",
+            "manifest": str(workdir / "candidate_step_manifest.jsonl") if native_probe is not None else None,
+            "physical_parameter_changes": False,
+        },
+        "initial_trajectory": (
+            {"path": str(Path(args.initial_trajectory).resolve()),
+             "sha256": hashlib.sha256(Path(args.initial_trajectory).read_bytes()).hexdigest(),
+             "coordinate_policy": "preserve_order_and_periodic_winding"}
+            if args.initial_trajectory else None
+        ),
         "git_revision": _git_revision(),
         "command_line": sys.argv,
         "calculator": "ASE VASP VCA" if args.vca_virtual_symbol else "ASE VASP",
@@ -298,15 +371,19 @@ def main() -> None:
         "endpoint_evaluation_policy": (
             f"fixed_{args.static_endpoint}_endpoint_static_scf"
             if args.static_only
-            else "fixed_cached_once" if args.image_workers else "ASE_calculator_cache"
+            else "fixed_cached_once"
         ),
         "image_workers": args.image_workers,
+        "effective_image_workers": max(1, args.image_workers),
         "image_retries": args.image_retries,
         "cell_interpolation": args.cell_interpolation,
         "mapping": args.mapping,
         "align_translation": args.align_translation,
         "fmax_target_eV_per_A": args.fmax,
         "calculator_parameters": static_parameters,
+        "input_contract_version": 1,
+        "validation_scope": "calculator_free_not_bravais_certification",
+        "runtime_parameter_changes_allowed": False,
         "licensed_input_fingerprints": vasp_input_fingerprints(initial_dir),
         "calculator_reports": [report.to_dict() for report in reports],
         "initial_path_geometry": path_geometry_diagnostics(images),
@@ -345,25 +422,32 @@ def main() -> None:
         print(f"[DONE] VASP fixed-endpoint static SCF; workdir={workdir}")
         return
 
-    executor = (
-        ThreadedCalculatorExecutor(
-            args.image_workers,
-            max_retries=args.image_retries,
-            manifest_path=image_manifest,
-            cache_dir=args.image_cache_dir,
-            cache_namespace=args.image_cache_namespace,
-        )
-        if args.image_workers
-        else None
+    cache_namespace = parameter_digest({
+        "parameters": static_parameters,
+        "inputs": {name: record["sha256"] for name, record in metadata["licensed_input_fingerprints"].items()},
+        "vca": metadata["vca"],
+        "user_namespace": args.image_cache_namespace,
+        "input_contract_version": 1,
+    })
+    executor = ThreadedCalculatorExecutor(
+        max(1, args.image_workers),
+        max_retries=args.image_retries,
+        manifest_path=image_manifest,
+        cache_dir=args.image_cache_dir or workdir / "image_cache",
+        cache_namespace=cache_namespace,
     )
 
-    chain, _ = run_vcneb(
+    chain, optimizer_result = run_vcneb(
         images,
         pressure_gpa=args.pressure_gpa,
         k=args.k,
         climb=not args.no_climb,
         mic=args.mic,
         image_executor=executor,
+        candidate_validator=candidate_validator,
+        candidate_step_retries=args.candidate_step_retries,
+        candidate_step_retry_factor=args.candidate_step_retry_factor,
+        candidate_step_manifest=workdir / "candidate_step_manifest.jsonl" if native_probe is not None else None,
         mode_basis=mode_basis,
         constraint_mode=None if args.constraint_mode == "none" else args.constraint_mode,
         optimizer=args.optimizer,
@@ -382,12 +466,16 @@ def main() -> None:
         write(workdir / f"{image_index:02d}" / "POSCAR.final", image, format="vasp", direct=True, vasp5=True)
     chain.plot_band(workdir / "vcneb_barrier.png")
     barrier, delta = chain.barrier()
+    final_force = chain.gradient_norm(-chain.get_forces())
+    converged = bool(np.isfinite(final_force) and final_force <= args.fmax)
     summary = {
-        "status": "completed",
+        "status": "completed" if converged else "step_limit_reached",
+        "converged": converged,
+        "candidate_step_history": getattr(optimizer_result, "candidate_step_history", []),
         **metadata,
         "barrier_enthalpy_eV": barrier,
         "reaction_enthalpy_eV": delta,
-        "final_max_generalized_force_eV_per_A": chain.gradient_norm(-chain.get_forces()),
+        "final_max_generalized_force_eV_per_A": final_force,
         "image_enthalpies_eV": [float(value) for value in chain.enthalpies],
         "path_diagnostics": chain.path_diagnostics(),
         "saddle_diagnostics": chain.saddle_diagnostics(),
@@ -398,7 +486,8 @@ def main() -> None:
         handle.write(f"Forward barrier (enthalpy) = {barrier:.8f} eV\n")
         handle.write(f"Reaction enthalpy          = {delta:.8f} eV\n")
         handle.write("Image enthalpies (eV)      = " + " ".join(f"{e:.8f}" for e in chain.enthalpies) + "\n")
-    print(f"[DONE] barrier={barrier:.6f} eV delta={delta:.6f} eV workdir={workdir}")
+    state = "CONVERGED" if converged else "NOT CONVERGED: step limit reached"
+    print(f"[{state}] barrier={barrier:.6f} eV delta={delta:.6f} eV workdir={workdir}")
 
 
 if __name__ == "__main__":

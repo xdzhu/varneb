@@ -100,10 +100,12 @@ force, stress, image-count, and restart diagnostics must remain auditable.
 VARNEB addresses these requirements as a pure-Python package. It treats VASP
 \cite{Kresse1996a,Kresse1996b}, ABACUS \cite{Li2016}, and future calculators as
 external ASE-compatible providers of energy, Cartesian forces, and stress.
-The current production evidence is ABACUS/PBE. VASP is included as a
-single-image adapter smoke test, not as a material-path benchmark. This
-separation is important: an interface feature is not itself cross-engine
-validation.
+The quantitative material results used in this manuscript are ABACUS/PBE.
+The VASP backend has additionally exercised the complete distributed path,
+restart, and lattice-contract workflow on GaN, but that path is retained as
+backend-validation evidence because its barrier remains mapping-sensitive and
+does not reproduce the literature value. This separation is important: a
+working backend is not itself cross-engine accuracy validation.
 
 \section{From conventional NEB to VCNEB}
 \label{sec:method}
@@ -206,6 +208,17 @@ available and the manager emits a structured failure report. Restart selects a
 complete chain snapshot; it does not regenerate an interpolation or overwrite
 the original initial chain.
 
+Backend independence also requires a numerical serialization contract.  The
+VASP adapter freezes the static parameters and licensed-input fingerprints,
+then writes lattice components with 17 significant decimal digits and verifies
+exact binary64 round-trip before launching the executable.  The optional
+lattice preflight evaluates the same serialized cell, so a last-digit POSCAR
+rounding change cannot silently alter VASP's direct/reciprocal Bravais
+classification.  This check does not symmetrize an image or adjust
+\texttt{SYMPREC}; a diagnostic linked to a local licensed VASP object must be
+validated against the corresponding executable and compiler target.  Its
+failure rejects the complete candidate before any image worker is launched.
+
 \begin{table*}[t]
 \centering
 \caption{Current VARNEB capabilities and evidence boundaries.}
@@ -226,7 +239,8 @@ comparison remains incomplete \\
 Execution & Isolated image directories, manager/worker ownership, bounded retry,
 snapshots, resume and durable cache & Scheduler resources remain user-reviewed \\
 Calculators & ABACUS, VASP and QE ASE-facing factories & ABACUS has material paths;
-VASP has a single-image smoke test and QE has a static no-DFT preflight only \\
+VASP has a converged GaN path plus full-SCF contract regressions; QE has a static
+no-DFT preflight only \\
 Reporting & JSON summary, trajectory, audit, image comparison, structural metrics,
 source-data and editable figure export & Results remain calculator and
 boundary-condition specific \\
@@ -283,7 +297,7 @@ the cubic endpoint with a $1\times1\times1$ finite-displacement calculation
 ($\delta=0.01$ \AA{}, six signed displacements) and assembled the $\Gamma$-point
 force constants and direct $\Gamma$ eigenvectors with Phonopy \cite{Togo2015}.
 The ABACUS--Phonopy force-constant convention,
-$\mathrm{eV}/(\AA\,\mathrm{au})$, is retained explicitly in the provenance
+$\mathrm{eV}/(\text{\AA}\,\mathrm{au})$, is retained explicitly in the provenance
 of the direct Phonopy $q=0$ calculation. The spectrum contains a triply degenerate unstable
 subspace at $-298.956$ cm$^{-1}$. After applying the
 recorded O-atom permutation and endpoint translation gauge, then removing each
@@ -368,7 +382,7 @@ The material cases demonstrate one ABACUS/PBE family, not universal accuracy.
 HfO$_2$ remains sensitive to mapping, supercell size, mechanical boundary
 conditions, and possible intermediate mechanisms. The BTO case is deliberately
 barrierless and therefore validates the CI gate rather than a saddle search.
-Future work will add a production VASP path, cross-implementation comparisons,
+Future work will complete cross-implementation comparisons,
 strict $0.05$ eV/\AA{} real-material release-and-refine comparisons, and
 systematic supercell and stress-measure benchmarks.
 

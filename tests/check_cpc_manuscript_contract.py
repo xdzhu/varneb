@@ -6,8 +6,8 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-MANUSCRIPT = ROOT / "papar" / "VARNEB_CPC" / "varneb_CPC.tex"
-BIBLIOGRAPHY = ROOT / "papar" / "VARNEB_CPC" / "varneb.bib"
+MANUSCRIPT = ROOT / "paper" / "VARNEB_CPC" / "varneb_CPC.tex"
+BIBLIOGRAPHY = ROOT / "paper" / "VARNEB_CPC" / "varneb.bib"
 
 
 def require(text: str, fragment: str, *, label: str) -> None:
@@ -22,7 +22,11 @@ def main() -> None:
     # These are scientific reporting boundaries, not stylistic preferences.
     for fragment, label in (
         ("does not claim a new\nVC-NEB formalism", "algorithm-novelty boundary"),
-        ("single-image adapter smoke test", "VASP evidence boundary"),
+        ("backend-validation evidence", "VASP execution evidence boundary"),
+        (
+            "working backend is not itself cross-engine accuracy validation",
+            "VASP accuracy-claim boundary",
+        ),
         ("no interior\nbarrier", "BTO topology conclusion"),
         ("CI is correctly withheld", "BTO CI policy"),
         ("not a strict algorithm benchmark", "BTO literature qualifier"),

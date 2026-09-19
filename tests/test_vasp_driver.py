@@ -7,6 +7,10 @@ import runpy
 import subprocess
 import sys
 from pathlib import Path
+from types import SimpleNamespace
+
+import numpy as np
+import pytest
 
 from ase import Atoms
 from ase.calculators.singlepoint import SinglePointCalculator
@@ -94,7 +98,7 @@ def test_vasp_static_only_evaluates_fixed_initial_endpoint_once(tmp_path: Path, 
     _endpoint(final, Atoms("Ba", scaled_positions=[[0.1, 0.0, 0.0]], cell=[4.1, 4, 4], pbc=True))
     calls: list[int] = []
 
-    def fake_attach(images, *, source_dir, workdir, command, overrides):
+    def fake_attach(images, *, source_dir, workdir, command, overrides, minimum_distance):
         for index, atoms in enumerate(images):
             calls.append(index)
             calculator = SinglePointCalculator(
@@ -127,7 +131,7 @@ def test_vasp_static_only_can_evaluate_fixed_final_endpoint(tmp_path: Path, monk
     _endpoint(initial, Atoms("Ba", cell=[4, 4, 4], pbc=True))
     _endpoint(final, Atoms("Ba", scaled_positions=[[0.1, 0.0, 0.0]], cell=[4.1, 4, 4], pbc=True))
 
-    def fake_attach(images, *, source_dir, workdir, command, overrides):
+    def fake_attach(images, *, source_dir, workdir, command, overrides, minimum_distance):
         for index, atoms in enumerate(images):
             calculator = SinglePointCalculator(atoms, energy=-7.0, forces=[[0.01, 0.0, 0.0]], stress=[0.0] * 6)
             calculator.directory = str(Path(workdir) / f"{index:02d}")
@@ -154,7 +158,7 @@ def test_vasp_final_static_records_the_mapped_path_endpoint_not_raw_input(tmp_pa
     _endpoint(initial, initial_atoms)
     _endpoint(final, final_atoms)
 
-    def fake_attach(images, *, source_dir, workdir, command, overrides):
+    def fake_attach(images, *, source_dir, workdir, command, overrides, minimum_distance):
         for index, atoms in enumerate(images):
             calculator = SinglePointCalculator(atoms, energy=-7.0, forces=[[0.01, 0.0, 0.0]] * len(atoms), stress=[0.0] * 6)
             calculator.directory = str(Path(workdir) / f"{index:02d}")
@@ -183,3 +187,44 @@ def test_vasp_final_static_records_the_mapped_path_endpoint_not_raw_input(tmp_pa
     )[-1]
     assert summary["endpoint_structures"]["final"]["sha256"] == endpoint_structure_record(expected)["sha256"]
     assert summary["endpoint_structures"]["final"]["sha256"] != endpoint_structure_record(read(final / "CONTCAR"))["sha256"]
+
+
+@pytest.mark.parametrize("force, status", [(0.08, "completed"), (0.12, "step_limit_reached")])
+def test_serial_driver_uses_bound_cache_and_truthful_convergence_status(tmp_path, monkeypatch, force, status):
+    module = _module()
+    initial, final = tmp_path / "initial", tmp_path / "final"
+    _endpoint(initial, Atoms("Ba", cell=[4, 4, 4], pbc=True))
+    _endpoint(final, Atoms("Ba", cell=[4.1, 4, 4], pbc=True))
+    captured = {}
+
+    def fake_attach(images, *, workdir, **kwargs):
+        for index, atoms in enumerate(images):
+            directory = Path(workdir) / f"{index:02d}"
+            directory.mkdir()
+            atoms.calc = SinglePointCalculator(atoms, energy=-1.0, forces=np.zeros((1, 3)), stress=np.zeros(6))
+            atoms.calc.directory = str(directory)
+
+    def fake_run(images, **kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(
+            images=images, enthalpies=np.zeros(len(images)),
+            plot_band=lambda *args: None, barrier=lambda: (0.0, 0.0),
+            get_forces=lambda: np.zeros((1, 3)), gradient_norm=lambda *args: force,
+            path_diagnostics=lambda: {}, saddle_diagnostics=lambda: {},
+        ), None
+
+    monkeypatch.setitem(module["main"].__globals__, "attach_vasp_calculators", fake_attach)
+    monkeypatch.setitem(module["main"].__globals__, "run_vcneb", fake_run)
+    monkeypatch.setattr(sys, "argv", [str(DRIVER), "--initial", str(initial), "--final", str(final),
+                                     "--workdir", str(tmp_path / "run"), "--no-climb", "--steps", "0"])
+    module["main"]()
+    executor = captured["image_executor"]
+    assert executor.max_workers == 1
+    assert executor.cache_dir == tmp_path / "run" / "image_cache"
+    assert len(executor.cache_namespace) == 64
+    summary = json.loads((tmp_path / "run" / "vcneb_summary.json").read_text())
+    assert summary["status"] == status
+    assert summary["converged"] == (status == "completed")
+    assert summary["calculator_parameters"]["symprec"] == 1e-4
+    assert summary["runtime_parameter_changes_allowed"] is False
+    assert summary["image_manifest"]

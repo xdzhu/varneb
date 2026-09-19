@@ -1,5 +1,24 @@
 # Cluster launch templates
 
+## Workflow index
+
+- `hf_batio3_*`: primary ABACUS BTO validation, optional VASP/QE backend gates,
+  and Gamma-point phonon analysis.
+- `hf_hfo2_*`: ABACUS HfO2 endpoint and production VCNEB workflows.
+- `hf_gan_qian_*` and `hf_gan_hex_*`: VASP GaN literature-path preparation,
+  native lattice checks, guarded optimization, and exact-POSCAR recovery.
+- `hf_cdse_sheppard_*`: VASP CdSe rock-salt-to-wurtzite endpoint, validation,
+  and two-mapping production workflows.
+- `hf_prl2023_hfo2_*`: VASP reproduction workflow for selected 2023 HfO2
+  polymorph paths, including the case-scoped `SYMPREC=1e-5` validation branch.
+- `235_*` and `cu17_*`: retained host-specific historical/recovery templates;
+  new Hefei production work uses Slurm on `hfacnormal01` unless documented
+  otherwise.
+
+The project default path threshold is `0.10 eV/Angstrom`.  Case-specific
+electronic, symmetry, or lattice-probe settings must be recorded in the input
+contract and validated across every initial image; they are not global defaults.
+
 The Slurm templates in this directory are for the Hefei cluster.  The ordinary
 templates run ABACUS through `srun` while the Python driver evaluates images
 sequentially; the opt-in `hf_batio3_vcneb_parallel.slurm` template uses

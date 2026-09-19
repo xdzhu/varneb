@@ -1,42 +1,41 @@
-# VCNEB CPC 论文工作区
+# VARNEB paper workspace
 
-论文将参考本机模板包：
+The canonical Computer Physics Communications manuscript is maintained in
+[`VARNEB_CPC/`](VARNEB_CPC/).  The former misspelled manuscript directory and
+the obsolete root-level `vcneb_CPC` draft have been retired so that the
+repository has one manuscript source of truth.
 
-`D:\Work\Zstar\zstar-article\submission_packages\ZStar_CPC_pdflatex`
+## Layout
 
-该模板使用 `elsarticle`、pdfLaTeX 和 Computer Physics Communications 的
-`Program Summary` 结构。VCNEB 论文暂定沿用以下组织：
+- `VARNEB_CPC/varneb_CPC.tex`: current compact CPC manuscript.
+- `VARNEB_CPC/varneb.bib`: bibliography used by the manuscript.
+- `VARNEB_CPC/figures/`: committed manuscript figures and source-data CSVs.
+- `VARNEB_CPC/MANUSCRIPT_EVIDENCE.md`: manuscript-specific evidence checklist.
+- `claim_evidence.md`: project-wide claim-to-code-and-result map.
+- `references/`: local reference material; intentionally ignored and never
+  included in release archives.
 
-1. `Introduction`：晶体相变能垒、固定 cell NEB 的局限、现有 VCNEB 工具和纯 Python calculator-agnostic 需求。
-2. `Theory`：扩展构型空间、cell deformation、应力/virial 到 cell force、切线、弹簧、CI、模式与方向约束。
-3. `Software`：核心数据模型、ASE-compatible calculator contract、VASP/ABACUS adapter、恢复、并行 image 执行和结果记录。
-4. `Examples`：HfO2 T->PO、钙钛矿相变、模式引导与严格约束、能垒和路径结构；有限差分、解析多井势、固定 cell ASE 对照、参数收敛和文献对比作为本节的小节、表格或图展示。
-5. `Conclusions/Availability`：可复现性、适用范围、限制、后续扩展、代码和数据获取方式。
+## Build
 
-## 写作规则
+From `paper/VARNEB_CPC/` run:
 
-- 理论稿件只使用已经由测试或数据支撑的公式与结论；未完成的内容使用 limitation/future work 标记。
-- 每一张图和表都必须能回溯到一个输入 manifest、一个代码 commit 和一个集群运行目录。
-- 主文稿、图表生成脚本、BibTeX 和最终复现包在本目录或其明确的子目录中管理。
-- 长时间 DFT 只在 `cu17`、`cu22`--`cu26` 执行；论文渲染可在本地完成。
-
-## 当前稿件拆分
-
-- `vcneb_CPC.tex`：按 `Introduction -> Theory -> Software -> Examples -> Conclusions/Availability` 组织的当前主稿件草稿；不单列 Benchmarks。
-- `vcneb.bib`：当前稿件引用，正式投稿前需继续补齐软件和材料案例的准确书目信息。
-- `zstar-elsarticle-num.bst`：从本地 CPC 模板复制的参考文献样式。
-- `figures/`：路径、cell 演化、收敛和 calculator 对比图。
-- `data/`：论文使用的汇总 CSV/JSON，不放入大体积 DFT restart 文件。
-- `reproduce/`：从 manifest 复现表格和图的脚本。
-- `claim_evidence.md`：将主稿件 claim 映射到代码、回归测试、作业和归档结果，并明确当前证据边界。
-- 根目录 `scripts/plot_vcneb_metrics.py`：只读取已归档的逐 image CSV，生成焓垒、晶格长度、体积和广义力四联图；不重新调用计算器。
-
-## 当前编译
-
-在仓库根目录执行：
-
-```bash
-python C:/Users/zhu/.codex/plugins/cache/openai-bundled/latex/0.2.6/scripts/compile_latex.py paper/vcneb_CPC.tex --output-directory paper/build --json
+```text
+latexmk -pdf -interaction=nonstopmode -halt-on-error varneb_CPC.tex
 ```
 
-当前草稿已用本机 TeX Live 2023 编译为 `paper/build/vcneb_CPC.pdf`。PDF 和中间文件属于构建产物，不作为论文源文件提交；所有数值结果仍需以 `outputs/` 下的 manifest 和原始集群目录为准。
+LaTeX products are local build artifacts.  The manuscript source, bibliography,
+editable figures, and source data are versioned.  The article is intentionally
+kept near eight typeset pages or shorter; new material is added only when it
+closes a documented evidence gap.
+
+## Evidence policy
+
+- Every numerical claim must map to a committed source-data file, audit, or
+  reproducible calculation record.
+- Running or unconverged calculations are described as provisional and do not
+  replace accepted production evidence.
+- Calculator support and material validation are reported at their demonstrated
+  level; a single-image smoke test is not presented as a converged cross-backend
+  VCNEB benchmark.
+- Large DFT outputs, restart files, private reference packages, and scheduler
+  scratch directories remain outside the manuscript package.

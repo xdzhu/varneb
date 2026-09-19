@@ -54,12 +54,22 @@ first-order saddle character.
 
 ## Files
 
+- `[DFT queued] examples/cdse_sheppard_2012/`: independent 8-atom CdSe
+  rock-salt -> wurtzite mapping cases on hf. See
+  `docs/CDSE_SHEPPARD_2012_REPLICATION_PLAN.md` for provenance and the
+  PBE/PW91, empirical/DFT and small-barrier accuracy distinctions;
+  submission is not a converged validation result.
 - `vcneb/core.py`: VC-NEB algorithm and optimizer-compatible object.
 - `vcneb/modes.py`: mode-guided initial paths and modal path projections.
 - `vcneb/vasp.py`: VASP input parsing, exact-POTCAR per-image setup, and a
   one-virtual-site VCA adapter that pulls coincident component forces back to
   the physical site. See `docs/vasp_vca_validation.md` for validated systems
   and its deliberately narrow applicability boundary.
+  The adapter writes lattice components with 17 significant decimal digits and
+  verifies exact binary64 round-trip before VASP; the optional native lattice
+  preflight uses that same serialization policy. This prevents last-digit ASE
+  POSCAR rounding from changing VASP's Bravais classification without changing
+  the manager geometry, symmetry tolerance, or physical path.
 - `vcneb/abacus.py`: ABACUS calculator factory adapter.
 - `vcneb/qe.py`: QE `pw.x` static-image factory; it rejects QE `relax` and
   `vc-relax` so cell updates remain manager-owned.
@@ -103,7 +113,8 @@ first-order saddle character.
 - `scripts/setup_hfo2_t_po_validation.py`: builds the HfO2 T -> PO validation fixture from local source structures or portable copies.
 - `scripts/validate_vcneb_inputs.py`: static dry-run validator for VASP/ABACUS VC-NEB image directories.
 - `scripts/validate_vasp_vcneb_static.py`: verifies that reused VASP endpoint
-  inputs become static `IBRION=-1`, `NSW=0`, `ISIF=2`, `ISYM=0` image calls.
+  inputs become static `IBRION=-1`, `NSW=0`, `ISIF=2` image calls with an
+  explicit, fixed symmetry policy.
 - `scripts/audit_vcneb_result.py`: calculator-free audit of a completed summary,
   including generalized-force, barrier, volume, geometry and interior-barrier gates.
   Use `--max-stress-kbar` when the production endpoint/path policy requires a
@@ -132,7 +143,7 @@ first-order saddle character.
 - `docs/material_validation_guide.md`: accepted BTO/HfO2 material conclusions,
   reporting boundaries, and the calculator-free command that regenerates the
   editable validation figure and source-data tables.
-- `papar/VARNEB_CPC/`: the CPC manuscript source, bibliography, figure PDF and
+- `paper/VARNEB_CPC/`: the CPC manuscript source, bibliography, figure PDF and
   figure source data; its evidence checklist prevents calculator-smoke or
   energy-scale comparisons from being presented as production benchmarks.
 - `docs/vasp_vca_validation.md`: VASP VCA input/force contract, committed
@@ -436,13 +447,22 @@ python examples/run_vcneb_vasp.py \
 
 The script reads `CONTCAR`/`POSCAR` endpoints, interpolates fractional
 coordinates and cell deformation, copies `POTCAR`, and uses static single-point
-VASP settings with `IBRION=-1`, `NSW=0`, `ISIF=2`, `ISYM=0`.
+VASP settings with `IBRION=-1`, `NSW=0`, `ISIF=2`, `ISYM=-1`, `SYMPREC=1e-4`.
+The latter is a tested GaN regression policy, not a guarantee for every lattice
+or VASP version. Overrides apply to the entire run, never as per-image repairs.
+Each actual input write checks the frozen parameters/source fingerprints,
+geometry and POSCAR roundtrip, and records `vasp_input_contract.json`.
+See [the VASP input contract](docs/vasp_input_contract.md) for evidence and limits.
 
 To build all seven isolated static image directories and record the effective
 VASP parameters without launching VASP, append `--validate-only`. The report
 is `vcneb_preflight.json`; `--image-workers N` subsequently enables a
 manager-controlled pool for interior images when the launcher reserves
-exclusive resources for each worker.
+exclusive resources for each worker. `--image-workers 0` remains serial, but now
+uses the same durable exact-state image cache and manifest as parallel runs.
+The cache namespace automatically includes effective parameters and input hashes;
+changing settings requires a new cache directory. Calculator-free preflight does
+not certify VASP's Bravais initialization or SCF convergence.
 
 To continue a stopped run from the latest complete chain snapshot:
 

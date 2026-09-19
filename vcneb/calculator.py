@@ -256,11 +256,26 @@ def classify_calculator_failure(
         seen.add(id(current))
         parts.append(str(current))
         current = current.__cause__ or current.__context__
-    text = (" ".join(parts) + " " + _diagnostic_text(diagnostic_paths)).lower()
+    exception_text = " ".join(parts).lower()
+    if "vasp input contract" in exception_text:
+        return "input_contract_violation"
+    text = (exception_text + " " + _diagnostic_text(diagnostic_paths)).lower()
     if re.search(r"\b(?:nan|inf|infinity|nonfinite|non-finite)\b", text) or "not finite" in text:
         return "nonfinite_evaluation"
     if any(token in text for token in ("timeout", "timed out", "time limit", "deadline")):
         return "timeout"
+    # Root DFT diagnostics take precedence over launcher names/MPI_ABORT.
+    if "inconsistent bravais lattice types" in text:
+        return "vasp_bravais_lattice_inconsistency"
+    if "vasp input contract" in text:
+        return "input_contract_violation"
+    scf_failure = (
+        re.search(r"\bscf\b.{0,100}(?:not|failed|fail|unable|did not).{0,40}converg", text)
+        or re.search(r"\bscf\b.{0,100}(?:max(?:imum)?\s+iteration|iteration\s+\d+)", text)
+        or re.search(r"(?:not|failed|unable|did not).{0,40}converg.{0,40}\bscf\b", text)
+    )
+    if scf_failure:
+        return "scf_nonconvergence"
     if (
         "mpi" in text
         or "srun" in text
@@ -269,13 +284,6 @@ def classify_calculator_failure(
         or "abort was invoked" in text
     ):
         return "mpi_failure"
-    scf_failure = (
-        re.search(r"\bscf\b.{0,100}(?:not|failed|fail|unable|did not).{0,40}converg", text)
-        or re.search(r"\bscf\b.{0,100}(?:max(?:imum)?\s+iteration|iteration\s+\d+)", text)
-        or re.search(r"(?:not|failed|unable|did not).{0,40}converg.{0,40}\bscf\b", text)
-    )
-    if scf_failure:
-        return "scf_nonconvergence"
     if (
         "singular cell" in text
         or "invalid cell" in text

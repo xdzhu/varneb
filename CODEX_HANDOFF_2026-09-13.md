@@ -1,5 +1,150 @@
 # Codex 线程交接说明（2026-09-13）
 
+> **2026-09-19 09:42状态覆盖：** 六方根因已定位为ASE默认POSCAR末位舍入：
+> manager image7原始binary64晶格是4/4/4，约5e-16 Å写盘差异才触发4/11/4；
+> 未对真实120.006616度剪切做对称投影，也未改SYMPREC。通用VASP入口现以17有效
+> 数字写晶格并要求逐位往返，preflight使用同一序列化。完整SCF canary 27723185
+> COMPLETED/0。fresh-FIRE六方27723210在hfacnormal01 RUNNING；首轮27/27内部像
+> 均新算、9 worker、每像一次成功、366.24 s，无Bravais错误，step0=0.919209；
+> 29像Ga2N2的energy/forces/stress均有限。第一个非零位移step1也已真实重算27/27
+> 新几何、每像一次成功、364.95 s，fmax降至0.757250；已跨过旧窄分类带，但尚未
+> 达到0.10，不能声称路径收敛。B3 27721015 RUNNING，09:39 step37=0.196777，保持不动。
+> 本机209项回归和diff-check通过，无CI/发布/推送。源包、作业和证据路径见
+> docs/GAN_QIAN_2013_REPLICATION_PLAN.md及validation/gan_qian_suite/
+> poscar17_recovery_20260919；目标未完成，不重复提交。
+> 09:49四个生产均RUNNING、stderr空。按实测轮时和近期下降，仅作调度估计：CdSe两路
+> 约10:30--11:30、B3约10:30--12:00、六方约11:00--13:00可能达到0.10；FIRE回弹
+> 或后期变慢会延后，不能据此宣称完成。当前只剩活跃计算，按用户约定暂停目标等待接力。
+
+> **2026-09-19 06:15 单次定时接力状态覆盖：** 已实际核验hf/sacct，不是提醒。
+> B3 27721015仍RUNNING，FIRE25残差0.466259、单轮约18分钟；不因step24回弹停止。
+> 六方27721448于05:23:39 FAILED：image7晶格分类错误；step26–102平台约0.919209，
+> 不是0.10收敛。同源probe的-O0+AVX2/-O2通用均漏检，-O2+core-avx2匹配实际4/11/4；
+> 不是简单“缺-O2”，旧构建flags没有完整记录。未重交未解决平台的六方生产。
+> CdSe原端点27721577/78优化完成；79/81相身份检查FAILED，80/82依赖取消。
+> 非标准超胞FixSymmetry不是完整母相晶格约束，另建有界相端点候选、保留原件；
+> 必须完整静态SCF及未经对称投影的force/virial<=0.02才能进入生产，未重复BFGS。
+> cell检查27722588 RUNNING(node124)→生产27722589 Dependency；atomic旧检查
+> 27722590因半胞舍入绕行碰撞失败，91依赖取消。明确参考motif零绕行后，
+> 独立atomic检查27722599 RUNNING(node363)→生产27722600 Dependency。
+> 两路17像预检通过；cell已通过image0/1真实初始化，但完整SCF/路径仍待审核。
+> v2/v3各独立目录，不覆盖B3/guard/cell运行源码；本机208项回归通过，无CI。
+> 详情/哈希/耗时估计见validation/heartbeat_20260919_0600.md；没有新监控/发布/推送。
+> 目标未完成，保持此前暂停状态；下次先核验上述四个新有效ID，不重复原六个提交。
+
+> **2026-09-18 23:15左右实时覆盖：** 六方续算27721448已于23:04:54启动，
+> node[39,478,491]/3节点291tasks，CheckedFIRE0→1残差4.505321→3.250342，
+> 第一轮新SCF后chain_step_0001全29帧/4原子结果齐全有限。B3 27721015保持运行，
+> FIRE2 fmax3.334191，step2全29帧/8原子结果齐全，未达到0.10。
+> 续算step0真实出现27个缓存命中但原始快照缺results，未改生产源码/路径：
+> 使用独立archive-audit目录工具，以精确cache key/匹配physics namespace，
+> 对照原始hex step1逐项相同结果生成独立审计副本；29像几何字节一致、0DFT，
+> 原始轨迹和core ca4d...保持不变。下载文件hex_resume_chain_step_0000_full_results
+> 的traj/json包含全部来源哈希；不是收敛证明。202项本机回归通过。
+> CdSe27721577/78仍RUNNING并持续电子迭代，四个后续任务Dependency，无失败证据。
+> 研究目标仍active，不重复提交/不提前CI，不因为旧Priority条目去重启六方。
+
+> **2026-09-18 CdSe 独立研究范围扩展：** 用户要求不要蹲守 GaN B3；保持27721015
+> 正常运行、27721448排队，同时开展 Sheppard2012 CdSe RS→WZ 双映射。
+> hf/hfacnormal01 已提交 RS/WZ BFGS 27721577/78 → 两路检查27721579/81 →
+> 两路生产27721580/82。23:07核验两端RUNNING于node111/node122，真实VASP step各32MPI，
+> 电子DAV迭代已开始；后续Dependency。提交/SCF启动不等于收敛。
+> 独立不可变目录 `20260918-varneb-cdse-sheppard`，新目录部署最新core b65090...，
+> 不覆盖旧GaN源码；196本机测试通过，实际hf两条种子17像原生/舍入晶格检查通过。
+> Cd4Se4/8原子/4FU、0GPa、PBE/PAW455eV/MP10³；15中间像，无CI/fmax0.10；
+> 每条生产2节点194tasks/6×32MPI，不派端点worker。原文PW91 Fig11小峰2.4meV/atom
+> 与前文经验势区分，不能以0.10单独证明meV能垒精度或提前确认重建候选机制。
+> 详见docs/CDSE_SHEPPARD_2012_REPLICATION_PLAN.md及validation/cdse_sheppard_2012。
+> GaN旧目标与新增CdSe研究均未完成；下一轮分别检查记录中的真实ID，不重复提交。
+
+> **2026-09-18 22:44状态覆盖：** B3 27721015仍RUNNING，FIRE1残差4.348028，
+> 由5.530889下降；未达到0.10。实际chain_step_0001.traj全29帧/8原子都有有效
+> energy/forces/stress，轨迹和字段审计已下载。六方27721448仍PENDING/Priority，
+> squeue估计9月19日12:25启动（可变估计，不是保证）。保持作业，不重交。
+> 本机新增缓存快照修正：从完整executor评估生成独立SinglePoint快照，不替换
+> live calculator、不做DFT；过期几何拒绝，3项新回归，全套190项通过。
+> **该IO修正尚未部署到已提交的运行/排队源码**：本机core SHA
+> b65090fcd062f07adf3f3fa80f114000bfb4829592205771708c89702d76db31，
+> guard运行包core仍ca4d3a2492dd933c290dc7038276ef7ceae6490b05195d6a79132eca10642547。
+> 后续必要时只以精确状态/匹配物理namespace缓存生成独立审计副本，不能更改路径
+> 或用邻近状态填补数据；目前B3该完整链没有缺口。目标仍active，无CI。
+
+> **2026-09-18 22:31左右状态覆盖：** 已实施原子性全链候选门禁与可选CheckedFIRE，
+> 仅在DFT前对明确候选拒绝有界缩步，接受短步后动量归零、dt降低；不修改物理契约。
+> 本机全套187项通过；hf没有pytest，未安装/升级环境，真实失败链回放在ASE3.23.1b1
+> 通过，接受半步与SCF canary几何差约1e-15Å。续算预检/端点缓存校验通过。
+> 六方续算27721448已提交，最后查询PENDING/Priority；独立代码目录
+> `/public/home/iai806/abacus/agent-runs/20260918-varneb-gan-lattice-guard`，不要覆盖运行源码。
+> 3节点291核/9×32MPI，29总像，298剩余步，无CI；从27721013最后完整链继续，
+> FIRE重新初始化，缓存复制到新目录，不导入诊断半步或不完整失败轮。
+> 原代码包SHA695f2ea41e6812cb37a06f23c0bc8ac75ac25ce1c26aca7383ed8a517c0aaadd。
+> 27721015仍RUNNING，完整初始链FIRE0 fmax=5.530889，后续SCF进行中。
+> 提交和门禁通过不等于六方/B3收敛；目标仍active。作业记录guarded_launch_20260918.json
+> 防重复提交，完整证据/适用边界见docs/vasp_input_contract.md第5节。
+
+> **2026-09-18 22:13左右状态覆盖：** 27721349 COMPLETED/exit0/04:50，参考态与
+> 半步image10均converged_static_passed、重复写入契约通过。参考重算energy/forces/stress
+> 与原结果差均为0（输出精度内）；记录已下载。不准误读旧RUNNING/Priority条目。
+> 半步只证实此次候选可计算，不能宣布整条六方路径收敛；控制器前置门禁/有界缩步
+> 尚未实施，下一步实现并测试、用独立源码快照续算，不覆盖B3运行目录。
+> 27721015最后查询仍RUNNING/06:26，目标仍active；保持既定物理契约和无CI。
+
+> **2026-09-18 22:11左右状态覆盖：** 半步完整SCF验证27721349已RUNNING于node124，
+> 参考态已 `converged_static_passed`，半步态尚在计算；此前Priority条目仅为历史状态。
+> B3生产27721015仍RUNNING；本轮没有覆盖其运行源码、改参数或自动重算。
+
+> **2026-09-18 22:07 CST 状态覆盖：** B3检查27721014 COMPLETED/exit0/28:37，
+> 全29初始像与两端静态SCF通过；生产27721015已RUNNING于node[44-45,102]。
+> scontrol逐项确认9个VASP step×32 MPI，各节点3个，不派发端点。
+> 本轮得到原生晶格前置检查证据：调用已许可lattlib.o的独立诊断包装器，
+> 不修改VASP/结构/参数；准确重现image10及两个等价换基失败，58个初始胞与
+> 两条完整已评估链均一致。失败整步只有image10不一致，1/2、1/4、1/8步均全链一致。
+> 这只是晶格分类验证，不是SCF成功；完整静态canary27721349已提交，最后为Priority等待。
+> 不重复提交、不把该候选直接当生产断点。原生工具尚未接入生产控制器。
+> 证据与下步要求见 `validation/gan_qian_suite/failure_hex_image10/native_lattice_preflight_20260918.md`。
+
+> **2026-09-18 六方失败状态覆盖（晚于21:42条目）：** 27721013 FAILED/exit1，
+> 用时17:43；image10在下一轮静态初始化发生实/倒空间Bravais分类不一致。
+> SYMPREC=1e-4、ISYM=-1实际生效；保留两条完整已评估链，不是因受力回弹停止。
+> 等价整数换基诊断27721271已完成报告，但三个输入全部初始化失败，绝非修复成功。
+> 证据见 `validation/gan_qian_suite/failure_hex_image10/diagnosis.md`。
+> 27721014最后查询仍RUNNING，已通过初始像0–23；27721015仍Dependency。
+> 用户强调三次连续转变应分为三段：各段独立起点焓、相身份与鞍点审计；
+> 原文单次长链优化与后续独立三段验证分开记录。目标仍active，不重复提交。
+
+> **2026-09-18 21:42 查询路径更正：** 六方首条全链FIRE step0已于21:37完成，
+> 初始fmax=5.969264 eV/Å，后续优化正常。实际优化日志为 `vcneb.opt.log`，
+> 不是此前误查的 `vcneb.log`；不要由错误文件名推断无进展。目标仍active。
+
+> **2026-09-18 21:39 状态覆盖：** B3/B1端点27721010/11均已COMPLETED/exit0，
+> BFGS第2步收敛，8原子常规胞、45.0 GPa、#216/#225保持，数据已归档。
+> 27721014已在node122启动，B3显式路径构造/preflight通过；27721015仍afterok等待。
+> 六方生产27721013仍RUNNING，实际9×32 MPI/3节点，没有中断或参数修改。
+> 端点证据见 `validation/gan_qian_suite/endpoints_45gpa_audit.md`，目标仍active。
+
+> **2026-09-18 21:32 状态覆盖：** 六方检查27721012已 COMPLETED/exit0，生产
+> 27721013已 RUNNING，node[364-366]，实际9个VASP step×32 MPI、每节点3个。
+> B3/B1端点27721010/11仍RUNNING，B1 step1 fmax=0.037585>0.02；
+> B3检查/生产27721014/15仍依赖等待。证据见
+> `validation/gan_qian_suite/hexagonal_worker_launch_20260918.md`，目标仍active。
+
+> **2026-09-18 21:21 GaN 新目标：** 保留四方 27719610 成功结果（0.33849 eV/GaN），
+> 继续六方/B3 文献对照。已提交端点 27721010/27721011（RUNNING）、六方检查
+> 27721012（RUNNING）；六方 VCNEB 27721013 afterok:27721012，B3 检查
+> 27721014 afterok:27721010:27721011，B3 VCNEB 27721015 afterok:27721014。
+> 新远端目录 `/public/home/iai806/abacus/agent-runs/20260918-varneb-gan-suite`，
+> 仅 hf/hfacnormal01，9×32 MPI/3 节点/291 核生产，29 总像/27 中间像，无 CI。
+> 端点优化尚未完成；目标 active。不要重复运行提交入口（launch.json 防重复）。
+> 方案及原文三峰/三段区别见 `docs/GAN_QIAN_2013_REPLICATION_PLAN.md`；
+> 作业、种子、指纹和当前状态见 `validation/gan_qian_suite/launch_20260918.md`。
+
+> **2026-09-18 执行位置覆盖更新：** 用户要求停止 235/cu17 当前 GaN VASP 计算，
+> 后续 VASP 测试、验证与生产使用合肥 `ssh hf`、Slurm `hfacnormal01`。
+> 加载 `source /public/home/iai806/Software/VASP/env.sh 6.3.2`；PBE 数据集
+> 位于 `$VASP_PSEUDO_ROOT/PBE/数据集/POTCAR`。不无声替换 Ga_d/Ga 等数据集。
+> 当前默认 SYMPREC=1e-4，NEB fmax=0.10 eV/A；无 CI。迁移策略与状态见
+> `docs/HF_VASP_WORKFLOW.md` 和 `validation/gan_b4_b1/hf_migration_20260918.md`。
+
 ## 项目与目标
 
 - 项目目录：`D:\Work\Code\vasp_neb`

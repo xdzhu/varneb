@@ -184,7 +184,7 @@ class ThreadedCalculatorExecutor:
                 image_index=image_index, n_atoms=len(image)
             )
         except Exception as exc:
-            raise RuntimeError(f"parallel calculator evaluation failed for image {image_index}: {exc}") from exc
+            raise RuntimeError(f"calculator evaluation failed for image {image_index}: {exc}") from exc
 
     def evaluate(
         self,
@@ -208,6 +208,20 @@ class ThreadedCalculatorExecutor:
         cached: dict[int, ImageEvaluation] = {}
         missing_images: list[tuple[int, Atoms]] = []
         for image_index, image in zip(image_indices, images):
+            # Input-policy checks must also run on exact-state cache hits.
+            # An old cached result must not mask a changed calculator contract.
+            validate_input = getattr(image.calc, "validate_input_contract", None)
+            if callable(validate_input):
+                try:
+                    validate_input(image)
+                except Exception as exc:
+                    self._write_manifest_record({
+                        "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+                        "status": "failed", "phase": "input_contract",
+                        "image_index": image_index, "error": repr(exc),
+                        "external_calculation_started": False,
+                    })
+                    raise
             result = self._load_cached(image_index, image)
             if result is None:
                 missing_images.append((image_index, image))
@@ -244,7 +258,14 @@ class ThreadedCalculatorExecutor:
             ) from last_error
 
         try:
-            if missing_images:
+            if missing_images and self.max_workers == 1:
+                # Serial mode must not queue more DFT after a fatal image error.
+                # Persist each success immediately before advancing to the next.
+                for image_index, image in missing_images:
+                    result = evaluate_with_retry(image_index, image)
+                    cached[image_index] = result
+                    self._store_cached(image_index, image, result)
+            elif missing_images:
                 failure: Exception | None = None
                 with ThreadPoolExecutor(
                     max_workers=min(self.max_workers, len(missing_images)),
@@ -278,6 +299,7 @@ class ThreadedCalculatorExecutor:
             ]
             record.update(
                 status="failed",
+                not_evaluated=[index for index in image_indices if index not in self.last_attempts],
                 attempts=dict(sorted(self.last_attempts.items())),
                 error=repr(exc),
                 elapsed_s=time.monotonic() - started,

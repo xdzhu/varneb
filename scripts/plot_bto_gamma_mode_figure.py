@@ -38,7 +38,7 @@ plt.rcParams.update(
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUTPUTS = ROOT / "outputs" / "batio3_t_to_c_pbe100_dzp10au"
-DEFAULT_FIGURE = ROOT / "papar" / "VARNEB_CPC" / "bto_gamma_mode_path"
+DEFAULT_FIGURE = ROOT / "paper" / "VARNEB_CPC" / "bto_gamma_mode_path"
 
 COLORS = {
     "soft": "#7C6CCF",
@@ -65,7 +65,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--source-data",
         type=Path,
-        default=ROOT / "papar" / "VARNEB_CPC" / "figures" / "bto_gamma_mode_path_source_data.csv",
+        default=ROOT / "paper" / "VARNEB_CPC" / "figures" / "bto_gamma_mode_path_source_data.csv",
     )
     return parser.parse_args()
 

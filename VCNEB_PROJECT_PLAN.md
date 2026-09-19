@@ -1,5 +1,62 @@
 # VCNEB 项目标准化任务清单
 
+> **2026-09-19 06:15 定时接力覆盖：** B3 27721015继续运行（step25 fmax0.466259）。
+> 六方27721448实际失败，fmax约0.919平台，未续投；同源probe浮点编译组合漏检证据
+> 已归档，下一优先级是有效候选步/非进展诊断，不调SYMPREC、不对称投影路径。
+> CdSe端点BFGS完成但母相晶格约束存在缺口，保留原件，不重复优化；显式相候选
+> 必须经过完整SCF及raw force/virial门禁。cell检查→生产27722588→27722589，
+> atomic固定周期绕行检查→生产27722599→27722600；检查RUNNING，生产Dependency。
+> 不将提交/初始化视为收敛。208回归通过。单次接力已执行，目标未完成/保持暂停，
+> 详情与下一次接力句柄见validation/heartbeat_20260919_0600.md。
+
+> **2026-09-19 09:34更新：** 真实根因是manager 4/4/4经ASE旧POSCAR末位舍入后
+> 变4/11/4，不是需要改SYMPREC或投影路径。17位有效数字晶格写入及匹配预检已实现；
+> 完整SCF canary 27723185成功，29像预检成功，六方fresh-FIRE 27723210 RUNNING。
+> 旧dt已塌缩，不继承optimizer状态；新namespace绑定写入源码/VASP，首轮27中间像
+> 会真实重算。B3 27721015继续独立运行。两者均未达到最终审计完成条件。
+
+> **2026-09-18 23:15左右覆盖：** 六方续算已RUNNING，第一轮新SCF完成，fmax3.250342；
+> B3 FIRE2 fmax3.334191。两条最新29帧快照结果齐全有限，均未达0.10。
+> 六方缓存启动快照保存缺口仅以精确状态/一致namespace/原始完整链逐项佐证的独立
+> 审计副本补足，不改活动源码或路径；202项测试通过。CdSe两端继续运行，后续依赖等待。
+> 工作仍未完成，继续新案例与GaN并行推进，不凭结果字段齐全宣布路径或能垒已收敛。
+
+> **2026-09-18 优先级扩展：** 现有GaN保持运行/排队，不等待B3结束才开展其他案例。
+> 新CdSe RS→WZ双映射已在hf独立提交27721577–27721582，端点/检查/生产依赖明确。
+> 23:07核验两个端点已RUNNING，真实VASP step各32MPI，后续按afterok等待。
+> 优先推进新案例实际端点与SCF检查，随后独立生产和机制/小势垒精度审计；
+> CdSe计划见docs/CDSE_SHEPPARD_2012_REPLICATION_PLAN.md。196项测试通过，
+> 新目录采用最新缓存快照补丁，旧运行源码不覆盖；两路种子门禁通过不等于DFT收敛。
+> 原GaN文献对照和新增CdSe都仍待验收，禁止提前CI或凭提交关闭研究目标。
+
+> **2026-09-18 22:44覆盖：** B3 FIRE1 fmax4.348028、实际29帧结果完整，27721015运行。
+> 六方27721448仍Priority等待，调度估计明天中午，保持原作业。新增快照数据回归
+> 修正仅本机，190项通过，不覆盖已提交源码；最终审计必须检查实际结果字段、
+> SCF/物理namespace与机制，不能把单点/快照完整当NEB收敛。目标active，无CI。
+
+> **2026-09-18 22:31覆盖：** 全链候选门禁/可选FIRE缩步已实现与实际失败链回放通过，
+> 187项本机回归通过；独立源码六方续算27721448已提交（最后Priority等待），
+> B3生产27721015继续运行，FIRE0 fmax5.530889。保持物理契约、无CI。
+> 后续验收是实际收敛、逐像SCF、机制和eV/GaN文献对照，不在提交或单点通过后关闭目标。
+
+> **2026-09-18 22:13覆盖：** 27721349已COMPLETED/exit0/04:50，参考与半步完整
+> SCF通过，参考energy/forces/stress重算一致。尚未接入控制器或续算六方；
+> 后续落实原子性全链候选门禁、有界缩步及证据记录。27721015继续RUNNING。
+
+> **2026-09-18 22:11 GaN状态覆盖：** 六方27721013在image10的Bravais初始化检查失败，
+> 完整链已保留；不得把旧条目的RUNNING当当前状态。B3检查27721014成功完成，
+> 生产27721015在3节点9×32 MPI运行。独立半步完整SCF canary27721349正在node124运行。
+> 新原生分类诊断已验证成功/失败输入，尚未接入生产；后续需实现原子性候选提交、
+> 有界缩步与严格记录，不修改DFT契约。详见六方failure目录的native_lattice_preflight记录。
+
+> **2026-09-18 GaN 文献扩展目标（active）：** 四方路径 27719610 已收敛，
+> 0.33849 eV/GaN 对照 0.34，不重算。六方生产 27721013 依赖检查 27721012；
+> B3/B1 45.0 GPa 端点 BFGS 27721010/27721011 → 检查 27721014 → 生产 27721015。
+> 所有新作业位于 hf/hfacnormal01。原文三峰来自同一长链中的三段物理事件，
+> 单事件最短映射/分段验证需独立审计；目标不在提交后关闭。
+> 方案见 `docs/GAN_QIAN_2013_REPLICATION_PLAN.md`，实时证据见
+> `validation/gan_qian_suite/launch_20260918.md`。
+
 > **研究路线更新（2026-09-16）：** 本文件保留标准化开发基线；关于表示一致度量、
 > 原子--应变模态预条件、自适应 image、多后端证据等级及论文晋级门槛，执行
 > [`docs/VARNEB_HIGH_LEVEL_RESEARCH_ROADMAP.md`](docs/VARNEB_HIGH_LEVEL_RESEARCH_ROADMAP.md)。
@@ -13,6 +70,21 @@
 > 代码上游：<https://github.com/xdzhu/varneb>。正式项目名称为 `VARNEB`；算法名称仍写作 VC-NEB，Python 导入包暂保留为 `vcneb` 以维持兼容。
 
 ## 1. 执行原则
+
+> **2026-09-18 计算位置更新：** 用户要求停止 235/cu17 的当前 GaN VASP 计算，
+> 后续 VASP 测试、验证和续算迁至合肥 `hf`、Slurm `hfacnormal01`。
+> 环境通过 `source /public/home/iai806/Software/VASP/env.sh 6.3.2` 加载；
+> PBE 赝势取自 `$VASP_PSEUDO_ROOT/PBE/数据集/POTCAR`，须保留具体数据集
+> （例如 Ga_d）并核对哈希，不能只按元素名无声替换。实际作业状态以迁移记录为准。
+
+> **2026-09-18 交付可靠性专项：** GaN 两次 Bravais 拒绝已纳入真实输入回归。
+> 通用 VASP 输入锁定/逐调用验证、串行持久化缓存与真实收敛状态门槛已实现；
+> 当前必须先完成全链初始化和代表性完整 SCF 验证，再推进 GaN 生产续算。
+> 按用户指定，VASP 默认 SYMPREC 已放宽为 1e-4；历史 1e-12 验证不替代
+> 新默认下的真实启动/SCF 验证。NEB 默认力阈值仍为 0.10 eV/A。
+> 证据、固定策略及尚未实现的步拒绝接口见
+> [`docs/vasp_input_contract.md`](docs/vasp_input_contract.md)。不得从单点通过推断
+> 整条未来路径已经修复，不触发 CI 或软件发布。
 
 - 先定义广义坐标、内积、应力符号和单位，再扩展算法；所有公式都要有数值回归测试。
 - 先用解析势和廉价计算器验证算法，再使用 DFT。不能把单次 DFT 跑通当作算法正确。
@@ -293,10 +365,10 @@
 
 ### 11.1 论文结构
 
-- [~] Introduction：晶体相变能垒、固定 cell NEB 的局限、现有 VCNEB/USPEX/ABINIT/ASE 生态和纯 Python 的需求（CPC 初稿已置于 `papar/VARNEB_CPC/`；作者、单位、基金等投稿元数据仍待确认）。
+- [~] Introduction：晶体相变能垒、固定 cell NEB 的局限、现有 VCNEB/USPEX/ABINIT/ASE 生态和纯 Python 的需求（CPC 初稿已置于 `paper/VARNEB_CPC/`；作者、单位、基金等投稿元数据仍待确认）。
 - [x] Theory：广义坐标、cell 度量、应力到 cell force、切线、弹簧力、CI、约束和收敛判据。
 - [~] Software：核心数据模型、calculator contract、VASP/ABACUS adapter、重启、并行 image 运行和模式 API（CPC 初稿和 claim-to-evidence 清单已写，VASP 生产级路径仍待补）。
-- [~] Examples：HfO2 T->PO、钙钛矿案例、模式引导与释放精修、能垒和路径结构；解析势、有限差分、ASE fixed-cell 对照、收敛矩阵、BTO/HfO₂ 路径和文献能垒对照图、公开方法差异已纳入 `papar/VARNEB_CPC/` 初稿，旧实现定量对比及其余投稿图表仍待补。
+- [~] Examples：HfO2 T->PO、钙钛矿案例、模式引导与释放精修、能垒和路径结构；解析势、有限差分、ASE fixed-cell 对照、收敛矩阵、BTO/HfO₂ 路径和文献能垒对照图、公开方法差异已纳入 `paper/VARNEB_CPC/` 初稿，旧实现定量对比及其余投稿图表仍待补。
 - [~] Conclusions/Availability：应力精度、cell 参数化、原子映射、磁性/电子态、多路径问题、计算成本、版本、许可证、输入、结构、脚本、manifest 和复现命令已纳入草稿；完整发布包仍待补。
 
 ### 11.2 软件发布
@@ -311,7 +383,7 @@
 
 ### 论文/发布出口标准
 
-- [~] 论文主要 claim 已在 `paper/claim_evidence.md` 与 `papar/VARNEB_CPC/MANUSCRIPT_EVIDENCE.md` 映射到代码、测试、输入摘要和结果文件；CPC 初稿采用可复算的 BTO/HfO₂ 图和 source data，但正式投稿图表与完整原始输出发布包仍待补。
+- [~] 论文主要 claim 已在 `paper/claim_evidence.md` 与 `paper/VARNEB_CPC/MANUSCRIPT_EVIDENCE.md` 映射到代码、测试、输入摘要和结果文件；CPC 初稿采用可复算的 BTO/HfO₂ 图和 source data，但正式投稿图表与完整原始输出发布包仍待补。
 - [x] 新用户不阅读内部源码，仅按 README 就能完成 toy、model 和至少一个 calculator smoke test。
 - [ ] 代码、数据和论文中使用的参数一致；没有手工修改但未记录的结果。
 
