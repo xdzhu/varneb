@@ -76,3 +76,23 @@ Transfer jobs submitted without retuning the strategy logic:
   from 0.02 to 0.044721.
 - Slurm 27729067: the same HfO2 initial chain with SplitFIRE, atomic cap 0.02
   and cell cap 0.01.
+
+## Production-chain continuations
+
+On 2026-09-20 the successful controls were applied to the preserved lowest-force
+complete snapshots of the unconverged VASP chains.  The calculator, endpoint,
+pressure, spring, image-count and `fmax=0.10 eV/Angstrom` contracts remain
+unchanged; only the optimizer state and strategy were restarted.
+
+- CdSe cell mapping n=17: BlockFIRE 0.01 from baseline step 49
+  (`fmax=0.111587`), Slurm 27732728.
+- GaN hexagonal n=29: BlockFIRE 0.01 from step 35
+  (`fmax=0.104281`), Slurm 27732740.  An earlier launch 27732729 failed before
+  any DFT call because its requested cache namespace did not match the preserved
+  cache metadata; the replacement deliberately uses a fresh isolated cache.
+- HfO2 T-to-PO n=20: StagedFIRE first reduced `0.179442` to `0.151528`, then
+  the native VASP lattice checker rejected the next candidate before DFT.
+  Continuation 27732743 retains that accepted chain and uses candidate-aware
+  BlockFIRE 0.01.
+- HfO2 PO-to-M n=20: StagedFIRE from baseline step 103, Slurm 27732731; its
+  first completed step reduced `0.278429` to `0.271560`.
