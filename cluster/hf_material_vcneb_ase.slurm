@@ -92,4 +92,7 @@ fi
 if [[ "${VALIDATE_ONLY:-0}" == 1 ]]; then
   args+=(--validate-only)
 fi
+if [[ "${STATIC_ONLY:-0}" == 1 ]]; then
+  args+=(--static-only --static-endpoints "${STATIC_ENDPOINTS:-both}")
+fi
 exec "${python}" "${args[@]}"
