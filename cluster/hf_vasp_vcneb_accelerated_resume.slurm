@@ -40,6 +40,8 @@ candidate_args=(--native-lattice-probe "${NATIVE_PROBE}")
 case "${OPTIMIZER}" in
   StagedFIRE)
     optimizer_args+=(--switch-fmax "${SWITCH_FMAX:-0.12}" --refine-maxstep "${REFINE_MAXSTEP:-0.02}")
+    candidate_args+=(--candidate-step-retries "${CANDIDATE_STEP_RETRIES:-8}" \
+                     --candidate-step-retry-factor "${CANDIDATE_STEP_RETRY_FACTOR:-0.5}")
     ;;
   FIRE|BlockFIRE|SplitFIRE)
     candidate_args+=(--candidate-step-retries "${CANDIDATE_STEP_RETRIES:-8}" \
