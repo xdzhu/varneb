@@ -85,7 +85,11 @@ retry or resume one image without mixing calculator files from another image.
 ### VASP, ABACUS, and QE
 
 Use the existing factories in `vcneb.vasp`, `vcneb.abacus`, and `vcneb.qe`.
-VASP inputs are frozen by the input contract; ABACUS input generation keeps
+For the uniform ASE entry point, `vcneb.vasp.make_ase_vasp_factory` exposes
+the same VASP input contract as an image factory, while
+`vcneb.backends.make_ase_calculator_factory` can wrap any other ASE
+calculator that returns energy, forces, and stress. VASP inputs are frozen by
+the input contract; ABACUS input generation keeps
 the calculator-specific files in the image directory; QE images must use
 `calculation='scf'`, `tstress=True`, and `tprnfor=True`. QE UPFs must be
 explicitly PBE-marked and pinned by the approved manifest.

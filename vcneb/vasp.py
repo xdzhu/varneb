@@ -8,7 +8,7 @@ import json
 import re
 import shutil
 from pathlib import Path
-from typing import Mapping, Optional, Sequence
+from typing import Callable, Mapping, Optional, Sequence
 
 import numpy as np
 from ase import Atoms
@@ -500,6 +500,43 @@ def attach_vasp_calculators(
             )
         else:
             raise ValueError("pass both vca_virtual_symbol and vca_components, or neither")
+
+
+def make_ase_vasp_factory(
+    *,
+    source_dir: str | Path,
+    command: str,
+    overrides: Optional[Mapping] = None,
+    minimum_distance: float | None = 1e-6,
+) -> Callable[[int, Atoms, Path], ExplicitPotcarVasp]:
+    """Create the uniform ASE factory for a contract-checked VASP image.
+
+    ``source_dir`` is an immutable input bundle containing ``INCAR``,
+    ``KPOINTS`` and the licensed ``POTCAR``.  The bundle is parsed and checked
+    once before the first image is constructed; every image then receives its
+    own directory and the same frozen static-SCF contract.  This is the VASP
+    counterpart of the generic ASE factories in :mod:`vcneb.backends`.
+    """
+
+    source = Path(source_dir).resolve()
+    params, potcar = prepare_vasp_static_parameters(source, overrides=overrides)
+
+    def factory(image_index: int, image: Atoms, image_dir: Path) -> ExplicitPotcarVasp:
+        del image_index
+        image_dir.mkdir(parents=True, exist_ok=True)
+        validate_vasp_image_geometry(image, minimum_distance=minimum_distance)
+        calculator = ExplicitPotcarVasp(
+            source_potcar=potcar,
+            minimum_distance=minimum_distance,
+            directory=str(image_dir),
+            command=command,
+            txt="vasp.out",
+            **params,
+        )
+        calculator.lock_input_contract(image, source)
+        return calculator
+
+    return factory
 
 
 def default_vasp_command(ncores: int, executable: str) -> str:
