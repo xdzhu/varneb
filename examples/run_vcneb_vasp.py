@@ -74,6 +74,20 @@ def parse_args() -> argparse.Namespace:
         choices=["FIRE", "ImageScaledFIRE", "StagedFIRE", "BlockFIRE", "SplitFIRE", "BFGS", "LBFGS", "BFGSLineSearch"],
         default="FIRE",
     )
+    parser.add_argument(
+        "--maxstep",
+        type=float,
+        default=None,
+        help="Optional ASE optimizer maxstep in Angstrom-like extended coordinates",
+    )
+    parser.add_argument(
+        "--cell-maxstep",
+        type=float,
+        default=None,
+        help="Optional per-image cell-block cap for SplitFIRE",
+    )
+    parser.add_argument("--switch-fmax", type=float, default=None, help="StagedFIRE coarse-to-fine force threshold")
+    parser.add_argument("--refine-maxstep", type=float, default=None, help="StagedFIRE final global band cap")
     parser.add_argument("--line-search-retries", type=int, default=0)
     parser.add_argument("--line-search-retry-factor", type=float, default=0.5)
     parser.add_argument("--native-lattice-probe", default=None, help="Separately licensed, validated lattice-only checker")
@@ -439,6 +453,19 @@ def main() -> None:
         cache_namespace=cache_namespace,
     )
 
+    optimizer_kwargs = {} if args.maxstep is None else {"maxstep": args.maxstep}
+    if args.cell_maxstep is not None:
+        if args.optimizer != "SplitFIRE":
+            raise ValueError("--cell-maxstep is only valid with SplitFIRE")
+        optimizer_kwargs["cell_maxstep"] = args.cell_maxstep
+    if args.switch_fmax is not None or args.refine_maxstep is not None:
+        if args.optimizer != "StagedFIRE":
+            raise ValueError("--switch-fmax/--refine-maxstep are only valid with StagedFIRE")
+        if args.switch_fmax is not None:
+            optimizer_kwargs["switch_fmax"] = args.switch_fmax
+        if args.refine_maxstep is not None:
+            optimizer_kwargs["refine_maxstep"] = args.refine_maxstep
+
     chain, optimizer_result = run_vcneb(
         images,
         pressure_gpa=args.pressure_gpa,
@@ -453,6 +480,7 @@ def main() -> None:
         mode_basis=mode_basis,
         constraint_mode=None if args.constraint_mode == "none" else args.constraint_mode,
         optimizer=args.optimizer,
+        optimizer_kwargs=optimizer_kwargs,
         line_search_retries=args.line_search_retries,
         line_search_retry_factor=args.line_search_retry_factor,
         fmax=args.fmax,
@@ -474,6 +502,8 @@ def main() -> None:
         "status": "completed" if converged else "step_limit_reached",
         "converged": converged,
         "candidate_step_history": getattr(optimizer_result, "candidate_step_history", []),
+        "optimizer": args.optimizer,
+        "optimizer_kwargs": optimizer_kwargs,
         **metadata,
         "barrier_enthalpy_eV": barrier,
         "reaction_enthalpy_eV": delta,

@@ -216,15 +216,29 @@ def test_serial_driver_uses_bound_cache_and_truthful_convergence_status(tmp_path
     monkeypatch.setitem(module["main"].__globals__, "attach_vasp_calculators", fake_attach)
     monkeypatch.setitem(module["main"].__globals__, "run_vcneb", fake_run)
     monkeypatch.setattr(sys, "argv", [str(DRIVER), "--initial", str(initial), "--final", str(final),
-                                     "--workdir", str(tmp_path / "run"), "--no-climb", "--steps", "0"])
+                                     "--workdir", str(tmp_path / "run"), "--no-climb", "--steps", "0",
+                                     "--optimizer", "StagedFIRE", "--maxstep", "0.02",
+                                     "--switch-fmax", "0.12", "--refine-maxstep", "0.02"])
     module["main"]()
     executor = captured["image_executor"]
     assert executor.max_workers == 1
     assert executor.cache_dir == tmp_path / "run" / "image_cache"
     assert len(executor.cache_namespace) == 64
+    assert captured["optimizer"] == "StagedFIRE"
+    assert captured["optimizer_kwargs"] == {
+        "maxstep": 0.02,
+        "switch_fmax": 0.12,
+        "refine_maxstep": 0.02,
+    }
     summary = json.loads((tmp_path / "run" / "vcneb_summary.json").read_text())
     assert summary["status"] == status
     assert summary["converged"] == (status == "completed")
     assert summary["calculator_parameters"]["symprec"] == 1e-4
     assert summary["runtime_parameter_changes_allowed"] is False
     assert summary["image_manifest"]
+    assert summary["optimizer"] == "StagedFIRE"
+    assert summary["optimizer_kwargs"] == {
+        "maxstep": 0.02,
+        "switch_fmax": 0.12,
+        "refine_maxstep": 0.02,
+    }
