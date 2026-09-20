@@ -26,10 +26,14 @@ Each backend must pass, in order:
 6. path plot, barrier/reaction enthalpy, and provenance record.
 
 The controller evaluates each endpoint once and caches it. Only images
-`1..n_images-2` are submitted to image workers. For the HF allocation, use
-32 MPI ranks per image worker; `5 × 32 = 160` ranks for BTO and
-`27 × 32 = 864` ranks for GaN are the upper bounds. If the allocation is
-smaller, the executor runs the workers in waves without changing the path.
+`1..n_images-2` are submitted to image workers. VASP/ABACUS native workers
+use the established 32-MPI-per-image contract. ASE shell calculators have a
+different launch contract: CP2K's `cp2k_shell` and the HF QE/ABINIT/LAMMPS
+ASE wrappers are launched as one-rank exclusive steps, with several image
+workers in parallel. This is intentional: passing 32 ranks to a persistent
+CP2K shell or to the HF QE MPICH build corrupts its protocol/PMI setup. The
+resource contract is therefore backend-specific and recorded in each Slurm
+export/worker manifest, rather than inferred from the image count.
 
 ## Backend matrix
 
@@ -37,10 +41,10 @@ smaller, the executor runs the workers in waves without changing the path.
 | --- | --- | --- | --- | --- |
 | ABACUS | `vcneb.abacus` | run | existing production reference | ABACUS input and orbital/pseudopotential hashes |
 | VASP | `vcneb.vasp` | existing accepted path; repeat under matrix manifest | run | VASP input contract and POTCAR hashes |
-| QE | `vcneb.qe` / `make_ase_espresso_factory` | run with explicit Ga/N UPFs | run with explicit Ba/Ti/O UPFs | UPF approval plus cutoff/k-point convergence |
+| QE | `vcneb.qe` / `make_ase_espresso_factory` | Dojo-NC-FR candidate run; approval pending | Dojo-NC-FR candidate run; approval pending | UPF approval plus cutoff/k-point convergence |
 | CP2K | `make_ase_cp2k_factory` | run with GTH-PBE and matching basis | run with GTH-PBE and matching basis | basis/cutoff/SCF convergence |
-| ABINIT | `make_ase_abinit_factory` | run with one reviewed PBE PSP family | run with one reviewed PBE PSP family | PSP format/XC and cutoff convergence |
-| LAMMPS | `make_ase_lammps_factory` | only after a published GaN potential is selected | only after a published Ba-Ti-O potential is selected | potential/units/virial validation |
+| ABINIT | `make_ase_abinit_factory` | provisional HGH/LDA run; PBE promotion pending | provisional HGH/LDA run; PBE promotion pending | PSP format/XC and cutoff convergence |
+| LAMMPS | `make_ase_lammps_factory` | GaN Tersoff (Nord–Albe–Erhart–Nordlund, 2003) run | blocked: no Ba-Ti-O potential installed/reviewed on HF | potential/units/virial validation |
 
 LAMMPS must not use the Ar Lennard-Jones smoke potential for either material.
 If a suitable potential is unavailable on HF, that cell is explicitly blocked,
@@ -68,3 +72,8 @@ images/image_0001/ ... image_<N-2>/
 The material benchmark is promoted only when all rows that claim completion
 contain complete per-image energies, forces, stresses, SCF status, endpoint
 identity, input hashes, executable/module versions, and job IDs.
+
+The generic ASE driver writes `status=converged` only when the final
+generalized force is at or below the requested threshold. A run that reaches
+the step limit is retained as `status=max_steps_reached` and is not promoted
+as a converged path.
