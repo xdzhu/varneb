@@ -334,9 +334,17 @@ def make_ase_abinit_factory(
             "#!/bin/sh\n"
             "set -eu\n"
             'input="${1:-abinit.in}"\n'
-            'pseudo=$(sed -n \'s/^[[:space:]]*pseudos[[:space:]]*//p\' "$input")\n'
+            "pseudo=$(awk '"
+            "/^[[:space:]]*pseudos[[:space:]]*/ {capture=1; "
+            "sub(/^[[:space:]]*pseudos[[:space:]]*/, \"\"); text=$0; "
+            "if ($0 ~ /\"[[:space:]]*\$/) {print text; exit}; next} "
+            "capture {text=text $0; if ($0 ~ /\"[[:space:]]*\$/) {print text; exit}}' \"$input\")\n"
             "test -n \"$pseudo\"\n"
-            'sed \'/^[[:space:]]*pseudos[[:space:]]/d\' "$input" > abinit.varneb.in\n'
+            "awk '"
+            "/^[[:space:]]*pseudos[[:space:]]*/ {skip=1; "
+            "if ($0 ~ /\"[[:space:]]*\$/) skip=0; next} "
+            "skip {if ($0 ~ /\"[[:space:]]*\$/) skip=0; next} "
+            "{print}' \"$input\" > abinit.varneb.in\n"
             "{\n"
             "  printf '%s\\n' abinit.varneb.in abinit.abo abinit.tmp abinito abinito\n"
             "  printf '%s\\n' \"$pseudo\" | tr ',' '\\n' | sed 's/^\\\"//; s/\\\"$//'\n"
