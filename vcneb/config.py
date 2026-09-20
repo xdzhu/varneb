@@ -62,9 +62,19 @@ class RunConfig:
         if data.get("schema_version") != 1:
             raise ValueError("config schema_version must be 1")
         base = source.parent
-        path_fields = {key: (base / data[key]).resolve() for key in ("initial", "final", "workdir")}
+        path_fields = {}
+        for key in ("initial", "final", "workdir"):
+            value = data.get(key)
+            if not isinstance(value, str) or not value.strip():
+                raise ValueError(f"config field {key!r} must be a non-empty path")
+            path_fields[key] = (base / value).resolve()
+        calculator = data.get("calculator", {})
+        if not isinstance(calculator, dict):
+            raise ValueError("calculator must be a mapping")
+        if not isinstance(calculator.get("parameters", {}), dict):
+            raise ValueError("calculator.parameters must be a mapping")
         values = {
-            "backend": data.get("backend"),
+            "backend": str(data.get("backend", "")),
             **path_fields,
             "n_images": int(data.get("n_images", 7)),
             "fmax_ev_per_angstrom": float(data.get("fmax_ev_per_angstrom", 0.10)),
@@ -74,16 +84,22 @@ class RunConfig:
             "mapping": str(data.get("mapping", "auto")),
             "mic": bool(data.get("mic", True)),
             "align_translation": bool(data.get("align_translation", True)),
-            "minimum_distance": data.get("minimum_distance"),
-            "maximum_deformation": data.get("maximum_deformation"),
+            "minimum_distance": (
+                None if data.get("minimum_distance") is None
+                else float(data["minimum_distance"])
+            ),
+            "maximum_deformation": (
+                None if data.get("maximum_deformation") is None
+                else float(data["maximum_deformation"])
+            ),
             "climb": bool(data.get("climb", False)),
-            "climb_after": data.get("climb_after"),
+            "climb_after": (
+                None if data.get("climb_after") is None else int(data["climb_after"])
+            ),
             "optimizer": str(data.get("optimizer", "FIRE")),
             "steps": int(data.get("steps", 300)),
-            "calculator": dict(data.get("calculator", {})),
+            "calculator": calculator,
         }
-        if not isinstance(values["calculator"], dict):
-            raise ValueError("calculator must be a mapping")
         return cls(**values)
 
     def to_dict(self) -> dict[str, object]:
