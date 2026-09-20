@@ -243,12 +243,16 @@ def main() -> None:
         failure_report=workdir / "vcneb_failure.json",
     )
     barrier, reaction = chain.barrier()
+    final_force = chain.gradient_norm(-chain.get_forces())
+    converged = bool(final_force <= args.fmax)
     summary = {
         **metadata,
-        "status": "completed",
+        "status": "converged" if converged else "max_steps_reached",
+        "converged": converged,
+        "termination": "force_threshold" if converged else "step_limit",
         "barrier_enthalpy_eV": barrier,
         "reaction_enthalpy_eV": reaction,
-        "final_max_generalized_force_eV_per_A": chain.gradient_norm(-chain.get_forces()),
+        "final_max_generalized_force_eV_per_A": final_force,
         "image_enthalpies_eV": [float(value) for value in chain.enthalpies],
         "path_diagnostics": chain.path_diagnostics(),
         "saddle_diagnostics": chain.saddle_diagnostics(),
