@@ -143,6 +143,13 @@ rescue some long chains, while staged trust radii plus pre-DFT feasibility
 backtracking prevent known invalid proposals and recover difficult chains.
 The method should not be advertised as uniformly faster on every path.
 
+The PO-to-M transfer also converged under the same fixed contract.  StagedFIRE
+reached `0.099462 eV/Angstrom` after 19 updates from `0.214936`, with a final
+barrier of `0.33449254 eV`; the complete 20-image chain passed the geometry and
+calculator audit.  The force history briefly rebounded around updates 8--11,
+then resumed a monotonic descent.  This is why a single rebound is not used as
+an early-stop criterion.
+
 ## Calculator-failure semantics
 
 Geometry feasibility failures and electronic-runtime failures are handled

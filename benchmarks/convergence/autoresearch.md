@@ -123,6 +123,13 @@ feasibility and transient calculator failures.
   proposal failed at that full step in six seconds (Slurm 27735454), while the
   backtracking run accepted the half-step and converged.  This is a controlled
   algorithm ablation, not an inference from two unrelated trajectories.
+- HfO2 PO-to-M n=20 subsequently completed with StagedFIRE and one exact-input
+  image retry enabled (Slurm 27735441).  Its force history was
+  `0.214936, 0.211147, 0.204578, 0.194083, 0.180491, 0.163464, 0.152925,
+  0.142694, 0.148453, 0.152878, 0.153952, 0.154380, 0.149539, 0.138817,
+  0.123297, 0.104358, 0.103834, 0.102725, 0.101297, 0.099462`
+  eV/Angstrom.  The 20-image chain passed audit with barrier `0.33449254 eV`,
+  reaction enthalpy `-0.33276529 eV`, and maximum deformation `0.1741`.
 
 The HfO2 VASP lattice tests also show that `SYMPREC` is not a monotonic
 "precision" knob.  Full-chain native probes gave different failure sets as
