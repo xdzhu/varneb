@@ -44,7 +44,13 @@ tetragonal-to-polar-orthorhombic path yields a 7-image climbing-image barrier
 of 32.29 meV per formula unit, close to a qualified 40-image literature
 reference of 32 meV per formula unit. The package does not claim a new
 VC-NEB formalism; its contribution is a transparent, calculator-agnostic,
-restartable implementation with explicit numerical and provenance checks.
+restartable implementation with explicit numerical and provenance checks. We
+also introduce a feasibility-aware local and staged optimization workflow:
+image-scaled and block-local FIRE variants reduce calculator evaluations in
+controlled BaTiO$_3$/HfO$_2$ ablations, while a pre-DFT cell gate provides
+auditable local recovery for long VASP chains. These acceleration results are
+reported as an implementation-level contribution, with negative transfer
+cases retained to delimit the claim.
 \end{abstract}
 
 \begin{keyword}
@@ -100,12 +106,14 @@ force, stress, image-count, and restart diagnostics must remain auditable.
 VARNEB addresses these requirements as a pure-Python package. It treats VASP
 \cite{Kresse1996a,Kresse1996b}, ABACUS \cite{Li2016}, and future calculators as
 external ASE-compatible providers of energy, Cartesian forces, and stress.
-The quantitative material results used in this manuscript are ABACUS/PBE.
-The VASP backend has additionally exercised the complete distributed path,
-restart, and lattice-contract workflow on GaN, but that path is retained as
-backend-validation evidence because its barrier remains mapping-sensitive and
-does not reproduce the literature value. This separation is important: a
-working backend is not itself cross-engine accuracy validation.
+The quantitative material results therefore use both ABACUS/PBE and
+VASP/PBE, with their calculator settings reported separately. The VASP backend
+has exercised the complete distributed path, restart, and lattice-contract
+workflow on GaN, HfO$_2$, and CdSe. The GaN tetragonal and hexagonal routes
+agree with their published barrier scales, while a B3 route and the small
+barrier CdSe route expose mapping and functional sensitivity. A working
+backend is not treated as proof of cross-engine identity; each comparison is
+reported with its pressure, formula-unit normalization, and literature method.
 
 \section{From conventional NEB to VCNEB}
 \label{sec:method}
@@ -176,6 +184,71 @@ maximum generalized force, atom-force and stress components, reaction enthalpy,
 barrier, peak identity, and CI status. An explicit post-run loose NEB re-audit
 never changes the trajectory or its calculator settings.
 
+\subsection{Convergence-aware path optimization}
+\label{sec:acceleration}
+
+The extended coordinate couples displacement blocks with different numerical
+scales. In addition, a global FIRE step cap is shared by all active images, so
+its effective per-image displacement decreases approximately as
+$N_{\mathrm{int}}^{-1/2}$ when the number of interior images is increased.
+VARNEB therefore exposes three related controls. ImageScaledFIRE interprets a
+user step cap as a per-interior-image scale and applies the corresponding
+$\sqrt{N_{\mathrm{int}}}$ correction. BlockFIRE gives each image an independent
+FIRE state, time step, and displacement cap; SplitFIRE further separates the
+atomic and cell blocks. StagedFIRE begins with the image-normalized cap and
+switches to a smaller cap after a force threshold, resetting momentum at the
+switch. These controls are separated from the physical path metric: they
+change the update sequence while leaving the energy, force, stress, tangent,
+and spring definitions unchanged. Related ideas exist for fixed-cell NEB and
+preconditioned path optimization \cite{Makri2019,Kolsbjerg2016,Lindgren2019};
+our implementation targets their variable-cell, calculator-backed execution
+failure modes.
+
+The second part is a feasibility gate between the optimizer and the
+calculator. Before a candidate image is sent to DFT, VARNEB checks positive
+cell volume, conditioning, minimum periodic separation, serialized-cell round
+trip, and an optional calculator-native lattice probe. A rejected candidate is
+shortened only for the affected image and its local optimizer state is reset.
+An electronic failure is treated separately: the identical input may be
+retried within a finite budget, but physical parameters are not changed. This
+makes recovery auditable and prevents a bad cell proposal from being silently
+converted into a different calculation.
+
+Table~\ref{tab:acceleration} summarizes the first-principles ablation. The
+rows share their starting chain, calculator settings, endpoints, image count,
+spring, pressure, and $0.10$ eV/\AA{} stopping rule. The reported evaluation
+count is the number of new image calculations estimated from archived manager
+logs; wall time is a secondary metric because scheduler and filesystem noise
+are not controlled.
+
+\begin{table*}[t]
+\centering
+\caption{Convergence acceleration ablations. Each row starts from the same
+archived chain and retains the same endpoint-defined path energy.}
+\label{tab:acceleration}
+\begin{tabularx}{\textwidth}{l l r r r r X}
+\toprule
+Case & Optimizer & Steps & Time (s) & Image evaluations & Final $f_{\max}$ & Result \\
+\midrule
+BTO n=9 & global FIRE & 28 & 2669 & 205 & 0.0967 & baseline \\
+BTO n=9 & BlockFIRE, per-image 0.02 & 10 & 963 & 79 & 0.0865 & converged \\
+BTO n=9 & BlockFIRE, per-image 0.01 & 5 & 478 & 44 & 0.0899 & fastest conservative transfer \\
+BTO n=9 & ImageScaledFIRE & 8 & 772 & 65 & 0.0781 & converged \\
+HfO$_2$ n=7 & global FIRE & 42 & 5242 & 217 & 0.0942 & baseline \\
+HfO$_2$ n=7 & StagedFIRE & 24 & 3513 & 134 & 0.0924 & staged transfer \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+The conservative BTO BlockFIRE row reduces the threshold time by 82.1\% and
+estimated image evaluations by 78.5\% relative to global FIRE, while the
+staged HfO$_2$ transfer reduces them by 33.0\% and 38.2\%, respectively. A
+matched global-cap control and a SplitFIRE transfer are retained in the
+project benchmark as negative controls. BlockFIRE plateaued on one 20-image
+HfO$_2$ chain, so the result is not advertised as a universal speedup. The
+reproducible claim is narrower: local state isolation and staged feasibility
+control can reduce expensive work on these variable-cell paths.
+
 \section{Calculator-agnostic architecture and reproducible workflow}
 \label{sec:software}
 
@@ -238,9 +311,8 @@ archived at a loose $0.10$ eV/\AA{} snapshot; strict $0.05$ eV/\AA{} release
 comparison remains incomplete \\
 Execution & Isolated image directories, manager/worker ownership, bounded retry,
 snapshots, resume and durable cache & Scheduler resources remain user-reviewed \\
-Calculators & ABACUS, VASP and QE ASE-facing factories & ABACUS has material paths;
-VASP has a converged GaN path plus full-SCF contract regressions; QE has a static
-no-DFT preflight only \\
+Calculators & ABACUS, VASP and QE ASE-facing factories & ABACUS and VASP have
+completed material paths; QE has a static no-DFT preflight only \\
 Reporting & JSON summary, trajectory, audit, image comparison, structural metrics,
 source-data and editable figure export & Results remain calculator and
 boundary-condition specific \\
@@ -351,6 +423,51 @@ chain and then releases all degrees of freedom.  Its full-space force reached
 additional observed steps.  We archive the step-275 path only under the
 conventional loose 0.10 eV/\AA{} ordinary-NEB convention; it is excluded from
 the strict ordinary/CI barrier comparison and literature discussion.
+
+\subsection{VASP backend and cross-case benchmark}
+
+The same core and image-level contract was exercised with VASP 6.3.2/PBE on
+the Hefei Slurm system. Endpoints were not dispatched to workers during a
+path; only the interior images were evaluated, with fixed PAW data, k-point
+settings, $\mathrm{ISYM}=-1$, and $\mathrm{SYMPREC}=10^{-4}$. The default
+maximum generalized-force threshold remained $0.10$ eV/\AA{}. Table~\ref{tab:vasp}
+lists the completed paths archived with their source-data files. The GaN
+four-phase comparisons use the conventional cells and divide cell energies by
+the number of GaN formula units. The CdSe entry is the cell-mapping branch and
+is reported in meV/atom because the published G-SSNEB figure is a small
+barrier landscape.
+
+\begin{table*}[t]
+\centering
+\caption{Completed VASP backend paths. The literature values are comparison
+references with their own functionals, coordinate metrics, and image protocols;
+they are not treated as exact cross-code replicas.}
+\label{tab:vasp}
+\begin{tabularx}{\textwidth}{l l r r r X}
+\toprule
+Path & Pressure & $N_{\mathrm{total}}$ ($N_{\mathrm{int}}$) & VARNEB barrier & Literature & Interpretation \\
+\midrule
+GaN B4$\rightarrow$B1, tetragonal & 45.7 GPa & 29 (27) & 0.3385 eV/GaN & 0.34 eV/GaN & barrier and path shape agree \\
+GaN B4$\rightarrow$B1, hexagonal & 45.7 GPa & 29 (27) & 0.3852 eV/GaN & 0.39 eV/GaN & barrier agrees; digitized shape agrees \\
+GaN B3$\rightarrow$B1 & 45.0 GPa & 29 (27) & 0.9553 eV/GaN & $\simeq$0.57 eV/GaN & mapping-sensitive negative control \\
+CdSe RS$\rightarrow$WZ, cell mapping & 0 GPa & 17 (15) & 7.22 meV/atom & 2.4 meV/atom & PBE/PW91 and metric differ \\
+HfO$_2$ T$\rightarrow$PO & 0 GPa & 20 (18) & 2.97 meV/f.u. & 2.50 meV/f.u. & same downhill topology \\
+HfO$_2$ PO$\rightarrow$M & 0 GPa & 20 (18) & 83.6 meV/f.u. & 105.1 meV/f.u. & same single-barrier topology \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+The two GaN B4$\rightarrow$B1 routes provide the strongest independent
+backend benchmark: their barriers are within 0.002 and 0.005 eV/GaN of the
+Qian et al. values, respectively \cite{Qian2013}. The B3$\rightarrow$B1
+negative control is scientifically useful because the present diagonal mapping
+produces one broad high barrier, whereas the reference chain contains three
+connected events. This is a path-construction limitation, not a VASP failure.
+For CdSe, the current PBE result is compared with the PW91 G-SSNEB landscape
+of Sheppard et al. \cite{Sheppard2012}; the small barrier and different
+coordinate definition preclude a claim of quantitative reproduction. The full
+per-path figures, digitization flags, hashes, and CSV source data are archived
+under \texttt{outputs/neb\_literature\_benchmarks/}.
 
 \begin{figure*}[t]
 \centering
