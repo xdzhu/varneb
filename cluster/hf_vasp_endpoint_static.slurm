@@ -23,8 +23,14 @@ export OMP_NUM_THREADS=1 PYTHONUNBUFFERED=1
 export I_MPI_PMI_LIBRARY=/opt/gridview/slurm/lib/libpmi2.so
 export VASP_COMMAND="srun --exclusive --exact --nodes=1 --ntasks=32 --ntasks-per-node=32 --cpus-per-task=1 --mpi=pmi2 ${VASP_ROOT}/bin/vasp_std"
 cd "${SOURCE_REPO}"
+path_args=()
+if [[ -n "${RESUME_TRAJECTORY:-}" ]]; then
+  [[ -f "${RESUME_TRAJECTORY}" ]] || { echo "missing resume trajectory" >&2; exit 2; }
+  path_args=(--resume --resume-trajectory "${RESUME_TRAJECTORY}")
+fi
 "${python}" examples/run_vcneb_vasp.py \
   --initial "${INITIAL_DIR}" --final "${FINAL_DIR}" \
+  "${path_args[@]}" \
   --workdir "${WORKDIR}" --n-images "${N_IMAGES}" \
   --static-only --static-endpoint "${STATIC_ENDPOINT}" \
   --vasp-isym -1 --vasp-symprec "${VASP_SYMPREC}" \
