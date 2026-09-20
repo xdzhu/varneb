@@ -1,5 +1,16 @@
 # VCNEB 项目标准化任务清单
 
+> **2026-09-20 架构与多后端推进：** 已建立 `README.md` 快速上手入口、
+> `docs/REPOSITORY_LAYOUT.md`/`docs/ARCHITECTURE_AND_USER_WORKFLOW.md` 架构规范，
+> 新增 `varneb backends/doctor/init/validate-config` 命令和统一 image 目录工厂。
+> LAMMPS、CP2K、QE 均已通过 HF `hfacnormal01` 一任务 energy/force/stress
+> contract smoke（27740478、27740553、27740644）；这不是材料势函数或 cutoff
+> 收敛证据。新增 calculator-free 路径反应坐标、模态贡献分数和 dominant-mode
+> 分析，并将它们接入 Gamma 路径报告。完整详细手册在
+> `docs/USER_MANUAL.md`；225 项回归通过。下一步是用已有 BaTiO3 简单案例做
+> QE/LAMMPS/CP2K 的端点静态横向门禁，再决定是否启动跨后端 VCNEB；不凭 smoke
+> 结果宣称文献能垒一致，也不扩张材料案例数量。
+
 > **2026-09-19 06:15 定时接力覆盖：** B3 27721015继续运行（step25 fmax0.466259）。
 > 六方27721448实际失败，fmax约0.919平台，未续投；同源probe浮点编译组合漏检证据
 > 已归档，下一优先级是有效候选步/非进展诊断，不调SYMPREC、不对称投影路径。

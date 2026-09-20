@@ -2,6 +2,10 @@
 
 ## Workflow index
 
+- `hf_optional_backend_smoke.slurm`: one-task LAMMPS/CP2K/QE contract smoke;
+  this checks energy/force/stress and isolated output handling, not a material
+  barrier or potential/basis convergence.
+
 - `hf_batio3_*`: primary ABACUS BTO validation, optional VASP/QE backend gates,
   and Gamma-point phonon analysis.
 - `hf_hfo2_*`: ABACUS HfO2 endpoint and production VCNEB workflows.

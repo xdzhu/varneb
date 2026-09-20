@@ -29,6 +29,13 @@ def _command_text(calculator: object) -> str | None:
         profile = getattr(calculator, "profile", None)
         command = getattr(profile, "command", None)
     if command is None:
+        getter = getattr(calculator, "get_lammps_command", None)
+        if callable(getter):
+            try:
+                command = getter()
+            except Exception:
+                command = None
+    if command is None:
         return None
     if isinstance(command, (list, tuple)):
         return " ".join(str(part) for part in command)
@@ -90,7 +97,20 @@ def inspect_calculator(
     stress_declared = not declared or "stress" in declared
     has_stress = has_stress_method and stress_declared
 
-    raw_directory = getattr(calculator, "directory", None)
+    raw_directory = getattr(calculator, "varneb_directory", None)
+    if raw_directory is None:
+        raw_directory = getattr(calculator, "directory", None)
+    # LAMMPS keeps its real files under ``tmp_dir`` and CP2K uses a label
+    # prefix.  ASE's base Calculator reports ``.`` for both, which would make
+    # a capability report claim a shared directory even when the adapter is
+    # correctly isolated.
+    if raw_directory in (None, "", "."):
+        parameters = getattr(calculator, "parameters", {})
+        raw_directory = parameters.get("tmp_dir") if hasattr(parameters, "get") else None
+        if raw_directory in (None, "", "."):
+            label = parameters.get("label") if hasattr(parameters, "get") else None
+            if label:
+                raw_directory = str(Path(label).parent)
     directory = None if raw_directory is None else str(Path(raw_directory))
     has_directory = directory is not None
     issues: list[str] = []

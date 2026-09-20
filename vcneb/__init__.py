@@ -30,7 +30,22 @@ from .modes import (
     project_path_onto_modes,
 )
 from .executor import ImageEvaluation, ThreadedCalculatorExecutor
-from .qe import attach_qe_calculators, make_ase_espresso_factory, static_qe_input_data
+from .qe import (
+    attach_qe_calculators,
+    load_approved_qe_pseudopotential_manifest,
+    make_ase_espresso_factory,
+    static_qe_input_data,
+    validate_qe_pseudopotentials,
+)
+from .backends import (
+    BackendSpec,
+    attach_image_calculators,
+    backend_capability_matrix,
+    backend_specs,
+    get_backend_spec,
+    make_ase_cp2k_factory,
+    make_ase_lammps_factory,
+)
 from .phonons import (
     GammaModes,
     PhonopyGammaEigenpairs,
@@ -44,6 +59,7 @@ from .phonons import (
     save_phonopy_gamma_eigenpairs,
     tangent_mode_overlaps,
 )
+from .analysis import dominant_mode_indices, mode_contribution_fractions, path_reaction_coordinate
 from .provenance import compare_endpoint_records, endpoint_structure_record
 
 __all__ = [
@@ -75,6 +91,15 @@ __all__ = [
     "attach_qe_calculators",
     "make_ase_espresso_factory",
     "static_qe_input_data",
+    "load_approved_qe_pseudopotential_manifest",
+    "validate_qe_pseudopotentials",
+    "BackendSpec",
+    "attach_image_calculators",
+    "backend_capability_matrix",
+    "backend_specs",
+    "get_backend_spec",
+    "make_ase_cp2k_factory",
+    "make_ase_lammps_factory",
     "GammaModes",
     "PhonopyGammaEigenpairs",
     "diagonalize_gamma_modes",
@@ -86,6 +111,9 @@ __all__ = [
     "project_displacements_onto_gamma_modes",
     "save_phonopy_gamma_eigenpairs",
     "tangent_mode_overlaps",
+    "dominant_mode_indices",
+    "mode_contribution_fractions",
+    "path_reaction_coordinate",
     "endpoint_structure_record",
     "compare_endpoint_records",
 ]

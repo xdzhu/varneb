@@ -1,4 +1,7 @@
-# VARNEB — Variable-Cell NEB
+# VARNEB — Variable-Cell NEB (compatibility reference)
+
+> The canonical user-facing README is [`README.md`](README.md).  This file is
+> retained because older research scripts and links refer to `README_VCNEB.md`.
 
 > VARiable-cell Nudged Elastic Band code with universal first-principles calculators
 

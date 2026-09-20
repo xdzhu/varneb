@@ -33,6 +33,9 @@ from vcneb import (
     project_displacements_onto_gamma_modes,
     read_chain_trajectory,
     tangent_mode_overlaps,
+    mode_contribution_fractions,
+    path_reaction_coordinate,
+    dominant_mode_indices,
 )
 
 
@@ -232,6 +235,8 @@ def make_report(
     )
     coordinates = project_displacements_onto_gamma_modes(displacements, modes)
     overlaps = tangent_mode_overlaps(coordinates)
+    reaction_coordinate, segment_lengths = path_reaction_coordinate(images)
+    contribution_fractions = mode_contribution_fractions(coordinates)
     translation_mask = np.abs(modes.frequencies_cm1) < 1e-3
     candidate = np.ones(len(modes.frequencies_cm1), dtype=bool) if include_translations else ~translation_mask
     peak = np.max(np.abs(coordinates), axis=0)
@@ -277,6 +282,10 @@ def make_report(
         "eigenvalues_eV_per_A2_amu": [float(value) for value in modes.eigenvalues_eV_per_A2_amu],
         "normal_coordinates_sqrt_amu_A": coordinates.tolist(),
         "segment_tangent_mode_overlaps": overlaps.tolist(),
+        "reaction_coordinate": reaction_coordinate.tolist(),
+        "segment_lengths": segment_lengths.tolist(),
+        "mode_contribution_fractions": contribution_fractions.tolist(),
+        "dominant_modes_by_image": dominant_mode_indices(coordinates, top=min(3, coordinates.shape[1])),
         "removed_mass_weighted_translation_A": removed_translations.tolist(),
         "reconstruction_residual_mass_weighted_sqrt_amu_A": reconstruction_residual.tolist(),
         "degenerate_mode_subspaces": grouped_modes,
@@ -294,6 +303,9 @@ def make_report(
         "reference_cell_displacements_A": displacements,
         "normal_coordinates_sqrt_amu_A": coordinates,
         "segment_tangent_mode_overlaps": overlaps,
+        "reaction_coordinate": reaction_coordinate,
+        "segment_lengths": segment_lengths,
+        "mode_contribution_fractions": contribution_fractions,
         "removed_mass_weighted_translation_A": removed_translations,
         "frequencies_cm1": modes.frequencies_cm1,
         "eigenvectors_mass_weighted": modes.eigenvectors,
