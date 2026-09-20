@@ -3,10 +3,11 @@
 from __future__ import annotations
 
 import numpy as np
-from ase.optimize import FIRE
+
+from .step_control import CheckedFIRE
 
 
-class ImageScaledFIRE(FIRE):
+class ImageScaledFIRE(CheckedFIRE):
     """Global FIRE whose input ``maxstep`` is interpreted per interior image.
 
     ASE caps the norm of the full concatenated band.  Multiplying the desired
@@ -20,6 +21,7 @@ class ImageScaledFIRE(FIRE):
         if self.per_image_maxstep <= 0.0:
             raise ValueError("maxstep must be positive")
         self.band_scale = float(np.sqrt(n_interior))
+        kwargs.setdefault("max_candidate_retries", 0)
         super().__init__(atoms, maxstep=self.per_image_maxstep * self.band_scale, **kwargs)
 
 
@@ -83,5 +85,4 @@ class StagedFIRE(ImageScaledFIRE):
             self._switch(current_fmax)
         # Pass the force array through so checking the stage does not trigger a
         # second electronic-structure evaluation.
-        return FIRE.step(self, forces)
-
+        return super().step(forces)

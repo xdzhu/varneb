@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 
 import numpy as np
+from ase.io import write
 from ase.optimize import FIRE
 
 
@@ -31,11 +32,11 @@ class CheckedFIRE(FIRE):
 
     def __init__(self, atoms, *, max_candidate_retries=8, candidate_retry_factor=0.5,
                  candidate_manifest=None, **kwargs):
-        if not callable(getattr(atoms, "candidate_validator", None)):
-            raise ValueError("CheckedFIRE requires an atomic candidate-validator target")
         if (isinstance(max_candidate_retries, bool) or int(max_candidate_retries) != max_candidate_retries
                 or max_candidate_retries < 0):
             raise ValueError("max_candidate_retries must be a nonnegative integer")
+        if max_candidate_retries and not callable(getattr(atoms, "candidate_validator", None)):
+            raise ValueError("CheckedFIRE retries require an atomic candidate-validator target")
         if not np.isfinite(candidate_retry_factor) or not 0 < candidate_retry_factor < 1:
             raise ValueError("candidate_retry_factor must be in (0, 1)")
         if kwargs.get("downhill_check", False):
@@ -53,6 +54,18 @@ class CheckedFIRE(FIRE):
                   "error": None if error is None else str(error),
                   "details": [] if error is None else error.details,
                   "electronic_job_launched_for_rejected_candidate": False}
+        if error is not None and self.candidate_manifest is not None:
+            try:
+                directory = self.candidate_manifest.parent / "candidate_step_artifacts"
+                directory.mkdir(parents=True, exist_ok=True)
+                artifact = directory / (
+                    f"step_{int(self.nsteps):04d}_event_{len(self.candidate_step_history):04d}.traj"
+                )
+                preview = self.atoms.candidate_images_from_x(coordinates)
+                write(artifact, preview, format="traj")
+                record["candidate_trajectory"] = str(artifact)
+            except (AttributeError, OSError, ValueError) as artifact_error:
+                record["candidate_trajectory_error"] = str(artifact_error)
         self.candidate_step_history.append(record)
         if self.candidate_manifest is not None:
             self.candidate_manifest.parent.mkdir(parents=True, exist_ok=True)

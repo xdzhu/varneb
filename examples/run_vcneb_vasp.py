@@ -218,7 +218,8 @@ def main() -> None:
     if args.candidate_step_retries < 0 or not np.isfinite(args.candidate_step_retry_factor) or not 0 < args.candidate_step_retry_factor < 1:
         raise ValueError("candidate step retries/factor are invalid")
     if args.candidate_step_retries and (
-        not args.native_lattice_probe or args.optimizer not in {"FIRE", "BlockFIRE", "SplitFIRE"}
+        not args.native_lattice_probe
+        or args.optimizer not in {"FIRE", "ImageScaledFIRE", "StagedFIRE", "BlockFIRE", "SplitFIRE"}
     ):
         raise ValueError("candidate backtracking requires --native-lattice-probe and a FIRE optimizer")
     if args.validate_only and args.static_only:

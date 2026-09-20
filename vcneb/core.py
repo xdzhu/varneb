@@ -1135,7 +1135,9 @@ class VCNEB:
             return np.zeros(0)
         return np.concatenate([self._image_x(i) for i in range(1, self.n_images - 1)])
 
-    def set_x(self, x: Array) -> None:
+    def candidate_images_from_x(self, x: Array) -> list[Atoms]:
+        """Build, but do not validate or commit, a candidate image chain."""
+
         x = np.asarray(x, dtype=float).reshape(-1)
         if x.size != self.ndofs():
             raise ValueError(f"Expected {self.ndofs()} coordinates, got {x.size}")
@@ -1154,11 +1156,19 @@ class VCNEB:
                     wrap_positions=self.wrap_positions,
                 )
             except ValueError as error:
-                if self.candidate_validator is None:
-                    raise
-                rejected = CandidateStepRejected(f"image {image_index}: {error}")
-                rejected.candidate_coordinates = x.copy()
-                raise rejected from error
+                raise ValueError(f"image {image_index}: {error}") from error
+        return candidates
+
+    def set_x(self, x: Array) -> None:
+        x = np.asarray(x, dtype=float).reshape(-1)
+        try:
+            candidates = self.candidate_images_from_x(x)
+        except ValueError as error:
+            if self.candidate_validator is None:
+                raise
+            rejected = CandidateStepRejected(str(error))
+            rejected.candidate_coordinates = x.copy()
+            raise rejected from error
         try:
             self._validate_candidate_images(candidates)
         except CandidateStepRejected as error:
@@ -1842,9 +1852,23 @@ def _make_optimizer(
             **kwargs,
         )
     if key in {"IMAGESCALEDFIRE", "IMAGE_SCALED_FIRE", "IMAGE-SCALED-FIRE"}:
-        return ImageScaledFIRE(chain, logfile=logfile, **kwargs)
+        return ImageScaledFIRE(
+            chain,
+            logfile=logfile,
+            max_candidate_retries=candidate_step_retries,
+            candidate_retry_factor=candidate_step_retry_factor,
+            candidate_manifest=candidate_step_manifest,
+            **kwargs,
+        )
     if key in {"STAGEDFIRE", "STAGED_FIRE", "STAGED-FIRE"}:
-        return StagedFIRE(chain, logfile=logfile, **kwargs)
+        return StagedFIRE(
+            chain,
+            logfile=logfile,
+            max_candidate_retries=candidate_step_retries,
+            candidate_retry_factor=candidate_step_retry_factor,
+            candidate_manifest=candidate_step_manifest,
+            **kwargs,
+        )
     if key == "LBFGS":
         return LBFGS(chain, logfile=logfile, **kwargs)
     if key == "BFGS":
@@ -2011,8 +2035,12 @@ def run_vcneb(
         raise ValueError("candidate_step_retries must be a nonnegative integer")
     if not np.isfinite(candidate_step_retry_factor) or not 0 < candidate_step_retry_factor < 1:
         raise ValueError("candidate_step_retry_factor must be in (0, 1)")
-    candidate_optimizers = {"FIRE", "BLOCKFIRE", "BLOCK_FIRE", "BLOCK-FIRE",
-                            "SPLITFIRE", "SPLIT_FIRE", "SPLIT-FIRE"}
+    candidate_optimizers = {
+        "FIRE", "BLOCKFIRE", "BLOCK_FIRE", "BLOCK-FIRE",
+        "SPLITFIRE", "SPLIT_FIRE", "SPLIT-FIRE",
+        "IMAGESCALEDFIRE", "IMAGE_SCALED_FIRE", "IMAGE-SCALED-FIRE",
+        "STAGEDFIRE", "STAGED_FIRE", "STAGED-FIRE",
+    }
     if candidate_step_retries and (
         candidate_validator is None or optimizer.upper() not in candidate_optimizers
     ):

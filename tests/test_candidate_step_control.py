@@ -1,6 +1,7 @@
 import numpy as np
 import pytest
 from ase import Atoms
+from ase.io import read
 
 from vcneb.core import VCNEB, run_vcneb
 from vcneb.step_control import CandidateStepRejected, CheckedFIRE
@@ -53,6 +54,8 @@ def test_checked_fire_accepts_exact_half_step_without_electronic_call(tmp_path):
     assert [entry['event'] for entry in opt.candidate_step_history]==['rejected','accepted_backtracked']
     assert opt.candidate_step_history[-1]['proposal_fraction']==0.5
     assert len((tmp_path/"steps.jsonl").read_text().splitlines())==2
+    artifact=opt.candidate_step_history[0]["candidate_trajectory"]
+    assert len(read(artifact,index=":"))==len(chain.images)
     assert all(image.calc is None for image in chain.images)
 
 

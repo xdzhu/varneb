@@ -3,6 +3,7 @@ from ase import Atoms
 
 from vcneb.core import VCNEB
 from vcneb.scaled_fire import ImageScaledFIRE, StagedFIRE
+from vcneb.step_control import CandidateStepRejected
 
 
 def images(n=9):
@@ -45,3 +46,25 @@ def test_staged_fire_switches_without_second_force_evaluation(monkeypatch):
     assert np.isclose(opt.maxstep, 0.02)
     assert opt.switch_history[0]["additional_calculator_evaluations"] == 0
 
+
+def test_staged_fire_backtracks_rejected_candidate_without_force_recalculation(tmp_path):
+    def validator(candidates):
+        if candidates[2].positions[0, 0] > 0.0075:
+            raise CandidateStepRejected("image 2 outside domain", details=[{"image_index": 2}])
+
+    chain = VCNEB(images(5), candidate_validator=validator, climb=False)
+    opt = StagedFIRE(
+        chain,
+        logfile=None,
+        maxstep=0.02,
+        switch_fmax=0.001,
+        max_candidate_retries=3,
+        candidate_manifest=tmp_path / "steps.jsonl",
+    )
+    opt.step(uniform_force(chain, 1.0))
+    assert np.isclose(chain.images[2].positions[0, 0], 0.005)
+    assert [entry["event"] for entry in opt.candidate_step_history] == [
+        "rejected",
+        "accepted_backtracked",
+    ]
+    assert opt.candidate_step_history[0]["candidate_trajectory"]
