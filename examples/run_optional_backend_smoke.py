@@ -1,4 +1,4 @@
-"""Run a tiny real LAMMPS or CP2K static stress/force smoke.
+"""Run a tiny real optional-backend static stress/force smoke.
 
 This is deliberately not a material benchmark.  It verifies the backend
 launch, isolated image directory, and ASE energy/force/stress contract before a
@@ -17,6 +17,7 @@ from vcneb import (
     attach_image_calculators,
     inspect_calculator,
     make_ase_cp2k_factory,
+    make_ase_abinit_factory,
     make_ase_lammps_factory,
     make_ase_espresso_factory,
     validate_qe_pseudopotentials,
@@ -25,10 +26,11 @@ from vcneb import (
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("backend", choices=("lammps", "cp2k", "qe"))
+    parser.add_argument("backend", choices=("lammps", "cp2k", "qe", "abinit"))
     parser.add_argument("--workdir", default="backend_smoke")
     parser.add_argument("--command", default=None)
     parser.add_argument("--pseudo-dir", default=None, help="QE UPF directory")
+    parser.add_argument("--abinit-pps", default="psp8", help="ABINIT pseudopotential format")
     return parser.parse_args()
 
 
@@ -111,6 +113,24 @@ def run_qe(workdir: Path, command: str | None, pseudo_dir: str | None) -> dict:
     return report
 
 
+def run_abinit(workdir: Path, command: str | None, pseudo_dir: str | None, pps: str) -> dict:
+    if not pseudo_dir:
+        raise ValueError("ABINIT smoke requires --pseudo-dir containing H.psp8")
+    images = [Atoms("H2", positions=[[0, 0, 0], [0, 0, 0.74]], cell=[8, 8, 8], pbc=True)]
+    factory = make_ase_abinit_factory(
+        parameters={
+            "ecut": 10,
+            "toldfe": 1.0e-6,
+            "kpts": (1, 1, 1),
+            "pps": pps,
+        },
+        command=command or "abinit",
+        pp_paths=pseudo_dir,
+    )
+    attach_image_calculators(images, workdir=workdir, factory=factory)
+    return _evaluate(images[0])
+
+
 def _evaluate(image: Atoms) -> dict:
     report = inspect_calculator(image.calc, require_stress=True, require_variable_cell=True)
     if not report.ok:
@@ -133,6 +153,8 @@ def main() -> None:
         report = run_lammps(workdir, args.command)
     elif args.backend == "cp2k":
         report = run_cp2k(workdir, args.command)
+    elif args.backend == "abinit":
+        report = run_abinit(workdir, args.command, args.pseudo_dir, args.abinit_pps)
     else:
         report = run_qe(workdir, args.command, args.pseudo_dir)
     output = workdir / f"{args.backend}_smoke.json"

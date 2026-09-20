@@ -15,8 +15,8 @@ varneb doctor
 
 `doctor` only checks Python adapter imports and executables on `PATH`. On HF,
 load a module inside the Slurm script, then run `varneb doctor` with the same
-Python environment. Do not install a second copy of LAMMPS, QE, or CP2K when
-the cluster module provides it.
+Python environment. Do not install a second copy of LAMMPS, QE, CP2K, or
+ABINIT when the cluster module provides it.
 
 ## 2. Configuration and path semantics
 
@@ -109,6 +109,26 @@ a deterministic short per-image alias when a shared HF path is long and copies
 `.inp`, `.out`, and `.pos` back to the image directory. A CP2K smoke pass is
 still not a basis/cutoff convergence result; complete that gate for a material
 before comparing barriers.
+
+### ABINIT
+
+ABINIT uses the ASE `AbinitProfile` and requires an explicit pseudopotential
+directory. The factory does not download or infer pseudopotentials:
+
+```python
+from vcneb import make_ase_abinit_factory
+
+factory = make_ase_abinit_factory(
+    parameters={"ecut": 10, "toldfe": 1.0e-6, "pps": "psp8", "kpts": (1, 1, 1)},
+    command="srun --exclusive --ntasks=1 abinit",
+    pp_paths="/path/to/reviewed/abinit-psp8",
+)
+```
+
+The HF adapter smoke uses the module-provided `H.psp8` test potential. That
+is an interface check only; a material calculation must pin the ABINIT
+pseudopotential files, exchange-correlation functional, cutoff, k mesh, and
+code revision before it can enter a cross-backend benchmark.
 
 ## 4. Modes and phonons
 

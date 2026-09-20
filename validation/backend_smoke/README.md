@@ -12,8 +12,18 @@ forces, and stress and the VARNEB capability preflight reports
   job `27740553`, success after the documented OT SCF setup.
 - QE: H2 with the installed `H.SG15.PBE.UPF`, `apps/quantum-espresso/intelmpi/7.0`,
   job `27740644`, success with the static `scf` force/stress contract.
+- ABINIT: H2 with the module-provided `H.psp8` test potential,
+  `apps/abinit/intelmpi/8.6.1`; add the job record only after the HF command,
+  stress, and pseudopotential provenance checks pass.
 
 The H2 force is intentionally not interpreted physically; the case exists to
 exercise the calculator contract.  For production use, a reviewed material
 potential/basis, cutoff convergence, endpoint static gate, and a complete
 VCNEB path are still required.
+
+An existing BaTiO3 cubic-to-tetragonal endpoint was also used for a QE
+candidate static calculation (`27740755`) and a safe `auto`-mapping,
+`log_strain`, minimum-distance preflight (`27740765`).  The detailed record is
+`bto_qe_candidate_20260920.json`; it is deliberately not an approved QE
+production benchmark because the Dojo UPF collection has not passed the
+project's user-approval and cutoff-convergence gates.

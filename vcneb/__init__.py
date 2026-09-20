@@ -43,6 +43,7 @@ from .backends import (
     backend_capability_matrix,
     backend_specs,
     get_backend_spec,
+    make_ase_abinit_factory,
     make_ase_cp2k_factory,
     make_ase_lammps_factory,
 )
@@ -61,6 +62,7 @@ from .phonons import (
 )
 from .analysis import dominant_mode_indices, mode_contribution_fractions, path_reaction_coordinate
 from .provenance import compare_endpoint_records, endpoint_structure_record
+from .config import RunConfig, prepare_run
 
 __all__ = [
     "VCNEB",
@@ -98,6 +100,7 @@ __all__ = [
     "backend_capability_matrix",
     "backend_specs",
     "get_backend_spec",
+    "make_ase_abinit_factory",
     "make_ase_cp2k_factory",
     "make_ase_lammps_factory",
     "GammaModes",
@@ -116,4 +119,6 @@ __all__ = [
     "path_reaction_coordinate",
     "endpoint_structure_record",
     "compare_endpoint_records",
+    "RunConfig",
+    "prepare_run",
 ]

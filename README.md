@@ -57,7 +57,7 @@ be reused from audited static calculations.
 ## Backends
 
 VASP and ABACUS have the repository's strongest production validation.  QE,
-LAMMPS, and CP2K are supported through optional ASE adapters with explicit
+LAMMPS, CP2K, and ABINIT are supported through optional ASE adapters with explicit
 per-image directories and static force/stress preflight.  The adapter status
 is intentionally reported as `validated`, `adapter`, or `planned` rather than
 claiming a material result that has not been run and audited.
@@ -65,7 +65,7 @@ claiming a material result that has not been run and audited.
 For HF module environments, inspect first and load only what the job needs:
 
 ```bash
-ssh hf "module avail 2>&1 | grep -Ei 'lammps|quantum-espresso|cp2k|abacus|vasp'"
+ssh hf "module avail 2>&1 | grep -Ei 'lammps|quantum-espresso|cp2k|abinit|abacus|vasp'"
 ```
 
 See [`docs/USER_MANUAL.md`](docs/USER_MANUAL.md) for calculator-specific

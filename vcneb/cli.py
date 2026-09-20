@@ -15,6 +15,7 @@ import shutil
 import sys
 
 from .backends import backend_capability_matrix, get_backend_spec
+from .config import RunConfig, prepare_run
 from .version import __version__
 
 
@@ -26,6 +27,17 @@ _CONFIG_TEMPLATE = {
     "workdir": "runs/example",
     "n_images": 7,
     "fmax_ev_per_angstrom": 0.10,
+    "k": 0.20,
+    "pressure_gpa": 0.0,
+    "cell_interpolation": "log_strain",
+    "mapping": "auto",
+    "mic": True,
+    "align_translation": True,
+    "minimum_distance": None,
+    "maximum_deformation": None,
+    "climb": False,
+    "optimizer": "FIRE",
+    "steps": 300,
     "calculator": {
         "parameters": {},
         "command": "",
@@ -54,6 +66,14 @@ def _doctor(as_json: bool, selected: str | None) -> int:
     if selected:
         get_backend_spec(selected)
         rows = [row for row in rows if row["name"] == selected.lower()]
+    executable_candidates = {
+        "abacus": ("abacus",),
+        "vasp": ("vasp_std", "vasp_gam", "vasp_ncl"),
+        "qe": ("pw.x",),
+        "lammps": ("lammps", "lmp", "lmp_mpi"),
+        "cp2k": ("cp2k_shell", "cp2k_shell.psmp"),
+        "abinit": ("abinit",),
+    }
     for row in rows:
         module = {
             "abacus": "ase.calculators.abacus",
@@ -61,10 +81,19 @@ def _doctor(as_json: bool, selected: str | None) -> int:
             "qe": "ase.calculators.espresso",
             "lammps": "ase.calculators.lammpsrun",
             "cp2k": "ase.calculators.cp2k",
+            "abinit": "ase.calculators.abinit",
         }[str(row["name"])]
         row["ase_module"] = module
         row["ase_importable"] = importlib.util.find_spec(module) is not None
-        row["executable_on_path"] = shutil.which(str(row["executable"])) is not None
+        candidates = executable_candidates[str(row["name"])]
+        resolved = None
+        for candidate in candidates:
+            resolved = shutil.which(candidate)
+            if resolved is not None:
+                break
+        row["executable_candidates"] = list(candidates)
+        row["resolved_executable"] = resolved
+        row["executable_on_path"] = resolved is not None
     if as_json:
         print(json.dumps(rows, indent=2, sort_keys=True))
         return 0
@@ -88,28 +117,19 @@ def _write_template(path: str, *, force: bool) -> int:
 
 
 def _validate_config(path: str) -> int:
-    source = Path(path)
-    data = json.loads(source.read_text(encoding="utf-8"))
-    if data.get("schema_version") != 1:
-        raise ValueError("config schema_version must be 1")
-    backend = data.get("backend")
-    get_backend_spec(backend)
-    for key in ("initial", "final", "workdir"):
-        if not isinstance(data.get(key), str) or not data[key].strip():
-            raise ValueError(f"config field {key!r} must be a non-empty path")
-    try:
-        n_images = int(data.get("n_images"))
-        fmax = float(data.get("fmax_ev_per_angstrom"))
-    except (TypeError, ValueError) as exc:
-        raise ValueError("n_images and fmax_ev_per_angstrom must be numeric") from exc
-    if n_images < 3:
-        raise ValueError("n_images must include two fixed endpoints and at least one interior image")
-    if not 0.0 < fmax:
-        raise ValueError("fmax_ev_per_angstrom must be positive")
-    calculator = data.get("calculator", {})
-    if not isinstance(calculator, dict) or not isinstance(calculator.get("parameters", {}), dict):
-        raise ValueError("calculator.parameters must be a mapping")
-    print(f"valid VARNEB config: backend={backend}, n_images={n_images}, fmax={fmax:g} eV/A")
+    config = RunConfig.from_file(path)
+    print(
+        f"valid VARNEB config: backend={config.backend}, "
+        f"n_images={config.n_images}, fmax={config.fmax_ev_per_angstrom:g} eV/A, "
+        f"mapping={config.mapping}, cell_interpolation={config.cell_interpolation}"
+    )
+    return 0
+
+
+def _prepare_config(path: str) -> int:
+    config, report_path = prepare_run(path)
+    print(f"prepared calculator-free path: {config.workdir / 'initial-vcneb.traj'}")
+    print(f"wrote preflight report: {report_path}")
     return 0
 
 
@@ -142,6 +162,11 @@ def build_parser() -> argparse.ArgumentParser:
         "validate-config", help="validate a varneb.json without launching a calculator"
     )
     validate.add_argument("path", nargs="?", default="varneb.json")
+
+    prepare = subparsers.add_parser(
+        "prepare", help="build a calculator-free initial path and geometry preflight report"
+    )
+    prepare.add_argument("path", nargs="?", default="varneb.json")
     return parser
 
 
@@ -156,6 +181,8 @@ def main() -> int:
             return _write_template(args.path, force=args.force)
         if args.command == "validate-config":
             return _validate_config(args.path)
+        if args.command == "prepare":
+            return _prepare_config(args.path)
     except (FileExistsError, OSError, ValueError, json.JSONDecodeError) as exc:
         print(f"varneb: {exc}", file=sys.stderr)
         return 2

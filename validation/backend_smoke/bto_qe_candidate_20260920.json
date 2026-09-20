@@ -1,0 +1,39 @@
+{
+  "format_version": 1,
+  "host": "hf",
+  "partition": "hfacnormal01",
+  "backend": "qe",
+  "job_id_static": "27740755",
+  "job_id_preflight": "27740765",
+  "status": "candidate_static_and_safe_preflight",
+  "case": "existing BaTiO3 cubic-to-tetragonal endpoints",
+  "endpoint_source": "validation/batio3_cubic_to_tetragonal/*_pbe100_dzp10au/CONTCAR",
+  "calculator": {
+    "module": "apps/quantum-espresso/intelmpi/7.0",
+    "command": "srun --exclusive --ntasks=1 pw.x",
+    "ecutwfc_Ry": 100.0,
+    "ecutrho_Ry": 600.0,
+    "kpts": [2, 2, 2],
+    "scf_thr_Ry": 1e-8,
+    "pseudopotentials": {
+      "Ba": {"filename": "Ba.upf", "sha256": "726040432eb3912c02838d037fffd922f6334353fb07528d782c929622b165d2"},
+      "Ti": {"filename": "Ti.upf", "sha256": "81294b131cf859af2bb923fa0b43a4f31ee550a69d071279040afccda79686b1"},
+      "O": {"filename": "O.upf", "sha256": "8c6886f443f3bfe7b8d18f2f6b28dd8749746d996499a542fff9666da34d7cf6"}
+    }
+  },
+  "static_initial_endpoint": {
+    "energy_eV": -3737.7696657176302,
+    "max_force_eV_per_A": 0.0,
+    "stress_eV_per_A3_voigt": [-0.009501095002083926, -0.009501095002083926, -0.009501095002083926, -0.0, -0.0, -0.0]
+  },
+  "path_preflight": {
+    "mapping": "auto",
+    "mic": true,
+    "align_translation": true,
+    "cell_interpolation": "log_strain",
+    "minimum_distance_threshold_A": 1.6,
+    "minimum_distance_observed_A": 1.80150621931,
+    "status": "passed"
+  },
+  "interpretation": "Candidate QE/Dojo UPFs are PBE-marked and the static/preflight path is successful, but this is not an approved QE pseudopotential manifest, cutoff-convergence result, or production VCNEB barrier."
+}

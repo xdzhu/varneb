@@ -8,7 +8,7 @@ energy, forces and stress.  Existing ``vcneb.vasp``, ``vcneb.abacus`` and
 ``vcneb.qe`` modules remain available for backwards compatibility; this module
 only gives them a uniform discovery and user-facing entry point.
 
-LAMMPS and CP2K are optional ASE integrations.  They are never imported at
+ABINIT, LAMMPS and CP2K are optional ASE integrations.  They are never imported at
 module import time, so installing VARNEB does not require either executable.
 """
 
@@ -63,6 +63,10 @@ _BACKENDS: tuple[BackendSpec, ...] = (
     BackendSpec(
         "cp2k", "vcneb.backends", "cp2k_shell", True, "adapter",
         "ASE CP2K static force/stress adapter; validate basis/potential files.",
+    ),
+    BackendSpec(
+        "abinit", "vcneb.backends", "abinit", True, "adapter",
+        "ASE ABINIT static force/stress adapter; validate pseudopotential paths and cutoffs.",
     ),
 )
 
@@ -230,6 +234,43 @@ def make_ase_cp2k_factory(
     return factory
 
 
+def make_ase_abinit_factory(
+    *,
+    parameters: Mapping,
+    command: str | None = None,
+    pp_paths: str | Path | list[str | Path] | None = None,
+) -> CalculatorFactory:
+    """Create an ASE ABINIT factory with isolated per-image directories.
+
+    ``command`` is normally the module-provided ``abinit`` executable (or an
+    ``srun`` wrapper).  ABINIT pseudopotentials are supplied through ASE's
+    ``AbinitProfile`` and are deliberately not guessed by VARNEB.
+    """
+
+    supplied = dict(parameters)
+    if pp_paths is None:
+        profile_paths = None
+    elif isinstance(pp_paths, (str, Path)):
+        profile_paths = [str(pp_paths)]
+    else:
+        profile_paths = [str(path) for path in pp_paths]
+
+    def factory(image_index: int, image: Atoms, image_dir: Path):
+        try:
+            from ase.calculators.abinit import Abinit, AbinitProfile
+        except Exception as exc:  # pragma: no cover - optional ASE component
+            raise ImportError("ASE ABINIT support is unavailable") from exc
+        if command is None:
+            raise ValueError("ABINIT requires an explicit command or srun wrapper")
+        image_dir.mkdir(parents=True, exist_ok=True)
+        profile = AbinitProfile(command, pp_paths=profile_paths)
+        calculator = Abinit(profile=profile, directory=str(image_dir), **supplied)
+        calculator.varneb_directory = str(image_dir)
+        return calculator
+
+    return factory
+
+
 __all__ = [
     "BackendSpec",
     "CalculatorFactory",
@@ -238,5 +279,6 @@ __all__ = [
     "backend_specs",
     "get_backend_spec",
     "make_ase_cp2k_factory",
+    "make_ase_abinit_factory",
     "make_ase_lammps_factory",
 ]

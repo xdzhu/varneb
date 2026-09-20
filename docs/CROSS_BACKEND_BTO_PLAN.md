@@ -17,6 +17,16 @@ fixtures.
 3. **CP2K:** choose a reviewed GTH basis/potential set and converge cutoff and
    SCF settings on the existing BTO endpoint.  The CP2K short-project-path
    handling is already implemented and tested on HF.
+4. **ABINIT:** choose a reviewed PBE pseudopotential family (the HF module
+   includes test PSP8 files), then converge `ecut`, k points, and SCF settings
+   on the same endpoint before using it for a BTO path comparison.
+
+The first QE candidate gate is now recorded in
+`validation/backend_smoke/bto_qe_candidate_20260920.json`: one fixed cubic
+endpoint SCF completed and the seven-image path passed the safer
+`auto`-mapping/`log_strain`/minimum-distance preflight.  This evidence is
+deliberately below production status until the UPFs are approved and their
+cutoff/k-point convergence is measured.
 
 ## Execution order
 

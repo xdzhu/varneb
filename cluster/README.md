@@ -2,7 +2,7 @@
 
 ## Workflow index
 
-- `hf_optional_backend_smoke.slurm`: one-task LAMMPS/CP2K/QE contract smoke;
+- `hf_optional_backend_smoke.slurm`: one-task LAMMPS/CP2K/QE/ABINIT contract smoke;
   this checks energy/force/stress and isolated output handling, not a material
   barrier or potential/basis convergence.
 

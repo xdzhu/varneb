@@ -14,6 +14,7 @@ from vcneb.backends import (
     backend_capability_matrix,
     get_backend_spec,
     make_ase_cp2k_factory,
+    make_ase_abinit_factory,
     make_ase_lammps_factory,
 )
 from vcneb.calculator import inspect_calculator
@@ -24,7 +25,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def test_backend_matrix_has_all_supported_adapters() -> None:
     names = [row["name"] for row in backend_capability_matrix()]
-    assert names == ["abacus", "vasp", "qe", "lammps", "cp2k"]
+    assert names == ["abacus", "vasp", "qe", "lammps", "cp2k", "abinit"]
     assert get_backend_spec("LAMMPS").variable_cell
 
 
@@ -64,6 +65,35 @@ def test_cp2k_factory_keeps_output_inside_image(monkeypatch, tmp_path) -> None:
     assert captured["stress_tensor"] is True
 
 
+def test_abinit_factory_uses_profile_and_image_directory(monkeypatch, tmp_path) -> None:
+    import ase.calculators.abinit as abinit
+
+    captured = {}
+
+    class FakeProfile:
+        def __init__(self, command, *, pp_paths=None):
+            captured["command"] = command
+            captured["pp_paths"] = pp_paths
+
+    class FakeAbinit:
+        def __init__(self, **kwargs):
+            captured["kwargs"] = kwargs
+
+    monkeypatch.setattr(abinit, "AbinitProfile", FakeProfile)
+    monkeypatch.setattr(abinit, "Abinit", FakeAbinit)
+    factory = make_ase_abinit_factory(
+        parameters={"ecut": 20, "toldfe": 1.0e-5},
+        command="abinit",
+        pp_paths=tmp_path / "pseudo",
+    )
+    image_dir = tmp_path / "image_0001"
+    image_dir.mkdir()
+    factory(1, Atoms("H", cell=[5, 5, 5], pbc=True), image_dir)
+    assert captured["command"] == "abinit"
+    assert captured["pp_paths"] == [str(tmp_path / "pseudo")]
+    assert captured["kwargs"]["directory"] == str(image_dir)
+
+
 def test_attach_image_calculators_uses_one_directory_per_image(tmp_path) -> None:
     seen = []
 
@@ -95,3 +125,9 @@ def test_cli_backend_and_init_commands(tmp_path) -> None:
         cwd=ROOT, capture_output=True, text=True, check=True,
     )
     assert "valid VARNEB config" in result.stdout
+    result = subprocess.run(
+        [sys.executable, "-m", "vcneb", "doctor", "--backend", "cp2k", "--json"],
+        cwd=ROOT, capture_output=True, text=True, check=True,
+    )
+    doctor = json.loads(result.stdout)[0]
+    assert "cp2k_shell.psmp" in doctor["executable_candidates"]
