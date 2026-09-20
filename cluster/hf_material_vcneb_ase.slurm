@@ -72,6 +72,10 @@ case "${backend}" in
 esac
 
 cd "${repo}"
+# Some HF modulefiles prepend the system Python 3.7 stdlib to PYTHONPATH.
+# The reproducible VARNEB environment is the explicit interpreter above;
+# leaving that path active mixes incompatible importlib implementations.
+unset PYTHONHOME PYTHONPATH
 export OMP_NUM_THREADS=1 PYTHONUNBUFFERED=1
 args=(examples/run_vcneb_ase.py
   --initial "${initial}" --final "${final}" --workdir "${workdir}"
