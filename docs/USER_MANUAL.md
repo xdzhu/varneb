@@ -27,7 +27,15 @@ calculator:
 varneb init varneb.json
 # edit initial, final, backend, workdir, and explicit calculator parameters
 varneb validate-config varneb.json
+varneb prepare varneb.json
 ```
+
+`prepare` is the source-of-truth input gate: it resolves paths relative to the
+JSON file, checks endpoint composition/order, creates the calculator-free
+initial trajectory, and writes `varneb_preflight.json`. It uses the tested
+`log_strain`/automatic-mapping/MIC/translation-alignment defaults and can
+reject a configured minimum-distance or deformation threshold before any
+external executable is launched.
 
 `n_images` includes both fixed endpoints. A seven-image path therefore has
 five worker images. The default ordinary-NEB criterion is `0.10 eV/Å`; set a
@@ -153,7 +161,7 @@ Before a real job:
 ```bash
 ssh hf "sinfo -p hfacnormal01"
 ssh hf "squeue -u iai806"
-ssh hf "module avail 2>&1 | grep -Ei 'lammps|quantum-espresso|cp2k|abacus|vasp'"
+ssh hf "module avail 2>&1 | grep -Ei 'lammps|quantum-espresso|cp2k|abinit|abacus|vasp'"
 ```
 
 Use the cluster templates in `cluster/`. A single manager may launch exclusive

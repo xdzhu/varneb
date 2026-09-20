@@ -89,7 +89,7 @@ def test_abinit_factory_uses_profile_and_image_directory(monkeypatch, tmp_path) 
     image_dir = tmp_path / "image_0001"
     image_dir.mkdir()
     factory(1, Atoms("H", cell=[5, 5, 5], pbc=True), image_dir)
-    assert captured["command"] == "abinit"
+    assert captured["command"].strip("'").endswith("varneb_abinit_runner.sh")
     assert captured["pp_paths"] == [str(tmp_path / "pseudo")]
     assert captured["kwargs"]["directory"] == str(image_dir)
 

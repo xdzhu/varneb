@@ -35,6 +35,7 @@ case "${backend}" in
     fi
     ;;
   abinit)
+    module load compiler/intel/2021.3.0
     module load apps/abinit/intelmpi/8.6.1
     command_name=${COMMAND:-"srun --exclusive --ntasks=1 abinit"}
     if [[ -z "${PSEUDO_DIR:-}" ]]; then

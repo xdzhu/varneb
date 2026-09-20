@@ -12,6 +12,9 @@ python -m pip install -e .
 varneb --version
 varneb backends
 varneb init varneb.json
+# after editing the endpoint paths:
+varneb validate-config varneb.json
+varneb prepare varneb.json
 python examples/run_toy_vcneb.py
 python -m pytest -q
 ```
@@ -68,5 +71,7 @@ For HF module environments, inspect first and load only what the job needs:
 ssh hf "module avail 2>&1 | grep -Ei 'lammps|quantum-espresso|cp2k|abinit|abacus|vasp'"
 ```
 
-See [`docs/USER_MANUAL.md`](docs/USER_MANUAL.md) for calculator-specific
+`varneb prepare` is calculator-free: it writes `initial-vcneb.traj` and a
+`varneb_preflight.json` report before any DFT executable is called. See
+[`docs/USER_MANUAL.md`](docs/USER_MANUAL.md) for calculator-specific
 factories, Slurm isolation, provenance, restarts, and modal analysis.

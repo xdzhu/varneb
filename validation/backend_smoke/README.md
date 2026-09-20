@@ -13,8 +13,10 @@ forces, and stress and the VARNEB capability preflight reports
 - QE: H2 with the installed `H.SG15.PBE.UPF`, `apps/quantum-espresso/intelmpi/7.0`,
   job `27740644`, success with the static `scf` force/stress contract.
 - ABINIT: H2 with the module-provided `H.psp8` test potential,
-  `apps/abinit/intelmpi/8.6.1`; add the job record only after the HF command,
-  stress, and pseudopotential provenance checks pass.
+  `apps/abinit/intelmpi/8.6.1`, job `27740907`, success after loading the
+  Intel runtime and bridging ABINIT 8.x's five-line `.files` protocol. The
+  exact input, output, and pseudopotential hash are recorded in
+  `abinit_hf_20260921.json`.
 
 The H2 force is intentionally not interpreted physically; the case exists to
 exercise the calculator contract.  For production use, a reviewed material
