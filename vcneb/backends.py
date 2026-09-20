@@ -16,6 +16,7 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass
 import hashlib
+import inspect
 from pathlib import Path
 import shlex
 import shutil
@@ -27,6 +28,56 @@ from ase.calculators.calculator import all_changes
 from ase.io import write
 
 CalculatorFactory = Callable[[int, Atoms, Path], object]
+
+
+def make_ase_calculator_factory(
+    calculator: Callable[..., object],
+    *,
+    parameters: Mapping | None = None,
+    command: str | None = None,
+    directory_keyword: str = "directory",
+    label_keyword: str = "label",
+) -> CalculatorFactory:
+    """Adapt any ASE calculator class/factory to the VARNEB image contract.
+
+    The callable must construct an ASE calculator exposing energy, forces and
+    stress.  VARNEB injects a private image directory when the constructor
+    accepts ``directory`` (or, as a fallback, ``label``), and optionally
+    injects ``command`` when that keyword is supported.  Backend-specific
+    profiles such as ASE's QE ``EspressoProfile`` can be supplied in
+    ``parameters``; this function deliberately does not guess a code's input
+    or pseudopotential semantics.
+    """
+
+    supplied = dict(parameters or {})
+    try:
+        signature = inspect.signature(calculator)
+        accepts_kwargs = any(
+            parameter.kind is inspect.Parameter.VAR_KEYWORD
+            for parameter in signature.parameters.values()
+        )
+        accepted = set(signature.parameters)
+    except (TypeError, ValueError):  # pragma: no cover - opaque user factory
+        accepts_kwargs = True
+        accepted = set()
+
+    def factory(image_index: int, image: Atoms, image_dir: Path):
+        params = dict(supplied)
+        if command is not None and "command" not in params and ("command" in accepted or accepts_kwargs):
+            params["command"] = command
+        if directory_keyword not in params and directory_keyword in accepted:
+            params[directory_keyword] = str(image_dir)
+        elif label_keyword not in params and (label_keyword in accepted or accepts_kwargs):
+            params[label_keyword] = str(image_dir / "ase")
+        image_dir.mkdir(parents=True, exist_ok=True)
+        instance = calculator(**params)
+        try:
+            instance.varneb_directory = str(image_dir)
+        except Exception:
+            pass
+        return instance
+
+    return factory
 
 
 @dataclass(frozen=True)
@@ -310,6 +361,7 @@ __all__ = [
     "backend_capability_matrix",
     "backend_specs",
     "get_backend_spec",
+    "make_ase_calculator_factory",
     "make_ase_cp2k_factory",
     "make_ase_abinit_factory",
     "make_ase_lammps_factory",

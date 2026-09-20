@@ -37,6 +37,12 @@ initial trajectory, and writes `varneb_preflight.json`. It uses the tested
 reject a configured minimum-distance or deformation threshold before any
 external executable is launched.
 
+The material production driver `examples/run_vcneb_ase.py` accepts either an
+ASE class (`--calculator module:Class`) or a VARNEB factory
+(`--factory module:function`). The latter is preferred for QE, CP2K, ABINIT,
+and LAMMPS because pseudopotential/profile and file-protocol details remain
+explicit in the factory arguments.
+
 `n_images` includes both fixed endpoints. A seven-image path therefore has
 five worker images. The default ordinary-NEB criterion is `0.10 eV/Å`; set a
 different value explicitly when a study requires it. Endpoints are not
@@ -55,6 +61,23 @@ the generalized VCNEB force. Use:
 from vcneb import validate_image_calculators
 validate_image_calculators(images, require_unique_directories=True)
 ```
+
+For an ASE calculator not yet listed in the registry, use the generic adapter:
+
+```python
+from vcneb import make_ase_calculator_factory, attach_image_calculators
+
+factory = make_ase_calculator_factory(
+    MyAseCalculator,
+    parameters={"cutoff": 400, "profile": reviewed_profile},
+    command="srun --exclusive --ntasks=32 reviewed-code",
+)
+attach_image_calculators(images, workdir="runs/my_backend", factory=factory)
+```
+
+The calculator remains responsible for its own units, pseudopotentials,
+profiles, and stress convention. VARNEB only consumes ASE's energy/forces/
+stress interface and validates that every image has a private directory.
 
 An image directory must be private to one worker. The controller can then
 retry or resume one image without mixing calculator files from another image.

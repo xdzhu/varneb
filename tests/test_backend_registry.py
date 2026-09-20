@@ -15,6 +15,7 @@ from vcneb.backends import (
     get_backend_spec,
     make_ase_cp2k_factory,
     make_ase_abinit_factory,
+    make_ase_calculator_factory,
     make_ase_lammps_factory,
 )
 from vcneb.calculator import inspect_calculator
@@ -92,6 +93,28 @@ def test_abinit_factory_uses_profile_and_image_directory(monkeypatch, tmp_path) 
     assert captured["command"].strip("'").endswith("varneb_abinit_runner.sh")
     assert captured["pp_paths"] == [str(tmp_path / "pseudo")]
     assert captured["kwargs"]["directory"] == str(image_dir)
+
+
+def test_generic_ase_factory_injects_private_directory_and_command(tmp_path) -> None:
+    captured = {}
+
+    class FakeCalculator:
+        def __init__(self, *, directory, command, cutoff):
+            captured.update(directory=directory, command=command, cutoff=cutoff)
+
+    factory = make_ase_calculator_factory(
+        FakeCalculator,
+        parameters={"cutoff": 400},
+        command="srun fake-code",
+    )
+    image_dir = tmp_path / "image_0003"
+    image_dir.mkdir()
+    factory(3, Atoms("H", cell=[5, 5, 5], pbc=True), image_dir)
+    assert captured == {
+        "directory": str(image_dir),
+        "command": "srun fake-code",
+        "cutoff": 400,
+    }
 
 
 def test_attach_image_calculators_uses_one_directory_per_image(tmp_path) -> None:

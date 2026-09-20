@@ -27,6 +27,9 @@ contracts.  The fixed endpoints are not dispatched during every iteration.
    ASE ABINIT/LAMMPS/CP2K factories.  Existing VASP/ABACUS/QE modules remain
    thin, import-compatible adapters. `vcneb.config` provides the
    calculator-free JSON run contract and safe initial-path preparation.
+   `make_ase_calculator_factory` is the generic escape hatch: any ASE
+   calculator class/factory that returns energy, forces, and stress can be
+   attached without adding a conditional to `vcneb.core`.
 4. `vcneb.modes` and `vcneb.phonons`: mode-guided initial paths, strict mode
    subspaces, Gamma eigenvectors, path projection, degeneracy grouping, and
    tangent overlaps.
@@ -72,8 +75,10 @@ ordinary NEB and is skipped for a monotonic path without an interior barrier.
 
 ## Extension rule
 
-To add a calculator, implement one factory and its preflight tests.  Do not add
-calculator conditionals to `vcneb.core`.  The factory must make the launch
-command, directory, unit system, stress support, and input provenance explicit;
-the registry status remains `adapter` until a real HF smoke and audit are
-committed.
+To add a calculator, first try `make_ase_calculator_factory` with a prebuilt ASE
+class/factory and an explicit profile/parameter dictionary.  Implement a
+specialized factory only when the code's file protocol or input contract needs
+it (as with ABINIT, CP2K, VASP, or QE).  Do not add calculator conditionals to
+`vcneb.core`.  The factory must make the launch command, directory, unit
+system, stress support, and input provenance explicit; the registry status
+remains `adapter` until a real HF smoke and audit are committed.

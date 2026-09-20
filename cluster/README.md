@@ -5,6 +5,10 @@
 - `hf_optional_backend_smoke.slurm`: one-task LAMMPS/CP2K/QE/ABINIT contract smoke;
   this checks energy/force/stress and isolated output handling, not a material
   barrier or potential/basis convergence.
+- `hf_material_vcneb_ase.slurm`: generic three-node, 32-MPI-per-image
+  production template for QE/CP2K/ABINIT/LAMMPS. It runs interior images in
+  waves and requires explicit parameter and factory-keyword JSON files; it
+  never invents a potential or pseudopotential.
 
 - `hf_batio3_*`: primary ABACUS BTO validation, optional VASP/QE backend gates,
   and Gamma-point phonon analysis.

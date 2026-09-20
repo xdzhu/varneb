@@ -75,3 +75,7 @@ ssh hf "module avail 2>&1 | grep -Ei 'lammps|quantum-espresso|cp2k|abinit|abacus
 `varneb_preflight.json` report before any DFT executable is called. See
 [`docs/USER_MANUAL.md`](docs/USER_MANUAL.md) for calculator-specific
 factories, Slurm isolation, provenance, restarts, and modal analysis.
+
+For any ASE calculator exposing energy, forces, and stress, use
+`examples/run_vcneb_ase.py`; specialized factories remain available when a
+code needs a profile or legacy file protocol.
