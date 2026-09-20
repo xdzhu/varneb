@@ -24,8 +24,9 @@ contracts.  The fixed endpoints are not dispatched during every iteration.
 1. `vcneb.core`: calculator-independent VC-NEB state and optimization.
 2. `vcneb.calculator`: capability checks and stable failure categories.
 3. `vcneb.backends`: registry, backend status, common image attachment, and
-   ASE LAMMPS/CP2K factories.  Existing VASP/ABACUS/QE modules remain thin,
-   import-compatible adapters.
+   ASE ABINIT/LAMMPS/CP2K factories.  Existing VASP/ABACUS/QE modules remain
+   thin, import-compatible adapters. `vcneb.config` provides the
+   calculator-free JSON run contract and safe initial-path preparation.
 4. `vcneb.modes` and `vcneb.phonons`: mode-guided initial paths, strict mode
    subspaces, Gamma eigenvectors, path projection, degeneracy grouping, and
    tangent overlaps.
@@ -41,6 +42,7 @@ contracts.  The fixed endpoints are not dispatched during every iteration.
 | QE | `vcneb.qe` | yes, `scf` only | HF contract smoke; UPF/cutoff convergence pending |
 | LAMMPS | `vcneb.backends` | yes via ASE | HF contract smoke; potential-specific validation pending |
 | CP2K | `vcneb.backends` | yes via ASE | HF contract smoke; basis/cutoff validation pending |
+| ABINIT | `vcneb.backends` | yes via ASE | HF contract smoke; PSP/cutoff validation pending |
 
 “Adapter” means the Python contract is implemented and tested; it does not
 mean a particular potential, pseudopotential, cutoff, or literature barrier is
@@ -52,6 +54,8 @@ force/stress, endpoint identity, and provenance gates pass.
 ```text
 varneb init varneb.json
 edit endpoint paths and explicit calculator parameters
+varneb validate-config varneb.json
+varneb prepare varneb.json
 varneb doctor --backend <name>
 calculator-free geometry/preflight
 static endpoint calculations and immutable cache

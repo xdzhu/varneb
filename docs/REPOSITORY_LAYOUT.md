@@ -44,7 +44,7 @@ directories hold immutable static results and are reused by the manager.
 ## Naming and provenance rules
 
 Use lowercase `snake_case` for Python modules and scripts, a public backend
-name (`vasp`, `abacus`, `qe`, `lammps`, `cp2k`) in run paths, and a manifest
+name (`vasp`, `abacus`, `qe`, `lammps`, `cp2k`, `abinit`) in run paths, and a manifest
 with the git commit, calculator command, parameter digest, input hashes,
 image count, threshold, and scheduler job IDs.  Never infer a physical
 potential, pseudopotential, or unit system from a filename.
