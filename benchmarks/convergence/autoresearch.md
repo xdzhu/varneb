@@ -96,3 +96,52 @@ unchanged; only the optimizer state and strategy were restarted.
   BlockFIRE 0.01.
 - HfO2 PO-to-M n=20: StagedFIRE from baseline step 103, Slurm 27732731; its
   first completed step reduced `0.278429` to `0.271560`.
+
+## 2026-09-20 VASP transfer and feasibility results
+
+The production-chain tests now separate optimizer acceleration from input
+feasibility and transient calculator failures.
+
+- GaN hexagonal n=29 converged in one conservative BlockFIRE update,
+  `0.104281 -> 0.098719 eV/Angstrom` (Slurm 27732740).
+- CdSe cell mapping n=17 converged in four BlockFIRE updates from the common
+  step-49 chain, `0.111587 -> 0.109890 -> 0.106575 -> 0.101830 ->
+  0.095892 eV/Angstrom` (Slurm 27732728, 2:06:28 wall time).  The historical
+  CheckedFIRE branch from the same chain instead gave `0.124067`, `0.117012`
+  and `0.161471` over its next three updates.  This is a successful rescue,
+  but the baseline was censored before a later crossing, so no unsupported
+  wall-time speedup ratio is assigned to CdSe.
+- HfO2 T-to-PO n=20 exposed a distinct failure of conservative BlockFIRE: it
+  plateaued near `0.188 eV/Angstrom` through step 28.  Candidate-aware
+  StagedFIRE, resumed from the best preserved complete chain, converged after
+  one accepted half-step, `0.101143 -> 0.099347 eV/Angstrom` (Slurm 27735411).
+  The full proposal failed the native Bravais-consistency gate at image 10;
+  no electronic job was launched for it, the half proposal passed, and the
+  final chain passed the normal audit.  This demonstrates why feasibility
+  backtracking and an optimizer are complementary rather than interchangeable.
+  An exact no-backtracking control from the same chain, calculator cache and
+  proposal failed at that full step in six seconds (Slurm 27735454), while the
+  backtracking run accepted the half-step and converged.  This is a controlled
+  algorithm ablation, not an inference from two unrelated trajectories.
+
+The HfO2 VASP lattice tests also show that `SYMPREC` is not a monotonic
+"precision" knob.  Full-chain native probes gave different failure sets as
+the threshold changed.  At `1e-5`, preserved rejected T-to-PO candidates also
+failed real VASP before the first electronic step.  At `1e-4`, two such
+candidates completed, but three images from an accepted T-to-PO chain failed
+real VASP before electronic iteration.  A case-specific fixed `3e-3` contract
+passed both preserved 20-image-chain scans and four representative full-SCF
+canaries; for all
+directly comparable structures, energies and maximum forces were identical
+to the tighter-threshold calculations.  Runtime threshold switching remains
+forbidden, and this evidence does not change the general `1e-4` default.
+Endpoint statics were regenerated from the exact resumed
+trajectories so the coordinate hashes, not only periodic structures, match.
+
+One PO-to-M image then hit a ScaLAPACK `pdstebz/pzheevx` segmentation fault
+after 12 electronic iterations.  Repeating the exact same structure and
+input completed in 55 seconds.  This is classified as a transient calculator
+failure, not a geometry rejection.  The Hefei launcher now permits an
+explicit finite `IMAGE_RETRIES`; retries repeat the identical calculation and
+never change the physical contract.  Successful images remain reusable from
+the content-addressed cache.

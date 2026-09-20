@@ -110,6 +110,50 @@ stopped as dominated.  These negative transfer results remain in the raw log.
 - Do not call a method accelerated until at least two DFT cases improve in
   both electronic work and wall time without a material path change.
 
+## Long-chain VASP transfer
+
+The same conservative BlockFIRE setting was applied to two preserved VASP
+chains without changing endpoints, DFT settings, image count, spring or the
+`0.10 eV/Angstrom` threshold.
+
+| Case | Common start | Accelerated history | Historical FIRE continuation | Result |
+|---|---:|---|---|---|
+| GaN hexagonal, 29 total images | 0.104281 | 0.098719 in 1 update | not required | converged and audited |
+| CdSe cell mapping, 17 total images | 0.111587 | 0.109890, 0.106575, 0.101830, 0.095892 | 0.124067, 0.117012, 0.161471 over the next 3 available updates | converged and audited |
+
+The CdSe run used 2:06:28 wall time for its initial chain evaluation plus four
+updates.  Since the historical branch was stopped before it later reached the
+threshold, this is reported as a successful convergence rescue rather than a
+numerical speedup factor.
+
+HfO2 n=20 provides the counterexample and the safety result.  Conservative
+BlockFIRE plateaued near 0.188 through 28 steps on T-to-PO, so per-image state
+alone is not a universal cure.  Candidate-aware StagedFIRE later converged the
+best preserved chain from 0.101143 to 0.099347 in one accepted update.  Its
+full proposal was rejected by the native VASP lattice gate and preserved as a
+trajectory; a half proposal passed and was the only candidate sent to DFT.
+The final audited barrier is 0.01189188 eV under this 20-image, no-climb
+contract.  An exact control with zero backtracking retries used the same
+starting chain, cache and full proposal; it stopped at the image-10 rejection
+in six seconds.  Thus the successful half-step is a direct ablation of the
+backtracking mechanism rather than a comparison between different runs.
+
+This transfer supports a narrower claim: image-local FIRE can accelerate or
+rescue some long chains, while staged trust radii plus pre-DFT feasibility
+backtracking prevent known invalid proposals and recover difficult chains.
+The method should not be advertised as uniformly faster on every path.
+
+## Calculator-failure semantics
+
+Geometry feasibility failures and electronic-runtime failures are handled
+differently.  A candidate that fails the native lattice probe is shortened
+before DFT.  An intermittent VASP failure may be repeated only with identical
+geometry and input.  The production launcher exposes a finite
+`IMAGE_RETRIES` value for this purpose; it does not alter `SYMPREC`, INCAR or
+the path.  This distinction was validated when one HfO2 PO-to-M image crashed
+inside ScaLAPACK after 12 DAV iterations but an independent exact-input repeat
+completed normally.
+
 ## Follow-up strategy matrix
 
 | Strategy | Intended bottleneck | Required evidence |
