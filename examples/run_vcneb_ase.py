@@ -13,6 +13,7 @@ from __future__ import annotations
 import argparse
 import importlib
 import json
+import math
 from pathlib import Path
 import sys
 
@@ -81,6 +82,17 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--minimum-distance", type=float, default=None)
     parser.add_argument("--maximum-deformation", type=float, default=None)
     parser.add_argument("--validate-only", action="store_true")
+    parser.add_argument(
+        "--static-only",
+        action="store_true",
+        help="evaluate the fixed endpoints once and write ase_static_summary.json",
+    )
+    parser.add_argument(
+        "--static-endpoints",
+        choices=("both", "initial", "final"),
+        default="both",
+        help="endpoints evaluated by --static-only (default: both)",
+    )
     return parser.parse_args()
 
 
@@ -159,6 +171,45 @@ def main() -> None:
     )
     if args.validate_only:
         print(f"[OK] ASE VCNEB preflight passed: {workdir / 'vcneb_preflight.json'}")
+        return
+
+    if args.static_only:
+        endpoint_indices = {
+            "both": (0, len(images) - 1),
+            "initial": (0,),
+            "final": (len(images) - 1,),
+        }[args.static_endpoints]
+        endpoint_results = []
+        for index in endpoint_indices:
+            image = images[index]
+            energy = float(image.get_potential_energy())
+            forces = image.get_forces()
+            stress = image.get_stress(voigt=False)
+            if not all(math.isfinite(float(value)) for value in forces.ravel()):
+                raise RuntimeError(f"non-finite endpoint forces at image {index}")
+            if not all(math.isfinite(float(value)) for value in stress.ravel()):
+                raise RuntimeError(f"non-finite endpoint stress at image {index}")
+            endpoint_results.append(
+                {
+                    "index": index,
+                    "label": "initial" if index == 0 else "final",
+                    "energy_eV": energy,
+                    "max_force_eV_per_A": float(abs(forces).max()),
+                    "stress_eV_per_A3": stress.tolist(),
+                    "n_atoms": len(image),
+                }
+            )
+        static_summary = {
+            **metadata,
+            "status": "static_completed",
+            "static_endpoints": endpoint_results,
+            "endpoint_evaluation_policy": "fixed_cached_once",
+        }
+        (workdir / "ase_static_summary.json").write_text(
+            json.dumps(static_summary, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+        print(json.dumps(static_summary, indent=2, sort_keys=True))
         return
 
     executor = (
