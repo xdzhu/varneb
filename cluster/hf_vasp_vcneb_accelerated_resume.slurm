@@ -54,12 +54,14 @@ fi
 
 mkdir -p "$(dirname "${WORKDIR}")"
 cd "${SOURCE_REPO}"
+# Optional retries repeat the identical calculator call; they never alter the contract.
 "${python}" examples/run_vcneb_vasp.py \
   --initial "${INITIAL_DIR}" --final "${FINAL_DIR}" \
   --resume --resume-trajectory "${OLD_TRAJECTORY}" \
   --workdir "${WORKDIR}" --n-images "${N_IMAGES}" --fmax 0.10 \
   --steps "${STEPS:-300}" --k "${K_SPRING}" --pressure-gpa "${PRESSURE_GPA}" \
-  "${optimizer_args[@]}" --image-workers "${IMAGE_WORKERS}" --image-retries 0 --no-climb \
+  "${optimizer_args[@]}" --image-workers "${IMAGE_WORKERS}" \
+  --image-retries "${IMAGE_RETRIES:-0}" --no-climb \
   --initial-static-summary "${STATIC_INITIAL}" --final-static-summary "${STATIC_FINAL}" \
   --image-cache-dir "${CACHE_DIR}" --image-cache-namespace "${IMAGE_CACHE_NAMESPACE}" \
   --vasp-isym -1 --vasp-symprec "${VASP_SYMPREC}" "${candidate_args[@]}" \
