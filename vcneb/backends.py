@@ -283,10 +283,14 @@ def make_ase_abinit_factory(
             "#!/bin/sh\n"
             "set -eu\n"
             'input="${1:-abinit.in}"\n'
-            'pseudo=$(grep -m1 "^[[:space:]]*pseudos" "$input" | sed \'s/.*pseudos[[:space:]]*"//; s/".*//\')\n'
+            'pseudo=$(sed -n \'s/^[[:space:]]*pseudos[[:space:]]*//p\' "$input")\n'
             "test -n \"$pseudo\"\n"
             'sed \'/^[[:space:]]*pseudos[[:space:]]/d\' "$input" > abinit.varneb.in\n'
-            f"printf '%s\\n%s\\n%s\\n%s\\n%s\\n%s\\n' abinit.varneb.in abinit.abo abinit.tmp abinito abinito \"$pseudo\" | exec {shlex.quote(executable)}\n",
+            "{\n"
+            "  printf '%s\\n' abinit.varneb.in abinit.abo abinit.tmp abinito abinito\n"
+            "  printf '%s\\n' \"$pseudo\" | tr ',' '\\n' | sed 's/^\\\"//; s/\\\"$//'\n"
+            "} > abinit.files\n"
+            f"exec {shlex.quote(executable)} < abinit.files\n",
             encoding="utf-8",
         )
         runner.chmod(0o755)
