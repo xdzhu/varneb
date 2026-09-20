@@ -47,7 +47,7 @@ case "${backend}" in
   qe)
     module load apps/quantum-espresso/intelmpi/7.0
     factory=${FACTORY:-vcneb.qe:make_ase_espresso_factory}
-    command=${command:-"srun --exclusive --nodes=1 --ntasks=${image_mpi} --ntasks-per-node=${image_mpi} --mpi=pmi2 pw.x"}
+    command=${command:-"srun --exclusive --nodes=1 --ntasks=${image_mpi} --ntasks-per-node=${image_mpi} pw.x"}
     ;;
   cp2k)
     module load apps/cp2k/intelmpi/2024.1-2021-plumed
@@ -77,7 +77,6 @@ cd "${repo}"
 # leaving that path active mixes incompatible importlib implementations.
 unset PYTHONHOME PYTHONPATH
 export OMP_NUM_THREADS=1 PYTHONUNBUFFERED=1
-export I_MPI_PMI_LIBRARY=/opt/gridview/slurm/lib/libpmi2.so
 args=(examples/run_vcneb_ase.py
   --initial "${initial}" --final "${final}" --workdir "${workdir}"
   --n-images "${n_images}" --fmax "${fmax}" --steps "${steps}" --k "${spring}"
