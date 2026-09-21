@@ -10,6 +10,11 @@ VARNEB 控制器只依赖每个 image 的 `energy`、`forces` 和完整 `stress`
 
 生产路径仍使用普通 VC-NEB `fmax = 0.10 eV/A`、固定端点和无 CI。最终是否收敛以完整链的 `final_max_generalized_force_eV_per_A <= 0.10` 判定，不能以 Slurm exit code 或某一轮回弹判定。
 
+HF 的 ABINIT 8.6.1 启动契约也已固定：必须由 Slurm-aware `mpiexec -n N abinit`
+启动，不能把 `srun ... abinit` 当作 MPI launcher。后者会向该二进制传入
+`pmi_args`，造成所有 rank 进入 socket 等待；这属于外部启动层失败，已用
+`27749797/98` 的独立目录复现并取消，未把它误判为 SCF 或 NEB 发散。
+
 ## ABACUS GaN：结果解析契约修复
 
 ### 根因
@@ -92,7 +97,8 @@ GaN CP2K `27741431` 也因端点静态审计显示固定端点基线无效而取
 | BTO / CP2K endpoint relaxation（400 Ry 修正版） | 27749725, 27749726 | 独立目录运行中；使用 `cutoff_ry: 400`、单 rank shell、`MAXSTEP=0.02`。 |
 | BTO / CP2K endpoint tightening | 27749774 | 从修正版初端点独立续算，目标广义力 `5e-4 eV/A`，用于满足 `0.1 kbar` 应力门禁；运行中。 |
 | GaN / CP2K endpoint relaxation（400 Ry 修正版） | 27749727, 27749728 | 独立目录运行中；使用 `cutoff_ry: 400`、单 rank shell、`MAXSTEP=0.02`。 |
-| GaN / ABINIT-HGH-LDA endpoint relaxation | 27749797, 27749798 | 独立端点准备运行中；与旧路径同一 HGH-LDA 物理模型，先重建端点，不与 PBE/VASP 能垒混合。 |
+| GaN / ABINIT-HGH-LDA endpoint relaxation（错误 launcher） | 27749797, 27749798 | 已取消并保留；`srun` 注入 `pmi_args` 导致 MPI socket 等待。 |
+| GaN / ABINIT-HGH-LDA endpoint relaxation（mpiexec 修正版） | 27749871, 27749872 | 独立端点准备运行中；与旧路径同一 HGH-LDA 物理模型，先重建端点，不与 PBE/VASP 能垒混合。 |
 
 ## 下一步
 
