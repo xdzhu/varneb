@@ -324,6 +324,17 @@ def make_ase_abinit_factory(
         profile_paths = [str(pp_paths)]
     else:
         profile_paths = [str(path) for path in pp_paths]
+    if "pps" in supplied:
+        if not profile_paths:
+            raise ValueError(
+                "ABINIT parameters with 'pps' require explicit pp_paths"
+            )
+        missing = [path for path in profile_paths if not Path(path).is_dir()]
+        if missing:
+            raise FileNotFoundError(
+                "ABINIT pseudopotential directories do not exist: "
+                + ", ".join(missing)
+            )
 
     def factory(image_index: int, image: Atoms, image_dir: Path):
         try:

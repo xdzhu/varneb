@@ -10,10 +10,22 @@ VARNEB 控制器只依赖每个 image 的 `energy`、`forces` 和完整 `stress`
 
 生产路径仍使用普通 VC-NEB `fmax = 0.10 eV/A`、固定端点和无 CI。最终是否收敛以完整链的 `final_max_generalized_force_eV_per_A <= 0.10` 判定，不能以 Slurm exit code 或某一轮回弹判定。
 
-HF 的 ABINIT 8.6.1 启动契约也已固定：必须由 Slurm-aware `mpiexec -n N abinit`
-启动，不能把 `srun ... abinit` 当作 MPI launcher。后者会向该二进制传入
-`pmi_args`，造成所有 rank 进入 socket 等待；这属于外部启动层失败，已用
-`27749797/98` 的独立目录复现并取消，未把它误判为 SCF 或 NEB 发散。
+HF 的 ABINIT 8.6.1 启动契约也已固定：该二进制链接 Intel MPI/Fortran
+2017.4/2017.5，必须加载匹配的 `compiler/intel/2017.5.239` 与
+`mpi/intelmpi/2017.4.239`，再由 `mpiexec.hydra -bootstrap slurm -n N abinit`
+启动。HF 默认 Intel 2021 环境的 `srun ... abinit` 会向该二进制传入
+`pmi_args`，而仅切换到 `mpiexec` 仍会因缺少 `libifport.so.5` 或 PMI ABI
+不匹配而失败。独立 32-rank canary `27749997` 在匹配的 compiler/MPI 与
+Hydra 组合下返回 `abinit 8.6.1`；对照 `27749996` 的 `srun --mpi=pmi2`
+仍以 `PMI_KVS_Get returned -1` 失败。此前 `27749797/98`、`27749871/72`
+的目录和日志均保留，未将启动层失败误判为 SCF 或 NEB 发散。
+
+ABINIT 的伪势也是输入契约的一部分：包含 `pps` 的参数必须同时提供存在的
+`pp_paths` 目录。缺少该目录会在 ASE 写入输入前给出明确的
+`ABINIT parameters with 'pps' require explicit pp_paths`/目录不存在错误，
+不再等到 32 个 rank 启动后才产生含糊的伪势解析失败。GaN HGH-LDA 试跑
+`27750045/46` 正是捕获了这一缺口；补充 `abinit_hgh_factory_kwargs.json`
+后的 `27750056/57` 才进入真实端点计算。
 
 ## ABACUS GaN：结果解析契约修复
 
@@ -98,12 +110,15 @@ GaN CP2K `27741431` 也因端点静态审计显示固定端点基线无效而取
 | BTO / CP2K endpoint tightening | 27749774 | 从修正版初端点独立续算，目标广义力 `5e-4 eV/A`，用于满足 `0.1 kbar` 应力门禁；运行中。 |
 | GaN / CP2K endpoint relaxation（400 Ry 修正版） | 27749727, 27749728 | 独立目录运行中；使用 `cutoff_ry: 400`、单 rank shell、`MAXSTEP=0.02`。 |
 | GaN / ABINIT-HGH-LDA endpoint relaxation（错误 launcher） | 27749797, 27749798 | 已取消并保留；`srun` 注入 `pmi_args` 导致 MPI socket 等待。 |
-| GaN / ABINIT-HGH-LDA endpoint relaxation（mpiexec 修正版） | 27749871, 27749872 | 独立端点准备运行中；与旧路径同一 HGH-LDA 物理模型，先重建端点，不与 PBE/VASP 能垒混合。 |
+| GaN / ABINIT-HGH-LDA endpoint relaxation（ABI 不匹配复现） | 27749871, 27749872 | 已取消并保留；Intel 2017/2021 混用，`mpiexec` 仍复现 `pmi_args`/socket 等待。 |
+| ABINIT 32-rank launcher canary | 27749992, 27749995, 27749996, 27749997 | 仅诊断：缺 compiler runtime、错误 PMI 组合均失败；匹配 Intel 2017 + Hydra 的 `27749997` 成功返回 8.6.1。 |
+| GaN / ABINIT-HGH-LDA endpoint relaxation（缺伪势路径） | 27750045, 27750046 | 预检后失败并保留；`pps=hgh` 未配 `pp_paths`，输入契约已补强。 |
+| GaN / ABINIT-HGH-LDA endpoint relaxation（匹配 ABI/伪势的新目录） | 27750056, 27750057 | 独立 `abinit_endpoint_relax_lda_hydra2` 目录运行中；与旧路径同一 HGH-LDA 物理模型，待端点摘要和静态门禁，不与 PBE/VASP 能垒混合。 |
 
 ## 下一步
 
 1. 等待并审计 `27744907` 的 ABACUS 生产结果；若再次失败，只看最小解析器的具体契约错误，不再改 FIRE 参数。
 2. 用 `snapshots/step_0000` 的完整快照在独立目录启动 guarded continuation，启用 `maximum_cell_step=0.05`；当前 `27744907` 已取消，原目录只作为失控证据保留。
 3. 对 CP2K BTO/GaN 修正版端点先用 `STATIC_ONLY=1` 生成独立摘要，只有通过门禁后才允许新的生产路径，不覆盖已取消目录。
-4. 对 ABINIT GaN 先完成 HGH-LDA 端点重建并通过同一门禁，再决定是否重跑；当前 `max_steps_reached` 结果不得进入生产矩阵。若要与 PBE 结果比较，必须另行获得并固定 PBE 赝势，不能把 LDA/HGH 结果标成 PBE。
+4. 对 ABINIT GaN 先完成 HGH-LDA 端点重建并通过同一门禁，再决定是否重跑；当前 `max_steps_reached` 结果不得进入生产矩阵。新的端点任务必须使用匹配 Intel 2017 + Hydra 启动契约。若要与 PBE 结果比较，必须另行获得并固定 PBE 赝势，不能把 LDA/HGH 结果标成 PBE。
 5. 生成统一后端状态表、路径图和文献比较数据；未达到阈值或非同一物理模型的结果不得进入“已验证生产矩阵”。

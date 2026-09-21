@@ -174,6 +174,7 @@ def test_abinit_factory_uses_profile_and_image_directory(monkeypatch, tmp_path) 
 
     monkeypatch.setattr(abinit, "AbinitProfile", FakeProfile)
     monkeypatch.setattr(abinit, "Abinit", FakeAbinit)
+    (tmp_path / "pseudo").mkdir()
     factory = make_ase_abinit_factory(
         parameters={"ecut": 20, "toldfe": 1.0e-5},
         command="abinit",
@@ -185,6 +186,19 @@ def test_abinit_factory_uses_profile_and_image_directory(monkeypatch, tmp_path) 
     assert captured["command"].strip("'").endswith("varneb_abinit_runner.sh")
     assert captured["pp_paths"] == [str(tmp_path / "pseudo")]
     assert captured["kwargs"]["directory"] == str(image_dir)
+
+
+def test_abinit_factory_rejects_missing_pseudopotential_contract(tmp_path) -> None:
+    with pytest.raises(ValueError, match="require explicit pp_paths"):
+        make_ase_abinit_factory(
+            parameters={"pps": "hgh"}, command="abinit"
+        )
+    with pytest.raises(FileNotFoundError, match="pseudopotential directories"):
+        make_ase_abinit_factory(
+            parameters={"pps": "hgh"},
+            command="abinit",
+            pp_paths=tmp_path / "missing-pseudo",
+        )
 
 
 def test_generic_ase_factory_injects_private_directory_and_command(tmp_path) -> None:

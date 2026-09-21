@@ -26,12 +26,18 @@ def test_endpoint_template_uses_single_rank_cp2k_shell() -> None:
     assert 'RUN_DFT:-0' in text
 
 
-def test_abinit_templates_use_slurm_mpiexec_wrapper() -> None:
+def test_abinit_templates_use_matching_intel_hydra_launcher() -> None:
     production = TEMPLATE.read_text(encoding="utf-8")
     endpoint = ENDPOINT_TEMPLATE.read_text(encoding="utf-8")
-    assert 'mpiexec -n ${image_mpi} abinit' in production
+    assert 'module load compiler/intel/2017.5.239' in production
+    assert 'module load mpi/intelmpi/2017.4.239' in production
+    assert 'mpiexec.hydra -bootstrap slurm -n ${image_mpi} abinit' in production
+    assert 'unset I_MPI_PMI_LIBRARY I_MPI_HYDRA_BOOTSTRAP_EXEC_EXTRA_ARGS I_MPI_HYDRA_BOOTSTRAP' in production
     assert 'srun --exclusive --nodes=1 --ntasks=${image_mpi} --ntasks-per-node=${image_mpi} abinit' not in production
-    assert 'mpiexec -n 32 abinit' in endpoint
+    assert 'module load compiler/intel/2017.5.239' in endpoint
+    assert 'module load mpi/intelmpi/2017.4.239' in endpoint
+    assert 'mpiexec.hydra -bootstrap slurm -n 32 abinit' in endpoint
+    assert 'unset I_MPI_PMI_LIBRARY I_MPI_HYDRA_BOOTSTRAP_EXEC_EXTRA_ARGS I_MPI_HYDRA_BOOTSTRAP' in endpoint
     assert 'srun --exclusive --nodes=1 --ntasks=32 --ntasks-per-node=32 abinit' not in endpoint
 
 

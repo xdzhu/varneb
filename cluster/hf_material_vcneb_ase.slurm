@@ -65,13 +65,19 @@ case "${backend}" in
     command=${command:-"srun --exclusive --nodes=1 --ntasks=1 --ntasks-per-node=1 cp2k_shell.psmp"}
     ;;
   abinit)
-    module load compiler/intel/2021.3.0
+    # The HF ABINIT 8.6.1 executable is linked against the Intel 2017
+    # Fortran/MPI ABI.  Loading a newer compiler or the site srun wrapper
+    # leaves ranks in PMI/socket startup (or injects the unsupported
+    # ``pmi_args`` option), so keep the runtime and launcher matched here.
+    module load compiler/intel/2017.5.239
+    module load mpi/intelmpi/2017.4.239
     module load apps/abinit/intelmpi/8.6.1
     factory=${FACTORY:-vcneb.backends:make_ase_abinit_factory}
-    # HF's ABINIT 8.6.1 binary is launched by the Slurm-aware mpiexec
-    # wrapper.  Calling it through srun injects PMI arguments that ABINIT
-    # misinterprets and leaves all ranks waiting in the MPI socket layer.
-    command=${command:-"mpiexec -n ${image_mpi} abinit"}
+    # Use Intel MPI's Hydra launcher explicitly.  Do not inherit the HF
+    # site's external-launcher/PMI overrides; Hydra bootstraps through Slurm
+    # without passing Slurm's pmi_args to ABINIT.
+    unset I_MPI_PMI_LIBRARY I_MPI_HYDRA_BOOTSTRAP_EXEC_EXTRA_ARGS I_MPI_HYDRA_BOOTSTRAP
+    command=${command:-"mpiexec.hydra -bootstrap slurm -n ${image_mpi} abinit"}
     ;;
   lammps)
     module load apps/lammps/23Jun2022-intel-21
