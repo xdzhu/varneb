@@ -90,6 +90,7 @@ GaN CP2K `27741431` 也因端点静态审计显示固定端点基线无效而取
 | BTO / CP2K endpoint relaxation（旧单位错误） | 27749624, 27749625 | 已取消并保留；旧 profile 把 400 Ry 错写成 400 eV，诊断应力 1459–3788 GPa，不进入结果矩阵。 |
 | GaN / CP2K endpoint relaxation（旧单位错误） | 27749627, 27749628 | 已取消并保留；同一 cutoff 单位错误，不进入结果矩阵。 |
 | BTO / CP2K endpoint relaxation（400 Ry 修正版） | 27749725, 27749726 | 独立目录运行中；使用 `cutoff_ry: 400`、单 rank shell、`MAXSTEP=0.02`。 |
+| BTO / CP2K endpoint tightening | 27749774 | 从修正版初端点独立续算，目标广义力 `5e-4 eV/A`，用于满足 `0.1 kbar` 应力门禁；运行中。 |
 | GaN / CP2K endpoint relaxation（400 Ry 修正版） | 27749727, 27749728 | 独立目录运行中；使用 `cutoff_ry: 400`、单 rank shell、`MAXSTEP=0.02`。 |
 | GaN / ABINIT-HGH-LDA endpoint relaxation | 27749797, 27749798 | 独立端点准备运行中；与旧路径同一 HGH-LDA 物理模型，先重建端点，不与 PBE/VASP 能垒混合。 |
 
