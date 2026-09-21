@@ -26,6 +26,15 @@ def test_endpoint_template_uses_single_rank_cp2k_shell() -> None:
     assert 'RUN_DFT:-0' in text
 
 
+def test_abinit_templates_use_slurm_mpiexec_wrapper() -> None:
+    production = TEMPLATE.read_text(encoding="utf-8")
+    endpoint = ENDPOINT_TEMPLATE.read_text(encoding="utf-8")
+    assert 'mpiexec -n ${image_mpi} abinit' in production
+    assert 'srun --exclusive --nodes=1 --ntasks=${image_mpi} --ntasks-per-node=${image_mpi} abinit' not in production
+    assert 'mpiexec -n 32 abinit' in endpoint
+    assert 'srun --exclusive --nodes=1 --ntasks=32 --ntasks-per-node=32 abinit' not in endpoint
+
+
 def test_gan_cp2k_stable_profile_uses_conservative_mixing() -> None:
     profile = json.loads(
         (Path(__file__).parents[1] / "examples" / "material_profiles" / "cp2k_gan_pbe_dzvp_stable.json").read_text()

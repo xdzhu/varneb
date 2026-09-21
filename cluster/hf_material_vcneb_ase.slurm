@@ -68,7 +68,10 @@ case "${backend}" in
     module load compiler/intel/2021.3.0
     module load apps/abinit/intelmpi/8.6.1
     factory=${FACTORY:-vcneb.backends:make_ase_abinit_factory}
-    command=${command:-"srun --exclusive --nodes=1 --ntasks=${image_mpi} --ntasks-per-node=${image_mpi} abinit"}
+    # HF's ABINIT 8.6.1 binary is launched by the Slurm-aware mpiexec
+    # wrapper.  Calling it through srun injects PMI arguments that ABINIT
+    # misinterprets and leaves all ranks waiting in the MPI socket layer.
+    command=${command:-"mpiexec -n ${image_mpi} abinit"}
     ;;
   lammps)
     module load apps/lammps/23Jun2022-intel-21

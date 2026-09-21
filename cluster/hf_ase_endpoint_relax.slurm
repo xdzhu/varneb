@@ -45,7 +45,9 @@ case "${backend}" in
     module load compiler/intel/2021.3.0
     module load apps/abinit/intelmpi/8.6.1
     factory=${FACTORY:-vcneb.backends:make_ase_abinit_factory}
-    command=${command:-"srun --exclusive --nodes=1 --ntasks=32 --ntasks-per-node=32 abinit"}
+    # The HF ABINIT executable must be started through the Slurm-aware
+    # mpiexec wrapper; srun passes PMI options that ABINIT 8.6.1 rejects.
+    command=${command:-"mpiexec -n 32 abinit"}
     ;;
   lammps)
     module load apps/lammps/23Jun2022-intel-21
