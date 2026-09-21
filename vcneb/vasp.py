@@ -506,6 +506,7 @@ def make_ase_vasp_factory(
     *,
     source_dir: str | Path,
     command: str,
+    parameters: Optional[Mapping] = None,
     overrides: Optional[Mapping] = None,
     minimum_distance: float | None = 1e-6,
 ) -> Callable[[int, Atoms, Path], ExplicitPotcarVasp]:
@@ -518,8 +519,12 @@ def make_ase_vasp_factory(
     counterpart of the generic ASE factories in :mod:`vcneb.backends`.
     """
 
+    if parameters is not None and overrides is not None:
+        raise ValueError("pass either parameters or overrides, not both")
     source = Path(source_dir).resolve()
-    params, potcar = prepare_vasp_static_parameters(source, overrides=overrides)
+    params, potcar = prepare_vasp_static_parameters(
+        source, overrides=parameters if parameters is not None else overrides
+    )
 
     def factory(image_index: int, image: Atoms, image_dir: Path) -> ExplicitPotcarVasp:
         del image_index
