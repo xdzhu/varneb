@@ -19,6 +19,7 @@ from vcneb.backends import (
     make_ase_lammps_factory,
 )
 from vcneb.calculator import inspect_calculator
+from vcneb.config import RunConfig
 from vcneb.optimizer_registry import get_optimizer_spec, optimizer_capability_matrix
 
 
@@ -36,6 +37,18 @@ def test_optimizer_registry_is_independent_from_backend_registry() -> None:
     rows = optimizer_capability_matrix()
     assert rows
     assert {row["backend_independent"] for row in rows} == {"true"}
+
+
+def test_run_config_accepts_cross_backend_optimizer_combinations(tmp_path) -> None:
+    common = {
+        "initial": tmp_path / "initial.vasp",
+        "final": tmp_path / "final.vasp",
+        "workdir": tmp_path / "run",
+    }
+    vasp_split_fire = RunConfig(backend="vasp", optimizer="SplitFIRE", **common)
+    abacus_bfgs = RunConfig(backend="abacus", optimizer="BFGS", **common)
+    assert (vasp_split_fire.backend, vasp_split_fire.optimizer) == ("vasp", "SplitFIRE")
+    assert (abacus_bfgs.backend, abacus_bfgs.optimizer) == ("abacus", "BFGS")
 
 
 def test_lammps_factory_is_explicit_and_isolated(tmp_path) -> None:
