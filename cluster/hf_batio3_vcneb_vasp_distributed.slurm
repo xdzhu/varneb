@@ -52,8 +52,9 @@ for path in "${initial_dir}/CONTCAR" "${initial_dir}/INCAR" "${initial_dir}/KPOI
 done
 
 export OMP_NUM_THREADS=1
+export I_MPI_PMI_LIBRARY=/opt/gridview/slurm/lib/libpmi2.so
 export VCNEB_GIT_REVISION="${VCNEB_GIT_REVISION:-remote-sync-unknown}"
-export VASP_COMMAND="srun --exclusive --nodes=1 --ntasks=${image_mpi} --ntasks-per-node=${image_mpi} ${VASP_BIN}"
+export VASP_COMMAND="srun --exclusive --exact --nodes=1 --ntasks=${image_mpi} --ntasks-per-node=${image_mpi} --cpus-per-task=1 --distribution=block:block --mpi=pmi2 ${VASP_BIN}"
 cd "${repo}"
 "${python}" scripts/validate_endpoint_identity_gate.py --gate "${endpoint_identity_gate}"
 "${python}" scripts/validate_vasp_static_baseline_gate.py \
