@@ -25,7 +25,12 @@ ABINIT 的伪势也是输入契约的一部分：包含 `pps` 的参数必须同
 `ABINIT parameters with 'pps' require explicit pp_paths`/目录不存在错误，
 不再等到 32 个 rank 启动后才产生含糊的伪势解析失败。GaN HGH-LDA 试跑
 `27750045/46` 正是捕获了这一缺口；补充 `abinit_hgh_factory_kwargs.json`
-后的 `27750056/57` 才进入真实端点计算。
+后的 `27750056/57` 进入真实端点计算；其中 B1 暴露了自动对称性中止，B4
+随后为保持端点契约一致而取消，二者目录均保留。
+
+另外，ABINIT 后端默认写入 `nsym=1`（恒等对称操作），避免由变胞路径或
+POSCAR 末位舍入触发自动对称性识别的 `chkorthsy` 中止。需要利用更高对称性
+时必须显式提供并审核 `nsym/symrel`，不能让生产路径隐式依赖自动分类。
 
 ## ABACUS GaN：结果解析契约修复
 
@@ -113,7 +118,8 @@ GaN CP2K `27741431` 也因端点静态审计显示固定端点基线无效而取
 | GaN / ABINIT-HGH-LDA endpoint relaxation（ABI 不匹配复现） | 27749871, 27749872 | 已取消并保留；Intel 2017/2021 混用，`mpiexec` 仍复现 `pmi_args`/socket 等待。 |
 | ABINIT 32-rank launcher canary | 27749992, 27749995, 27749996, 27749997 | 仅诊断：缺 compiler runtime、错误 PMI 组合均失败；匹配 Intel 2017 + Hydra 的 `27749997` 成功返回 8.6.1。 |
 | GaN / ABINIT-HGH-LDA endpoint relaxation（缺伪势路径） | 27750045, 27750046 | 预检后失败并保留；`pps=hgh` 未配 `pp_paths`，输入契约已补强。 |
-| GaN / ABINIT-HGH-LDA endpoint relaxation（匹配 ABI/伪势的新目录） | 27750056, 27750057 | 独立 `abinit_endpoint_relax_lda_hydra2` 目录运行中；与旧路径同一 HGH-LDA 物理模型，待端点摘要和静态门禁，不与 PBE/VASP 能垒混合。 |
+| GaN / ABINIT-HGH-LDA endpoint relaxation（自动对称性试跑） | 27750056, 27750057 | B1 因 `chkorthsy` 末位晶格噪声失败，B4 为一致性取消；独立目录和日志保留。 |
+| GaN / ABINIT-HGH-LDA endpoint relaxation（`nsym=1` 修正版） | 27750109, 27750110 | 新独立 `abinit_endpoint_relax_lda_nsym` 目录运行中；与旧路径同一 HGH-LDA 物理模型，待端点摘要和静态门禁，不与 PBE/VASP 能垒混合。 |
 
 ## 下一步
 

@@ -318,6 +318,12 @@ def make_ase_abinit_factory(
     # ``prteig``; enabling it avoids a successful SCF being reported as a
     # calculator failure during result parsing.
     supplied.setdefault("prteig", 1)
+    # VC-NEB images generally break endpoint symmetry, and tiny decimal noise
+    # in a transformed cell can make ABINIT's automatic symmetry finder abort
+    # before SCF (chkorthsy).  Keep the calculator contract conservative and
+    # explicit: identity is still a valid symmetry (nsym=1), while users can
+    # opt into a larger, audited symmetry set through parameters.
+    supplied.setdefault("nsym", 1)
     if pp_paths is None:
         profile_paths = None
     elif isinstance(pp_paths, (str, Path)):

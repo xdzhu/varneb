@@ -186,6 +186,7 @@ def test_abinit_factory_uses_profile_and_image_directory(monkeypatch, tmp_path) 
     assert captured["command"].strip("'").endswith("varneb_abinit_runner.sh")
     assert captured["pp_paths"] == [str(tmp_path / "pseudo")]
     assert captured["kwargs"]["directory"] == str(image_dir)
+    assert captured["kwargs"]["nsym"] == 1
 
 
 def test_abinit_factory_rejects_missing_pseudopotential_contract(tmp_path) -> None:
