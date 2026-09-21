@@ -79,6 +79,8 @@ GaN CP2K `27741431` 也因端点静态审计显示固定端点基线无效而取
 | BTO / VASP | 27741623 | 最终力 `0.095145 eV/A`，能垒 `0.042644 eV`；已收敛。 |
 | GaN / ABACUS（新解析器重跑） | 27744907 | 已取消；运行至第 15 步，`fmax` 在 `3.17–3.27 eV/A` 平台并出现 `54190`、`26643 eV/A` 尖峰；image 19 单像体积发散，原目录保留为失败证据。 |
 | GaN / ABACUS（guarded continuation） | 27749598 | 已从 `snapshots/chain_step_0000.traj` 在独立源码/工作目录启动，启用 `maximum_cell_step=0.05` 和 8 次回溯；当前运行中，尚未产生第一步摘要。 |
+| BTO / CP2K endpoint relaxation | 27749624, 27749625 | 初末端点独立 BFGS 准备任务，使用稳定 PBE/DZVP profile；运行中。 |
+| GaN / CP2K endpoint relaxation | 27749627, 27749628 | 初末端点独立 BFGS 准备任务，使用稳定 PBE/DZVP profile；运行中。 |
 
 ## 下一步
 
