@@ -24,6 +24,7 @@ final=${FINAL:?set FINAL endpoint path}
 workdir=${WORKDIR:?set WORKDIR}
 parameters=${PARAMETERS_JSON:?set PARAMETERS_JSON JSON file}
 factory_kwargs=${FACTORY_KWARGS_JSON:-}
+endpoint_summary=${ENDPOINT_STATIC_SUMMARY:-}
 n_images=${N_IMAGES:-7}
 image_workers=${IMAGE_WORKERS:-5}
 image_mpi=${IMAGE_MPI:-32}
@@ -52,7 +53,10 @@ case "${backend}" in
   cp2k)
     module load apps/cp2k/intelmpi/2024.1-2021-plumed
     factory=${FACTORY:-vcneb.backends:make_ase_cp2k_factory}
-    command=${command:-"srun --exclusive --nodes=1 --ntasks=${image_mpi} --ntasks-per-node=${image_mpi} cp2k_shell.psmp"}
+    # ASE's CP2K calculator speaks to one persistent cp2k_shell process per
+    # image.  Do not launch the shell as a 32-rank MPI application: the shell
+    # handshake is single-rank even when the CP2K allocation has more cores.
+    command=${command:-"srun --exclusive --nodes=1 --ntasks=1 --ntasks-per-node=1 cp2k_shell.psmp"}
     ;;
   abinit)
     module load compiler/intel/2021.3.0
@@ -77,6 +81,19 @@ cd "${repo}"
 # leaving that path active mixes incompatible importlib implementations.
 unset PYTHONHOME PYTHONPATH
 export OMP_NUM_THREADS=1 PYTHONUNBUFFERED=1
+if [[ "${STATIC_ONLY:-0}" != 1 && "${REQUIRE_ENDPOINT_STATIC_GATE:-1}" == 1 ]]; then
+  [[ -n "${endpoint_summary}" ]] || {
+    echo "ENDPOINT_STATIC_SUMMARY is required before production VC-NEB" >&2
+    exit 2
+  }
+  if [[ "${endpoint_summary}" != /* ]]; then
+    endpoint_summary="${repo}/${endpoint_summary}"
+  fi
+  "${python}" scripts/validate_ase_static_gate.py "${endpoint_summary}" \
+    --fmax "${ENDPOINT_FMAX:-0.10}" \
+    --stress-kbar "${ENDPOINT_STRESS_KBAR:-0.10}" \
+    --output "${workdir}/endpoint_static_gate.json"
+fi
 args=(examples/run_vcneb_ase.py
   --initial "${initial}" --final "${final}" --workdir "${workdir}"
   --n-images "${n_images}" --fmax "${fmax}" --steps "${steps}" --k "${spring}"
