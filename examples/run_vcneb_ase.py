@@ -275,6 +275,7 @@ def main() -> None:
         logfile=workdir / "vcneb.opt.log",
         trajectory=workdir / "vcneb.traj",
         snapshot_dir=workdir / "snapshots",
+        candidate_step_manifest=workdir / "candidate_step_manifest.jsonl",
         failure_report=workdir / "vcneb_failure.json",
     )
     barrier, reaction = chain.barrier()
