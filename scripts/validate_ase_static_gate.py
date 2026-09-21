@@ -26,9 +26,27 @@ def validate_summary(
         issues.append("summary must contain exactly two static endpoints")
         endpoints = []
 
+    identity = summary.get("endpoint_structures")
+    if not isinstance(identity, dict):
+        issues.append("summary must contain endpoint_structures identity records")
+        identity = {}
+    initial_identity = identity.get("initial")
+    final_identity = identity.get("final")
+    if not isinstance(initial_identity, dict) or not isinstance(final_identity, dict):
+        issues.append("endpoint_structures must contain initial and final records")
+    elif initial_identity.get("n_atoms") != final_identity.get("n_atoms"):
+        issues.append("initial/final endpoint atom counts differ")
+    elif initial_identity.get("composition") != final_identity.get("composition"):
+        issues.append("initial/final endpoint compositions differ")
+
     records = []
+    labels_seen: set[str] = set()
     for endpoint in endpoints:
+        if not isinstance(endpoint, dict):
+            issues.append("each static endpoint must be an object")
+            continue
         label = str(endpoint.get("label", endpoint.get("index", "unknown")))
+        labels_seen.add(label)
         force = endpoint.get("max_generalized_force_eV_per_A")
         if force is None:
             force = endpoint.get("max_force_eV_per_A")
@@ -58,6 +76,13 @@ def validate_summary(
                 "n_atoms": endpoint.get("n_atoms"),
             }
         )
+    if labels_seen != {"initial", "final"}:
+        issues.append("static endpoints must be labelled initial and final exactly once")
+    expected_atoms = initial_identity.get("n_atoms") if isinstance(initial_identity, dict) else None
+    if expected_atoms is not None:
+        for record in records:
+            if record["n_atoms"] != expected_atoms:
+                issues.append(f"{record['label']}: atom count differs from endpoint identity")
 
     return {
         "status": "passed" if not issues else "failed",
