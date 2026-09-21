@@ -19,6 +19,7 @@ from vcneb.backends import (
     make_ase_lammps_factory,
 )
 from vcneb.calculator import inspect_calculator
+from vcneb.optimizer_registry import get_optimizer_spec, optimizer_capability_matrix
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -28,6 +29,13 @@ def test_backend_matrix_has_all_supported_adapters() -> None:
     names = [row["name"] for row in backend_capability_matrix()]
     assert names == ["abacus", "vasp", "qe", "lammps", "cp2k", "abinit"]
     assert get_backend_spec("LAMMPS").variable_cell
+
+
+def test_optimizer_registry_is_independent_from_backend_registry() -> None:
+    assert get_optimizer_spec("split-fire").name == "SplitFIRE"
+    rows = optimizer_capability_matrix()
+    assert rows
+    assert {row["backend_independent"] for row in rows} == {"true"}
 
 
 def test_lammps_factory_is_explicit_and_isolated(tmp_path) -> None:

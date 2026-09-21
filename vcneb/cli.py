@@ -16,6 +16,7 @@ import sys
 
 from .backends import backend_capability_matrix, get_backend_spec
 from .config import RunConfig, prepare_run
+from .optimizer_registry import optimizer_capability_matrix
 from .version import __version__
 
 
@@ -57,6 +58,23 @@ def _print_backends(as_json: bool) -> int:
             f"{row['name']:<8} {row['executable']:<15} "
             f"{'yes' if row['variable_cell'] else 'no':<13} "
             f"{row['status']:<11} {row['python_adapter']}"
+        )
+    return 0
+
+
+def _print_optimizers(as_json: bool) -> int:
+    """List path optimizers without importing or selecting a calculator."""
+
+    rows = optimizer_capability_matrix()
+    if as_json:
+        print(json.dumps(rows, indent=2, sort_keys=True))
+        return 0
+    print("optimizer          family       backend-independent  notes")
+    print("------------------  -----------  -------------------  ------------------------------")
+    for row in rows:
+        print(
+            f"{row['name']:<18}  {row['family']:<11}  "
+            f"{row['backend_independent']:<19}  {row['notes']}"
         )
     return 0
 
@@ -146,6 +164,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
     backends.add_argument("--json", action="store_true", help="emit machine-readable JSON")
 
+    optimizers = subparsers.add_parser(
+        "optimizers", help="list calculator-independent path optimization strategies"
+    )
+    optimizers.add_argument("--json", action="store_true", help="emit machine-readable JSON")
+
     doctor = subparsers.add_parser(
         "doctor", help="check optional ASE adapter imports and local executables"
     )
@@ -175,6 +198,8 @@ def main() -> int:
     try:
         if args.command == "backends":
             return _print_backends(args.json)
+        if args.command == "optimizers":
+            return _print_optimizers(args.json)
         if args.command == "doctor":
             return _doctor(args.json, args.backend)
         if args.command == "init":

@@ -64,6 +64,12 @@ from .phonons import (
 from .analysis import dominant_mode_indices, mode_contribution_fractions, path_reaction_coordinate
 from .provenance import compare_endpoint_records, endpoint_structure_record
 from .config import RunConfig, prepare_run
+from .optimizer_registry import (
+    OptimizerSpec,
+    get_optimizer_spec,
+    optimizer_capability_matrix,
+    optimizer_specs,
+)
 
 __all__ = [
     "VCNEB",
@@ -123,4 +129,8 @@ __all__ = [
     "compare_endpoint_records",
     "RunConfig",
     "prepare_run",
+    "OptimizerSpec",
+    "get_optimizer_spec",
+    "optimizer_capability_matrix",
+    "optimizer_specs",
 ]

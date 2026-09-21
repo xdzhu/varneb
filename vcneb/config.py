@@ -11,6 +11,7 @@ from ase.io import read, write
 
 from .backends import get_backend_spec
 from .core import interpolate_vcneb, path_geometry_diagnostics
+from .optimizer_registry import get_optimizer_spec
 from .provenance import endpoint_structure_record
 
 
@@ -40,6 +41,7 @@ class RunConfig:
 
     def __post_init__(self) -> None:
         get_backend_spec(self.backend)
+        get_optimizer_spec(self.optimizer)
         if self.n_images < 3:
             raise ValueError("n_images must include two endpoints and one interior image")
         if not 0.0 < self.fmax_ev_per_angstrom:

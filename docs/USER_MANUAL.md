@@ -10,6 +10,7 @@ case plans under this directory contain system-specific scientific settings.
 python -m pip install -e .
 varneb --version
 varneb backends --json > backend-capabilities.json
+varneb optimizers --json > optimizer-capabilities.json
 varneb doctor
 ```
 
@@ -81,6 +82,21 @@ stress interface and validates that every image has a private directory.
 
 An image directory must be private to one worker. The controller can then
 retry or resume one image without mixing calculator files from another image.
+
+### Backend/optimizer separation
+
+The production architecture has two independent selections:
+
+1. The backend factory creates an isolated calculator for one image and must
+   return energy, atomic forces, and cell stress.
+2. The VARNEB controller applies the NEB tangent/spring projection and runs a
+   calculator-independent optimizer (`FIRE`, `BlockFIRE`, `SplitFIRE`,
+   `ImageScaledFIRE`, `StagedFIRE`, `BFGS`, `LBFGS`, or `BFGSLineSearch`).
+
+Thus a convergence experiment changes only `optimizer` and its strategy
+parameters; switching VASP, ABACUS, QE, CP2K, ABINIT, or LAMMPS changes only
+the calculator profile/launcher. Backend-specific SCF retries are not path
+optimizer retries, and neither is allowed to silently change the other.
 
 ### VASP, ABACUS, and QE
 

@@ -11,6 +11,7 @@ original research scripts.
 python -m pip install -e .
 varneb --version
 varneb backends
+varneb optimizers
 varneb init varneb.json
 # after editing the endpoint paths:
 varneb validate-config varneb.json
@@ -20,6 +21,11 @@ python -m pytest -q
 ```
 
 `varneb backends --json` prints the machine-readable backend capability table.
+`varneb optimizers --json` prints the calculator-independent path strategy
+table. The `backend` and `optimizer` fields in `varneb.json` are deliberately
+orthogonal: changing FIRE/BlockFIRE/SplitFIRE/StagedFIRE/BFGS does not alter
+the calculator profile, and changing the calculator does not silently alter
+the path optimizer.
 `varneb doctor` checks optional ASE adapters and executables visible in the
 current shell; it does not launch a DFT calculation.  The generated
 `varneb.json` is a deliberately small starting point, not a calculator
