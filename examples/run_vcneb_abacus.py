@@ -193,6 +193,18 @@ def parse_args() -> argparse.Namespace:
         help="retry a failed image calculator this many times when image-workers is enabled",
     )
     parser.add_argument(
+        "--candidate-step-retries",
+        type=int,
+        default=0,
+        help="FIRE geometry backtracking retries before an electronic evaluation",
+    )
+    parser.add_argument(
+        "--maximum-cell-step",
+        type=float,
+        default=None,
+        help="maximum relative Frobenius cell deformation per optimizer step",
+    )
+    parser.add_argument(
         "--image-manifest",
         default=None,
         help="append one JSONL record per controller image-evaluation batch",
@@ -288,6 +300,8 @@ def _run_metadata(args: argparse.Namespace, workdir: Path) -> dict:
         "resume_step": args.resume_step,
         "image_workers": int(args.image_workers),
         "image_retries": int(args.image_retries),
+        "candidate_step_retries": int(args.candidate_step_retries),
+        "maximum_cell_step": args.maximum_cell_step,
         "image_manifest": str(args.image_manifest) if args.image_manifest else None,
         "image_cache_dir": str(args.image_cache_dir) if args.image_cache_dir else None,
         "image_cache_namespace": args.image_cache_namespace,
@@ -332,6 +346,10 @@ def main() -> None:
     if args.resume:
         resume_step = -1 if args.resume_step is None else args.resume_step
         images = read_chain_trajectory(resume_path, n_images=args.n_images, step=resume_step)
+        if endpoint_structure_record(images[0])["sha256"] != endpoint_structure_record(initial)["sha256"]:
+            raise ValueError("resume snapshot initial endpoint does not match --initial")
+        if endpoint_structure_record(images[-1])["sha256"] != endpoint_structure_record(final)["sha256"]:
+            raise ValueError("resume snapshot final endpoint does not match --final")
         label = "latest complete" if resume_step == -1 else f"complete step {resume_step}"
         print(f"[OK] resumed {label} {args.n_images}-image chain from {resume_path}")
     else:
@@ -489,6 +507,8 @@ def main() -> None:
         optimizer_kwargs=optimizer_kwargs,
         line_search_retries=args.line_search_retries,
         line_search_retry_factor=args.line_search_retry_factor,
+        candidate_step_retries=args.candidate_step_retries,
+        maximum_cell_step=args.maximum_cell_step,
         fmax=args.fmax,
         steps=args.steps,
         logfile=workdir / "vcneb.opt.log",
@@ -529,6 +549,8 @@ def main() -> None:
         "optimizer": args.optimizer,
         "line_search_retries": args.line_search_retries,
         "line_search_retry_factor": args.line_search_retry_factor,
+        "candidate_step_retries": args.candidate_step_retries,
+        "maximum_cell_step": args.maximum_cell_step,
         "steps_requested": args.steps,
         "fmax_target_eV_per_A": args.fmax,
         "final_max_generalized_force_eV_per_A": max_force,

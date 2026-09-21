@@ -30,6 +30,11 @@ image_workers=${IMAGE_WORKERS:-9}
 image_mpi=${IMAGE_MPI:-32}
 steps=${STEPS:-300}
 fmax=${FMAX:-0.10}
+maximum_cell_step=${MAXIMUM_CELL_STEP:-0.05}
+candidate_step_retries=${CANDIDATE_STEP_RETRIES:-8}
+resume=${RESUME:-0}
+resume_trajectory=${RESUME_TRAJECTORY:-}
+resume_step=${RESUME_STEP:-0}
 
 (( n_images == 29 && image_workers == 9 && image_mpi == 32 )) || {
   echo "GaN production requires 29 images, 9 concurrent workers, and 32 MPI ranks per worker" >&2
@@ -42,10 +47,20 @@ source "${env_script}"
 export OMP_NUM_THREADS=1 PYTHONUNBUFFERED=1
 cd "${repo}"
 
+resume_args=()
+if [[ "${resume}" == 1 ]]; then
+  resume_args+=(--resume --resume-step "${resume_step}")
+  if [[ -n "${resume_trajectory}" ]]; then
+    resume_args+=(--resume-trajectory "${resume_trajectory}")
+  fi
+fi
+
 exec "${python}" examples/run_vcneb_abacus.py \
   --initial "${initial}" --final "${final}" --workdir "${workdir}" \
   --n-images "${n_images}" --fmax "${fmax}" --steps "${steps}" --k 0.20 \
   --optimizer FIRE --image-workers "${image_workers}" --no-climb \
+  --candidate-step-retries "${candidate_step_retries}" --maximum-cell-step "${maximum_cell_step}" \
+  "${resume_args[@]}" \
   --command "srun --exclusive --mpi=pmix_v3 -n ${image_mpi} ${abacus}" \
   --pseudo-dir "${pseudo_dir}" --basis-dir "${basis_dir}" \
   --pp Ga=Ga.upf --pp N=N.upf \
