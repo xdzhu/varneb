@@ -1,4 +1,5 @@
 from pathlib import Path
+import json
 
 
 TEMPLATE = Path(__file__).parents[1] / "cluster" / "hf_material_vcneb_ase.slurm"
@@ -23,3 +24,12 @@ def test_endpoint_template_uses_single_rank_cp2k_shell() -> None:
     assert "scripts/relax_ase_endpoint.py" in text
     assert 'ntasks=1 --ntasks-per-node=1 cp2k_shell.psmp' in text
     assert 'RUN_DFT:-0' in text
+
+
+def test_gan_cp2k_stable_profile_uses_conservative_mixing() -> None:
+    profile = json.loads(
+        (Path(__file__).parents[1] / "examples" / "material_profiles" / "cp2k_gan_pbe_dzvp_stable.json").read_text()
+    )
+    assert profile["max_scf"] == 1000
+    assert "DIRECT_P_MIXING" in profile["inp"]
+    assert "ALPHA 0.05" in profile["inp"]
