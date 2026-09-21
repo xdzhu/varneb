@@ -8,6 +8,7 @@ import subprocess
 import sys
 
 from ase import Atoms
+import pytest
 
 from vcneb.backends import (
     attach_image_calculators,
@@ -18,6 +19,7 @@ from vcneb.backends import (
     make_ase_calculator_factory,
     make_ase_lammps_factory,
 )
+from vcneb.abacus import _read_vcneb_results
 from vcneb.calculator import inspect_calculator
 from vcneb.config import RunConfig
 from vcneb.optimizer_registry import get_optimizer_spec, optimizer_capability_matrix
@@ -49,6 +51,27 @@ def test_run_config_accepts_cross_backend_optimizer_combinations(tmp_path) -> No
     abacus_bfgs = RunConfig(backend="abacus", optimizer="BFGS", **common)
     assert (vasp_split_fire.backend, vasp_split_fire.optimizer) == ("vasp", "SplitFIRE")
     assert (abacus_bfgs.backend, abacus_bfgs.optimizer) == ("abacus", "BFGS")
+
+
+def test_abacus_reader_ignores_optional_eigenvalue_parser(monkeypatch, tmp_path) -> None:
+    abacus_io = pytest.importorskip("ase.io.abacus")
+
+    class Chunk:
+        energy = -1.25
+        free_energy = -1.25
+        forces_sort = [[0.0, 0.0, 0.0]] * 4
+        stress = [[0.0, 0.0, 0.0]] * 3
+        magmom = None
+        dipole = None
+
+    output = tmp_path / "OUT.ABACUS"
+    output.mkdir()
+    (output / "running_scf.log").write_text("minimal", encoding="utf-8")
+    monkeypatch.setattr(abacus_io, "_get_abacus_chunks", lambda *args, **kwargs: [Chunk()])
+    result = _read_vcneb_results(tmp_path, output_suffix="ABACUS", calculation="scf")
+    assert result["energy"] == -1.25
+    assert result["forces"] == [[0.0, 0.0, 0.0]] * 4
+    assert result["stress"] == [[0.0, 0.0, 0.0]] * 3
 
 
 def test_lammps_factory_is_explicit_and_isolated(tmp_path) -> None:

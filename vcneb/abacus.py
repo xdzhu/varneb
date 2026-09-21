@@ -24,6 +24,38 @@ REQUIRED_VCNEB_PARAMETERS = {
 }
 
 
+def _read_vcneb_results(directory: Path, *, output_suffix: str, calculation: str) -> dict:
+    """Read only the ABACUS properties required by variable-cell NEB.
+
+    ASE's ABACUS reader eagerly parses eigenvalues while building its complete
+    result dictionary.  Some ABACUS builds write a harmless but irregular
+    k-point eigenvalue block, which makes that optional parser fail before the
+    energy, forces, and stress are returned.  VCNEB does not use eigenvalues,
+    so keep this adapter on the smaller, explicit calculator contract.
+    """
+
+    output = Path(directory) / ("OUT." + output_suffix) / f"running_{calculation}.log"
+    try:
+        from ase.io.abacus import _get_abacus_chunks
+    except ImportError:  # pragma: no cover - version-specific ASE fallback
+        from ase.io.abacus import read_abacus_results
+
+        with output.open(encoding="utf-8") as handle:
+            return read_abacus_results(handle, index=-1)[0]
+
+    with output.open(encoding="utf-8") as handle:
+        chunk = _get_abacus_chunks(handle, index=-1, non_convergence_ok=False)[0]
+    values = {
+        "energy": chunk.energy,
+        "free_energy": chunk.free_energy,
+        "forces": chunk.forces_sort,
+        "stress": chunk.stress,
+        "magmom": chunk.magmom,
+        "dipole": chunk.dipole,
+    }
+    return {key: value for key, value in values.items() if value is not None}
+
+
 def _install_parallel_safe_sort_writer() -> None:
     """Avoid ASE-ABACUS's process-global ``ase_sort.dat`` race for identity order.
 
@@ -98,8 +130,8 @@ def make_ase_abacus_factory(
         params.update(kwargs)
         params.update(REQUIRED_VCNEB_PARAMETERS)
         if profile is not None:
-            return Abacus(directory=str(image_dir), profile=profile, **params)
-        if command is not None:
+            calculator = Abacus(directory=str(image_dir), profile=profile, **params)
+        elif command is not None:
             try:
                 from ase.calculators.abacus import AbacusProfile
             except Exception as exc:  # pragma: no cover - depends on external ASE build
@@ -107,7 +139,19 @@ def make_ase_abacus_factory(
                     "This ASE ABACUS adapter does not expose AbacusProfile; "
                     "pass an explicit profile object instead of command."
                 ) from exc
-            return Abacus(directory=str(image_dir), profile=AbacusProfile(command), **params)
-        return Abacus(directory=str(image_dir), **params)
+            calculator = Abacus(
+                directory=str(image_dir), profile=AbacusProfile(command), **params
+            )
+        else:
+            calculator = Abacus(directory=str(image_dir), **params)
+
+        template = getattr(calculator, "template", None)
+        if template is not None:
+            template.read_results = lambda directory: _read_vcneb_results(
+                directory,
+                output_suffix=template.out_suffix,
+                calculation=template.cal_name,
+            )
+        return calculator
 
     return factory
