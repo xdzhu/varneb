@@ -11,6 +11,7 @@ from .core import (
     read_chain_trajectory,
     run_vcneb,
     validate_atom_mapping,
+    validate_candidate_cell_step,
     validate_path_geometry,
 )
 from .calculator import (
@@ -82,6 +83,7 @@ __all__ = [
     "read_chain_trajectory",
     "run_vcneb",
     "validate_atom_mapping",
+    "validate_candidate_cell_step",
     "validate_path_geometry",
     "CalculatorCapabilities",
     "CalculatorCapabilityError",

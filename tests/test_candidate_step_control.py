@@ -3,7 +3,7 @@ import pytest
 from ase import Atoms
 from ase.io import read
 
-from vcneb.core import VCNEB, run_vcneb
+from vcneb.core import VCNEB, run_vcneb, validate_candidate_cell_step
 from vcneb.step_control import CandidateStepRejected, CheckedFIRE
 from vcneb.vasp_lattice import NativeVaspCandidateValidator, LatticeClassification
 
@@ -135,6 +135,23 @@ def test_native_candidate_checks_all_images_and_serialized_cells():
     assert len(probe.calls)==8
     assert {item['representation'] for item in exc.value.details}=={'manager','POSCAR_preview'}
     assert {item['image_index'] for item in exc.value.details}=={2}
+
+
+def test_candidate_cell_step_rejects_single_image_volume_blowup():
+    previous = images()
+    candidates = [image.copy() for image in previous]
+    candidates[2].set_cell(np.eye(3) * 4.12, scale_atoms=False)
+    with pytest.raises(CandidateStepRejected, match="cell step") as exc:
+        validate_candidate_cell_step(previous, candidates, maximum_cell_step=0.05)
+    assert exc.value.details[0]["image_index"] == 2
+    assert exc.value.details[0]["volume_ratio"] > 1.0
+
+
+def test_candidate_cell_step_accepts_small_uniform_change():
+    previous = images()
+    candidates = [image.copy() for image in previous]
+    candidates[1].set_cell(np.eye(3) * 4.01, scale_atoms=False)
+    validate_candidate_cell_step(previous, candidates, maximum_cell_step=0.05)
 
 
 @pytest.mark.parametrize("optimizer,validator",[("BFGS",bounded_validator),("FIRE",None)])

@@ -776,6 +776,59 @@ def validate_path_geometry(
     return report
 
 
+def validate_candidate_cell_step(
+    previous_images: Sequence[Atoms],
+    candidate_images: Sequence[Atoms],
+    *,
+    maximum_cell_step: float,
+) -> None:
+    """Reject a candidate with an excessive one-step cell deformation.
+
+    ``maximum_deformation`` validates the absolute initial path.  This check
+    is complementary: it compares each candidate cell with the cell that is
+    currently committed, so one image cannot jump to a different volume while
+    the rest of the band remains near its previous geometry.  The relative
+    deformation is ``solve(old_cell, new_cell).T - I`` in ASE's row-vector
+    convention.
+    """
+
+    try:
+        limit = float(maximum_cell_step)
+    except (TypeError, ValueError) as exc:
+        raise ValueError("maximum_cell_step must be a finite positive number") from exc
+    if not np.isfinite(limit) or limit <= 0.0:
+        raise ValueError("maximum_cell_step must be a finite positive number")
+    if len(previous_images) != len(candidate_images):
+        raise ValueError("previous and candidate paths must contain the same number of images")
+    for image_index in range(1, len(previous_images) - 1):
+        old_cell = cell_matrix(previous_images[image_index])
+        new_cell = cell_matrix(candidate_images[image_index])
+        try:
+            _validate_cell_matrix(old_cell, context=f"previous image {image_index} cell")
+            _validate_cell_matrix(new_cell, context=f"candidate image {image_index} cell")
+            relative = np.linalg.solve(old_cell, new_cell).T
+        except (np.linalg.LinAlgError, ValueError) as exc:
+            raise CandidateStepRejected(
+                f"candidate image {image_index} has an invalid cell step",
+                details=[{"image_index": image_index, "category": "candidate_cell_step"}],
+            ) from exc
+        norm = float(np.linalg.norm(relative - np.eye(3)))
+        volume_ratio = float(np.linalg.det(new_cell) / np.linalg.det(old_cell))
+        if not np.isfinite(norm) or not np.isfinite(volume_ratio) or norm > limit:
+            raise CandidateStepRejected(
+                f"candidate image {image_index} cell step {norm:.6g} exceeds {limit:.6g}",
+                details=[
+                    {
+                        "image_index": image_index,
+                        "category": "candidate_cell_step",
+                        "relative_cell_step_frobenius": norm,
+                        "volume_ratio": volume_ratio,
+                        "maximum_cell_step": limit,
+                    }
+                ],
+            )
+
+
 def fractional_force(atoms: Atoms) -> Array:
     """Convert Cartesian forces to forces conjugate to fractional coordinates."""
 
@@ -1986,6 +2039,7 @@ def run_vcneb(
     candidate_step_retries: int = 0,
     candidate_step_retry_factor: float = 0.5,
     candidate_step_manifest: str | Path | None = None,
+    maximum_cell_step: float | None = None,
     optimizer: str = "FIRE",
     optimizer_kwargs: Optional[Mapping[str, object]] = None,
     line_search_retries: int = 0,
@@ -2021,6 +2075,8 @@ def run_vcneb(
     ``candidate_validator`` previews every image before an atomic geometry
     commit. With FIRE, ``candidate_step_retries`` permits fixed-direction
     geometry backtracking before DFT; accepted shortened moves reset momentum.
+    ``maximum_cell_step`` adds a calculator-independent per-iteration cell
+    trust radius and can be combined with those retries.
     This is distinct from retrying a failed electronic calculation.
     """
 
@@ -2035,6 +2091,21 @@ def run_vcneb(
         raise ValueError("candidate_step_retries must be a nonnegative integer")
     if not np.isfinite(candidate_step_retry_factor) or not 0 < candidate_step_retry_factor < 1:
         raise ValueError("candidate_step_retry_factor must be in (0, 1)")
+    if maximum_cell_step is not None:
+        try:
+            maximum_cell_step = float(maximum_cell_step)
+        except (TypeError, ValueError) as exc:
+            raise ValueError("maximum_cell_step must be a finite positive number") from exc
+        if not np.isfinite(maximum_cell_step) or maximum_cell_step <= 0.0:
+            raise ValueError("maximum_cell_step must be a finite positive number")
+    effective_candidate_validator = candidate_validator
+    if maximum_cell_step is not None:
+        def validate_candidate(candidates: Sequence[Atoms]) -> None:
+            if candidate_validator is not None:
+                candidate_validator(candidates)
+            validate_candidate_cell_step(images, candidates, maximum_cell_step=maximum_cell_step)
+
+        effective_candidate_validator = validate_candidate
     candidate_optimizers = {
         "FIRE", "BLOCKFIRE", "BLOCK_FIRE", "BLOCK-FIRE",
         "SPLITFIRE", "SPLIT_FIRE", "SPLIT-FIRE",
@@ -2042,7 +2113,7 @@ def run_vcneb(
         "STAGEDFIRE", "STAGED_FIRE", "STAGED-FIRE",
     }
     if candidate_step_retries and (
-        candidate_validator is None or optimizer.upper() not in candidate_optimizers
+        effective_candidate_validator is None or optimizer.upper() not in candidate_optimizers
     ):
         raise ValueError("candidate step backtracking requires a candidate validator and a FIRE optimizer")
     if isinstance(line_search_retries, bool) or int(line_search_retries) != line_search_retries or line_search_retries < 0:
@@ -2076,7 +2147,7 @@ def run_vcneb(
         wrap_positions=wrap_positions,
         parallel=parallel,
         image_executor=image_executor,
-        candidate_validator=candidate_validator,
+        candidate_validator=effective_candidate_validator,
         log=log,
     )
     base_optimizer_kwargs = {} if optimizer_kwargs is None else dict(optimizer_kwargs)

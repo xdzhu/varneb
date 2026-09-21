@@ -3,6 +3,9 @@
 # It uses three 97-core nodes: nine 32-MPI image workers in waves plus
 # manager headroom. For BTO set IMAGE_WORKERS=5; for GaN set IMAGE_WORKERS=9.
 # This template is intentionally input-driven and refuses to guess potentials.
+# Production FIRE steps use a 0.05 relative cell trust radius with bounded
+# geometry backtracking, preventing a single image from changing volume by 10%
+# while the neighboring images remain on the old path.
 #SBATCH -J varneb-material-ase
 #SBATCH -p hfacnormal01
 #SBATCH -N 3
@@ -33,6 +36,8 @@ fmax=${FMAX:-0.10}
 spring=${SPRING:-0.20}
 optimizer=${OPTIMIZER:-FIRE}
 command=${COMMAND:-}
+maximum_cell_step=${MAXIMUM_CELL_STEP:-0.05}
+candidate_step_retries=${CANDIDATE_STEP_RETRIES:-8}
 
 if (( image_workers < 1 || image_workers * image_mpi > 288 )); then
   echo "IMAGE_WORKERS * IMAGE_MPI must be between 1 and 288" >&2
@@ -98,6 +103,7 @@ args=(examples/run_vcneb_ase.py
   --initial "${initial}" --final "${final}" --workdir "${workdir}"
   --n-images "${n_images}" --fmax "${fmax}" --steps "${steps}" --k "${spring}"
   --optimizer "${optimizer}" --image-workers "${image_workers}"
+  --candidate-step-retries "${candidate_step_retries}" --maximum-cell-step "${maximum_cell_step}"
   --command "${command}" --factory "${factory}" --parameters "${parameters}"
   --mic --cell-interpolation log_strain --mapping auto --align-translation
   --maximum-deformation "${MAXIMUM_DEFORMATION:-0.50}")

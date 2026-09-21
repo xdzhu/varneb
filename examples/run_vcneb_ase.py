@@ -67,6 +67,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--maxstep", type=float, default=None)
     parser.add_argument("--image-workers", type=int, default=0)
     parser.add_argument("--image-retries", type=int, default=0)
+    parser.add_argument(
+        "--candidate-step-retries",
+        type=int,
+        default=0,
+        help="FIRE geometry backtracking retries before an electronic evaluation",
+    )
     parser.add_argument("--command", default=None)
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--calculator", help="ASE class/factory as module:attribute")
@@ -81,6 +87,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--align-translation", action="store_true")
     parser.add_argument("--minimum-distance", type=float, default=None)
     parser.add_argument("--maximum-deformation", type=float, default=None)
+    parser.add_argument(
+        "--maximum-cell-step",
+        type=float,
+        default=None,
+        help="maximum relative Frobenius cell deformation per optimizer step",
+    )
     parser.add_argument("--validate-only", action="store_true")
     parser.add_argument(
         "--static-only",
@@ -151,6 +163,8 @@ def main() -> None:
         "n_images": args.n_images,
         "n_interior_images": args.n_images - 2,
         "fmax_target_eV_per_A": args.fmax,
+        "candidate_step_retries": args.candidate_step_retries,
+        "maximum_cell_step": args.maximum_cell_step,
         "endpoint_evaluation_policy": "fixed_cached_once",
         "cell_interpolation": args.cell_interpolation,
         "mapping": args.mapping,
@@ -235,6 +249,8 @@ def main() -> None:
         image_executor=executor,
         optimizer=args.optimizer,
         optimizer_kwargs={} if args.maxstep is None else {"maxstep": args.maxstep},
+        candidate_step_retries=args.candidate_step_retries,
+        maximum_cell_step=args.maximum_cell_step,
         fmax=args.fmax,
         steps=args.steps,
         logfile=workdir / "vcneb.opt.log",
