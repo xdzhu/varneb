@@ -8,13 +8,70 @@ provided calculator factory.
 from __future__ import annotations
 
 from pathlib import Path
+import re
 from typing import Callable, Mapping, Optional
 
 from ase import Atoms
+import numpy as np
 from ase.io import write
 
 
 CalculatorFactory = Callable[[int, Atoms, Path], object]
+
+_ABACUS_FLOAT = r"[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[EeDd][-+]?\d+)?"
+
+
+def _minimal_abacus_results(output: Path) -> dict:
+    """Parse the static force/stress contract from a damaged ABACUS log."""
+
+    text = output.read_text(encoding="utf-8", errors="replace")
+    energy_matches = re.findall(
+        rf"final\s+etot\s+is\s+({_ABACUS_FLOAT})\s*eV", text, flags=re.IGNORECASE
+    )
+    if not energy_matches:
+        raise ValueError(f"ABACUS log has no final total energy: {output}")
+    energy = float(energy_matches[-1].replace("D", "E").replace("d", "e"))
+
+    force_body = text.rsplit("TOTAL-FORCE", 1)[-1]
+    force_body = force_body.split("TOTAL-STRESS", 1)[0]
+    forces: list[list[float]] = []
+    for line in force_body.splitlines():
+        fields = line.split()
+        if len(fields) < 4:
+            continue
+        try:
+            values = [float(value.replace("D", "E").replace("d", "e")) for value in fields[-3:]]
+        except ValueError:
+            continue
+        if len(fields) == 4 or re.match(r"^[A-Za-z][A-Za-z0-9_]*$", fields[0]):
+            forces.append(values)
+    if not forces:
+        raise ValueError(f"ABACUS log has no parseable final force block: {output}")
+
+    stress_body = text.rsplit("TOTAL-STRESS", 1)[-1]
+    stress_rows: list[list[float]] = []
+    for line in stress_body.splitlines():
+        fields = line.split()
+        if len(fields) < 3:
+            continue
+        try:
+            values = [float(value.replace("D", "E").replace("d", "e")) for value in fields[-3:]]
+        except ValueError:
+            continue
+        stress_rows.append(values)
+        if len(stress_rows) == 3:
+            break
+    if len(stress_rows) != 3:
+        raise ValueError(f"ABACUS log has no parseable final stress block: {output}")
+
+    from ase.stress import full_3x3_to_voigt_6_stress
+
+    stress = -0.1 * 160.21766208 * np.asarray(stress_rows, dtype=float)
+    return {
+        "energy": energy,
+        "forces": np.asarray(forces, dtype=float),
+        "stress": full_3x3_to_voigt_6_stress(stress),
+    }
 
 
 REQUIRED_VCNEB_PARAMETERS = {
@@ -43,8 +100,22 @@ def _read_vcneb_results(directory: Path, *, output_suffix: str, calculation: str
         with output.open(encoding="utf-8") as handle:
             return read_abacus_results(handle, index=-1)[0]
 
-    with output.open(encoding="utf-8") as handle:
-        chunk = _get_abacus_chunks(handle, index=-1, non_convergence_ok=False)[0]
+    try:
+        with output.open(encoding="utf-8") as handle:
+            chunk = _get_abacus_chunks(handle, index=-1, non_convergence_ok=False)[0]
+    except (AttributeError, IndexError, KeyError, TypeError, ValueError) as exc:
+        # ABACUS can leave a usable final force/stress block while its verbose
+        # header or optional eigenvalue block is malformed.  Keep the original
+        # parser error in the chained exception if the contract fallback also
+        # fails, but do not discard valid VCNEB data merely because eigenvalue
+        # diagnostics are unreadable.
+        try:
+            return _minimal_abacus_results(output)
+        except Exception as fallback_exc:
+            raise ValueError(
+                f"ABACUS result parsing failed for {output}: {exc}; "
+                f"minimal contract parser also failed: {fallback_exc}"
+            ) from exc
     values = {
         "energy": chunk.energy,
         "free_energy": chunk.free_energy,

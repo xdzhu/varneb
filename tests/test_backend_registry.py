@@ -19,7 +19,7 @@ from vcneb.backends import (
     make_ase_calculator_factory,
     make_ase_lammps_factory,
 )
-from vcneb.abacus import _read_vcneb_results
+from vcneb.abacus import _minimal_abacus_results, _read_vcneb_results
 from vcneb.calculator import inspect_calculator
 from vcneb.config import RunConfig
 from vcneb.optimizer_registry import get_optimizer_spec, optimizer_capability_matrix
@@ -72,6 +72,28 @@ def test_abacus_reader_ignores_optional_eigenvalue_parser(monkeypatch, tmp_path)
     assert result["energy"] == -1.25
     assert result["forces"] == [[0.0, 0.0, 0.0]] * 4
     assert result["stress"] == [[0.0, 0.0, 0.0]] * 3
+
+
+def test_abacus_minimal_contract_parser_handles_usable_damaged_log(tmp_path) -> None:
+    output = tmp_path / "running_scf.log"
+    output.write_text(
+        """TOTAL-FORCE (eV/Angstrom)
+Ga1 0.1 0.2 0.3
+N1 -0.1 -0.2 -0.3
+
+TOTAL-STRESS (KBAR)
+x 1.0 2.0 3.0
+y 4.0 5.0 6.0
+z 7.0 8.0 9.0
+
+final etot is -1.25 eV
+""",
+        encoding="utf-8",
+    )
+    result = _minimal_abacus_results(output)
+    assert result["forces"].shape == (2, 3)
+    assert result["stress"].shape == (6,)
+    assert result["energy"] == -1.25
 
 
 def test_lammps_factory_is_explicit_and_isolated(tmp_path) -> None:
