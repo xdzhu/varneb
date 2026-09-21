@@ -28,6 +28,7 @@ workdir=${WORKDIR:?set WORKDIR}
 parameters=${PARAMETERS_JSON:?set PARAMETERS_JSON JSON file}
 factory_kwargs=${FACTORY_KWARGS_JSON:-}
 endpoint_summary=${ENDPOINT_STATIC_SUMMARY:-}
+resume_snapshot=${RESUME_SNAPSHOT:-}
 n_images=${N_IMAGES:-7}
 image_workers=${IMAGE_WORKERS:-5}
 image_mpi=${IMAGE_MPI:-32}
@@ -112,6 +113,9 @@ if [[ -n "${MINIMUM_DISTANCE:-}" ]]; then
 fi
 if [[ -n "${factory_kwargs}" ]]; then
   args+=(--factory-kwargs "${factory_kwargs}")
+fi
+if [[ -n "${resume_snapshot}" ]]; then
+  args+=(--resume-snapshot "${resume_snapshot}")
 fi
 if [[ "${NO_CLIMB:-1}" == 1 ]]; then
   args+=(--no-climb)

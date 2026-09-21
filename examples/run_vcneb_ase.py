@@ -57,6 +57,11 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--initial", required=True)
     parser.add_argument("--final", required=True)
+    parser.add_argument(
+        "--resume-snapshot",
+        default=None,
+        help="complete chain snapshot to resume from in a new work directory",
+    )
     parser.add_argument("--workdir", required=True)
     parser.add_argument("--n-images", type=int, default=7)
     parser.add_argument("--fmax", type=float, default=0.10)
@@ -116,18 +121,31 @@ def main() -> None:
     final = read(args.final)
     workdir = Path(args.workdir).resolve()
     workdir.mkdir(parents=True, exist_ok=True)
-    images = interpolate_vcneb(
-        initial,
-        final,
-        args.n_images,
-        align_cells=True,
-        mic=args.mic,
-        cell_interpolation=args.cell_interpolation,
-        mapping=None if args.mapping == "identity" else "auto",
-        align_translation=args.align_translation,
-        minimum_distance=args.minimum_distance,
-        maximum_deformation=args.maximum_deformation,
-    )
+    if args.resume_snapshot is None:
+        images = interpolate_vcneb(
+            initial,
+            final,
+            args.n_images,
+            align_cells=True,
+            mic=args.mic,
+            cell_interpolation=args.cell_interpolation,
+            mapping=None if args.mapping == "identity" else "auto",
+            align_translation=args.align_translation,
+            minimum_distance=args.minimum_distance,
+            maximum_deformation=args.maximum_deformation,
+        )
+    else:
+        images = read(args.resume_snapshot, index=":")
+        if len(images) != args.n_images:
+            raise ValueError(
+                f"resume snapshot contains {len(images)} images; expected {args.n_images}"
+            )
+        for label, expected, actual in (
+            ("initial", endpoint_structure_record(initial), endpoint_structure_record(images[0])),
+            ("final", endpoint_structure_record(final), endpoint_structure_record(images[-1])),
+        ):
+            if expected["sha256"] != actual["sha256"]:
+                raise ValueError(f"resume snapshot {label} endpoint does not match the requested endpoint")
     write(workdir / "initial-vcneb.traj", images)
 
     parameters = _json_object(args.parameters)
@@ -160,6 +178,7 @@ def main() -> None:
         "factory": args.factory,
         "calculator_parameters": parameters,
         "factory_kwargs": _json_object(args.factory_kwargs),
+        "resume_snapshot": args.resume_snapshot,
         "n_images": args.n_images,
         "n_interior_images": args.n_images - 2,
         "fmax_target_eV_per_A": args.fmax,
