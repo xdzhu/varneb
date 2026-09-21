@@ -81,7 +81,7 @@ GaN CP2K `27741431` 也因端点静态审计显示固定端点基线无效而取
 | 案例/后端 | 作业 | 当前判定 |
 |---|---:|---|
 | GaN / QE | 27741412 | 已完成；最终广义力 `0.091018 eV/A`，按默认阈值可接受；能垒 `1.638143 eV`。旧 summary 未写显式 `converged`，审计以最终力为准。 |
-| GaN / ABINIT | 27741516 | `max_steps_reached`，最终力 `9.537243 eV/A`，未收敛；暂不作为生产证据。 |
+| GaN / ABINIT（旧路径） | 27741516 | `max_steps_reached`，最终力 `9.537243 eV/A`，且 HGH-LDA 端点应力约 `-2791 GPa`；未收敛，不作为生产证据。 |
 | GaN / LAMMPS | 27741574 | 最终力 `0.095441 eV/A`；仅是经典 Tersoff 对照，不能与 DFT/PBE 能垒等价比较。 |
 | BTO / QE | 27741411 | 最终力 `0.052831 eV/A`，无内部势垒；按阈值可接受。 |
 | BTO / VASP | 27741623 | 最终力 `0.095145 eV/A`，能垒 `0.042644 eV`；已收敛。 |
@@ -91,11 +91,12 @@ GaN CP2K `27741431` 也因端点静态审计显示固定端点基线无效而取
 | GaN / CP2K endpoint relaxation（旧单位错误） | 27749627, 27749628 | 已取消并保留；同一 cutoff 单位错误，不进入结果矩阵。 |
 | BTO / CP2K endpoint relaxation（400 Ry 修正版） | 27749725, 27749726 | 独立目录运行中；使用 `cutoff_ry: 400`、单 rank shell、`MAXSTEP=0.02`。 |
 | GaN / CP2K endpoint relaxation（400 Ry 修正版） | 27749727, 27749728 | 独立目录运行中；使用 `cutoff_ry: 400`、单 rank shell、`MAXSTEP=0.02`。 |
+| GaN / ABINIT-HGH-LDA endpoint relaxation | 27749797, 27749798 | 独立端点准备运行中；与旧路径同一 HGH-LDA 物理模型，先重建端点，不与 PBE/VASP 能垒混合。 |
 
 ## 下一步
 
 1. 等待并审计 `27744907` 的 ABACUS 生产结果；若再次失败，只看最小解析器的具体契约错误，不再改 FIRE 参数。
 2. 用 `snapshots/step_0000` 的完整快照在独立目录启动 guarded continuation，启用 `maximum_cell_step=0.05`；当前 `27744907` 已取消，原目录只作为失控证据保留。
 3. 对 CP2K BTO/GaN 修正版端点先用 `STATIC_ONLY=1` 生成独立摘要，只有通过门禁后才允许新的生产路径，不覆盖已取消目录。
-4. 对 ABINIT GaN 先修正端点物理设置并通过同一门禁，再决定是否重跑；当前 `max_steps_reached` 结果不得进入生产矩阵。
+4. 对 ABINIT GaN 先完成 HGH-LDA 端点重建并通过同一门禁，再决定是否重跑；当前 `max_steps_reached` 结果不得进入生产矩阵。若要与 PBE 结果比较，必须另行获得并固定 PBE 赝势，不能把 LDA/HGH 结果标成 PBE。
 5. 生成统一后端状态表、路径图和文献比较数据；未达到阈值或非同一物理模型的结果不得进入“已验证生产矩阵”。
