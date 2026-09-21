@@ -33,6 +33,7 @@ args=(examples/run_vcneb_vasp.py \
   --static-only --static-endpoint "${STATIC_ENDPOINT}" \
   --vasp-isym -1 --vasp-symprec "${VASP_SYMPREC}" \
   --minimum-distance "${MIN_DISTANCE}" --maximum-deformation "${MAX_DEFORMATION}" \
+  --mic --cell-interpolation log_strain --mapping auto --align-translation \
   --ncores 32 --vasp-bin "${VASP_ROOT}/bin/vasp_std")
 if (( ${#path_args[@]} )); then
   args+=("${path_args[@]}")
