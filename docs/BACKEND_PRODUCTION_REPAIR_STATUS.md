@@ -47,6 +47,14 @@ GaN ABACUS 作业 `27741518` 在 step 0 的 image 5 报出 NumPy 不规则数组
 - `DIRECT_P_MIXING`，`ALPHA = 0.05`；
 - 生产资源采用独占节点，多个 one-rank `cp2k_shell.psmp` image worker，而不是把 32 MPI 直接交给 shell。
 
+本轮端点重跑进一步发现并修正了一个输入单位错误：ASE 的 CP2K calculator
+把 `cutoff` 解释为 eV，而 CP2K 文献 profile 通常以 Ry 给出。旧的稳定 profile
+裸写 `400`，实际只有约 29.4 Ry，足以产生异常大的 Pulay 应力并把 BFGS
+推向错误的晶胞。现在 `make_ase_cp2k_factory` 接受显式的 `cutoff_ry`，在
+后端边界转换为 eV；BTO/GaN 稳定 profile 均改为 `cutoff_ry: 400`，并拒绝
+同时提供 `cutoff` 与 `cutoff_ry`。已取消的 `27749624/25/27/28` 只作为这
+一错误输入的诊断证据保留，修正版将在独立目录重新准备端点。
+
 单结构探针 `27744287` 已成功；两个相同的旧 image-4 结构均在 101 次 SCF 内收敛，退出码为 0。BTO 生产 `27744298` 随后因端点静态审计不通过、且路径力连续多步发散而取消；独立目录和日志均保留。
 
 GaN CP2K `27741431` 也因端点静态审计显示固定端点基线无效而取消；原目录保留，只有重新生成并通过端点门禁后才允许新的 profile 续跑。

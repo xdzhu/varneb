@@ -23,9 +23,11 @@ import shutil
 import tempfile
 from typing import Callable, Mapping
 
+import numpy as np
 from ase import Atoms
 from ase.calculators.calculator import all_changes
 from ase.io import write
+from ase.units import Rydberg
 
 CalculatorFactory = Callable[[int, Atoms, Path], object]
 
@@ -222,6 +224,18 @@ def make_ase_cp2k_factory(
     """
 
     supplied = dict(parameters)
+    # ASE's CP2K calculator accepts ``cutoff`` in eV, while CP2K studies and
+    # published profiles conventionally specify the plane-wave cutoff in Ry.
+    # Keep the unit conversion explicit at the backend boundary instead of
+    # silently interpreting a bare ``400`` as 400 Ry (which would actually be
+    # only 29.4 Ry and can produce pathological Pulay stresses).
+    if "cutoff_ry" in supplied:
+        if "cutoff" in supplied:
+            raise ValueError("CP2K parameters cannot set both cutoff and cutoff_ry")
+        cutoff_ry = float(supplied.pop("cutoff_ry"))
+        if not np.isfinite(cutoff_ry) or cutoff_ry <= 0.0:
+            raise ValueError("CP2K cutoff_ry must be a finite positive number")
+        supplied["cutoff"] = cutoff_ry * Rydberg
 
     def output_label(image_dir: Path) -> tuple[str, str]:
         requested = image_dir / "cp2k"

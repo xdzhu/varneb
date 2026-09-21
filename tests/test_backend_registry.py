@@ -132,6 +132,32 @@ def test_cp2k_factory_keeps_output_inside_image(monkeypatch, tmp_path) -> None:
     assert captured["stress_tensor"] is True
 
 
+def test_cp2k_factory_converts_explicit_rydberg_cutoff(monkeypatch, tmp_path) -> None:
+    import ase.calculators.cp2k as cp2k
+    from ase.units import Rydberg
+
+    captured = {}
+
+    class FakeCP2K:
+        def __init__(self, **kwargs):
+            captured.update(kwargs)
+
+    monkeypatch.setattr(cp2k, "CP2K", FakeCP2K)
+    factory = make_ase_cp2k_factory(parameters={"cutoff_ry": 400}, command="cp2k_shell")
+    image_dir = tmp_path / "image_0003"
+    image_dir.mkdir()
+    factory(3, Atoms("H", cell=[5, 5, 5], pbc=True), image_dir)
+    assert captured["cutoff"] == pytest.approx(400 * Rydberg)
+
+
+def test_cp2k_factory_rejects_ambiguous_cutoff_units(monkeypatch) -> None:
+    import ase.calculators.cp2k as cp2k
+
+    monkeypatch.setattr(cp2k, "CP2K", lambda **kwargs: None)
+    with pytest.raises(ValueError, match="both cutoff and cutoff_ry"):
+        make_ase_cp2k_factory(parameters={"cutoff": 400, "cutoff_ry": 400})
+
+
 def test_abinit_factory_uses_profile_and_image_directory(monkeypatch, tmp_path) -> None:
     import ase.calculators.abinit as abinit
 
