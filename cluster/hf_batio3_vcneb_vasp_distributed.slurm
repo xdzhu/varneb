@@ -12,6 +12,7 @@
 #SBATCH -e /public/home/iai806/abacus/agent-runs/20260912-vcneb-hf/slurm-%x-%j.err
 
 set -euo pipefail
+source /public/home/iai806/Software/VASP/env.sh 6.3.2
 
 repo=${REPO:-/public/home/iai806/abacus/agent-runs/20260912-vcneb-hf}
 python=${PYTHON:-/public/home/iai806/.conda/envs/icu/bin/python}
