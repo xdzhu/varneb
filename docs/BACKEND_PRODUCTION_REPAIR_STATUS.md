@@ -87,13 +87,15 @@ GaN CP2K `27741431` 也因端点静态审计显示固定端点基线无效而取
 | BTO / VASP | 27741623 | 最终力 `0.095145 eV/A`，能垒 `0.042644 eV`；已收敛。 |
 | GaN / ABACUS（新解析器重跑） | 27744907 | 已取消；运行至第 15 步，`fmax` 在 `3.17–3.27 eV/A` 平台并出现 `54190`、`26643 eV/A` 尖峰；image 19 单像体积发散，原目录保留为失败证据。 |
 | GaN / ABACUS（guarded continuation） | 27749598 | 已从 `snapshots/chain_step_0000.traj` 在独立源码/工作目录启动，启用 `maximum_cell_step=0.05` 和 8 次回溯；当前运行中，尚未产生第一步摘要。 |
-| BTO / CP2K endpoint relaxation | 27749624, 27749625 | 初末端点独立 BFGS 准备任务，使用稳定 PBE/DZVP profile；运行中。 |
-| GaN / CP2K endpoint relaxation | 27749627, 27749628 | 初末端点独立 BFGS 准备任务，使用稳定 PBE/DZVP profile；运行中。 |
+| BTO / CP2K endpoint relaxation（旧单位错误） | 27749624, 27749625 | 已取消并保留；旧 profile 把 400 Ry 错写成 400 eV，诊断应力 1459–3788 GPa，不进入结果矩阵。 |
+| GaN / CP2K endpoint relaxation（旧单位错误） | 27749627, 27749628 | 已取消并保留；同一 cutoff 单位错误，不进入结果矩阵。 |
+| BTO / CP2K endpoint relaxation（400 Ry 修正版） | 27749725, 27749726 | 独立目录运行中；使用 `cutoff_ry: 400`、单 rank shell、`MAXSTEP=0.02`。 |
+| GaN / CP2K endpoint relaxation（400 Ry 修正版） | 27749727, 27749728 | 独立目录运行中；使用 `cutoff_ry: 400`、单 rank shell、`MAXSTEP=0.02`。 |
 
 ## 下一步
 
 1. 等待并审计 `27744907` 的 ABACUS 生产结果；若再次失败，只看最小解析器的具体契约错误，不再改 FIRE 参数。
 2. 用 `snapshots/step_0000` 的完整快照在独立目录启动 guarded continuation，启用 `maximum_cell_step=0.05`；当前 `27744907` 已取消，原目录只作为失控证据保留。
-3. 对 CP2K BTO/GaN 先用 `STATIC_ONLY=1` 生成独立端点摘要，只有通过门禁后才允许新的生产路径，不覆盖已取消目录。
+3. 对 CP2K BTO/GaN 修正版端点先用 `STATIC_ONLY=1` 生成独立摘要，只有通过门禁后才允许新的生产路径，不覆盖已取消目录。
 4. 对 ABINIT GaN 先修正端点物理设置并通过同一门禁，再决定是否重跑；当前 `max_steps_reached` 结果不得进入生产矩阵。
 5. 生成统一后端状态表、路径图和文献比较数据；未达到阈值或非同一物理模型的结果不得进入“已验证生产矩阵”。
