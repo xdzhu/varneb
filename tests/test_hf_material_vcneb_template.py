@@ -18,6 +18,7 @@ def test_production_requires_endpoint_static_gate() -> None:
     assert 'ENDPOINT_STATIC_SUMMARY is required before production VC-NEB' in text
     assert 'scripts/validate_ase_static_gate.py' in text
     assert 'STATIC_ONLY:-0' in text
+    assert 'mkdir -p "${workdir}"' in text
 
 
 def test_abacus_production_requires_endpoint_static_gate() -> None:

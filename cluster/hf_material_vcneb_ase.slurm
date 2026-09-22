@@ -96,6 +96,10 @@ cd "${repo}"
 # leaving that path active mixes incompatible importlib implementations.
 unset PYTHONHOME PYTHONPATH
 export OMP_NUM_THREADS=1 PYTHONUNBUFFERED=1
+# The gate report is part of the production artifact.  Create the isolated
+# work directory before validation so a passed gate cannot fail merely because
+# its output parent is absent.
+mkdir -p "${workdir}"
 if [[ "${STATIC_ONLY:-0}" != 1 && "${REQUIRE_ENDPOINT_STATIC_GATE:-1}" == 1 ]]; then
   [[ -n "${endpoint_summary}" ]] || {
     echo "ENDPOINT_STATIC_SUMMARY is required before production VC-NEB" >&2
