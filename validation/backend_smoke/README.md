@@ -23,6 +23,14 @@ exercise the calculator contract.  For production use, a reviewed material
 potential/basis, cutoff convergence, endpoint static gate, and a complete
 VCNEB path are still required.
 
+The first material-level CP2K endpoint gate is now recorded in
+`cp2k_bto_endpoint_gate_20260922.json`.  The BTO PBE/GTH-PBE/DZVP-MOLOPT-SR-GTH
+400 Ry endpoints passed the project gate (`fmax < 0.10 eV/A`, maximum stress
+`< 0.10 kbar`) after independent variable-cell BFGS relaxations.  The BTO
+VCNEB is intentionally not submitted until the corresponding GaN endpoint
+gate has also completed, so that the two material examples use the same
+auditable input contract.
+
 An existing BaTiO3 cubic-to-tetragonal endpoint was also used for a QE
 candidate static calculation (`27740755`) and a safe `auto`-mapping,
 `log_strain`, minimum-distance preflight (`27740765`).  The detailed record is
