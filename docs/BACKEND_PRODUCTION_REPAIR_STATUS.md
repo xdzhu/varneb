@@ -52,6 +52,10 @@ ABACUS 日志的人类可读 `final etot is` 行被长行截断而被误判为�
 区块。此前错误分类为 `mpi_failure`，根因是最小解析器只识别前一种能量标记，
 不是 MPI 或晶胞信赖域问题。解析器现在同时接受两种官方输出标记，并增加了
 该真实截断格式的回归测试；原 `27749598` 目录保留，续算使用独立目录。
+
+新的独立续算 `27755927` 已从 `chain_step_0009.traj` 启动；两次仅参数错误
+的提交 `27755906/24` 在 DFT 启动前退出，不计入计算失败。续算仍沿用
+`maximum_cell_step=0.05`、9 个并行 image worker 和每像 32 MPI。
 - 修复已加入回归测试并推送，当前代码提交为 `1812352`。
 
 新鲜生产重跑：`27744907`，目录 `cases/gan/abacus_vcneb_production_minparser`。在它完成前，不把 ABACUS 宣布为生产级路径已通过。
@@ -116,17 +120,19 @@ GaN CP2K `27741431` 也因端点静态审计显示固定端点基线无效而取
 | BTO / VASP | 27741623 | 最终力 `0.095145 eV/A`，能垒 `0.042644 eV`；已收敛。 |
 | GaN / ABACUS（新解析器重跑） | 27744907 | 已取消；运行至第 15 步，`fmax` 在 `3.17–3.27 eV/A` 平台并出现 `54190`、`26643 eV/A` 尖峰；image 19 单像体积发散，原目录保留为失败证据。 |
 | GaN / ABACUS（guarded continuation） | 27749598 | 已写出 step 0--9 后因 image 10 的 `!FINAL_ETOT_IS` 解析缺口失败；原目录和完整快照保留，不作为物理失败。 |
+| GaN / ABACUS（marker-parser continuation） | 27755927 | 已从完整 step 9 快照在独立目录运行中；`27755906/24` 仅为启动参数错误，未启动 DFT。 |
 | BTO / CP2K endpoint relaxation（旧单位错误） | 27749624, 27749625 | 已取消并保留；旧 profile 把 400 Ry 错写成 400 eV，诊断应力 1459–3788 GPa，不进入结果矩阵。 |
 | GaN / CP2K endpoint relaxation（旧单位错误） | 27749627, 27749628 | 已取消并保留；同一 cutoff 单位错误，不进入结果矩阵。 |
-| BTO / CP2K endpoint relaxation（400 Ry 修正版） | 27749725, 27749726 | 独立目录运行中；使用 `cutoff_ry: 400`、单 rank shell、`MAXSTEP=0.02`。 |
-| BTO / CP2K endpoint tightening | 27749774 | 从修正版初端点独立续算，目标广义力 `5e-4 eV/A`，用于满足 `0.1 kbar` 应力门禁；运行中。 |
-| GaN / CP2K endpoint relaxation（400 Ry 修正版） | 27749727, 27749728 | 独立目录运行中；使用 `cutoff_ry: 400`、单 rank shell、`MAXSTEP=0.02`。 |
+| BTO / CP2K endpoint relaxation（400 Ry 修正版） | 27749725, 27749726 | 已完成；初端点力很小但应力约 `5.97 kbar`，终端点应力约 `4.35 kbar`，均未通过严格静态门禁。 |
+| BTO / CP2K endpoint tightening | 27749774 | 已完成；初端点 `max_generalized_force=4.24e-4 eV/A`、最大应力约 `0.0094 kbar`，通过严格门禁。 |
+| GaN / CP2K endpoint relaxation（400 Ry 修正版） | 27749727, 27749728 | 已完成；两端最大应力约 `6.84/4.82 kbar`，未通过严格静态门禁。 |
+| BTO/GaN / CP2K endpoint tightening | 27755902, 27755903, 27755904 | 独立加严目录运行中，目标 `fmax=5e-4 eV/A`、应力 `<0.1 kbar`，不覆盖粗弛豫结果。 |
 | GaN / ABINIT-HGH-LDA endpoint relaxation（错误 launcher） | 27749797, 27749798 | 已取消并保留；`srun` 注入 `pmi_args` 导致 MPI socket 等待。 |
 | GaN / ABINIT-HGH-LDA endpoint relaxation（ABI 不匹配复现） | 27749871, 27749872 | 已取消并保留；Intel 2017/2021 混用，`mpiexec` 仍复现 `pmi_args`/socket 等待。 |
 | ABINIT 32-rank launcher canary | 27749992, 27749995, 27749996, 27749997 | 仅诊断：缺 compiler runtime、错误 PMI 组合均失败；匹配 Intel 2017 + Hydra 的 `27749997` 成功返回 8.6.1。 |
 | GaN / ABINIT-HGH-LDA endpoint relaxation（缺伪势路径） | 27750045, 27750046 | 预检后失败并保留；`pps=hgh` 未配 `pp_paths`，输入契约已补强。 |
 | GaN / ABINIT-HGH-LDA endpoint relaxation（自动对称性试跑） | 27750056, 27750057 | B1 因 `chkorthsy` 末位晶格噪声失败，B4 为一致性取消；独立目录和日志保留。 |
-| GaN / ABINIT-HGH-LDA endpoint relaxation（`nsym=1` 修正版） | 27750109, 27750110 | 新独立 `abinit_endpoint_relax_lda_nsym` 目录运行中；与旧路径同一 HGH-LDA 物理模型，待端点摘要和静态门禁，不与 PBE/VASP 能垒混合。 |
+| GaN / ABINIT-HGH-LDA endpoint relaxation（`nsym=1` 修正版） | 27750109, 27750110 | 已完成但静态门禁失败；端点体积塌缩至 `7.22/7.08 Å³`，应力 `59.3/60.8 kbar`。HGH-LDA 测试结果不进入 PBE/VASP 生产矩阵。 |
 
 ## 下一步
 

@@ -1,0 +1,35 @@
+{
+  "backend": "abinit",
+  "jobs": [27750109, 27750110],
+  "host_partition": "hfacnormal01",
+  "abinit_version": "8.6.1",
+  "runtime": {
+    "compiler": "compiler/intel/2017.5.239",
+    "mpi": "mpi/intelmpi/2017.4.239",
+    "launcher": "mpiexec.hydra -bootstrap slurm -n 32 abinit"
+  },
+  "case": "GaN B4/B1 endpoint preparation",
+  "physical_model": {
+    "xc": "LDA",
+    "pseudopotential": "HGH test-library Ga/N",
+    "ecut_eV": 600,
+    "nsym": 1
+  },
+  "endpoint_gate": {
+    "status": "failed",
+    "force_target_eV_per_A": 0.1,
+    "stress_target_kbar": 0.1,
+    "initial": {
+      "max_generalized_force_eV_per_A": 0.08393352967266411,
+      "max_abs_stress_kbar": 59.333839194895624,
+      "volume_A3": 7.222334680912742
+    },
+    "final": {
+      "max_generalized_force_eV_per_A": 0.0681763514467238,
+      "max_abs_stress_kbar": 60.775385105161654,
+      "volume_A3": 7.078192397555246
+    }
+  },
+  "scope": "adapter/runtime and failure-contract evidence only; not a production VC-NEB benchmark",
+  "exclusion_reason": "HGH-LDA model is not comparable to the PBE GaN matrix and both endpoints fail the strict stress gate"
+}
