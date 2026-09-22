@@ -22,6 +22,7 @@ if str(ROOT) not in sys.path:
 
 from vcneb.abacus import attach_abacus_calculators, make_ase_abacus_factory
 from vcneb.calculator import validate_image_calculators
+from vcneb.provenance import endpoint_structure_record
 
 
 # 1 eV/A^3 in kbar (CODATA conversion used by ASE/ABACUS interfaces).
@@ -196,8 +197,10 @@ def main() -> None:
     stress_ok = args.stress_kbar is None or max_abs_stress_kbar < args.stress_kbar
     summary = {
         "returncode": 0,
+        "status": "completed" if (force_ok and stress_ok) else "step_limit",
         "structure": str(structure),
         "workdir": str(workdir),
+        "endpoint": endpoint_structure_record(atoms),
         "natoms": len(atoms),
         "final_natoms": len(atoms),
         "composition": dict(sorted(Counter(atoms.get_chemical_symbols()).items())),
@@ -217,6 +220,7 @@ def main() -> None:
         "max_abs_stress_eV_per_A3": max_abs_stress_eV_per_A3,
         "max_abs_stress_kbar": max_abs_stress_kbar,
         "stress_eV_per_A3": stress.tolist(),
+        "potential_energy_eV": energy,
         "volume_A3": float(atoms.get_volume()),
         "force_converged": bool(force_ok),
         "stress_converged": bool(stress_ok),

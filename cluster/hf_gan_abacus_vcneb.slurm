@@ -35,6 +35,7 @@ candidate_step_retries=${CANDIDATE_STEP_RETRIES:-8}
 resume=${RESUME:-0}
 resume_trajectory=${RESUME_TRAJECTORY:-}
 resume_step=${RESUME_STEP:-0}
+endpoint_summary=${ENDPOINT_STATIC_SUMMARY:-}
 
 (( n_images == 29 && image_workers == 9 && image_mpi == 32 )) || {
   echo "GaN production requires 29 images, 9 concurrent workers, and 32 MPI ranks per worker" >&2
@@ -46,6 +47,20 @@ module purge
 source "${env_script}"
 export OMP_NUM_THREADS=1 PYTHONUNBUFFERED=1
 cd "${repo}"
+
+if [[ "${REQUIRE_ENDPOINT_STATIC_GATE:-1}" == 1 ]]; then
+  [[ -n "${endpoint_summary}" ]] || {
+    echo "ENDPOINT_STATIC_SUMMARY is required before production ABACUS VC-NEB" >&2
+    exit 2
+  }
+  if [[ "${endpoint_summary}" != /* ]]; then
+    endpoint_summary="${repo}/${endpoint_summary}"
+  fi
+  "${python}" scripts/validate_ase_static_gate.py "${endpoint_summary}" \
+    --fmax "${ENDPOINT_FMAX:-0.10}" \
+    --stress-kbar "${ENDPOINT_STRESS_KBAR:-0.10}" \
+    --output "${workdir}/endpoint_static_gate.json"
+fi
 
 resume_args=()
 if [[ "${resume}" == 1 ]]; then
