@@ -45,6 +45,13 @@ GaN ABACUS 作业 `27741518` 在 step 0 的 image 5 报出 NumPy 不规则数组
 - `vcneb/abacus.py` 新增只解析 VCNEB 三项的结果入口，避免可选 eigenvalue 解析。
 - 完整 ASE 解析失败时，使用严格的最小日志解析器读取最后一组 `final etot`、`TOTAL-FORCE` 和 `TOTAL-STRESS`；结果仍由统一的 `ImageEvaluation` 检查数量、形状和有限值。
 - 对旧损坏日志的回放结果为：energy `-4726.0740513 eV`、forces `(4,3)`、stress `(6,)`。
+
+Guarded continuation `27749598` 在完整写出 step 0--9 后，于 image 10 因
+ABACUS 日志的人类可读 `final etot is` 行被长行截断而被误判为无能量；同一
+日志实际包含完整的 `!FINAL_ETOT_IS -4726.5466304132096411 eV`、力和应力
+区块。此前错误分类为 `mpi_failure`，根因是最小解析器只识别前一种能量标记，
+不是 MPI 或晶胞信赖域问题。解析器现在同时接受两种官方输出标记，并增加了
+该真实截断格式的回归测试；原 `27749598` 目录保留，续算使用独立目录。
 - 修复已加入回归测试并推送，当前代码提交为 `1812352`。
 
 新鲜生产重跑：`27744907`，目录 `cases/gan/abacus_vcneb_production_minparser`。在它完成前，不把 ABACUS 宣布为生产级路径已通过。
@@ -108,7 +115,7 @@ GaN CP2K `27741431` 也因端点静态审计显示固定端点基线无效而取
 | BTO / QE | 27741411 | 最终力 `0.052831 eV/A`，无内部势垒；按阈值可接受。 |
 | BTO / VASP | 27741623 | 最终力 `0.095145 eV/A`，能垒 `0.042644 eV`；已收敛。 |
 | GaN / ABACUS（新解析器重跑） | 27744907 | 已取消；运行至第 15 步，`fmax` 在 `3.17–3.27 eV/A` 平台并出现 `54190`、`26643 eV/A` 尖峰；image 19 单像体积发散，原目录保留为失败证据。 |
-| GaN / ABACUS（guarded continuation） | 27749598 | 已从 `snapshots/chain_step_0000.traj` 在独立源码/工作目录启动，启用 `maximum_cell_step=0.05` 和 8 次回溯；当前运行中，尚未产生第一步摘要。 |
+| GaN / ABACUS（guarded continuation） | 27749598 | 已写出 step 0--9 后因 image 10 的 `!FINAL_ETOT_IS` 解析缺口失败；原目录和完整快照保留，不作为物理失败。 |
 | BTO / CP2K endpoint relaxation（旧单位错误） | 27749624, 27749625 | 已取消并保留；旧 profile 把 400 Ry 错写成 400 eV，诊断应力 1459–3788 GPa，不进入结果矩阵。 |
 | GaN / CP2K endpoint relaxation（旧单位错误） | 27749627, 27749628 | 已取消并保留；同一 cutoff 单位错误，不进入结果矩阵。 |
 | BTO / CP2K endpoint relaxation（400 Ry 修正版） | 27749725, 27749726 | 独立目录运行中；使用 `cutoff_ry: 400`、单 rank shell、`MAXSTEP=0.02`。 |
@@ -124,7 +131,8 @@ GaN CP2K `27741431` 也因端点静态审计显示固定端点基线无效而取
 ## 下一步
 
 1. 等待并审计 `27744907` 的 ABACUS 生产结果；若再次失败，只看最小解析器的具体契约错误，不再改 FIRE 参数。
-2. 用 `snapshots/step_0000` 的完整快照在独立目录启动 guarded continuation，启用 `maximum_cell_step=0.05`；当前 `27744907` 已取消，原目录只作为失控证据保留。
+2. 将 ABACUS `!FINAL_ETOT_IS` 解析修复部署到独立源码，从 `27749598` 的
+   `chain_step_0009.traj` 续算；只在新目录中验证后续路径，不覆盖原始链。
 3. 对 CP2K BTO/GaN 修正版端点先用 `STATIC_ONLY=1` 生成独立摘要，只有通过门禁后才允许新的生产路径，不覆盖已取消目录。
 4. 对 ABINIT GaN 先完成 HGH-LDA 端点重建并通过同一门禁，再决定是否重跑；当前 `max_steps_reached` 结果不得进入生产矩阵。新的端点任务必须使用匹配 Intel 2017 + Hydra 启动契约。若要与 PBE 结果比较，必须另行获得并固定 PBE 赝势，不能把 LDA/HGH 结果标成 PBE。
 5. 生成统一后端状态表、路径图和文献比较数据；未达到阈值或非同一物理模型的结果不得进入“已验证生产矩阵”。

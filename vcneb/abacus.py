@@ -25,9 +25,19 @@ def _minimal_abacus_results(output: Path) -> dict:
     """Parse the static force/stress contract from a damaged ABACUS log."""
 
     text = output.read_text(encoding="utf-8", errors="replace")
-    energy_matches = re.findall(
-        rf"final\s+etot\s+is\s+({_ABACUS_FLOAT})\s*eV", text, flags=re.IGNORECASE
+    # ABACUS writes both the human-readable ``final etot is`` line and the
+    # machine-oriented ``!FINAL_ETOT_IS`` marker.  A long SCF summary can
+    # occasionally wrap/truncate the former even though the latter and the
+    # force/stress contract are complete.
+    energy_patterns = (
+        rf"final\s+etot\s+is\s+({_ABACUS_FLOAT})\s*eV",
+        rf"!FINAL_ETOT_IS\s+({_ABACUS_FLOAT})\s*eV",
     )
+    energy_matches = [
+        match.group(1)
+        for pattern in energy_patterns
+        for match in re.finditer(pattern, text, flags=re.IGNORECASE)
+    ]
     if not energy_matches:
         raise ValueError(f"ABACUS log has no final total energy: {output}")
     energy = float(energy_matches[-1].replace("D", "E").replace("d", "e"))

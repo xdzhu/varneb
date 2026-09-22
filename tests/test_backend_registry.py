@@ -96,6 +96,23 @@ final etot is -1.25 eV
     assert result["energy"] == -1.25
 
 
+def test_abacus_minimal_contract_parser_accepts_final_etot_marker(tmp_path) -> None:
+    output = tmp_path / "running_scf.log"
+    output.write_text(
+        "TOTAL-FORCE (eV/Angstrom)\n"
+        "Ga1 0.1 0.2 0.3\n"
+        "N1 -0.1 -0.2 -0.3\n\n"
+        "TOTAL-STRESS (KBAR)\n"
+        "x 1.0 2.0 3.0\n"
+        "y 4.0 5.0 6.0\n"
+        "z 7.0 8.0 9.0\n\n"
+        "!FINAL_ETOT_IS -4726.5466304132096411 eV\n",
+        encoding="utf-8",
+    )
+    result = _minimal_abacus_results(output)
+    assert result["energy"] == pytest.approx(-4726.54663041321)
+
+
 def test_lammps_factory_is_explicit_and_isolated(tmp_path) -> None:
     factory = make_ase_lammps_factory(
         parameters={"pair_style": "zero 10.0", "pair_coeff": ["* *"]},
