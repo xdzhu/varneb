@@ -121,6 +121,18 @@ GaN CP2K `27741431` 也因端点静态审计显示固定端点基线无效而取
 
 这些是输入契约层的预防检查，不会修改或“修复”已有轨迹。
 
+2026-09-22 的加严端点结果已通过统一门禁：BTO 初/终端最大广义力为
+`4.24e-4/3.64e-4 eV/A`、最大应力为 `0.0094/0.0348 kbar`；GaN 初/终端为
+`3.72e-4/4.82e-4 eV/A`、最大应力为 `0.0241/0.0496 kbar`。端点原子数分别
+保持为 5/5 和 4/4；可复核记录见
+`validation/backend_smoke/cp2k_bto_endpoint_gate_20260922.json` 与
+`validation/backend_smoke/cp2k_gan_endpoint_gate_20260922.json`。
+
+首次提交 `27756548/27756549` 在写门禁报告前退出，根因是新 `WORKDIR` 尚未
+创建，而不是 CP2K SCF 或静态门禁失败。模板已在提交 `3190ccc` 中于门禁前
+创建工作目录，并增加回归断言；修正版在独立目录重提为 BTO `27756554`
+与 GaN `27756555`。两者已通过门禁并进入普通 VCNEB，未覆盖首次失败目录。
+
 端点准备现在也有统一入口 `scripts/relax_ase_endpoint.py`：它通过与生产路径相同的 ASE factory，对单个端点执行可变胞 BFGS（或 `--fixed-cell` 原子 BFGS），保存 `CONTCAR`、断点、力/应力/焓摘要。端点准备、静态门禁和 VC-NEB 因而成为三个可审计阶段，而不是在路径迭代中临时改变后端参数。
 
 ### 运行中 ABACUS 链的几何诊断
@@ -148,7 +160,10 @@ GaN CP2K `27741431` 也因端点静态审计显示固定端点基线无效而取
 | BTO / CP2K endpoint relaxation（400 Ry 修正版） | 27749725, 27749726 | 已完成；初端点力很小但应力约 `5.97 kbar`，终端点应力约 `4.35 kbar`，均未通过严格静态门禁。 |
 | BTO / CP2K endpoint tightening | 27749774 | 已完成；初端点 `max_generalized_force=4.24e-4 eV/A`、最大应力约 `0.0094 kbar`，通过严格门禁。 |
 | GaN / CP2K endpoint relaxation（400 Ry 修正版） | 27749727, 27749728 | 已完成；两端最大应力约 `6.84/4.82 kbar`，未通过严格静态门禁。 |
-| BTO/GaN / CP2K endpoint tightening | 27755902, 27755903, 27755904 | 独立加严目录运行中，目标 `fmax=5e-4 eV/A`、应力 `<0.1 kbar`，不覆盖粗弛豫结果。 |
+| BTO/GaN / CP2K endpoint tightening | 27755902, 27755903, 27755904 | 已完成；两端均通过 `fmax<0.10 eV/A`、应力 `<0.1 kbar` 门禁，结果见 `validation/backend_smoke/cp2k_*_endpoint_gate_20260922.json`。 |
+| BTO / CP2K ordinary VCNEB | 27756554 | 已通过端点门禁后在独立 retry-1 目录运行；7 total images（5 interior），每像 one-rank `cp2k_shell`。 |
+| GaN / CP2K ordinary VCNEB | 27756555 | 已通过端点门禁后在独立 retry-1 目录运行；29 total images（27 interior），每像 one-rank `cp2k_shell`。 |
+| BTO/GaN / CP2K first VCNEB submission | 27756548, 27756549 | 仅运行 4 秒即退出；门禁报告父目录缺失，已作为启动契约失败保留，不覆盖 retry-1。 |
 | GaN / ABINIT-HGH-LDA endpoint relaxation（错误 launcher） | 27749797, 27749798 | 已取消并保留；`srun` 注入 `pmi_args` 导致 MPI socket 等待。 |
 | GaN / ABINIT-HGH-LDA endpoint relaxation（ABI 不匹配复现） | 27749871, 27749872 | 已取消并保留；Intel 2017/2021 混用，`mpiexec` 仍复现 `pmi_args`/socket 等待。 |
 | ABINIT 32-rank launcher canary | 27749992, 27749995, 27749996, 27749997 | 仅诊断：缺 compiler runtime、错误 PMI 组合均失败；匹配 Intel 2017 + Hydra 的 `27749997` 成功返回 8.6.1。 |

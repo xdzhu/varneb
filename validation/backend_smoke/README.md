@@ -31,6 +31,13 @@ VCNEB is intentionally not submitted until the corresponding GaN endpoint
 gate has also completed, so that the two material examples use the same
 auditable input contract.
 
+The corresponding GaN endpoint gate is recorded in
+`cp2k_gan_endpoint_gate_20260922.json`.  Its four-atom B4/B1 endpoints also
+passed the same force/stress limits.  The ordinary CP2K VCNEB was then
+submitted as job `27756555` in a new retry directory with 29 total images
+(27 interior images); each persistent `cp2k_shell` worker is one rank, with
+nine workers sharing one 32-task node allocation.
+
 An existing BaTiO3 cubic-to-tetragonal endpoint was also used for a QE
 candidate static calculation (`27740755`) and a safe `auto`-mapping,
 `log_strain`, minimum-distance preflight (`27740765`).  The detailed record is

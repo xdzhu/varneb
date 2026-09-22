@@ -1,0 +1,39 @@
+{
+  "backend": "cp2k",
+  "case": "GaN B4 to B1 endpoint gate",
+  "jobs": [27755903, 27755904],
+  "remote_source": "/public/home/iai806/abacus/agent-runs/20260921-varneb-material/varneb_cp2k_ry_source",
+  "profile": "examples/material_profiles/cp2k_gan_pbe_dzvp_stable.json",
+  "calculator_contract": {
+    "xc": "PBE",
+    "pseudo_potential": "GTH-PBE",
+    "basis_set": "DZVP-MOLOPT-SR-GTH",
+    "cutoff_ry": 400,
+    "kpoints": "Monkhorst-Pack 2 2 2",
+    "scf": {
+      "eps_scf": 1e-5,
+      "max_scf": 1000,
+      "added_mos": 30,
+      "fermi_dirac_temperature_K": 300,
+      "mixing": "DIRECT_P_MIXING alpha=0.05"
+    }
+  },
+  "endpoint_evaluation_policy": "independent_bfgs_relaxations",
+  "static_gate": {
+    "status": "passed",
+    "fmax_target_eV_per_A": 0.1,
+    "stress_target_kbar": 0.1,
+    "initial": {
+      "max_generalized_force_eV_per_A": 0.00037248025820496035,
+      "max_abs_stress_kbar": 0.02411525560889517,
+      "n_atoms": 4
+    },
+    "final": {
+      "max_generalized_force_eV_per_A": 0.00048186681780195876,
+      "max_abs_stress_kbar": 0.04956532796509592,
+      "n_atoms": 4
+    }
+  },
+  "vcneb_jobs": [27756555],
+  "vcneb_workdir": "cases/gan/cp2k_vcneb_prod_20260922_retry1"
+}
