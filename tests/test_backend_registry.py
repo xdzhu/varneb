@@ -20,7 +20,7 @@ from vcneb.backends import (
     make_ase_lammps_factory,
 )
 from vcneb.abacus import _minimal_abacus_results, _read_vcneb_results
-from vcneb.calculator import inspect_calculator
+from vcneb.calculator import classify_calculator_failure, inspect_calculator
 from vcneb.config import RunConfig
 from vcneb.optimizer_registry import get_optimizer_spec, optimizer_capability_matrix
 
@@ -217,6 +217,18 @@ def test_abinit_factory_rejects_missing_pseudopotential_contract(tmp_path) -> No
             command="abinit",
             pp_paths=tmp_path / "missing-pseudo",
         )
+
+
+@pytest.mark.parametrize(
+    ("message", "category"),
+    [
+        ("ABINIT chkorthsy: inconsistent lattice vectors; MPI_ABORT", "abinit_symmetry_failure"),
+        ("ABINIT requires pp_paths: pseudopotential directory missing", "pseudopotential_contract"),
+        ("ABACUS result parsing failed: no parseable final stress", "output_contract_violation"),
+    ],
+)
+def test_backend_contract_failures_are_not_misclassified_as_mpi(message, category) -> None:
+    assert classify_calculator_failure(RuntimeError(message)) == category
 
 
 def test_generic_ase_factory_injects_private_directory_and_command(tmp_path) -> None:

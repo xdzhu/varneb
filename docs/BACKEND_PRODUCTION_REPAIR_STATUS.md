@@ -1,12 +1,18 @@
 # VARNEB 多后端生产修复状态
 
-更新时间：2026-09-21（HF `hfacnormal01`）
+更新时间：2026-09-22（HF `hfacnormal01`）
 
 本文只记录已由日志、作业状态或回放实验支持的结论。旧失败目录保留，修复使用独立目录，不覆盖原始轨迹。
 
 ## 统一判定边界
 
 VARNEB 控制器只依赖每个 image 的 `energy`、`forces` 和完整 `stress`。后端适配器负责输入生成、外部程序启动、输出解析和 SCF 诊断；FIRE、BlockFIRE、SplitFIRE 等路径优化器不负责修复后端输出，也不把 SCF 重试伪装成路径迭代。
+
+失败分类现在进一步按后端契约分层：ABINIT 的 `chkorthsy` 归为
+`abinit_symmetry_failure`，缺失或未固定伪势归为 `pseudopotential_contract`，
+能量/力/应力区块缺失或解析失败归为 `output_contract_violation`。这些分类在
+`MPI_ABORT` 或 launcher 文本之前判定，避免把输入/输出契约错误误报为 MPI 故障，
+也避免错误地修改 FIRE、NEB 图像数或路径步长。
 
 生产路径仍使用普通 VC-NEB `fmax = 0.10 eV/A`、固定端点和无 CI。最终是否收敛以完整链的 `final_max_generalized_force_eV_per_A <= 0.10` 判定，不能以 Slurm exit code 或某一轮回弹判定。
 

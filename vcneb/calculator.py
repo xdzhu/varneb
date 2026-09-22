@@ -289,6 +289,26 @@ def classify_calculator_failure(
         return "vasp_bravais_lattice_inconsistency"
     if "vasp input contract" in text:
         return "input_contract_violation"
+    # These failures are input/output contract violations, not path dynamics.
+    # Keep them ahead of the generic MPI branch because ABINIT often appends
+    # MPI_ABORT after rejecting the lattice or pseudopotential before SCF.
+    if "chkorthsy" in text or (
+        "abinit" in text and "symmetr" in text and "lattice" in text
+    ):
+        return "abinit_symmetry_failure"
+    if (
+        ("pseudopotential" in text or "pseudo potential" in text or "pp_paths" in text)
+        and any(token in text for token in ("missing", "not found", "require", "cannot", "invalid"))
+    ):
+        return "pseudopotential_contract"
+    if (
+        "result parsing failed" in text
+        or "minimal contract parser also failed" in text
+        or "no final total energy" in text
+        or "no parseable final force" in text
+        or "no parseable final stress" in text
+    ):
+        return "output_contract_violation"
     scf_failure = (
         re.search(r"\bscf\b.{0,100}(?:not|failed|fail|unable|did not).{0,40}converg", text)
         or re.search(r"\bscf\b.{0,100}(?:max(?:imum)?\s+iteration|iteration\s+\d+)", text)
