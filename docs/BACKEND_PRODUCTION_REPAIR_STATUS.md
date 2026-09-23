@@ -306,7 +306,8 @@ CP2K GaN `27756555` 使用旧模板的零外压与零应力端点，已在
 | BTO / CP2K corrected ordinary VCNEB | 27763906 | 9 像链以 `fmax=0.081828 eV/A` 收敛；无内部峰，`0.060805 eV/5-atom cell` 只是端点焓差，不是激活能垒。完整审计见 `validation/backend_smoke/cp2k_bto_k4_vcneb_20260923.json`。 |
 | BTO / CP2K ordinary VCNEB（退化旧输入） | 27756554 | 数值收敛但两端均近立方，路径总长仅 `1.80e-4 Å`；保留为负例，不作为 T→C 生产结果。 |
 | GaN / CP2K ordinary VCNEB（旧对齐） | 27756555 | 零外压链数值达到路径阈值，但有效对齐终态未通过静态门禁（`0.183 eV/A`、约 `6.04 kbar`），不接收为生产结果。 |
-| GaN / CP2K endpoint identity retry | 27764113 | `MAPPING=identity, ALIGN_TRANSLATION=0` 的新生产链已通过源端点哈希门禁，正在计算；不与旧对齐链混用。 |
+| GaN / CP2K endpoint identity retry | 27764113, 27764399, 27764401 | 前三次尝试均在 DFT 前被契约拒绝：先后暴露自动映射重排、`log_strain` 与关闭晶胞对齐不相容等输入组合问题；不产生物理结果。 |
+| GaN / CP2K source-consistent production retry | 27767011 | `MAPPING=identity, ALIGN_TRANSLATION=0, ALIGN_CELLS=0, CELL_INTERPOLATION=linear` 已通过端点哈希预检并进入 29 像生产计算；结果待完整链审计。 |
 | BTO/GaN / CP2K first VCNEB submission | 27756548, 27756549 | 仅运行 4 秒即退出；门禁报告父目录缺失，已作为启动契约失败保留，不覆盖 retry-1。 |
 | GaN / ABINIT-HGH-LDA endpoint relaxation（错误 launcher） | 27749797, 27749798 | 已取消并保留；`srun` 注入 `pmi_args` 导致 MPI socket 等待。 |
 | GaN / ABINIT-HGH-LDA endpoint relaxation（ABI 不匹配复现） | 27749871, 27749872 | 已取消并保留；Intel 2017/2021 混用，`mpiexec` 仍复现 `pmi_args`/socket 等待。 |
