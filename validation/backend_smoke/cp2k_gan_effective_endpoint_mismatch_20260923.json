@@ -1,0 +1,35 @@
+{
+  "case": "GaN B4-to-B1 zero-pressure CP2K diagnostic",
+  "job_id": "27756555",
+  "slurm_state": "COMPLETED",
+  "exit_code": "0:0",
+  "workdir": "/public/home/iai806/abacus/agent-runs/20260921-varneb-material/varneb_cp2k_ry_source/cases/gan/cp2k_vcneb_prod_20260922_retry1",
+  "chain_result": {
+    "final_max_generalized_force_eV_per_A": 0.0961199882,
+    "barrier_eV_per_4_atom_cell": 0.5554691763,
+    "pressure_gpa": 0.0,
+    "force_threshold_met": true
+  },
+  "static_gate_before_mapping": {
+    "status": "passed",
+    "final_sha256": "b36250c14988d3e93c825d3d8dbf29ee148631a986f4b99d84f6eb2958e05cf1",
+    "final_max_force_eV_per_A": 0.00048223881546635445,
+    "final_max_stress_kbar": 0.04956532796509592
+  },
+  "effective_mapped_endpoint": {
+    "final_sha256": "bb56084de1393c65ebdd3ad4e8d23542e0367631820bc2db824ce55e761d43e5",
+    "final_max_force_eV_per_A": 0.1829627141119967,
+    "final_max_stress_kbar": 6.040982659527591
+  },
+  "assessment": "not accepted as a production chain: translation alignment changed the grid origin seen by CP2K, while the old static gate described the untranslated source endpoint",
+  "repair": "production drivers now require the static endpoint hashes to match the mapped/aligned effective VCNEB endpoints before any DFT iteration"
+  ,"controlled_grid_probe": {
+    "relcutoff80_job_id": "27763865",
+    "relcutoff80_max_force_eV_per_A": 0.14840208066227,
+    "relcutoff80_max_stress_kbar": 6.069,
+    "cutoff800_relcutoff80_job_id": "27763910",
+    "cutoff800_relcutoff80_max_force_eV_per_A": 0.073804739299583,
+    "cutoff800_relcutoff80_max_stress_kbar": 1.7199,
+    "interpretation": "grid and cutoff refinement reduces the translation sensitivity but does not by itself meet the 1 kbar endpoint gate; the production retry therefore uses identity mapping and no translation alignment"
+  }
+}

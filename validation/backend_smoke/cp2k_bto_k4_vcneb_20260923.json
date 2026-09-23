@@ -1,0 +1,47 @@
+{
+  "case": "BaTiO3 tetragonal-to-cubic VCNEB",
+  "backend": "CP2K 2024.1 through ASE",
+  "job_id": "27763906",
+  "slurm_state": "COMPLETED",
+  "exit_code": "0:0",
+  "workdir": "/public/home/iai806/abacus/agent-runs/20260921-varneb-material/cases/bto/cp2k_k4_vcneb_prod_20260923",
+  "contract": {
+    "functional": "PBE",
+    "basis": "DZVP-MOLOPT-SR-GTH",
+    "pseudopotential": "GTH-PBE",
+    "cutoff_ry": 400,
+    "kpoints": [4, 4, 4],
+    "pressure_gpa": 0.0,
+    "n_images_total": 9,
+    "n_images_interior": 7,
+    "image_workers": 7,
+    "mpi_ranks_per_worker": 1,
+    "climbing_image": false,
+    "fmax_target_eV_per_A": 0.1,
+    "endpoint_stress_limit_kbar": 1.0
+  },
+  "result": {
+    "status": "converged",
+    "termination": "force_threshold",
+    "final_max_generalized_force_eV_per_A": 0.08182849942480201,
+    "barrier_enthalpy_eV_per_5_atom_cell": 0.06080492769979173,
+    "reaction_enthalpy_eV_per_5_atom_cell": 0.06080492769979173,
+    "interior_peak_indices": [],
+    "has_interior_barrier": false,
+    "path_geometry_valid": true,
+    "all_image_energy_force_stress_finite": true,
+    "calculator_reports": 9,
+    "known_cp2k_fatal_signatures_found": false
+  },
+  "endpoint_gate": {
+    "phase_identity": "T P4mm to C Pm-3m",
+    "tetragonal_c_over_a": 1.0618331173744153,
+    "cubic_c_over_a": 0.9999999989575437,
+    "tetragonal_max_force_eV_per_A": 0.0044586653640279,
+    "tetragonal_max_stress_residual_kbar": 0.9141183092440072,
+    "cubic_max_force_eV_per_A": 0.058737938651667,
+    "cubic_max_stress_residual_kbar": 0.06952554665475365,
+    "status": "passed"
+  },
+  "interpretation": "The converged chain has no interior saddle; its reported barrier equals the endpoint enthalpy difference and should not be presented as an activated barrier."
+}

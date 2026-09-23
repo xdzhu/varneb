@@ -1,0 +1,42 @@
+{
+  "case": "BaTiO3 tetragonal-to-cubic endpoint gate",
+  "backend": "CP2K 2024.1 through ASE",
+  "jobs": {
+    "tetragonal_relax": "27761495",
+    "cubic_relax": "27761496",
+    "effective_endpoint_static": "27763724",
+    "unneeded_tightening_cancelled_after_threshold_decision": "27763854"
+  },
+  "contract": {
+    "functional": "PBE",
+    "basis": "DZVP-MOLOPT-SR-GTH",
+    "pseudopotential": "GTH-PBE",
+    "cutoff_ry": 400,
+    "kpoints": [4, 4, 4],
+    "pressure_gpa": 0.0,
+    "force_limit_eV_per_A": 0.1,
+    "stress_residual_limit_kbar": 1.0
+  },
+  "phase_identity": {
+    "status": "passed",
+    "tetragonal_c_over_a": 1.0618331173744153,
+    "tetragonal_ti_equatorial_o_offset_A": 0.2205587695916778,
+    "cubic_c_over_a": 0.9999999989575437,
+    "cubic_ti_equatorial_o_offset_A": 5.842532184919963e-10
+  },
+  "effective_static_gate": {
+    "status": "passed",
+    "tetragonal_max_force_eV_per_A": 0.0044586653640279,
+    "tetragonal_max_stress_residual_kbar": 0.9141183092440072,
+    "cubic_max_force_eV_per_A": 0.058737938651667,
+    "cubic_max_stress_residual_kbar": 0.06952554665475365,
+    "tetragonal_energy_eV": -3595.3296315134,
+    "cubic_energy_eV": -3595.2688265857,
+    "tetragonal_minus_cubic_energy_eV": -0.06080492770007884
+  },
+  "provenance": {
+    "phase_gate": "/public/home/iai806/abacus/agent-runs/20260921-varneb-material/analysis/bto_phase_audit_20260923/cp2k_k4_relaxed_phase_pair.json",
+    "static_summary": "/public/home/iai806/abacus/agent-runs/20260921-varneb-material/varneb_cp2k_ry_source/cases/bto/cp2k_k4_static_relaxed_20260923/ase_static_summary.json",
+    "static_gate": "/public/home/iai806/abacus/agent-runs/20260921-varneb-material/varneb_cp2k_ry_source/cases/bto/cp2k_k4_static_relaxed_20260923/endpoint_static_gate_1kbar.json"
+  }
+}
