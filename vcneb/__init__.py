@@ -63,7 +63,11 @@ from .phonons import (
     tangent_mode_overlaps,
 )
 from .analysis import dominant_mode_indices, mode_contribution_fractions, path_reaction_coordinate
-from .provenance import compare_endpoint_records, endpoint_structure_record
+from .provenance import (
+    compare_endpoint_records,
+    endpoint_structure_record,
+    validate_static_endpoint_identity,
+)
 from .config import RunConfig, prepare_run
 from .optimizer_registry import (
     OptimizerSpec,
@@ -129,6 +133,7 @@ __all__ = [
     "path_reaction_coordinate",
     "endpoint_structure_record",
     "compare_endpoint_records",
+    "validate_static_endpoint_identity",
     "RunConfig",
     "prepare_run",
     "OptimizerSpec",

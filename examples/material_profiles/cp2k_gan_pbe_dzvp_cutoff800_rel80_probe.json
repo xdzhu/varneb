@@ -1,0 +1,10 @@
+{
+  "basis_set": "DZVP-MOLOPT-SR-GTH",
+  "pseudo_potential": "GTH-PBE",
+  "cutoff_ry": 800,
+  "xc": "PBE",
+  "charge": 0,
+  "max_scf": 1000,
+  "inp": "&FORCE_EVAL\n  &DFT\n    &KPOINTS\n      SCHEME MONKHORST-PACK 2 2 2\n    &END KPOINTS\n    &MGRID\n      REL_CUTOFF 80\n    &END MGRID\n    &SCF\n      EPS_SCF 1.0E-5\n      SCF_GUESS ATOMIC\n      ADDED_MOS 30\n      &SMEAR ON\n        METHOD FERMI_DIRAC\n        ELECTRONIC_TEMPERATURE [K] 300\n      &END SMEAR\n      &MIXING\n        METHOD DIRECT_P_MIXING\n        ALPHA 0.05\n      &END MIXING\n    &END SCF\n  &END DFT\n&END FORCE_EVAL\n",
+  "debug": false
+}

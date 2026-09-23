@@ -34,5 +34,17 @@
       "n_atoms": 5
     }
   },
-  "vcneb_status": "not_submitted_until_GaN_CP2K_endpoint_gate_completes"
+  "vcneb_job": 27756554,
+  "vcneb_status": "numerically_converged_but_invalid_T_to_C_phase_pair",
+  "vcneb_audit": {
+    "final_max_generalized_force_eV_per_A": 0.00962653751634904,
+    "reported_barrier_eV_not_physical": 2.60699835052947e-7,
+    "initial_c_over_a": 0.999997616202306,
+    "final_c_over_a": 1.00002306432052,
+    "initial_path_total_length_A": 0.000180156318354439,
+    "input_root_cause": "The endpoint file labels are reversed: T_CONTCAR is cubic (4.028225 Angstrom on each axis), while C_CONTCAR is tetragonal/polar (3.990321 x 3.990321 x 4.239804 Angstrom). The latter then relaxed to near-cubic under this CP2K contract in the completed 27-step final-endpoint BFGS run.",
+    "duplicate_probe": "Job 27761267 used a VASP T POSCAR byte-identical to the already-relaxed C_CONTCAR seed with the same CP2K profile. It was cancelled after 9 minutes once the duplication was verified; its directory is preserved.",
+    "verdict": "Both endpoints are essentially cubic; endpoint force/stress convergence alone does not establish a tetragonal-to-cubic transition. Exclude from production benchmark and literature barrier comparison.",
+    "source": "/public/home/iai806/abacus/agent-runs/20260921-varneb-material/varneb_cp2k_ry_source/cases/bto/cp2k_vcneb_prod_20260922_retry1/vcneb_summary.json"
+  }
 }

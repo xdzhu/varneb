@@ -19,6 +19,22 @@ def test_production_requires_endpoint_static_gate() -> None:
     assert 'scripts/validate_ase_static_gate.py' in text
     assert 'STATIC_ONLY:-0' in text
     assert 'mkdir -p "${workdir}"' in text
+    assert '--endpoint-static-summary "${endpoint_summary}"' in text
+
+
+def test_generic_material_template_preserves_pressure_and_endpoint_separation() -> None:
+    text = TEMPLATE.read_text(encoding="utf-8")
+    assert 'pressure_gpa=${PRESSURE_GPA:-0.0}' in text
+    assert text.count('--pressure-gpa "${pressure_gpa}"') == 2
+    assert '--minimum-endpoint-separation "${MINIMUM_ENDPOINT_SEPARATION}"' in text
+    assert 'align_translation=${ALIGN_TRANSLATION:-1}' in text
+    assert 'args+=(--align-translation)' in text
+    assert 'mapping=${MAPPING:-auto}' in text
+    assert '--mapping "${mapping}"' in text
+    assert 'align_cells=${ALIGN_CELLS:-1}' in text
+    assert 'args+=(--no-align-cells)' in text
+    assert 'cell_interpolation=${CELL_INTERPOLATION:-log_strain}' in text
+    assert '--cell-interpolation "${cell_interpolation}"' in text
 
 
 def test_abacus_production_requires_endpoint_static_gate() -> None:
@@ -26,6 +42,19 @@ def test_abacus_production_requires_endpoint_static_gate() -> None:
     assert 'ENDPOINT_STATIC_SUMMARY is required before production ABACUS VC-NEB' in text
     assert 'scripts/validate_ase_static_gate.py' in text
     assert 'REQUIRE_ENDPOINT_STATIC_GATE:-1' in text
+    assert '--endpoint-static-summary "${endpoint_summary}"' in text
+
+
+def test_abacus_gan_launcher_and_pressure_contract() -> None:
+    text = ABACUS_TEMPLATE.read_text(encoding="utf-8")
+    assert '#SBATCH --cpus-per-task=4' in text
+    assert 'mpirun -np ${image_mpi} ${abacus}' in text
+    assert 'srun --exclusive --mpi=pmix_v3' not in text
+    assert '--pressure-gpa "${pressure_gpa}"' in text
+    assert 'ENDPOINT_STRESS_KBAR:-2.0' in text
+    assert 'command=("${python}"' in text
+    assert 'exec "${command[@]}"' in text
+    assert '"${resume_args[@]}"' not in text
 
 
 def test_endpoint_template_uses_single_rank_cp2k_shell() -> None:

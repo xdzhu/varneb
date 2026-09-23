@@ -28,10 +28,11 @@ from vcneb import (
     build_mode_basis,
     interpolate_vcneb,
     mode_guided_path,
-    path_geometry_diagnostics,
     endpoint_structure_record,
     read_chain_trajectory,
     run_vcneb,
+    validate_static_endpoint_identity,
+    validate_path_geometry,
     validate_image_calculators,
 )
 from vcneb.abacus import attach_abacus_calculators, make_ase_abacus_factory
@@ -53,6 +54,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--steps", type=int, default=300)
     parser.add_argument("--k", type=float, default=0.10)
     parser.add_argument("--pressure-gpa", type=float, default=0.0)
+    parser.add_argument(
+        "--endpoint-static-summary",
+        default=None,
+        help="static endpoint summary whose hashes must match the effective band endpoints",
+    )
     parser.add_argument(
         "--command",
         default=os.environ.get("ABACUS_COMMAND"),
@@ -115,6 +121,12 @@ def parse_args() -> argparse.Namespace:
         type=float,
         default=None,
         help="Reject initial paths whose Frobenius deformation exceeds this threshold",
+    )
+    parser.add_argument(
+        "--minimum-endpoint-separation",
+        type=float,
+        default=None,
+        help="Reject nearly identical endpoints before DFT (extended-coordinate Angstrom)",
     )
     parser.add_argument(
         "--mode",
@@ -293,6 +305,7 @@ def _run_metadata(args: argparse.Namespace, workdir: Path) -> dict:
     return {
         "git_revision": _git_revision(),
         "workdir": str(workdir),
+        "external_pressure_gpa": float(args.pressure_gpa),
         "command_line": sys.argv,
         "slurm": {key: os.environ[key] for key in slurm_keys if os.environ.get(key)},
         "resume": bool(args.resume),
@@ -382,7 +395,18 @@ def main() -> None:
     if not args.resume or not initial_trajectory.exists():
         if mode is not None and args.constraint_mode == "subspace":
             write(raw_initial_trajectory, images)
-    initial_geometry = path_geometry_diagnostics(images)
+    initial_geometry = validate_path_geometry(
+        images,
+        minimum_distance=args.minimum_distance,
+        maximum_deformation=args.maximum_deformation,
+        minimum_endpoint_separation=args.minimum_endpoint_separation,
+    )
+    endpoint_identity_gate = None
+    if args.endpoint_static_summary is not None:
+        endpoint_summary_path = Path(args.endpoint_static_summary).resolve()
+        endpoint_summary = json.loads(endpoint_summary_path.read_text(encoding="utf-8"))
+        endpoint_identity_gate = validate_static_endpoint_identity(endpoint_summary, images)
+        endpoint_identity_gate["summary"] = str(endpoint_summary_path)
     mode_basis = None
     if mode is not None and args.constraint_mode != "none":
         mode_basis = build_mode_basis(
@@ -453,9 +477,10 @@ def main() -> None:
         "fixed_cached_once" if args.image_workers else "ASE_calculator_cache"
     )
     metadata["endpoint_structures"] = {
-        "initial": endpoint_structure_record(initial),
-        "final": endpoint_structure_record(final),
+        "initial": endpoint_structure_record(images[0]),
+        "final": endpoint_structure_record(images[-1]),
     }
+    metadata["endpoint_static_identity_gate"] = endpoint_identity_gate
     preflight = {
         **metadata,
         "status": "ok",

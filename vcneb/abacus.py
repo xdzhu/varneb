@@ -91,6 +91,28 @@ REQUIRED_VCNEB_PARAMETERS = {
 }
 
 
+def _reject_broken_mpi_launch(directory: Path) -> None:
+    """Reject ABACUS output produced after Intel MPI fell back to singletons.
+
+    A direct Slurm/PMIx launch can print this warning once per requested rank,
+    then let every independent process write apparently usable energy and
+    force blocks to the same image directory.  Parsing those blocks as one
+    valid distributed calculation would silently contaminate the NEB chain.
+    """
+
+    for name in ("abacus.out", "abacus.err"):
+        path = directory / name
+        if not path.is_file():
+            continue
+        with path.open(encoding="utf-8", errors="replace") as handle:
+            if any("PMI server not found" in line for line in handle):
+                raise RuntimeError(
+                    f"ABACUS MPI launch failed in {directory}: {path} reports "
+                    "'PMI server not found'; discard this image calculation "
+                    "and use a validated MPI launcher"
+                )
+
+
 def _read_vcneb_results(directory: Path, *, output_suffix: str, calculation: str) -> dict:
     """Read only the ABACUS properties required by variable-cell NEB.
 
@@ -101,7 +123,9 @@ def _read_vcneb_results(directory: Path, *, output_suffix: str, calculation: str
     so keep this adapter on the smaller, explicit calculator contract.
     """
 
-    output = Path(directory) / ("OUT." + output_suffix) / f"running_{calculation}.log"
+    directory = Path(directory)
+    _reject_broken_mpi_launch(directory)
+    output = directory / ("OUT." + output_suffix) / f"running_{calculation}.log"
     try:
         from ase.io.abacus import _get_abacus_chunks
     except ImportError:  # pragma: no cover - version-specific ASE fallback

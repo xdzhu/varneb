@@ -74,6 +74,17 @@ def test_abacus_reader_ignores_optional_eigenvalue_parser(monkeypatch, tmp_path)
     assert result["stress"] == [[0.0, 0.0, 0.0]] * 3
 
 
+def test_abacus_reader_rejects_singleton_mpi_fallback(tmp_path) -> None:
+    output = tmp_path / "OUT.ABACUS"
+    output.mkdir()
+    (output / "running_scf.log").write_text("apparently valid", encoding="utf-8")
+    (tmp_path / "abacus.out").write_text(
+        "MPI startup(): PMI server not found\n", encoding="utf-8"
+    )
+    with pytest.raises(RuntimeError, match="PMI server not found"):
+        _read_vcneb_results(tmp_path, output_suffix="ABACUS", calculation="scf")
+
+
 def test_abacus_minimal_contract_parser_handles_usable_damaged_log(tmp_path) -> None:
     output = tmp_path / "running_scf.log"
     output.write_text(

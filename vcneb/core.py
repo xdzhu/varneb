@@ -632,6 +632,7 @@ def path_geometry_diagnostics(
     maximum_deformation: float | None = None,
     cell_scale: float | None = None,
     fold_cosine_threshold: float | None = None,
+    minimum_endpoint_separation: float | None = None,
 ) -> dict:
     """Report image volumes, cell deformation, and MIC atom separations.
 
@@ -641,7 +642,10 @@ def path_geometry_diagnostics(
     ``maximum_deformation`` is a Frobenius-norm threshold on ``F-I`` relative
     to ``reference_cell``.  If ``fold_cosine_threshold`` is supplied, adjacent
     extended-coordinate segments with a cosine below that threshold are
-    reported as path folds and make validation fail.
+    reported as path folds and make validation fail.  The optional endpoint
+    separation is measured after the caller's atom mapping and translation
+    alignment, in the same atom-plus-cell coordinates used by VC-NEB.  It
+    catches collapsed endpoints but does not by itself establish phase identity.
     """
 
     if len(images) < 2:
@@ -654,6 +658,8 @@ def path_geometry_diagnostics(
         raise ValueError("cell_scale must be positive when provided")
     if fold_cosine_threshold is not None and not -1.0 <= fold_cosine_threshold <= 1.0:
         raise ValueError("fold_cosine_threshold must be between -1 and 1")
+    if minimum_endpoint_separation is not None and minimum_endpoint_separation <= 0.0:
+        raise ValueError("minimum_endpoint_separation must be positive when provided")
     reference = (
         cell_matrix(images[0]) if reference_cell is None else np.asarray(reference_cell, dtype=float)
     )
@@ -706,6 +712,16 @@ def path_geometry_diagnostics(
     segment_lengths = []
     for left, right in zip(extended_coordinates[:-1], extended_coordinates[1:]):
         segment_lengths.append(float(np.linalg.norm(right - left)))
+    endpoint_separation = float(np.linalg.norm(extended_coordinates[-1] - extended_coordinates[0]))
+    if (
+        minimum_endpoint_separation is not None
+        and endpoint_separation < minimum_endpoint_separation
+    ):
+        issues.append(
+            f"endpoint extended-coordinate separation {endpoint_separation:.6g} A "
+            f"is below {minimum_endpoint_separation:.6g} A; "
+            "check that the requested phases did not collapse to the same structure"
+        )
     adjacent_cosines = []
     zero_length_segments = []
     folded_junctions = []
@@ -742,6 +758,8 @@ def path_geometry_diagnostics(
         "cell_scale_A": coordinate_scale,
         "images": records,
         "segment_lengths_A": segment_lengths,
+        "endpoint_separation_A": endpoint_separation,
+        "minimum_endpoint_separation_A": minimum_endpoint_separation,
         "adjacent_segment_cosines": adjacent_cosines,
         "zero_length_segments": zero_length_segments,
         "fold_cosine_threshold": fold_cosine_threshold,
@@ -759,6 +777,7 @@ def validate_path_geometry(
     maximum_deformation: float | None = None,
     cell_scale: float | None = None,
     fold_cosine_threshold: float | None = None,
+    minimum_endpoint_separation: float | None = None,
 ) -> dict:
     """Validate a calculator-independent initial path and return its report."""
 
@@ -769,6 +788,7 @@ def validate_path_geometry(
         maximum_deformation=maximum_deformation,
         cell_scale=cell_scale,
         fold_cosine_threshold=fold_cosine_threshold,
+        minimum_endpoint_separation=minimum_endpoint_separation,
     )
     if report["issues"]:
         detail = "\n".join(f"- {issue}" for issue in report["issues"])

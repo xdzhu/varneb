@@ -28,8 +28,9 @@ from vcneb import (  # noqa: E402
     endpoint_structure_record,
     interpolate_vcneb,
     make_ase_calculator_factory,
-    path_geometry_diagnostics,
     run_vcneb,
+    validate_static_endpoint_identity,
+    validate_path_geometry,
     validate_image_calculators,
 )
 from vcneb.executor import ThreadedCalculatorExecutor  # noqa: E402
@@ -51,6 +52,22 @@ def _json_object(path: str | None) -> dict:
     if not isinstance(value, dict):
         raise ValueError(f"JSON object expected in {path}")
     return value
+
+
+def _validate_static_endpoint_identity(summary_path: str | Path, images) -> dict:
+    """Require the static gate to describe the effective VCNEB endpoints.
+
+    Atom mapping and translation alignment can change the structures that the
+    calculator actually sees.  A static calculation of the source files is
+    therefore not a valid gate unless its endpoint hashes match the mapped,
+    aligned band endpoints exactly.
+    """
+
+    summary_path = Path(summary_path).resolve()
+    summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    report = validate_static_endpoint_identity(summary, images)
+    report["summary"] = str(summary_path)
+    return report
 
 
 def parse_args() -> argparse.Namespace:
@@ -84,14 +101,30 @@ def parse_args() -> argparse.Namespace:
     group.add_argument("--factory", help="VARNEB factory as module:attribute")
     parser.add_argument("--parameters", default=None, help="JSON calculator parameter object")
     parser.add_argument("--factory-kwargs", default=None, help="JSON factory-only keyword object")
+    parser.add_argument(
+        "--endpoint-static-summary",
+        default=None,
+        help="static endpoint summary whose structure hashes must match the effective band endpoints",
+    )
     parser.add_argument("--no-climb", action="store_true")
     parser.add_argument("--climb-after", type=int, default=None)
     parser.add_argument("--mic", action="store_true")
     parser.add_argument("--cell-interpolation", choices=("linear", "log_strain"), default="log_strain")
     parser.add_argument("--mapping", choices=("identity", "auto"), default="auto")
+    parser.add_argument(
+        "--no-align-cells",
+        action="store_true",
+        help="preserve the endpoint cell frames instead of removing a global rotation",
+    )
     parser.add_argument("--align-translation", action="store_true")
     parser.add_argument("--minimum-distance", type=float, default=None)
     parser.add_argument("--maximum-deformation", type=float, default=None)
+    parser.add_argument(
+        "--minimum-endpoint-separation",
+        type=float,
+        default=None,
+        help="reject a nearly identical endpoint pair before DFT (extended-coordinate Angstrom)",
+    )
     parser.add_argument(
         "--maximum-cell-step",
         type=float,
@@ -117,6 +150,8 @@ def main() -> None:
     args = parse_args()
     if args.n_images < 3 or args.image_workers < 0 or args.image_retries < 0:
         raise ValueError("n_images must be >=3 and worker/retry counts non-negative")
+    if args.no_align_cells and args.cell_interpolation != "linear":
+        raise ValueError("--no-align-cells requires --cell-interpolation linear")
     initial = read(args.initial)
     final = read(args.final)
     workdir = Path(args.workdir).resolve()
@@ -126,7 +161,7 @@ def main() -> None:
             initial,
             final,
             args.n_images,
-            align_cells=True,
+            align_cells=not args.no_align_cells,
             mic=args.mic,
             cell_interpolation=args.cell_interpolation,
             mapping=None if args.mapping == "identity" else "auto",
@@ -146,6 +181,17 @@ def main() -> None:
         ):
             if expected["sha256"] != actual["sha256"]:
                 raise ValueError(f"resume snapshot {label} endpoint does not match the requested endpoint")
+    geometry = validate_path_geometry(
+        images,
+        minimum_distance=args.minimum_distance,
+        maximum_deformation=args.maximum_deformation,
+        minimum_endpoint_separation=args.minimum_endpoint_separation,
+    )
+    endpoint_identity_gate = (
+        _validate_static_endpoint_identity(args.endpoint_static_summary, images)
+        if args.endpoint_static_summary is not None
+        else None
+    )
     write(workdir / "initial-vcneb.traj", images)
 
     parameters = _json_object(args.parameters)
@@ -181,22 +227,21 @@ def main() -> None:
         "resume_snapshot": args.resume_snapshot,
         "n_images": args.n_images,
         "n_interior_images": args.n_images - 2,
+        "external_pressure_gpa": args.pressure_gpa,
         "fmax_target_eV_per_A": args.fmax,
         "candidate_step_retries": args.candidate_step_retries,
         "maximum_cell_step": args.maximum_cell_step,
         "endpoint_evaluation_policy": "fixed_cached_once",
         "cell_interpolation": args.cell_interpolation,
         "mapping": args.mapping,
+        "align_cells": not args.no_align_cells,
         "align_translation": args.align_translation,
         "endpoint_structures": {
             "initial": endpoint_structure_record(images[0]),
             "final": endpoint_structure_record(images[-1]),
         },
-        "initial_path_geometry": path_geometry_diagnostics(
-            images,
-            minimum_distance=args.minimum_distance,
-            maximum_deformation=args.maximum_deformation,
-        ),
+        "endpoint_static_identity_gate": endpoint_identity_gate,
+        "initial_path_geometry": geometry,
         "calculator_reports": [report.to_dict() for report in reports],
     }
     (workdir / "vcneb_preflight.json").write_text(
@@ -227,7 +272,10 @@ def main() -> None:
                     "index": index,
                     "label": "initial" if index == 0 else "final",
                     "energy_eV": energy,
-                    "max_force_eV_per_A": float(abs(forces).max()),
+                    "max_force_eV_per_A": max(
+                        math.sqrt(sum(float(value) ** 2 for value in row))
+                        for row in forces
+                    ),
                     "stress_eV_per_A3": stress.tolist(),
                     "n_atoms": len(image),
                 }

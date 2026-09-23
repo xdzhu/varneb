@@ -7,13 +7,17 @@ import pytest
 from scripts.build_ase_static_summary import build_summary
 
 
-def _write_summary(tmp_path, name: str, *, converged: bool = True, n_atoms: int = 4):
+def _write_summary(
+    tmp_path, name: str, *, converged: bool = True, n_atoms: int = 4,
+    pressure_gpa: float = 0.0,
+):
     path = tmp_path / name
     path.write_text(
         json.dumps(
             {
                 "status": "completed",
                 "converged": converged,
+                "external_pressure_gpa": pressure_gpa,
                 "endpoint": {
                     "n_atoms": n_atoms,
                     "composition": {"Ba": 1, "Ti": 1, "O": 2},
@@ -42,6 +46,7 @@ def test_build_summary_creates_static_gate_contract(tmp_path) -> None:
         "final",
     ]
     assert summary["endpoint_structures"]["initial"]["n_atoms"] == 4
+    assert summary["external_pressure_gpa"] == 0.0
 
 
 def test_build_summary_rejects_unconverged_endpoint(tmp_path) -> None:
@@ -57,4 +62,12 @@ def test_build_summary_rejects_mismatched_atom_count(tmp_path) -> None:
     final = _write_summary(tmp_path, "final.json", n_atoms=5)
 
     with pytest.raises(ValueError, match="different atom counts"):
+        build_summary(initial, final)
+
+
+def test_build_summary_rejects_mismatched_pressure(tmp_path) -> None:
+    initial = _write_summary(tmp_path, "initial.json", pressure_gpa=45.7)
+    final = _write_summary(tmp_path, "final.json", pressure_gpa=45.0)
+
+    with pytest.raises(ValueError, match="different target pressures"):
         build_summary(initial, final)

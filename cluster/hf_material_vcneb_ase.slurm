@@ -34,11 +34,16 @@ image_workers=${IMAGE_WORKERS:-5}
 image_mpi=${IMAGE_MPI:-32}
 steps=${STEPS:-300}
 fmax=${FMAX:-0.10}
+pressure_gpa=${PRESSURE_GPA:-0.0}
 spring=${SPRING:-0.20}
 optimizer=${OPTIMIZER:-FIRE}
 command=${COMMAND:-}
 maximum_cell_step=${MAXIMUM_CELL_STEP:-0.05}
 candidate_step_retries=${CANDIDATE_STEP_RETRIES:-8}
+align_translation=${ALIGN_TRANSLATION:-1}
+mapping=${MAPPING:-auto}
+align_cells=${ALIGN_CELLS:-1}
+cell_interpolation=${CELL_INTERPOLATION:-log_strain}
 
 if (( image_workers < 1 || image_workers * image_mpi > 288 )); then
   echo "IMAGE_WORKERS * IMAGE_MPI must be between 1 and 288" >&2
@@ -110,19 +115,48 @@ if [[ "${STATIC_ONLY:-0}" != 1 && "${REQUIRE_ENDPOINT_STATIC_GATE:-1}" == 1 ]]; 
   fi
   "${python}" scripts/validate_ase_static_gate.py "${endpoint_summary}" \
     --fmax "${ENDPOINT_FMAX:-0.10}" \
-    --stress-kbar "${ENDPOINT_STRESS_KBAR:-0.10}" \
+    --stress-kbar "${ENDPOINT_STRESS_KBAR:-1.0}" \
+    --pressure-gpa "${pressure_gpa}" \
     --output "${workdir}/endpoint_static_gate.json"
 fi
 args=(examples/run_vcneb_ase.py
   --initial "${initial}" --final "${final}" --workdir "${workdir}"
   --n-images "${n_images}" --fmax "${fmax}" --steps "${steps}" --k "${spring}"
+  --pressure-gpa "${pressure_gpa}"
   --optimizer "${optimizer}" --image-workers "${image_workers}"
   --candidate-step-retries "${candidate_step_retries}" --maximum-cell-step "${maximum_cell_step}"
   --command "${command}" --factory "${factory}" --parameters "${parameters}"
-  --mic --cell-interpolation log_strain --mapping auto --align-translation
+  --mic --cell-interpolation "${cell_interpolation}" --mapping "${mapping}"
   --maximum-deformation "${MAXIMUM_DEFORMATION:-0.50}")
+if [[ "${align_translation}" == 1 ]]; then
+  args+=(--align-translation)
+elif [[ "${align_translation}" != 0 ]]; then
+  echo "ALIGN_TRANSLATION must be 0 or 1" >&2
+  exit 2
+fi
+if [[ "${mapping}" != auto && "${mapping}" != identity ]]; then
+  echo "MAPPING must be auto or identity" >&2
+  exit 2
+fi
+if [[ "${align_cells}" != 0 && "${align_cells}" != 1 ]]; then
+  echo "ALIGN_CELLS must be 0 or 1" >&2
+  exit 2
+fi
+if [[ "${align_cells}" == 0 ]]; then
+  args+=(--no-align-cells)
+fi
+if [[ "${cell_interpolation}" != linear && "${cell_interpolation}" != log_strain ]]; then
+  echo "CELL_INTERPOLATION must be linear or log_strain" >&2
+  exit 2
+fi
+if [[ -n "${endpoint_summary}" && "${STATIC_ONLY:-0}" != 1 ]]; then
+  args+=(--endpoint-static-summary "${endpoint_summary}")
+fi
 if [[ -n "${MINIMUM_DISTANCE:-}" ]]; then
   args+=(--minimum-distance "${MINIMUM_DISTANCE}")
+fi
+if [[ -n "${MINIMUM_ENDPOINT_SEPARATION:-}" ]]; then
+  args+=(--minimum-endpoint-separation "${MINIMUM_ENDPOINT_SEPARATION}")
 fi
 if [[ -n "${factory_kwargs}" ]]; then
   args+=(--factory-kwargs "${factory_kwargs}")

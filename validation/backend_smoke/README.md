@@ -23,20 +23,29 @@ exercise the calculator contract.  For production use, a reviewed material
 potential/basis, cutoff convergence, endpoint static gate, and a complete
 VCNEB path are still required.
 
-The first material-level CP2K endpoint gate is now recorded in
-`cp2k_bto_endpoint_gate_20260922.json`.  The BTO PBE/GTH-PBE/DZVP-MOLOPT-SR-GTH
-400 Ry endpoints passed the project gate (`fmax < 0.10 eV/A`, maximum stress
-`< 0.10 kbar`) after independent variable-cell BFGS relaxations.  The BTO
-VCNEB is intentionally not submitted until the corresponding GaN endpoint
-gate has also completed, so that the two material examples use the same
-auditable input contract.
+The original material-level CP2K endpoint gate is recorded in
+`cp2k_bto_endpoint_gate_20260922.json`, but the subsequent path audit showed
+that both endpoints had collapsed to the cubic phase.  It is retained as a
+negative example: force/stress convergence alone does not establish phase
+identity.  The corrected 4x4x4-k-point T/C endpoints pass both the explicit
+phase gate and the current project gate (`fmax < 0.10 eV/A`, residual stress
+`< 1.0 kbar`); see `cp2k_bto_k4_endpoint_gate_20260923.json`.
 
-The corresponding GaN endpoint gate is recorded in
-`cp2k_gan_endpoint_gate_20260922.json`.  Its four-atom B4/B1 endpoints also
-passed the same force/stress limits.  The ordinary CP2K VCNEB was then
-submitted as job `27756555` in a new retry directory with 29 total images
-(27 interior images); each persistent `cp2k_shell` worker is one rank, with
-nine workers sharing one 32-task node allocation.
+The corresponding original GaN endpoint gate is recorded in
+`cp2k_gan_endpoint_gate_20260922.json`.  Job `27756555` later exposed a
+provenance gap: translation alignment changed the effective CP2K final
+endpoint, so the source-file static gate no longer described the structure
+actually evaluated by the path.  Its effective endpoint has
+`0.183 eV/A` force and about `6.04 kbar` stress and is rejected.  The exact
+hash mismatch and repair are recorded in
+`cp2k_gan_effective_endpoint_mismatch_20260923.json`.  Production drivers now
+require static-summary hashes to match the mapped/aligned endpoints.
+
+The first accepted high-pressure material path in this repair series is
+ABACUS GaN B4-to-B1 job `27760826`: 29 total images, `45.7 GPa`, final
+`fmax=0.096844 eV/A`, and barrier `0.327366 eV/GaN`.  The calculator contract,
+endpoint residuals, path audit and literature comparison are recorded in
+`abacus_gan_45p7_vcneb_20260923.json`.
 
 An existing BaTiO3 cubic-to-tetragonal endpoint was also used for a QE
 candidate static calculation (`27740755`) and a safe `auto`-mapping,

@@ -91,4 +91,42 @@ def compare_endpoint_records(reference: dict, candidate: dict) -> dict:
     return result
 
 
-__all__ = ["compare_endpoint_records", "endpoint_structure_record"]
+def validate_static_endpoint_identity(summary: dict, images: list[Atoms]) -> dict:
+    """Require a static summary to match the effective band endpoints exactly.
+
+    The effective endpoints are checked after atom mapping, cell alignment and
+    optional translation alignment.  This matters for grid-based calculators:
+    a numerically non-invariant translation must not inherit a static gate from
+    the untranslated source structure.
+    """
+
+    identities = summary.get("endpoint_structures")
+    if not isinstance(identities, dict):
+        raise ValueError("static endpoint summary has no endpoint_structures")
+    if len(images) < 2:
+        raise ValueError("endpoint identity validation requires at least two images")
+    actual = {
+        "initial": endpoint_structure_record(images[0]),
+        "final": endpoint_structure_record(images[-1]),
+    }
+    comparison = compare_endpoint_records(identities, actual)
+    issues = [
+        f"{label}: static endpoint does not match the mapped/aligned VCNEB endpoint"
+        for label, record in comparison["endpoints"].items()
+        if not record["matches"]
+    ]
+    report = {
+        "status": "passed" if not issues else "failed",
+        "endpoints": comparison["endpoints"],
+        "issues": issues,
+    }
+    if issues:
+        raise ValueError("; ".join(issues))
+    return report
+
+
+__all__ = [
+    "compare_endpoint_records",
+    "endpoint_structure_record",
+    "validate_static_endpoint_identity",
+]

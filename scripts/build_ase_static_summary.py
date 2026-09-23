@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 from pathlib import Path
 
 
@@ -31,6 +32,12 @@ def build_summary(initial_path: str | Path, final_path: str | Path) -> dict:
         raise ValueError("relaxed endpoints have different atom counts")
     if initial_identity.get("composition") != final_identity.get("composition"):
         raise ValueError("relaxed endpoints have different compositions")
+    initial_pressure = float(initial.get("external_pressure_gpa", 0.0))
+    final_pressure = float(final.get("external_pressure_gpa", 0.0))
+    if not (math.isfinite(initial_pressure) and math.isfinite(final_pressure)):
+        raise ValueError("endpoint target pressure must be finite")
+    if not math.isclose(initial_pressure, final_pressure, abs_tol=1e-6):
+        raise ValueError("relaxed endpoints have different target pressures")
 
     def record(payload: dict, label: str) -> dict:
         return {
@@ -45,6 +52,7 @@ def build_summary(initial_path: str | Path, final_path: str | Path) -> dict:
 
     return {
         "status": "static_completed",
+        "external_pressure_gpa": initial_pressure,
         "endpoint_evaluation_policy": "independent_bfgs_relaxations",
         "endpoint_structures": {"initial": initial_identity, "final": final_identity},
         "static_endpoints": [record(initial, "initial"), record(final, "final")],
