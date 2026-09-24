@@ -1,0 +1,90 @@
+{
+  "case": "GaN B4-to-B1 endpoint preparation",
+  "date": "2026-09-24",
+  "external_pressure_gpa": 45.7,
+  "phase_gate": {
+    "atom_count_each_endpoint": 4,
+    "composition": {"Ga": 2, "N": 2},
+    "initial_coordination": 4,
+    "final_coordination": 6,
+    "status": "passed"
+  },
+  "thresholds": {
+    "maximum_generalized_force_ev_per_a": 0.1,
+    "maximum_stress_residual_kbar": 1.0
+  },
+  "backends": {
+    "qe": {
+      "endpoint_jobs": [27770124, 27770125, 27770163],
+      "gate_status": "passed",
+      "initial": {
+        "structure_sha256": "bad1c701f6ebc4c4cbf3a973004759cae2d79f4d7c30c2cd20fd0d83d4eed34e",
+        "volume_a3": 39.354075385184416,
+        "energy_ev": -4727.284348331442,
+        "maximum_generalized_force_ev_per_a": 0.0030199396884921918,
+        "maximum_stress_residual_kbar": 0.49178914840550053
+      },
+      "final": {
+        "structure_sha256": "67bb5b5ea81524fa80e7afdaf89c9a068864bc7c7853e8fd3c09909adb2a421c",
+        "volume_a3": 33.35409982487931,
+        "energy_ev": -4725.603167266387,
+        "maximum_generalized_force_ev_per_a": 0.0018963230704016787,
+        "maximum_stress_residual_kbar": 0.36436234584228655
+      },
+      "production_job": 27770529,
+      "production_status_at_record": "running"
+    },
+    "abinit": {
+      "endpoint_jobs": [27770099, 27770101, 27770164],
+      "gate_status": "passed",
+      "initial": {
+        "structure_sha256": "7b5671026997cd024e8d4904c147400f93c0ca8d80867c442edfd658f3a061c8",
+        "volume_a3": 39.34345773024261,
+        "energy_ev": -4727.356152227076,
+        "maximum_generalized_force_ev_per_a": 0.004684681789452751,
+        "maximum_stress_residual_kbar": 0.7630888492190451
+      },
+      "final": {
+        "structure_sha256": "ba93550e21b69bf46b9bca0f7b63e69326c7d1b05a52034c8358cdecf6c72a9e",
+        "volume_a3": 33.38355807562464,
+        "energy_ev": -4725.770965920153,
+        "maximum_generalized_force_ev_per_a": 0.0011724399448340144,
+        "maximum_stress_residual_kbar": 0.2250755648287086
+      },
+      "production_job": 27770687,
+      "production_status_at_record": "running"
+    },
+    "cp2k": {
+      "launcher_benchmarks": {
+        "8_rank_job": 27770135,
+        "8_rank_elapsed": "00:03:44",
+        "16_rank_job": 27770136,
+        "16_rank_elapsed": "00:02:23"
+      },
+      "endpoint_jobs": [27770175, 27770176],
+      "gate_status": "passed",
+      "initial": {
+        "structure_sha256": "ad33eeffe0320bae5092ee5e3fa74abb1ebcdbe6069a7a34b66c763b21769fa2",
+        "volume_a3": 39.73942181447312,
+        "energy_ev": -4601.6421636252,
+        "maximum_generalized_force_ev_per_a": 0.002831006862894313,
+        "maximum_stress_residual_kbar": 0.4163916528108912
+      },
+      "final": {
+        "structure_sha256": "e4c3bcd8795eb53b58c6ffb95939aadf4800959c6479ddf10cd29371434f6b9d",
+        "volume_a3": 33.72894910375808,
+        "energy_ev": -4600.0447728899,
+        "maximum_generalized_force_ev_per_a": 0.0023983219003051357,
+        "maximum_stress_residual_kbar": 0.24856993995205245
+      },
+      "failed_eager_shell_job": 27770686,
+      "production_job": 27770714,
+      "production_status_at_record": "running"
+    }
+  },
+  "notes": [
+    "All endpoint gates compare stress with the 45.7 GPa hydrostatic target, not with zero stress.",
+    "Production uses 29 total images for the GaN literature benchmark; BTO remains 7 total images (5 interior).",
+    "Endpoint and production directories are retained on HF under cases/gan for provenance."
+  ]
+}

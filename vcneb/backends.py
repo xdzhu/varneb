@@ -17,6 +17,8 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 import hashlib
 import inspect
+import json
+import os
 from pathlib import Path
 import shlex
 import shutil
@@ -25,7 +27,7 @@ from typing import Callable, Mapping
 
 import numpy as np
 from ase import Atoms
-from ase.calculators.calculator import all_changes
+from ase.calculators.calculator import Calculator, all_changes
 from ase.io import write
 from ase.units import Rydberg
 
@@ -237,6 +239,11 @@ def make_ase_cp2k_factory(
             raise ValueError("CP2K cutoff_ry must be a finite positive number")
         supplied["cutoff"] = cutoff_ry * Rydberg
 
+    try:
+        from ase.calculators.cp2k import CP2K
+    except Exception as exc:  # pragma: no cover - optional ASE component
+        raise ImportError("ASE CP2K support is unavailable") from exc
+
     def output_label(image_dir: Path) -> tuple[str, str]:
         requested = image_dir / "cp2k"
         # CP2K's parser rejects PROJECT paths longer than 80 characters.  A
@@ -259,43 +266,56 @@ def make_ase_cp2k_factory(
         return str(short_dir / "cp2k"), str(image_dir)
 
     def factory(image_index: int, image: Atoms, image_dir: Path):
-        try:
-            from ase.calculators.cp2k import CP2K
-        except Exception as exc:  # pragma: no cover - optional ASE component
-            raise ImportError("ASE CP2K support is unavailable") from exc
         image_dir.mkdir(parents=True, exist_ok=True)
         params = dict(supplied)
         params.setdefault("stress_tensor", True)
         label, original_directory = output_label(image_dir)
-        class PersistentCP2K(CP2K):
-            def _persist_outputs(self) -> None:
-                source_prefix = Path(self.label)
-                target_prefix = image_dir / "cp2k"
-                for suffix in (".inp", ".out", ".pos"):
-                    source = Path(f"{source_prefix}{suffix}")
-                    target = Path(f"{target_prefix}{suffix}")
-                    if not source.is_file():
-                        continue
-                    try:
-                        if target.is_symlink() or target.exists():
-                            target.unlink()
-                        shutil.copy2(source, target)
-                    except OSError:
-                        continue
+
+        def persist_outputs(source_label: str) -> None:
+            source_prefix = Path(source_label)
+            target_prefix = image_dir / "cp2k"
+            for suffix in (".inp", ".out", ".pos"):
+                source = Path(f"{source_prefix}{suffix}")
+                target = Path(f"{target_prefix}{suffix}")
+                if not source.is_file():
+                    continue
+                try:
+                    if target.is_symlink() or target.exists():
+                        target.unlink()
+                    shutil.copy2(source, target)
+                except OSError:
+                    continue
+
+        class EphemeralCP2K(Calculator):
+            """Start one shell only while this image is actively evaluated."""
+
+            implemented_properties = ["energy", "free_energy", "forces", "stress"]
+
+            def __init__(self) -> None:
+                super().__init__(directory=str(image_dir), label="cp2k", **params)
+                self.command = command
+                self.varneb_directory = original_directory
 
             def calculate(self, atoms=None, properties=None, system_changes=all_changes):
+                Calculator.calculate(self, atoms, properties, system_changes)
+                calculator = None
                 try:
-                    return super().calculate(atoms, properties, system_changes)
+                    calculator = CP2K(label=label, command=command, **params)
+                    calculator.calculate(
+                        atoms,
+                        properties=["energy", "forces", "stress"],
+                        system_changes=system_changes,
+                    )
+                    self.results = {
+                        key: np.array(value, copy=True) if isinstance(value, np.ndarray) else value
+                        for key, value in calculator.results.items()
+                    }
                 finally:
-                    self._persist_outputs()
+                    persist_outputs(label)
+                    if calculator is not None and hasattr(calculator, "close"):
+                        calculator.close()
 
-        calculator = PersistentCP2K(
-            label=label,
-            command=command,
-            **params,
-        )
-        calculator.varneb_directory = original_directory
-        return calculator
+        return EphemeralCP2K()
 
     return factory
 
@@ -305,6 +325,7 @@ def make_ase_abinit_factory(
     parameters: Mapping,
     command: str | None = None,
     pp_paths: str | Path | list[str | Path] | None = None,
+    pseudopotential_manifest: str | Path | None = None,
 ) -> CalculatorFactory:
     """Create an ASE ABINIT factory with isolated per-image directories.
 
@@ -327,9 +348,12 @@ def make_ase_abinit_factory(
     if pp_paths is None:
         profile_paths = None
     elif isinstance(pp_paths, (str, Path)):
-        profile_paths = [str(pp_paths)]
+        profile_paths = [str(Path(os.path.expandvars(str(pp_paths))).expanduser().resolve())]
     else:
-        profile_paths = [str(path) for path in pp_paths]
+        profile_paths = [
+            str(Path(os.path.expandvars(str(path))).expanduser().resolve())
+            for path in pp_paths
+        ]
     if "pps" in supplied:
         if not profile_paths:
             raise ValueError(
@@ -342,6 +366,21 @@ def make_ase_abinit_factory(
                 + ", ".join(missing)
             )
 
+    manifest_path = (
+        None
+        if pseudopotential_manifest is None
+        else Path(os.path.expandvars(str(pseudopotential_manifest))).expanduser().resolve()
+    )
+    manifest_payload = None
+    if manifest_path is not None:
+        manifest_payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+        if manifest_payload.get("approval_status") != "approved":
+            raise ValueError("ABINIT pseudopotential manifest must have approval_status='approved'")
+        if manifest_payload.get("pps") != supplied.get("pps"):
+            raise ValueError("ABINIT manifest pps does not match calculator parameters")
+        if not isinstance(manifest_payload.get("species"), Mapping):
+            raise ValueError("ABINIT pseudopotential manifest requires a species mapping")
+
     def factory(image_index: int, image: Atoms, image_dir: Path):
         try:
             from ase.calculators.abinit import Abinit, AbinitProfile
@@ -349,6 +388,33 @@ def make_ase_abinit_factory(
             raise ImportError("ASE ABINIT support is unavailable") from exc
         if command is None:
             raise ValueError("ABINIT requires an explicit command or srun wrapper")
+        if manifest_payload is not None:
+            required = set(image.get_chemical_symbols())
+            entries = manifest_payload["species"]
+            if set(entries) != required:
+                raise ValueError(
+                    "ABINIT manifest species must exactly match the image; "
+                    f"required={sorted(required)}, manifest={sorted(entries)}"
+                )
+            for species in sorted(required):
+                entry = entries[species]
+                if not isinstance(entry, Mapping):
+                    raise ValueError(f"ABINIT manifest entry for {species} must be a mapping")
+                filename = entry.get("filename")
+                expected = entry.get("sha256")
+                if not isinstance(filename, str) or Path(filename).name != filename:
+                    raise ValueError(f"ABINIT manifest filename for {species} must be a basename")
+                if not isinstance(expected, str) or len(expected) != 64:
+                    raise ValueError(f"ABINIT manifest SHA256 for {species} is invalid")
+                matches = [Path(path) / filename for path in (profile_paths or [])]
+                path = next((candidate for candidate in matches if candidate.is_file()), None)
+                if path is None:
+                    raise FileNotFoundError(
+                        f"ABINIT manifest file for {species} is missing from pp_paths: {filename}"
+                    )
+                digest = hashlib.sha256(path.read_bytes()).hexdigest()
+                if digest.lower() != expected.lower():
+                    raise ValueError(f"ABINIT pseudopotential SHA256 mismatch for {species}")
         image_dir.mkdir(parents=True, exist_ok=True)
         # ABINIT 8.x consumes a three-line ``.files`` stream on stdin rather
         # than treating the input filename as a positional argument.  ASE's
@@ -388,6 +454,8 @@ def make_ase_abinit_factory(
         profile = AbinitProfile(launch, pp_paths=profile_paths)
         calculator = Abinit(profile=profile, directory=str(image_dir), **supplied)
         calculator.varneb_directory = str(image_dir)
+        if manifest_path is not None:
+            calculator.varneb_pseudopotential_manifest = str(manifest_path)
         return calculator
 
     return factory

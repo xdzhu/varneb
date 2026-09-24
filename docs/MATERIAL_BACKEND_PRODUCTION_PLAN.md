@@ -26,14 +26,15 @@ Each backend must pass, in order:
 6. path plot, barrier/reaction enthalpy, and provenance record.
 
 The controller evaluates each endpoint once and caches it. Only images
-`1..n_images-2` are submitted to image workers. VASP/ABACUS native workers
-use the established 32-MPI-per-image contract. ASE shell calculators have a
-different launch contract: CP2K's `cp2k_shell` and the HF QE/ABINIT/LAMMPS
-ASE wrappers are launched as one-rank exclusive steps, with several image
-workers in parallel. This is intentional: passing 32 ranks to a persistent
-CP2K shell or to the HF QE MPICH build corrupts its protocol/PMI setup. The
-resource contract is therefore backend-specific and recorded in each Slurm
-export/worker manifest, rather than inferred from the image count.
+`1..n_images-2` are submitted to image workers. Resource contracts are
+backend-specific and measured rather than inferred from image count: HF QE
+7.0 uses one-rank exclusive `srun` steps with image-level parallelism;
+ABINIT 8.6.1 uses eight Intel-2017 Hydra ranks per image; CP2K 2024.1 uses one
+logical ASE shell backed by a verified 16-rank `mpirun` world per active image.
+The CP2K adapter starts that world lazily and closes it after each evaluation,
+so the number of live MPI worlds is bounded by `IMAGE_WORKERS`. VASP/ABACUS
+retain their separately validated native MPI contracts. Every Slurm export
+and worker manifest records the actual launcher and rank count.
 
 ## Backend matrix
 
@@ -41,9 +42,9 @@ export/worker manifest, rather than inferred from the image count.
 | --- | --- | --- | --- | --- |
 | ABACUS | `vcneb.abacus` | run | existing production reference | ABACUS input and orbital/pseudopotential hashes |
 | VASP | `vcneb.vasp` | existing accepted path; repeat under matrix manifest | run | VASP input contract and POTCAR hashes |
-| QE | `vcneb.qe` / `make_ase_espresso_factory` | Dojo-NC-FR candidate run; approval pending | Dojo-NC-FR candidate run; approval pending | UPF approval plus cutoff/k-point convergence |
+| QE | `vcneb.qe` / `make_ase_espresso_factory` | NC-SR-PBE 45.7 GPa production running | existing 7-total-image result; rebuild only under the approved manifest when needed | approved UPF manifest plus cutoff/k-point convergence |
 | CP2K | `make_ase_cp2k_factory` | run with GTH-PBE and matching basis | run with GTH-PBE and matching basis | basis/cutoff/SCF convergence |
-| ABINIT | `make_ase_abinit_factory` | provisional HGH/LDA run; PBE promotion pending | provisional HGH/LDA run; PBE promotion pending | PSP format/XC and cutoff convergence |
+| ABINIT | `make_ase_abinit_factory` | NC-SR-PBE/PSP8 45.7 GPa production running | pending 7-total-image PBE run | approved PSP8 manifest plus cutoff/k-point convergence |
 | LAMMPS | `make_ase_lammps_factory` | GaN Tersoff (Nord–Albe–Erhart–Nordlund, 2003) run | blocked: no Ba-Ti-O potential installed/reviewed on HF | potential/units/virial validation |
 
 LAMMPS must not use the Ar Lennard-Jones smoke potential for either material.

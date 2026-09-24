@@ -30,6 +30,42 @@ from vcneb import (  # noqa: E402
 )
 
 GPA_PER_EV_PER_A3 = 160.21766208
+EV_A3_TO_KBAR = 1602.176634
+
+
+def _stress_residual_kbar(atoms, pressure_gpa: float) -> float:
+    """Maximum Cartesian stress residual relative to hydrostatic pressure."""
+
+    stress = _finite_stress(atoms)
+    target = -pressure_gpa / GPA_PER_EV_PER_A3
+    residual = stress - np.diag([target, target, target])
+    return float(np.max(np.abs(residual)) * EV_A3_TO_KBAR)
+
+
+class EndpointBFGS(BFGS):
+    """BFGS with separate physical force and pressure convergence tests.
+
+    ASE cell filters express cell gradients in force-like units, so a single
+    ``fmax`` can stop with a backend- and volume-dependent residual stress.
+    The endpoint contract instead applies ``fmax`` to atomic forces and an
+    explicit kbar tolerance to the stress tensor.  Cached calculator results
+    are reused, so this check does not add electronic-structure evaluations.
+    """
+
+    def __init__(self, *args, endpoint_atoms, pressure_gpa, stress_kbar=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.endpoint_atoms = endpoint_atoms
+        self.pressure_gpa = float(pressure_gpa)
+        self.stress_kbar = None if stress_kbar is None else float(stress_kbar)
+
+    def gradient_converged(self, gradient):
+        if self.stress_kbar is None:
+            return super().gradient_converged(gradient)
+        forces = np.asarray(self.endpoint_atoms.get_forces(), dtype=float)
+        force_max = float(np.linalg.norm(forces, axis=1).max())
+        return force_max < self.fmax and _stress_residual_kbar(
+            self.endpoint_atoms, self.pressure_gpa
+        ) < self.stress_kbar
 
 
 def _load_symbol(spec: str):
@@ -57,7 +93,14 @@ def _finite_stress(atoms) -> np.ndarray:
     return stress
 
 
-def _snapshot(atoms, filtered, optimizer, pressure_gpa: float, fmax: float) -> dict:
+def _snapshot(
+    atoms,
+    filtered,
+    optimizer,
+    pressure_gpa: float,
+    fmax: float,
+    stress_kbar: float | None = None,
+) -> dict:
     forces = np.asarray(atoms.get_forces(), dtype=float)
     if forces.shape != (len(atoms), 3) or not np.all(np.isfinite(forces)):
         raise RuntimeError("calculator did not return finite atomic forces")
@@ -74,6 +117,8 @@ def _snapshot(atoms, filtered, optimizer, pressure_gpa: float, fmax: float) -> d
         "enthalpy_eV": energy + pressure_ev_a3 * float(atoms.get_volume()),
         "max_atomic_force_eV_per_A": float(np.linalg.norm(forces, axis=1).max()),
         "max_generalized_force_eV_per_A": float(np.linalg.norm(generalized, axis=1).max()),
+        "max_abs_stress_residual_kbar": _stress_residual_kbar(atoms, pressure_gpa),
+        "stress_target_kbar": stress_kbar,
         "stress_eV_per_A3": stress.tolist(),
         "cell_A": np.asarray(atoms.cell, dtype=float).tolist(),
         "volume_A3": float(atoms.get_volume()),
@@ -92,6 +137,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--fmax", type=float, default=0.10)
     parser.add_argument("--steps", type=int, default=200)
     parser.add_argument("--maxstep", type=float, default=0.05)
+    parser.add_argument(
+        "--stress-kbar",
+        type=float,
+        default=None,
+        help="variable-cell convergence threshold for residual stress",
+    )
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--fixed-cell", action="store_true", help="relax atoms only, retaining the cell")
     return parser.parse_args()
@@ -101,6 +152,10 @@ def main() -> int:
     args = parse_args()
     if args.fmax <= 0.0 or args.steps < 1 or args.maxstep <= 0.0:
         raise ValueError("fmax, steps and maxstep must be positive")
+    if args.stress_kbar is not None and args.stress_kbar <= 0.0:
+        raise ValueError("stress-kbar must be positive")
+    if args.fixed_cell and args.stress_kbar is not None:
+        raise ValueError("stress-kbar cannot be enforced during fixed-cell relaxation")
     workdir = Path(args.workdir).resolve()
     current = workdir / "CONTCAR.current"
     if workdir.exists() and not args.resume and any(workdir.iterdir()):
@@ -129,15 +184,25 @@ def main() -> int:
         atoms,
         scalar_pressure=args.pressure_gpa / GPA_PER_EV_PER_A3,
     )
-    optimizer = BFGS(
+    optimizer = EndpointBFGS(
         filtered,
         logfile=str(workdir / "relax.log"),
         trajectory=str(workdir / "relax.traj"),
         maxstep=args.maxstep,
+        endpoint_atoms=atoms,
+        pressure_gpa=args.pressure_gpa,
+        stress_kbar=args.stress_kbar,
     )
 
     def checkpoint() -> None:
-        payload = _snapshot(atoms, filtered, optimizer, args.pressure_gpa, args.fmax)
+        payload = _snapshot(
+            atoms,
+            filtered,
+            optimizer,
+            args.pressure_gpa,
+            args.fmax,
+            args.stress_kbar,
+        )
         payload.update({"status": "running", "endpoint": endpoint_structure_record(atoms)})
         write(workdir / "CONTCAR.current", atoms, format="vasp", direct=True, vasp5=True)
         (workdir / "endpoint_relax_state.json").write_text(
@@ -147,7 +212,14 @@ def main() -> int:
     optimizer.attach(checkpoint, interval=1)
     converged = bool(optimizer.run(fmax=args.fmax, steps=args.steps))
     checkpoint()
-    payload = _snapshot(atoms, filtered, optimizer, args.pressure_gpa, args.fmax)
+    payload = _snapshot(
+        atoms,
+        filtered,
+        optimizer,
+        args.pressure_gpa,
+        args.fmax,
+        args.stress_kbar,
+    )
     payload.update(
         {
             "status": "completed" if converged else "step_limit",

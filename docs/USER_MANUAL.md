@@ -108,7 +108,10 @@ calculator that returns energy, forces, and stress. VASP inputs are frozen by
 the input contract; ABACUS input generation keeps
 the calculator-specific files in the image directory; QE images must use
 `calculation='scf'`, `tstress=True`, and `tprnfor=True`. QE UPFs must be
-explicitly PBE-marked and pinned by the approved manifest.
+explicitly PBE-marked and pinned by the approved manifest. The shipped GaN
+PseudoDojo examples use `${VARNEB_PSEUDO_DIR}` rather than a user-specific
+absolute path; set it to the reviewed UPF/PSP8 directory before launching QE
+or ABINIT.
 
 ### LAMMPS
 
@@ -146,12 +149,12 @@ factory = make_ase_cp2k_factory(
     parameters={
         "basis_set": "DZVP-MOLOPT-SR-GTH",
         "pseudo_potential": "GTH-PBE",
-        "cutoff": 300,
+        "cutoff_ry": 800,
         "xc": "PBE",
         "max_scf": 200,
         "inp": "&FORCE_EVAL\\n  &DFT\\n    &SCF\\n      &OT\\n      &END OT\\n    &END SCF\\n  &END DFT\\n&END FORCE_EVAL",
     },
-    command="cp2k_shell.psmp",
+    command="mpirun -np 16 cp2k_shell.psmp",
 )
 ```
 
@@ -160,6 +163,13 @@ a deterministic short per-image alias when a shared HF path is long and copies
 `.inp`, `.out`, and `.pos` back to the image directory. A CP2K smoke pass is
 still not a basis/cutoff convergence result; complete that gate for a material
 before comparing barriers.
+
+`cutoff_ry` is converted explicitly at the backend boundary; a bare ASE
+`cutoff` is in eV and must not be documented as Ry. The CP2K calculator is
+lazy and ephemeral: attaching a 29-image path starts no shell, and each active
+worker starts one MPI shell only for its own evaluation, then closes it. Thus
+`IMAGE_WORKERS`, not total image count, bounds live MPI worlds. The shown
+16-rank launch is the measured HF GaN contract; re-benchmark it elsewhere.
 
 ### ABINIT
 
@@ -170,9 +180,10 @@ directory. The factory does not download or infer pseudopotentials:
 from vcneb import make_ase_abinit_factory
 
 factory = make_ase_abinit_factory(
-    parameters={"ecut": 10, "toldfe": 1.0e-6, "pps": "psp8", "kpts": (1, 1, 1)},
-    command="srun --exclusive --ntasks=1 abinit",
-    pp_paths="/path/to/reviewed/abinit-psp8",
+    parameters={"ecut": 1400, "toldfe": 1.0e-7, "pps": "psp8", "kpts": (4, 4, 3)},
+    command="mpiexec.hydra -bootstrap slurm -n 8 abinit",
+    pp_paths="${VARNEB_PSEUDO_DIR}",
+    pseudopotential_manifest="examples/material_profiles/abinit_gan_pseudodojo_sr_manifest.json",
 )
 ```
 
@@ -213,6 +224,11 @@ allocation. Record job IDs, actual task counts, modules, input hashes, and the
 VARNEB git revision. Do not submit a material path from a login shell, and do
 not label a job as converged merely because it was submitted or because one
 image returned a force.
+
+`--validate-only` checks path geometry, endpoint hashes, profiles, and approved
+manifests without instantiating calculators that can start external programs.
+Runtime capability and private-directory checks run again inside the scheduled
+production job before the first DFT evaluation.
 
 ## 6. Auditing and promotion
 

@@ -11,6 +11,7 @@ from __future__ import annotations
 from copy import deepcopy
 import hashlib
 import json
+import os
 from pathlib import Path
 import re
 from typing import Callable, Mapping
@@ -45,7 +46,7 @@ def validate_qe_pseudopotentials(
     report so a reviewed selection cannot silently change during a restart.
     """
 
-    root = Path(pseudo_dir).expanduser().resolve()
+    root = Path(os.path.expandvars(str(pseudo_dir))).expanduser().resolve()
     if not root.is_dir():
         raise FileNotFoundError(f"QE pseudopotential directory does not exist: {root}")
     if not pseudopotentials:
@@ -101,7 +102,7 @@ def load_approved_qe_pseudopotential_manifest(
     decision merely because the JSON file is present in the repository.
     """
 
-    source = Path(path).expanduser().resolve()
+    source = Path(os.path.expandvars(str(path))).expanduser().resolve()
     payload = json.loads(source.read_text(encoding="utf-8"))
     if payload.get("approval_status") != "approved":
         raise ValueError("QE pseudopotential manifest must have approval_status='approved'")
@@ -188,6 +189,7 @@ def make_ase_espresso_factory(
     command: str | None = None,
     pseudo_dir: str | Path | None = None,
     profile: object | None = None,
+    pseudopotential_manifest: str | Path | None = None,
 ) -> CalculatorFactory:
     """Build an ASE ``Espresso`` factory with VCNEB-safe image parameters.
 
@@ -204,6 +206,16 @@ def make_ase_espresso_factory(
 
     supplied = dict(parameters)
     supplied["input_data"] = static_qe_input_data(supplied.get("input_data"))
+    resolved_pseudo_dir = (
+        None
+        if pseudo_dir is None
+        else Path(os.path.expandvars(str(pseudo_dir))).expanduser().resolve()
+    )
+    manifest_path = (
+        None
+        if pseudopotential_manifest is None
+        else Path(os.path.expandvars(str(pseudopotential_manifest))).expanduser().resolve()
+    )
 
     def factory(image_index: int, image: Atoms, image_dir: Path):
         try:
@@ -216,8 +228,23 @@ def make_ase_espresso_factory(
 
         active_profile = profile
         if active_profile is None:
-            active_profile = EspressoProfile(command, str(pseudo_dir))
-        return Espresso(profile=active_profile, directory=str(image_dir), **deepcopy(supplied))
+            active_profile = EspressoProfile(command, str(resolved_pseudo_dir))
+        pseudo_report = None
+        if manifest_path is not None:
+            required = set(image.get_chemical_symbols())
+            manifest = load_approved_qe_pseudopotential_manifest(manifest_path, required)
+            if supplied.get("pseudopotentials") != manifest["pseudopotentials"]:
+                raise ValueError("QE manifest filenames do not match calculator parameters")
+            pseudo_report = validate_qe_pseudopotentials(
+                resolved_pseudo_dir,
+                manifest["pseudopotentials"],
+                expected_md5=manifest["expected_md5"],
+            )
+        calculator = Espresso(profile=active_profile, directory=str(image_dir), **deepcopy(supplied))
+        if manifest_path is not None:
+            calculator.varneb_pseudopotential_manifest = str(manifest_path)
+            calculator.varneb_pseudopotential_report = pseudo_report
+        return calculator
 
     return factory
 

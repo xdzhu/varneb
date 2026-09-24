@@ -7,9 +7,10 @@ ENDPOINT_TEMPLATE = Path(__file__).parents[1] / "cluster" / "hf_ase_endpoint_rel
 ABACUS_TEMPLATE = Path(__file__).parents[1] / "cluster" / "hf_gan_abacus_vcneb.slurm"
 
 
-def test_cp2k_shell_default_is_single_rank() -> None:
+def test_cp2k_shell_default_uses_validated_direct_mpi_world() -> None:
     text = TEMPLATE.read_text(encoding="utf-8")
-    assert 'ntasks=1 --ntasks-per-node=1 cp2k_shell.psmp' in text
+    assert 'cp2k_mpi_ranks=${CP2K_MPI_RANKS:-16}' in text
+    assert 'mpirun -np ${cp2k_mpi_ranks} cp2k_shell.psmp' in text
     assert 'ntasks=${image_mpi} --ntasks-per-node=${image_mpi} cp2k_shell.psmp' not in text
 
 
@@ -57,11 +58,24 @@ def test_abacus_gan_launcher_and_pressure_contract() -> None:
     assert '"${resume_args[@]}"' not in text
 
 
-def test_endpoint_template_uses_single_rank_cp2k_shell() -> None:
+def test_endpoint_template_uses_validated_cp2k_mpi_world() -> None:
     text = ENDPOINT_TEMPLATE.read_text(encoding="utf-8")
     assert "scripts/relax_ase_endpoint.py" in text
-    assert 'ntasks=1 --ntasks-per-node=1 cp2k_shell.psmp' in text
+    assert 'cp2k_mpi_ranks=${CP2K_MPI_RANKS:-16}' in text
+    assert 'mpirun -np ${cp2k_mpi_ranks} cp2k_shell.psmp' in text
     assert 'RUN_DFT:-0' in text
+    assert 'stress_kbar=${STRESS_KBAR:-1.0}' in text
+    assert '--stress-kbar "${stress_kbar}"' in text
+
+
+def test_qe_templates_use_verified_single_rank_hf_launcher() -> None:
+    production = TEMPLATE.read_text(encoding="utf-8")
+    endpoint = ENDPOINT_TEMPLATE.read_text(encoding="utf-8")
+    for text in (production, endpoint):
+        assert 'qe_mpi_ranks=${QE_MPI_RANKS:-1}' in text
+        assert 'ntasks=${qe_mpi_ranks} --ntasks-per-node=${qe_mpi_ranks} pw.x' in text
+        assert 'ntasks=32 --ntasks-per-node=32 pw.x' not in text
+        assert 'ntasks=${image_mpi} --ntasks-per-node=${image_mpi} pw.x' not in text
 
 
 def test_abinit_templates_use_matching_intel_hydra_launcher() -> None:
@@ -74,7 +88,8 @@ def test_abinit_templates_use_matching_intel_hydra_launcher() -> None:
     assert 'srun --exclusive --nodes=1 --ntasks=${image_mpi} --ntasks-per-node=${image_mpi} abinit' not in production
     assert 'module load compiler/intel/2017.5.239' in endpoint
     assert 'module load mpi/intelmpi/2017.4.239' in endpoint
-    assert 'mpiexec.hydra -bootstrap slurm -n 32 abinit' in endpoint
+    assert 'abinit_mpi_ranks=${ABINIT_MPI_RANKS:-8}' in endpoint
+    assert 'mpiexec.hydra -bootstrap slurm -n ${abinit_mpi_ranks} abinit' in endpoint
     assert 'unset I_MPI_PMI_LIBRARY I_MPI_HYDRA_BOOTSTRAP_EXEC_EXTRA_ARGS I_MPI_HYDRA_BOOTSTRAP' in endpoint
     assert 'srun --exclusive --nodes=1 --ntasks=32 --ntasks-per-node=32 abinit' not in endpoint
 

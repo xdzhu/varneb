@@ -80,6 +80,46 @@ def test_qe_factory_requires_one_explicit_launch_path() -> None:
         make_ase_espresso_factory(parameters={}, command="pw.x", pseudo_dir="/pseudo", profile=object())
 
 
+def test_qe_factory_enforces_approved_manifest(monkeypatch, tmp_path) -> None:
+    import hashlib
+    import json
+    import ase.calculators.espresso as espresso
+
+    class FakeProfile:
+        def __init__(self, command, pseudo_dir):
+            self.command = command
+            self.pseudo_dir = pseudo_dir
+
+    class FakeEspresso:
+        implemented_properties = ("energy", "forces", "stress")
+
+        def __init__(self, **kwargs):
+            self.__dict__.update(kwargs)
+
+    monkeypatch.setattr(espresso, "EspressoProfile", FakeProfile)
+    monkeypatch.setattr(espresso, "Espresso", FakeEspresso)
+    data = b'<PP_HEADER element="H" functional="PBE"/>'
+    (tmp_path / "H.upf").write_bytes(data)
+    manifest = tmp_path / "manifest.json"
+    manifest.write_text(json.dumps({
+        "approval_status": "approved",
+        "species": {"H": {
+            "filename": "H.upf",
+            "md5": hashlib.md5(data).hexdigest(),
+        }},
+    }))
+    monkeypatch.setenv("TEST_QE_PP_DIR", str(tmp_path))
+    monkeypatch.setenv("TEST_QE_PP_MANIFEST", str(manifest))
+    factory = make_ase_espresso_factory(
+        parameters={"pseudopotentials": {"H": "H.upf"}},
+        command="pw.x",
+        pseudo_dir="${TEST_QE_PP_DIR}",
+        pseudopotential_manifest="${TEST_QE_PP_MANIFEST}",
+    )
+    calc = factory(0, Atoms("H", cell=[5, 5, 5], pbc=True), tmp_path / "image")
+    assert calc.varneb_pseudopotential_report[0]["species"] == "H"
+
+
 def test_qe_pseudopotential_gate_validates_element_pbe_and_sha256(tmp_path) -> None:
     upf = tmp_path / "Ba-pbe.UPF"
     upf.write_text('<UPF version="2.0.1" element="Ba" functional="PBE">\n', encoding="utf-8")

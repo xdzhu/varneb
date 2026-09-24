@@ -42,10 +42,10 @@ contracts.  The fixed endpoints are not dispatched during every iteration.
 |---|---|---:|---|
 | VASP | `vcneb.vasp` | yes | production GaN/BTO/HfO2/CdSe evidence |
 | ABACUS | `vcneb.abacus` | yes | production HfO2/BTO evidence |
-| QE | `vcneb.qe` | yes, `scf` only | HF contract smoke; UPF/cutoff convergence pending |
+| QE | `vcneb.qe` | yes, `scf` only | approved PseudoDojo PBE GaN endpoints; 45.7 GPa production running |
 | LAMMPS | `vcneb.backends` | yes via ASE | HF contract smoke; potential-specific validation pending |
-| CP2K | `vcneb.backends` | yes via ASE | HF contract smoke; basis/cutoff validation pending |
-| ABINIT | `vcneb.backends` | yes via ASE | HF contract smoke; PSP/cutoff validation pending |
+| CP2K | `vcneb.backends` | yes via ASE | 800-Ry GaN endpoints and lazy 16-rank shell lifecycle validated; production running |
+| ABINIT | `vcneb.backends` | yes via ASE | approved PseudoDojo PBE/PSP8 GaN endpoints; production running |
 
 “Adapter” means the Python contract is implemented and tested; it does not
 mean a particular potential, pseudopotential, cutoff, or literature barrier is

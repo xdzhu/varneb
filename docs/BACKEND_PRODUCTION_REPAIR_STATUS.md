@@ -1,8 +1,55 @@
 # VARNEB 多后端生产修复状态
 
-更新时间：2026-09-23（HF `hfacnormal01`）
+更新时间：2026-09-24（HF `hfacnormal01`）
 
 本文只记录已由日志、作业状态或回放实验支持的结论。旧失败目录保留，修复使用独立目录，不覆盖原始轨迹。
+
+## 2026-09-24：GaN 45.7 GPa 的 QE、CP2K 与 ABINIT 重建
+
+这轮不再续用三个后端的零压旧链，而是从已验证的 GaN B4/B1 四原子种子出发，
+分别在各后端自己的 PBE 契约下重新做 45.7 GPa 可变胞 BFGS。普通 VCNEB 仍用
+`fmax=0.10 eV/A`；端点门禁使用用户指定的残余应力 `<1.0 kbar`。为避免 ASE
+晶胞过滤器的力式停止条件提前终止，端点 driver 现分别检查原子力和相对于目标
+静水压力的应力残差，不再用一个与体积相关的广义 `fmax` 代替压力判据。
+
+三套端点均已完成并通过门禁，且 B4/B1 均保持 4/6 配位和 4/4 原子：
+
+| 后端 | 端点作业 | B4/B1 残余应力 (kbar) | B4/B1 最大广义力 (eV/A) | 输入契约 |
+|---|---|---:|---:|---|
+| QE | `27770124/25`，B4 加严 `27770163` | `0.492/0.364` | `0.00302/0.00190` | QE 7.0，PseudoDojo NC-SR-PBE v0.4，100/600 Ry，4×4×3，单 rank `srun` |
+| ABINIT | `27770099/27770101`，B4 加严 `27770164` | `0.763/0.225` | `0.00468/0.00117` | ABINIT 8.6.1，同源 PseudoDojo PSP8，1400 eV，4×4×3，Intel-2017 Hydra 8 rank |
+| CP2K | `27770175/76` | `0.416/0.249` | `0.00283/0.00240` | CP2K 2024.1，GTH-PBE/DZVP，800 Ry、REL_CUTOFF 80，4×4×3，16 rank `mpirun` |
+
+QE 的 32-rank `srun` 端点试投 `27770097/98` 在 `MPI_Init_thread` 失败；同机历史
+成功记录和重试均证明该站点构建应使用单-rank `srun --exclusive ... pw.x`，并把
+并行放在独立 image 上。QE 29-total-image 生产链 `27770529` 已通过端点哈希、
+路径几何和计算器契约，9 个 interior-image worker 正常推进；初始 `1.5046 eV/A`
+到 step 8 已降至 `0.4224 eV/A`，后续回弹按完整轨迹观察，不因单步上升停止。
+
+CP2K 的结论需要区分启动器和 shell 生命周期。相同 GaN 静态输入的受控 benchmark
+中，直接 `mpirun -np 8` (`27770135`) 用时 3:44，`mpirun -np 16`
+(`27770136`) 用时 2:23，能量一致；原单-rank 端点在 12 分钟仍未完成首步，故取消
+并保留。先前失败的是把多个 shell 交给错误的 `srun`/协议组合，而不是
+`cp2k_shell.psmp` 永远只能单 rank。生产首投 `27770686` 又揭示 ASE 在 calculator
+构造期立即启动 shell：29 个像会瞬间形成 464 rank，绕过 `IMAGE_WORKERS=5` 的并发
+上限。CP2K factory 已改为惰性、一次 image 评价期间启动一个 16-rank shell，并在
+复制输出后关闭；`--validate-only` 也不再实例化任何会启动外部进程的 calculator。
+修正版生产为 `27770714`，首轮应只出现一个端点 MPI world，随后最多五个并发
+interior worlds；须以实际 Slurm steps 和完整 step 0 为准继续审核。
+
+ABINIT 已弃用先前不可比较的 HGH-LDA 端点，改用带审批清单、逐文件 SHA-256 的
+PseudoDojo NC-SR-PBE v0.4 PSP8。生产 `27770687` 已完成 step 0 的全部像并进入下一轮；
+9 个并发 image worker、每像 8 Hydra ranks 均返回完整能量、力和应力。作业 stderr
+中的站点 ROCm modulefile 提示不影响 ABINIT 计算，但保留在审计记录中。
+
+两次 QE 生产预提交 `27770190/27770301` 均在首个 DFT 前退出，根因是远端 guarded
+source 的入口脚本与 `vcneb` 包 API 版本不一致；其目录保留但不计作物理失败。
+远端现按整包同步并执行 `compileall` 与 calculator-free `--validate-only`，防止模板、
+入口和包 API 的部分部署。三条生产链都使用 identity mapping、无整体平移、无晶胞
+旋转、linear cell interpolation，以保持有效端点哈希与静态门禁完全一致。
+
+BTO 的生产定义维持 **7 total images（5 interior）**。9 total images 不是统一硬要求；
+只有出现未解析的路径曲率或分辨率依赖时，才做独立的 image-count 收敛检查。
 
 ## 统一判定边界
 
@@ -152,7 +199,7 @@ ABACUS MPI rank，且 27 个内部像每轮均返回完整结果。作业以 Slu
 两个探针失败也已区分：
 
 - `27744198` 申请共享节点 1 CPU，却在内部要求 `srun --exclusive`，一直等待作业 step，随后取消；属于 Slurm 资源请求错误。
-- `27744265` 让 ASE 的 `cp2k_shell.psmp` 直接启动 32 MPI，shell 握手失败；CP2K shell 适配器必须用单 rank step。
+- `27744265` 通过当时的 `srun`/MPI 组合启动 32-rank `cp2k_shell.psmp`，shell 握手失败；该结果只能否定这一启动组合，不能推出 CP2K shell 必须单 rank。2026-09-24 的直接 `mpirun` 对照已验证 8/16 rank 均可用。
 
 ### 处理
 
@@ -161,7 +208,7 @@ ABACUS MPI rank，且 27 个内部像每轮均返回完整结果。作业以 Slu
 - `EPS_SCF = 1e-5`，`MAX_SCF = 1000`；
 - `ADDED_MOS = 30`，300 K Fermi smearing；
 - `DIRECT_P_MIXING`，`ALPHA = 0.05`；
-- 生产资源采用独占节点，多个 one-rank `cp2k_shell.psmp` image worker，而不是把 32 MPI 直接交给 shell。
+- 当时的诊断阶段采用多个 one-rank image worker 绕开错误的 32-rank `srun`；当前生产契约已由实测更新为每个活跃 image 一个 16-rank direct-`mpirun` world，并以惰性生命周期限制并发数。
 
 本轮端点重跑进一步发现并修正了一个输入单位错误：ASE 的 CP2K calculator
 把 `cutoff` 解释为 eV，而 CP2K 文献 profile 通常以 Ry 给出。旧的稳定 profile
@@ -177,7 +224,7 @@ GaN CP2K `27741431` 也因端点静态审计显示固定端点基线无效而取
 
 通用 ASE Slurm 模板现已在源头加入两项防护：
 
-- CP2K 默认对每个持久 `cp2k_shell.psmp` 进程使用单 rank，不能把分配给 image 的 32 MPI 直接交给 shell 握手；
+- CP2K 不再在 calculator 构造期启动所有持久 shell；每个活跃 image 惰性启动一个经 benchmark 验证的 16-rank direct-`mpirun` world，评价结束即关闭，实际并发由 `IMAGE_WORKERS` 限制；
 - 生产 VC-NEB 必须提供 `ENDPOINT_STATIC_SUMMARY`，并在启动路径前验证两个端点的力 `< 0.10 eV/A`、残余应力 `< 1.0 kbar`。先生成摘要时显式使用 `STATIC_ONLY=1`；绕过门禁必须显式设置 `REQUIRE_ENDPOINT_STATIC_GATE=0`。
 - 静态摘要中的两端 SHA-256 必须与映射/对齐后的实际 VCNEB 两端完全一致。该检查覆盖“源文件静态合格、但路径预处理改变了计算器实际输入”的缺口。对 CP2K 等有限实空间网格计算，生产模板允许显式设置 `ALIGN_TRANSLATION=0`，避免把静态门禁从一个网格原点带到另一个网格原点；这是可审计的路径定义，不是运行后的自修复。
 

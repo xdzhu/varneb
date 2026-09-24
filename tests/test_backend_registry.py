@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 import subprocess
 import sys
 
 from ase import Atoms
+import numpy as np
 import pytest
 
 from vcneb.backends import (
@@ -147,17 +149,33 @@ def test_cp2k_factory_keeps_output_inside_image(monkeypatch, tmp_path) -> None:
     captured = {}
 
     class FakeCP2K:
+        implemented_properties = ["energy", "forces", "stress"]
+
         def __init__(self, **kwargs):
             captured.update(kwargs)
+
+        def calculate(self, atoms=None, properties=None, system_changes=None):
+            self.results = {
+                "energy": -1.0,
+                "forces": np.zeros((len(atoms), 3)),
+                "stress": np.zeros(6),
+            }
+
+        def close(self):
+            captured["closed"] = True
 
     monkeypatch.setattr(cp2k, "CP2K", FakeCP2K)
     factory = make_ase_cp2k_factory(parameters={"cutoff": 300}, command="cp2k_shell")
     image_dir = tmp_path / "image_0002"
     image_dir.mkdir()
-    factory(2, Atoms("H", cell=[5, 5, 5], pbc=True), image_dir)
+    atoms = Atoms("H", cell=[5, 5, 5], pbc=True)
+    atoms.calc = factory(2, atoms, image_dir)
+    assert captured == {}
+    assert atoms.get_potential_energy() == -1.0
     assert captured["label"].endswith("cp2k")
     assert captured["command"] == "cp2k_shell"
     assert captured["stress_tensor"] is True
+    assert captured["closed"] is True
 
 
 def test_cp2k_factory_converts_explicit_rydberg_cutoff(monkeypatch, tmp_path) -> None:
@@ -170,11 +188,23 @@ def test_cp2k_factory_converts_explicit_rydberg_cutoff(monkeypatch, tmp_path) ->
         def __init__(self, **kwargs):
             captured.update(kwargs)
 
+        def calculate(self, atoms=None, properties=None, system_changes=None):
+            self.results = {
+                "energy": -1.0,
+                "forces": np.zeros((len(atoms), 3)),
+                "stress": np.zeros(6),
+            }
+
+        def close(self):
+            pass
+
     monkeypatch.setattr(cp2k, "CP2K", FakeCP2K)
     factory = make_ase_cp2k_factory(parameters={"cutoff_ry": 400}, command="cp2k_shell")
     image_dir = tmp_path / "image_0003"
     image_dir.mkdir()
-    factory(3, Atoms("H", cell=[5, 5, 5], pbc=True), image_dir)
+    atoms = Atoms("H", cell=[5, 5, 5], pbc=True)
+    atoms.calc = factory(3, atoms, image_dir)
+    atoms.get_potential_energy()
     assert captured["cutoff"] == pytest.approx(400 * Rydberg)
 
 
@@ -222,6 +252,44 @@ def test_abinit_factory_rejects_missing_pseudopotential_contract(tmp_path) -> No
         make_ase_abinit_factory(
             parameters={"pps": "hgh"}, command="abinit"
         )
+
+
+def test_abinit_factory_validates_approved_manifest(monkeypatch, tmp_path) -> None:
+    import ase.calculators.abinit as abinit
+
+    class FakeProfile:
+        def __init__(self, command, *, pp_paths=None):
+            self.command = command
+
+    class FakeAbinit:
+        def __init__(self, **kwargs):
+            self.__dict__.update(kwargs)
+
+    monkeypatch.setattr(abinit, "AbinitProfile", FakeProfile)
+    monkeypatch.setattr(abinit, "Abinit", FakeAbinit)
+    pseudo = tmp_path / "pseudo"
+    pseudo.mkdir()
+    contents = b"approved psp8"
+    (pseudo / "H.psp8").write_bytes(contents)
+    manifest = tmp_path / "manifest.json"
+    manifest.write_text(json.dumps({
+        "approval_status": "approved",
+        "pps": "psp8",
+        "species": {"H": {
+            "filename": "H.psp8",
+            "sha256": hashlib.sha256(contents).hexdigest(),
+        }},
+    }))
+    monkeypatch.setenv("TEST_ABINIT_PP_DIR", str(pseudo))
+    monkeypatch.setenv("TEST_ABINIT_PP_MANIFEST", str(manifest))
+    factory = make_ase_abinit_factory(
+        parameters={"pps": "psp8", "xc": "PBE"},
+        command="abinit",
+        pp_paths="${TEST_ABINIT_PP_DIR}",
+        pseudopotential_manifest="${TEST_ABINIT_PP_MANIFEST}",
+    )
+    calc = factory(0, Atoms("H", cell=[5, 5, 5], pbc=True), tmp_path / "image")
+    assert calc.varneb_pseudopotential_manifest == str(manifest.resolve())
     with pytest.raises(FileNotFoundError, match="pseudopotential directories"):
         make_ase_abinit_factory(
             parameters={"pps": "hgh"},

@@ -209,14 +209,6 @@ def main() -> None:
             parameters=parameters,
             command=args.command,
         )
-    attach_image_calculators(images, workdir=workdir, factory=factory)
-    reports = validate_image_calculators(
-        images,
-        require_stress=True,
-        require_variable_cell=True,
-        require_directory=True,
-        require_unique_directories=True,
-    )
     metadata = {
         "status": "preflight",
         "driver": "examples/run_vcneb_ase.py",
@@ -242,7 +234,8 @@ def main() -> None:
         },
         "endpoint_static_identity_gate": endpoint_identity_gate,
         "initial_path_geometry": geometry,
-        "calculator_reports": [report.to_dict() for report in reports],
+        "calculator_validation": "factory_configuration_only",
+        "calculator_reports": [],
     }
     (workdir / "vcneb_preflight.json").write_text(
         json.dumps(metadata, indent=2, sort_keys=True) + "\n", encoding="utf-8"
@@ -250,6 +243,25 @@ def main() -> None:
     if args.validate_only:
         print(f"[OK] ASE VCNEB preflight passed: {workdir / 'vcneb_preflight.json'}")
         return
+
+    # Some ASE calculators (notably CP2K) start a persistent external process
+    # in their constructor.  Instantiate image calculators only inside an
+    # actual scheduler run, never during a geometry-only validation on a login
+    # node.  Production still validates stress support and isolated image
+    # directories before the first electronic-structure evaluation.
+    attach_image_calculators(images, workdir=workdir, factory=factory)
+    reports = validate_image_calculators(
+        images,
+        require_stress=True,
+        require_variable_cell=True,
+        require_directory=True,
+        require_unique_directories=True,
+    )
+    metadata["calculator_validation"] = "runtime_instantiated"
+    metadata["calculator_reports"] = [report.to_dict() for report in reports]
+    (workdir / "vcneb_preflight.json").write_text(
+        json.dumps(metadata, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
 
     if args.static_only:
         endpoint_indices = {

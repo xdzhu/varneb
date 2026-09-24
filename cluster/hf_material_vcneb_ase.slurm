@@ -32,6 +32,8 @@ resume_snapshot=${RESUME_SNAPSHOT:-}
 n_images=${N_IMAGES:-7}
 image_workers=${IMAGE_WORKERS:-5}
 image_mpi=${IMAGE_MPI:-32}
+qe_mpi_ranks=${QE_MPI_RANKS:-1}
+cp2k_mpi_ranks=${CP2K_MPI_RANKS:-16}
 steps=${STEPS:-300}
 fmax=${FMAX:-0.10}
 pressure_gpa=${PRESSURE_GPA:-0.0}
@@ -59,15 +61,19 @@ case "${backend}" in
   qe)
     module load apps/quantum-espresso/intelmpi/7.0
     factory=${FACTORY:-vcneb.qe:make_ase_espresso_factory}
-    command=${command:-"srun --exclusive --nodes=1 --ntasks=${image_mpi} --ntasks-per-node=${image_mpi} pw.x"}
+    # This HF QE build has a verified single-rank Slurm launch contract.  Its
+    # multi-rank PMI startup fails in MPI_Init_thread before pw.x reads input.
+    # Parallelism therefore comes from independent image workers, not ranks
+    # inside one image, unless QE_MPI_RANKS is deliberately revalidated.
+    command=${command:-"srun --exclusive --nodes=1 --ntasks=${qe_mpi_ranks} --ntasks-per-node=${qe_mpi_ranks} pw.x"}
     ;;
   cp2k)
     module load apps/cp2k/intelmpi/2024.1-2021-plumed
     factory=${FACTORY:-vcneb.backends:make_ase_cp2k_factory}
-    # ASE's CP2K calculator speaks to one persistent cp2k_shell process per
-    # image.  Do not launch the shell as a 32-rank MPI application: the shell
-    # handshake is single-rank even when the CP2K allocation has more cores.
-    command=${command:-"srun --exclusive --nodes=1 --ntasks=1 --ntasks-per-node=1 cp2k_shell.psmp"}
+    # One ASE image owns one persistent cp2k_shell MPI world.  Direct mpirun
+    # avoids the earlier nested-srun/protocol failures while retaining CP2K's
+    # internal parallelism; 16 ranks is the validated HF GaN default.
+    command=${command:-"mpirun -np ${cp2k_mpi_ranks} cp2k_shell.psmp"}
     ;;
   abinit)
     # The HF ABINIT 8.6.1 executable is linked against the Intel 2017
