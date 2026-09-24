@@ -169,7 +169,17 @@ before comparing barriers.
 lazy and ephemeral: attaching a 29-image path starts no shell, and each active
 worker starts one MPI shell only for its own evaluation, then closes it. Thus
 `IMAGE_WORKERS`, not total image count, bounds live MPI worlds. The shown
-16-rank launch is the measured HF GaN contract; re-benchmark it elsewhere.
+16-rank launch is the measured HF GaN per-image contract; re-benchmark it
+elsewhere. **Do not equate an 80-task allocation with five isolated 16-rank
+worlds.** A separate GaN continuation demonstrated that five plain `mpirun`
+commands can pin all 80 processes to the same 16 CPU IDs, reducing each rank
+to roughly 20% CPU and making a single SCF iteration take about 238 seconds.
+For a portable safe starting point use one CP2K worker. Before enabling
+multiple workers, run an affinity canary on the actual allocation and use a
+launcher that gives each world a non-overlapping CPU set. The case-specific
+record is in `examples/cases/gan_b4_b1_cp2k/README.md`. This is an execution
+constraint, not an optimizer effect, and a run with overlapping CPU sets must
+not enter an acceleration benchmark.
 
 ### ABINIT
 

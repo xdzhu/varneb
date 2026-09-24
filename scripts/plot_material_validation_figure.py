@@ -37,6 +37,18 @@ class PathSeries:
     def barrier_eV(self) -> float:
         return max(self.relative_enthalpy_eV)
 
+    @property
+    def formula_units(self) -> int:
+        if self.material == "BaTiO3":
+            return 1
+        if self.material == "HfO2":
+            return HFO2_FORMULA_UNITS_PER_CELL
+        raise ValueError(f"unknown formula-unit count for {self.material}")
+
+    @property
+    def relative_enthalpy_per_formula_unit_eV(self) -> tuple[float, ...]:
+        return tuple(value / self.formula_units for value in self.relative_enthalpy_eV)
+
 
 def _coordinates(summary: dict, n_images: int) -> tuple[float, ...]:
     geometry = (summary.get("path_diagnostics") or {}).get("geometry") or {}
@@ -117,9 +129,8 @@ def write_source_data(
         )
         writer.writeheader()
         for series in (*tuple(bto_paths), *tuple(hfo2_paths)):
-            formula_units = 1 if series.material == "BaTiO3" else HFO2_FORMULA_UNITS_PER_CELL
-            for index, (coordinate, enthalpy, volume) in enumerate(
-                zip(series.coordinate, series.relative_enthalpy_eV, series.volume_A3)
+            for index, (coordinate, enthalpy, enthalpy_per_fu, volume) in enumerate(
+                zip(series.coordinate, series.relative_enthalpy_eV, series.relative_enthalpy_per_formula_unit_eV, series.volume_A3)
             ):
                 writer.writerow(
                     {
@@ -129,7 +140,7 @@ def write_source_data(
                         "image_index": index,
                         "normalized_reaction_coordinate": f"{coordinate:.12g}",
                         "relative_enthalpy_eV_per_cell": f"{enthalpy:.12g}",
-                        "relative_enthalpy_eV_per_formula_unit": f"{enthalpy / formula_units:.12g}",
+                        "relative_enthalpy_eV_per_formula_unit": f"{enthalpy_per_fu:.12g}",
                         "volume_A3": f"{volume:.12g}",
                         "is_climbing_image": index == series.climbing_image_index,
                     }
@@ -203,19 +214,23 @@ def plot_validation_figure(
 
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
-    from matplotlib.ticker import MaxNLocator
-
     plt.rcParams["font.family"] = "sans-serif"
     plt.rcParams["font.sans-serif"] = ["Arial", "DejaVu Sans", "Liberation Sans"]
     plt.rcParams["svg.fonttype"] = "none"
     plt.rcParams["pdf.fonttype"] = 42
     plt.rcParams.update(
         {
-            "font.size": 7,
-            "axes.linewidth": 0.8,
-            "axes.spines.top": False,
-            "axes.spines.right": False,
-            "legend.frameon": False,
+            "font.size": 8.5,
+            "axes.labelsize": 9,
+            "xtick.labelsize": 8,
+            "ytick.labelsize": 8,
+            "axes.linewidth": 0.9,
+            "axes.spines.top": True,
+            "axes.spines.right": True,
+            "legend.frameon": True,
+            "legend.framealpha": 0.84,
+            "legend.facecolor": "white",
+            "legend.edgecolor": "#7A7A7A",
         }
     )
     colors = {
@@ -227,55 +242,73 @@ def plot_validation_figure(
         "literature": "#272727",
     }
 
-    figure, axes = plt.subplots(2, 2, figsize=(7.205, 4.72), constrained_layout=True)
+    figure, axes = plt.subplots(2, 2, figsize=(7.205, 4.85))
     bto_ax, hfo2_ax, barrier_ax, volume_ax = axes.flat
+    figure.subplots_adjust(left=0.115, right=0.975, top=0.91, bottom=0.205, wspace=0.34, hspace=0.39)
+    hfo2_handles = []
 
-    def draw_paths(axis, paths, *, per_fu: bool, title: str) -> None:
+    def draw_paths(axis, paths, *, collect_handles: bool = False) -> None:
         for series in paths:
             key = "ci" if "CI" in series.label else "linear" if "linear" in series.label.lower() else f"n{series.image_count}"
-            scale = HFO2_FORMULA_UNITS_PER_CELL if per_fu else 1
-            values = [value / scale for value in series.relative_enthalpy_eV]
-            axis.plot(series.coordinate, values, marker="o", markersize=3.3, linewidth=1.35, color=colors[key], label=series.label)
+            values = series.relative_enthalpy_per_formula_unit_eV
+            line, = axis.plot(series.coordinate, values, marker="o", markersize=3.5, linewidth=1.55, color=colors[key], label=series.label)
+            if collect_handles:
+                hfo2_handles.append(line)
             if series.climbing_image_index is not None:
                 index = series.climbing_image_index
-                axis.plot(series.coordinate[index], values[index], marker="o", markersize=6.7, markerfacecolor="none", markeredgecolor="#272727", markeredgewidth=0.9, linestyle="None", zorder=5)
-        axis.set(xlim=(-0.03, 1.03), xlabel="Normalized reaction coordinate", ylabel="Relative enthalpy (eV/f.u.)", title=title)
-        axis.legend(loc="best", fontsize=6)
-        axis.xaxis.set_major_locator(MaxNLocator(5))
+                axis.plot(series.coordinate[index], values[index], marker="o", markersize=7.0, markerfacecolor="white", markeredgecolor="#272727", markeredgewidth=1.0, linestyle="None", zorder=6)
+        axis.set(xlim=(-0.03, 1.03), xlabel="Normalized path coordinate", ylabel="Relative enthalpy (eV/f.u.)")
+        axis.set_xticks([0, 0.25, 0.5, 0.75, 1.0])
 
-    draw_paths(bto_ax, bto_paths, per_fu=True, title="BaTiO$_3$ T$\\rightarrow$C")
-    bto_ax.text(0.03, 0.96, f"monotonic; $\\Delta H$ = {bto_paths[0].barrier_eV:.3f} eV/f.u.\nreference = {bto_literature_barrier_kcal_per_mol:.2f} kcal mol$^{{-1}}$", transform=bto_ax.transAxes, va="top", ha="left", fontsize=6, color="#4D4D4D")
-
-    draw_paths(hfo2_ax, hfo2_paths, per_fu=True, title="HfO$_2$ T$\\rightarrow$PO")
-    hfo2_ax.axhline(hfo2_literature_barrier_eV_per_fu, linestyle=":", linewidth=1.0, color=colors["literature"], zorder=0)
-    hfo2_ax.text(0.99, hfo2_literature_barrier_eV_per_fu + 0.001, "literature CI-VCNEB", ha="right", va="bottom", fontsize=5.6, color=colors["literature"])
+    draw_paths(bto_ax, bto_paths)
+    bto_ax.legend(loc="upper left", fontsize=8, handlelength=1.7, borderpad=0.35)
+    draw_paths(hfo2_ax, hfo2_paths, collect_handles=True)
+    literature_line = hfo2_ax.axhline(hfo2_literature_barrier_eV_per_fu, linestyle=":", linewidth=1.15, color=colors["literature"], zorder=0)
+    hfo2_handles.append(literature_line)
 
     hfo2_barriers = [series.barrier_eV / HFO2_FORMULA_UNITS_PER_CELL for series in hfo2_paths]
-    hfo2_labels = [series.label.replace("ordinary ", "").replace(" log-strain", "") for series in hfo2_paths] + ["literature\nVC-NEB"]
-    bto_barrier = bto_paths[0].barrier_eV
+    def short_label(series: PathSeries) -> str:
+        if "CI" in series.label:
+            return "CI n7"
+        if "linear" in series.label.lower():
+            return "linear n7"
+        return f"n{series.image_count}"
+
+    hfo2_labels = [short_label(series) for series in hfo2_paths] + ["lit."]
     values_eV_per_fu = hfo2_barriers + [hfo2_literature_barrier_eV_per_fu]
     values_meV_per_fu = [value * 1000.0 for value in values_eV_per_fu]
     bar_colors = [colors["n7"], colors["n9"], colors["ci"], colors["linear"], colors["literature"]]
     positions = list(range(len(values_meV_per_fu)))
     bars = barrier_ax.bar(positions, values_meV_per_fu, color=bar_colors[: len(values_meV_per_fu)], edgecolor="#272727", linewidth=0.45)
     for bar, value in zip(bars, values_meV_per_fu):
-        barrier_ax.text(bar.get_x() + bar.get_width() / 2, value + 1.5, f"{value:.1f}", ha="center", va="bottom", fontsize=6)
-    barrier_ax.set(xticks=positions, xticklabels=hfo2_labels, ylabel="Barrier (meV/f.u.)", title="HfO$_2$ barrier comparison")
-    barrier_ax.text(0.02, 0.96, f"BTO endpoint rise: {bto_barrier * KCAL_PER_MOL_PER_EV:.2f} kcal mol$^{{-1}}$", transform=barrier_ax.transAxes, va="top", ha="left", fontsize=5.8, color="#4D4D4D")
-    barrier_ax.set_ylim(0, max(values_meV_per_fu) * 1.28)
+        barrier_ax.text(bar.get_x() + bar.get_width() / 2, value + 0.9, f"{value:.1f}", ha="center", va="bottom", fontsize=8)
+    barrier_ax.set(xticks=positions, xticklabels=hfo2_labels, ylabel="Barrier (meV/f.u.)")
+    barrier_ax.set_ylim(0, max(values_meV_per_fu) * 1.2)
 
     for series in hfo2_paths:
         key = "ci" if "CI" in series.label else "linear" if "linear" in series.label.lower() else f"n{series.image_count}"
         normalized_volume = [(value / series.volume_A3[0] - 1.0) * 100.0 for value in series.volume_A3]
-        volume_ax.plot(series.coordinate, normalized_volume, marker="o", markersize=3.2, linewidth=1.25, color=colors[key], label=series.label)
+        volume_ax.plot(series.coordinate, normalized_volume, marker="o", markersize=3.3, linewidth=1.45, color=colors[key], label=series.label)
     volume_ax.axhline(0.0, color="#767676", linewidth=0.65)
-    volume_ax.set(xlim=(-0.03, 1.03), xlabel="Normalized reaction coordinate", ylabel="$\\Delta V/V_0$ (%)", title="HfO$_2$ cell evolution")
-    volume_ax.legend(loc="best", fontsize=6)
-    volume_ax.xaxis.set_major_locator(MaxNLocator(5))
+    volume_ax.set(xlim=(-0.03, 1.03), xlabel="Normalized path coordinate", ylabel="$\\Delta V/V_0$ (%)")
+    volume_ax.set_xticks([0, 0.25, 0.5, 0.75, 1.0])
 
-    for label, axis in zip(("a", "b", "c", "d"), axes.flat):
-        axis.text(-0.17, 1.04, label, transform=axis.transAxes, fontweight="bold", fontsize=9, va="bottom")
-        axis.tick_params(direction="out", length=3, width=0.7)
+    figure.legend(
+        hfo2_handles,
+        [series.label for series in hfo2_paths] + ["literature"],
+        loc="lower center",
+        bbox_to_anchor=(0.5, 0.018),
+        ncol=3,
+        fontsize=8,
+        frameon=True,
+        framealpha=0.84,
+        handlelength=1.7,
+        columnspacing=1.1,
+    )
+
+    for label, axis in zip(("(a)", "(b)", "(c)", "(d)"), axes.flat):
+        axis.text(-0.15, 1.035, label, transform=axis.transAxes, fontweight="normal", fontsize=10.5, va="bottom", ha="left")
+        axis.tick_params(direction="out", length=3.2, width=0.8, top=True, right=True)
 
     output_base.parent.mkdir(parents=True, exist_ok=True)
     paths = []

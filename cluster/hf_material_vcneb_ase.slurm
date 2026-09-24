@@ -1,7 +1,9 @@
 #!/bin/bash
 # Generic ASE-factory material VCNEB production template.
-# It uses three 97-core nodes: nine 32-MPI image workers in waves plus
-# manager headroom. For BTO set IMAGE_WORKERS=5; for GaN set IMAGE_WORKERS=9.
+# The Slurm resource stanza is a large-allocation example; override node/task
+# counts for each calculator and image-worker count.  Do not infer usable
+# concurrency from rank counts alone: independent MPI worlds need disjoint CPU
+# affinity, especially for CP2K's direct-mpirun shell launcher.
 # This template is intentionally input-driven and refuses to guess potentials.
 # Production FIRE steps use a 0.05 relative cell trust radius with bounded
 # geometry backtracking, preventing a single image from changing volume by 10%
@@ -30,7 +32,12 @@ factory_kwargs=${FACTORY_KWARGS_JSON:-}
 endpoint_summary=${ENDPOINT_STATIC_SUMMARY:-}
 resume_snapshot=${RESUME_SNAPSHOT:-}
 n_images=${N_IMAGES:-7}
-image_workers=${IMAGE_WORKERS:-5}
+if [[ "${backend}" == cp2k ]]; then
+  # One world is the safe default until a multi-worker affinity canary passes.
+  image_workers=${IMAGE_WORKERS:-1}
+else
+  image_workers=${IMAGE_WORKERS:-5}
+fi
 image_mpi=${IMAGE_MPI:-32}
 qe_mpi_ranks=${QE_MPI_RANKS:-1}
 cp2k_mpi_ranks=${CP2K_MPI_RANKS:-16}
@@ -47,15 +54,6 @@ mapping=${MAPPING:-auto}
 align_cells=${ALIGN_CELLS:-1}
 cell_interpolation=${CELL_INTERPOLATION:-log_strain}
 
-if (( image_workers < 1 || image_workers * image_mpi > 288 )); then
-  echo "IMAGE_WORKERS * IMAGE_MPI must be between 1 and 288" >&2
-  exit 2
-fi
-if (( SLURM_NTASKS < image_workers * image_mpi )); then
-  echo "allocation is smaller than requested image worker ranks" >&2
-  exit 2
-fi
-
 module purge
 case "${backend}" in
   qe)
@@ -65,14 +63,23 @@ case "${backend}" in
     # multi-rank PMI startup fails in MPI_Init_thread before pw.x reads input.
     # Parallelism therefore comes from independent image workers, not ranks
     # inside one image, unless QE_MPI_RANKS is deliberately revalidated.
+    ranks_per_worker=${qe_mpi_ranks}
     command=${command:-"srun --exclusive --nodes=1 --ntasks=${qe_mpi_ranks} --ntasks-per-node=${qe_mpi_ranks} pw.x"}
     ;;
   cp2k)
     module load apps/cp2k/intelmpi/2024.1-2021-plumed
     factory=${FACTORY:-vcneb.backends:make_ase_cp2k_factory}
-    # One ASE image owns one persistent cp2k_shell MPI world.  Direct mpirun
-    # avoids the earlier nested-srun/protocol failures while retaining CP2K's
-    # internal parallelism; 16 ranks is the validated HF GaN default.
+    # One active ASE image owns one ephemeral cp2k_shell MPI world.  Direct
+    # mpirun avoids the earlier nested-srun/protocol failures, but five such
+    # worlds were observed pinning to the same 16 CPUs despite 80 allocated
+    # tasks.  Multiple workers therefore require an explicit launcher and
+    # a measured disjoint-affinity canary on the actual allocation.
+    ranks_per_worker=${cp2k_mpi_ranks}
+    if (( image_workers > 1 )) &&
+       { [[ -z "${COMMAND:-}" ]] || [[ "${CP2K_AFFINITY_VERIFIED:-0}" != 1 ]]; }; then
+      echo "CP2K multi-worker launch requires COMMAND and CP2K_AFFINITY_VERIFIED=1 after a disjoint-CPU canary" >&2
+      exit 2
+    fi
     command=${command:-"mpirun -np ${cp2k_mpi_ranks} cp2k_shell.psmp"}
     ;;
   abinit)
@@ -88,11 +95,13 @@ case "${backend}" in
     # site's external-launcher/PMI overrides; Hydra bootstraps through Slurm
     # without passing Slurm's pmi_args to ABINIT.
     unset I_MPI_PMI_LIBRARY I_MPI_HYDRA_BOOTSTRAP_EXEC_EXTRA_ARGS I_MPI_HYDRA_BOOTSTRAP
+    ranks_per_worker=${image_mpi}
     command=${command:-"mpiexec.hydra -bootstrap slurm -n ${image_mpi} abinit"}
     ;;
   lammps)
     module load apps/lammps/23Jun2022-intel-21
     factory=${FACTORY:-vcneb.backends:make_ase_lammps_factory}
+    ranks_per_worker=${image_mpi}
     command=${command:-"srun --exclusive --nodes=1 --ntasks=${image_mpi} --ntasks-per-node=${image_mpi} lmp_mpi"}
     ;;
   *)
@@ -100,6 +109,15 @@ case "${backend}" in
     exit 2
     ;;
 esac
+
+if (( image_workers < 1 || ranks_per_worker < 1 )); then
+  echo "IMAGE_WORKERS and per-worker ranks must be positive" >&2
+  exit 2
+fi
+if (( SLURM_NTASKS < image_workers * ranks_per_worker )); then
+  echo "allocation is smaller than requested image worker ranks" >&2
+  exit 2
+fi
 
 cd "${repo}"
 # Some HF modulefiles prepend the system Python 3.7 stdlib to PYTHONPATH.

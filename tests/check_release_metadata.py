@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import argparse
 import re
+import sys
 from pathlib import Path
 
 
@@ -19,10 +21,18 @@ def _project_field(text: str, field: str) -> str:
     return match.group(1)
 
 
-def main() -> None:
+def main(argv: list[str] = ()) -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--tag", help="Release tag that must match package version")
+    args = parser.parse_args(argv)
     pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
     assert _project_field(pyproject, "name") == "varneb"
-    assert re.fullmatch(r"\d+\.\d+\.\d+", _project_field(pyproject, "version"))
+    version = _project_field(pyproject, "version")
+    assert re.fullmatch(r"\d+\.\d+\.\d+", version)
+    version_source = (ROOT / "vcneb" / "version.py").read_text(encoding="utf-8")
+    assert f'__version__ = "{version}"' in version_source
+    if args.tag is not None:
+        assert args.tag == f"v{version}", f"tag {args.tag} does not match v{version}"
     assert _project_field(pyproject, "description") == EXPECTED_DESCRIPTION
     assert _project_field(pyproject, "license") == "GPL-3.0-or-later"
 
@@ -30,9 +40,10 @@ def main() -> None:
         encoding="utf-8"
     )
     assert 'tags: ["v*"]' in workflow
-    assert "release:" in workflow and "types: [published]" in workflow
+    assert "  release:" not in workflow
     assert "workflow_dispatch:" in workflow
     assert "inputs.publish == true" in workflow
+    assert "--tag \"${GITHUB_REF_NAME}\"" in workflow
     assert "on:" in workflow
     assert "push:\n    branches:" not in workflow
 
@@ -40,4 +51,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv[1:])

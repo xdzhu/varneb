@@ -4,6 +4,26 @@
 
 本文只记录已由日志、作业状态或回放实验支持的结论。旧失败目录保留，修复使用独立目录，不覆盖原始轨迹。
 
+## 2026-09-24 最终补记：CP2K GaN 路径已收敛
+
+HF `hfacnormal01` 作业 `27770714` 于 21:23 正常完成（Slurm `COMPLETED`，
+`exit=0`）。29 total images、27 interior 的普通 VCNEB 在第 52 步达到
+`fmax=0.0940915 eV/A < 0.10 eV/A`。45.7 GPa 下按每个四原子胞含两个
+GaN 化学式单元归一化，image 15 的主峰为 `0.292755 eV/GaN`，B1−B4
+反应焓为 `−0.058509 eV/GaN`。最终快照 SHA-256 为
+`790599c1e8d4a700067fd5a5c5cdd2cf5ca4ff2e5ad572d37b798fb6a4eb9fc1`；
+所有像的能量、力、应力均有限，端点结构哈希与静态门禁一致，路径几何审计通过。
+其完整 29 像焓曲线已进入 CPC 五后端图，证据数值在
+`paper/VARNEB_CPC/evidence/gan_45p7_multibackend_vcneb_20260924.json`。
+与 Qian 文献**四方**路线应比较 `0.34 eV/GaN`；`0.39 eV/GaN`
+是另一条六方路线，不能混用。
+
+独立尝试的 step-33 BlockFIRE 分支 `27775731` 于 22:55 取消。其
+五个 16-rank `mpirun` shell 被重复绑定到同一组 16 个 CPU，单电子步约
+238 s，尚未完成初始链评估；故它既不是算法收敛结果，也不能用来计量
+BlockFIRE 加速。原作业和所有快照未被覆盖。通用 HF 模板现让 CP2K
+默认单 worker，并要求多 worker 先通过实际节点上的不重叠绑核 canary。
+
 ## 2026-09-24：GaN 45.7 GPa 的 QE、CP2K 与 ABINIT 重建
 
 这轮不再续用三个后端的零压旧链，而是从已验证的 GaN B4/B1 四原子种子出发，
@@ -22,9 +42,10 @@
 
 QE 的 32-rank `srun` 端点试投 `27770097/98` 在 `MPI_Init_thread` 失败；同机历史
 成功记录和重试均证明该站点构建应使用单-rank `srun --exclusive ... pw.x`，并把
-并行放在独立 image 上。QE 29-total-image 生产链 `27770529` 已通过端点哈希、
-路径几何和计算器契约，9 个 interior-image worker 正常推进；初始 `1.5046 eV/A`
-到 step 8 已降至 `0.4224 eV/A`，后续回弹按完整轨迹观察，不因单步上升停止。
+并行放在独立 image 上。QE 29-total-image 生产链 `27770529` 已收敛：最终最大
+广义力为 `0.098431 eV/A`，势垒为 `0.329663 eV/GaN`，峰值位于 image 15。
+完整链通过端点哈希、路径几何和能量/力/应力审计；中间曾有力回弹，但判定使用
+完整轨迹而不是单步趋势。
 
 CP2K 的结论需要区分启动器和 shell 生命周期。相同 GaN 静态输入的受控 benchmark
 中，直接 `mpirun -np 8` (`27770135`) 用时 3:44，`mpirun -np 16`
@@ -34,11 +55,12 @@ CP2K 的结论需要区分启动器和 shell 生命周期。相同 GaN 静态输
 构造期立即启动 shell：29 个像会瞬间形成 464 rank，绕过 `IMAGE_WORKERS=5` 的并发
 上限。CP2K factory 已改为惰性、一次 image 评价期间启动一个 16-rank shell，并在
 复制输出后关闭；`--validate-only` 也不再实例化任何会启动外部进程的 calculator。
-修正版生产为 `27770714`，首轮应只出现一个端点 MPI world，随后最多五个并发
-interior worlds；须以实际 Slurm steps 和完整 step 0 为准继续审核。
+修正版生产为 `27770714`，启动时只有一个端点 MPI world，随后最多五个并发
+interior worlds；其最终收敛与全像审计结果见上面的最终补记。
 
 ABINIT 已弃用先前不可比较的 HGH-LDA 端点，改用带审批清单、逐文件 SHA-256 的
-PseudoDojo NC-SR-PBE v0.4 PSP8。生产 `27770687` 已完成 step 0 的全部像并进入下一轮；
+PseudoDojo NC-SR-PBE v0.4 PSP8。生产 `27770687` 已收敛：最终最大广义力为
+`0.099105 eV/A`，势垒为 `0.292422 eV/GaN`，峰值同样位于 image 15。
 9 个并发 image worker、每像 8 Hydra ranks 均返回完整能量、力和应力。作业 stderr
 中的站点 ROCm modulefile 提示不影响 ABINIT 计算，但保留在审计记录中。
 

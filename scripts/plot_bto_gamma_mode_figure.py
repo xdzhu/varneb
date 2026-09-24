@@ -28,17 +28,23 @@ plt.rcParams["svg.fonttype"] = "none"
 plt.rcParams.update(
     {
         "pdf.fonttype": 42,
-        "font.size": 7,
-        "axes.linewidth": 0.8,
-        "axes.spines.right": False,
-        "axes.spines.top": False,
-        "legend.frameon": False,
+        "font.size": 8.5,
+        "axes.labelsize": 9,
+        "xtick.labelsize": 8,
+        "ytick.labelsize": 8,
+        "axes.linewidth": 0.9,
+        "axes.spines.right": True,
+        "axes.spines.top": True,
+        "legend.frameon": True,
+        "legend.framealpha": 0.84,
+        "legend.facecolor": "white",
+        "legend.edgecolor": "#7A7A7A",
     }
 )
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUTPUTS = ROOT / "outputs" / "batio3_t_to_c_pbe100_dzp10au"
-DEFAULT_FIGURE = ROOT / "paper" / "VARNEB_CPC" / "bto_gamma_mode_path"
+DEFAULT_FIGURE = ROOT / "paper" / "VARNEB_CPC" / "figures" / "bto_gamma_mode_path"
 
 COLORS = {
     "soft": "#7C6CCF",
@@ -124,58 +130,42 @@ def write_source_data(rows: list[dict], path: Path) -> None:
 
 
 def add_panel_label(axis, label: str) -> None:
-    axis.text(-0.17, 1.03, label, transform=axis.transAxes, fontweight="bold", fontsize=8)
+    axis.text(-0.15, 1.04, f"({label})", transform=axis.transAxes, fontweight="normal", fontsize=10.5, va="bottom", ha="left")
 
 
 def plot(rows: list[dict], curves: list[tuple[str, np.ndarray, str]], output: Path) -> list[Path]:
     image = np.asarray([row["image_index"] for row in rows])
     energy = np.asarray([row["relative_enthalpy_meV_per_formula_unit"] for row in rows])
     volume = np.asarray([row["relative_volume_percent"] for row in rows])
-    figure = plt.figure(figsize=(7.2, 2.55))  # double-column width, 183 mm
-    grid = figure.add_gridspec(2, 3, width_ratios=[1.15, 1.15, 0.9], wspace=0.55, hspace=0.6)
-    hero = figure.add_subplot(grid[:, :2])
-    energy_axis = figure.add_subplot(grid[0, 2])
-    volume_axis = figure.add_subplot(grid[1, 2])
+    figure = plt.figure(figsize=(7.2, 3.05))  # double-column width, 183 mm
+    grid = figure.add_gridspec(2, 2, width_ratios=[1.72, 1], wspace=0.39, hspace=0.38)
+    hero = figure.add_subplot(grid[:, 0])
+    energy_axis = figure.add_subplot(grid[0, 1])
+    volume_axis = figure.add_subplot(grid[1, 1])
+    figure.subplots_adjust(left=0.115, right=0.975, top=0.91, bottom=0.17)
 
     for label, values, color in curves:
-        hero.plot(image, values, "o-", color=color, lw=1.6, ms=4, label=label)
+        hero.plot(image, values, "o-", color=color, lw=1.8, ms=4.0, label=label)
     hero.set_xlabel(r"VCNEB image index (T $\rightarrow$ C)")
     hero.set_ylabel(r"subspace coordinate norm ($\sqrt{\mathrm{amu}}$ \AA)")
     hero.set_xticks(image)
-    hero.legend(loc="upper right", fontsize=6, handlelength=1.7)
-    hero.text(
-        0.02,
-        0.04,
-        r"cubic endpoint $\Gamma$ eigenvectors" "\nrigid translations removed",
-        transform=hero.transAxes,
-        fontsize=5.8,
-        va="bottom",
-        color="#4D4D4D",
-    )
+    hero.legend(loc="upper right", fontsize=8, handlelength=1.7, borderpad=0.4)
     add_panel_label(hero, "a")
 
-    energy_axis.plot(image, energy, "o-", color=COLORS["energy"], lw=1.5, ms=3.5)
-    energy_axis.set_ylabel("relative enthalpy\n(meV/f.u.)")
+    energy_axis.plot(image, energy, "o-", color=COLORS["energy"], lw=1.7, ms=3.7)
+    energy_axis.set_ylabel("Relative enthalpy\n(meV/f.u.)")
     energy_axis.set_xticks(image)
     energy_axis.set_xticklabels([])
-    energy_axis.set_title("monotonic path", fontsize=7, pad=2)
     add_panel_label(energy_axis, "b")
 
-    volume_axis.plot(image, volume, "o-", color=COLORS["volume"], lw=1.5, ms=3.5)
-    volume_axis.set_xlabel("")
+    volume_axis.plot(image, volume, "o-", color=COLORS["volume"], lw=1.7, ms=3.7)
+    volume_axis.set_xlabel("VCNEB image index")
     volume_axis.set_ylabel(r"$\Delta V/V_0$ (%)")
     volume_axis.set_xticks(image)
     add_panel_label(volume_axis, "c")
 
-    figure.text(
-        0.995,
-        0.005,
-        "Single deterministic ABACUS/PBE path; no error bars.",
-        ha="right",
-        va="bottom",
-        fontsize=5.5,
-        color="#4D4D4D",
-    )
+    for axis in (hero, energy_axis, volume_axis):
+        axis.tick_params(direction="out", length=3.2, width=0.8, top=True, right=True)
     output.parent.mkdir(parents=True, exist_ok=True)
     saved = []
     for suffix, dpi in ((".svg", 600), (".pdf", 600), (".png", 600)):

@@ -28,6 +28,11 @@ the original project.  The top-level `initial_state/`, `final_state/`,
 build state, not library source.  They are ignored or documented rather than
 globally deleted because a user may have an active restart there.
 
+The canonical CP2K GaN fixture is under `examples/cases/gan_b4_b1_cp2k/`;
+the independent final-chain evidence and cross-backend source data live under
+`paper/VARNEB_CPC/evidence/` and `paper/VARNEB_CPC/figures/`. Large scheduler
+working directories remain on the cluster, not in the installable package.
+
 New calculations should use a run root containing:
 
 ```text

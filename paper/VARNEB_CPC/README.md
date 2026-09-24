@@ -38,16 +38,25 @@ statistical replica.
 ## Scope and length
 
 VARNEB is a compact software paper, not a feature-for-feature counterpart to
-the ZStar reference package. Keep the submitted article to approximately eight
-typeset pages including the Program Summary, figures, tables, and references.
-The current draft is intentionally shorter. Add material only when it closes a
-specific reproducibility or verification gap; do not pad the manuscript with
-duplicate workflow descriptions, redundant plots, or unsupported benchmark
-claims. The single four-panel ABACUS material-validation figure remains the
-primary compact figure. Per-path VASP/ABACUS literature figures and CSV source
-data are archived under `outputs/neb_literature_benchmarks/` and support the
-backend benchmark table without expanding the main text beyond the CPC page
-budget.
+the ZStar reference package. The working target is approximately ten typeset
+pages including the Program Summary, figures, tables, and references. Add
+material only when it closes a reproducibility, method, or verification gap;
+do not pad the manuscript with duplicate workflow descriptions or unsupported
+benchmark claims. The main evidence set now contains the architecture figure,
+the BTO mode decomposition, the ABACUS BTO/HfO2 validation figure, and the GaN
+multi-backend comparison. Per-path literature figures remain archived under
+`outputs/neb_literature_benchmarks/` rather than being duplicated in the main
+text.
+
+The panel-by-panel argument, data normalization, and plotting conventions are
+recorded in `FIGURE_LOGIC_AND_STYLE.md`. Plot generators remain in `scripts/`;
+the manuscript reads the files under `figures/` explicitly, so stale root-level
+exports cannot silently replace a revised panel.
+
+The CP2K GaN path is now part of the converged five-backend figure. Its
+45.7-GPa, 29-image chain reached `fmax=0.09409 eV/Å` and a
+`0.29276 eV/GaN` barrier at image 15. The source-data CSV, exact evaluated
+chain, and endpoint/geometry evidence are kept with the manuscript package.
 
 ## Author metadata
 

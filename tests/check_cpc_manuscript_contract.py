@@ -21,18 +21,16 @@ def main() -> None:
 
     # These are scientific reporting boundaries, not stylistic preferences.
     for fragment, label in (
-        ("does not claim a new\nVC-NEB formalism", "algorithm-novelty boundary"),
-        ("backend-validation evidence", "VASP execution evidence boundary"),
-        (
-            "working backend is not itself cross-engine accuracy validation",
-            "VASP accuracy-claim boundary",
-        ),
+        ("without changing the underlying VCNEB formalism", "algorithm-novelty boundary"),
+        ("Material-level agreement requires a recorded", "backend evidence boundary"),
+        ("same dominant\nbarrier topology", "cross-backend claim boundary"),
         ("no interior\nbarrier", "BTO topology conclusion"),
         ("CI is correctly withheld", "BTO CI policy"),
         ("not a strict algorithm benchmark", "BTO literature qualifier"),
         ("0.1291722", "HfO2 CI barrier evidence"),
         ("reported 32 meV per formula unit", "HfO2 literature comparison"),
-        ("vcneb_material_validation.pdf", "reproducible figure asset"),
+        ("figures/vcneb_material_validation.pdf", "reproducible figure asset"),
+        ("78.5\\% and 38.2\\%", "bounded acceleration result"),
     ):
         require(manuscript, fragment, label=label)
 

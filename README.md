@@ -7,6 +7,9 @@ original research scripts.
 
 ## Quick start (calculator-free)
 
+For an installed release, start with `python -m pip install varneb`. To run
+the bundled examples and tests from a source checkout, use:
+
 ```bash
 python -m pip install -e .
 varneb --version
@@ -46,7 +49,9 @@ parameter guess.
 The old `README_VCNEB.md`, `run_NEB/`, and `run_VCNEB/` names remain as
 compatibility entry points for existing research scripts.  New work should use
 the public CLI, `vcneb` API, and the layout documented in
-[`docs/REPOSITORY_LAYOUT.md`](docs/REPOSITORY_LAYOUT.md).
+[`docs/REPOSITORY_LAYOUT.md`](https://github.com/xdzhu/varneb/blob/main/docs/REPOSITORY_LAYOUT.md).
+Release artifacts and the deliberately tag-triggered PyPI workflow are
+described in [`docs/RELEASE_PROCESS.md`](https://github.com/xdzhu/varneb/blob/main/docs/RELEASE_PROCESS.md).
 
 ## Minimal API
 
@@ -65,11 +70,15 @@ be reused from audited static calculations.
 
 ## Backends
 
-VASP and ABACUS have the repository's strongest production validation.  QE,
-LAMMPS, CP2K, and ABINIT are supported through optional ASE adapters with explicit
-per-image directories and static force/stress preflight.  The adapter status
-is intentionally reported as `validated`, `adapter`, or `planned` rather than
-claiming a material result that has not been run and audited.
+ABACUS, VASP, QE, ABINIT, and CP2K have independently converged 45.7-GPa
+GaN B4→B1 paths under their recorded first-principles contracts. ABACUS and
+VASP additionally cover the largest set of material cases; CP2K also has a
+converged barrierless BTO T→C case. LAMMPS is a separate classical-potential
+adapter, not an interchangeable DFT validation. Every backend uses explicit
+per-image directories and static force/stress preflight. See the
+[`GaN CP2K case`](https://github.com/xdzhu/varneb/blob/main/examples/cases/gan_b4_b1_cp2k/README.md) for the complete
+result and an important MPI-affinity warning before enabling multiple CP2K
+image workers.
 
 For HF module environments, inspect first and load only what the job needs:
 
@@ -79,7 +88,7 @@ ssh hf "module avail 2>&1 | grep -Ei 'lammps|quantum-espresso|cp2k|abinit|abacus
 
 `varneb prepare` is calculator-free: it writes `initial-vcneb.traj` and a
 `varneb_preflight.json` report before any DFT executable is called. See
-[`docs/USER_MANUAL.md`](docs/USER_MANUAL.md) for calculator-specific
+[`docs/USER_MANUAL.md`](https://github.com/xdzhu/varneb/blob/main/docs/USER_MANUAL.md) for calculator-specific
 factories, Slurm isolation, provenance, restarts, and modal analysis.
 
 For any ASE calculator exposing energy, forces, and stress, use

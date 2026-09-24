@@ -12,6 +12,9 @@ def test_cp2k_shell_default_uses_validated_direct_mpi_world() -> None:
     assert 'cp2k_mpi_ranks=${CP2K_MPI_RANKS:-16}' in text
     assert 'mpirun -np ${cp2k_mpi_ranks} cp2k_shell.psmp' in text
     assert 'ntasks=${image_mpi} --ntasks-per-node=${image_mpi} cp2k_shell.psmp' not in text
+    assert 'image_workers=${IMAGE_WORKERS:-1}' in text
+    assert 'CP2K_AFFINITY_VERIFIED:-0' in text
+    assert 'CP2K multi-worker launch requires COMMAND' in text
 
 
 def test_production_requires_endpoint_static_gate() -> None:

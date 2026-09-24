@@ -6,6 +6,7 @@ directories.  This index is the stable entry point for new users:
 | Case | Backend(s) | Purpose |
 | --- | --- | --- |
 | BaTiO3 | VASP, QE candidate | simple cross-backend static/preflight comparison |
+| [GaN B4/B1](gan_b4_b1_cp2k/) | CP2K | converged 45.7-GPa material path, exact endpoint fixture, and MPI-affinity warning |
 | GaN B3/B1 | VASP | literature path and finite-pressure barrier |
 | CdSe RS/WZ | VASP | G-SSNEB mapping and small-barrier audit |
 | HfO2 T/PO/M | ABACUS, VASP | variable-cell production and acceleration benchmark |

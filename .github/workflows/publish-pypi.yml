@@ -1,13 +1,11 @@
 name: Publish VARNEB to PyPI
 
 on:
-  # Publishing is deliberate: either push a version tag, publish a GitHub
-  # Release, or explicitly run this workflow with publish=true. Ordinary
-  # branch pushes and repository synchronization never publish.
+  # Publishing is deliberate: push a version tag or explicitly dispatch with
+  # publish=true. A GitHub Release made from the same tag does not publish
+  # twice. Ordinary branch pushes never publish.
   push:
     tags: ["v*"]
-  release:
-    types: [published]
   workflow_dispatch:
     inputs:
       publish:
@@ -30,7 +28,12 @@ jobs:
         with:
           python-version: "3.x"
       - name: Check release metadata
-        run: python tests/check_release_metadata.py
+        run: |
+          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+            python tests/check_release_metadata.py --tag "${GITHUB_REF_NAME}"
+          else
+            python tests/check_release_metadata.py
+          fi
       - name: Build distribution
         run: |
           python -m pip install --upgrade build
@@ -43,7 +46,7 @@ jobs:
 
   publish:
     needs: build
-    if: ${{ github.event_name == 'push' || github.event_name == 'release' || inputs.publish == true }}
+    if: ${{ github.event_name == 'push' || inputs.publish == true }}
     runs-on: ubuntu-latest
     environment:
       name: pypi

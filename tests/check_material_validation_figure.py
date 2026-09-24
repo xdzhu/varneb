@@ -42,6 +42,10 @@ def main() -> None:
         hfo2 = read_completed_summary(source, label="HfO2 CI n3", material="HfO2")
         if bto.coordinate != (0.0, 0.4, 1.0) or bto.barrier_eV != 0.12:
             raise SystemExit(f"path normalization failed: {bto}")
+        if bto.relative_enthalpy_per_formula_unit_eV != (0.0, 0.12, -0.2):
+            raise SystemExit("BTO plot energy must not be divided by four")
+        if hfo2.relative_enthalpy_per_formula_unit_eV != (0.0, 0.03, -0.05):
+            raise SystemExit("HfO2 plot energy must be divided by four")
         if hfo2.climbing_image_index != 1:
             raise SystemExit("climbing-image evidence was lost")
         path_data, barrier_data = write_source_data(

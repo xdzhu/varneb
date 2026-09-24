@@ -25,8 +25,8 @@ latexmk -pdf -interaction=nonstopmode -halt-on-error varneb_CPC.tex
 
 LaTeX products are local build artifacts.  The manuscript source, bibliography,
 editable figures, and source data are versioned.  The article is intentionally
-kept near eight typeset pages or shorter; new material is added only when it
-closes a documented evidence gap.
+kept near ten typeset pages; new material is added only when it closes a
+documented evidence gap.
 
 ## Evidence policy
 
