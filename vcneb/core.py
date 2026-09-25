@@ -1039,6 +1039,7 @@ class VCNEB:
 
         self._last_enthalpies: Optional[Array] = None
         self._last_forces_x: Optional[Array] = None
+        self._last_true_forces_x: Optional[Array] = None
         self._last_evaluations: Optional[list[ImageEvaluation]] = None
         self._last_evaluation_geometry = None
         # Endpoints are fixed during VC-NEB; cache their evaluations and only
@@ -1254,6 +1255,7 @@ class VCNEB:
             self.images[image_index].set_positions(candidates[image_index].positions, apply_constraint=False)
         self._last_enthalpies = None
         self._last_forces_x = None
+        self._last_true_forces_x = None
         self._last_evaluations = None
         self._last_evaluation_geometry = None
 
@@ -1483,6 +1485,7 @@ class VCNEB:
             image_x_active.append(x_i * active_mask)
 
         self._last_enthalpies = enthalpies.copy()
+        self._last_true_forces_x = np.asarray(true_forces, dtype=float)
         force_x = np.zeros(self.ndofs())
         if self.n_images <= 2:
             self._last_forces_x = force_x
@@ -1574,7 +1577,9 @@ class VCNEB:
 
         The curvature is a local finite-difference estimate along the current
         extended-coordinate path.  It is a diagnostic, not a replacement for
-        a Hessian calculation.
+        a Hessian calculation. Legacy ``tangential_force_eV_per_A`` refers to
+        the *NEB residual*, whose ordinary-NEB tangent is only a spring term.
+        Use ``true_tangential_force_eV_per_A`` to assess physical stationarity.
         """
 
         if self.n_images <= 2:
@@ -1590,12 +1595,16 @@ class VCNEB:
                 "residual_generalized_force_eV_per_A": 0.0,
                 "tangential_force_eV_per_A": 0.0,
                 "perpendicular_force_eV_per_A": 0.0,
+                "true_tangential_force_eV_per_A": 0.0,
+                "true_perpendicular_force_eV_per_A": 0.0,
+                "true_generalized_force_max_vector_eV_per_A": 0.0,
                 "tangent_curvature_eV_per_A2": None,
             }
 
         self._compute_forces()
         assert self._last_enthalpies is not None
         assert self._last_forces_x is not None
+        assert self._last_true_forces_x is not None
         image_index = self.highest_image_index()
         assert image_index is not None
         interior_peak_indices = self._interior_peak_indices(self._last_enthalpies)
@@ -1615,6 +1624,9 @@ class VCNEB:
         perpendicular = residual - tangential * tangent
         residual_norm = float(np.linalg.norm(residual.reshape(-1, 3), axis=1).max())
         perpendicular_norm = float(np.linalg.norm(perpendicular))
+        physical_force = self._last_true_forces_x[image_index] * active_mask
+        physical_tangential = float(np.dot(physical_force, tangent))
+        physical_perpendicular = physical_force - physical_tangential * tangent
 
         d_minus = float(np.linalg.norm(image_x_active[image_index] - image_x_active[image_index - 1]))
         d_plus = float(np.linalg.norm(image_x_active[image_index + 1] - image_x_active[image_index]))
@@ -1640,6 +1652,11 @@ class VCNEB:
             "residual_generalized_force_eV_per_A": residual_norm,
             "tangential_force_eV_per_A": tangential,
             "perpendicular_force_eV_per_A": perpendicular_norm,
+            "true_tangential_force_eV_per_A": physical_tangential,
+            "true_perpendicular_force_eV_per_A": float(np.linalg.norm(physical_perpendicular)),
+            "true_generalized_force_max_vector_eV_per_A": float(
+                np.linalg.norm(physical_force.reshape(-1, 3), axis=1).max()
+            ),
             "tangent_curvature_eV_per_A2": curvature,
         }
 
@@ -1689,6 +1706,9 @@ class VCNEB:
             true_force_x = self._force_to_x(force_state)
             true_force_norm = float(np.linalg.norm(true_force_x.reshape(-1, 3), axis=1).max())
             cell_force_x = true_force_x[3 * self.n_atoms :]
+            active_true_force_x = true_force_x * active_mask
+            constrained_true_force_x = self._project_constraint_force(active_true_force_x) * active_mask
+            released_force_x = active_true_force_x - constrained_true_force_x
             record = {
                 "image_index": image_index,
                 "interior": 0 < image_index < self.n_images - 1,
@@ -1705,9 +1725,18 @@ class VCNEB:
                 "max_true_generalized_force_eV_per_A": true_force_norm,
                 "cell_generalized_force_norm_eV_per_A": float(np.linalg.norm(cell_force_x)),
             }
+            if self.mode_basis is not None:
+                record.update({
+                    "raw_force_orthogonal_to_mode_subspace_norm_eV_per_A": float(
+                        np.linalg.norm(released_force_x)
+                    ),
+                    "raw_force_orthogonal_to_mode_subspace_max_vector_eV_per_A": float(
+                        np.linalg.norm(released_force_x.reshape(-1, 3), axis=1).max()
+                    ),
+                })
             if 0 < image_index < self.n_images - 1:
                 tangent = self._tangent(image_index, self._last_enthalpies, image_x_active)
-                constrained_true = self._project_constraint_force(true_force_x * active_mask) * active_mask
+                constrained_true = constrained_true_force_x
                 true_parallel = float(np.dot(constrained_true, tangent))
                 true_perpendicular = constrained_true - true_parallel * tangent
                 d_plus = float(np.linalg.norm(image_x_active[image_index + 1] - image_x_active[image_index]))
@@ -1756,6 +1785,8 @@ class VCNEB:
         return {
             "n_images": self.n_images,
             "n_atoms": self.n_atoms,
+            "constraint_mode": self.constraint_mode,
+            "n_mode_directions": None if self.mode_basis is None else int(self.mode_basis.shape[1]),
             "pressure_eV_per_A3": self.pressure,
             "cell_scale_A": self.cell_scale,
             "geometry": geometry,
