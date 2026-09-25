@@ -66,7 +66,7 @@ def main() -> None:
     initial, final, reference_cell = build_endpoints()
 
     ase_images = make_images(initial, final, reference_cell, args.images)
-    ase_neb = NEB(ase_images, climb=True, parallel=False)
+    ase_neb = NEB(ase_images, k=0.15, climb=True, parallel=False, method="improvedtangent")
     ase_opt = FIRE(ase_neb, logfile=None)
     ase_opt.run(fmax=args.fmax, steps=args.steps)
     ase_energies = [float(image.get_potential_energy()) for image in ase_images]
@@ -96,6 +96,14 @@ def main() -> None:
         "barrier_absolute_difference_eV": abs(
             (max(ase_energies) - ase_energies[0]) - (max(vc_energies) - vc_energies[0])
         ),
+        "max_cell_deviation_from_reference_A": float(max(
+            np.max(np.abs(image.cell.array - reference_cell))
+            for image in [*ase_images, *vc_images]
+        )),
+        "max_corresponding_image_position_difference_A": float(max(
+            np.max(np.abs(ase_image.positions - vc_image.positions))
+            for ase_image, vc_image in zip(ase_images, vc_images)
+        )),
         "saddle_diagnostics": vc_chain.saddle_diagnostics(),
     }
     output.write_text(json.dumps(result, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
