@@ -28,6 +28,27 @@ def test_bto_comparison_rejects_different_stationary_center():
         compare(bto_report(0.05, 0.005), bto_report(0.10, 0.004, refined="other"), "bto")
 
 
+def test_bto_lowest_direction_overlap_is_sign_invariant_and_requires_a_pair():
+    first = bto_report(0.05, 0.005)
+    second = bto_report(0.10, 0.004)
+    first["lowest_eigenvector_in_common_orthogonal_basis"] = [1.0] + [0.0] * 15
+    second["lowest_eigenvector_in_common_orthogonal_basis"] = [-1.0] + [0.0] * 15
+    comparison = compare(first, second, "bto")["lowest_direction_comparison"]
+    assert comparison["lowest_mode_absolute_overlap"] == pytest.approx(1.0)
+    del second["lowest_eigenvector_in_common_orthogonal_basis"]
+    with pytest.raises(ValueError, match="both BTO audits"):
+        compare(first, second, "bto")
+
+
+def test_bto_lowest_direction_rejects_nonunit_vector():
+    first = bto_report(0.05, 0.005)
+    second = bto_report(0.10, 0.004)
+    first["lowest_eigenvector_in_common_orthogonal_basis"] = [2.0] + [0.0] * 15
+    second["lowest_eigenvector_in_common_orthogonal_basis"] = [1.0] + [0.0] * 15
+    with pytest.raises(ValueError, match="malformed"):
+        compare(first, second, "bto")
+
+
 def test_bto_two_step_energy_derivative_extrapolation_is_diagnostic():
     first = bto_report(0.05, 0.005)
     second = bto_report(0.10, 0.004)

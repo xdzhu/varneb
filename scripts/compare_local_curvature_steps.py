@@ -51,6 +51,29 @@ def compare_bto_energy_force_gradients(first: dict, second: dict) -> dict | None
     }
 
 
+def compare_bto_lowest_directions(first: dict, second: dict) -> dict | None:
+    """Track the lowest direction in the same audited orthogonal basis."""
+
+    key = "lowest_eigenvector_in_common_orthogonal_basis"
+    present = [key in report for report in (first, second)]
+    if not any(present):
+        return None  # Older archived audits did not save eigenvectors.
+    if not all(present):
+        raise ValueError("both BTO audits must save lowest-direction eigenvectors")
+    vectors = [np.asarray(report[key], dtype=float) for report in (first, second)]
+    if any(vector.shape != (16,) or not np.isfinite(vector).all()
+           or not np.isclose(np.linalg.norm(vector), 1.0, atol=1e-8, rtol=0.0)
+           for vector in vectors):
+        raise ValueError("BTO lowest-direction eigenvectors are malformed")
+    return {
+        "lowest_mode_absolute_overlap": float(abs(vectors[0] @ vectors[1])),
+        "basis_note": (
+            "Absolute overlap in the same deterministic fixed-Q metric-orthonormal "
+            "basis; this checks step sensitivity, not a phonon or minimum certificate."
+        ),
+    }
+
+
 def compare(first: dict, second: dict, kind: str) -> dict:
     if kind == "bto":
         for key in ("preflight", "refined_result", "branch_replay"):
@@ -133,6 +156,9 @@ def compare(first: dict, second: dict, kind: str) -> dict:
         diagnostic = compare_bto_energy_force_gradients(first, second)
         if diagnostic is not None:
             result["energy_force_gradient_step_extrapolation"] = diagnostic
+        direction_comparison = compare_bto_lowest_directions(first, second)
+        if direction_comparison is not None:
+            result["lowest_direction_comparison"] = direction_comparison
     return result
 
 

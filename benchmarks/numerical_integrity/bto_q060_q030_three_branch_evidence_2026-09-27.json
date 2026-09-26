@@ -1,0 +1,113 @@
+{
+  "schema_version": "1.0",
+  "case": "BaTiO3 cubic-Gamma three-soft-mode fixed-Q off-axis conditional point",
+  "claim_level": "three independently audited orthogonal-gradient-stationary branches; two-step positive orthogonal Hessian and directly energy/force-audited soft direction at the selected branch, but rigorous stationary minimum and full 2D conditional PES remain unverified",
+  "fixed_Q_z_Q_x_sqrt_amu_A": [0.6, 0.3],
+  "gamma_phonon_supercell": [1, 1, 1],
+  "electronic_kpoints": [4, 4, 4],
+  "calculator_contract": {
+    "code": "ABACUS 3.10.0 LTS",
+    "functional": "PBE",
+    "ecutwfc_Ry": 100,
+    "orbital": "full 10 au DZP for Ba/Ti/O",
+    "mpi_ranks_per_static_evaluation": 32,
+    "slurm_partition": "hfacnormal01",
+    "slurm_job_id": "27785666"
+  },
+  "audit": {
+    "raw_DFT_points_individually_validated": 76,
+    "raw_energy_force_stress_geometry_input_hash_checked": true,
+    "cache_only_replay_hits": 76,
+    "three_start_outcomes_reproduced": true,
+    "gradient_threshold_eV_per_sqrt_amu_A": 0.003,
+    "raw_stress_threshold_kbar": 1.0,
+    "selected_final_minimum_pair_distance_A": 1.8181673835914844
+  },
+  "branches": [
+    {
+      "initial_Q_y_sqrt_amu_A": 0.0,
+      "final_Q_y_sqrt_amu_A": 0.0,
+      "final_Q_y_note": "absolute value approximately 1.6e-15",
+      "energy_minus_c_eV_per_BTO": -0.05498385992177646,
+      "orthogonal_gradient_norm_eV_per_sqrt_amu_A": 0.001791494531801133,
+      "maximum_absolute_stress_kbar": 0.297953510954777,
+      "converged": true,
+      "final_evaluation_directory": "eval-000019-80ed0a929dbb"
+    },
+    {
+      "initial_Q_y_sqrt_amu_A": 0.4,
+      "final_Q_y_sqrt_amu_A": 1.0705837867646562,
+      "energy_minus_c_eV_per_BTO": -0.1049652604201583,
+      "orthogonal_gradient_norm_eV_per_sqrt_amu_A": 0.0024012796447390934,
+      "maximum_absolute_stress_kbar": 0.49161284825029605,
+      "converged": true,
+      "final_evaluation_directory": "eval-000047-3d1a962cdeb5"
+    },
+    {
+      "initial_Q_y_sqrt_amu_A": -0.4,
+      "final_Q_y_sqrt_amu_A": -1.0705837865520627,
+      "energy_minus_c_eV_per_BTO": -0.10496526041879406,
+      "orthogonal_gradient_norm_eV_per_sqrt_amu_A": 0.0024012796836889805,
+      "maximum_absolute_stress_kbar": 0.49161283895029595,
+      "converged": true,
+      "final_evaluation_directory": "eval-000075-5594f1ce49c7"
+    }
+  ],
+  "interpretation": {
+    "zero_to_positive_branch_energy_difference_meV_per_BTO": 49.98140049838184,
+    "positive_minus_negative_branch_energy_difference_eV_per_BTO": -1.3642420526593924e-12,
+    "meaning": "Qy=0 is higher than the two opposite-sign stationary branches at this single fixed-Q point; no local-minimum or continuous-ring claim before orthogonal curvature and numerical consistency tests"
+  },
+  "selected_positive_branch_orthogonal_curvature": {
+    "slurm_job_ids": ["27785904", "27785989"],
+    "additional_DFT_points": 64,
+    "all_cached_DFT_points_individually_audited": 140,
+    "open_dimension": 16,
+    "step_sizes_sqrt_amu_A": [0.05, 0.10],
+    "lowest_eigenvalues_eV_per_amu_A2": [0.005385495749773613, 0.005415969773262984],
+    "negative_eigenvalue_counts": [0, 0],
+    "lowest_mode_absolute_overlap_in_common_orthogonal_basis": 0.9999995601293374,
+    "maximum_energy_force_diagonal_curvature_disagreement_eV_per_amu_A2": [0.005762676548034085, 0.002598553902252776],
+    "maximum_energy_force_gradient_disagreement_eV_per_sqrt_amu_A": [0.0009217773967417934, 0.0032244160146898985],
+    "maximum_two_step_extrapolated_energy_force_gradient_disagreement_eV_per_sqrt_amu_A": 0.0003167311200109414,
+    "status": "persistent_positive_force_difference_curvature_local_candidate_not_minimum_certificate",
+    "limitation": "The maximum energy-force diagonal mismatch is a diagnostic scale, not a rigorous eigenvalue error bound; one off-axis Q point does not define a global conditional PES."
+  },
+  "selected_positive_branch_direct_soft_direction": {
+    "slurm_job_id": "27786097",
+    "n_new_DFT_points": 4,
+    "all_cached_DFT_points_individually_audited": 144,
+    "step_sizes_sqrt_amu_A": [0.05, 0.10],
+    "energy_curvature_eV_per_amu_A2": [0.005777484693680889, 0.005695585878129349],
+    "force_difference_curvature_eV_per_amu_A2": [0.005378590747320544, 0.005380010256941926],
+    "energy_force_disagreement_eV_per_amu_A2": [0.0003988939463603451, 0.0003155756211874229],
+    "center_directional_gradient_eV_per_sqrt_amu_A": 0.00008222572089006214,
+    "strain_fraction_of_metric_norm": 0.9770587924389091,
+    "minimum_probe_pair_distance_A": 1.817362295572939,
+    "status": "audited_positive_direct_soft_direction_curvature_local_basin_candidate_not_global_PES",
+    "limitation": "The strain fraction is in the declared mass-plus-strain coordinate metric, not an energy fraction; one fixed-Q local direction does not certify a rigorous stationary minimum or the full PES."
+  },
+  "remote_evidence_root": "/public/home/iai806/abacus/agent-runs/20260927-varneb-bto-soft-q060q030",
+  "sha256": {
+    "preflight": "b03bcd7bd207c3c8ab468d6da56d470333d2acfaa1655313279270f98c58811c",
+    "frozen_runner": "de0c1c3aeac376b9e4f4ea1f9ff742e85e70f9ba08823824c46c358d547a17bf",
+    "frozen_mode_surface": "91b70d48a488b5a26f1e563bbce1ba0e75581a01d9145158d57108b8dac4bbfc",
+    "job_summary": "176d8ec47e79c4e99972efb92402c827963c18df836771e82b7045f99817b2b8",
+    "raw_DFT_audit": "4bcb64465ab4fabe48d489ba213b77c62d892c1f21e86efc0797b98eb27ac27d",
+    "cache_only_replay": "b0cba6aeca60582736cd427498266bd6b1935a5a1c79565ee7ca79ea6d399bbc",
+    "replay_mode_surface": "55bcf70c3af12b4a5d4eb445ae30f8461c07f18890afc34c05ee3b084b64164a",
+    "all140_raw_DFT_audit": "21a30d34bef6797ab30a837fd26e921a87f9d2316d490e4ce8b06afd6920d31e",
+    "curvature_0p05_independent_audit_v2": "d438bb149feafb66afb0dd3de0fadaf5835bd99af43926e97b7d86e06b3c4220",
+    "curvature_0p10_independent_audit_v2": "9e7f5451bc0a731a3a21bbf313910c95a39688ff93dce69f8345586d0f3a2170",
+    "two_step_curvature_comparison_v2": "1562a6c802deac7c911c11198b601644f2e8f6f16ec1df00c88791f620422860",
+    "soft_direction_four_point_preflight_v2": "bd3a065c475e62a9841b97329909c9b21f27e66be9b9a6b0b067075c5bd1eda9",
+    "soft_direction_preflight_script_v2": "521f0edf345b5fce5f7080fb68817384a4550c4c6e21be74238f0cf507624ce8",
+    "soft_direction_runner_script_v2": "4020ab5e4e0d809eb97f4832ba747ff417dff372c465606efc1eb0d512184c68",
+    "soft_direction_four_point_job_script": "2466ce1d68d5e0e5289630b38003ae0c6aca8dc9e113fadb5d8268cc7daf9bc1",
+    "soft_direction_four_point_summary_v2": "3acc67d07a6fc6e026d98621162ea265af7789eebe22d26e1aa5b9bc472810e1",
+    "all144_raw_DFT_audit": "5aaee8129019cf39dcbab4d709f1c3d8f47992956b95b049623ac48e2b46ae3d",
+    "all144_raw_DFT_auditor_script": "8038e1d93e0a9e960e891ceff155aeddf39d79584269d46382807605ab28b3d2",
+    "soft_direction_four_point_auditor_script_v3": "1cbc4d576e82ffb770cfc29e3ea591332334ef149a2b5582f5a52d9a09256231",
+    "soft_direction_four_point_independent_audit_v3": "4f272fdb2195b92703c20dc28470e83e7c0f9722197330c5025940e937d41c62"
+  }
+}
