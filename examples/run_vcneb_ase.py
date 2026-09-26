@@ -75,6 +75,22 @@ def _validate_static_endpoint_identity(summary_path: str | Path, images) -> dict
     return report
 
 
+def _cell_mask_for_mode(mode: str, images, pressure_gpa: float) -> np.ndarray | None:
+    """Make the mechanical boundary condition explicit before any DFT call."""
+
+    if mode == "full":
+        return None
+    if mode != "fixed":
+        raise ValueError(f"unsupported cell mode: {mode}")
+    if pressure_gpa != 0.0:
+        raise ValueError("fixed-cell NEB does not use pressure_gpa; set it to zero")
+    reference = images[0].cell.array
+    if any(not np.allclose(image.cell.array, reference, atol=1e-10, rtol=0.0)
+           for image in images):
+        raise ValueError("fixed-cell NEB requires identical cells for all images")
+    return np.zeros((3, 3), dtype=float)
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--initial", required=True)
@@ -103,6 +119,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--steps", type=int, default=300)
     parser.add_argument("--k", type=float, default=0.20)
     parser.add_argument("--pressure-gpa", type=float, default=0.0)
+    parser.add_argument(
+        "--cell-mode", choices=("full", "fixed"), default="full",
+        help="full VCNEB (requires stress) or fixed-cell NEB (energy and forces only)",
+    )
     parser.add_argument("--optimizer", default="FIRE")
     parser.add_argument("--maxstep", type=float, default=None)
     parser.add_argument("--image-workers", type=int, default=0)
@@ -206,6 +226,8 @@ def main() -> None:
         ):
             if expected["sha256"] != actual["sha256"]:
                 raise ValueError(f"supplied chain {label} endpoint does not match the requested endpoint")
+    cell_mask = _cell_mask_for_mode(args.cell_mode, images, args.pressure_gpa)
+    require_stress = cell_mask is None
     geometry = validate_path_geometry(
         images,
         minimum_distance=args.minimum_distance,
@@ -232,10 +254,14 @@ def main() -> None:
             artifact_path, images[0], images[-1],
         )
         mode_scale = float(artifact["cell_scale_A"])
+        if cell_mask is not None and not np.allclose(
+            mode_basis[3 * len(images[0]):, :], 0.0, atol=1e-12, rtol=0.0,
+        ):
+            raise ValueError("fixed-cell mode subspace must contain atomic directions only")
         unprojected = [image.copy() for image in images]
         projected = [image.copy() for image in images]
         VCNEB(
-            projected, cell_scale=mode_scale, mode_basis=mode_basis,
+            projected, cell_scale=mode_scale, cell_mask=cell_mask, mode_basis=mode_basis,
             constraint_mode="subspace", k=args.k, climb=False,
         )
         first_cell = images[0].cell.array
@@ -283,6 +309,9 @@ def main() -> None:
         "n_images": args.n_images,
         "n_interior_images": args.n_images - 2,
         "external_pressure_gpa": args.pressure_gpa,
+        "cell_mode": args.cell_mode,
+        "cell_mask": None if cell_mask is None else cell_mask.tolist(),
+        "requires_stress": require_stress,
         "fmax_target_eV_per_A": args.fmax,
         "candidate_step_retries": args.candidate_step_retries,
         "maximum_cell_step": args.maximum_cell_step,
@@ -326,13 +355,13 @@ def main() -> None:
     # Some ASE calculators (notably CP2K) start a persistent external process
     # in their constructor.  Instantiate image calculators only inside an
     # actual scheduler run, never during a geometry-only validation on a login
-    # node.  Production still validates stress support and isolated image
-    # directories before the first electronic-structure evaluation.
+    # node.  Production validates the requested stress policy and isolated
+    # image directories before the first electronic-structure evaluation.
     attach_image_calculators(images, workdir=workdir, factory=factory)
     reports = validate_image_calculators(
         images,
-        require_stress=True,
-        require_variable_cell=True,
+        require_stress=require_stress,
+        require_variable_cell=require_stress,
         require_directory=True,
         require_unique_directories=True,
     )
@@ -353,10 +382,10 @@ def main() -> None:
             image = images[index]
             energy = float(image.get_potential_energy())
             forces = image.get_forces()
-            stress = image.get_stress(voigt=False)
+            stress = image.get_stress(voigt=False) if require_stress else None
             if not all(math.isfinite(float(value)) for value in forces.ravel()):
                 raise RuntimeError(f"non-finite endpoint forces at image {index}")
-            if not all(math.isfinite(float(value)) for value in stress.ravel()):
+            if stress is not None and not all(math.isfinite(float(value)) for value in stress.ravel()):
                 raise RuntimeError(f"non-finite endpoint stress at image {index}")
             endpoint_results.append(
                 {
@@ -367,7 +396,8 @@ def main() -> None:
                         math.sqrt(sum(float(value) ** 2 for value in row))
                         for row in forces
                     ),
-                    "stress_eV_per_A3": stress.tolist(),
+                    "stress_eV_per_A3": None if stress is None else stress.tolist(),
+                    "stress_available": stress is not None,
                     "n_atoms": len(image),
                 }
             )
@@ -384,16 +414,18 @@ def main() -> None:
         print(json.dumps(static_summary, indent=2, sort_keys=True))
         return
 
+    cache_namespace = {"calculator": args.calculator, "factory": args.factory,
+                       "parameters": parameters}
+    if not require_stress:
+        cache_namespace["cell_mode"] = "fixed"
     executor = (
         ThreadedCalculatorExecutor(
             args.image_workers,
             max_retries=args.image_retries,
             manifest_path=workdir / "image_worker_manifest.jsonl",
             cache_dir=workdir / "image_cache",
-            cache_namespace=json.dumps(
-                {"calculator": args.calculator, "factory": args.factory, "parameters": parameters},
-                sort_keys=True,
-            ),
+            cache_namespace=json.dumps(cache_namespace, sort_keys=True),
+            require_stress=require_stress,
         )
         if args.image_workers
         else None
@@ -401,6 +433,7 @@ def main() -> None:
     chain, _ = run_vcneb(
         images,
         pressure_gpa=args.pressure_gpa,
+        cell_mask=cell_mask,
         cell_scale=mode_scale,
         k=args.k,
         climb=not args.no_climb,

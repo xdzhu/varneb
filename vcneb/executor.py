@@ -23,13 +23,21 @@ from ase import Atoms
 
 @dataclass(frozen=True)
 class ImageEvaluation:
-    """Energy, Cartesian forces and full stress for one image."""
+    """Energy, Cartesian forces and optional measured stress for one image.
+
+    Fixed-cell runs use a zero internal stress placeholder with
+    ``stress_available=False``; consumers must not report it as a physical
+    stress or reuse it for variable-cell forces.
+    """
 
     energy: float
     forces: np.ndarray
     stress: np.ndarray
+    stress_available: bool = True
 
-    def validate(self, *, image_index: int, n_atoms: int) -> "ImageEvaluation":
+    def validate(
+        self, *, image_index: int, n_atoms: int, require_stress: bool = True,
+    ) -> "ImageEvaluation":
         forces = np.asarray(self.forces, dtype=float)
         stress = np.asarray(self.stress, dtype=float)
         if forces.shape != (n_atoms, 3):
@@ -38,9 +46,11 @@ class ImageEvaluation:
             )
         if stress.shape != (3, 3):
             raise ValueError(f"image {image_index} stress shape {stress.shape} != (3, 3)")
+        if require_stress and not self.stress_available:
+            raise ValueError(f"image {image_index} has no measured stress for variable-cell use")
         if not np.isfinite(float(self.energy)) or not np.all(np.isfinite(forces)) or not np.all(np.isfinite(stress)):
             raise ValueError(f"image {image_index} evaluation contains NaN/Inf")
-        return ImageEvaluation(float(self.energy), forces, stress)
+        return ImageEvaluation(float(self.energy), forces, stress, bool(self.stress_available))
 
 
 class ThreadedCalculatorExecutor:
@@ -61,6 +71,7 @@ class ThreadedCalculatorExecutor:
         manifest_path: str | Path | None = None,
         cache_dir: str | Path | None = None,
         cache_namespace: str | None = None,
+        require_stress: bool = True,
     ):
         if isinstance(max_workers, bool) or int(max_workers) != max_workers or max_workers < 1:
             raise ValueError("max_workers must be a positive integer")
@@ -71,6 +82,7 @@ class ThreadedCalculatorExecutor:
         self.manifest_path = Path(manifest_path) if manifest_path is not None else None
         self.cache_dir = Path(cache_dir) if cache_dir is not None else None
         self.cache_namespace = None if cache_namespace is None else str(cache_namespace)
+        self.require_stress = bool(require_stress)
         if self.cache_dir is not None:
             self.cache_dir.mkdir(parents=True, exist_ok=True)
             self._validate_cache_namespace()
@@ -85,6 +97,8 @@ class ThreadedCalculatorExecutor:
             "format_version": 1,
             "namespace": self.cache_namespace,
         }
+        if not self.require_stress:
+            expected["require_stress"] = False
         if metadata_path.exists():
             try:
                 actual = json.loads(metadata_path.read_text(encoding="utf-8"))
@@ -141,8 +155,13 @@ class ThreadedCalculatorExecutor:
                     float(np.asarray(data["energy"]).reshape(())),
                     np.asarray(data["forces"], dtype=float),
                     np.asarray(data["stress"], dtype=float),
+                    bool(np.asarray(data["stress_available"]).reshape(()))
+                    if "stress_available" in data else True,
                 )
-            return evaluation.validate(image_index=image_index, n_atoms=len(image))
+            return evaluation.validate(
+                image_index=image_index, n_atoms=len(image),
+                require_stress=self.require_stress,
+            )
         except (OSError, KeyError, ValueError, TypeError, EOFError):
             # A partial/corrupt cache entry is treated as a miss.  The original
             # file is retained for post-mortem inspection and will be replaced
@@ -156,12 +175,14 @@ class ThreadedCalculatorExecutor:
         _, path = cache_path
         temporary = path.with_suffix(path.suffix + ".tmp")
         with temporary.open("wb") as handle:
-            np.savez_compressed(
-                handle,
-                energy=np.asarray(evaluation.energy, dtype=float),
-                forces=np.asarray(evaluation.forces, dtype=float),
-                stress=np.asarray(evaluation.stress, dtype=float),
-            )
+            values = {
+                "energy": np.asarray(evaluation.energy, dtype=float),
+                "forces": np.asarray(evaluation.forces, dtype=float),
+                "stress": np.asarray(evaluation.stress, dtype=float),
+            }
+            if not evaluation.stress_available:
+                values["stress_available"] = np.asarray(False)
+            np.savez_compressed(handle, **values)
             handle.flush()
         temporary.replace(path)
 
@@ -174,14 +195,17 @@ class ThreadedCalculatorExecutor:
             handle.write(json.dumps(record, ensure_ascii=False, sort_keys=True) + "\n")
             handle.flush()
 
-    @staticmethod
-    def _evaluate_one(image_index: int, image: Atoms) -> ImageEvaluation:
+    def _evaluate_one(self, image_index: int, image: Atoms) -> ImageEvaluation:
         try:
             energy = float(image.get_potential_energy())
             forces = np.asarray(image.get_forces(), dtype=float)
-            stress = np.asarray(image.get_stress(voigt=False), dtype=float)
-            return ImageEvaluation(energy, forces, stress).validate(
-                image_index=image_index, n_atoms=len(image)
+            stress = (np.asarray(image.get_stress(voigt=False), dtype=float)
+                      if self.require_stress else np.zeros((3, 3), dtype=float))
+            return ImageEvaluation(
+                energy, forces, stress, stress_available=self.require_stress,
+            ).validate(
+                image_index=image_index, n_atoms=len(image),
+                require_stress=self.require_stress,
             )
         except Exception as exc:
             raise RuntimeError(f"calculator evaluation failed for image {image_index}: {exc}") from exc

@@ -1,8 +1,9 @@
 """Calculator capability checks and diagnostics for VC-NEB.
 
 The VC-NEB core only needs the ASE calculator protocol.  This module provides
-an explicit preflight check so a missing stress property is reported before an
-optimization starts instead of being silently interpreted as zero cell force.
+an explicit preflight check so a missing stress property is reported before a
+variable-cell optimization starts. Fixed-cell NEB requires energy and forces
+but does not silently interpret missing stress as measured zero stress.
 """
 
 from __future__ import annotations

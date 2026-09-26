@@ -1001,6 +1001,12 @@ class VCNEB:
             np.isclose(self.cell_mask, 0.0) | np.isclose(self.cell_mask, 1.0)
         ):
             raise ValueError("cell_mask must contain only finite 0/1 values")
+        self._requires_stress = self.cell_mask is None or bool(np.any(self.cell_mask))
+        if not self._requires_stress and any(
+            not np.allclose(image.cell.array, self.reference_cell, atol=1e-10, rtol=0.0)
+            for image in self.images
+        ):
+            raise ValueError("fixed-cell NEB requires the same cell for every image")
         if constraint_mode is None:
             constraint_mode = "subspace" if mode_basis is not None else "none"
         constraint_mode = str(constraint_mode).lower()
@@ -1292,13 +1298,13 @@ class VCNEB:
             atoms = self.images[image_index]
             enthalpy = float(evaluation.energy + self.pressure * atoms.get_volume())
             f_q = fractional_force_from_arrays(evaluation.forces, cell_matrix(atoms))
-            f_cell = cell_force_from_arrays(
+            f_cell = (cell_force_from_arrays(
                 evaluation.stress,
                 atoms,
                 self.reference_cell,
                 pressure=self.pressure,
                 mask=self.cell_mask,
-            )
+            ) if self._requires_stress else np.zeros((3, 3), dtype=float))
             return enthalpy, VCNEBState(q=f_q, deform=f_cell)
 
         enthalpy = 0.0
@@ -1310,12 +1316,12 @@ class VCNEB:
                 energy = atoms.get_potential_energy()
                 enthalpy = float(energy + self.pressure * atoms.get_volume())
                 f_q = fractional_force(atoms)
-                f_cell = cell_force(
+                f_cell = (cell_force(
                     atoms,
                     self.reference_cell,
                     pressure=self.pressure,
                     mask=self.cell_mask,
-                )
+                ) if self._requires_stress else np.zeros((3, 3), dtype=float))
             except Exception as exc:
                 raise RuntimeError(
                     f"VC-NEB evaluation failed for image {image_index} "
@@ -1366,12 +1372,16 @@ class VCNEB:
                         float(value.energy),
                         np.asarray(value.forces, dtype=float),
                         np.asarray(value.stress, dtype=float),
+                        bool(getattr(value, "stress_available", True)),
                     )
                 except AttributeError as exc:
                     raise TypeError(
                         f"image executor result {image_index} is not an ImageEvaluation"
                     ) from exc
-            evaluations.append(evaluation.validate(image_index=image_index, n_atoms=self.n_atoms))
+            evaluations.append(evaluation.validate(
+                image_index=image_index, n_atoms=self.n_atoms,
+                require_stress=self._requires_stress,
+            ))
         return evaluations
 
     def _evaluate_fixed_endpoint(self, image_index: int) -> ImageEvaluation:
@@ -1385,8 +1395,13 @@ class VCNEB:
             evaluation = ImageEvaluation(
                 float(atoms.get_potential_energy()),
                 np.asarray(atoms.get_forces(), dtype=float),
-                np.asarray(atoms.get_stress(voigt=False), dtype=float),
-            ).validate(image_index=image_index, n_atoms=self.n_atoms)
+                (np.asarray(atoms.get_stress(voigt=False), dtype=float)
+                 if self._requires_stress else np.zeros((3, 3), dtype=float)),
+                stress_available=self._requires_stress,
+            ).validate(
+                image_index=image_index, n_atoms=self.n_atoms,
+                require_stress=self._requires_stress,
+            )
         except Exception as exc:
             raise RuntimeError(
                 f"VC-NEB endpoint evaluation failed for image {image_index} "
@@ -1422,10 +1437,15 @@ class VCNEB:
             raise RuntimeError("Snapshot geometry changed since the complete executor evaluation")
         snapshots = []
         for index, (image, value) in enumerate(zip(self.images, self._last_evaluations)):
-            evaluation = value.validate(image_index=index, n_atoms=len(image))
+            evaluation = value.validate(
+                image_index=index, n_atoms=len(image),
+                require_stress=self._requires_stress,
+            )
             snapshot = image.copy()
-            snapshot.calc = SinglePointCalculator(snapshot, energy=evaluation.energy,
-                                                   forces=evaluation.forces, stress=evaluation.stress)
+            results = {"energy": evaluation.energy, "forces": evaluation.forces}
+            if evaluation.stress_available:
+                results["stress"] = evaluation.stress
+            snapshot.calc = SinglePointCalculator(snapshot, **results)
             snapshots.append(snapshot)
         return snapshots
 
@@ -1677,21 +1697,24 @@ class VCNEB:
         active_mask = self._active_x_mask()
         image_x = [self._image_x(index) for index in range(self.n_images)]
         image_x_active = [x * active_mask for x in image_x]
-        physical: list[tuple[VCNEBState, Array, Array]] = []
+        physical: list[tuple[VCNEBState, Array, Array, bool]] = []
         for image_index in range(self.n_images):
             _, force_state = self._enthalpy_and_force(image_index)
             atom_forces = np.zeros((self.n_atoms, 3), dtype=float)
             stress = np.zeros((3, 3), dtype=float)
+            stress_available = self._requires_stress
             if self.image_executor is not None:
                 assert self._last_evaluations is not None
                 evaluation = self._last_evaluations[image_index]
                 atom_forces = np.asarray(evaluation.forces, dtype=float)
                 stress = np.asarray(evaluation.stress, dtype=float)
+                stress_available = evaluation.stress_available
             elif self._own_image(image_index):
                 atoms = self.images[image_index]
                 atom_forces = np.asarray(atoms.get_forces(), dtype=float)
-                stress = np.asarray(atoms.get_stress(voigt=False), dtype=float)
-            physical.append((force_state, _sum_array(atom_forces), _sum_array(stress)))
+                if self._requires_stress:
+                    stress = np.asarray(atoms.get_stress(voigt=False), dtype=float)
+            physical.append((force_state, _sum_array(atom_forces), _sum_array(stress), stress_available))
 
         climbing_image = self.highest_image_index()
         interior_peak_indices = self._interior_peak_indices(self._last_enthalpies)
@@ -1702,7 +1725,7 @@ class VCNEB:
             > max(self._last_enthalpies[0], self._last_enthalpies[-1]) + 1e-8
         ]
         image_records = []
-        for image_index, (force_state, atom_forces, stress) in enumerate(physical):
+        for image_index, (force_state, atom_forces, stress, stress_available) in enumerate(physical):
             true_force_x = self._force_to_x(force_state)
             true_force_norm = float(np.linalg.norm(true_force_x.reshape(-1, 3), axis=1).max())
             cell_force_x = true_force_x[3 * self.n_atoms :]
@@ -1718,8 +1741,9 @@ class VCNEB:
                 "cell_lengths_A": [float(value) for value in self.images[image_index].cell.lengths()],
                 "cell_angles_deg": [float(value) for value in self.images[image_index].cell.angles()],
                 "max_atom_force_eV_per_A": float(np.linalg.norm(atom_forces, axis=1).max()),
-                "max_stress_eV_per_A3": float(np.max(np.abs(stress))),
-                "stress_eV_per_A3": stress.tolist(),
+                "stress_available": bool(stress_available),
+                "max_stress_eV_per_A3": float(np.max(np.abs(stress))) if stress_available else None,
+                "stress_eV_per_A3": stress.tolist() if stress_available else None,
                 "cell_force_eV": force_state.deform.tolist(),
                 "max_cell_force_eV": float(np.max(np.abs(force_state.deform))),
                 "max_true_generalized_force_eV_per_A": true_force_norm,
@@ -2177,11 +2201,12 @@ def run_vcneb(
     if not np.isfinite(line_search_retry_factor) or not 0.0 < line_search_retry_factor < 1.0:
         raise ValueError("line_search_retry_factor must be a finite number in (0, 1)")
 
+    require_stress = cell_mask is None or bool(np.any(np.asarray(cell_mask, dtype=float)))
     if validate_calculators:
         validate_image_calculators(
             images,
-            require_stress=True,
-            require_variable_cell=True,
+            require_stress=require_stress,
+            require_variable_cell=require_stress,
         )
 
     chain = VCNEB(

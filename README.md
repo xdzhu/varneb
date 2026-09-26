@@ -59,13 +59,14 @@ described in [`docs/RELEASE_PROCESS.md`](https://github.com/xdzhu/varneb/blob/ma
 from vcneb import interpolate_vcneb, run_vcneb
 
 images = interpolate_vcneb(initial, final, n_images=7, mic=True)
-# Attach one static calculator with energy, forces, and stress to each image.
+# Attach a static calculator with energy, forces, and (for VCNEB) stress.
 result = run_vcneb(images, fmax=0.10, climb_after=None)
 ```
 
-The default NEB force threshold is `0.10 eV/Å`.  In a variable-cell run the
-calculator must provide stress; cell updates remain owned by VARNEB, so QE
-images must use `scf`, not `relax` or `vc-relax`.  Endpoints are fixed and may
+The default NEB force threshold is `0.10 eV/Å`. In a variable-cell run the
+calculator must provide stress; with `cell_mask=0` the path is fixed-cell NEB
+and needs only energy and forces. Cell updates remain owned by VARNEB, so QE
+images must use `scf`, not `relax` or `vc-relax`. Endpoints are fixed and may
 be reused from audited static calculations.
 
 ## Backends
@@ -91,6 +92,8 @@ ssh hf "module avail 2>&1 | grep -Ei 'lammps|quantum-espresso|cp2k|abinit|abacus
 [`docs/USER_MANUAL.md`](https://github.com/xdzhu/varneb/blob/main/docs/USER_MANUAL.md) for calculator-specific
 factories, Slurm isolation, provenance, restarts, and modal analysis.
 
-For any ASE calculator exposing energy, forces, and stress, use
-`examples/run_vcneb_ase.py`; specialized factories remain available when a
-code needs a profile or legacy file protocol.
+For any ASE calculator exposing energy and forces (plus stress for VCNEB), use
+`examples/run_vcneb_ase.py`. Its `--cell-mode fixed` option enforces identical
+image cells and does not request stress; the default `--cell-mode full` retains
+variable-cell behavior. Specialized factories remain available when a code
+needs a profile or legacy file protocol.

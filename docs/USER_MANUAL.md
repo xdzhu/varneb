@@ -54,13 +54,15 @@ run manifest.
 
 ## 3. Calculator contract
 
-Every image calculator must provide `get_potential_energy()`, `get_forces()`,
-and `get_stress()`. Stress is mandatory because it becomes the cell part of
-the generalized VCNEB force. Use:
+Every image calculator must provide `get_potential_energy()` and `get_forces()`.
+Variable-cell paths additionally require `get_stress()`, which supplies the
+cell part of the generalized VCNEB force. In fixed-cell mode, the cell is
+identical in every image and VARNEB does not request or report stress. Use:
 
 ```python
 from vcneb import validate_image_calculators
 validate_image_calculators(images, require_unique_directories=True)
+# For a fixed-cell path, pass require_stress=False, require_variable_cell=False.
 ```
 
 For an ASE calculator not yet listed in the registry, use the generic adapter:
@@ -77,8 +79,16 @@ attach_image_calculators(images, workdir="runs/my_backend", factory=factory)
 ```
 
 The calculator remains responsible for its own units, pseudopotentials,
-profiles, and stress convention. VARNEB only consumes ASE's energy/forces/
-stress interface and validates that every image has a private directory.
+profiles, and (when applicable) stress convention. VARNEB consumes ASE's
+energy/forces/stress interface as required by the selected mechanical mode and
+validates that every image has a private directory.
+
+The generic driver defaults to full VCNEB. Select `--cell-mode fixed` for an
+ordinary fixed-cell NEB; this rejects nonzero `--pressure-gpa`, unequal image
+cells, and mode-subspace artifacts containing cell directions. A fixed-cell
+calculator only needs energy and forces, including in threaded image workers.
+This flag does not implement the symmetric in-plane strain coordinates needed
+for a two-dimensional variable-cell comparison.
 
 An image directory must be private to one worker. The controller can then
 retry or resume one image without mixing calculator files from another image.
@@ -88,7 +98,7 @@ retry or resume one image without mixing calculator files from another image.
 The production architecture has two independent selections:
 
 1. The backend factory creates an isolated calculator for one image and must
-   return energy, atomic forces, and cell stress.
+   return energy and atomic forces; variable-cell runs also require cell stress.
 2. The VARNEB controller applies the NEB tangent/spring projection and runs a
    calculator-independent optimizer (`FIRE`, `BlockFIRE`, `SplitFIRE`,
    `ImageScaledFIRE`, `StagedFIRE`, `BFGS`, `LBFGS`, or `BFGSLineSearch`).
@@ -104,7 +114,7 @@ Use the existing factories in `vcneb.vasp`, `vcneb.abacus`, and `vcneb.qe`.
 For the uniform ASE entry point, `vcneb.vasp.make_ase_vasp_factory` exposes
 the same VASP input contract as an image factory, while
 `vcneb.backends.make_ase_calculator_factory` can wrap any other ASE
-calculator that returns energy, forces, and stress. VASP inputs are frozen by
+calculator that returns energy, forces, and (for variable-cell use) stress. VASP inputs are frozen by
 the input contract; ABACUS input generation keeps
 the calculator-specific files in the image directory; QE images must use
 `calculation='scf'`, `tstress=True`, and `tprnfor=True`. QE UPFs must be

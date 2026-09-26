@@ -4,7 +4,7 @@ The VCNEB core deliberately knows nothing about an external executable.  This
 module is the small public boundary between the core and calculator adapters:
 each factory receives an image index, an :class:`ase.Atoms` object and a
 private image directory, and returns an ASE-compatible calculator exposing
-energy, forces and stress.  Existing ``vcneb.vasp``, ``vcneb.abacus`` and
+energy and forces (plus stress for variable-cell paths). Existing ``vcneb.vasp``, ``vcneb.abacus`` and
 ``vcneb.qe`` modules remain available for backwards compatibility; this module
 only gives them a uniform discovery and user-facing entry point.
 
@@ -44,8 +44,8 @@ def make_ase_calculator_factory(
 ) -> CalculatorFactory:
     """Adapt any ASE calculator class/factory to the VARNEB image contract.
 
-    The callable must construct an ASE calculator exposing energy, forces and
-    stress.  VARNEB injects a private image directory when the constructor
+    The callable must construct an ASE calculator exposing energy and forces;
+    variable-cell paths also require stress. VARNEB injects a private image directory when the constructor
     accepts ``directory`` (or, as a fallback, ``label``), and optionally
     injects ``command`` when that keyword is supported.  Backend-specific
     profiles such as ASE's QE ``EspressoProfile`` can be supplied in
