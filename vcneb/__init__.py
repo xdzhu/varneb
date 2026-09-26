@@ -79,6 +79,7 @@ from .conditional_evidence import (
     ConditionalPointEvidence, ConditionalHoldout, ConditionalInterpolationScreen,
     screen_conditional_interpolation,
 )
+from .slab_boundary import symmetric_inplane_vcneb_boundary
 from .reference_cell import ReferenceCellCoordinates
 from .mode_evaluator import CalculatorModeEvaluator
 from .mode_subspace import (
@@ -165,6 +166,7 @@ __all__ = [
     "ConditionalHoldout",
     "ConditionalInterpolationScreen",
     "screen_conditional_interpolation",
+    "symmetric_inplane_vcneb_boundary",
     "ConditionalSurfaceContinuityAudit",
     "audit_conditional_surface_continuity",
     "OrthogonalCurvatureAudit",

@@ -1,8 +1,9 @@
 # 2D 滑移路径的晶胞边界条件：双层 hBN 研究契约
 
 **状态（2026-09-27）：** 方法与解析回归已定义；通用 ASE 入口已支持显式
-固定胞、无应力计算器和逐像并行，但双层 hBN 的真实 DFT 端点、势垒和极化
-尚未计算。本文件不将解析玩具模型当作材料结果。
+固定胞、无应力计算器和逐像并行。另有 Python API 的对称面内
+应变子空间与解析能量—应力导数回归，但双层 hBN 的真实 DFT
+端点、势垒和极化尚未计算。本文件不将解析玩具模型当作材料结果。
 
 ## 要回答的物理问题
 
@@ -41,15 +42,32 @@ VARNEB 的二维案例先问：在**相同电子结构协议**下，面内晶格
    项目的普通 NEB 默认 `0.10 eV/Å` 不因此改动，但材料结论
    可增加独立收敛检查。
 2. 现有核心支持逐分量 `cell_mask`，但直接开放四个面内变形矩阵
-   分量会同时开放无物理意义的刚体转动。正式面内 VC 对照应
-   使用三维的对称面内应变坐标 `(εxx, εyy, εxy)`，或等价地施加
-   旋转 gauge 约束；当前解析回归仅验证一个面内正应变分量，
-   **不认证**尚未实现的对称剪切接口。
+   分量会同时开放无物理意义的刚体转动。新增
+   `symmetric_inplane_vcneb_boundary(n_atoms, reference_cell)`，同时返回
+   面内掩码和正交 `mode_basis`：全部原子自由度以及
+   `Fxx, Fyy, (Fxy+Fyx)/√2`，由 `constraint_mode='subspace'` 排除
+   反对称旋转、`xz/yz` 耦合与真空方向改变。解析测试检查了候选像
+   的精确约束及对称剪切的应力—能量中心差分。这是**代码级验证**，
+   不是 hBN 的 DFT 应力、面内变胞路径或材料级准确度证书。
+
+   Python 调用时必须**同时**传递两个返回值：
+
+   ```python
+   mask, basis = symmetric_inplane_vcneb_boundary(len(images[0]), images[0].cell.array)
+   chain, optimizer = run_vcneb(
+       images, cell_mask=mask, mode_basis=basis,
+       constraint_mode="subspace", pressure_gpa=0.0,
+   )
+   ```
+
+   只传 `mask` 会重新放开面内反对称转动；正式材料运行还须检查
+   两端是否同属该子空间，并通过代表性 hBN 一像的 DFT 差分门。
 3. 通用 ASE 命令入口现有 `--cell-mode fixed`：明确设置 `cell_mask=0`，
    预检所有 image 的晶胞相同，并允许只返回能量与力的计算器；串行、
    逐像并行和缓存均有回归测试。默认 `--cell-mode full` 仍要求应力。
-   **对称面内 VC** 尚无单独的应变坐标入口和材料级梯度核验，不可用
-   任意面内 `cell_mask` 冒充已验证的正式选项。
+   **对称面内 VC** 目前仅有上述 Python API 子空间，尚无专用
+   命令行选项和材料级梯度核验；不可用任意面内 `cell_mask` 冒充
+   已验证的正式 hBN 生产选项。
 4. ABACUS/VASP 输出的三维应力按含真空体积归一。面内二维应力
    应以固定真空高度换算为力/长度（例如 N/m）；不能将现有
    各向同性 `pressure_gpa` 或三维 `E+pV` 当作二维面内张力。
