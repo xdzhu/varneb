@@ -7,6 +7,12 @@ from pathlib import Path
 import numpy as np
 
 from scripts.prepare_gan_joint_curvature import prepare
+from scripts.prepare_gan_ts_bracketed_trial import (
+    choose_guarded_trial, cross_axis_skew_angstrom,
+)
+from scripts.prepare_gan_equivalent_basis_probe import TRANSFORMS, physically_equivalent
+from vcneb.joint_curvature import JointCurvatureCoordinates
+from ase.io import read
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -159,3 +165,100 @@ def test_published_newton_probe_preserves_failure_as_missing_result() -> None:
     assert len(full["outcar_sha256"]) == len(full["stdout_sha256"]) == 64
     for record, staged in zip(report["cases"], manifest["cases"]):
         assert record["input_sha256"] == staged["input_sha256"]
+
+
+def test_bracketed_trial_preflight_rejects_risky_three_quarter_step() -> None:
+    manifest = json.loads((EVIDENCE / "newton_probe1000_manifest.json").read_text())
+    reference = read(TRAJECTORY, index=15)
+    coordinates = JointCurvatureCoordinates(reference, manifest["cell_scale_A"])
+    correction = np.asarray(manifest["correction_A"], dtype=float)
+    skews = {
+        "center": cross_axis_skew_angstrom(reference.cell.array),
+        "completed_half": cross_axis_skew_angstrom(
+            coordinates.displaced(0.5 * correction).cell.array
+        ),
+        "failed_full": cross_axis_skew_angstrom(
+            coordinates.displaced(correction).cell.array
+        ),
+    }
+    fraction, trial, skew, limit, options = choose_guarded_trial(
+        coordinates, correction, skews,
+    )
+    assert fraction == 0.625
+    assert options[0]["fraction"] == 0.75
+    assert not options[0]["passes_empirical_margin"]
+    assert options[1]["passes_empirical_margin"]
+    assert skew < limit
+    assert trial.get_volume() > 0
+    assert trial.get_chemical_symbols() == reference.get_chemical_symbols()
+
+
+def test_equivalent_basis_probes_preserve_full_step_physics_and_kmesh() -> None:
+    manifest = json.loads((EVIDENCE / "newton_probe1000_manifest.json").read_text())
+    reference = read(TRAJECTORY, index=15)
+    coordinates = JointCurvatureCoordinates(reference, manifest["cell_scale_A"])
+    original = coordinates.displaced(np.asarray(manifest["correction_A"], dtype=float))
+    for matrix in TRANSFORMS.values():
+        candidate = original.copy()
+        candidate.set_cell(np.asarray(matrix) @ original.cell.array, scale_atoms=False)
+        assert physically_equivalent(original, candidate, np.asarray(matrix))
+    unsuitable = np.array([[0, 0, 1], [1, 0, 0], [0, 1, 0]])
+    candidate = original.copy()
+    candidate.set_cell(unsuitable @ original.cell.array, scale_atoms=False)
+    assert not physically_equivalent(original, candidate, unsuitable)
+
+
+def test_published_bracketed_trial_has_only_audited_gradient_descent() -> None:
+    manifest_path = EVIDENCE / "bracketed_0p625_manifest.json"
+    audit_path = EVIDENCE / "bracketed_0p625_audit_v1.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    audit = json.loads(audit_path.read_text(encoding="utf-8"))
+    assert manifest["evaluation_encut_eV"] == 1000
+    assert manifest["status"] == "inputs_finalized_no_DFT"
+    assert manifest["cases"][0]["fraction_from_original_center"] == 0.625
+    assert not manifest["empirical_bravais_risk"]["candidate_options"][0][
+        "passes_empirical_margin"
+    ]
+    assert manifest["cases"][0]["cross_axis_skew_A"] < manifest[
+        "empirical_bravais_risk"
+    ]["allowed_skew_A"]
+    assert manifest["source_sha256"]["preparer"] == _sha256(
+        ROOT / "scripts/prepare_gan_ts_bracketed_trial.py"
+    )
+    assert manifest["source_sha256"]["previous_manifest"] == _sha256(
+        EVIDENCE / "newton_probe1000_manifest.json"
+    )
+    assert audit["source_sha256"]["manifest"] == _sha256(manifest_path)
+    assert audit["source_sha256"]["auditor"] == _sha256(
+        ROOT / "scripts/audit_gan_ts_bracketed_trial.py"
+    )
+    assert audit["result"]["status"] == "complete_converged_static_not_TS_certificate"
+    assert 0.03 < audit["result"]["translation_free_gradient_eV_per_A"] < 0.04
+    assert 0.7 < audit["result"]["gradient_ratio_to_previous_half"] < 0.8
+    assert audit["result"]["input_sha256"] == manifest["cases"][0]["input_sha256"]
+    assert len(audit["result"]["outcar_sha256"]) == 64
+
+
+def test_published_equivalent_basis_probe_does_not_count_unrun_case_as_failure() -> None:
+    manifest_path = EVIDENCE / "equivalent_basis_full_manifest.json"
+    audit_path = EVIDENCE / "equivalent_basis_full_two_trials_audit_v1.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    audit = json.loads(audit_path.read_text(encoding="utf-8"))
+    assert manifest["evaluation_encut_eV"] == 1000
+    assert manifest["kmesh"] == [8, 8, 6]
+    assert manifest["source_sha256"]["preparer"] == _sha256(
+        ROOT / "scripts/prepare_gan_equivalent_basis_probe.py"
+    )
+    assert audit["source_sha256"]["manifest"] == _sha256(manifest_path)
+    assert audit["source_sha256"]["auditor"] == _sha256(
+        ROOT / "scripts/audit_gan_equivalent_basis_probe.py"
+    )
+    assert [result["status"] for result in audit["results"]] == [
+        "VASP_6p3p2_Bravais_classification_failure_before_SCF",
+        "not_evaluated",
+        "VASP_6p3p2_Bravais_classification_failure_before_SCF",
+    ]
+    for staged, result in zip(manifest["cases"], audit["results"]):
+        assert staged["input_sha256"] == result["input_sha256"]
+    assert all(result["energy_eV_per_cell"] is None for result in
+               (audit["results"][0], audit["results"][2]))
