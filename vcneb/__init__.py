@@ -75,6 +75,10 @@ from .mode_surface import (
     sample_frozen_mode_surface,
     sample_conditional_mode_surface, relax_orthogonal_at_q,
 )
+from .conditional_evidence import (
+    ConditionalPointEvidence, ConditionalHoldout, ConditionalInterpolationScreen,
+    screen_conditional_interpolation,
+)
 from .reference_cell import ReferenceCellCoordinates
 from .mode_evaluator import CalculatorModeEvaluator
 from .mode_subspace import (
@@ -157,6 +161,10 @@ __all__ = [
     "ConditionalBranchOutcome",
     "ConditionalModePoint",
     "ConditionalModeSurface",
+    "ConditionalPointEvidence",
+    "ConditionalHoldout",
+    "ConditionalInterpolationScreen",
+    "screen_conditional_interpolation",
     "ConditionalSurfaceContinuityAudit",
     "audit_conditional_surface_continuity",
     "OrthogonalCurvatureAudit",
