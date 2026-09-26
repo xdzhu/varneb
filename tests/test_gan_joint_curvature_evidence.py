@@ -97,3 +97,65 @@ def test_published_800ev_probe_is_isolated_and_not_misread_as_convergence() -> N
     assert report["mean_absolute_gradient_mismatch_eV_per_A"]["800"] > 0.01
     assert all(len(item["outcar_sha256"]) == 64 for item in report["cases"])
     assert "not_production" in report["status"]
+
+
+def test_published_three_cutoff_stress_series_remains_local_diagnostic() -> None:
+    manifest_path = EVIDENCE / "strain_encut1000_manifest.json"
+    series_path = EVIDENCE / "strain_encut1000_series_v2.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    series = json.loads(series_path.read_text(encoding="utf-8"))
+    assert manifest["encut_eV"] == 1000 and manifest["baseline_encut_eV"] == 600
+    assert len(manifest["cases"]) == len(series["cases"]) == 7
+    assert manifest["source_600_manifest_sha256"] == _sha256(EVIDENCE / "step_0p02_manifest.json")
+    assert manifest["preparer_sha256"] == _sha256(
+        ROOT / "scripts/prepare_gan_strain_cutoff_diagnostic.py"
+    )
+    assert series["source_sha256"]["manifest_1000"] == _sha256(manifest_path)
+    assert series["source_sha256"]["report_800"] == _sha256(
+        EVIDENCE / "strain_encut800_diagnostic_v1.json"
+    )
+    assert series["source_sha256"]["auditor"] == _sha256(
+        ROOT / "scripts/audit_gan_strain_cutoff_series.py"
+    )
+    mean = series["mean_absolute_gradient_mismatch_eV_per_A"]
+    assert mean["600"] > mean["800"] > mean["1000"] > 0
+    assert max(abs(value) for value in series["equivalent_stress_difference_kbar"]["1000"]) < 1
+    gradients = series["center_gradient_translation_free_eV_per_A"]
+    assert gradients["1000"] > gradients["600"] > 0.05
+    assert "not_production_or_TS_certificate" in series["status"]
+
+
+def test_published_newton_probe_preserves_failure_as_missing_result() -> None:
+    manifest_path = EVIDENCE / "newton_probe1000_manifest.json"
+    report_path = EVIDENCE / "newton_probe1000_partial_audit_v1.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    assert manifest["evaluation_encut_eV"] == 1000
+    assert manifest["source_hessian_encut_eV"] == 600
+    assert manifest["status"] == "inputs_finalized_no_DFT"
+    assert [case["name"] for case in manifest["cases"]] == ["newton_half", "newton_full"]
+    assert manifest["source_sha256"]["trajectory"] == _sha256(TRAJECTORY)
+    assert manifest["source_sha256"]["hessian_archive"] == _sha256(
+        EVIDENCE / "step_0p02_joint_hessian.npz"
+    )
+    assert manifest["source_sha256"]["preparer"] == _sha256(
+        ROOT / "scripts/prepare_gan_ts_newton_probe.py"
+    )
+    assert report["source_sha256"]["manifest"] == _sha256(manifest_path)
+    assert report["source_sha256"]["auditor"] == _sha256(
+        ROOT / "scripts/audit_gan_ts_newton_probe.py"
+    )
+    assert "not_TS_certificate" in report["status"]
+    assert report["best_trial"] == "newton_half"
+    half, full = report["cases"]
+    assert half["status"] == "complete_converged_static"
+    assert half["translation_free_gradient_eV_per_A"] < 0.05
+    assert 0.4 < half["gradient_ratio_to_center"] < 0.6
+    assert len(half["outcar_sha256"]) == 64
+    assert "failure_before_SCF" in full["status"]
+    assert full["energy_eV_per_cell"] is None
+    assert full["translation_free_gradient_eV_per_A"] is None
+    assert full["gradient_ratio_to_center"] is None
+    assert len(full["outcar_sha256"]) == len(full["stdout_sha256"]) == 64
+    for record, staged in zip(report["cases"], manifest["cases"]):
+        assert record["input_sha256"] == staged["input_sha256"]
