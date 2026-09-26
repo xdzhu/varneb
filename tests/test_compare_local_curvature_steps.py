@@ -28,6 +28,32 @@ def test_bto_comparison_rejects_different_stationary_center():
         compare(bto_report(0.05, 0.005), bto_report(0.10, 0.004, refined="other"), "bto")
 
 
+def test_bto_two_step_energy_derivative_extrapolation_is_diagnostic():
+    first = bto_report(0.05, 0.005)
+    second = bto_report(0.10, 0.004)
+    for report in (first, second):
+        step = report["step_sqrt_amu_A"]
+        report["force_gradient_per_open_direction_eV_per_sqrt_amu_A"] = [0.4] * 16
+        report["energy_gradient_per_open_direction_eV_per_sqrt_amu_A"] = [
+            0.4 + 2.0 * step**2
+        ] * 16
+    diagnostic = compare(first, second, "bto")["energy_force_gradient_step_extrapolation"]
+    assert diagnostic["max_abs_error_first_eV_per_sqrt_amu_A"] == pytest.approx(0.005)
+    assert diagnostic["max_abs_error_second_eV_per_sqrt_amu_A"] == pytest.approx(0.02)
+    assert diagnostic["max_abs_error_extrapolated_eV_per_sqrt_amu_A"] == pytest.approx(0.0)
+
+
+def test_bto_two_step_gradient_requires_same_center():
+    first = bto_report(0.05, 0.005)
+    second = bto_report(0.10, 0.004)
+    for report in (first, second):
+        report["force_gradient_per_open_direction_eV_per_sqrt_amu_A"] = [0.4] * 16
+        report["energy_gradient_per_open_direction_eV_per_sqrt_amu_A"] = [0.4] * 16
+    second["force_gradient_per_open_direction_eV_per_sqrt_amu_A"][0] = 0.5
+    with pytest.raises(ValueError, match="shared center"):
+        compare(first, second, "bto")
+
+
 def test_gan_comparison_checks_one_negative_mode_across_steps():
     base = {
         "source_sha256": {"center_OUTCAR": "same"},

@@ -18,6 +18,39 @@ def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def compare_bto_energy_force_gradients(first: dict, second: dict) -> dict | None:
+    """Check whether central-energy derivative error is consistent with O(h²)."""
+
+    keys = ("energy_gradient_per_open_direction_eV_per_sqrt_amu_A",
+            "force_gradient_per_open_direction_eV_per_sqrt_amu_A")
+    if not all(key in report for report in (first, second) for key in keys):
+        return None
+    h1, h2 = (float(report["step_sqrt_amu_A"]) for report in (first, second))
+    energy1, energy2 = (np.asarray(report[keys[0]], dtype=float)
+                        for report in (first, second))
+    force1, force2 = (np.asarray(report[keys[1]], dtype=float)
+                      for report in (first, second))
+    if (any(values.shape != (16,) or not np.isfinite(values).all()
+            for values in (energy1, energy2, force1, force2))
+            or not np.allclose(force1, force2, atol=1e-10, rtol=0)):
+        raise ValueError("BTO energy/force derivative vectors or shared center invalid")
+    extrapolated = (h2**2 * energy1 - h1**2 * energy2) / (h2**2 - h1**2)
+    error_first = np.abs(energy1 - force1)
+    error_second = np.abs(energy2 - force1)
+    error_extrapolated = np.abs(extrapolated - force1)
+    return {
+        "method": "two_step_O_h_squared_central_energy_derivative_extrapolation",
+        "max_abs_error_first_eV_per_sqrt_amu_A": float(np.max(error_first)),
+        "max_abs_error_second_eV_per_sqrt_amu_A": float(np.max(error_second)),
+        "max_abs_error_extrapolated_eV_per_sqrt_amu_A": float(np.max(error_extrapolated)),
+        "worst_direction_after_extrapolation": int(np.argmax(error_extrapolated)),
+        "interpretation": (
+            "A decrease supports finite-step truncation as one contributor; "
+            "it is not an independent force-consistency or minimum certificate."
+        ),
+    }
+
+
 def compare(first: dict, second: dict, kind: str) -> dict:
     if kind == "bto":
         for key in ("preflight", "refined_result", "branch_replay"):
@@ -72,7 +105,7 @@ def compare(first: dict, second: dict, kind: str) -> dict:
     mismatch = [float(report[curvature_key]) for report in (first, second)]
     if any(not np.isfinite(value) or value < 0 for value in mismatch):
         raise ValueError("energy-gradient curvature diagnostics are invalid")
-    return {
+    result = {
         "status": "two_step_local_curvature_comparison_not_minimum_or_TS_certificate",
         "kind": kind,
         "step_sizes": steps,
@@ -96,6 +129,11 @@ def compare(first: dict, second: dict, kind: str) -> dict:
             "A second step alone cannot prove global branch selection, basin connections or finite-q stability.",
         ],
     }
+    if kind == "bto":
+        diagnostic = compare_bto_energy_force_gradients(first, second)
+        if diagnostic is not None:
+            result["energy_force_gradient_step_extrapolation"] = diagnostic
+    return result
 
 
 def compare_archived_modes(first_npz: Path, second_npz: Path,
