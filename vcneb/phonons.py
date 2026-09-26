@@ -127,6 +127,53 @@ class GammaModes:
         return self.eigenvectors / weights[:, None]
 
 
+def anchored_gamma_axis_weights(
+    modes: GammaModes,
+    mode_indices: Array,
+    cartesian_anchors: Array,
+    *,
+    tolerance: float = 1e-10,
+) -> Array:
+    """Build two signed axes from physical anchors inside a mode subspace.
+
+    The two columns of ``cartesian_anchors`` are atomic displacement patterns
+    in Angstrom. Each is projected onto the selected *mass-weighted* mode
+    subspace, then orthogonalized in the given order. The resulting physical
+    axes are invariant to arbitrary rotations/sign changes of an exactly
+    degenerate eigenvector basis. The anchors fix orientation; individual
+    mode numbers do not. A vanishing or dependent projected anchor is an
+    error rather than an arbitrary axis choice.
+    """
+
+    indices = np.asarray(mode_indices)
+    anchors = np.asarray(cartesian_anchors, dtype=float)
+    count = modes.eigenvectors.shape[1]
+    if indices.ndim != 1 or len(indices) < 2 or not np.issubdtype(indices.dtype, np.integer):
+        raise ValueError("mode_indices must contain at least two integer indices")
+    if np.any(indices < 0) or np.any(indices >= count) or len(np.unique(indices)) != len(indices):
+        raise ValueError("mode_indices must be unique and within the Gamma spectrum")
+    if anchors.shape != (count, 2) or not np.all(np.isfinite(anchors)):
+        raise ValueError("cartesian_anchors must contain two finite atomic displacement columns")
+    if not np.isfinite(tolerance) or tolerance <= 0.0:
+        raise ValueError("tolerance must be finite and positive")
+    sqrt_masses = np.repeat(np.sqrt(modes.masses_amu), 3)
+    subspace = modes.eigenvectors[:, indices]
+    if not np.allclose(subspace.T @ subspace, np.eye(len(indices)), rtol=1e-8, atol=1e-8):
+        raise ValueError("selected Gamma eigenvectors must be orthonormal")
+    coefficients = subspace.T @ (sqrt_masses[:, None] * anchors)
+    if np.any(np.linalg.norm(coefficients, axis=0) <= tolerance):
+        raise ValueError("an anchor has negligible projection onto the selected mode subspace")
+    first = coefficients[:, 0] / np.linalg.norm(coefficients[:, 0])
+    second = coefficients[:, 1] - first * np.dot(first, coefficients[:, 1])
+    if np.linalg.norm(second) <= tolerance * np.linalg.norm(coefficients[:, 1]):
+        raise ValueError("projected anchors are linearly dependent")
+    second /= np.linalg.norm(second)
+    weights = np.zeros((count, 2))
+    weights[indices, 0] = first
+    weights[indices, 1] = second
+    return weights
+
+
 @dataclass(frozen=True)
 class PhonopyGammaEigenpairs:
     """Raw, auditable Gamma-point eigenpairs obtained from Phonopy.
@@ -341,6 +388,7 @@ def load_gamma_force_constants(path: str | Path) -> tuple[Array, Array]:
 __all__ = [
     "GammaModes",
     "PhonopyGammaEigenpairs",
+    "anchored_gamma_axis_weights",
     "diagonalize_gamma_modes",
     "force_constants_to_eV_per_A2",
     "gamma_modes_from_phonopy_eigenpairs",

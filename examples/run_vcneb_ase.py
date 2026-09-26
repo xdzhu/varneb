@@ -11,12 +11,14 @@ controller; only interior images are sent to the threaded executor.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import importlib
 import json
 import math
 from pathlib import Path
 import sys
 
+import numpy as np
 from ase.io import read, write
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -24,9 +26,11 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from vcneb import (  # noqa: E402
+    VCNEB,
     attach_image_calculators,
     endpoint_structure_record,
     interpolate_vcneb,
+    load_vcneb_subspace_artifact,
     make_ase_calculator_factory,
     run_vcneb,
     validate_static_endpoint_identity,
@@ -34,6 +38,7 @@ from vcneb import (  # noqa: E402
     validate_image_calculators,
 )
 from vcneb.executor import ThreadedCalculatorExecutor  # noqa: E402
+from vcneb.mode_subspace import _vcneb_x  # noqa: E402
 
 
 def _load_symbol(spec: str):
@@ -74,10 +79,23 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--initial", required=True)
     parser.add_argument("--final", required=True)
-    parser.add_argument(
+    seed_group = parser.add_mutually_exclusive_group()
+    seed_group.add_argument(
         "--resume-snapshot",
         default=None,
         help="complete chain snapshot to resume from in a new work directory",
+    )
+    seed_group.add_argument(
+        "--initial-chain",
+        help="unconstrained starting chain to project into a declared mode subspace",
+    )
+    parser.add_argument(
+        "--subspace-artifact",
+        help="audited global VCNEB mode-subspace JSON, independent of calculator backend",
+    )
+    parser.add_argument(
+        "--subspace-artifact-sha256",
+        help="pin the exact subspace artifact bytes; required for a production subspace run",
     )
     parser.add_argument("--workdir", required=True)
     parser.add_argument("--n-images", type=int, default=7)
@@ -96,7 +114,7 @@ def parse_args() -> argparse.Namespace:
         help="FIRE geometry backtracking retries before an electronic evaluation",
     )
     parser.add_argument("--command", default=None)
-    group = parser.add_mutually_exclusive_group(required=True)
+    group = parser.add_mutually_exclusive_group()
     group.add_argument("--calculator", help="ASE class/factory as module:attribute")
     group.add_argument("--factory", help="VARNEB factory as module:attribute")
     parser.add_argument("--parameters", default=None, help="JSON calculator parameter object")
@@ -150,13 +168,20 @@ def main() -> None:
     args = parse_args()
     if args.n_images < 3 or args.image_workers < 0 or args.image_retries < 0:
         raise ValueError("n_images must be >=3 and worker/retry counts non-negative")
+    if not args.validate_only and args.calculator is None and args.factory is None:
+        raise ValueError("a calculator or factory is required unless --validate-only is set")
+    if args.subspace_artifact_sha256 is not None and args.subspace_artifact is None:
+        raise ValueError("--subspace-artifact-sha256 requires --subspace-artifact")
+    if args.subspace_artifact is not None and not args.validate_only and args.subspace_artifact_sha256 is None:
+        raise ValueError("production subspace runs require --subspace-artifact-sha256")
     if args.no_align_cells and args.cell_interpolation != "linear":
         raise ValueError("--no-align-cells requires --cell-interpolation linear")
     initial = read(args.initial)
     final = read(args.final)
     workdir = Path(args.workdir).resolve()
     workdir.mkdir(parents=True, exist_ok=True)
-    if args.resume_snapshot is None:
+    supplied_chain = args.resume_snapshot or args.initial_chain
+    if supplied_chain is None:
         images = interpolate_vcneb(
             initial,
             final,
@@ -170,17 +195,17 @@ def main() -> None:
             maximum_deformation=args.maximum_deformation,
         )
     else:
-        images = read(args.resume_snapshot, index=":")
+        images = read(supplied_chain, index=":")
         if len(images) != args.n_images:
             raise ValueError(
-                f"resume snapshot contains {len(images)} images; expected {args.n_images}"
+                f"supplied chain contains {len(images)} images; expected {args.n_images}"
             )
         for label, expected, actual in (
             ("initial", endpoint_structure_record(initial), endpoint_structure_record(images[0])),
             ("final", endpoint_structure_record(final), endpoint_structure_record(images[-1])),
         ):
             if expected["sha256"] != actual["sha256"]:
-                raise ValueError(f"resume snapshot {label} endpoint does not match the requested endpoint")
+                raise ValueError(f"supplied chain {label} endpoint does not match the requested endpoint")
     geometry = validate_path_geometry(
         images,
         minimum_distance=args.minimum_distance,
@@ -192,23 +217,60 @@ def main() -> None:
         if args.endpoint_static_summary is not None
         else None
     )
+    mode_basis = None
+    mode_scale = None
+    subspace_record = None
+    if args.subspace_artifact is not None:
+        artifact_path = Path(args.subspace_artifact).resolve()
+        artifact_sha256 = hashlib.sha256(artifact_path.read_bytes()).hexdigest()
+        if args.subspace_artifact_sha256 is not None and (
+            len(args.subspace_artifact_sha256) != 64
+            or args.subspace_artifact_sha256.lower() != artifact_sha256
+        ):
+            raise ValueError("subspace artifact SHA256 does not match the pinned digest")
+        mode_basis, artifact = load_vcneb_subspace_artifact(
+            artifact_path, images[0], images[-1],
+        )
+        mode_scale = float(artifact["cell_scale_A"])
+        unprojected = [image.copy() for image in images]
+        projected = [image.copy() for image in images]
+        VCNEB(
+            projected, cell_scale=mode_scale, mode_basis=mode_basis,
+            constraint_mode="subspace", k=args.k, climb=False,
+        )
+        first_cell = images[0].cell.array
+        before = [_vcneb_x(image, first_cell, mode_scale) for image in unprojected]
+        displacements = [float(np.linalg.norm(
+            _vcneb_x(image, first_cell, mode_scale) - original
+        )) for image, original in zip(projected, before)]
+        if args.resume_snapshot is not None and max(displacements) > 1e-8:
+            raise ValueError("resume snapshot is outside the declared global mode subspace")
+        if args.resume_snapshot is None:
+            raw_path = workdir / "initial-vcneb-unprojected.traj"
+            if raw_path.exists():
+                raise FileExistsError(f"refusing to replace raw initial chain: {raw_path}")
+            write(raw_path, unprojected)
+        images = projected
+        geometry = validate_path_geometry(
+            images,
+            minimum_distance=args.minimum_distance,
+            maximum_deformation=args.maximum_deformation,
+            minimum_endpoint_separation=args.minimum_endpoint_separation,
+        )
+        subspace_record = {
+            "artifact": str(artifact_path),
+            "artifact_sha256": artifact_sha256,
+            "artifact_sha256_pinned": args.subspace_artifact_sha256 is not None,
+            "subspace_kind": artifact["subspace_kind"],
+            "reference_id": artifact["reference_id"],
+            "n_directions": artifact["n_directions"],
+            "cell_scale_A": mode_scale,
+            "initial_projection_displacements_vcneb_A": displacements,
+            "source_sha256": artifact["source_sha256"],
+        }
     write(workdir / "initial-vcneb.traj", images)
 
     parameters = _json_object(args.parameters)
-    if args.factory:
-        builder = _load_symbol(args.factory)
-        factory_kwargs = _json_object(args.factory_kwargs)
-        factory_kwargs["parameters"] = parameters
-        if args.command is not None:
-            factory_kwargs["command"] = args.command
-        factory = builder(**factory_kwargs)
-    else:
-        calculator = _load_symbol(args.calculator)
-        factory = make_ase_calculator_factory(
-            calculator,
-            parameters=parameters,
-            command=args.command,
-        )
     metadata = {
         "status": "preflight",
         "driver": "examples/run_vcneb_ase.py",
@@ -217,6 +279,7 @@ def main() -> None:
         "calculator_parameters": parameters,
         "factory_kwargs": _json_object(args.factory_kwargs),
         "resume_snapshot": args.resume_snapshot,
+        "initial_chain": args.initial_chain,
         "n_images": args.n_images,
         "n_interior_images": args.n_images - 2,
         "external_pressure_gpa": args.pressure_gpa,
@@ -234,7 +297,8 @@ def main() -> None:
         },
         "endpoint_static_identity_gate": endpoint_identity_gate,
         "initial_path_geometry": geometry,
-        "calculator_validation": "factory_configuration_only",
+        "mode_subspace": subspace_record,
+        "calculator_validation": "not_instantiated_validate_only" if args.validate_only else "factory_configuration_only",
         "calculator_reports": [],
     }
     (workdir / "vcneb_preflight.json").write_text(
@@ -243,6 +307,21 @@ def main() -> None:
     if args.validate_only:
         print(f"[OK] ASE VCNEB preflight passed: {workdir / 'vcneb_preflight.json'}")
         return
+
+    if args.factory:
+        builder = _load_symbol(args.factory)
+        factory_kwargs = _json_object(args.factory_kwargs)
+        factory_kwargs["parameters"] = parameters
+        if args.command is not None:
+            factory_kwargs["command"] = args.command
+        factory = builder(**factory_kwargs)
+    else:
+        calculator = _load_symbol(args.calculator)
+        factory = make_ase_calculator_factory(
+            calculator,
+            parameters=parameters,
+            command=args.command,
+        )
 
     # Some ASE calculators (notably CP2K) start a persistent external process
     # in their constructor.  Instantiate image calculators only inside an
@@ -322,9 +401,12 @@ def main() -> None:
     chain, _ = run_vcneb(
         images,
         pressure_gpa=args.pressure_gpa,
+        cell_scale=mode_scale,
         k=args.k,
         climb=not args.no_climb,
         climb_after=args.climb_after,
+        mode_basis=mode_basis,
+        constraint_mode="subspace" if mode_basis is not None else None,
         image_executor=executor,
         optimizer=args.optimizer,
         optimizer_kwargs={} if args.maxstep is None else {"maxstep": args.maxstep},

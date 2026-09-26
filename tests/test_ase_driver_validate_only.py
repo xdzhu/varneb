@@ -16,13 +16,10 @@ def test_validate_only_does_not_instantiate_external_calculators(tmp_path, monke
     write(initial_path, initial, format="vasp")
     write(final_path, final, format="vasp")
 
-    def builder(**kwargs):
-        def forbidden_factory(*args, **factory_kwargs):
-            raise AssertionError("validate-only instantiated an external calculator")
+    def forbidden_load_symbol(spec):
+        raise AssertionError("validate-only loaded an external calculator factory")
 
-        return forbidden_factory
-
-    monkeypatch.setattr(run_vcneb_ase, "_load_symbol", lambda spec: builder)
+    monkeypatch.setattr(run_vcneb_ase, "_load_symbol", forbidden_load_symbol)
     monkeypatch.setattr(
         sys,
         "argv",
@@ -48,5 +45,5 @@ def test_validate_only_does_not_instantiate_external_calculators(tmp_path, monke
     )
     run_vcneb_ase.main()
     payload = json.loads((tmp_path / "run" / "vcneb_preflight.json").read_text())
-    assert payload["calculator_validation"] == "factory_configuration_only"
+    assert payload["calculator_validation"] == "not_instantiated_validate_only"
     assert payload["calculator_reports"] == []
