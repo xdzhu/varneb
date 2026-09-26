@@ -8,6 +8,7 @@ provided calculator factory.
 from __future__ import annotations
 
 from pathlib import Path
+import math
 import re
 from typing import Callable, Mapping, Optional
 
@@ -19,6 +20,32 @@ from ase.io import write
 CalculatorFactory = Callable[[int, Atoms, Path], object]
 
 _ABACUS_FLOAT = r"[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[EeDd][-+]?\d+)?"
+
+
+def _prefer_machine_precision_energy(output: Path, parsed_energy: float) -> float:
+    """Use ABACUS's full-precision final marker when it matches ASE's energy.
+
+    The human-readable ``final etot is`` line commonly rounds to seven
+    decimals. Small frozen-mode curvature differences can be of that order.
+    A disagreement larger than print rounding is an audit failure, not a
+    reason to silently replace a different energy definition.
+    """
+
+    parsed = float(parsed_energy)
+    if not math.isfinite(parsed):
+        raise ValueError(f"ABACUS parsed energy is non-finite: {output}")
+    marker = None
+    pattern = re.compile(rf"!FINAL_ETOT_IS\s+({_ABACUS_FLOAT})\s*eV", re.IGNORECASE)
+    with output.open(encoding="utf-8", errors="replace") as handle:
+        for line in handle:
+            match = pattern.search(line)
+            if match is not None:
+                marker = float(match.group(1).replace("D", "E").replace("d", "e"))
+    if marker is None:
+        return parsed
+    if not math.isfinite(marker) or abs(marker - parsed) > 1e-4:
+        raise ValueError(f"ABACUS full-precision energy disagrees with parsed result: {output}")
+    return marker
 
 
 def _minimal_abacus_results(output: Path) -> dict:
@@ -76,7 +103,10 @@ def _minimal_abacus_results(output: Path) -> dict:
 
     from ase.stress import full_3x3_to_voigt_6_stress
 
-    stress = -0.1 * 160.21766208 * np.asarray(stress_rows, dtype=float)
+    # ABACUS prints compressive-positive kbar; ASE expects tensile-positive
+    # eV/A^3. 1 eV/A^3 = 1602.176634 kbar. Multiplication by a GPa factor
+    # here would silently corrupt the fallback stress by orders of magnitude.
+    stress = -np.asarray(stress_rows, dtype=float) / 1602.176634
     return {
         "energy": energy,
         "forces": np.asarray(forces, dtype=float),
@@ -151,7 +181,8 @@ def _read_vcneb_results(directory: Path, *, output_suffix: str, calculation: str
                 f"minimal contract parser also failed: {fallback_exc}"
             ) from exc
     values = {
-        "energy": chunk.energy,
+        "energy": (_prefer_machine_precision_energy(output, chunk.energy)
+                   if chunk.energy is not None else None),
         "free_energy": chunk.free_energy,
         "forces": chunk.forces_sort,
         "stress": chunk.stress,
