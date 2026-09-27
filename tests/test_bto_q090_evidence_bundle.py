@@ -106,3 +106,27 @@ def test_single_step_curvature_is_raw_audited_but_not_certified(point, q, n_eval
     assert min(audit["eigenvalues_eV_per_amu_A2"]) > 0
     assert audit["energy_hessian_diagonal_max_abs_difference_eV_per_amu_A2"] > min(
         audit["eigenvalues_eV_per_amu_A2"])
+
+
+@pytest.mark.parametrize("point,q", [
+    ("q090_q000", [0.9, 0.0]),
+    ("q090_q030", [0.9, 0.3]),
+])
+def test_second_step_preflight_is_geometry_only(point, q):
+    parent, parent_sha = _load(f"conditional_{point}_result.json")
+    initial_audit, initial_audit_sha = _load(f"audit-{point}-production-raw-final.json")
+    replay, replay_sha = _load(f"replay-{point}-final.json")
+    preflight, _ = _load(
+        f"bto_transverse_soft_{point}_selected_curvature_0p10_preflight_2026-09-27.json")
+    assert preflight["status"] == "all_signed_probes_geometry_safe_not_a_curvature_result"
+    assert preflight["q1_q2_sqrt_amu_A"] == q
+    assert preflight["n_signed_probes"] == 32
+    assert preflight["curvature_step_sqrt_amu_A"] == 0.10
+    assert preflight["minimum_probe_atomic_distance_A"] > 1.6
+    assert preflight["minimum_probe_volume_A3"] > 0
+    assert preflight["no_dft_launched"] is True
+    assert preflight["source_sha256"]["summary"] == parent_sha
+    assert preflight["source_sha256"]["audit"] == initial_audit_sha
+    assert preflight["source_sha256"]["branch_replay"] == replay_sha
+    assert parent["stress_target_passed"] and initial_audit["source_sha256"]["summary"] == parent_sha
+    assert replay["selected_start"] == parent["selected_start"]

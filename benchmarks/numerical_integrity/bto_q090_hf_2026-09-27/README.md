@@ -1,7 +1,8 @@
 # BTO off-axis conditional-branch evidence, `Q_z=0.9`
 
-These sixteen JSON files are byte-for-byte copies of the completed `27786180`
-and `27787086` ABACUS runs and subsequent read-only audits on hf. Their source directory is
+These eighteen JSON files are byte-for-byte copies of the completed `27786180`
+and `27787086` ABACUS runs and subsequent read-only audits, plus the no-DFT
+preflights for the second-step array `27787309` on hf. Their source directory is
 `/public/home/iai806/abacus/agent-runs/20260927-varneb-bto-soft-gridpilot-qx030`.
 The `run-q090_q000/` and `run-q090_q030/` subdirectories there retain the
 original `INPUT`, `KPT`, `STRU`, ABACUS logs, and immutable evaluation cache.
@@ -21,6 +22,10 @@ have no negative eigenvalues at this **one** step, with lowest values
 curvature discrepancies are `0.007674` and `0.010632 eV/(amu Å²)`, larger than
 the lowest eigenvalues. Thus this is a useful positive screen, **not** a
 numerical certificate of local-minimum stability.
+The 0.10-step signed-probe geometry preflights pass for both sites (32 probes
+each); they are not curvature results. Array `27787309` uses the same frozen
+100 Ry/10 au source and independent result names. Audit its Slurm completion
+and every new raw DFT evaluation before interpreting its Hessian.
 
 All calculations preserve the five-atom `1×1×1` cubic Γ-mode source and
 ABACUS PBE/`ecutwfc=100 Ry`/10 au DZP/`4×4×4` electronic k-point contract.
