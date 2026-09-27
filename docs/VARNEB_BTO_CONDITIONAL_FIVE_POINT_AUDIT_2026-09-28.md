@@ -39,6 +39,12 @@ DZP / 4×4×4 电子 k 网格。模式来自五原子 `1×1×1` 立方胞的 Γ
 误判成不同物理相。比较结构时统一取已实际计算、已缓存审计的
 `+Q_y` 分支；并未修改 DFT 结果。
 
+通用 `vcneb.conditional_evidence` 筛选器仍忠实检查调用方给出的
+原始结构，不会自动把任意大跳跃宣布为对称等价。本案例的对齐是
+**有证据的显式选择**：先核对两套实际计算的终态在镜面下坐标和
+能量均一致，再在这个有限网格上统一使用正分支代表元。未来材料
+若没有对应对称操作与独立分支证据，不能套用这一处理。
+
 在同一质量加权原子＋已声明应变度规中，正分支四角预测中心
 `Q_y=1.016318130 √amu·Å`，实测为 `1.032331062`，差
 `0.016012932`。完整 21 维坐标的留点误差为
@@ -60,6 +66,13 @@ DZP / 4×4×4 电子 k 网格。模式来自五原子 `1×1×1` 立方胞的 Γ
 作为方法与分支问题的有限区域实证，但不能替代整个条件面。
 
 ## 来源与复核
+
+无需访问 hf 就能重算上述五点算术和镜面核验：
+[`bto_conditional_five_point_patch_2026-09-28.json`](../benchmarks/numerical_integrity/bto_conditional_five_point_patch_2026-09-28.json)
+保存五个点的坐标、能量、代表元及原始结果文件哈希；执行
+`python scripts/audit_bto_conditional_five_point_patch.py benchmarks/numerical_integrity/bto_conditional_five_point_patch_2026-09-28.json`
+会给出能量与结构留点误差、对齐前后邻点跃迁。该紧凑快照**不能**
+替代下面列出的 hf 原始 SCF、力、应力逐点审计；脚本也不运行 DFT。
 
 - `(0.60,0.00)`：本地忽略目录 `outputs/batio3_t_to_c_pbe100_dzp10au/`
   的 `bto_transverse_soft_conditional_q060_result_job27783331.json`
