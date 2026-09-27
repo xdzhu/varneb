@@ -212,6 +212,23 @@ def make_ase_lammps_factory(
     return factory
 
 
+def _persist_cp2k_outputs(source_label: str, image_dir: Path) -> None:
+    """Keep a durable copy after CP2K's shell has flushed and exited."""
+    source_prefix = Path(source_label)
+    target_prefix = image_dir / "cp2k"
+    for suffix in (".inp", ".out", ".pos"):
+        source = Path(f"{source_prefix}{suffix}")
+        target = Path(f"{target_prefix}{suffix}")
+        if not source.is_file() or source == target:
+            continue
+        try:
+            if target.is_symlink() or target.exists():
+                target.unlink()
+            shutil.copy2(source, target)
+        except OSError:
+            continue
+
+
 def make_ase_cp2k_factory(
     *,
     parameters: Mapping,
@@ -271,21 +288,6 @@ def make_ase_cp2k_factory(
         params.setdefault("stress_tensor", True)
         label, original_directory = output_label(image_dir)
 
-        def persist_outputs(source_label: str) -> None:
-            source_prefix = Path(source_label)
-            target_prefix = image_dir / "cp2k"
-            for suffix in (".inp", ".out", ".pos"):
-                source = Path(f"{source_prefix}{suffix}")
-                target = Path(f"{target_prefix}{suffix}")
-                if not source.is_file():
-                    continue
-                try:
-                    if target.is_symlink() or target.exists():
-                        target.unlink()
-                    shutil.copy2(source, target)
-                except OSError:
-                    continue
-
         class EphemeralCP2K(Calculator):
             """Start one shell only while this image is actively evaluated."""
 
@@ -311,9 +313,11 @@ def make_ase_cp2k_factory(
                         for key, value in calculator.results.items()
                     }
                 finally:
-                    persist_outputs(label)
-                    if calculator is not None and hasattr(calculator, "close"):
-                        calculator.close()
+                    try:
+                        if calculator is not None and hasattr(calculator, "close"):
+                            calculator.close()
+                    finally:
+                        _persist_cp2k_outputs(label, image_dir)
 
         return EphemeralCP2K()
 

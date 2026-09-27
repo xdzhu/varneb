@@ -29,8 +29,12 @@
       "last_visible_energy_eV": -4600.267100295448,
       "final_chain_peak_energy_eV": -4600.2667338125,
       "last_visible_energy_minus_chain_eV": -0.00036648294735641684,
+      "nearest_record_one_based": 28,
+      "nearest_record_energy_eV": -4600.266642524207,
+      "nearest_record_minus_chain_eV": 9.128829333349131e-05,
+      "n_energy_records_matching_chain_within_1e-8_eV": 0,
       "last_program_end_precedes_last_energy": true,
-      "last_scf_converged_marker_after_last_energy": false,
+      "last_run_scf_converged_before_last_energy": true,
       "exact_geometry_cache_key": "image_0015_cc482fbb3276f4d82daccec61e40f26c4c6d87a17e4566c10f7016afadef530d.npz",
       "worker_cache_sha256": "f9999926bb269008fe16815e032f1d628f1c337ae3ca3b40b4606b44cb20f1fd",
       "worker_cache_energy_difference_eV": 0.0,
@@ -38,5 +42,5 @@
       "worker_cache_max_absolute_stress_difference_eV_per_A3": 0.0
     }
   },
-  "limitations": "QE/ABINIT are re-read with ASE output readers, the same parser family used during calculation; this checks the frozen raw bytes against the final chain but is not parser-independent. CP2K's exact-geometry worker cache reproduces the chain energy/forces/stress, but its cumulative last visible text energy differs and has no following PROGRAM ENDED marker; the cache establishes the serialized worker return, not independent raw-electronic-output agreement. Other 28 images and cached endpoints are not covered."
+  "limitations": "QE/ABINIT are re-read with ASE output readers, the same parser family used during calculation; this checks the frozen raw bytes against the final chain but is not parser-independent. CP2K's exact-geometry worker cache reproduces the chain energy/forces/stress, but none of the cumulative text output's FORCE_EVAL energies matches that final-chain energy within 1e-8 eV; the last visible run lacks a following PROGRAM ENDED marker. The cache establishes the serialized worker return, not independent raw-electronic-output agreement. Other 28 images and cached endpoints are not covered."
 }

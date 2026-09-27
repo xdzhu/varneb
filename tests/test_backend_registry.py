@@ -13,6 +13,7 @@ import numpy as np
 import pytest
 
 from vcneb.backends import (
+    _persist_cp2k_outputs,
     attach_image_calculators,
     backend_capability_matrix,
     get_backend_spec,
@@ -211,6 +212,51 @@ def test_cp2k_factory_converts_explicit_rydberg_cutoff(monkeypatch, tmp_path) ->
     atoms.calc = factory(3, atoms, image_dir)
     atoms.get_potential_energy()
     assert captured["cutoff"] == pytest.approx(400 * Rydberg)
+
+
+def test_cp2k_output_is_archived_only_after_shell_close(monkeypatch, tmp_path) -> None:
+    import ase.calculators.cp2k as cp2k
+    import vcneb.backends as backends
+
+    monkeypatch.setattr(backends.tempfile, "gettempdir", lambda: str(tmp_path))
+
+    class FakeCP2K:
+        def __init__(self, **kwargs):
+            self.label = kwargs["label"]
+
+        def calculate(self, atoms=None, properties=None, system_changes=None):
+            Path(f"{self.label}.inp").write_text("fixed input\n", encoding="utf-8")
+            Path(f"{self.label}.out").write_text("SCF converged\n", encoding="utf-8")
+            self.results = {
+                "energy": -1.0,
+                "forces": np.zeros((len(atoms), 3)),
+                "stress": np.zeros(6),
+            }
+
+        def close(self):
+            with Path(f"{self.label}.out").open("a", encoding="utf-8") as handle:
+                handle.write("PROGRAM ENDED\n")
+
+    monkeypatch.setattr(cp2k, "CP2K", FakeCP2K)
+    image_dir = tmp_path / ("long_image_directory_" * 5)
+    image_dir.mkdir()
+    assert len(str(image_dir / "cp2k")) > 72
+    atoms = Atoms("H", cell=[5, 5, 5], pbc=True)
+    atoms.calc = make_ase_cp2k_factory(parameters={"cutoff": 300}, command="cp2k_shell")(
+        2, atoms, image_dir
+    )
+    assert atoms.get_potential_energy() == -1.0
+    assert (image_dir / "cp2k.inp").read_text(encoding="utf-8") == "fixed input\n"
+    assert (image_dir / "cp2k.out").read_text(encoding="utf-8").endswith("PROGRAM ENDED\n")
+
+
+def test_cp2k_output_already_in_image_directory_is_not_deleted(tmp_path) -> None:
+    image_dir = tmp_path / "image_0001"
+    image_dir.mkdir()
+    output = image_dir / "cp2k.out"
+    output.write_text("SCF converged\nPROGRAM ENDED\n", encoding="utf-8")
+    _persist_cp2k_outputs(str(image_dir / "cp2k"), image_dir)
+    assert output.read_text(encoding="utf-8").endswith("PROGRAM ENDED\n")
 
 
 def test_cp2k_factory_rejects_ambiguous_cutoff_units(monkeypatch) -> None:

@@ -23,7 +23,11 @@ def test_frozen_image15_raw_output_audit() -> None:
     cp2k = report["findings"]["cp2k"]
     assert cp2k["status"] == "last_visible_text_output_does_not_certify_final_peak"
     assert cp2k["last_program_end_precedes_last_energy"]
+    assert cp2k["last_run_scf_converged_before_last_energy"]
     assert 0.0003 < abs(cp2k["last_visible_energy_minus_chain_eV"]) < 0.0004
+    assert cp2k["nearest_record_one_based"] == 28
+    assert 0.0 < abs(cp2k["nearest_record_minus_chain_eV"]) < 0.0001
+    assert cp2k["n_energy_records_matching_chain_within_1e-8_eV"] == 0
     assert cp2k["exact_geometry_cache_key"].startswith("image_0015_cc482fbb3276f4d8")
     assert cp2k["worker_cache_energy_difference_eV"] == 0.0
     assert cp2k["worker_cache_max_absolute_force_difference_eV_per_A"] == 0.0

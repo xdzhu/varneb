@@ -74,24 +74,38 @@ def audit_peak_outputs() -> dict:
     )
     if not energies:
         raise ValueError("CP2K output lacks FORCE_EVAL energies")
-    last_energy = float(energies[-1]) * Hartree
+    energies_ev = [float(energy) * Hartree for energy in energies]
+    last_energy = energies_ev[-1]
     chain = read(CHAIN / "gan_cp2k_45p7_final_chain.traj", index=15)
-    difference = float(last_energy - chain.get_potential_energy())
+    chain_energy = float(chain.get_potential_energy())
+    difference = float(last_energy - chain_energy)
+    nearest_index = min(
+        range(len(energies_ev)), key=lambda index: abs(energies_ev[index] - chain_energy)
+    )
+    nearest_difference = float(energies_ev[nearest_index] - chain_energy)
     last_energy_offset = cp2k_text.rfind("ENERGY| Total FORCE_EVAL")
     last_completed_offset = cp2k_text.rfind("PROGRAM ENDED AT")
+    last_started_offset = cp2k_text.rfind("PROGRAM STARTED AT", 0, last_energy_offset)
     findings["cp2k"] = {
         "status": "last_visible_text_output_does_not_certify_final_peak",
         "raw_output_sha256": EXPECTED_HASHES["cp2k"],
         "n_force_eval_energy_records": len(energies),
         "last_visible_energy_eV": last_energy,
-        "final_chain_peak_energy_eV": float(chain.get_potential_energy()),
+        "final_chain_peak_energy_eV": chain_energy,
         "last_visible_energy_minus_chain_eV": difference,
+        "nearest_record_one_based": nearest_index + 1,
+        "nearest_record_energy_eV": energies_ev[nearest_index],
+        "nearest_record_minus_chain_eV": nearest_difference,
+        "n_energy_records_matching_chain_within_1e-8_eV": sum(
+            abs(energy - chain_energy) < 1e-8 for energy in energies_ev
+        ),
         "last_program_end_precedes_last_energy": last_completed_offset < last_energy_offset,
-        "last_scf_converged_marker_after_last_energy": (
-            cp2k_text.rfind("SCF run converged") > last_energy_offset
+        "last_run_scf_converged_before_last_energy": (
+            last_started_offset < cp2k_text.rfind("SCF run converged", 0, last_energy_offset)
         ),
     }
-    if abs(difference) < 1e-8 or not findings["cp2k"]["last_program_end_precedes_last_energy"]:
+    if (findings["cp2k"]["n_energy_records_matching_chain_within_1e-8_eV"] != 0
+            or not findings["cp2k"]["last_program_end_precedes_last_energy"]):
         raise ValueError("CP2K visible tail changed; this audit needs review")
     cache_path = RAW / "cp2k_image15_worker_cache.npz"
     cache_digest = hashlib.sha256(cache_path.read_bytes()).hexdigest()
@@ -118,7 +132,7 @@ def audit_peak_outputs() -> dict:
         "kind": "gan_45p7_image15_original_calculator_output_audit_not_full_chain",
         "status": "qe_abinit_peak_output_matched_cp2k_last_visible_text_inconclusive",
         "findings": findings,
-        "limitations": "QE/ABINIT are re-read with ASE output readers, the same parser family used during calculation; this checks the frozen raw bytes against the final chain but is not parser-independent. CP2K's exact-geometry worker cache reproduces the chain energy/forces/stress, but its cumulative last visible text energy differs and has no following PROGRAM ENDED marker; the cache establishes the serialized worker return, not independent raw-electronic-output agreement. Other 28 images and cached endpoints are not covered.",
+        "limitations": "QE/ABINIT are re-read with ASE output readers, the same parser family used during calculation; this checks the frozen raw bytes against the final chain but is not parser-independent. CP2K's exact-geometry worker cache reproduces the chain energy/forces/stress, but none of the cumulative text output's FORCE_EVAL energies matches that final-chain energy within 1e-8 eV; the last visible run lacks a following PROGRAM ENDED marker. The cache establishes the serialized worker return, not independent raw-electronic-output agreement. Other 28 images and cached endpoints are not covered.",
     }
 
 
