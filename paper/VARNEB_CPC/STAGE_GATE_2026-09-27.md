@@ -24,10 +24,14 @@ the specific artifacts being revised.
    at `(0.6,0)`, `(0.6,0.3)`, `(0.9,0)`, `(0.9,0.3)` in
    `sqrt(amu) Å`. The branch is 57.47, 49.98, 34.46, and 28.31 meV/BTO below
    the separately relaxed `Q_y=0` branch. At `Q_z=0.9`, the raw-audited
-   one-step 16D orthogonal Hessians have positive lowest eigenvalues
-   0.005699/0.005817 eV/(amu Å²), but energy/force diagonal discrepancies
-   0.007674/0.010632 eV/(amu Å²) exceed those soft curvatures. These are
-   one-step local candidates, not certified minima or a continuous PES.
+   16D orthogonal Hessians at two finite-difference steps have positive lowest
+   eigenvalues: 0.005699/0.005817 at 0.05 and 0.005720/0.005844 at 0.10,
+   in eV/(amu Å²). The respective lowest directions overlap above 0.999999.
+   Four additional signed DFT probes per site give positive direct
+   energy- and force-derived curvatures along those directions. All 145/146
+   cached DFT points, respectively, passed an independent raw-output audit.
+   This strengthens the *local numerical screen*, but does not certify a
+   global minimum, branch continuity, or a continuous conditional PES.
 3. **GaN B4→B1, 45.7 GPa:** `figures/gan_multibackend_validation.*` shows
    five converged *one-dimensional* variable-cell enthalpy paths, normalized
    per GaN: ABACUS/VASP/QE/ABINIT/CP2K forward barriers
@@ -56,9 +60,11 @@ the specific artifacts being revised.
 
 ## Stronger mode-surface / TS claims: evidence still needed
 
-- **BTO conditional 2D surface:** second independent curvature step and
-  direct soft-direction energy/force checks at both `Q_z=0.9` sites; an
-  independently computed interior holdout near `(0.75,0.15)`; competing
+- **BTO conditional 2D surface:** the second curvature step and direct
+  soft-direction checks at both `Q_z=0.9` sites are complete. Three
+  independently audited static starts at `(0.75,0.15)` are complete; their
+  conditional relaxations are running as hf job `27787487`, so the holdout
+  energy and interpolation test remain pending. Competing
   branch and continuity checks across the sampled domain; quantified
   interpolation error and a clear definition of released atomic/strain
   variables. Confirm that the actual T endpoint is represented by, or is

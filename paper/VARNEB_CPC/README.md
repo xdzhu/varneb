@@ -25,10 +25,14 @@ The manuscript distinguishes three evidence levels:
 1. Analytic and fixed-cell regression tests establish the generalized
    coordinate, force, CI, and restart mechanics.
 2. ABACUS/PBE material calculations establish the BTO and HfO2 examples.
-3. The VASP adapter has completed material paths on the Hefei Slurm system.
-   The GaN tetragonal and hexagonal routes reproduce the published barrier
-   scale; the B3 route and CdSe route are retained as explicit mapping and
-   functional-sensitivity controls.
+   BTO's cubic Gamma projection uses the five-atom `1x1x1` phonon cell;
+   its 59-point contour is a *frozen-cell* slice, not a relaxed conditional
+   surface. The four-point conditional analysis and local curvature checks
+   remain staged evidence.
+3. ABACUS, VASP, QE, ABINIT, and CP2K have each completed a 45.7-GPa GaN
+   B4-to-B1 material path. The five paths support a common dominant barrier
+   topology, not identical calculator protocols or barriers. Additional VASP
+   GaN and CdSe paths remain mapping and functional-sensitivity controls.
 
 The HfO2 literature bar is external comparison data with a different
 functional, code, image count, and force criterion. The BTO literature number
@@ -42,9 +46,12 @@ the ZStar reference package. The working target is approximately ten typeset
 pages including the Program Summary, figures, tables, and references. Add
 material only when it closes a reproducibility, method, or verification gap;
 do not pad the manuscript with duplicate workflow descriptions or unsupported
-benchmark claims. The main evidence set now contains the architecture figure,
-the BTO mode decomposition, the ABACUS BTO/HfO2 validation figure, and the GaN
-multi-backend comparison. Per-path literature figures remain archived under
+benchmark claims. The current working draft is twelve pages; trimming to about
+ten pages and a figure-by-figure evidence audit remain submission gates. The
+main evidence set contains the architecture figure, the BTO mode
+decomposition, the ABACUS BTO/HfO2 validation figure, the GaN multi-backend
+comparison, and a separately labeled local GaN atom--strain diagnostic.
+Per-path literature figures remain archived under
 `outputs/neb_literature_benchmarks/` rather than being duplicated in the main
 text.
 
