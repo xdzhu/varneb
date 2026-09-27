@@ -56,8 +56,14 @@ last calculator inputs**. These differences cannot establish whether their
 the actual `.pwi`, `abinit.in`, and `cp2k.inp` geometries and paired outputs.
 The former geometry check has now been done in
 `gan_45p7_final_peak_inputs_20260927/`: all three actual inputs match the
-final image-15 geometry within `1e-9 Å`. The paired output-value audit is
-still open.
+final image-15 geometry within `1e-9 Å`. The paired output-value check in
+`gan_45p7_peak_raw_outputs_20260927/` shows QE/ABINIT image-15 energy,
+forces and stress exactly matching the evaluated chain. The cumulative
+CP2K text tail is **not** the chain value and has no following program-end
+marker, so it cannot certify its final peak without a per-call join. The
+exact-geometry CP2K worker cache in the same evidence folder separately
+matches the evaluated chain's serialized energy/forces/stress, but is not an
+independent raw-electronic-log verification.
 
 | Backend | File in result tree | SHA-256 |
 | --- | --- | --- |
@@ -97,8 +103,9 @@ their last 29 images archived under `gan_45p7_final_chains_20260927/`;
 are reproduced from those evaluated chains. Next raw-output gate: locate
 an actual calculator input/output pair matching **each exact final image
 geometry** (including endpoint static jobs). Peak actual-input geometry is
-already matched for QE/ABINIT/CP2K, but paired raw energy/force/stress and
-the other images are not yet independently audited. Only if records do not exist
+already matched for QE/ABINIT/CP2K and peak raw output is matched for
+QE/ABINIT. CP2K's last cumulative text record is not matched; other images
+are not yet independently audited. Only if records do not exist
 should a hash-pinned same-protocol static re-evaluation be considered.
 Then compare raw energy, force, stress, SCF completion and atom/cell identity
 to the chain. Do not treat the final trajectory audit as this raw-log audit.

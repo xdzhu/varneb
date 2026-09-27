@@ -1,0 +1,42 @@
+{
+  "kind": "gan_45p7_image15_original_calculator_output_audit_not_full_chain",
+  "status": "qe_abinit_peak_output_matched_cp2k_last_visible_text_inconclusive",
+  "findings": {
+    "qe": {
+      "status": "raw_output_reproduces_final_peak_energy_force_stress",
+      "raw_output_sha256": "8c151175c2e85e087da3181a2c43bd403eec05e6855a5a48f5bd4003a7659cb8",
+      "energy_difference_eV": 0.0,
+      "max_absolute_force_difference_eV_per_A": 0.0,
+      "max_absolute_stress_difference_eV_per_A3": 0.0,
+      "scf_marker_present": true,
+      "completion_marker_present": true,
+      "reader": "espresso-out"
+    },
+    "abinit": {
+      "status": "raw_output_reproduces_final_peak_energy_force_stress",
+      "raw_output_sha256": "eb34bbdb7435490057eb51cfe67959449de96ccd06caa299bae1b4ba5be30100",
+      "energy_difference_eV": 0.0,
+      "max_absolute_force_difference_eV_per_A": 0.0,
+      "max_absolute_stress_difference_eV_per_A3": 0.0,
+      "scf_marker_present": true,
+      "completion_marker_present": true,
+      "reader": "abinit-out"
+    },
+    "cp2k": {
+      "status": "last_visible_text_output_does_not_certify_final_peak",
+      "raw_output_sha256": "439ceac169eb5186e09afa3f51123f15a5147e29070e337c9fc2d12d4044607e",
+      "n_force_eval_energy_records": 53,
+      "last_visible_energy_eV": -4600.267100295448,
+      "final_chain_peak_energy_eV": -4600.2667338125,
+      "last_visible_energy_minus_chain_eV": -0.00036648294735641684,
+      "last_program_end_precedes_last_energy": true,
+      "last_scf_converged_marker_after_last_energy": false,
+      "exact_geometry_cache_key": "image_0015_cc482fbb3276f4d82daccec61e40f26c4c6d87a17e4566c10f7016afadef530d.npz",
+      "worker_cache_sha256": "f9999926bb269008fe16815e032f1d628f1c337ae3ca3b40b4606b44cb20f1fd",
+      "worker_cache_energy_difference_eV": 0.0,
+      "worker_cache_max_absolute_force_difference_eV_per_A": 0.0,
+      "worker_cache_max_absolute_stress_difference_eV_per_A3": 0.0
+    }
+  },
+  "limitations": "QE/ABINIT are re-read with ASE output readers, the same parser family used during calculation; this checks the frozen raw bytes against the final chain but is not parser-independent. CP2K's exact-geometry worker cache reproduces the chain energy/forces/stress, but its cumulative last visible text energy differs and has no following PROGRAM ENDED marker; the cache establishes the serialized worker return, not independent raw-electronic-output agreement. Other 28 images and cached endpoints are not covered."
+}

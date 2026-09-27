@@ -69,12 +69,58 @@ After the 0.05 raw audit passed, all 32 signed `±0.10 sqrt(amu) Å` probes
 passed an independent geometry preflight (minimum separation
 `1.796364193 Å`, volume `67.630117027 Å³`; `curvature_0p10_preflight.json`,
 SHA-256 `1589a26a00c5b5d775be8af267ae00775e26192966acff7ddbe84b6c635fc6f0`).
-The second-step Slurm job `27787746` started on hf `hfacnormal01` at
-2026-09-27 15:03 CST. Its result must be separately raw-audited and compared
-with the first step; no stable-branch conclusion is implied by its submission.
+The second-step Slurm job `27787746` completed on hf `hfacnormal01` at
+2026-09-27 15:27 CST (`COMPLETED/0:0`; elapsed `00:23:47`). Its independent
+audit re-read all **141** cached original DFT points, including 32 new signed
+probes. The two force-Hessian lowest eigenvalues are `+0.00543824` and
+`+0.00546533 eV/(amu Å²)`; their common-basis lowest eigenvectors have
+absolute overlap `0.999999657`. The 0.10-step antisymmetric relative defect
+is `0.001571`; maximum energy-versus-force diagonal-curvature mismatch falls
+to `0.00402230 eV/(amu Å²)`, but the 0.05-step mismatch remains larger than
+the weakest eigenvalue. First-derivative mismatches are `0.000816` and
+`0.003056 eV/(sqrt(amu) Å)` at the two steps. The hash-linked comparison is
+`two_step_curvature_screen.json`, reproducible via
+`scripts/audit_bto_selected_two_step_curvature.py`. These data show a
+**reproducible positive force-Hessian sign**, not a certified conditional
+minimum: direct energy/gradient probes along the mixed lowest eigenvector,
+branch continuity and the off-plane T endpoint still need checking.
 Therefore the manuscript may report this local predictive success only with
 these limits; it may not promote the staged four-point figure into a smooth
 conditional-PES contour yet.
+
+The follow-up four signed probes along the common soft direction at
+`±0.05/±0.10 sqrt(amu) Å` passed a separate no-DFT geometry preflight
+(minimum atomic separation `1.82211245 Å`, minimum cell volume
+`67.69342590 Å³`). Its frozen `soft_direction_preflight.json` has SHA-256
+`da7f47f2cfc47f23cf497257999939d0069dd7a2a30d55ac35bc467ae2b40096`.
+A complete read-only runner input check then passed. The latter
+verified the same calculator/cache contract before any new static evaluation.
+The guarded hf `hfacnormal01` Slurm job is `27791225`; its launch script is
+`cluster/hf_bto_transverse_soft_q075_q015_direct_probe_20260927.slurm`
+(SHA-256 `10c9fe21d27b3f098e0a22c5d55b39a3845c2702ed1f32b22e398d01a960480d`).
+It completed `COMPLETED/0:0` at 2026-09-27 22:13:57 CST after `00:04:34`.
+The independent auditor re-read all **145** original cached ABACUS points,
+including the four new static evaluations, and checked each probe against its
+preflight geometry and original INPUT/KPT/STRU, SCF, energy, force and stress.
+The frozen records are `soft_direction_result.json`,
+`all_points_145_raw_audit.json`, `soft_direction_raw_audit.json`, and
+`soft_direction_center_result.json`. Their hash-linked line-integral check is
+`soft_direction_work_integral.json`.
+
+| Step (sqrt(amu) Å) | Energy curvature | Directional-gradient curvature | Absolute mismatch |
+| ---: | ---: | ---: | ---: |
+| 0.05 | +0.00512544 | +0.00543225 | 0.00030682 |
+| 0.10 | +0.00504960 | +0.00543009 | 0.00038050 |
+
+Curvature entries are in `eV/(amu Å²)`. The five-point energy-versus-
+directional-gradient Simpson work residual is at most `0.006404 meV` over
+the two half-lines. The mixed direction has `97.67%` of its metric weight in
+strain, so this is particularly relevant to the variable-cell coupling. Both
+energy and gradient independently give a positive sign **in this selected
+direction**. This is not a spectral error bound for the full 16D Hessian:
+the larger diagonal energy/force discrepancy in other directions, competing
+branches, and the T-endpoint off-plane residual remain open. Do not promote
+this one-direction result to a certified conditional minimum or a 2D PES.
 
 `conditional_q075_q015_result.json` is the frozen job's output. The
 `audit-*.json` files are the canary, 77-point raw-output, and cache-only
