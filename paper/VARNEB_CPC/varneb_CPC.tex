@@ -689,49 +689,19 @@ the figure.}
 
 \subsection{Additional path-transfer benchmarks}
 
-VASP 6.3.2/PBE additionally exercises long-path restart, lattice
-serialization, candidate feasibility, and mapping sensitivity. Endpoints are
-not dispatched during each iteration; static PAW data, $k$ points,
-$\mathrm{ISYM}=-1$, and $\mathrm{SYMPREC}=10^{-4}$ remain fixed. Table~\ref{tab:vasp}
-lists the additional completed paths. GaN energies are divided by the number
-of formula units in the conventional cell. CdSe is reported in meV/atom
-because the published G-SSNEB landscape has a small barrier.
-
-\begin{table}[!htbp]
-\centering
-\footnotesize
-\caption{Additional completed VASP paths not included in the GaN
-multi-backend panel. The literature values are comparison
-references with their own functionals, coordinate metrics, and image protocols;
-they are not treated as exact cross-code replicas.}
-\label{tab:vasp}
-\begin{tabularx}{\textwidth}{p{0.25\textwidth}l c c c >{\raggedright\arraybackslash}X}
-\toprule
-Path & Pressure & $N_{\mathrm{total}}$ ($N_{\mathrm{int}}$) & VARNEB barrier & Literature & Interpretation \\
-\midrule
-GaN B4$\rightarrow$B1, hexagonal & 45.7 GPa & 29 (27) & 0.3852 eV/GaN & 0.39 eV/GaN & barrier agrees; digitized shape agrees \\
-GaN B3$\rightarrow$B1 & 45.0 GPa & 29 (27) & 0.9553 eV/GaN & $\simeq$0.57 eV/GaN & mapping-sensitive negative control \\
-CdSe RS$\rightarrow$WZ, cell mapping & 0 GPa & 17 (15) & 7.22 meV/atom & 2.4 meV/atom & PBE/PW91 and metric differ \\
-HfO$_2$ T$\rightarrow$PO & 0 GPa & 20 (18) & 2.97 meV/f.u. & 2.50 meV/f.u. & same downhill topology \\
-HfO$_2$ PO$\rightarrow$M & 0 GPa & 20 (18) & 83.6 meV/f.u. & 105.1 meV/f.u. & same single-barrier topology \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-The tetragonal and hexagonal GaN routes are within 0.002 and 0.005 eV/GaN of
-their respective Qian \emph{et al.} values \cite{Qian2013}. The
-B3$\rightarrow$B1 negative control is scientifically useful because the
-present diagonal mapping produces one broad high barrier, whereas the
-reference chain contains three connected events. Those events must be treated
-as three joined path segments if one wants separate elementary barriers; a
-single long-chain three-peak trace is not evidence for three independently
-converged calculations. The discrepancy is therefore assigned to path
-construction, not to the VASP adapter.
-For CdSe, the current PBE result is compared with the PW91 G-SSNEB landscape
-of Sheppard et al. \cite{Sheppard2012}; the small barrier and different
-coordinate definition preclude a claim of quantitative reproduction. The full
-per-path figures, digitization flags, hashes, and CSV source data are archived
-under \texttt{outputs/neb\_literature\_benchmarks/}.
+Independent VASP/PBE transfers test mapping sensitivity beyond the five-code
+GaN panel. The 45.7-GPa hexagonal GaN B4$\rightarrow$B1 path gives
+0.3852 eV/GaN versus Qian \emph{et al.}'s 0.39 eV/GaN \cite{Qian2013}.
+At 45.0 GPa, a diagonal GaN B3$\rightarrow$B1 mapping instead gives
+0.9553 eV/GaN versus approximately 0.57 eV/GaN; this negative control does
+not by itself indicate an adapter failure. The reference's three connected
+events represent three joined path segments, not three independent barriers
+established by our single chain. CdSe RS$\rightarrow$WZ cell mapping gives
+7.22 meV/atom; differing PBE/PW91 and path-coordinate protocols preclude
+quantitative reproduction of the 2.4 meV/atom G-SSNEB reference
+\cite{Sheppard2012}. Input contracts, HfO$_2$ companion paths, individual
+literature overlays, hashes, and normalization are archived under
+\texttt{outputs/neb\_literature\_benchmarks/}.
 
 \FloatBarrier
 \section{Scope, limitations, and outlook}
