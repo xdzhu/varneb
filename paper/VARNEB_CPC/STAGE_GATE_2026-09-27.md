@@ -8,11 +8,14 @@ the specific artifacts being revised.
 ## What can already be shown
 
 1. **BTO T→C:** seven real ABACUS VCNEB images and a cubic Γ-mode projection
-   are in `figures/bto_gamma_mode_path.*`. The separate exploratory
-   `outputs/batio3_t_to_c_pbe100_dzp10au/bto_transverse_soft_frozen59_exploratory_contour_job27781166.*`
+   are in `figures/bto_gamma_mode_path.*`. The main-text exploratory figure
+   `figures/bto_frozen_soft_mode_landscape.*`, copied from the independently
+   audited 59-point source under `outputs/batio3_t_to_c_pbe100_dzp10au/`,
    contains 59 audited *frozen cubic-cell* DFT samples. Its smooth contour is
    display interpolation (35 interior leave-one-out points; maximum absolute
-   error 5.14 meV/BTO). The variable-cell path is projected onto that plane
+   error 5.14 meV/BTO on the final set; earlier independent center and edge
+   holdouts reached 32.57 and 14.83 meV/BTO). The variable-cell path is
+   projected onto that plane
    but leaves it: the contour is neither a relaxed conditional PES nor a
    T→C barrier. The cubic Γ source is the five-atom `1×1×1` cell, with
    ABACUS PBE/`ecutwfc=100 Ry`/10 au DZP/`4×4×4` electronic k points.
@@ -44,9 +47,9 @@ the specific artifacts being revised.
 
 ## Minimum submission gates for a focused CPC software paper
 
-- Decide the exact claim: either retain the frozen BTO contour as a labeled
-  exploratory analysis and leave the conditional surface as staged work, or
-  complete the stronger conditional-PES gate below before using that term.
+- Keep the 59-point BTO contour explicitly labeled as an exploratory frozen
+  cut; leave the conditional surface as staged work until its stronger gate
+  below is complete. The main text now follows this narrower claim.
 - Freeze figure-to-data provenance and captions: explicit `E` versus
   `H=E+PV`, pressure, formula-unit normalization, reference zero, number of
   computed points, interpolation status, and backend-specific settings.

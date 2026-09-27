@@ -27,8 +27,11 @@ The manuscript distinguishes three evidence levels:
 2. ABACUS/PBE material calculations establish the BTO and HfO2 examples.
    BTO's cubic Gamma projection uses the five-atom `1x1x1` phonon cell;
    its 59-point contour is a *frozen-cell* slice, not a relaxed conditional
-   surface. The four-point conditional analysis and local curvature checks
-   remain staged evidence.
+   surface. The main text now shows this exploratory cut beside the direct
+   seven-image energy path and off-plane residual. The four-point conditional
+   analysis and local curvature checks remain staged evidence. Its five
+   hash-matched input JSON files are under `evidence/`; the plotting command
+   and claim limits are in `FIGURE_LOGIC_AND_STYLE.md`.
 3. ABACUS, VASP, QE, ABINIT, and CP2K have each completed a 45.7-GPa GaN
    B4-to-B1 material path. The five paths support a common dominant barrier
    topology, not identical calculator protocols or barriers. Additional VASP
@@ -48,8 +51,8 @@ material only when it closes a reproducibility, method, or verification gap;
 do not pad the manuscript with duplicate workflow descriptions or unsupported
 benchmark claims. The current working draft is twelve pages; trimming to about
 ten pages and a figure-by-figure evidence audit remain submission gates. The
-main evidence set contains the architecture figure, the BTO mode
-decomposition, the ABACUS BTO/HfO2 validation figure, the GaN multi-backend
+main evidence set contains the architecture figure, the BTO frozen-mode cut
+and path projection, the ABACUS BTO/HfO2 validation figure, the GaN multi-backend
 comparison, and a separately labeled local GaN atom--strain diagnostic.
 Per-path literature figures remain archived under
 `outputs/neb_literature_benchmarks/` rather than being duplicated in the main
