@@ -46,12 +46,18 @@ The following hashes refer to the **last visible files** under each image-15
 directory. The final-chain trajectory/snapshot and worker manifest still need
 to be joined to the exact calculator call before these can certify the final
 image-15 point. `sha256sum` was run on hf; no VASP POTCAR is redistributed.
-The byte-preserved peak input geometries and a negative-control regression
-are in `gan_45p7_peak_raw_input_20260927/`: ABACUS/VASP match final image 15,
-whereas QE/ABINIT/CP2K have raw-minus-final volumes of +0.282226,
-+0.210699, and +0.278682 Å³. Consequently the latter three last-visible
-outputs **cannot** certify the final chain's peak and must not be promoted
-from "representative raw files" to "audited final-image output".
+The geometry sanity check in `gan_45p7_image15_geometry_sanity_20260927/`
+shows ABACUS `POSCAR.final` and VASP `POSCAR` matching final image 15.
+The QE/ABINIT/CP2K `structure.start.vasp` files differ by +0.282226,
++0.210699, and +0.278682 Å³ in volume, **but these are deliberately
+initial-chain snapshots written once by `attach_image_calculators`, not the
+last calculator inputs**. These differences cannot establish whether their
+`.pwo`, `.abo`, or `cp2k.out` match the final chain. That requires parsing
+the actual `.pwi`, `abinit.in`, and `cp2k.inp` geometries and paired outputs.
+The former geometry check has now been done in
+`gan_45p7_final_peak_inputs_20260927/`: all three actual inputs match the
+final image-15 geometry within `1e-9 Å`. The paired output-value audit is
+still open.
 
 | Backend | File in result tree | SHA-256 |
 | --- | --- | --- |
@@ -89,8 +95,10 @@ The complete remote trajectories have since been independently re-read and
 their last 29 images archived under `gan_45p7_final_chains_20260927/`;
 `gan_45p7_final_chain_audit_20260927.json` proves that the plotted curves
 are reproduced from those evaluated chains. Next raw-output gate: locate
-an immutable calculator log matching **each exact final image geometry**
-(including endpoint static jobs), or perform a hash-pinned same-protocol
-static re-evaluation where mutable image directories have overwritten it.
+an actual calculator input/output pair matching **each exact final image
+geometry** (including endpoint static jobs). Peak actual-input geometry is
+already matched for QE/ABINIT/CP2K, but paired raw energy/force/stress and
+the other images are not yet independently audited. Only if records do not exist
+should a hash-pinned same-protocol static re-evaluation be considered.
 Then compare raw energy, force, stress, SCF completion and atom/cell identity
 to the chain. Do not treat the final trajectory audit as this raw-log audit.
