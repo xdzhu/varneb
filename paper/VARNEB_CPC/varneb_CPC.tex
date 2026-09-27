@@ -47,8 +47,8 @@ ABINIT, and CP2K give barriers of 0.3274, 0.3385, 0.3297, 0.2924, and
 0.2928 eV/GaN,
 respectively, and recover the same dominant barrier topology; the published
 tetragonal-route value is 0.34 eV/GaN. A feasibility-aware family of
-image-scaled, image-local, block, and staged FIRE updates reduces new image
-evaluations by 38--79\% in controlled BTO/HfO$_2$ transfers, while preserving
+image-scaled, image-local, block, and staged FIRE updates reduces estimated new
+image evaluations by 38--79\% in controlled BTO/HfO$_2$ transfers, while preserving
 negative transfer cases. Finally, a Phonopy-based $\Gamma$-mode projection
 identifies the triply degenerate unstable cubic-BTO subspace as the principal
 atomic component of the T-to-C path. VARNEB therefore contributes an
@@ -521,8 +521,11 @@ figure in the software archive.}
 Table~\ref{tab:acceleration} isolates the update policy from the calculator:
 each comparison starts from the same archived chain and holds the endpoints,
 image count, spring, pressure, calculator settings, and $0.10$ eV/\AA{}
-stopping rule fixed. New image evaluations are counted from manager logs; wall
-time is reported for context but includes scheduler and filesystem variation.
+stopping rule fixed. New image evaluations are reconstructed from the logged
+update counts and the fixed-endpoint/interior-image evaluation policy; available
+worker manifests are cross-checked, but the totals remain estimates rather than
+an independent audit of every electronic launch. Wall time is reported for
+context but includes scheduler and filesystem variation.
 All listed variants reach the common force threshold and retain the same
 endpoint-defined energy scale.
 
@@ -530,12 +533,12 @@ endpoint-defined energy scale.
 \centering
 \footnotesize
 \caption{First-principles convergence ablations. $n$ denotes total images;
-``saved'' compares new image evaluations with global FIRE for the same case.
+``saved'' compares estimated new image evaluations with global FIRE for the same case.
 The final generalized force is in eV/\AA{}.}
 \label{tab:acceleration}
 \begin{tabular}{@{}llrrrrr@{}}
 \toprule
-Case & Update policy & Steps & Time (s) & New image evals & Saved (\%) & Final $f_{\max}$ \\
+Case & Update policy & Steps & Time (s) & Est. image evals & Saved (\%) & Final $f_{\max}$ \\
 \midrule
 BTO $n=9$ & global FIRE & 28 & 2669 & 205 & --- & 0.0967 \\
 BTO $n=9$ & BlockFIRE (0.02/image) & 10 & 963 & 79 & 61.5 & 0.0865 \\
@@ -687,7 +690,7 @@ VARNEB makes established VCNEB physics usable through a documented generalized
 force, calculator, execution, and evidence contract. Five converged GaN
 backends share one 29-image path controller and recover the same dominant
 barrier topology. On matched BTO and HfO$_2$ chains, image-local or staged updates
-reduce new calculator evaluations by 78.5\% and 38.2\%, respectively, with
+reduce estimated new calculator evaluations by 78.5\% and 38.2\%, respectively, with
 negative transfers retained to delimit the claim. An endpoint-$\Gamma$ basis
 then identifies the unstable BTO subspace that carries most of the atomic path
 displacement while cell strain is reported separately. These three capabilities
