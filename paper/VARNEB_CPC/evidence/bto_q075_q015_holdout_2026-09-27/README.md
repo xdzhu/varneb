@@ -43,7 +43,16 @@ exact start-to-terminal mapping `frozen→eval-18`, `+Q_y→eval-47`, and
 `−Q_y→eval-76`, including the original selected start. These terminals are
 also the only three cache points meeting both stationarity limits. The
 mapping is now reproducibly reconstructed, although it was not serialized by
-the original job. The holdout Hessian, full-domain
+the original job. A separate geometry/provenance preflight for the selected
+`+Q_y` branch checked all 32 signed fixed-Q probes at a difference step of
+`0.05 sqrt(amu) Å`: the smallest atomic separation is `1.809681819 Å`,
+the smallest volume is `67.685878084 Å³`, and every probe passed the
+predeclared minimum-distance guard. Its immutable output is
+`curvature_0p05_preflight.json` (SHA-256
+`f9c5f423696fdbc25cf2002a6c0605387f013e6dd0d0a7c078e85867397ce4d7`).
+The corresponding 32-static-evaluation Slurm job `27787714` was submitted
+on hf `hfacnormal01` and began running on 2026-09-27 at 14:37 CST. This
+preflight is **not** a Hessian or a stability result. The holdout Hessian, full-domain
 branch continuity, and T-endpoint off-plane residual are also unverified.
 Therefore the manuscript may report this local predictive success only with
 these limits; it may not promote the staged four-point figure into a smooth
