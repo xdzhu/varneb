@@ -1,4 +1,4 @@
-"""The archived BTO Qz=0.9 candidate must not be promoted before curvature."""
+"""The archived BTO Qz=0.9 single-step screen is not a PES certificate."""
 
 from __future__ import annotations
 
@@ -70,3 +70,39 @@ def test_raw_audit_replay_and_curvature_preflight_chain(point, q, n_eval):
     assert probe["n_signed_probes"] == 32
     assert probe["curvature_step_sqrt_amu_A"] == 0.05
     assert probe["minimum_probe_atomic_distance_A"] > 1.6
+
+
+@pytest.mark.parametrize("point,q,n_eval", [
+    ("q090_q000", [0.9, 0.0], 109),
+    ("q090_q030", [0.9, 0.3], 110),
+])
+def test_single_step_curvature_is_raw_audited_but_not_certified(point, q, n_eval):
+    parent, parent_sha = _load(f"conditional_{point}_result.json")
+    replay, replay_sha = _load(f"replay-{point}-final.json")
+    all_points, all_points_sha = _load(
+        f"audit-{point}-all-points-through-curvature-0p05-27787086.json")
+    result, result_sha = _load(f"conditional_{point}_selected_curvature_0p05.json")
+    audit, _ = _load(f"audit-{point}-curvature-0p05-27787086.json")
+
+    assert all_points["status"] == "verified_gradient_stationary_candidate_curvature_and_branches_unchecked"
+    assert all_points["n_individually_audited_DFT_points"] == n_eval
+    assert len(all_points["evaluations"]) == n_eval
+    assert all(item["raw_log_sha256"] and len(item["raw_input_sha256"]) == 3
+               and item["mpi_dsize"] == 32 for item in all_points["evaluations"])
+    assert result["status"] == "orthogonal_curvature_screen_complete_not_branch_certification"
+    assert result["q1_q2_sqrt_amu_A"] == q
+    assert result["curvature_step_sqrt_amu_A"] == 0.05
+    assert result["n_gradient_evaluations"] == 32
+    assert result["start_from_result_sha256"] == parent_sha
+    assert result["evaluator_contract_sha256"] == parent["evaluator_contract_sha256"]
+    assert audit["status"] == "no_negative_curvature_at_one_difference_step_only"
+    assert audit["n_audited_DFT_points"] == n_eval
+    assert audit["n_matched_signed_probes"] == 32
+    assert audit["source_sha256"]["refined_result"] == parent_sha
+    assert audit["source_sha256"]["curvature_result"] == result_sha
+    assert audit["source_sha256"]["all_points_audit"] == all_points_sha
+    assert audit["source_sha256"]["branch_replay"] == replay_sha
+    assert audit["negative_directions"] == []
+    assert min(audit["eigenvalues_eV_per_amu_A2"]) > 0
+    assert audit["energy_hessian_diagonal_max_abs_difference_eV_per_amu_A2"] > min(
+        audit["eigenvalues_eV_per_amu_A2"])
