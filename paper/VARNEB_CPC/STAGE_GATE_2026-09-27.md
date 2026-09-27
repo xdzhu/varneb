@@ -44,7 +44,12 @@ the specific artifacts being revised.
    local atom–strain instability candidate under the **same original 600-eV
    VASP contract** as the path and endpoint Γ bases. Its `0.0232 eV/Å`
    energy–force mismatch still prevents a strict full-variable-cell TS
-   certificate. The supplementary candidate
+   certificate. The separate local `q_u/q_v` frozen quadratic cut now has
+   eight same-input grid statics and four axial half-step holdouts, with
+   maximum holdout error `0.04974 < 0.20 meV/GaN`; its contour is confined
+   to those measured coordinate bounds. This does not validate off-axis
+   interior points, an orthogonally relaxed PES, or the whole path. The
+   supplementary candidate
    `figures/gan_600eV_atomic_tube_samples.*` plots 28 audited central
    off-path statics without interpolation; the `2.329 meV/GaN` maximum LOO
    error exceeds the `1.0` gate. A smooth whole-path GaN 2D PES is not

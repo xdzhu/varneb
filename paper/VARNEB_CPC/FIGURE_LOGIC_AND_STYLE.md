@@ -24,6 +24,16 @@ no contour or unsampled minimum is drawn. Its maximum linear LOO error
 exploratory/supplementary figure until an independent along-path validation
 is available. Its source CSV and QA JSON provide per-case hashes.
 
+A distinct **local** same-600-eV joint-coordinate figure is
+`figures/gan_600eV_local_joint_cut.*`: panel (a) shows the quadratic
+`H(q_u,q_v)` cut only within the measured rectangle and overlays eight raw
+grid points plus four axial half-step holdouts; panel (b) compares their
+actual DFT enthalpies with model predictions. Its maximum axial holdout
+error is `0.04974 meV/GaN`, below the predeclared `0.20` gate. This can
+support a local-mode discussion, but must not be captioned as a certified
+whole-path surface or transition state. Keep it supplementary unless the
+five-figure manuscript is deliberately restructured and re-typeset.
+
 All plotted panels use a 183-mm figure width, editable SVG/PDF text, and a
 600-dpi PNG preview. Panel labels are regular-weight `(a)`, `(b)`, ... at
 10.5 pt in the exported figure. Tick labels, axis labels, and legends are

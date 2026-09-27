@@ -93,6 +93,21 @@ The old 1000-eV coupling figure has been replaced in the CPC draft by a
 same-600-eV Hessian/endpoint-Γ panel; the 1000-eV diagnostics remain historical
 only and cannot be mixed into production-path claims.
 
+The already completed 600-eV **local** pilot now has a separate plotted
+quadratic cut, `paper/VARNEB_CPC/figures/gan_600eV_local_joint_cut.*`.
+Within the measured `q_u=±0.020 Å`, `q_v=±0.0125 Å` rectangle, it overlays
+eight raw grid statics, four axial half-step holdouts, and the center on the
+Hessian-based contour. The maximum grid/model residual is
+`0.09054 meV/GaN`; the independent axial half-step maximum is
+`0.04974 meV/GaN`, below its predeclared `0.20` gate. A second panel compares
+all 12 off-center DFT points with model predictions. This closes the
+**local frozen two-coordinate figure and axial validation**, not an off-axis
+interior holdout, a relaxed conditional plane, a strict TS certificate, or
+the requested whole-path 2D landscape. The source CSV and QA JSON record
+the all-600-eV input provenance and the `0.0232 eV/Å` energy–gradient
+mismatch. Editable PDF/SVG and PNG are tracked; the 600-dpi TIFF is
+reproducibly generated locally but repository-ignored.
+
 The two cuts answer different questions and should be separate panels or
 figures. Their **same electronic contract** does not make their coordinate
 charts interchangeable: the local TS axes and the path-adapted axes must
