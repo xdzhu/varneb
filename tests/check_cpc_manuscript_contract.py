@@ -31,6 +31,8 @@ def main() -> None:
         ("reported 32 meV per formula unit", "HfO2 literature comparison"),
         ("figures/vcneb_material_validation.pdf", "reproducible figure asset"),
         ("78.5\\% and 38.2\\%", "bounded acceleration result"),
+        ("Forward\nB4-to-B1 barriers", "forward GaN barrier panel"),
+        ("Reverse\nB1-to-B4 barriers", "reverse GaN barrier panel"),
     ):
         require(manuscript, fragment, label=label)
 

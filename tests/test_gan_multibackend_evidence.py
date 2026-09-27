@@ -52,3 +52,16 @@ def test_multibackend_source_data_has_five_converged_paths() -> None:
         assert len(path_rows) == 29
         assert all(row["status"] == "converged" for row in path_rows)
         assert all(row["relative_enthalpy_eV_per_GaN"] for row in path_rows)
+        values = np.asarray([float(row["relative_enthalpy_eV_per_GaN"]) for row in path_rows])
+        forward = float(np.max(values[1:-1]) - values[0])
+        reverse = float(np.max(values[1:-1]) - values[-1])
+        reaction = float(values[-1] - values[0])
+        for row in path_rows:
+            np.testing.assert_allclose(float(row["barrier_eV_per_GaN"]), forward, atol=1e-10)
+            np.testing.assert_allclose(float(row["forward_barrier_eV_per_GaN"]), forward, atol=1e-10)
+            np.testing.assert_allclose(float(row["reverse_barrier_eV_per_GaN"]), reverse, atol=1e-10)
+            np.testing.assert_allclose(float(row["reaction_enthalpy_eV_per_GaN"]), reaction, atol=1e-10)
+
+    literature_rows = [row for row in rows if row["backend"] == "Qian et al."]
+    assert literature_rows
+    assert all(not row["reverse_barrier_eV_per_GaN"] for row in literature_rows)

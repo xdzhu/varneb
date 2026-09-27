@@ -103,6 +103,15 @@ def build_series(payload: dict, vasp_source: Path) -> tuple[dict[str, tuple[np.n
     return series, literature
 
 
+def barrier_components(values: np.ndarray) -> tuple[float, float, float]:
+    """Return forward/reverse barriers and endpoint enthalpy from one path."""
+
+    if len(values) < 3 or not np.isfinite(values).all():
+        raise ValueError("barrier path must have finite endpoints and interior images")
+    peak = float(np.max(values[1:-1]))
+    return peak - float(values[0]), peak - float(values[-1]), float(values[-1] - values[0])
+
+
 def write_source_data(path: Path, payload: dict, series: dict[str, tuple[np.ndarray, np.ndarray]], literature: tuple[np.ndarray, np.ndarray]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8", newline="") as handle:
@@ -115,6 +124,9 @@ def write_source_data(path: Path, payload: dict, series: dict[str, tuple[np.ndar
                 "normalized_image_index",
                 "relative_enthalpy_eV_per_GaN",
                 "barrier_eV_per_GaN",
+                "forward_barrier_eV_per_GaN",
+                "reverse_barrier_eV_per_GaN",
+                "reaction_enthalpy_eV_per_GaN",
                 "final_fmax_eV_per_A",
                 "provenance",
             ),
@@ -122,6 +134,9 @@ def write_source_data(path: Path, payload: dict, series: dict[str, tuple[np.ndar
         writer.writeheader()
         for label, (coordinate, values) in series.items():
             record = payload["backends"][label.lower()]
+            forward, reverse, reaction = barrier_components(values)
+            if not np.isclose(forward, record["barrier_eV_per_GaN"], atol=1e-6, rtol=0):
+                raise ValueError(f"{label} path and recorded forward barrier disagree")
             for index, (x_value, energy) in enumerate(zip(coordinate, values)):
                 writer.writerow(
                     {
@@ -130,7 +145,10 @@ def write_source_data(path: Path, payload: dict, series: dict[str, tuple[np.ndar
                         "image_index": index,
                         "normalized_image_index": f"{x_value:.12g}",
                         "relative_enthalpy_eV_per_GaN": f"{energy:.12g}",
-                        "barrier_eV_per_GaN": f"{record['barrier_eV_per_GaN']:.12g}",
+                        "barrier_eV_per_GaN": f"{forward:.12g}",
+                        "forward_barrier_eV_per_GaN": f"{forward:.12g}",
+                        "reverse_barrier_eV_per_GaN": f"{reverse:.12g}",
+                        "reaction_enthalpy_eV_per_GaN": f"{reaction:.12g}",
                         "final_fmax_eV_per_A": f"{record['final_max_generalized_force_eV_per_A']:.12g}",
                         "provenance": f"Slurm job {record['job_id']}",
                     }
@@ -144,6 +162,9 @@ def write_source_data(path: Path, payload: dict, series: dict[str, tuple[np.ndar
                     "normalized_image_index": f"{x_value:.12g}",
                     "relative_enthalpy_eV_per_GaN": f"{energy:.12g}",
                     "barrier_eV_per_GaN": payload["literature"]["barrier_eV_per_GaN"],
+                    "forward_barrier_eV_per_GaN": payload["literature"]["barrier_eV_per_GaN"],
+                    "reverse_barrier_eV_per_GaN": "",
+                    "reaction_enthalpy_eV_per_GaN": "",
                     "final_fmax_eV_per_A": "",
                     "provenance": "Qian et al. (2013), Fig. 4; approximate digitization",
                 }
@@ -207,7 +228,7 @@ def plot_multibackend(output: Path, payload: dict, series: dict[str, tuple[np.nd
     grid = figure.add_gridspec(2, 2, width_ratios=(1.58, 1), wspace=0.43, hspace=0.42)
     path_axis = figure.add_subplot(grid[:, 0])
     barrier_axis = figure.add_subplot(grid[0, 1])
-    force_axis = figure.add_subplot(grid[1, 1])
+    reverse_axis = figure.add_subplot(grid[1, 1])
     figure.subplots_adjust(left=0.11, right=0.975, top=0.92, bottom=0.15)
 
     labels = ("ABACUS", "VASP", "QE", "ABINIT", "CP2K")
@@ -220,26 +241,25 @@ def plot_multibackend(output: Path, payload: dict, series: dict[str, tuple[np.nd
 
     y_positions = np.arange(len(labels))[::-1]
     barrier_axis.axvline(payload["literature"]["barrier_eV_per_GaN"], color=COLORS["literature"], linestyle="--", lw=1.1, zorder=0)
-    force_axis.axvline(payload["contract"]["fmax_target_eV_per_A"], color=COLORS["literature"], linestyle="--", lw=1.1, zorder=0)
-
     for label, y_value in zip(labels, y_positions, strict=True):
-        record = payload["backends"][label.lower()]
-        barrier = record["barrier_eV_per_GaN"]
-        force = record["final_max_generalized_force_eV_per_A"]
-        for axis, value, annotation_x in ((barrier_axis, barrier, 0.365), (force_axis, force, 0.108)):
-            axis.plot([0, value], [y_value, y_value], color=COLORS[label], lw=1.25, alpha=0.65, zorder=1)
-            axis.scatter([value], [y_value], color=COLORS[label], edgecolor="white", linewidth=0.7, s=45, zorder=3)
-            axis.text(annotation_x, y_value, f"{value:.3f}", ha="left", va="center", fontsize=8, color="#272727")
+        _, values = series[label]
+        forward, reverse, _ = barrier_components(values)
+        for axis, value in ((barrier_axis, forward), (reverse_axis, reverse)):
+            axis.barh(y_value, value, height=0.58, color=COLORS[label],
+                      edgecolor="white", linewidth=0.7, zorder=2)
+            axis.text(0.375, y_value, f"{value:.3f}", ha="left",
+                      va="center", fontsize=8, color="#272727")
 
-    for axis, xlabel, xlim in (
-        (barrier_axis, "Barrier (eV/GaN)", (0, 0.48)),
-        (force_axis, r"Final $f_{\max}$ (eV/$\AA$)", (0, 0.15)),
+    for axis, xlabel in (
+        (barrier_axis, "Forward barrier (eV/GaN)"),
+        (reverse_axis, "Reverse barrier (eV/GaN)"),
     ):
-        axis.set(xlim=xlim, ylim=(-0.6, 4.6), xlabel=xlabel)
+        axis.set(xlim=(0, 0.44), ylim=(-0.6, 4.6), xlabel=xlabel)
+        axis.set_xticks(np.arange(0, 0.41, 0.1))
         axis.set_yticks(y_positions, labels)
         axis.tick_params(direction="out", length=3.2, width=0.8, top=True, right=True)
 
-    for label, axis in zip(("(a)", "(b)", "(c)"), (path_axis, barrier_axis, force_axis)):
+    for label, axis in zip(("(a)", "(b)", "(c)"), (path_axis, barrier_axis, reverse_axis)):
         axis.text(-0.15, 1.04, label, transform=axis.transAxes, fontweight="normal", fontsize=10.5, va="bottom", ha="left")
         axis.tick_params(direction="out", length=3.2, width=0.8, top=True, right=True)
     return _save(figure, output)
