@@ -1,4 +1,4 @@
-"""The archived BTO Qz=0.9 single-step screen is not a PES certificate."""
+"""The archived BTO Qz=0.9 two-step/local probes are not a PES certificate."""
 
 from __future__ import annotations
 
@@ -130,3 +130,62 @@ def test_second_step_preflight_is_geometry_only(point, q):
     assert preflight["source_sha256"]["branch_replay"] == replay_sha
     assert parent["stress_target_passed"] and initial_audit["source_sha256"]["summary"] == parent_sha
     assert replay["selected_start"] == parent["selected_start"]
+
+
+@pytest.mark.parametrize("point,q,n_through_hessian,n_final", [
+    ("q090_q000", [0.9, 0.0], 141, 145),
+    ("q090_q030", [0.9, 0.3], 142, 146),
+])
+def test_two_step_and_direct_soft_direction_are_raw_audited(
+    point, q, n_through_hessian, n_final,
+):
+    parent, parent_sha = _load(f"conditional_{point}_result.json")
+    first_raw, first_raw_sha = _load(
+        f"audit-{point}-all-points-through-curvature-0p05-27787086.json")
+    second_raw, second_raw_sha = _load(
+        f"audit-{point}-all-points-through-curvature-0p10-27787309.json")
+    final_raw, final_raw_sha = _load(
+        f"audit-{point}-all-points-through-soft-probes-27787447.json")
+    first, first_sha = _load(
+        f"audit-{point}-curvature-0p05-rereconstructed-20260927.json")
+    second, second_sha = _load(f"audit-{point}-curvature-0p10-27787309.json")
+    comparison, _ = _load(f"compare-{point}-curvature-0p05-0p10-27787309.json")
+    soft_preflight, soft_preflight_sha = _load(
+        f"preflight-{point}-soft-direction-two-step-20260927.json")
+    direct, direct_sha = _load(f"soft-probe-{point}-result.json")
+    audited, _ = _load(f"audit-soft-probe-{point}-27787447.json")
+
+    assert [first_raw["n_individually_audited_DFT_points"],
+            second_raw["n_individually_audited_DFT_points"],
+            final_raw["n_individually_audited_DFT_points"]] == [
+                n_through_hessian - 32, n_through_hessian, n_final]
+    assert all(item["status"] == "verified_gradient_stationary_candidate_curvature_and_branches_unchecked"
+               and item["source_sha256"]["summary"] == parent_sha
+               for item in (first_raw, second_raw, final_raw))
+    assert parent["stress_target_passed"] is True
+    assert first["source_sha256"]["all_points_audit"] == first_raw_sha
+    assert second["source_sha256"]["all_points_audit"] == second_raw_sha
+    assert first["step_sqrt_amu_A"] == 0.05
+    assert second["step_sqrt_amu_A"] == 0.10
+    assert comparison["source_sha256"] == {
+        "first_audit": first_sha, "second_audit": second_sha,
+    }
+    assert comparison["lowest_direction_comparison"]["lowest_mode_absolute_overlap"] > 0.999999
+    assert all(value > 0 for value in comparison["lowest_eigenvalues"])
+    assert comparison["smallest_absolute_curvature_below_observed_diagonal_mismatch"] is True
+    assert soft_preflight["status"] == "four_soft_direction_geometries_passed_no_dft"
+    assert soft_preflight["q1_q2_sqrt_amu_A"] == q
+    assert soft_preflight["source_sha256"]["curvature_small"] == first_sha
+    assert soft_preflight["source_sha256"]["curvature_large"] == second_sha
+    assert direct["status"] == "four_static_probes_complete_pending_independent_SCF_audit"
+    assert direct["n_new_evaluations"] == 4
+    assert audited["status"] == "four_original_static_DFT_points_verified_soft_direction_curvature_screen_only"
+    assert audited["source_sha256"]["summary"] == direct_sha
+    assert audited["source_sha256"]["all_points_audit"] == final_raw_sha
+    assert audited["source_sha256"]["soft_preflight"] == soft_preflight_sha
+    assert audited["n_individually_audited_DFT_points"] == 4
+    assert len(audited["curvatures"]) == 2
+    assert all(row["energy_curvature_eV_per_amu_A2"] > 0
+               and row["gradient_curvature_eV_per_amu_A2"] > 0
+               and row["energy_gradient_disagreement_eV_per_amu_A2"] < 0.001
+               for row in audited["curvatures"])

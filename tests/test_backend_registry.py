@@ -31,9 +31,14 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_backend_matrix_has_all_supported_adapters() -> None:
-    names = [row["name"] for row in backend_capability_matrix()]
+    rows = backend_capability_matrix()
+    names = [row["name"] for row in rows]
     assert names == ["abacus", "vasp", "qe", "lammps", "cp2k", "abinit"]
     assert get_backend_spec("LAMMPS").variable_cell
+    statuses = {row["name"]: row["status"] for row in rows}
+    assert all(statuses[name] == "validated"
+               for name in ("abacus", "vasp", "qe", "cp2k", "abinit"))
+    assert statuses["lammps"] == "adapter"
 
 
 def test_optimizer_registry_is_independent_from_backend_registry() -> None:

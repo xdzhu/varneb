@@ -109,20 +109,20 @@ _BACKENDS: tuple[BackendSpec, ...] = (
         "VASP contract, exact POSCAR lattice round-trip and endpoint caching.",
     ),
     BackendSpec(
-        "qe", "vcneb.qe", "pw.x", True, "adapter",
-        "ASE Espresso static scf adapter; UPF provenance must be pinned.",
+        "qe", "vcneb.qe", "pw.x", True, "validated",
+        "GaN B4-to-B1 45.7-GPa material path validated; pin the UPF and scf contract.",
     ),
     BackendSpec(
         "lammps", "vcneb.backends", "lammps", True, "adapter",
         "ASE LAMMPS static force/stress adapter; validate potential and units.",
     ),
     BackendSpec(
-        "cp2k", "vcneb.backends", "cp2k_shell", True, "adapter",
-        "ASE CP2K static force/stress adapter; validate basis/potential files.",
+        "cp2k", "vcneb.backends", "cp2k_shell", True, "validated",
+        "GaN B4-to-B1 45.7-GPa material path validated; pin basis/potential and MPI affinity.",
     ),
     BackendSpec(
-        "abinit", "vcneb.backends", "abinit", True, "adapter",
-        "ASE ABINIT static force/stress adapter; validate pseudopotential paths and cutoffs.",
+        "abinit", "vcneb.backends", "abinit", True, "validated",
+        "GaN B4-to-B1 45.7-GPa material path validated; pin pseudopotentials and cutoffs.",
     ),
 )
 

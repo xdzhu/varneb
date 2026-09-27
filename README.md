@@ -63,6 +63,8 @@ images = interpolate_vcneb(initial, final, n_images=7, mic=True)
 result = run_vcneb(images, fmax=0.10, climb_after=None)
 ```
 
+`n_images=7` means **seven total images**: two fixed endpoints and five
+interior images. The endpoints are not recalculated at every VCNEB update.
 The default NEB force threshold is `0.10 eV/Å`. In a variable-cell run the
 calculator must provide stress; with `cell_mask=0` the path is fixed-cell NEB
 and needs only energy and forces. Cell updates remain owned by VARNEB, so QE
