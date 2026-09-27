@@ -36,7 +36,12 @@ layout/source audit remain open. Recompute after final figure/data review.
 1. Join the newly indexed remote trees to the **exact final** calculator call
    for each of the 29 images, including the cached endpoint static jobs;
    independently parse all raw energies/forces/stresses and SCF completion,
-   then freeze a portable data archive. The compact GaN evidence JSON gives
+   then freeze a portable raw-data archive. The last-visible QE/ABINIT/CP2K
+   image-15 workdirs have **different geometry** from final chain image 15;
+   see the byte-pinned negative control in
+   `evidence/gan_45p7_peak_raw_input_20260927/`. Find immutable matching
+   logs or plan a same-contract final-chain static verification; do not audit
+   those mutable directories as though they held the final point. The compact GaN evidence JSON gives
    all five jobs and barriers, but only CP2K currently embeds both a chain
    SHA-256 and a calculator-profile SHA-256. The separate source index does
    not retroactively insert those hashes or establish this full audit.

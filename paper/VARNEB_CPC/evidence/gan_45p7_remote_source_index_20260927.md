@@ -46,6 +46,12 @@ The following hashes refer to the **last visible files** under each image-15
 directory. The final-chain trajectory/snapshot and worker manifest still need
 to be joined to the exact calculator call before these can certify the final
 image-15 point. `sha256sum` was run on hf; no VASP POTCAR is redistributed.
+The byte-preserved peak input geometries and a negative-control regression
+are in `gan_45p7_peak_raw_input_20260927/`: ABACUS/VASP match final image 15,
+whereas QE/ABINIT/CP2K have raw-minus-final volumes of +0.282226,
++0.210699, and +0.278682 Å³. Consequently the latter three last-visible
+outputs **cannot** certify the final chain's peak and must not be promoted
+from "representative raw files" to "audited final-image output".
 
 | Backend | File in result tree | SHA-256 |
 | --- | --- | --- |
@@ -79,9 +85,12 @@ except VASP, whose paths are `$V/vcneb_input/initial/CONTCAR` and
 | ABINIT | `27274061bd12e6b1db693170b3a60103731c30dad7d072b277d3118cadbb973b` / `3c996227b5a2814b96026216f49e21129ae63bdc9018ca996d018a8fd9f86d22` | parameter JSON `8c92a8b30ecac9a6ccfee81aac3dbd893c1f20c836c2d22597c14c40c76fd990`; factory JSON `8967fec1f5e76a81e989fad51cdac09d7c762a0ddb17432ec2167b08ae5d287c` |
 | CP2K | `7411c5ff4d1e29132f97c1e13818f032378b32f73d4e27898b1e64ef67e5197c` / `187402f1eca823878a33732369520c0ab263dce6d6c7fa3a9102ab92bc59de9f` | parameter JSON `e274b93390b400289fba6c84fd7cf56d58fe8c6fa640d9b152f5bb2795af5a17` |
 
-Next gate: parse each final `vcneb_summary.json`, trajectory/snapshot, and
-worker manifest together, then locate and validate the **exact final** 29
-calculator calls (including endpoints from their static jobs) and hash their
-raw inputs/outputs. Compare raw energy, forces, stress, SCF completion and
-cell/atom identity to the archived source-data CSV. Only then freeze the
-portable archive and strengthen the five-backend manuscript claim.
+The complete remote trajectories have since been independently re-read and
+their last 29 images archived under `gan_45p7_final_chains_20260927/`;
+`gan_45p7_final_chain_audit_20260927.json` proves that the plotted curves
+are reproduced from those evaluated chains. Next raw-output gate: locate
+an immutable calculator log matching **each exact final image geometry**
+(including endpoint static jobs), or perform a hash-pinned same-protocol
+static re-evaluation where mutable image directories have overwritten it.
+Then compare raw energy, force, stress, SCF completion and atom/cell identity
+to the chain. Do not treat the final trajectory audit as this raw-log audit.
