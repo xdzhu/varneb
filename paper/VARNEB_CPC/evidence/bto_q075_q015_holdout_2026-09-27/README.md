@@ -122,6 +122,19 @@ the larger diagonal energy/force discrepancy in other directions, competing
 branches, and the T-endpoint off-plane residual remain open. Do not promote
 this one-direction result to a certified conditional minimum or a 2D PES.
 
+An older offline projection of the archived seven-image T→C chain already
+measures the T endpoint's atomic residual outside these two cubic Γ axes as
+`0.28996193 sqrt(amu) Å` (cubic endpoint ≈0), with T-end symmetric strain
+`ηxx=ηyy=−0.00940965`, `ηzz=+0.05252416`. Its report and reference/force-
+constant/eigenpair SHA-256 values match the sources frozen in this holdout's
+soft-direction preflight. That projection currently resides at
+`outputs/batio3_t_to_c_pbe100_dzp10au/bto_transverse_soft_plane_offline_audit_2026-09-26.json`
+in the local ignored result tree; it is **not** yet a portable raw-data audit
+in this folder. A nonzero frozen-plane residual does not rule out a
+*conditionally relaxed* surface containing T, because the orthogonal
+coordinates may relax. The T-end branch correspondence and portable source
+freeze remain open before any path-overlaid conditional contour claim.
+
 `conditional_q075_q015_result.json` is the frozen job's output. The
 `audit-*.json` files are the canary, 77-point raw-output, and cache-only
 branch-replay audits; the
