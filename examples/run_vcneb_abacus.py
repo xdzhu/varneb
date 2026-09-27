@@ -172,7 +172,9 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Remove the (mass-weighted, when available) translational component before normalization",
     )
-    parser.add_argument("--no-climb", action="store_true")
+    climb_group = parser.add_mutually_exclusive_group()
+    climb_group.add_argument("--climb", action="store_true", help="Enable climbing image explicitly")
+    climb_group.add_argument("--no-climb", action="store_true", help="Legacy explicit ordinary-NEB selection")
     parser.add_argument(
         "--climb-after",
         type=int,
@@ -244,6 +246,10 @@ def parse_args() -> argparse.Namespace:
         help="step-cap factor applied to each line-search retry",
     )
     return parser.parse_args()
+
+
+def _climb_enabled(args: argparse.Namespace) -> bool:
+    return (args.climb or args.climb_after is not None) and not args.no_climb
 
 
 def parse_species_files(values: list[str], option: str) -> dict[str, str]:
@@ -523,7 +529,7 @@ def main() -> None:
         images,
         pressure_gpa=args.pressure_gpa,
         k=args.k,
-        climb=not args.no_climb,
+        climb=_climb_enabled(args),
         climb_after=args.climb_after,
         mode_basis=mode_basis,
         constraint_mode=None if args.constraint_mode == "none" else args.constraint_mode,

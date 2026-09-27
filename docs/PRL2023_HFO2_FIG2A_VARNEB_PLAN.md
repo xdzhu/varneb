@@ -236,7 +236,7 @@ python examples/run_vcneb_vasp.py \
   --vasp-bin /path/to/vasp_std
 ```
 
-未收敛时使用相同参数和 `--resume`，不要再次传入 `--initial-trajectory`。普通路径达到 `0.10 eV/Å` 并通过路径诊断后，可复制为独立CI工作目录，或在同一可追溯链上以 `--resume`、去掉 `--no-climb`、`--fmax 0.03` 进行CI精修。普通阶段结果用于筛查路径拓扑和异常，不作为最终精确势垒。
+未收敛时使用相同参数和 `--resume`，不要再次传入 `--initial-trajectory`。普通路径达到 `0.10 eV/Å` 并确认内部能峰及路径诊断后，可复制为独立 CI 工作目录，或在同一可追溯链上以 `--resume --climb --fmax 0.03` 进行 CI 精修。仅删除 `--no-climb` 不会启用 CI；普通阶段结果用于筛查路径拓扑和异常，不作为最终精确势垒。
 
 ## 8. 计算顺序
 

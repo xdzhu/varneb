@@ -938,7 +938,7 @@ class VCNEB:
         *,
         pressure: float = 0.0,
         k: float | Iterable[float] = 0.2,
-        climb: bool = True,
+        climb: bool = False,
         cell_scale: Optional[float] = None,
         atom_mask: Optional[Array] = None,
         cell_mask: Optional[Array] = None,
@@ -2099,7 +2099,7 @@ def run_vcneb(
     *,
     pressure_gpa: float = 0.0,
     k: float | Iterable[float] = 0.2,
-    climb: bool = True,
+    climb: bool = False,
     climb_after: int | None = None,
     cell_scale: Optional[float] = None,
     atom_mask: Optional[Array] = None,
@@ -2132,10 +2132,10 @@ def run_vcneb(
 ) -> tuple[VCNEB, object]:
     """Run a VC-NEB optimization with an ASE optimizer.
 
-    When ``climb_after`` is provided with ``climb=True``, ordinary NEB is
-    used for that many completed optimizer steps before the climbing-image
-    force is enabled.  This prevents a noisy initial path from selecting a
-    wrong climbing image too early.
+    Ordinary NEB is the default. When ``climb_after`` is provided with
+    ``climb=True``, ordinary NEB is used for that many completed optimizer
+    steps before the climbing-image force is enabled. This prevents a noisy
+    initial path from selecting a wrong climbing image too early.
 
     If ``failure_report`` is supplied, optimizer/calculator exceptions are
     recorded atomically with the completed-step count and recovery locations

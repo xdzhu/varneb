@@ -143,11 +143,17 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--mode-cell-scale", type=float, default=None)
     parser.add_argument("--mode-mass-weighted-input", action="store_true")
     parser.add_argument("--mode-remove-translation", action="store_true")
-    parser.add_argument("--no-climb", action="store_true")
+    climb_group = parser.add_mutually_exclusive_group()
+    climb_group.add_argument("--climb", action="store_true", help="Enable climbing image explicitly")
+    climb_group.add_argument("--no-climb", action="store_true", help="Legacy explicit ordinary-NEB selection")
     parser.add_argument("--resume", action="store_true", help="Resume from the latest complete chain in vcneb.traj")
     parser.add_argument("--resume-trajectory", default=None, help="Trajectory to resume from; defaults to workdir/vcneb.traj")
     parser.add_argument("--initial-trajectory", default=None, help="Explicit single initial chain; preserves atom order and unwrapped coordinates")
     return parser.parse_args()
+
+
+def _climb_enabled(args: argparse.Namespace) -> bool:
+    return args.climb
 
 
 def read_explicit_initial_chain(path, initial, final, n_images, **geometry_limits):
@@ -471,7 +477,7 @@ def main() -> None:
         images,
         pressure_gpa=args.pressure_gpa,
         k=args.k,
-        climb=not args.no_climb,
+        climb=_climb_enabled(args),
         mic=args.mic,
         image_executor=executor,
         candidate_validator=candidate_validator,

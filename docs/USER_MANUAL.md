@@ -57,6 +57,17 @@ cache. Use `interpolate_vcneb(..., mic=True, cell_interpolation="log_strain")`
 for the tested variable-cell initialization and keep the mapping report in the
 run manifest.
 
+The Python `VCNEB` and `run_vcneb` entry points default to ordinary NEB
+(`climb=False`). Set `climb=True` only after an ordinary path has a genuine
+interior energy/enthalpy peak above both endpoints. `climb_after` delays CI
+when paired with `climb=True`; it is **not** an automatic peak or
+transition-state certification gate.
+
+The material command-line drivers also default to ordinary NEB. Use
+`--climb` after checking the interior peak, or `--climb-after N` for an
+explicit delayed CI run. `--no-climb` remains accepted for older job scripts
+and overrides `--climb-after`; removing it alone does not enable CI.
+
 ## 3. Calculator contract
 
 Every image calculator must provide `get_potential_energy()` and `get_forces()`.

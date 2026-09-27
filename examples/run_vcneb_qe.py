@@ -65,8 +65,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--degauss", type=float, default=None, help="QE degauss in Ry; requires --smearing")
     parser.add_argument("--optimizer", choices=["FIRE", "BFGS", "LBFGS", "BFGSLineSearch"], default="FIRE")
     parser.add_argument("--maxstep", type=float, default=None)
-    parser.add_argument("--no-climb", action="store_true", help="Use ordinary NEB without CI")
-    parser.add_argument("--climb-after", type=int, default=None)
+    climb_group = parser.add_mutually_exclusive_group()
+    climb_group.add_argument("--climb", action="store_true", help="Enable climbing image explicitly")
+    climb_group.add_argument("--no-climb", action="store_true", help="Legacy explicit ordinary-NEB selection")
+    parser.add_argument("--climb-after", type=int, default=None, help="Enable climbing image after this many ordinary-NEB steps")
     parser.add_argument("--mic", action="store_true")
     parser.add_argument("--cell-interpolation", choices=["linear", "log_strain"], default="linear")
     parser.add_argument("--mapping", choices=["identity", "auto"], default="identity")
@@ -85,6 +87,10 @@ def parse_args() -> argparse.Namespace:
         help="Evaluate fixed initial endpoint 00 once, then write qe_static_summary.json; never optimize a path",
     )
     return parser.parse_args()
+
+
+def _climb_enabled(args: argparse.Namespace) -> bool:
+    return (args.climb or args.climb_after is not None) and not args.no_climb
 
 
 def parse_species_files(values: list[str]) -> dict[str, str]:
@@ -273,7 +279,7 @@ def main() -> None:
         images,
         pressure_gpa=args.pressure_gpa,
         k=args.k,
-        climb=not args.no_climb,
+        climb=_climb_enabled(args),
         climb_after=args.climb_after,
         image_executor=executor,
         optimizer=args.optimizer,

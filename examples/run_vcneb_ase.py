@@ -144,8 +144,10 @@ def parse_args() -> argparse.Namespace:
         default=None,
         help="static endpoint summary whose structure hashes must match the effective band endpoints",
     )
-    parser.add_argument("--no-climb", action="store_true")
-    parser.add_argument("--climb-after", type=int, default=None)
+    climb_group = parser.add_mutually_exclusive_group()
+    climb_group.add_argument("--climb", action="store_true", help="Enable climbing image explicitly")
+    climb_group.add_argument("--no-climb", action="store_true", help="Legacy explicit ordinary-NEB selection")
+    parser.add_argument("--climb-after", type=int, default=None, help="Enable climbing image after this many ordinary-NEB steps")
     parser.add_argument("--mic", action="store_true")
     parser.add_argument("--cell-interpolation", choices=("linear", "log_strain"), default="log_strain")
     parser.add_argument("--mapping", choices=("identity", "auto"), default="auto")
@@ -182,6 +184,10 @@ def parse_args() -> argparse.Namespace:
         help="endpoints evaluated by --static-only (default: both)",
     )
     return parser.parse_args()
+
+
+def _climb_enabled(args: argparse.Namespace) -> bool:
+    return (args.climb or args.climb_after is not None) and not args.no_climb
 
 
 def main() -> None:
@@ -436,7 +442,7 @@ def main() -> None:
         cell_mask=cell_mask,
         cell_scale=mode_scale,
         k=args.k,
-        climb=not args.no_climb,
+        climb=_climb_enabled(args),
         climb_after=args.climb_after,
         mode_basis=mode_basis,
         constraint_mode="subspace" if mode_basis is not None else None,

@@ -190,6 +190,8 @@ if [[ -n "${resume_snapshot}" ]]; then
 fi
 if [[ "${NO_CLIMB:-1}" == 1 ]]; then
   args+=(--no-climb)
+else
+  args+=(--climb)
 fi
 if [[ "${VALIDATE_ONLY:-0}" == 1 ]]; then
   args+=(--validate-only)
