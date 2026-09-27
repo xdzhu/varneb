@@ -78,8 +78,11 @@ final = read("final/POSCAR")
 images = interpolate_vcneb(initial, final, n_images=7, mic=True)
 # Attach a reviewed static calculator to each image first; for VCNEB it must
 # provide energy, forces, and stress in ASE units and use a private directory.
-chain, optimizer = run_vcneb(images, fmax=0.10, climb_after=None)
+chain, optimizer = run_vcneb(images, fmax=0.10, climb=False)
 ```
+
+Start with ordinary NEB; enable a climbing-image refinement only after the
+converged ordinary band has a genuine interior maximum above both endpoints.
 
 `n_images=7` means **seven total images**: two fixed endpoints and five
 interior images. The endpoints are not recalculated at every VCNEB update.
