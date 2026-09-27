@@ -39,6 +39,20 @@ energy-gradient/stress-gradient discrepancy of `0.02372 eV/Å` at a 0.02 Å
 step (and `0.02320 eV/Å` at 0.01 Å). This is a numerical consistency limit
 that must be reported and diagnosed **without changing ENCUT** before making
 sub-0.01 eV/Å saddle-gradient claims.
+At the 0.02 Å step the three diagonal-strain discrepancies are nearly
+isotropic (about `0.022–0.024 eV/Å`), whereas the largest atomic-coordinate
+discrepancy is `0.00674 eV/Å`. This pattern is compatible with a stress-side
+basis-set/Pulay contribution, but does **not** prove that diagnosis; VASP's
+[Pulay-stress documentation](https://vasp.at/wiki/Pulay_stress) explains why
+cell derivatives are especially sensitive to a finite plane-wave basis.
+For this study the response is to carry a same-600-eV numerical error budget,
+not to retune the cutoff or combine unequal-cutoff energies.
+
+The current CPC draft's GaN joint-mode panel still depicts the segregated
+1000-eV diagnostic. It is **not** the final same-protocol figure and must be
+replaced or removed before submission; the historical calculation is retained
+only for provenance. Endpoint Γ modes, local joint modes and the 1D path must
+all be compared under the 600-eV contract in the revised analysis.
 
 ## Two complementary computed surfaces, with distinct claims
 
@@ -46,10 +60,10 @@ sub-0.01 eV/Å saddle-gradient claims.
    barrier neighborhood, refine the saddle and compute its joint atom–strain
    Hessian **entirely at 600 eV**; remove translations and choose the negative
    eigenvector `u` and a declared orthogonal transverse eigenvector `v`.
-   First verify the stationary gradient, Hessian index and two-basin links
-   under this same contract. Define a *frozen* local slice
+   Verify the stationary gradient, Hessian index and two-basin links
+   under this same contract before claiming a certified TS. Define a *frozen* local slice
    `H(q_u,q_v)=H[Q_TS+q_u u+q_v v]`. Only after these gates pass, preflight a
-   small 3×3 static pilot at `q_u,q_v∈{-0.10,0,+0.10} Å`, reusing the center
+   small 3×3 static pilot within geometry-safe displacements, reusing the center
    only if its input and output are genuinely identical. The plot is a
    local *enthalpy cut*, not a full-path PES or a constrained minimum. Check
    center/axis energy–gradient consistency, cell positivity, minimum
@@ -68,6 +82,16 @@ sub-0.01 eV/Å saddle-gradient claims.
    `s` is a collective reaction coordinate, and the transported transverse
    direction can change with `s`. Plot the mode/strain amplitudes and
    reconstruction residual separately along all 29 images.
+
+As of 2026-09-28, the 600-eV local candidate has one negative joint Hessian
+direction at a 0.02 Å full finite-difference step and a 3×3 frozen pilot at
+`q_u=±0.02 Å`, `q_v=±0.0125 Å`, plus four independent axial half-steps. The
+half-step quadratic-model error is below `0.05 meV/GaN`, but the full
+energy–gradient mismatch is about `0.0232 eV/Å` and two-basin links have not
+been demonstrated. Thus this is a measured local cut, not a certified TS.
+The old 1000-eV coupling figure has been replaced in the CPC draft by a
+same-600-eV Hessian/endpoint-Γ panel; the 1000-eV diagnostics remain historical
+only and cannot be mixed into production-path claims.
 
 The two cuts answer different questions and should be separate panels or
 figures. Their **same electronic contract** does not make their coordinate
@@ -106,6 +130,29 @@ strict-subspace barriers remain different quantities.
   2D cut, a raw-audited whole-path 2D tube, all-image mode/strain/reconstruction
   plots, a same-protocol comparison to the original 1D enthalpy barrier, and
   figure source data. HfO2 and bilayer hBN come **after** this GaN/BTO closure.
+
+## CPC figure contract (Python/matplotlib)
+
+Core conclusion: the 600-eV GaN path has a local coupled atom–strain negative
+direction, while a path-adapted transverse coordinate reveals how the
+enthalpy changes away from the full B4→B1 VCNEB centerline. Use a full-width
+quantitative composite (183 mm) with two aligned, untitled panels: (a) the
+whole-path `H(s,q_perp)` tube as the hero, preserving every computed point
+and drawing the actual `q_perp=0` chain; (b) the near-saddle frozen
+`H(q_u,q_v)` cut with its grid and axial holdouts. Mark panels `(a)` and `(b)`
+in normal-weight large type, keep all four axis spines and legible labels,
+and use framed semitransparent white legends away from data. Export editable
+PDF/SVG plus 600-dpi TIFF, a source-data CSV and a hash/QA record.
+
+Only interpolate within the sampled coordinate rectangle and show raw markers.
+For panel (a), interpolate the *off-path excess enthalpy* along arc length,
+not the barrier itself; first inspect the leave-one-anchor-out error and
+refine anchors where it exceeds `0.10 meV/GaN`. For panel (b), use a declared
+local quadratic interpolant only if the independent half-step holdout error
+passes `0.20 meV/GaN`. Neither contour is a free-energy landscape or proof of
+a globally unique MEP. The transverse normal is transported and is not a
+single global Γ phonon; the small q-range and numerical stress/energy
+consistency limit belong in the caption, not hidden in source files.
 
 For a stationary enthalpy minimum or an index-one saddle, the derivative
 `dH/ds` along a smooth MEP is zero at that point. An index-one saddle has

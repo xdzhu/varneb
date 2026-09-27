@@ -635,49 +635,52 @@ located at image 15. These checks distinguish the complete path result from
 an endpoint-only backend demonstration.
 
 A separate local VASP diagnostic examines why the B4-to-B1 candidate is
-unstable when atomic and cell freedoms are combined. At a 1000 eV cutoff,
-the translation-free atomic--symmetric-strain Hessian has one negative
-direction at both 0.01 and 0.02 \AA{} finite-difference steps, whereas its
-frozen-strain atomic and frozen-atomic strain blocks are each positive definite
-(Fig.~\ref{fig:gan-joint-mode}a). The lowest joint curvature is
-$-4.049/-4.031$ eV/\AA$^2$ across the two steps, and the corresponding
-directions overlap by $0.999999$ in absolute value. Relaxing strain in the
-quadratic atomic block gives a negative Schur-complement curvature; the
-instability is therefore a local atom--strain coupling effect, not an
-unstable mode of either frozen block alone. Curvature magnitudes depend on
-the stated atomic--cell coordinate metric, while the sign pattern is robust
-to these two numerical steps. This 1000 eV diagnostic is not mixed into the
-600 eV production-path enthalpies.
+unstable when atomic and cell freedoms are combined. The production electronic
+contract is retained throughout: 600 eV, PBE/Ga\_d+N PAW, and the same
+$\Gamma$-centered $8\times8\times6$ mesh. Following one 600 eV static
+refinement, the translation-free atomic--symmetric-strain Hessian at a
+0.02 \AA{} finite-difference step has one negative direction,
+$-4.033$ eV/\AA$^2$, whose squared overlap with the path tangent is $0.996$.
+Its frozen-strain atomic and frozen-atomic strain blocks have positive lowest
+curvatures, $2.450$ and $3.903$ eV/\AA$^2$, while the strain-relaxed atomic
+Schur complement is negative (Fig.~\ref{fig:gan-joint-mode}a). This supports
+a local atom--strain coupling mechanism within the stated coordinate metric.
+Independent half-step energy probes preserve the negative path-direction
+and positive transverse-direction signs, but are not a second full Hessian.
+The maximum discrepancy between numerical enthalpy derivatives and the
+force/stress-derived gradient is $0.0232$ eV/\AA{}; accordingly, the candidate
+is not presented as a strictly certified transition state.
 
-The atomic component of that joint negative direction can also be compared
-geometrically with independently calculated 600 eV, four-atom-cell endpoint
+The atomic component of the same 600 eV joint negative direction is projected
+geometrically onto independently calculated 600 eV, four-atom-cell endpoint
 $\Gamma$ bases after center-of-mass translation is removed
-(Fig.~\ref{fig:gan-joint-mode}b). The two dominant B4 optical doublets capture
-$56.2\%$ and $39.6\%$ of its mass-weighted atomic optical norm; the
+(Fig.~\ref{fig:gan-joint-mode}b). The lower and upper B4 optical doublets
+capture $56.1\%$ and $39.7\%$ of its mass-weighted atomic optical norm; the
 corresponding B1 doublets capture $68.3\%$ and $27.5\%$. The remaining
 single-mode group carries about $4.2\%$ at either endpoint. These are
-subspace-overlap fractions, not energy or barrier contributions. In
-particular, a fixed-cell endpoint $\Gamma$ basis does not by itself certify
-a variable-cell transition-state phonon or the uniqueness of the global path.
+subspace-overlap fractions, not energy or barrier contributions. A fixed-cell
+endpoint $\Gamma$ basis does not certify a variable-cell transition-state
+phonon or the uniqueness of the global path.
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=\textwidth]{figures/gan_joint_mode_coupling.pdf}
+\includegraphics[width=\textwidth]{figures/gan_joint_mode_600eV.pdf}
 \caption{Local atom--strain coupling in GaN B4-to-B1 at 45.7 GPa. (a) Lowest
 curvature of the frozen-strain atomic block, frozen-atomic strain block,
-combined Hessian, and strain-relaxed atomic Schur complement at two
-finite-difference steps. The diagnostic uses a 1000 eV VASP cutoff and a
-translation-free atomic-plus-symmetric-strain coordinate with
-$\mathrm{cell\_scale}=3.3983$ \AA; the plotted values depend on that metric,
-but both steps preserve the positive-block/negative-joint sign pattern.
+combined Hessian, and strain-relaxed atomic Schur complement at one 0.02 \AA{}
+finite-difference step. All DFT calculations use the same 600 eV VASP
+electronic contract as the production path and endpoint $\Gamma$ calculations.
+The translation-free atomic-plus-symmetric-strain coordinate uses
+$\mathrm{cell\_scale}=3.3983$ \AA; curvature magnitudes depend on that metric.
 (b) Squared projection of the joint unstable direction's mass-weighted
 atomic optical component onto the lower doublet, intervening single mode,
-and upper doublet of the 600 eV B4 and B1 endpoint $\Gamma$ bases. The
+and upper doublet of the B4 and B1 endpoint $\Gamma$ bases. The
 three groups are ordered by their respective endpoint frequencies; they
 are not common-energy modes or decomposed barrier shares. The plot is one
-deterministic local candidate with two numerical steps, not repeated
-material samples; no statistical error bars are implied. Editable source
-data and the independent numerical-integrity record accompany the figure.}
+deterministic local candidate with one full Hessian step, not repeated
+material samples or strict TS certification; no statistical error bars are
+implied. Editable source data and the numerical-integrity record accompany
+the figure.}
 \label{fig:gan-joint-mode}
 \end{figure*}
 
