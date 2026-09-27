@@ -40,10 +40,15 @@ the specific artifacts being revised.
    per GaN: ABACUS/VASP/QE/ABINIT/CP2K forward barriers
    0.3274/0.3385/0.3297/0.2924/0.2928 eV/GaN. This is reasonably near
    Qian et al.'s ~0.34 eV/GaN tetragonal-route reference while calculator
-   protocols are not identical. `figures/gan_joint_mode_coupling.*` shows a
-   local atom–strain instability candidate; its 1000-eV VASP Hessian and
-   600-eV endpoint Γ optical bases are only compared geometrically. Neither
-   a unique full-variable-cell TS nor a GaN two-dimensional PES is certified.
+   protocols are not identical. `figures/gan_joint_mode_600eV.*` shows a
+   local atom–strain instability candidate under the **same original 600-eV
+   VASP contract** as the path and endpoint Γ bases. Its `0.0232 eV/Å`
+   energy–force mismatch still prevents a strict full-variable-cell TS
+   certificate. The supplementary candidate
+   `figures/gan_600eV_atomic_tube_samples.*` plots 28 audited central
+   off-path statics without interpolation; the `2.329 meV/GaN` maximum LOO
+   error exceeds the `1.0` gate. A smooth whole-path GaN 2D PES is not
+   certified. Earlier 1000-eV diagnostics are archival and excluded.
 
 ## Minimum submission gates for a focused CPC software paper
 

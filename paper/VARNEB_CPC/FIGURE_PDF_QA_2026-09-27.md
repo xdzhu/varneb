@@ -1,4 +1,4 @@
-# CPC working-PDF and figure QA, 2026-09-27
+# CPC working-PDF and figure QA, 2026-09-27 (dated snapshot)
 
 This is a **working-tree review**, not a submission certificate. The current
 TeX project builds successfully with TeX Live/`latexmk` into an isolated
@@ -13,7 +13,12 @@ review build is not substituted for the manuscript package's main PDF.
 | 2, BTO frozen Γ cut | The actual variable-cell T→C path projects onto but leaves a frozen two-soft-mode, fixed-cubic-cell energy cut; this is not a conditional PES or a barrier map. | Rebuilt page 7 with 59 computed static points and seven path values. Panels, regular-weight `(a)` labels, distinct energy zeros, and the off-plane residual are legible. The figure PDF, SVG, PNG, source CSV, and QA record are packaged together. |
 | 3, material paths | BTO is monotonic; HfO₂ has an interior maximum whose estimate depends on path protocol. | Four panels and external-literature marker are legible on page 8; path and barrier source CSVs are tracked. Literature values use different calculator contracts and are not error bars. |
 | 4, GaN backends | Five complete 45.7-GPa paths share the dominant barrier topology; forward and reverse bars use different endpoint baselines. | Three panels are legible on page 9; all five backends have 29 rows in the tracked source CSV. The Qian curve is an approximate digitization, not a sixth computed backend. |
-| 5, local GaN coupling | A negative direction appears in the combined atom–strain Hessian even though its frozen blocks are positive. | Two panels and the signed-curvature zero line are legible on page 10; tracked CSV and audit accompany the figure. The 1000-eV joint Hessian and 600-eV endpoint Γ projections are compared geometrically, not as one energy protocol or decomposed barrier. |
+| 5, local GaN coupling | A negative direction appears in the combined atom–strain Hessian even though its frozen blocks are positive. | The page-10 visual check applies only to the **2026-09-27** build, which used the older mixed-protocol diagnostic. The manuscript now cites the all-600-eV figure; page-level visual QA must be repeated on a fresh build before submission. Historical 1000-eV results are excluded from current manuscript evidence. |
+
+The later all-600-eV Fig. 5 replacement and new exploratory GaN sampled-point
+figure are **not** certified by this dated PDF review. Their standalone
+source/QA records are separate; the current manuscript needs another full
+typeset-PDF inspection.
 
 The plotted SVGs retain text elements; the GaN figure PDFs have embedded
 TrueType text rather than text converted entirely to outlines. Top/right axes,

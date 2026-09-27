@@ -223,6 +223,17 @@ Do not respond by changing `ENCUT`, relaxing the original NEB threshold, or
 promoting an after-the-fact fit. The reproducible component report is
 `benchmarks/numerical_integrity/gan_600eV_atomic_tube_components_20260928.json`.
 
+An explicitly **exploratory, discrete-sample** two-panel figure now accompanies
+this audit at `paper/VARNEB_CPC/figures/gan_600eV_atomic_tube_samples.*`.
+Panel (a) shows the unchanged 29-image 600-eV path (`0.33849 eV/GaN`
+forward barrier); panel (b) places the 18 central `q=0` images and all 28
+audited off-path statics at their actual `(s,q)` coordinates. There is no
+color interpolation or contour. The tracked PDF/SVG/PNG, source CSV and hash/QA
+JSON accompany a reproducible local 600-dpi TIFF export (repository-ignored);
+the QA record states the failed `2.329 > 1.0 meV/GaN` LOO
+gate. It is suitable as a transparent interim or supplementary diagnostic,
+not a substitute for the requested validated smooth whole-path 2D surface.
+
 ## Gates and stop conditions
 
 - Before any new DFT submission, verify every generated cell and the
