@@ -31,7 +31,7 @@ TS 模态，加 HfO₂ 或二维 hBN 的新物理结果。它们不应无限期�
 | GaN B4→B1 | 45.7 GPa 下 ABACUS/VASP/QE/ABINIT/CP2K 五条收敛的一维焓路径、正反向势垒；VASP 另有近驻定局部原子–应变指数一候选及两侧下坡审计 | 二维 GaN PES、有限温自由能鞍点或全局唯一机制；把 600/1000 eV 直接拼为同一条生产链 |
 | HfO₂ T→PO | ABACUS 100 Ry/10 au DZP 真实 VCNEB 与 CI 结果及 image 数对照 | 未经相容母相/模态参考审计的 Y/Γ 模耦合机制 |
 | 多后端 | GaN 上五个第一性原理后端有材料级路径；ASE energy/forces/stress 是核心契约 | 所有 ASE calculator 无条件可用、所有后端精度数值相同、LAMMPS 与 DFT 直接等价 |
-| 文稿 | 现有 12 页 CPC 草稿、多后端图、模式图和 source data | 已完成投稿前图文、参数、来源和独立复现终审 |
+| 文稿 | 现有 11 页 CPC 草稿、多后端图、模式图和 source data | 已完成投稿前图文、参数、来源和独立复现终审 |
 
 统一术语：`n_images` 是**总像数**；7 总像 = 2 固定端点 + 5 内部像。
 公共 NEB 默认 `fmax=0.10 eV/Å`。条件面正交梯度/残余应力是

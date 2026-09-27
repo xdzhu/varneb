@@ -1,6 +1,6 @@
 # Acceleration table: claim-to-evidence audit
 
-This record is a submission gate for Table 3 of `varneb_CPC.tex`, not a new
+This record is a submission gate for Table 2 of `varneb_CPC.tex`, not a new
 algorithm benchmark. The six rows use **total** image counts (including two
 fixed endpoints) and the public stopping criterion `fmax = 0.10 eV/Å`. The
 archived BTO comparisons begin at the same serial step-9 chain; the HfO₂

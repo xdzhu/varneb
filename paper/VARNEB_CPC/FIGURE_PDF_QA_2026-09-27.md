@@ -55,3 +55,23 @@ Remaining submission gates:
   backend parameters, normalization, and bibliography against committed
   evidence. Several concurrent figure/manuscript changes remain uncommitted
   in the shared worktree and are not silently included in a release claim.
+
+## 2026-09-28 addendum: shorter working draft
+
+The redundant capability matrix was replaced by one evidence-boundary
+paragraph; the calculator-parameter and acceleration tables remain. The four
+data-figure captions were shortened without removing the energy zero,
+computed-versus-interpolated distinction, pressure, endpoint baseline, or
+the 600-eV GaN diagnostic boundary. The TeX Live review build succeeds at
+**11 A4 pages** (SHA-256 of review PDF:
+`191a4880cf73b7fb3a7f43f318ba4d3200ae79eadc3ca4e26dc907a83588f31c`).
+The five main figures remain on pages 4, 7, 8, 9, and 10. Rendered pages
+5 and 7–11 were visually checked: the calculator table is legible, the
+shorter captions leave figures 2–4 free of collisions, the all-600-eV GaN
+Fig. 5 is present on page 10, and the declarations plus all references fit
+on page 11 without clipping. `pdftotext` finds selectable
+text; the build log has no unresolved citations or references. A 1.9-pt
+output-box overfull warning persists. Eleven pages meet the approximate
+ten-page length aim without shrinking plot text, but this is not a final
+submission certificate: author/affiliation/funding placeholders and complete
+raw-output and figure-source audits remain open.

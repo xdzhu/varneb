@@ -55,8 +55,9 @@ the ZStar reference package. The working target is approximately ten typeset
 pages including the Program Summary, figures, tables, and references. Add
 material only when it closes a reproducibility, method, or verification gap;
 do not pad the manuscript with duplicate workflow descriptions or unsupported
-benchmark claims. The current working draft is twelve pages; trimming to about
-ten pages and a figure-by-figure evidence audit remain submission gates. The
+benchmark claims. The current compiled draft is eleven pages, close to the
+ten-page target; figure-by-figure evidence and author-metadata audits remain
+submission gates. The
 main evidence set contains the architecture figure, the BTO frozen-mode cut
 and path projection, the ABACUS BTO/HfO2 validation figure, the GaN multi-backend
 comparison, and a separately labeled local GaN atom--strain diagnostic.

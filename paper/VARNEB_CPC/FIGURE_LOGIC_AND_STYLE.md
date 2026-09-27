@@ -5,7 +5,7 @@ the path; its output can be interpreted against a vibrational-basis energy cut; 
 preserve their expected topology; the same controller works with distinct
 first-principles calculators; and a separate local diagnostic examines
 atom--strain coupling at the GaN candidate barrier top. Estimated new-image
-evaluation savings appear in Table 3 alongside matched controls and negative
+evaluation savings appear in Table 2 alongside matched controls and negative
 transfers; these totals are not an electronic-launch-by-launch audit.
 
 | Figure | Claim carried by the panels | Source and scientific limit |

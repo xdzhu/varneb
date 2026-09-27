@@ -328,34 +328,13 @@ evaluation and closed afterwards. These rules are backend details, but their
 observable contract at the controller boundary remains the same $(E,F,\sigma)$
 tuple.
 
-\begin{table*}[t]
-\centering
-\caption{Current VARNEB capabilities and evidence boundaries.}
-\label{tab:capabilities}
-\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.22\textwidth}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{0.28\textwidth}}
-\toprule
-Capability & Delivered behaviour & Evidence boundary \\
-\midrule
-Extended VC-NEB coordinate & Fractional atom coordinates, deformation gradient,
-force/stress transformation, pressure and cell masks & Analytic finite differences
-and fixed-cell reduction tests \\
-Path search & Ordinary NEB, staged CI, FIRE/BFGS/LBFGS interfaces, linear or
-log-strain cell interpolation & CI requires an interior-barrier gate \\
-Mode APIs & Initial-path guidance, strict subspace and projected-update modes,
-endpoint $\Gamma$ eigenvectors, degenerate-subspace coordinates, and tangent
-overlaps & BTO endpoint force constants and a seven-image path projection are
-archived; strict real-material release-and-refine remains incomplete \\
-Execution & Isolated image directories, manager/worker ownership, bounded retry,
-snapshots, resume and durable cache & Scheduler resources remain user-reviewed \\
-Calculators & ABACUS, VASP, QE, CP2K, ABINIT, LAMMPS, and a generic ASE
-factory & Material-level evidence is reported separately from adapter-level
-availability; LAMMPS remains potential-dependent \\
-Reporting & JSON summary, trajectory, audit, image comparison, structural metrics,
-source-data and editable figure export & Results remain calculator and
-boundary-condition specific \\
-\bottomrule
-\end{tabularx}
-\end{table*}
+The API also exposes initial-path guidance, strict-subspace and
+projected-update modes, and endpoint $\Gamma$-mode projections. Only the BTO
+endpoint basis and seven-image projection have material-level mode evidence
+here; a strict real-material release-and-refine remains incomplete. LAMMPS
+and generic ASE calculators satisfy adapter-level interfaces, not automatic
+material validation, and scheduler resources remain user selected. JSON
+summaries, trajectories, and audits preserve these distinctions.
 
 A production run prepares element-preserving endpoint structures with identical
 atom count, independently relaxes and audits them, preflights a mapped and
@@ -478,20 +457,15 @@ neither its energy nor a T-to-C barrier can be read from the frozen contour.
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\textwidth]{figures/bto_frozen_soft_mode_landscape.pdf}
-\caption{BTO frozen $\Gamma$-mode energy cut and the distinct variable-cell
-T-to-C path. (a) Fixed-cubic-cell static energies relative to the cubic
-reference at 59 computed ABACUS/PBE points (white circles); the colored
-contour is display interpolation, not a relaxed conditional potential-energy
-surface. Orange symbols and the black line are only the seven-image VC-NEB
-path projected into this two-mode plane. (b) Direct energies of those seven
-variable-cell images relative to the tetragonal endpoint, at zero external
-pressure; the path rises monotonically by 0.08713 eV/BTO and has no interior
-barrier. (c) Mass-weighted atomic distance of each image from the frozen
-two-mode plane; cell strain is an additional omitted coordinate. Panel (a)
-and panel (b) have different reference energies, and the projected line is
-not a minimum-energy path on the frozen cut. The 59 calculated points and
-seven path values are supplied as source data; no statistical error bars are
-implied by this deterministic calculation.}
+\caption{BTO frozen $\Gamma$-mode cut and variable-cell T-to-C path.
+(a) Fixed-cubic-cell energies $E-E_C$ at 59 ABACUS/PBE points (white circles);
+colored contours interpolate for display only. Orange symbols and the black
+guide project seven VC-NEB images, not a minimum-energy path on this cut.
+(b) Direct variable-cell $E-E_T$ at zero pressure: a monotonic 0.08713-eV/BTO
+rise without an interior barrier. (c) Mass-weighted atomic distance from the
+frozen plane; cell strain is excluded. The cut is not a relaxed conditional
+surface. Source data contain all computed points; this deterministic figure
+has no statistical error bars.}
 \label{fig:bto-frozen-mode-cut}
 \end{figure*}
 
@@ -524,16 +498,14 @@ the strict ordinary/CI barrier comparison and literature discussion.
 \begin{figure*}[!t]
 \centering
 \includegraphics[width=0.96\textwidth]{figures/vcneb_material_validation.pdf}
-\caption{Material validation and qualified literature comparison. (a) ABACUS/PBE
-BaTiO$_3$ T-to-C paths at 5, 7, and 9 total images are monotonic; the cubic
-endpoint rise is 0.08713 eV/f.u. and no internal image is a maximum. (b)
-HfO$_2$ T-to-PO ordinary
-log-strain paths, a linear-cell control, and a staged CI refinement. The open
-circle marks the climbing image and the dotted line denotes the external
-literature CI-VCNEB barrier. (c) HfO$_2$ barriers per formula unit. The
-literature bar is not a statistical replicate. (d) Relative volume evolution
-demonstrates the variable-cell degree of freedom. Source data accompany this
-figure in the software archive.}
+\caption{Material paths and qualified literature comparison. (a) ABACUS/PBE
+BTO T-to-C at 5, 7, and 9 total images: monotonic 0.08713-eV/f.u. endpoint
+rise, not an activation barrier. (b) HfO$_2$ T-to-PO log-strain paths,
+linear-cell control, and staged CI refinement; the open circle is the climbing
+image and the dotted line is the external literature barrier. (c) HfO$_2$
+barriers per formula unit; the literature bar is not a statistical replicate.
+(d) Relative volume along the variable-cell paths. Source data accompany
+the figure.}
 \label{fig:materials}
 \end{figure*}
 
@@ -611,28 +583,22 @@ common dominant topology and barrier scale, not numerical identity.
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\textwidth]{figures/gan_multibackend_validation.pdf}
-\caption{Multi-backend GaN B4-to-B1 benchmark at 45.7 GPa. (a) Converged
-29-total-image ordinary VCNEB enthalpy paths plotted against image index divided
-by 28. The dashed literature curve is an approximate digitization of the
-tetragonal route in Ref.~\cite{Qian2013}; each curve is referenced to its own
-initial endpoint, and the shape comparison is qualitative. (b) Forward
-B4-to-B1 barriers, $H_{\rm peak}-H_{\rm B4}$, as bars; the vertical dashed
-line marks the published 0.34 eV/GaN tetragonal-route value. (c) Reverse
-B1-to-B4 barriers, $H_{\rm peak}-H_{\rm B1}$, as bars on the same scale.
-The reverse values are derived from each backend's own final endpoint, not
-from an independent literature reference. All five paths satisfy the common
-0.10 eV/\AA{} force criterion and include the complete CP2K chain.}
+\caption{Five-backend GaN B4-to-B1 benchmark at 45.7 GPa. (a) Converged
+29-total-image ordinary VCNEB enthalpy paths, each referenced to its own B4
+endpoint. The dashed Ref.~\cite{Qian2013} tetragonal route is approximately
+digitized, so shape comparison is qualitative. (b) Forward
+$H_{\rm peak}-H_{\rm B4}$; the dashed line marks the published
+0.34 eV/GaN value. (c) Reverse $H_{\rm peak}-H_{\rm B1}$ against each
+backend's own B1 endpoint, with no literature reverse reference. All five
+complete paths, including CP2K, satisfy $f_{\max}\leq0.10$ eV/\AA{}.}
 \label{fig:gan-multibackend}
 \end{figure*}
 
-The CP2K path uses the same pressure, phases, atom order, image count, and
-controller settings. Its endpoint pressure residuals are 0.416 and 0.249 kbar,
-both below the 1 kbar gate. The ordinary-NEB path reaches
-$f_{\max}=0.09409$ eV/\AA{} after 52 updates; all 29 images have finite
-energy, force, and stress, the saved-band endpoint hashes match the static
-references, and the geometry audit passes. The 0.29276 eV/GaN barrier is
-located at image 15. These checks distinguish the complete path result from
-an endpoint-only backend demonstration.
+The CP2K path uses the same pressure, phase mapping, atom order, image count,
+and controller settings. After 52 updates it reaches
+$f_{\max}=0.09409$ eV/\AA{} with a 0.29276-eV/GaN barrier at image 15.
+Endpoint pressure residuals (0.416/0.249 kbar) pass the 1-kbar gate;
+all-image energy/force/stress, geometry, and endpoint-hash audits pass.
 
 A separate local VASP diagnostic examines why the B4-to-B1 candidate is
 unstable when atomic and cell freedoms are combined. The production electronic
@@ -668,22 +634,15 @@ phonon or the uniqueness of the global path.
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\textwidth]{figures/gan_joint_mode_600eV.pdf}
-\caption{Local atom--strain coupling in GaN B4-to-B1 at 45.7 GPa. (a) Lowest
-curvature of the frozen-strain atomic block, frozen-atomic strain block,
-combined Hessian, and strain-relaxed atomic Schur complement at one 0.02 \AA{}
-finite-difference step. All DFT calculations use the same 600 eV VASP
-electronic contract as the production path and endpoint $\Gamma$ calculations.
-The translation-free atomic-plus-symmetric-strain coordinate uses
-$\mathrm{cell\_scale}=3.3983$ \AA; curvature magnitudes depend on that metric.
-(b) Squared projection of the joint unstable direction's mass-weighted
-atomic optical component onto the lower doublet, intervening single mode,
-and upper doublet of the B4 and B1 endpoint $\Gamma$ bases. The
-three groups are ordered by their respective endpoint frequencies; they
-are not common-energy modes or decomposed barrier shares. The plot is one
-deterministic local candidate with one full Hessian step, not repeated
-material samples or strict TS certification; no statistical error bars are
-implied. Editable source data and the numerical-integrity record accompany
-the figure.}
+\caption{GaN local atom--strain coupling at 45.7 GPa, using the production
+600-eV VASP contract throughout. (a) Lowest curvatures of atomic and strain
+blocks, joint Hessian, and strain-relaxed Schur complement at a 0.02-\AA{}
+step. Translation-free coordinates use $\mathrm{cell\_scale}=3.3983$ \AA;
+curvature magnitudes depend on this metric. (b) Squared projections of the
+joint negative direction's atomic optical component onto B4/B1 endpoint
+$\Gamma$ groups, ordered by each endpoint's frequencies. These are geometric
+overlaps, not mode-resolved barrier shares. One local Hessian does not certify
+a strict TS; source data and numerical-integrity checks accompany the figure.}
 \label{fig:gan-joint-mode}
 \end{figure*}
 
