@@ -235,6 +235,8 @@ def main() -> None:
         "mapping": args.mapping,
         "align_translation": args.align_translation,
         "fmax_target_eV_per_A": args.fmax,
+        "climbing_image_requested": _climb_enabled(args),
+        "climb_after_steps": args.climb_after,
         "calculator_parameters": parameters,
         "pseudopotential_reports": pseudopotential_reports,
         "pseudopotential_manifest": pp_manifest,
@@ -292,12 +294,16 @@ def main() -> None:
         failure_report=workdir / "vcneb_failure.json",
     )
     barrier, reaction = chain.barrier()
+    final_force = chain.gradient_norm(-chain.get_forces())
+    converged = bool(np.isfinite(final_force) and final_force <= args.fmax)
     summary = {
-        "status": "completed",
+        "status": "completed" if converged else "step_limit_reached",
+        "converged": converged,
         **metadata,
         "barrier_enthalpy_eV": barrier,
         "reaction_enthalpy_eV": reaction,
-        "final_max_generalized_force_eV_per_A": chain.gradient_norm(-chain.get_forces()),
+        "final_max_generalized_force_eV_per_A": final_force,
+        "climbing_image_active_final": bool(chain.climb),
         "image_enthalpies_eV": [float(value) for value in chain.enthalpies],
         "path_diagnostics": chain.path_diagnostics(),
         "saddle_diagnostics": chain.saddle_diagnostics(),
@@ -306,7 +312,7 @@ def main() -> None:
     _write_json_atomic(workdir / "vcneb_summary.json", summary)
     for index, image in enumerate(chain.images):
         write(workdir / f"{index:02d}" / "POSCAR.final", image, format="vasp", direct=True, vasp5=True)
-    print(f"[DONE] barrier={barrier:.6f} eV reaction={reaction:.6f} eV workdir={workdir}")
+    print(f"[{'CONVERGED' if converged else 'STEP LIMIT'}] barrier={barrier:.6f} eV reaction={reaction:.6f} eV workdir={workdir}")
 
 
 if __name__ == "__main__":

@@ -74,6 +74,7 @@ def test_vasp_driver_validate_only_writes_static_7_image_preflight(tmp_path: Pat
     assert payload["n_images"] == 7
     assert payload["n_interior_images"] == 5
     assert payload["fmax_target_eV_per_A"] == 0.10
+    assert payload["climbing_image_requested"] is False
     assert payload["endpoint_structures"]["initial"]["sha256"]
     assert payload["endpoint_structures"]["initial"]["n_atoms"] == 1
     assert payload["endpoint_structures"]["initial"]["sha256"] != payload["endpoint_structures"]["final"]["sha256"]
@@ -207,7 +208,7 @@ def test_serial_driver_uses_bound_cache_and_truthful_convergence_status(tmp_path
     def fake_run(images, **kwargs):
         captured.update(kwargs)
         return SimpleNamespace(
-            images=images, enthalpies=np.zeros(len(images)),
+            images=images, enthalpies=np.zeros(len(images)), climb=False,
             plot_band=lambda *args: None, barrier=lambda: (0.0, 0.0),
             get_forces=lambda: np.zeros((1, 3)), gradient_norm=lambda *args: force,
             path_diagnostics=lambda: {}, saddle_diagnostics=lambda: {},
@@ -233,6 +234,8 @@ def test_serial_driver_uses_bound_cache_and_truthful_convergence_status(tmp_path
     summary = json.loads((tmp_path / "run" / "vcneb_summary.json").read_text())
     assert summary["status"] == status
     assert summary["converged"] == (status == "completed")
+    assert summary["climbing_image_requested"] is False
+    assert summary["climbing_image_active_final"] is False
     assert summary["calculator_parameters"]["symprec"] == 1e-4
     assert summary["runtime_parameter_changes_allowed"] is False
     assert summary["image_manifest"]

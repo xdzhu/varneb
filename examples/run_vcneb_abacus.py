@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import os
 from pathlib import Path
 import subprocess
@@ -312,6 +313,8 @@ def _run_metadata(args: argparse.Namespace, workdir: Path) -> dict:
         "git_revision": _git_revision(),
         "workdir": str(workdir),
         "external_pressure_gpa": float(args.pressure_gpa),
+        "climbing_image_requested": _climb_enabled(args),
+        "climb_after_steps": args.climb_after,
         "command_line": sys.argv,
         "slurm": {key: os.environ[key] for key in slurm_keys if os.environ.get(key)},
         "resume": bool(args.resume),
@@ -554,11 +557,13 @@ def main() -> None:
     chain.plot_band(workdir / "vcneb_barrier.png")
     barrier, delta = chain.barrier()
     max_force = chain.gradient_norm(-chain.get_forces())
+    converged = bool(math.isfinite(max_force) and max_force <= args.fmax)
     diagnostics = chain.path_diagnostics()
     saddle = chain.saddle_diagnostics()
     summary = {
         **metadata,
-        "status": "completed",
+        "status": "completed" if converged else "step_limit_reached",
+        "converged": converged,
         "workdir": str(workdir),
         "n_images": args.n_images,
         "n_interior_images": max(0, int(args.n_images) - 2),
@@ -586,6 +591,7 @@ def main() -> None:
         "steps_requested": args.steps,
         "fmax_target_eV_per_A": args.fmax,
         "final_max_generalized_force_eV_per_A": max_force,
+        "climbing_image_active_final": bool(chain.climb),
         "barrier_enthalpy_eV": barrier,
         "reaction_enthalpy_eV": delta,
         "image_enthalpies_eV": [float(value) for value in chain.enthalpies],
@@ -602,6 +608,7 @@ def main() -> None:
         handle.write(f"Forward barrier (enthalpy) = {barrier:.8f} eV\n")
         handle.write(f"Reaction enthalpy          = {delta:.8f} eV\n")
         handle.write(f"Final max generalized force = {max_force:.8f} eV/A\n")
+        handle.write(f"Converged                  = {converged}\n")
         handle.write(
             "Highest image diagnostics    = "
             + json.dumps(saddle, ensure_ascii=False, sort_keys=True)
@@ -610,7 +617,7 @@ def main() -> None:
         handle.write("Per-image physical diagnostics = vcneb_summary.json[path_diagnostics]\n")
         handle.write("Image enthalpies (eV)      = " + " ".join(f"{value:.8f}" for value in chain.enthalpies) + "\n")
     print(
-        f"[DONE] barrier={barrier:.6f} eV delta={delta:.6f} eV "
+        f"[{'CONVERGED' if converged else 'STEP LIMIT'}] barrier={barrier:.6f} eV delta={delta:.6f} eV "
         f"max_force={max_force:.6f} eV/A workdir={workdir}"
     )
 

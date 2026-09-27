@@ -47,3 +47,5 @@ def test_validate_only_does_not_instantiate_external_calculators(tmp_path, monke
     payload = json.loads((tmp_path / "run" / "vcneb_preflight.json").read_text())
     assert payload["calculator_validation"] == "not_instantiated_validate_only"
     assert payload["calculator_reports"] == []
+    assert payload["climbing_image_requested"] is False
+    assert payload["climb_after_steps"] is None

@@ -50,6 +50,11 @@ def test_run_helper_defaults_to_ordinary_neb() -> None:
         trajectory=None, snapshot_dir=None,
     )
     assert climbed.climb is True
+    delayed, _ = run_vcneb(
+        _barrier_images(), climb=True, climb_after=5, steps=0,
+        logfile=None, trajectory=None, snapshot_dir=None,
+    )
+    assert delayed.climb is False
 
 
 @pytest.mark.parametrize("script,required", CLI_DRIVERS)
