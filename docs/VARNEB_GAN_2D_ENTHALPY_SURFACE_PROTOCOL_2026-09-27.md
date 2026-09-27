@@ -129,6 +129,45 @@ Audited machine-readable records: `benchmarks/numerical_integrity/gan_600eV_path
 `gan_600eV_path_tube_refinement_20260928.json`, and
 `gan_600eV_path_tube_residual_analysis_20260928.json` in that directory.
 
+### Wider-coordinate canaries and chart decision (2026-09-28)
+
+Widening the *joint atom–strain* transverse amplitude to `±0.20 Å` was tested
+at four representative anchors under exactly the same 600-eV inputs (Slurm
+`27792700`). Six of eight statics completed. Both signs at image 5 failed
+immediately with VASP's direct/reciprocal Bravais conflict: the direct cell
+was classified base-centered monoclinic and the reciprocal simple monoclinic
+for one sign, with the classes reversed for the other. The earlier empirical
+single-projection geometry window had passed both, so it is demonstrably
+insufficient as a general VASP preflight. Neither `SYMPREC` nor `ENCUT` was
+changed to rescue these points; the joint wide tube is **not** a complete
+surface. At the successful images 15, 18 and 20, the measured excess enthalpy
+at `±0.20 Å` spans roughly `22–52 meV/GaN`, a physically clearer scale than
+the narrow strip, but these six points cannot support an uninterrupted plot.
+
+An alternative chart keeps the original, already-computed cell of each VCNEB
+image and uses a path-orthogonal *atomic-only* transverse vector. The reaction
+coordinate `s` still contains the full variable-cell transformation; the
+transverse coordinate must explicitly be labeled atomic-only, not a joint
+atom–strain mode. Its `±0.20 Å` canary at images 5 and 18 (Slurm `27792726`)
+passed 4/4 raw VASP audits at 600 eV, including the two image-5 cases that
+failed in the joint chart. However, the image-5 excess enthalpies are
+`288/347 meV/GaN` and atomic forces reach `4.03 eV/Å`: that width is too
+large for a useful local-mode contour there. The atomic normal is smooth
+through the central barrier segment (adjacent overlap `>0.95` for images
+5–22) but not over the entire chain (minimum overlap `0.147` near the final
+endpoint). The defensible next design is a *piecewise/adaptive-width*
+atomic-transverse chart, with smaller widths near image 5 and explicit seams
+where mode identity rotates. It needs intermediate-width holdouts and a
+predeclared interpolation/error gate before any publication contour.
+
+The raw-audited canary records are
+`benchmarks/numerical_integrity/gan_600eV_wide_tube_canary_20260928.json` and
+`gan_600eV_atomic_tube_canary_20260928.json`; the latter derives from the
+geometry-only atomic-chart definition in
+`gan_600eV_atomic_tube_feasibility_20260928.json`. These studies explain a
+coordinate-design problem, not a reason to change the agreed electronic
+parameters or the default `0.10 eV/Å` NEB threshold.
+
 ## Gates and stop conditions
 
 - Before any new DFT submission, verify every generated cell and the
