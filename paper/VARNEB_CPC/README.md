@@ -32,6 +32,12 @@ The manuscript distinguishes three evidence levels:
    analysis and local curvature checks remain staged evidence. Its five
    hash-matched input JSON files are under `evidence/`; the plotting command
    and claim limits are in `FIGURE_LOGIC_AND_STYLE.md`.
+   A separately sourced 79-point path-adapted frozen plane is retained as a
+   supplementary candidate; it combines an unstable and a stable $\Gamma$
+   triplet and must not be substituted for the main two-soft-mode figure.
+   Regenerate it from the repository root with
+   `python scripts/plot_bto_paper_path_adapted_79.py`; the committed QA
+   distinguishes 79 DFT nodes from interpolated pixels and visual guides.
 3. ABACUS, VASP, QE, ABINIT, and CP2K have each completed a 45.7-GPa GaN
    B4-to-B1 material path. The five paths support a common dominant barrier
    topology, not identical calculator protocols or barriers. Additional VASP

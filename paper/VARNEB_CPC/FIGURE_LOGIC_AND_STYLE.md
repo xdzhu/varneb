@@ -16,6 +16,25 @@ transfers; these totals are not an electronic-launch-by-launch audit.
 | 4, GaN backends | Five converged calculators recover the same dominant B4-to-B1 barrier topology, while forward and reverse activation barriers use their own endpoint baselines. | 29 total images at 45.7 GPa, normalized by two GaN units. Panel (a) uses normalized image index; the literature curve is an approximate digitization. Panels (b) and (c) are aligned horizontal-bar comparisons of $H_{\rm peak}-H_{\rm B4}$ and $H_{\rm peak}-H_{\rm B1}$, respectively. Only the forward panel carries the published 0.34-eV/GaN guide; CP2K enters only after the whole path passed audit. |
 | 5, GaN local coupling | A local negative direction appears only after atomic and cell-strain coordinates are combined; endpoint optical-mode subspaces geometrically resolve its atomic component. | The joint Hessian, endpoint $\Gamma$ bases, and path all use the original 600-eV VASP contract. The 0.02-Å joint step gives one negative eigenvalue, but the 0.0232-eV/Å energy–force mismatch prevents strict TS certification. Optical projections are geometric overlaps, not mode energy contributions. No global path uniqueness or finite-temperature transition-state claim follows. Source: `benchmarks/numerical_integrity/gan_600eV_joint_gamma_bridge_20260928.json`, `figures/gan_joint_mode_600eV_source_data.csv`. |
 
+The separate BTO path-adapted panel `figures/bto_frozen_path_adapted_79.*`
+is a **supplementary candidate, not a replacement for Fig. 2**. It uses a
+different plane: $Q_1$ combines the unstable cubic $\Gamma$ modes 0–2 and
+$Q_2$ combines stable modes 6–8. Panel (a) shows 79 real fixed-cubic-cell
+ABACUS/PBE/100-Ry/10-au-DZP energies and a display-only Clough–Tocher
+contour; the seven-image variable-cell path is merely projected. Its T-end
+$Q_1$ projection exceeds the sampled grid by
+$0.00433\sqrt{\mathrm{amu}}\,$Å, so the plot leaves a white margin rather
+than extrapolating the contour. Panel (b) separately shows the direct
+variable-cell $H-H_C$ path values, and panel (c) the measured reference-cell
+strains. The preselected 16-point interpolation holdout has a maximum
+absolute error of 7.19 meV/BTO; this does not certify all unsampled extrema.
+The maximum path atomic projection residual is
+$0.06028\sqrt{\mathrm{amu}}\,$Å; strain is not part of the frozen plane.
+This soft-plus-stable slice must never be relabelled as the main figure's
+two-soft-mode plane or its conditional pilot. The source CSVs, source QA,
+visual-guide CSV explicitly marked `not_DFT`, and regenerated QA JSON travel
+with the supplementary candidate.
+
 An additional GaN central atomic-tube diagnostic, **not** a sixth validated
 main-text surface figure, is `figures/gan_600eV_atomic_tube_samples.*`. It
 places all 28 same-600-eV off-path statics at their measured `(s,q)` values;
