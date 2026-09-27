@@ -168,6 +168,43 @@ geometry-only atomic-chart definition in
 coordinate-design problem, not a reason to change the agreed electronic
 parameters or the default `0.10 eV/Å` NEB threshold.
 
+The completed *bounded* central-segment test kept the fixed-seed atomic-only
+normal over images 5–22 (minimum adjacent overlap `0.954` there) and sampled
+`q_atom=±0.05 Å` at preselected anchors `5,8,11,14,17,18,20,22`, while reusing
+the audited `q=0` chain. The predeclared gate for a smooth **central-segment**
+off-path excess-enthalpy interpolation is a maximum leave-one-anchor-out
+error of `1.0 meV/GaN`. This is about a 5% scale for a 20-meV transverse
+feature and far below the roughly 0.39-eV/GaN path barrier; it is an
+interpolation target, not a new DFT convergence or default NEB threshold.
+The source generator and Slurm array `27792746` retain the original 600-eV
+INCAR/KPOINTS/POTCAR hashes. Its gate failure calls for inspecting the
+localized error and coordinate branch before deciding the next step. This central chart cannot be extended
+through the endpoints without a separate mode-identity seam analysis.
+
+**2026-09-28 central atomic-tube outcome.** Array `27792746` completed all
+16 signed off-path statics; the raw audit found a maximum linear
+leave-one-anchor-out (LOO) excess-enthalpy error of `6.598 meV/GaN`, so the
+predeclared `1.0 meV/GaN` gate failed. A bounded, same-600-eV refinement
+`27792774` added signed `q=±0.05 Å` anchors at images `6,7,19,21` and
+independent `q=±0.025 Å` half-steps at images `8,20`; all 12 statics passed
+raw audit. The combined 12-anchor linear LOO maximum fell to
+`2.329 meV/GaN`, still a gate failure. The even transverse-curvature
+half-step discrepancy was only `0.0541%` at worst, below its separately
+predeclared 5% gate. Thus the local `q` curvature is resolved at those two
+anchors, but the along-path interpolation is not.
+
+An *offline, post-hoc* comparison on exactly the same audited points gives
+maximum LOO errors of `2.329` (linear), `2.725` (PCHIP), `2.689` (Akima),
+and `2.433 meV/GaN` (natural cubic). None meets `1.0 meV/GaN`; model
+selection on these already-seen holdouts would not independently validate a
+new contour even if one had passed. No cutoff, k mesh, PAW, or SCF setting
+was changed. The result is a raw sampled central transverse cut, **not** a
+validated smooth GaN 2D enthalpy contour. Sources and reproducible comparison
+are `gan_600eV_atomic_tube_central_20260928.json`,
+`gan_600eV_atomic_tube_refinement_20260928.json`, and
+`gan_600eV_atomic_tube_interpolants_20260928.json` under
+`benchmarks/numerical_integrity/`.
+
 ## Gates and stop conditions
 
 - Before any new DFT submission, verify every generated cell and the
@@ -214,8 +251,10 @@ PDF/SVG plus 600-dpi TIFF, a source-data CSV and a hash/QA record.
 
 Only interpolate within the sampled coordinate rectangle and show raw markers.
 For panel (a), interpolate the *off-path excess enthalpy* along arc length,
-not the barrier itself; first inspect the leave-one-anchor-out error and
-refine anchors where it exceeds `0.10 meV/GaN`. For panel (b), use a declared
+not the barrier itself; use the predeclared `1.0 meV/GaN` maximum LOO gate,
+which the current central atomic chart does **not** pass. Do not publish a
+smooth contour as validated until an independently assessed chart passes.
+For panel (b), use a declared
 local quadratic interpolant only if the independent half-step holdout error
 passes `0.20 meV/GaN`. Neither contour is a free-energy landscape or proof of
 a globally unique MEP. The transverse normal is transported and is not a
