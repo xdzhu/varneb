@@ -7,21 +7,35 @@ original research scripts.
 
 ## Quick start (calculator-free)
 
-For an installed release, start with `python -m pip install varneb`. To run
-the bundled examples and tests from a source checkout, use:
+For an installed release, use `python -m pip install "varneb[plot]"`. From a
+source checkout, this first example runs immediately and needs no DFT code or
+material endpoint files:
 
 ```bash
-python -m pip install -e .
+python -m pip install -e ".[plot]"
 varneb --version
+python examples/run_toy_vcneb.py
+```
+
+It writes `toy_vcneb_run/` and should report a barrier near **0.25 eV**.
+The potential is analytic: this verifies variable-cell forces and the run
+interface, not a material prediction. To prepare a real material path next:
+
+```bash
 varneb backends
 varneb optimizers
 varneb init varneb.json
-# after editing the endpoint paths:
+# edit initial, final, backend, workdir, and explicit calculator settings
 varneb validate-config varneb.json
 varneb prepare varneb.json
-python examples/run_toy_vcneb.py
-python -m pytest -q
 ```
+
+`prepare` only writes an initial chain and a geometry preflight report; it
+does **not** run DFT. The material execution entry point is
+`examples/run_vcneb_ase.py` with a reviewed ASE calculator or VARNEB factory,
+as detailed in [`docs/USER_MANUAL.md`](docs/USER_MANUAL.md). To run the
+repository tests, install the additional `dev` extra and use
+`python -m pytest -q`.
 
 `varneb backends --json` prints the machine-readable backend capability table.
 `varneb optimizers --json` prints the calculator-independent path strategy
@@ -56,11 +70,15 @@ described in [`docs/RELEASE_PROCESS.md`](https://github.com/xdzhu/varneb/blob/ma
 ## Minimal API
 
 ```python
+from ase.io import read
 from vcneb import interpolate_vcneb, run_vcneb
 
+initial = read("initial/POSCAR")
+final = read("final/POSCAR")
 images = interpolate_vcneb(initial, final, n_images=7, mic=True)
-# Attach a static calculator with energy, forces, and (for VCNEB) stress.
-result = run_vcneb(images, fmax=0.10, climb_after=None)
+# Attach a reviewed static calculator to each image first; for VCNEB it must
+# provide energy, forces, and stress in ASE units and use a private directory.
+chain, optimizer = run_vcneb(images, fmax=0.10, climb_after=None)
 ```
 
 `n_images=7` means **seven total images**: two fixed endpoints and five

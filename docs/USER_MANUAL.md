@@ -7,12 +7,17 @@ case plans under this directory contain system-specific scientific settings.
 ## 1. Install and inspect
 
 ```bash
-python -m pip install -e .
+python -m pip install -e ".[plot,mode]"
 varneb --version
 varneb backends --json > backend-capabilities.json
 varneb optimizers --json > optimizer-capabilities.json
 varneb doctor
 ```
+
+The base package needs only ASE and NumPy; `plot` supplies Matplotlib for
+figure-producing examples, and `mode` supplies SciPy for mode analysis. Add
+the `dev` extra only when running the test suite. The README's analytic toy
+run is the quickest executable check before configuring any DFT backend.
 
 `doctor` only checks Python adapter imports and executables on `PATH`. On HF,
 load a module inside the Slurm script, then run `varneb doctor` with the same
