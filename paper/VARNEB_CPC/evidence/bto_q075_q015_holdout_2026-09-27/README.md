@@ -51,9 +51,27 @@ predeclared minimum-distance guard. Its immutable output is
 `curvature_0p05_preflight.json` (SHA-256
 `f9c5f423696fdbc25cf2002a6c0605387f013e6dd0d0a7c078e85867397ce4d7`).
 The corresponding 32-static-evaluation Slurm job `27787714` was submitted
-on hf `hfacnormal01` and began running on 2026-09-27 at 14:37 CST. This
-preflight is **not** a Hessian or a stability result. The holdout Hessian, full-domain
-branch continuity, and T-endpoint off-plane residual are also unverified.
+on hf `hfacnormal01` and finished `COMPLETED/0:0` after `00:20:29`.
+The independent auditor re-read **all 109** cache points, including the 32
+new signed probes, from original ABACUS input/SCF/force/stress files and
+reconstructed the same 16D Hessian. Its lowest eigenvalue is
+`+0.00543824 eV/(amu Å²)` at this one step, and its antisymmetric relative
+defect is `0.000507`. However, the maximum energy-versus-force diagonal
+curvature mismatch is `0.01623171 eV/(amu Å²)`, **larger than the lowest
+eigenvalue**; the maximum energy-versus-force first-derivative mismatch is
+`0.00081562 eV/(sqrt(amu) Å)`. Thus the 0.05 result is a one-step screen,
+not a numerical certification of positive curvature. The output, 109-point
+raw audit and Hessian reconstruction are the three `curvature_0p05_*.json`
+files in this folder. The full-domain branch continuity and T-endpoint
+off-plane residual are also unverified.
+
+After the 0.05 raw audit passed, all 32 signed `±0.10 sqrt(amu) Å` probes
+passed an independent geometry preflight (minimum separation
+`1.796364193 Å`, volume `67.630117027 Å³`; `curvature_0p10_preflight.json`,
+SHA-256 `1589a26a00c5b5d775be8af267ae00775e26192966acff7ddbe84b6c635fc6f0`).
+The second-step Slurm job `27787746` started on hf `hfacnormal01` at
+2026-09-27 15:03 CST. Its result must be separately raw-audited and compared
+with the first step; no stable-branch conclusion is implied by its submission.
 Therefore the manuscript may report this local predictive success only with
 these limits; it may not promote the staged four-point figure into a smooth
 conditional-PES contour yet.
