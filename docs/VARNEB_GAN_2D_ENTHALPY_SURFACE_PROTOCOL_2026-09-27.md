@@ -205,6 +205,24 @@ are `gan_600eV_atomic_tube_central_20260928.json`,
 `gan_600eV_atomic_tube_interpolants_20260928.json` under
 `benchmarks/numerical_integrity/`.
 
+**Why interpolation fails (same data, no new DFT).** Decompose each signed
+pair into an even `q²` response and an odd response at `q=0.05 Å`. The
+maximum linear LOO errors are `1.907 meV/GaN` for the even part (worst at
+image 8) and `1.229 meV/GaN` for the odd part (worst at image 20). Replacing
+the odd interpolation with the already archived `q=0` projected force at
+each held-out image still leaves a maximum signed error of
+`1.935 meV/GaN`; it is a post-hoc diagnostic, not an independent pass. Near
+images 19–21 the transverse force-derived slope changes from about
+`-0.084` to `-0.090` to `+0.010 eV/Å`, while adjacent fixed-seed normal
+overlaps are approximately `0.955` around image 20. The even excess also
+has localized structure near image 8. This identifies a changing local
+path/coordinate response; it does not by itself prove a discontinuous
+physical branch or a software error. Analyze those image geometries and
+mode transport before considering a predeclared, bounded *along-s* holdout.
+Do not respond by changing `ENCUT`, relaxing the original NEB threshold, or
+promoting an after-the-fact fit. The reproducible component report is
+`benchmarks/numerical_integrity/gan_600eV_atomic_tube_components_20260928.json`.
+
 ## Gates and stop conditions
 
 - Before any new DFT submission, verify every generated cell and the
