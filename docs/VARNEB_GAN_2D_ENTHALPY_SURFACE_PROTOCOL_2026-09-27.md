@@ -100,6 +100,35 @@ remain labeled separately. An optional conditional relaxation at fixed `(s,q_per
 is a later, explicitly labeled calculation: frozen, relaxed-orthogonal, and
 strict-subspace barriers remain different quantities.
 
+### Measured narrow-tube outcome (2026-09-28)
+
+The first nine-anchor 600-eV frozen tube passed all 18 raw static audits but
+had a maximum leave-one-anchor-out error of `0.6684 meV/GaN`. A geometry-screened
+second batch, Slurm array `27792651`, added nine path anchors (`1,6,8,9,16,18,19,21,22`)
+and 18 more **unchanged-600-eV** VASP statics. All 18 tasks completed and their
+OUTCARs passed input-hash, SCF, geometry, energy, force, and stress checks.
+The combined maximum error fell to `0.3993 meV/GaN`, still above the
+predeclared `0.10 meV/GaN` contour gate. Hence the narrow full-path tube is
+measured but **not cleared for a smooth publication contour**.
+
+The failure is localized, not an excuse to change `ENCUT`: the largest held-out
+errors remain at images 20 (`0.399 meV/GaN`) and 5 (`0.344 meV/GaN`). The
+same-contract force/stress-derived transverse slope changes sign at 5→6
+(`+0.0191` to `−0.0240 eV/Å`) and 19→20 (`+0.0545` to `−0.0285 eV/Å`). At image
+18 it is `+0.0886 eV/Å`, allowed by the ordinary `0.10 eV/Å` chain criterion;
+a local quadratic fit to the signed statics puts its transverse minimum at
+`q_perp≈−0.030 Å`, outside the sampled `±0.015 Å` strip. These correlations
+do not by themselves prove a branch switch or invalidate the reported barrier.
+They do show why standard barrier convergence cannot be conflated with a
+sub-meV smooth landscape. The next surface step must test a wider or
+conditionally relaxed coordinate chart, and/or targeted path refinement,
+under the *same* 600-eV electronic inputs. It should not blindly add more
+anchors to this same narrow strip or silently relax the interpolation gate.
+
+Audited machine-readable records: `benchmarks/numerical_integrity/gan_600eV_path_tube_refinement_screen_20260928.json`,
+`gan_600eV_path_tube_refinement_20260928.json`, and
+`gan_600eV_path_tube_residual_analysis_20260928.json` in that directory.
+
 ## Gates and stop conditions
 
 - Before any new DFT submission, verify every generated cell and the
