@@ -62,9 +62,14 @@ the specific artifacts being revised.
 
 - **BTO conditional 2D surface:** the second curvature step and direct
   soft-direction checks at both `Q_z=0.9` sites are complete. Three
-  independently audited static starts at `(0.75,0.15)` are complete; their
-  conditional relaxations are running as hf job `27787487`, so the holdout
-  energy and interpolation test remain pending. Competing
+  independently audited static starts at `(0.75,0.15)` and their
+  conditional relaxations (`27787487`) are complete. An independent audit of
+  all 77 DFT points finds unique gradient/stress-eligible cache points in the
+  `Q_y=0,+,−` basins; the pre-declared low-energy center prediction misses by
+  only `0.476 meV/BTO`, under its `2 meV/BTO` local line. The frozen runner
+  did not explicitly serialize all branch terminal records; a cache-only
+  deterministic replay reconstructed all three with zero new DFT calls.
+  Local holdout curvature remains unchecked. Competing
   branch and continuity checks across the sampled domain; quantified
   interpolation error and a clear definition of released atomic/strain
   variables. Confirm that the actual T endpoint is represented by, or is
