@@ -96,6 +96,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--vasp-bin", default=os.environ.get("VASP_BIN", "vasp_std"))
     parser.add_argument("--ncores", type=int, default=int(os.environ.get("NP", "8")))
     parser.add_argument(
+        "--expected-encut-ev",
+        type=float,
+        default=None,
+        help="Reject a source INCAR whose ENCUT differs from this case's fixed benchmark value",
+    )
+    parser.add_argument(
         "--vasp-isym",
         type=int,
         choices=[0, -1],
@@ -154,6 +160,24 @@ def parse_args() -> argparse.Namespace:
 
 def _climb_enabled(args: argparse.Namespace) -> bool:
     return args.climb
+
+
+def validate_expected_encut(parameters: dict, expected_ev: float | None) -> None:
+    """Reject benchmark cutoff drift before any DFT image is evaluated."""
+    if expected_ev is None:
+        return
+    if not np.isfinite(expected_ev) or expected_ev <= 0:
+        raise ValueError("--expected-encut-ev must be finite and positive")
+    observed = parameters.get("encut")
+    try:
+        actual_ev = float(observed)
+    except (TypeError, ValueError) as exc:
+        raise ValueError("source VASP INCAR has no valid ENCUT") from exc
+    if not np.isfinite(actual_ev) or not np.isclose(actual_ev, expected_ev, rtol=0, atol=1e-9):
+        raise ValueError(
+            f"source VASP ENCUT={actual_ev:g} eV differs from the fixed "
+            f"benchmark ENCUT={expected_ev:g} eV"
+        )
 
 
 def read_explicit_initial_chain(path, initial, final, n_images, **geometry_limits):
@@ -314,6 +338,7 @@ def main() -> None:
             raise ValueError("--vasp-symprec must be positive")
         vasp_overrides["symprec"] = args.vasp_symprec
     static_parameters, _ = prepare_vasp_static_parameters(initial_dir, overrides=vasp_overrides)
+    validate_expected_encut(static_parameters, args.expected_encut_ev)
     native_probe = None
     candidate_validator = None
     if args.native_lattice_probe:

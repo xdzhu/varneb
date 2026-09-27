@@ -39,6 +39,7 @@ export IMAGE_CACHE_NAMESPACE="hf-vasp6.3.2-$(sha256sum "${VASP_ROOT}/bin/vasp_st
   --image-cache-namespace "${IMAGE_CACHE_NAMESPACE}" \
   --mic --cell-interpolation linear --mapping auto --align-translation \
   --minimum-distance 1.4 --maximum-deformation 0.50 --vasp-isym -1 --vasp-symprec 1e-4 \
+  --expected-encut-ev 600 \
   --ncores 32 --vasp-bin "${VASP_ROOT}/bin/vasp_std"
 "${python}" scripts/audit_vcneb_result.py "${workdir}" \
   --max-min-distance 1.4 --max-deformation 0.50 --fmax-target 0.10
