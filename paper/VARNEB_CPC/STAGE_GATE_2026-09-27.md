@@ -173,6 +173,16 @@ the specific artifacts being revised.
   conclusion heading and text. Main Figs. 4 and 5 still occupy near-standalone
   float pages, so the current 12-page PDF should not be presented as a final
   ten-page layout.
+- Confirm the intended CPC article track before submission. Elsevier's current
+  [CPC journal description](https://shop.elsevier.com/journals/computer-physics-communications/0010-4655)
+  distinguishes *Computer Programs in Physics* (programs archived in the CPC
+  Program Library on Mendeley Data under an approved open-source licence) from
+  *Computational Physics Papers* (implementation and performance details,
+  ideally with code on a public repository). This draft includes a Program
+  Summary and currently has only a GitHub/PyPI release record; that is not
+  evidence of a CPC Program Library accession. Confirm the track and prepare
+  the corresponding program deposit during submission, without publishing a
+  new release or claiming an accession number prematurely.
 
 ## Stronger mode-surface / TS claims: evidence still needed
 
