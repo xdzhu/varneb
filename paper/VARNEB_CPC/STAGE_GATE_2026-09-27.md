@@ -36,6 +36,16 @@ the specific artifacts being revised.
    cached DFT points, respectively, passed an independent raw-output audit.
    This strengthens the *local numerical screen*, but does not certify a
    global minimum, branch continuity, or a continuous conditional PES.
+   A separate preselected center `(0.75,0.15)` is now audited with the same
+   ABACUS/PBE/100-Ry/10-au-DZP contract. After mirror-branch alignment, its
+   energy differs from the four-corner bilinear prediction by 0.476 meV/BTO,
+   while the atomic-plus-strain coordinate discrepancy is
+   `0.1254 sqrt(amu) Å`, predominantly strain. All five selected low-energy
+   branches pass the declared local gradient/stress and two-step 16D
+   curvature screens, but the weakest curvature lacks a rigorous numerical
+   error bound. This five-point pilot does not promote the four-point stage
+   figure to a continuous conditional-PES contour. Source:
+   `benchmarks/numerical_integrity/bto_conditional_five_point_patch_2026-09-28.json`.
 3. **GaN B4→B1, 45.7 GPa:** `figures/gan_multibackend_validation.*` shows
    five converged *one-dimensional* variable-cell enthalpy paths, normalized
    per GaN: ABACUS/VASP/QE/ABINIT/CP2K forward barriers
@@ -94,8 +104,9 @@ the specific artifacts being revised.
   only `0.476 meV/BTO`, under its `2 meV/BTO` local line. The frozen runner
   did not explicitly serialize all branch terminal records; a cache-only
   deterministic replay reconstructed all three with zero new DFT calls.
-  Local holdout curvature remains unchecked. Competing
-  branch and continuity checks across the sampled domain; quantified
+  Local holdout curvature has since been screened at two finite-difference
+  steps, but its weak positive value is not a rigorously certified minimum.
+  Competing branch and continuity checks across the sampled domain; quantified
   interpolation error and a clear definition of released atomic/strain
   variables. Confirm that the actual T endpoint is represented by, or is
   explicitly off, the chosen two-mode manifold. Only then promote a contour
