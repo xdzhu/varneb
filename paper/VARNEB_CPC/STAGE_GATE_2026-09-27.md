@@ -1,10 +1,10 @@
 # VARNEB manuscript evidence gate — 2026-09-27
 
 This is a claim gate, not a request to change a calculator parameter or to run
-CI. The 2026-09-28 two-column `elsarticle` draft currently compiles to 12 PDF
-pages, including approximately ten pages of scientific text/figures and the
-end-matter/references, plus a separate four-page supplement. Two wide GaN
-floats occupy nearly standalone pages; a final journal-layout pass remains.
+CI. The 2026-09-28 two-column `elsarticle` draft currently compiles to 10 main
+PDF pages including references, plus a separate four-page supplement. The two
+wide GaN figures share pages with text without reducing their label sizes;
+author metadata and a final journal-layout pass remain.
 The BTO restricted-sheet figure,
 GaN five-backend path comparison, GaN local joint-coordinate cut, and
 validated central GaN two-coordinate cut remain in the main text. The
@@ -12,8 +12,7 @@ BTO/HfO2 material-control figure, all-image GaN endpoint-mode profile, and
 original GaN Hessian/endpoint-mode chart, and the 81-point frozen BTO grid
 are Supplementary Figs. S1--S4;
 their original source data remain linked.
-The scientific narrative remains near the intended length without shrinking
-the plotted labels, but the current PDF is not literally ten pages. The former
+The ten-page layout target is now met without shrinking plotted labels. The former
 October 3/10 dates were a contingency buffer, not a requirement for new DFT.
 The revised execution target is a science-and-figure freeze by September 29
 and a complete technical manuscript/source package by September 30. Literal
@@ -163,7 +162,7 @@ the specific artifacts being revised.
   is a clean package-source snapshot, not a full-repository pristine checkout.
   The checks do not replace remote material-output audits, a full-checkout
   test, or an actual tagged release.
-- Review the current 12-page main PDF and four-page supplement while checking
+- Review the current 10-page main PDF and four-page supplement while checking
   journal formatting, float placement, bibliography, figure legibility, and
   source-data availability. Do not regain length by dropping method derivation
   or evidence limits. Author order,
@@ -173,9 +172,14 @@ the specific artifacts being revised.
   updated main Fig. 4 and supplementary Fig. S4 were rendered and visually
   checked, with no clipped labels or unresolved references detected. A
   `\raggedbottom` layout correction removed stretched whitespace between the
-  conclusion heading and text. Main Figs. 4 and 5 still occupy near-standalone
-  float pages, so the current 12-page PDF should not be presented as a final
-  ten-page layout.
+  conclusion heading and text. Moving the Fig. 4 declaration earlier lets
+  Figs. 4 and 5 share pages 8 and 9 with the surrounding text; linking the
+  concise Data availability statement to `MANUSCRIPT_EVIDENCE.md` keeps the
+  figure and principal-claim source paths discoverable and brings references
+  onto page 10. Pages 7--10
+  were rerendered and checked for clipping, readable labels, and figure order;
+  no scientific figure, method derivation, or caveat was dropped to meet the
+  length target.
 - Confirm the intended CPC article track before submission. Elsevier's current
   [CPC journal description](https://shop.elsevier.com/journals/computer-physics-communications/0010-4655)
   distinguishes *Computer Programs in Physics* (programs archived in the CPC

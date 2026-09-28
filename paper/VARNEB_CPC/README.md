@@ -64,9 +64,11 @@ the ZStar reference package. The working target is approximately ten typeset
 pages including the Program Summary, figures, tables, and references. Add
 material only when it closes a reproducibility, method, or verification gap;
 do not pad the manuscript with duplicate workflow descriptions or unsupported
-benchmark claims. The 2026-09-28 draft compiles to **12 PDF pages, including
-two near-standalone GaN figure pages, plus four supplement pages/figures**.
-This is not literally the ten-page target; final journal layout remains open.
+benchmark claims. The 2026-09-28 draft compiles to **10 main PDF pages plus
+four supplement pages/figures**. Advancing the GaN local figure declaration
+and linking the shorter Data availability statement to the committed
+claim-to-evidence index removed two near-standalone float pages without
+shrinking figure labels or dropping scientific limits.
 Author metadata and journal-specific final checks
 remain submission gates. The main evidence set contains the architecture
 figure, BTO restricted-sheet/path projection, GaN five-backend comparison,

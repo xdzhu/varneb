@@ -619,6 +619,25 @@ complete paths, including CP2K, satisfy $f_{\max}\leq0.10$ eV/\AA{}.}
 \label{fig:gan-multibackend}
 \end{figure*}
 
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/gan_600eV_local_joint_dft81_v2_20260928.pdf}
+\caption{GaN local joint-coordinate enthalpy cut near the B4-to-B1 highest
+image at 45.7 GPa, using the production VASP/PBE 600-eV contract.
+(a) Display interpolation of 81 raw-audited DFT enthalpies on a complete
+$9\times9$ grid in the coupled unstable coordinate $q_u$ and stable joint
+coordinate $q_v$; circles mark 80 off-center statics and the star marks the
+center. (b) Direct DFT enthalpy changes against the \emph{original} quadratic
+model. The shaded $\pm0.2$-meV/GaN band was predeclared for the four original
+axial half-step checks only; it is not a retrospective acceptance test for
+the additional 68 points. The preceding 25-point interpolation prospectively
+predicts the final 56 nodes within 0.0135 meV/GaN. These atom--cell joint
+coordinates define a frozen local enthalpy slice, not an orthogonally relaxed
+or whole-path surface or a certified stationary transition state; Hessian
+and endpoint-mode projections appear in Supplementary Fig.~S3.}
+\label{fig:gan-joint-mode}
+\end{figure*}
+
 A separate local VASP diagnostic examines why the B4-to-B1 candidate is
 unstable when atomic and cell freedoms are combined. The production electronic
 contract is retained throughout: 600 eV, PBE/Ga\_d+N PAW, and the same
@@ -674,25 +693,6 @@ component projects onto independent 600-eV endpoint $\Gamma$ bases
 $56.1\%/39.7\%$ at B4 and $68.3\%/27.5\%$ at B1; the remaining group carries
 about $4.2\%$. These geometric subspace overlaps neither partition the
 barrier nor certify a variable-cell TS phonon.
-
-\begin{figure*}[t]
-\centering
-\includegraphics[width=\textwidth]{figures/gan_600eV_local_joint_dft81_v2_20260928.pdf}
-\caption{GaN local joint-coordinate enthalpy cut near the B4-to-B1 highest
-image at 45.7 GPa, using the production VASP/PBE 600-eV contract.
-(a) Display interpolation of 81 raw-audited DFT enthalpies on a complete
-$9\times9$ grid in the coupled unstable coordinate $q_u$ and stable joint
-coordinate $q_v$; circles mark 80 off-center statics and the star marks the
-center. (b) Direct DFT enthalpy changes against the \emph{original} quadratic
-model. The shaded $\pm0.2$-meV/GaN band was predeclared for the four original
-axial half-step checks only; it is not a retrospective acceptance test for
-the additional 68 points. The preceding 25-point interpolation prospectively
-predicts the final 56 nodes within 0.0135 meV/GaN. These atom--cell joint
-coordinates define a frozen local enthalpy slice, not an orthogonally relaxed
-or whole-path surface or a certified stationary transition state; Hessian
-and endpoint-mode projections appear in Supplementary Fig.~S3.}
-\label{fig:gan-joint-mode}
-\end{figure*}
 
 We also resolve the \emph{entire} 29-image 600-eV path against the two
 independently calculated endpoint $\Gamma$ bases (Supplementary Fig.~S2).
@@ -815,31 +815,18 @@ their frozen scope and numerical TS limit remain explicit.
 
 \section*{Data availability}
 
-The source code, examples, tests, manuscript source, and compact source-data
-tables are available at \url{https://github.com/xdzhu/varneb}. Full
-first-principles output directories are retained with the project calculation
-archive. Supplementary Fig.~S1 and Fig.~\ref{fig:gan-multibackend} are generated
-from committed source tables; the latter includes the audited, force-converged
-CP2K path, its source-data record, and the 27-image raw-energy/stress versus
-exact-cache reconciliation in
-\path{benchmarks/numerical_integrity/gan_cp2k_final_chain_raw_energy_stress_20260928.json}.
-The GaN central-cut figure
-(Fig.~\ref{fig:gan-dense-surface}) likewise has a committed 90-coordinate
-source table, per-output hashes, and interpolation-gate audit. The all-image
-endpoint-$\Gamma$ profile (Supplementary Fig.~S2) has a committed
-29-image mode/strain/residual table and calculation-input hash record.
-The local joint-mode figure (Fig.~\ref{fig:gan-joint-mode}) has an 81-row
-source table and separate 13-, 25-, and 81-point raw-output audits;
-the 56 last-grid points provide a prospective check of the 25-point
-interpolant. Supplementary Fig.~S4 has an 81-point frozen-cell BTO source
-table, including the 22-point prospective extension from its earlier 59-point
-cut and explicit interpolation-error diagnostics.
-The BTO restricted-sheet figure (Fig.~\ref{fig:bto-qy0-sheet}) includes its
-measured/model source tables, prospectively frozen predictions, raw-output
-holdout audits, and figure QA hashes.
-The signed GaN basin-return and same-protocol final-static audits, including
-complete output hashes and the 2-kbar stress gate, are archived under
-\texttt{benchmarks/numerical\_integrity/}.
+The source code, examples, tests, manuscript source, plotted CSVs, and
+figure-QA and audit records are available at
+\url{https://github.com/xdzhu/varneb}. The repository's
+\path{paper/VARNEB_CPC/MANUSCRIPT_EVIDENCE.md} indexes the displayed figures
+and principal quantitative claims to source data, hashes, and claim limits.
+It covers the BTO restricted and 81-point frozen sheets; five-backend GaN
+paths and the CP2K raw-energy/stress reconciliation; the 81-point local and
+90-point central GaN cuts; endpoint-$\Gamma$ projections; and the Slurm
+acceleration accounting. The index distinguishes measured DFT points from
+display interpolation and records unavailable original-output properties.
+Full first-principles output directories are retained in the project
+calculation archive rather than bundled in the installable package.
 
 \section*{CRediT authorship contribution statement}
 Draft placeholder: confirm roles and author order before submission.
