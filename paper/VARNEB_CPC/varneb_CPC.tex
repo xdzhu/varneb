@@ -561,15 +561,11 @@ best update policy material- and path-dependent.
 \subsection{GaN B4-to-B1 across first-principles backends}
 \label{sec:gan-multibackend}
 
-GaN B4-to-B1 at 45.7 GPa supplies a finite-barrier production benchmark. The
-four-atom path contains 29 total images, uses the tetragonal mapping of the
-Qian benchmark, and normalizes enthalpy by two GaN formula units. Nine image
-workers evaluate the 27 interior images in three waves for ABACUS, QE, and
-ABINIT; VASP uses the same manager ownership and endpoint-cache policy. The
-launcher within a worker is backend-specific and is recorded rather than
-inferred: four MPI ranks for ABACUS, 32 for VASP, one exclusive Slurm rank for
-QE, eight Hydra ranks for ABINIT, and 16 MPI ranks in each of five CP2K
-workers. The latter evaluates the 27 interior images in six waves.
+GaN B4-to-B1 at 45.7 GPa supplies a finite-barrier production benchmark: a
+29-image, four-atom path using Qian's tetragonal mapping, with enthalpy per
+two GaN formula units. The manager reuses fixed endpoints and schedules only
+the 27 interior images in private calculator directories; backend-specific
+MPI launch and affinity settings are recorded with each run.
 
 All five completed calculations meet $f_{\max}\leq0.10$ eV/\AA{} and place
 the dominant maximum at image 15 (Fig.~\ref{fig:gan-multibackend}). Their
@@ -584,9 +580,9 @@ enthalpy is more code-sensitive ($-0.0585$ to $-0.0046$ eV/GaN), as expected
 for independently relaxed endpoint geometries and distinct basis and
 pseudopotential families. The defensible cross-backend claim is therefore a
 common dominant topology and barrier scale, not numerical identity. The CP2K
-recorded 29-image chain passes finite energy/force/stress and geometry checks;
-its endpoint pressure residuals are 0.416/0.249 kbar. A complete independent
-audit against every original electronic-output file remains outstanding.
+chain passes recorded 29-image energy/force/stress and geometry checks
+(endpoint pressure residuals 0.416/0.249 kbar), although an independent audit
+of every raw electronic-output file remains outstanding.
 
 \begin{figure*}[t]
 \centering
@@ -622,39 +618,27 @@ $0.0205$--$0.0211$ eV/\AA{} in the three volume-changing strain directions.
 We therefore do not present this candidate as a strictly certified
 transition state or infer a unique cause of the residual.
 
-Uninterrupted 600-eV/45.7-GPa relaxations from signed displacements along the
-joint negative direction return structurally to B4 and B1, respectively;
-their first ten ionic enthalpies reproduce the original signed pilots
-exactly. Under a 2-kbar endpoint stress gate, the B4 native-relax terminal
-state passes (1.743 kbar) but B1 narrowly misses (2.528 kbar). Fresh
-same-600-eV statics on both terminal geometries match the archived B4/B1
-endpoint enthalpies within 0.207/0.026 meV per four-atom cell, yet their
-stress residuals are 8.165/3.726 kbar. Thus these trajectories support the
-two-basin structural connection, not a stress-certified transition state.
-Here the electronic $\Gamma$-centered $8\times8\times6$ mesh remains fixed
-only to isolate this diagnostic, while B4/B1 have different reciprocal
-volumes per point (0.01647/0.01931~\AA$^{-3}$). In a production variable-cell
-path, integer meshes may instead change under a declared reciprocal-spacing
-rule; matching sampling density and checking relative enthalpy, force, and
-stress convergence matter more than identical mesh counts. On fresh restart at identical
-terminal geometries, the number of plane waves changes at each of the 384
-fixed K points, with B4/B1 static-minus-native energy shifts of
-$-7.720/+7.105$ meV per cell. This is consistent with a normal variable-cell
-basis-history effect; it does not by itself imply inadequate K-point sampling
-or demand a larger cutoff. The
-measured offsets require same-contract energies for meV-scale basin
-comparisons. They do not quantify all of the stress discrepancy.
+Uninterrupted signed 600-eV relaxations return structurally to B4 and B1,
+reproducing the pilots' first ten ionic enthalpies. At the 2-kbar stress gate,
+native B4 passes (1.743 kbar) and B1 narrowly misses (2.528 kbar); fresh
+same-600-eV statics match archived endpoint enthalpies within 0.207/0.026
+meV per cell but have 8.165/3.726-kbar stress residuals. The two-basin
+connection is supported, not a stress-certified TS. This diagnostic fixes a
+$\Gamma$-centered $8\times8\times6$ mesh to isolate variables, whereas
+production variable-cell paths may change integer meshes under a declared
+reciprocal-spacing rule and checked energy/force/stress convergence. Fresh
+statics change plane-wave counts at the same 384 K points and shift B4/B1
+energies by $-7.720/+7.105$ meV per cell relative to native relaxations.
+These offsets are consistent with basis-history effects and require
+same-contract meV-scale comparisons; they neither imply inadequate K-point
+sampling nor explain all stress differences.
 
-The atomic component of the same 600 eV joint negative direction is projected
-geometrically onto independently calculated 600 eV, four-atom-cell endpoint
-$\Gamma$ bases after center-of-mass translation is removed
-(Fig.~\ref{fig:gan-joint-mode}b). The lower and upper B4 optical doublets
-capture $56.1\%$ and $39.7\%$ of its mass-weighted atomic optical norm; the
-corresponding B1 doublets capture $68.3\%$ and $27.5\%$. The remaining
-single-mode group carries about $4.2\%$ at either endpoint. These are
-subspace-overlap fractions, not energy or barrier contributions. A fixed-cell
-endpoint $\Gamma$ basis does not certify a variable-cell transition-state
-phonon or the uniqueness of the global path.
+After removing rigid translation, the joint negative direction's atomic
+component projects onto independent 600-eV endpoint $\Gamma$ bases
+(Fig.~\ref{fig:gan-joint-mode}b). The two optical doublets capture
+$56.1\%/39.7\%$ at B4 and $68.3\%/27.5\%$ at B1; the remaining group carries
+about $4.2\%$. These geometric subspace overlaps neither partition the
+barrier nor certify a variable-cell TS phonon.
 
 \begin{figure*}[t]
 \centering
@@ -703,30 +687,19 @@ are geometric projections, not contributions to the barrier; the figure's
 \label{fig:gan-gamma-path}
 \end{figure*}
 
-The local mode analysis is complemented by an explicitly sampled,
-path-adapted two-coordinate enthalpy cut (Fig.~\ref{fig:gan-dense-surface}).
-Here $s$ follows the audited variable-cell VCNEB arc, while the transverse
-coordinate $q_{\perp}$ displaces atoms at each image's \emph{fixed} cell.
-Every sampled point is compared at the same external pressure,
-$P_{\mathrm{ext}}=45.7$~GPa, through the cell enthalpy
-$H=E+P_{\mathrm{ext}}V$ (then divided by two GaN formula units).
-Because these off-path calculations are frozen-geometry statics, their
-instantaneous internal stresses need not equal $P_{\mathrm{ext}}$; the
-chart is not a pointwise pressure-relaxed surface.
-The transported atomic normal remains coherent over central images 5--22;
-it is not a single global phonon mode. We evaluated the 18 path centers and
-$q_{\perp}=\pm0.025,\pm0.05$~\AA{} at each of these images, reusing 28
-previously audited off-path statics and running only 44 missing points with
-the unchanged 600-eV VASP input. All 44 new SCF, geometry, energy, force,
-stress, and input-hash audits passed. A linear-in-$s$, quadratic-in-$q_{\perp}$
-interpolant predicts eight preselected along-path holdout values to within
-0.166~meV/GaN; the 36 inner-$q_{\perp}$ checks deviate by at most
-0.159~meV/GaN. Both are below their documented 1.0-meV/GaN gates. The
-sampled transverse excess enthalpy spans 0--20.60~meV/GaN, against the
-0.33849-eV/GaN barrier of the complete 29-image path. This validates a
-\emph{central frozen cut} and its bounded interpolation, not a conditional
-minimum-energy surface, endpoint-spanning two-mode landscape, or strictly
-certified transition state.
+An explicitly sampled two-coordinate cut follows the audited variable-cell
+arc $s$, with atomic transverse displacements $q_{\perp}$ at each image's
+fixed cell (Fig.~\ref{fig:gan-dense-surface}). All 90 points use
+$H=E+P_{\mathrm{ext}}V$ at $P_{\mathrm{ext}}=45.7$~GPa, divided by two GaN
+formula units; off-path static stresses need not equal this pressure. The
+transported normal is coherent over images 5--22, not a global phonon mode.
+At these 18 centers, $q_{\perp}=\pm0.025,\pm0.05$~\AA{} supplies 72 off-path
+statics, including 44 new raw-audited calculations under the original 600-eV
+input. Preselected along-path and inner-transverse interpolation errors are
+0.166 and 0.159~meV/GaN, below their 1.0-meV/GaN gates; transverse excess
+enthalpy reaches 20.60~meV/GaN versus the path's 0.33849-eV/GaN barrier.
+This supports a bounded \emph{central frozen cut}, not an endpoint-spanning
+conditional PES or strict TS.
 
 \begin{figure*}[t]
 \centering

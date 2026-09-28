@@ -36,21 +36,26 @@ contracts.  The fixed endpoints are not dispatched during every iteration.
 5. `examples/` and `scripts/`: user-facing drivers and bounded postprocessing;
    no calculator logic is copied into the core.
 
-## Backend maturity contract
+## Backend maturity contract (2026-09-28)
 
 | Backend | Adapter | Variable-cell stress preflight | Material evidence |
 |---|---|---:|---|
-| VASP | `vcneb.vasp` | yes | production GaN/BTO/HfO2/CdSe evidence |
-| ABACUS | `vcneb.abacus` | yes | production HfO2/BTO evidence |
-| QE | `vcneb.qe` | yes, `scf` only | approved PseudoDojo PBE GaN endpoints; 45.7 GPa production running |
+| VASP | `vcneb.vasp` | yes | GaN 45.7-GPa path; BTO/HfO2/CdSe case evidence |
+| ABACUS | `vcneb.abacus` | yes | GaN 45.7-GPa path; BTO/HfO2 case evidence |
+| QE | `vcneb.qe` | yes, `scf` only | converged GaN 45.7-GPa path with pinned PBE UPFs |
 | LAMMPS | `vcneb.backends` | yes via ASE | HF contract smoke; potential-specific validation pending |
-| CP2K | `vcneb.backends` | yes via ASE | 800-Ry GaN endpoints and lazy 16-rank shell lifecycle validated; production running |
-| ABINIT | `vcneb.backends` | yes via ASE | approved PseudoDojo PBE/PSP8 GaN endpoints; production running |
+| CP2K | `vcneb.backends` | yes via ASE | converged GaN 45.7-GPa path and BTO T→C topology check; MPI affinity is case-specific |
+| ABINIT | `vcneb.backends` | yes via ASE | converged GaN 45.7-GPa path with pinned PBE/PSP8 potentials |
 
 “Adapter” means the Python contract is implemented and tested; it does not
 mean a particular potential, pseudopotential, cutoff, or literature barrier is
 validated.  A case is promoted to material evidence only after complete SCF,
 force/stress, endpoint identity, and provenance gates pass.
+The five-backend GaN source-of-truth paths and their distinct calculator
+contracts are listed in
+[`paper/VARNEB_CPC/MANUSCRIPT_EVIDENCE.md`](../paper/VARNEB_CPC/MANUSCRIPT_EVIDENCE.md).
+This table does not imply equal numerical barriers across backends or a
+transferable convergence result for another material.
 
 ## User workflow
 

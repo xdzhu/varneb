@@ -290,6 +290,76 @@ does not prove that a non-stationary path image is a saddle or that the mode is
 the unique reaction coordinate. Preserve the endpoint mapping and any
 fractional gauge translation in the command line and manifest.
 
+### Reproduce a path projection
+
+The archived BTO example uses a five-atom cubic reference, a `1×1×1` **phonon
+supercell**, and a separate `4×4×4` electronic k mesh. Its force-constant
+archive has the explicitly recorded `eV/angstrom.au` unit; do not use the
+script's `eV/angstrom^2` default for that archive. After making the audited
+endpoint structure and complete seven-image trajectory available locally,
+the corresponding command is:
+
+```bash
+python examples/analyze_path_gamma_modes.py \
+  --reference C_endpoint.cif --trajectory converged_vcneb.traj \
+  --force-constants outputs/batio3_t_to_c_pbe100_dzp10au/bto_cubic_gamma_force_constants.npz \
+  --force-constant-unit eV/angstrom.au \
+  --phonopy-eigenpairs outputs/batio3_t_to_c_pbe100_dzp10au/bto_cubic_phonopy_gamma_eigenpairs.npz \
+  --n-images 7 --reference-permutation 0,1,4,3,2 \
+  --reference-translation 0.5,0.5,0.5605508507551892 \
+  --output mode_projection.json
+```
+
+`C_endpoint.cif` and `converged_vcneb.traj` above are placeholders, not files
+shipped with the wheel. The exact source job, original trajectory location,
+atom permutation, and gauge shift for this BTO analysis are recorded in
+[`bto_cubic_gamma_phonon_provenance.json`](../outputs/batio3_t_to_c_pbe100_dzp10au/bto_cubic_gamma_phonon_provenance.json).
+For another mapping, recompute those two alignment arguments rather than
+copying the BTO values. The output amplitudes are mass-weighted atomic
+projections in the fixed reference-cell convention; cell strain is not a
+Gamma phonon amplitude.
+
+### What a two-coordinate surface means
+
+- A **frozen cut** evaluates actual static calculator points after varying
+  only the declared coordinates. All omitted atomic modes and the cell follow
+  a stated fixed rule. Interpolation may be drawn only within the sampled
+  domain and must have an independent error check. Projecting a variable-cell
+  path onto this plane does not put the path *on* the frozen surface.
+- A **conditional surface** relaxes the explicitly declared remaining degrees
+  of freedom at each fixed coordinate. Audit orthogonal force and stress,
+  competing starts/branches, curvature where stability is claimed, and
+  preselected holdout energies **and structures**. A converged local branch
+  is not automatically the global lower envelope.
+- A **path-adapted cut** uses path position `s` and a declared transverse
+  coordinate. It can display a central segment without claiming to cover the
+  endpoints or to use two global endpoint phonon modes. At nonzero external
+  pressure compare `H = E + PV`, with one pressure and one formula-unit
+  normalization throughout; the plotted 2D values are not finite-temperature
+  free energies.
+
+For BTO, cubic C has three independent unstable Gamma directions. Fixing only
+`(Q_z,Q_x)` while freely minimizing the omitted `Q_y` therefore cannot yield
+a two-dimensional lower envelope that passes through C at its cubic reference
+energy. The completed 59-point BTO figure is a **frozen** cut; the separate
+five-point conditional pilot shows branch lowering but is not a certified
+continuous PES. For GaN, the audited 45.7-GPa surface is a **central frozen
+atomic-transverse enthalpy cut** around a variable-cell path, not an
+endpoint-spanning or orthogonally relaxed two-mode surface. See
+[`MANUSCRIPT_EVIDENCE.md`](../paper/VARNEB_CPC/MANUSCRIPT_EVIDENCE.md) for
+the bounded point counts and holdout errors. Do not derive a new activation
+barrier from either interpolated contour; obtain it from the converged VCNEB
+image enthalpies under the same calculator contract.
+
+An interior highest image is only a transition-state candidate. Calling it a
+strict variable-cell TS additionally requires a sufficiently stationary
+atomic-plus-cell enthalpy gradient, one negative direction of the **joint**
+Hessian with converged finite differences, consistent energy/force/stress
+derivatives, and two-sided descent to the intended basins. A fixed-cell
+imaginary Gamma mode alone does not establish this. The current GaN evidence
+supports local atom–strain coupling but is deliberately not labeled a strict
+TS certificate.
+
 ## 5. HF/Slurm execution
 
 Before a real job:

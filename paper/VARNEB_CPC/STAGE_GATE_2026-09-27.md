@@ -2,7 +2,11 @@
 
 This is a claim gate, not a request to change a calculator parameter or to run
 CI. The 2026-09-28 compiled draft PDF has 13 pages; the intended CPC article
-is about 10.
+is about 10. A same-day GaN-section edit removed repeated execution and audit
+prose, but the rebuilt PDF remains 13 pages with seven legible main figures.
+The length gate is still open. Further cuts must preserve mode/PES claim
+boundaries and figure readability; a secondary diagnostic belongs in
+supplementary material before shrinking labels or dropping caveats.
 The working tree contains unrelated and ongoing user research files: stage only
 the specific artifacts being revised.
 
