@@ -34,7 +34,7 @@ ROOT = Path(__file__).resolve().parents[1]
 def test_backend_matrix_has_all_supported_adapters() -> None:
     rows = backend_capability_matrix()
     names = [row["name"] for row in rows]
-    assert names == ["abacus", "vasp", "qe", "lammps", "cp2k", "abinit"]
+    assert names == ["ase", "abacus", "vasp", "qe", "lammps", "cp2k", "abinit"]
     assert get_backend_spec("LAMMPS").variable_cell
     statuses = {row["name"]: row["status"] for row in rows}
     assert all(statuses[name] == "validated"

@@ -34,6 +34,8 @@ varneb init varneb.json
 # edit initial, final, backend, workdir, and explicit calculator parameters
 varneb validate-config varneb.json
 varneb prepare varneb.json
+# from within a reviewed Slurm allocation, after loading the calculator module:
+varneb run varneb.json --execute
 ```
 
 `prepare` is the source-of-truth input gate: it resolves paths relative to the
@@ -43,11 +45,55 @@ initial trajectory, and writes `varneb_preflight.json`. It uses the tested
 reject a configured minimum-distance or deformation threshold before any
 external executable is launched.
 
-The material production driver `examples/run_vcneb_ase.py` accepts either an
+`varneb run` uses the *same* configuration; `--execute` is required because it
+can launch first-principles programs. It never submits a Slurm job by itself.
+The initial path and preflight are checked again, and a prior execution in the
+same workdir is refused rather than overwritten. For a standard ASE
+calculator, set the following fields in `varneb.json` (shown with a
+calculator-free toy class; substitute a reviewed material calculator and
+settings for production):
+
+```json
+{
+  "schema_version": 1,
+  "backend": "ase",
+  "initial": "initial/POSCAR",
+  "final": "final/POSCAR",
+  "workdir": "runs/example",
+  "n_images": 7,
+  "cell_mode": "fixed",
+  "optimizer": "FIRE",
+  "image_workers": 0,
+  "calculator": {
+    "kind": "ase_class",
+    "symbol": "ase.calculators.emt:EMT",
+    "parameters": {}
+  }
+}
+```
+
+For a named DFT backend (`abacus`, `vasp`, `qe`, `cp2k`, `abinit`, or `lammps`),
+declare `calculator.command` explicitly and keep all scientific settings in
+`calculator.parameters`; `kind: "factory"` and `calculator.factory_kwargs`
+select a specialized image factory when profiles, potential paths, or launcher
+protocols require it. The `backend` label and `optimizer` remain independent.
+`cell_mode: "full"` requests stress and allows cell evolution;
+`cell_mode: "fixed"` requires identical cells and zero pressure and requests
+energy/forces only. Set `image_workers` to the number of concurrent *interior*
+calculations; this must fit the scheduler allocation, including each worker's
+MPI ranks. The initial two endpoints are evaluated once, not at every update.
+The run manifest records the JSON hash, declared backend, calculator symbol,
+parameters, and input geometry. Neither `validate-config` nor `prepare`
+certifies that a DFT profile is physically suitable; the operator must review
+pseudopotentials, cutoff, k mesh, stress units and the executable beforehand.
+
+The packaged advanced driver `python -m vcneb.material_runner` accepts either an
 ASE class (`--calculator module:Class`) or a VARNEB factory
 (`--factory module:function`). The latter is preferred for QE, CP2K, ABINIT,
 and LAMMPS because pseudopotential/profile and file-protocol details remain
-explicit in the factory arguments.
+explicit in the factory arguments. `examples/run_vcneb_ase.py` remains a
+compatibility wrapper for existing source-checkout jobs, and advanced
+`--resume-snapshot`/`--subspace-artifact` options remain on that driver.
 
 `n_images` includes both fixed endpoints. A seven-image path therefore has
 five worker images. The default ordinary-NEB criterion is `0.10 eV/Å`; set a

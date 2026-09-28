@@ -30,6 +30,7 @@ _CONFIG_TEMPLATE = {
     "fmax_ev_per_angstrom": 0.10,
     "k": 0.20,
     "pressure_gpa": 0.0,
+    "cell_mode": "full",
     "cell_interpolation": "log_strain",
     "mapping": "auto",
     "mic": True,
@@ -39,9 +40,13 @@ _CONFIG_TEMPLATE = {
     "climb": False,
     "optimizer": "FIRE",
     "steps": 300,
+    "image_workers": 0,
     "calculator": {
+        "kind": None,
+        "symbol": None,
         "parameters": {},
         "command": "",
+        "factory_kwargs": {},
     },
 }
 
@@ -85,6 +90,7 @@ def _doctor(as_json: bool, selected: str | None) -> int:
         get_backend_spec(selected)
         rows = [row for row in rows if row["name"] == selected.lower()]
     executable_candidates = {
+        "ase": (),
         "abacus": ("abacus",),
         "vasp": ("vasp_std", "vasp_gam", "vasp_ncl"),
         "qe": ("pw.x",),
@@ -94,6 +100,7 @@ def _doctor(as_json: bool, selected: str | None) -> int:
     }
     for row in rows:
         module = {
+            "ase": "ase.calculators.calculator",
             "abacus": "ase.calculators.abacus",
             "vasp": "ase.calculators.vasp",
             "qe": "ase.calculators.espresso",
@@ -111,14 +118,16 @@ def _doctor(as_json: bool, selected: str | None) -> int:
                 break
         row["executable_candidates"] = list(candidates)
         row["resolved_executable"] = resolved
-        row["executable_on_path"] = resolved is not None
+        row["executable_on_path"] = None if not candidates else resolved is not None
     if as_json:
         print(json.dumps(rows, indent=2, sort_keys=True))
         return 0
     for row in rows:
+        available = row["executable_on_path"]
+        executable_state = "n/a" if available is None else "yes" if available else "no"
         print(
             f"{row['name']}: ASE={'yes' if row['ase_importable'] else 'no'}, "
-            f"PATH executable={'yes' if row['executable_on_path'] else 'no'}; "
+            f"PATH executable={executable_state}; "
             f"{row['notes']}"
         )
     return 0
@@ -148,6 +157,77 @@ def _prepare_config(path: str) -> int:
     config, report_path = prepare_run(path)
     print(f"prepared calculator-free path: {config.workdir / 'initial-vcneb.traj'}")
     print(f"wrote preflight report: {report_path}")
+    return 0
+
+
+def _run_config(path: str) -> int:
+    """Execute the packaged material runner from an explicit reviewed config."""
+
+    config = RunConfig.from_file(path)
+    calculator = config.calculator
+    if set(calculator) - {"kind", "symbol", "parameters", "command", "factory_kwargs"}:
+        raise ValueError("calculator contains unsupported fields")
+    kind = calculator.get("kind")
+    symbol = calculator.get("symbol")
+    if (kind not in {"ase_class", "factory"} or not isinstance(symbol, str)
+            or ":" not in symbol or not all(symbol.split(":", 1))):
+        raise ValueError("calculator.kind must be ase_class or factory, with an explicit module:attribute symbol")
+    command = calculator.get("command")
+    if command is not None and not isinstance(command, str):
+        raise ValueError("calculator.command must be a string")
+    if config.backend != "ase" and not (command and command.strip()):
+        raise ValueError("named DFT backends require an explicit calculator.command")
+    factory_kwargs = calculator.get("factory_kwargs", {})
+    if set(factory_kwargs) & {"parameters", "command"}:
+        raise ValueError("factory_kwargs must not override parameters or command")
+    if config.workdir.exists() and (
+        any(config.workdir.glob("image_[0-9]*"))
+        or any((config.workdir / name).exists() for name in (
+            "vcneb.opt.log", "vcneb.traj", "vcneb_summary.json", "ase_static_summary.json",
+            "image_cache", "snapshots",
+        ))
+    ):
+        raise FileExistsError("workdir contains a previous execution; choose a new workdir or use the explicit resume driver")
+    prepare_run(path)
+    argv = [
+        "--initial", str(config.initial), "--final", str(config.final),
+        "--workdir", str(config.workdir), "--n-images", str(config.n_images),
+        "--fmax", str(config.fmax_ev_per_angstrom), "--steps", str(config.steps),
+        "--k", str(config.k), "--pressure-gpa", str(config.pressure_gpa),
+        "--cell-mode", config.cell_mode, "--optimizer", config.optimizer,
+        "--image-workers", str(config.image_workers),
+        "--image-retries", str(config.image_retries),
+        "--candidate-step-retries", str(config.candidate_step_retries),
+        "--cell-interpolation", config.cell_interpolation,
+        "--mapping", config.mapping,
+        "--backend-label", config.backend,
+        "--config-source", str(Path(path).resolve()),
+        "--parameters-json", json.dumps(calculator.get("parameters", {})),
+        "--factory-kwargs-json", json.dumps(factory_kwargs),
+    ]
+    argv += ["--factory" if kind == "factory" else "--calculator", symbol]
+    if command:
+        argv += ["--command", command]
+    if config.mic:
+        argv.append("--mic")
+    if config.align_translation:
+        argv.append("--align-translation")
+    if config.climb:
+        argv.append("--climb")
+    for name, value in (
+        ("--climb-after", config.climb_after),
+        ("--minimum-distance", config.minimum_distance),
+        ("--maximum-deformation", config.maximum_deformation),
+        ("--minimum-endpoint-separation", config.minimum_endpoint_separation),
+        ("--maximum-cell-step", config.maximum_cell_step),
+        ("--maxstep", config.maxstep),
+        ("--endpoint-static-summary", config.endpoint_static_summary),
+    ):
+        if value is not None:
+            argv += [name, str(value)]
+    from .material_runner import main as run_material
+
+    run_material(argv)
     return 0
 
 
@@ -190,6 +270,11 @@ def build_parser() -> argparse.ArgumentParser:
         "prepare", help="build a calculator-free initial path and geometry preflight report"
     )
     prepare.add_argument("path", nargs="?", default="varneb.json")
+    run = subparsers.add_parser(
+        "run", help="execute a reviewed varneb.json in the current process (no scheduler submission)"
+    )
+    run.add_argument("path", nargs="?", default="varneb.json")
+    run.add_argument("--execute", action="store_true", help="acknowledge this may launch external calculators")
     return parser
 
 
@@ -208,6 +293,10 @@ def main() -> int:
             return _validate_config(args.path)
         if args.command == "prepare":
             return _prepare_config(args.path)
+        if args.command == "run":
+            if not args.execute:
+                raise ValueError("run requires --execute; use prepare for calculator-free validation")
+            return _run_config(args.path)
     except (FileExistsError, OSError, ValueError, json.JSONDecodeError) as exc:
         print(f"varneb: {exc}", file=sys.stderr)
         return 2

@@ -5,7 +5,7 @@ paths between periodic crystal structures.  The public project name is
 `varneb`; the import package remains `vcneb` for compatibility with the
 original research scripts.
 
-## Quick start (calculator-free)
+## Quick start
 
 For an installed release, use `python -m pip install "varneb[plot]"`. From a
 source checkout, this first example runs immediately and needs no DFT code or
@@ -28,14 +28,21 @@ varneb init varneb.json
 # edit initial, final, backend, workdir, and explicit calculator settings
 varneb validate-config varneb.json
 varneb prepare varneb.json
+# inside a reviewed scheduler allocation, after loading the calculator:
+varneb run varneb.json --execute
 ```
 
 `prepare` only writes an initial chain and a geometry preflight report; it
-does **not** run DFT. The material execution entry point is
-`examples/run_vcneb_ase.py` with a reviewed ASE calculator or VARNEB factory,
-as detailed in [`docs/USER_MANUAL.md`](docs/USER_MANUAL.md). To run the
-repository tests, install the additional `dev` extra and use
-`python -m pytest -q`.
+does **not** run DFT. Set `calculator.kind` to `ase_class` or `factory`, pin its
+`module:attribute` symbol, reviewed parameters and (for named DFT backends)
+an explicit command before `run`. `run --execute` uses that same JSON and
+starts calculators **in the current process**; it does not submit a scheduler
+job or guess pseudopotentials/cutoffs. A seven-image path has five interior
+workers; `image_workers: 0` runs them sequentially. Advanced restarts and mode
+subspaces remain available via `python -m vcneb.material_runner` (the old
+`examples/run_vcneb_ase.py` remains compatible). See
+[`docs/USER_MANUAL.md`](docs/USER_MANUAL.md) for the full contract. To run the
+repository tests, install the additional `dev` extra and use `python -m pytest -q`.
 
 `varneb backends --json` prints the machine-readable backend capability table.
 `varneb optimizers --json` prints the calculator-independent path strategy

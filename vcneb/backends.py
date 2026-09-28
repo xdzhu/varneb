@@ -101,6 +101,10 @@ class BackendSpec:
 
 _BACKENDS: tuple[BackendSpec, ...] = (
     BackendSpec(
+        "ase", "ase.calculators.calculator", "user supplied", True, "generic",
+        "Any reviewed ASE calculator; energy/forces required, stress for variable-cell.",
+    ),
+    BackendSpec(
         "abacus", "vcneb.abacus", "abacus", True, "validated",
         "ASE ABACUS adapter; use static force/stress evaluations per image.",
     ),

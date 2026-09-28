@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 
+import pytest
+
 from ase import Atoms
 from ase.io import write
 
@@ -35,6 +37,45 @@ def test_prepare_run_uses_safe_geometry_defaults(tmp_path) -> None:
     report = json.loads(report_path.read_text(encoding="utf-8"))
     assert report["calculator_attached"] is False
     assert report["initial_path_geometry"]["valid"] is True
+    _, repeated_report = prepare_run(config_path)
+    assert repeated_report == report_path
+
+
+def test_prepare_refuses_to_replace_a_changed_chain(tmp_path) -> None:
+    initial = Atoms("H2", positions=[[0, 0, 0], [0, 0, 0.74]], cell=[5, 5, 5], pbc=True)
+    final = initial.copy()
+    final.positions[1, 2] = 1.0
+    write(tmp_path / "initial.vasp", initial, format="vasp", direct=True, vasp5=True)
+    write(tmp_path / "final.vasp", final, format="vasp", direct=True, vasp5=True)
+    config_path = tmp_path / "varneb.json"
+    config_path.write_text(json.dumps({
+        "schema_version": 1, "backend": "ase", "initial": "initial.vasp",
+        "final": "final.vasp", "workdir": "run",
+    }), encoding="utf-8")
+    prepare_run(config_path)
+    trajectory = tmp_path / "run" / "initial-vcneb.traj"
+    saved = trajectory.read_bytes()
+    final.positions[1, 2] = 1.2
+    write(tmp_path / "final.vasp", final, format="vasp", direct=True, vasp5=True)
+    with pytest.raises(FileExistsError, match="prepared path"):
+        prepare_run(config_path)
+    assert trajectory.read_bytes() == saved
+
+
+@pytest.mark.parametrize("key,value", [
+    ("fmax_ev_per_angstrom", float("nan")),
+    ("k", 0.0),
+    ("pressure_gpa", float("inf")),
+    ("image_workers", -1),
+])
+def test_run_config_rejects_nonphysical_or_unsafe_values(tmp_path, key, value) -> None:
+    kwargs = {
+        "backend": "ase", "initial": tmp_path / "is.vasp",
+        "final": tmp_path / "fs.vasp", "workdir": tmp_path / "run",
+        key: value,
+    }
+    with pytest.raises(ValueError):
+        RunConfig(**kwargs)
 
 
 def test_identity_mapping_rejects_reordered_endpoint(tmp_path) -> None:
