@@ -11,7 +11,9 @@ Before tagging:
 2. Run `python tests/check_release_metadata.py --tag vX.Y.Z`,
    `python -m pytest -q`, and the manuscript/figure contract checks.
 3. Build an sdist and wheel with `python -m build`; inspect their contents and
-   install the wheel in an isolated environment. The sdist must contain
+   install the wheel in a fresh virtual environment without
+   `--system-site-packages`, so dependency resolution and package imports are
+   tested independently of the developer checkout. The sdist must contain
    `README.md`, `docs/USER_MANUAL.md`, and `examples/run_toy_vcneb.py`, but
    not cluster jobs, raw `outputs/`, validation runs, benchmarks, or the
    manuscript. The wheel should contain the `vcneb` package and metadata,
