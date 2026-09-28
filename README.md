@@ -127,3 +127,20 @@ For any ASE calculator exposing energy and forces (plus stress for VCNEB), use
 image cells and does not request stress; the default `--cell-mode full` retains
 variable-cell behavior. Specialized factories remain available when a code
 needs a profile or legacy file protocol.
+
+## Reproducible research figures
+
+The [CPC manuscript package](paper/VARNEB_CPC/README.md) contains the
+LaTeX sources, figure PDFs, plotted CSVs, and claim-to-evidence checklist.
+Its two mode-surface examples have deliberately different scopes:
+
+- BaTiO₃/ABACUS: a zero-pressure, `Q_y=0` symmetry-restricted variable-cell
+  energy sheet with nine audited fitting nodes and two prospective DFT checks.
+  It is not an unrestricted or finite-temperature potential surface.
+- GaN/VASP: a 45.7-GPa, 600-eV **central** path-adapted enthalpy cut using
+  18 path centers and 72 off-path static evaluations. The five-backend
+  B4→B1 barrier paths separately validate the path controller; the
+  two-coordinate cut does not certify a strict transition state.
+
+Both contours display interpolation only inside their sampled domains;
+barriers come from converged VCNEB chains, not from contour pixels.
