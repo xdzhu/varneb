@@ -31,8 +31,11 @@ def main() -> None:
         ("reported 32 meV per formula unit", "HfO2 literature comparison"),
         ("figures/vcneb_material_validation.pdf", "reproducible figure asset"),
         ("78.5\\% and 38.2\\%", "bounded acceleration result"),
-        ("Forward\nB4-to-B1 barriers", "forward GaN barrier panel"),
-        ("Reverse\nB1-to-B4 barriers", "reverse GaN barrier panel"),
+        ("(b) Forward\n$H_{\\rm peak}-H_{\\rm B4}$", "forward GaN barrier panel"),
+        ("(c) Reverse $H_{\\rm peak}-H_{\\rm B1}$", "reverse GaN barrier panel"),
+        ("Under a 2-kbar endpoint stress gate", "GaN basin stress gate"),
+        ("B1 narrowly misses (2.528 kbar)", "GaN B1 stress limitation"),
+        ("not a stress-certified transition state", "GaN TS claim limit"),
     ):
         require(manuscript, fragment, label=label)
 

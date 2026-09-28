@@ -586,7 +586,10 @@ endpoint, span 0.3431--0.3605 eV/GaN. The endpoint reaction
 enthalpy is more code-sensitive ($-0.0585$ to $-0.0046$ eV/GaN), as expected
 for independently relaxed endpoint geometries and distinct basis and
 pseudopotential families. The defensible cross-backend claim is therefore a
-common dominant topology and barrier scale, not numerical identity.
+common dominant topology and barrier scale, not numerical identity. The CP2K
+recorded 29-image chain passes finite energy/force/stress and geometry checks;
+its endpoint pressure residuals are 0.416/0.249 kbar. A complete independent
+audit against every original electronic-output file remains outstanding.
 
 \begin{figure*}[t]
 \centering
@@ -601,12 +604,6 @@ backend's own B1 endpoint, with no literature reverse reference. All five
 complete paths, including CP2K, satisfy $f_{\max}\leq0.10$ eV/\AA{}.}
 \label{fig:gan-multibackend}
 \end{figure*}
-
-The CP2K path uses the same pressure, phase mapping, atom order, image count,
-and controller settings. After 52 updates it reaches
-$f_{\max}=0.09409$ eV/\AA{} with a 0.29276-eV/GaN barrier at image 15.
-Endpoint pressure residuals (0.416/0.249 kbar) pass the 1-kbar gate;
-all-image energy/force/stress, geometry, and endpoint-hash audits pass.
 
 A separate local VASP diagnostic examines why the B4-to-B1 candidate is
 unstable when atomic and cell freedoms are combined. The production electronic
@@ -627,6 +624,18 @@ reduces the atomic and shear residuals below $0.0006$ eV/\AA{}, but leaves
 $0.0205$--$0.0211$ eV/\AA{} in the three volume-changing strain directions.
 We therefore do not present this candidate as a strictly certified
 transition state or infer a unique cause of the residual.
+
+Uninterrupted same-input relaxations from signed displacements along the
+joint negative direction return structurally to B4 and B1, respectively;
+their first ten ionic enthalpies reproduce the original signed pilots
+exactly. Under a 2-kbar endpoint stress gate, the B4 native-relax terminal
+state passes (1.743 kbar) but B1 narrowly misses (2.528 kbar). Fresh
+same-600-eV statics on both terminal geometries match the archived B4/B1
+endpoint enthalpies within 0.207/0.026 meV per four-atom cell, yet their
+stress residuals are 8.165/3.726 kbar. Thus these trajectories support the
+two-basin structural connection, not a stress-certified transition state;
+the differing variable-cell basis history also forbids mixing native-relax
+and fresh-static enthalpies at the meV scale.
 
 The atomic component of the same 600 eV joint negative direction is projected
 geometrically onto independently calculated 600 eV, four-atom-cell endpoint
@@ -660,7 +669,7 @@ For each endpoint reference, the three optical groups with the largest
 integrated path amplitudes contain five eigenvectors and capture more than
 $99.99\%$ of the squared atomic optical displacement along this
 particular mapped four-atom path. The maximum residual after reconstructing
-with these groups is $0.00043$ and $0.00139\sqrt{\mathrm{amu}}\,\AA$ for
+with these groups is $0.00043$ and $0.00139\sqrt{\mathrm{amu}}\,\text{\AA}$ for
 the B4 and B1 references, respectively. At the same time, the B4-referenced
 normal strains reach absolute values of $34.0\%$, $24.3\%$, and $17.8\%$.
 Thus a compact description of the \emph{atomic geometry} does not eliminate
@@ -679,7 +688,7 @@ norms in the three leading optical $\Gamma$ subspaces of B4 and B1,
 respectively; the labels rank each endpoint basis separately and do not
 identify modes across phases. (c) Symmetric strain relative to B4.
 (d) Atomic reconstruction residual after those three groups; the ordinate
-is in $10^{-3}\sqrt{\mathrm{amu}}\,\AA$. The dotted line marks the highest
+is in $10^{-3}\sqrt{\mathrm{amu}}\,\text{\AA}$. The dotted line marks the highest
 \emph{discrete} image (15), not a certified stationary saddle. Mode amplitudes
 are geometric projections, not contributions to the barrier; the figure's
 29-row source data and input-hash audit accompany the paper.}
@@ -803,6 +812,9 @@ CP2K path and its source-data record. The GaN central-cut figure
 source table, per-output hashes, and interpolation-gate audit. The all-image
 endpoint-$\Gamma$ profile (Fig.~\ref{fig:gan-gamma-path}) has a committed
 29-image mode/strain/residual table and calculation-input hash record.
+The signed GaN basin-return and same-protocol final-static audits, including
+complete output hashes and the 2-kbar stress gate, are archived under
+\texttt{benchmarks/numerical\_integrity/}.
 
 \section*{CRediT authorship contribution statement}
 Draft placeholder: confirm roles and author order before submission.
