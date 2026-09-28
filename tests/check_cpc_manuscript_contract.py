@@ -8,7 +8,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 MANUSCRIPT = ROOT / "paper" / "VARNEB_CPC" / "varneb_CPC.tex"
-SUPPLEMENT = ROOT / "paper" / "VARNEB_CPC" / "varneb_CPC_supplement.tex"
 BIBLIOGRAPHY = ROOT / "paper" / "VARNEB_CPC" / "varneb.bib"
 
 
@@ -22,7 +21,6 @@ def require(text: str, fragment: str, *, label: str) -> None:
 
 def main() -> None:
     manuscript = MANUSCRIPT.read_text(encoding="utf-8")
-    supplement = SUPPLEMENT.read_text(encoding="utf-8")
     bibliography = BIBLIOGRAPHY.read_text(encoding="utf-8")
 
     # These are scientific reporting boundaries, not stylistic preferences.
@@ -43,13 +41,20 @@ def main() -> None:
         ("81 measured enthalpies", "GaN local DFT point count"),
         ("or whole-path surface or a certified stationary transition state",
          "GaN local TS limit"),
-        ("Supplementary Fig.~S4", "BTO frozen-grid supplement boundary"),
+        ("Fig.~\\ref{fig:bto-frozen-soft81}", "BTO frozen-grid main-text boundary"),
     ):
         require(manuscript, fragment, label=label)
 
-    require(supplement, "vcneb_material_validation.pdf", label="material validation supplement")
-    require(supplement, "bto_frozen_soft_mode_81_20260928.pdf",
-            label="audited BTO grid supplement")
+    for figure, label in (
+        ("vcneb_material_validation.pdf", "material-control appendix"),
+        ("bto_frozen_soft_mode_81_20260928.pdf", "audited BTO grid in main text"),
+        ("gan_gamma_path_600eV.pdf", "GaN whole-path modes in main text"),
+        ("gan_joint_mode_600eV.pdf", "GaN joint modes in main text"),
+    ):
+        require(manuscript, figure, label=label)
+    require(manuscript, "\\appendix", label="same-document appendix")
+    if "Supplementary Fig." in manuscript:
+        raise SystemExit("main manuscript still refers to separate supplementary figures")
     require(manuscript, "\\cite{BTOReaxFF2019}", label="BTO citation key")
     require(bibliography, "@article{BTOReaxFF2019,", label="BTO bibliography record")
     require(bibliography, "10.1039/C9CP02955A", label="BTO DOI")

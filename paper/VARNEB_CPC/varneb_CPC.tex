@@ -439,7 +439,7 @@ holdouts were worse. We completed its $9\times9$ grid with 22 additional
 static DFT points under the unchanged 100-Ry contract; the prior 59-point
 interpolant predicted these new nodes within 0.441 meV/BTO. The full-grid
 display and its 5.14-meV/BTO maximum interior leave-one-out error appear in
-Supplementary Fig.~S4. The frozen cut still cannot represent the
+Fig.~\ref{fig:bto-frozen-soft81}. The frozen cut still cannot represent the
 variable-cell path because stable atomic modes and strain move. We therefore
 fixed two signed cubic soft-mode
 amplitudes $(Q_z,Q_x)$, imposed $Q_y=0$ at every evaluation, and released the
@@ -491,6 +491,26 @@ Source-data tables and raw-output hashes accompany the figure.}
 \label{fig:bto-qy0-sheet}
 \end{figure*}
 
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/bto_frozen_soft_mode_81_20260928.pdf}
+\caption{Exploratory cubic-cell BTO two-soft-mode cut, distinct from the
+symmetry-restricted variable-cell sheet in Fig.~\ref{fig:bto-qy0-sheet}.
+ABACUS/PBE static calculations retain the 100-Ry/10-au-DZP basis and
+$4\times4\times4$ electronic mesh; the mode axes derive from cubic
+$1\times1\times1$ $\Gamma$ force constants. (a) The 81 circles are measured
+DFT energies on a complete $9\times9$ $(Q_\parallel,Q_\perp)$ grid; smooth
+color is display interpolation, not additional DFT. The black line is only
+the seven-image T-to-C VCNEB projection onto this frozen plane. (b) Actual
+variable-cell path energies relative to T. (c) Atomic displacement norm
+omitted by the plane. The prior 59-point interpolant predicted the 22 newly
+computed nodes within 0.441 meV/BTO, whereas full-grid interior
+leave-one-out error reaches 5.14 meV/BTO and the display interpolant
+undershoots a measured minimum by 1.78 meV/BTO. Neither the interpolated
+minimum nor a point on the projected line is a relaxed T-to-C barrier.}
+\label{fig:bto-frozen-soft81}
+\end{figure*}
+
 \subsection{\texorpdfstring{HfO$_2$}{HfO2} tetragonal to polar orthorhombic path}
 
 The HfO$_2$ case uses an explicitly mapped 12-atom Hf$_4$O$_8$ endpoint pair:
@@ -517,8 +537,8 @@ additional observed steps.  We archive the step-275 path only under the
 conventional loose 0.10 eV/\AA{} ordinary-NEB convention; it is excluded from
 the strict ordinary/CI barrier comparison and literature discussion.
 The full BTO/HfO$_2$ path profiles, volume changes, and literature comparison
-are retained as Supplementary Fig.~S1, rather than duplicating the main-text
-BTO mode-sheet and GaN barrier figures.
+are retained in Appendix~\ref{app:material-controls}, separate from the
+main-text BTO mode sheets and GaN barrier figures.
 
 \subsection{Calculator-work reduction on matched chains}
 \label{sec:efficiency}
@@ -634,7 +654,7 @@ the additional 68 points. The preceding 25-point interpolation prospectively
 predicts the final 56 nodes within 0.0135 meV/GaN. These atom--cell joint
 coordinates define a frozen local enthalpy slice, not an orthogonally relaxed
 or whole-path surface or a certified stationary transition state; Hessian
-and endpoint-mode projections appear in Supplementary Fig.~S3.}
+and endpoint-mode projections appear in Fig.~\ref{fig:gan-joint-hessian}.}
 \label{fig:gan-joint-mode}
 \end{figure*}
 
@@ -647,7 +667,7 @@ refinement, the translation-free atomic--symmetric-strain Hessian at a
 $-4.033$ eV/\AA$^2$, whose squared overlap with the path tangent is $0.996$.
 Its frozen-strain atomic and frozen-atomic strain blocks have positive lowest
 curvatures, $2.450$ and $3.903$ eV/\AA$^2$, while the strain-relaxed atomic
-Schur complement is negative (Supplementary Fig.~S3a). This supports
+Schur complement is negative (Fig.~\ref{fig:gan-joint-hessian}a). This supports
 a local atom--strain coupling mechanism within the stated coordinate metric.
 Independent half-step energy probes preserve the negative path-direction
 and positive transverse-direction signs, but are not a second full Hessian.
@@ -689,13 +709,30 @@ sampling nor explain all stress differences.
 
 After removing rigid translation, the joint negative direction's atomic
 component projects onto independent 600-eV endpoint $\Gamma$ bases
-(Supplementary Fig.~S3b). The two optical doublets capture
+(Fig.~\ref{fig:gan-joint-hessian}b). The two optical doublets capture
 $56.1\%/39.7\%$ at B4 and $68.3\%/27.5\%$ at B1; the remaining group carries
 about $4.2\%$. These geometric subspace overlaps neither partition the
 barrier nor certify a variable-cell TS phonon.
 
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/gan_joint_mode_600eV.pdf}
+\caption{Local GaN atom--strain coupling at 45.7 GPa, under the original
+VASP/PBE 600-eV contract. (a) Lowest curvatures of the frozen-strain atomic
+and frozen-atomic strain blocks, full joint Hessian, and strain-relaxed Schur
+complement at a 0.02-\AA{} step. Translation-free coordinates use
+$\mathrm{cell\_scale}=3.3983$ \AA; curvature magnitudes depend on this metric.
+(b) Squared geometric projections of the joint negative direction's atomic
+optical component onto independent B4 and B1 endpoint $\Gamma$ groups,
+ranked separately by frequency. These overlaps are not mode-resolved barrier
+shares. The energy--force mismatch and incomplete stationary-point tests
+preclude certification of a strict variable-cell transition state.}
+\label{fig:gan-joint-hessian}
+\end{figure*}
+
 We also resolve the \emph{entire} 29-image 600-eV path against the two
-independently calculated endpoint $\Gamma$ bases (Supplementary Fig.~S2).
+independently calculated endpoint $\Gamma$ bases
+(Fig.~\ref{fig:gan-gamma-path}).
 For each endpoint reference, the three optical groups with the largest
 integrated path amplitudes contain five eigenvectors and capture more than
 $99.99\%$ of the squared atomic optical displacement along this
@@ -707,6 +744,24 @@ Thus a compact description of the \emph{atomic geometry} does not eliminate
 the cell coordinate. The large capture reflects this path's symmetry and
 chosen mapping; it is neither a mode-resolved enthalpy partition nor proof
 that an unconstrained two- or three-mode PES contains the transformation.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/gan_gamma_path_600eV.pdf}
+\caption{All-image GaN B4-to-B1 mode and strain evolution at 45.7 GPa,
+using the original VASP/PBE 600-eV electronic contract and independent
+$1\times1\times1$ endpoint $\Gamma$ force constants. The 29 total images
+share one normalized variable-cell path coordinate. (a,b) Atomic displacement
+norms in the three leading optical $\Gamma$ subspaces of B4 and B1,
+respectively; the labels rank each endpoint basis separately and do not
+identify modes across phases. (c) Symmetric strain relative to B4. (d)
+Atomic reconstruction residual after those three groups; the ordinate is in
+$10^{-3}\sqrt{\mathrm{amu}}\,\text{\AA}$. The dotted line marks the highest
+discrete image (15), not a certified stationary saddle. Mode amplitudes are
+geometric projections, not barrier contributions. The 29-row source data and
+input-hash audit accompany the project archive.}
+\label{fig:gan-gamma-path}
+\end{figure*}
 
 An explicitly sampled two-coordinate cut follows the audited variable-cell
 arc $s$, with atomic transverse displacements $q_{\perp}$ at each image's
@@ -838,6 +893,36 @@ with all authors before submission.
 \section*{Acknowledgements}
 Draft placeholder: add funding, computing allocations, and institutional
 acknowledgements before submission.
+
+\appendix
+\setcounter{figure}{0}
+\renewcommand{\theHfigure}{A.\arabic{figure}}
+\section{Material-path and image-count controls}
+\label{app:material-controls}
+
+Figure~\ref{fig:material-controls} collects the complete image-count and
+interpolation controls behind the BTO and HfO$_2$ comparisons in the main
+text. BTO's monotonic endpoint energy rise must not be read as a transition
+barrier. The HfO$_2$ climbing-image result is compared with a literature
+barrier only after normalizing the 12-atom cell by four formula units; the
+published calculation used a different electronic-structure contract and
+is not a statistical replicate.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/vcneb_material_validation.pdf}
+\caption{Material paths and qualified literature comparison. (a) ABACUS/PBE
+BaTiO$_3$ T-to-C at 5, 7, and 9 total images: the monotonic 0.08713-eV/BTO
+endpoint rise is not an activation barrier. (b) HfO$_2$ T-to-PO log-strain
+paths, linear-cell control, and staged climbing-image refinement; the open
+circle marks the climbing image and the dotted line an external literature
+barrier. (c) HfO$_2$ barriers per formula unit; the literature bar is not a
+statistical replicate. (d) Relative volume along the variable-cell paths.
+The BTO and HfO$_2$ calculator contracts and cross-functional comparison
+limits are stated in the main text.}
+\label{fig:material-controls}
+\end{figure*}
+\clearpage
 
 {\footnotesize\bibliography{varneb}}
 \end{document}

@@ -1,5 +1,15 @@
 # VARNEB CPC claim-to-evidence checklist
 
+**Current single-document layout (2026-09-28):** the evidence rows below retain
+their original source-data identities, but old S1--S4 and Fig. 3--5 labels are
+historical. The current manuscript uses Fig. 2 (BTO restricted sheet), Fig. 3
+(BTO 81-point frozen grid), Fig. 4 (GaN five backends), Fig. 5 (GaN 81-point
+local cut), Fig. 6 (GaN Hessian/endpoint projections), Fig. 7 (GaN whole-path
+modes/strain), Fig. 8 (GaN central 90-point cut), and same-document Appendix
+Fig. A.1 (BTO/HfO$_2$ material controls). No separate supplement is submitted.
+The auditable figure-to-data map in `FIGURE_LOGIC_AND_STYLE.md` is authoritative
+for current numbering.
+
 | Manuscript element | Source of truth | Current status |
 | --- | --- | --- |
 | Generalized atomic/cell coordinates and force transform | `docs/theory.md`, `tests/check_vcneb_forces.py` | regression covered |

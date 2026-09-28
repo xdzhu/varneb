@@ -40,7 +40,7 @@ def _assert_complete_nine_by_nine(rows: list[dict[str, str]], x: str, y: str) ->
     assert set(coordinates) == {(x_value, y_value) for x_value in xs for y_value in ys}
 
 
-def test_bto_supplementary_grid_is_81_measured_statics() -> None:
+def test_bto_main_text_grid_is_81_measured_statics() -> None:
     stem = "bto_frozen_soft_mode_81_20260928"
     csv_path = FIGURES / f"{stem}_source_data.csv"
     qa = _json(FIGURES / f"{stem}_qa.json")
@@ -49,8 +49,8 @@ def test_bto_supplementary_grid_is_81_measured_statics() -> None:
     measured = [row for row in rows if row["record"] == "frozen_DFT"]
     path = [row for row in rows if row["record"] == "VCNEB_image"]
 
-    assert (PAPER / "varneb_CPC_supplement.tex").read_text(encoding="utf-8").count(
-        f"{{{stem}.pdf}}"
+    assert (PAPER / "varneb_CPC.tex").read_text(encoding="utf-8").count(
+        f"{{figures/{stem}.pdf}}"
     ) == 1
     assert (FIGURES / f"{stem}.pdf").is_file()
     assert _sha256(csv_path) == qa["source_data_csv_sha256"]

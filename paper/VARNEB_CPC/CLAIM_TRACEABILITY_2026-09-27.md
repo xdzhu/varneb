@@ -1,5 +1,12 @@
 # CPC claim-to-evidence traceability (working audit)
 
+**Figure-number update, 2026-09-28:** old S1--S4 and Fig. 3--5 references
+in the dated audit rows below are historical labels. The current single
+manuscript uses Appendix Fig. A.1 for old S1; main Figs. 7, 6, and 3 for old
+S2, S3, and S4; and Figs. 4, 5, and 8 for the former GaN main Figs. 3, 4,
+and 5. No separate supplement remains in the submission. Scientific gates
+and source hashes are unchanged.
+
 This is a **snapshot of evidence boundaries**, not a frozen release manifest.
 Figure numbers can change while the CPC layout is edited; figure identities
 below refer to their stable source-data stems and manuscript labels.

@@ -12,12 +12,12 @@ From this directory, run:
 
 ```text
 latexmk -pdf -interaction=nonstopmode -halt-on-error varneb_CPC.tex
-latexmk -pdf -interaction=nonstopmode -halt-on-error varneb_CPC_supplement.tex
 ```
 
-The outputs are `varneb_CPC.pdf` and `varneb_CPC_supplement.pdf`. The main
-source uses the two-column `elsarticle` 5p layout; the supplement is a separate
-four-page article in the current build. The package uses `elsarticle-num`, supplied by standard
+The sole manuscript output is `varneb_CPC.pdf`. Its source uses the two-column
+`elsarticle` 5p layout, with secondary material-path controls in an appendix
+of the same document. There is no separate supplementary submission. The
+package uses `elsarticle-num`, supplied by standard
 Elsevier/TeX Live installations. `figures/` contains the PDF source used by
 the manuscript and its CSV source data.
 
@@ -31,8 +31,7 @@ The manuscript distinguishes three evidence levels:
    BTO's cubic Gamma projection uses the five-atom `1x1x1` phonon cell;
    its complete 81-point two-soft-mode contour (59 prior plus 22 new static
    points) is a *frozen-cell* slice, not a relaxed conditional surface;
-   it is Supplementary Fig. S4. The main text instead shows the separately
-   audited `Q_y=0`
+   it is a main-text figure alongside the separately audited `Q_y=0`
    symmetry-restricted variable-cell sheet, with nine measured training nodes
    and two prospective DFT holdouts below the predeclared 2-meV/BTO gate. It
    does not claim an unrestricted conditional PES or a finite-temperature
@@ -41,7 +40,7 @@ The manuscript distinguishes three evidence levels:
    hash-matched input JSON files are under `evidence/`; the plotting command
    and claim limits are in `FIGURE_LOGIC_AND_STYLE.md`.
    A separately sourced 79-point path-adapted frozen plane is retained as a
-   supplementary candidate; it combines an unstable and a stable $\Gamma$
+   archival candidate; it combines an unstable and a stable $\Gamma$
    triplet and must not be substituted for the main symmetry-restricted sheet.
    Regenerate it from the repository root with
    `python scripts/plot_bto_paper_path_adapted_79.py`; the committed QA
@@ -57,29 +56,20 @@ is a locally restrained PBEsol DFT distortion-cost comparison, not a BTO
 NEB benchmark. Neither is represented as a
 statistical replica.
 
-## Scope and length
+## Scope and organization
 
-VARNEB is a compact software paper, not a feature-for-feature counterpart to
-the ZStar reference package. The working target is approximately ten typeset
-pages including the Program Summary, figures, tables, and references. Add
-material only when it closes a reproducibility, method, or verification gap;
-do not pad the manuscript with duplicate workflow descriptions or unsupported
-benchmark claims. The 2026-09-28 draft compiles to **10 main PDF pages plus
-four supplement pages/figures**. Advancing the GaN local figure declaration
-and linking the shorter Data availability statement to the committed
-claim-to-evidence index removed two near-standalone float pages without
-shrinking figure labels or dropping scientific limits.
-Author metadata and journal-specific final checks
-remain submission gates. The main evidence set contains the architecture
-figure, BTO restricted-sheet/path projection, GaN five-backend comparison,
-the same-600-eV local GaN joint-coordinate cut, and the validated **central**
-GaN atomic-transverse enthalpy cut. The BTO/HfO2 material controls and the
-all-image GaN endpoint-Gamma mode/strain projection, and the supporting
-GaN Hessian/endpoint-mode chart, and the 81-point frozen BTO grid are
-Supplementary Figs. S1--S4. The central
-GaN cut is not a full-path or
-conditionally relaxed two-mode landscape, and the local candidate is not a
-certified variable-cell transition state.
+There is no page-count target or separate supplement. The main text contains
+the architecture, BTO `Q_y=0` restricted sheet and 81-point frozen-mode grid,
+five-backend GaN barriers, the 81-point local GaN joint-coordinate cut,
+the GaN joint Hessian and endpoint-mode projections, whole-path endpoint-mode
+and strain evolution, and the validated **central** GaN atomic-transverse
+enthalpy cut. The BTO/HfO2 image-count, interpolation, and volume controls
+are in the same document's appendix. Keep the figures legible and retain the
+reproducibility and scientific limits rather than compressing for page count.
+The central GaN cut is not a full-path or conditionally relaxed two-mode
+landscape, and the local candidate is not a certified variable-cell transition
+state. Author metadata and journal-specific final checks remain submission
+gates.
 Per-path literature figures remain archived under
 `outputs/neb_literature_benchmarks/` rather than being duplicated in the main
 text.

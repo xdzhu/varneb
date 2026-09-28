@@ -149,7 +149,7 @@ Its two mode-surface examples have deliberately different scopes:
 - BaTiO₃/ABACUS: a zero-pressure, `Q_y=0` symmetry-restricted variable-cell
   energy sheet with nine audited fitting nodes and two prospective DFT checks.
   It is not an unrestricted or finite-temperature potential surface. A
-  separate frozen-cubic two-soft-mode figure in the supplement contains a
+  separate frozen-cubic two-soft-mode figure in the main text contains a
   complete 9×9 grid of 81 *static DFT* points; its smooth contour is only
   display interpolation, and the projected VCNEB path leaves that plane.
 - GaN/VASP: a 45.7-GPa, 600-eV **central** path-adapted enthalpy cut using
