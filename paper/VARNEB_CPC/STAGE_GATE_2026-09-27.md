@@ -90,7 +90,10 @@ the specific artifacts being revised.
 - Reconcile code, examples, quick-start README, detailed manual, and paper
   around the same backend/optimizer interface and supported feature matrix.
   Re-run relevant unit/integration checks locally; do not trigger CI merely
-  by pushing ordinary commits.
+  by pushing ordinary commits. The 2026-09-28 tracked local suite has
+  549 passes and one skip, documented in
+  `docs/VARNEB_LOCAL_REGRESSION_2026-09-28.md`; it does not replace remote
+  material-output audits or a clean release-build check.
 - Tighten the 13-page draft toward about 10 pages without deleting method
   derivation or evidence limits; check PDF layout, bibliography, figure
   legibility, source-data availability, and journal formatting. Author order,
@@ -138,7 +141,9 @@ the specific artifacts being revised.
   while native B1 has 2.528 kbar residual and narrowly fails stress. Fresh
   statics on both final geometries reproduce the archived endpoint enthalpies
   within 0.207/0.026 meV per four-atom cell but have larger 8.165/3.726
-  kbar stress residuals. These data support two-basin identification, **not**
+  kbar raw-stress residuals. Native/static `PSTRESS` is 457/0 kbar; VASP's
+  pressure-shifted `external pressure` line is not the common stress gate.
+  These data support two-basin identification, **not**
   a stress-certified two-basin link or an index-one variable-cell TS. Do not
   mix native constant-basis relaxation enthalpies with fresh-static/path
   enthalpies; keep the same 600-eV electronic contract and diagnose the

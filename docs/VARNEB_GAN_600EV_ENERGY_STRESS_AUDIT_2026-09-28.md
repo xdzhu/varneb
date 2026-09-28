@@ -45,6 +45,30 @@ DFT，也没有改 `ENCUT`、k 网格或其它电子参数。36 个 Hessian 扰�
 不能证明它就是本例残差的唯一根因**。相同 FFT 网格亦不能证明
 完整的平面波基组相同。
 
+## 原位弛豫与新静态计算不是同一机械输入
+
+另一个已审计的 B4/B1 端点对比使用相同的最终结构字节、KPOINTS、
+POTCAR 和所列电子 INCAR 参数，却有不同的机械设置：原位 `ISIF=3`
+弛豫使用 `PSTRESS=457 kbar`，新静态使用 `PSTRESS=0`。两者的
+`ENCUT` 都是 **600 eV**。VASP 的 `external pressure` 行等于打印的
+`in kB` 原始应力对角均值减去 `PSTRESS`；原位 B4/B1 因而分别
+打印约 `−0.14/−2.06 kbar`，新静态约 `458.72/453.89 kbar`。
+相对于目标 **457 kbar** 的应力残差必须由原始张量计算，不能将
+两类 `external pressure` 行直接相减或当作端点收敛判据。
+[VASP 的 PSTRESS 说明](https://vasp.at/wiki/PSTRESS)明确指出其
+压力项及应力对角修正；该输出恒等式也已由
+[`audit_gan_600eV_basis_history.py`](../scripts/audit_gan_600eV_basis_history.py)
+对原始 OUTCAR 逐一检查。
+
+原位变胞弛豫保持原始平面波集合，而从同一末态重新启动的静态计算
+重建集合；这是 [VASP 的 ISTART](https://vasp.at/wiki/ISTART) 与
+[Pulay stress](https://vasp.at/wiki/Pulay_stress) 文档描述的区别。
+本例两个末态的 384 个 K 点均发生平面波计数变化，静态减原位
+`TOTEN` 为 B4 `−7.720`、B1 `+7.105 meV/四原子胞`。这些结果与
+基组历史效应相容，但**不**单独证明能量差的唯一来源，也不构成
+提高截断能或更换 K 网格的依据。完整数值、输入哈希和机械参数见
+[`gan_600eV_basis_history_audit_20260928.json`](../benchmarks/numerical_integrity/gan_600eV_basis_history_audit_20260928.json)。
+
 ## 论文与下一步边界
 
 600 eV 的原子—应变 Hessian、局域二维切片仍可如实作为固定协议的
