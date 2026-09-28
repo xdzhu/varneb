@@ -166,16 +166,16 @@ def write_source_data(
                     "method": series.label,
                     "barrier_eV_per_formula_unit": f"{series.barrier_eV:.12g}",
                     "barrier_kcal_per_mol_per_formula_unit": f"{series.barrier_eV * KCAL_PER_MOL_PER_EV:.12g}",
-                    "reference_note": "ABACUS PBE 100 Ry, 10 au DZP",
+                    "reference_note": "ABACUS PBE 100 Ry 10 au DZP; monotonic T-to-C endpoint rise not an activation barrier",
                 }
             )
         writer.writerow(
             {
                 "material": "BaTiO3",
-                "method": "Literature restrained NEB",
+                "method": "Literature locally restrained DFT",
                 "barrier_eV_per_formula_unit": f"{bto_literature_barrier_kcal_per_mol / KCAL_PER_MOL_PER_EV:.12g}",
                 "barrier_kcal_per_mol_per_formula_unit": f"{bto_literature_barrier_kcal_per_mol:.12g}",
-                "reference_note": "PBEsol restrained NEB; not a like-for-like VC-NEB benchmark",
+                "reference_note": "VASP/PBEsol locally restrained T-to-C unit-cell distortion; NEB in source concerns oxygen-vacancy migration; not a VC-NEB benchmark",
             }
         )
         for series in hfo2_paths:

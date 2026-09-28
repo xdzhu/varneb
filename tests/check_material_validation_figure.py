@@ -61,6 +61,10 @@ def main() -> None:
         expected = 0.12 / HFO2_FORMULA_UNITS_PER_CELL
         if f"{expected:.12g}" not in hfo2_text or "Literature VC-NEB" not in hfo2_text:
             raise SystemExit("per-formula-unit or literature records are missing")
+        if "Literature locally restrained DFT" not in hfo2_text or "PBEsol restrained NEB" in hfo2_text:
+            raise SystemExit("BTO literature method is misattributed")
+        if "monotonic T-to-C endpoint rise not an activation barrier" not in hfo2_text:
+            raise SystemExit("BTO endpoint-rise qualifier is missing")
     print("material_validation_figure_regression=ok")
 
 

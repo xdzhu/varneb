@@ -51,7 +51,8 @@ The manuscript distinguishes three evidence levels:
 
 The HfO2 literature bar is external comparison data with a different
 functional, code, image count, and force criterion. The BTO literature number
-is a restrained-NEB energy-scale comparison. Neither is represented as a
+is a locally restrained PBEsol DFT distortion-cost comparison, not a BTO
+NEB benchmark. Neither is represented as a
 statistical replica.
 
 ## Scope and length
