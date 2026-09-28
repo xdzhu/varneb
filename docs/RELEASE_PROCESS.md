@@ -11,8 +11,15 @@ Before tagging:
 2. Run `python tests/check_release_metadata.py --tag vX.Y.Z`,
    `python -m pytest -q`, and the manuscript/figure contract checks.
 3. Build an sdist and wheel with `python -m build`; inspect their contents and
-   install the wheel in an isolated environment. Build files are local and
-   ignored by Git.
+   install the wheel in an isolated environment. The sdist must contain
+   `README.md`, `docs/USER_MANUAL.md`, and `examples/run_toy_vcneb.py`, but
+   not cluster jobs, raw `outputs/`, validation runs, benchmarks, or the
+   manuscript. The wheel should contain the `vcneb` package and metadata,
+   not those research artifacts. Run `python -m twine check` on both files,
+   then smoke-test `varneb --version`, `varneb backends --json`, and the
+   analytic toy example from the unpacked sdist. Build files are local and
+   ignored by Git. Use the isolated build by default: `--no-isolation` is
+   only valid when the local setuptools meets `pyproject.toml`'s minimum.
 4. Review `git diff` and push the reviewed commit to `main`.
 5. Push the annotated tag. Verify the publish workflow succeeds and the new
    version appears on PyPI before announcing the release.

@@ -41,7 +41,7 @@ job or guess pseudopotentials/cutoffs. A seven-image path has five interior
 workers; `image_workers: 0` runs them sequentially. Advanced restarts and mode
 subspaces remain available via `python -m vcneb.material_runner` (the old
 `examples/run_vcneb_ase.py` remains compatible). See
-[`docs/USER_MANUAL.md`](docs/USER_MANUAL.md) for the full contract. To run the
+[`docs/USER_MANUAL.md`](https://github.com/xdzhu/varneb/blob/main/docs/USER_MANUAL.md) for the full contract. To run the
 repository tests, install the additional `dev` extra and use `python -m pytest -q`.
 
 `varneb backends --json` prints the machine-readable backend capability table.
