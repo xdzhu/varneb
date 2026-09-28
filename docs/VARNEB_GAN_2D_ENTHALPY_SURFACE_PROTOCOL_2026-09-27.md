@@ -228,6 +228,33 @@ No extra optimization is being started solely to chase this stress gate;
 the numerical basis-history discrepancy must first be treated explicitly
 in any TS or barrier claim.
 
+**Same-geometry basis-history audit (2026-09-28).** A separate read-only
+parser compared the four original `OUTCAR` files, not just their submitted
+`INCAR` values. The native `ISIF=3` and fresh static input use identical
+terminal POSCAR bytes, KPOINTS, POTCAR and electronic INCAR keys, including
+`ENCUT=600 eV`; the native run has `PSTRESS=457 kbar` and the static has no
+PSTRESS. VASP's reported `external pressure` subtracts PSTRESS from the mean
+**raw** diagonal stress, so it is not itself the 45.7-GPa residual. The table
+uses the final raw `in kB` tensor and final `TOTEN` at that same geometry.
+
+| Terminal phase | Native initial→final volume (Å³) | Coarse FFT grid, native→static | First-k-point plane waves, native→static | Changed k-point counts | Static−native `TOTEN` (meV/4-atom cell) | Max raw stress residual, native→static (kbar) |
+| --- | ---: | --- | ---: | ---: | ---: | ---: |
+| B4 | 36.7395→39.22 | 24×24×40→24×24×40 | 1225→1303 | 384/384 | −7.72045 | 1.74317→8.16492 |
+| B1 | 36.5839→33.44 | 24×24×40→24×24×32 | 1221→1093 | 384/384 | +7.10461 | 2.52755→3.72621 |
+
+The unchanged nominal cutoff therefore does **not** imply the same numerical
+plane-wave set after an `ISIF=3` run. This directly explains why a
+native-relax `TOTEN` cannot be combined with a fresh-static `TOTEN` for a
+meV-scale B4/B1 comparison. It is consistent with VASP's
+[constant-basis cell-relaxation/restart description](https://vasp.at/wiki/ISTART)
+and [Pulay-stress discussion](https://vasp.at/wiki/Pulay_stress), but the
+single-pair audit does not quantify the entire stress difference or prove a
+600-eV cutoff-convergence bound. The reproducible evidence is
+`benchmarks/numerical_integrity/gan_600eV_basis_history_audit_20260928.json`,
+regenerated from local archived outputs with
+`python -m scripts.audit_gan_600eV_basis_history --output <new-json-path>`.
+No cutoff change or additional relaxation follows from this diagnostic.
+
 ### Measured narrow-tube outcome (2026-09-28)
 
 The first nine-anchor 600-eV frozen tube passed all 18 raw static audits but
