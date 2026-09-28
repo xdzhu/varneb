@@ -19,7 +19,10 @@ appendix figure. This gate supersedes the layout targets in the dated
 `MANUSCRIPT_EVIDENCE.md` and `FIGURE_LOGIC_AND_STYLE.md` are the current
 figure-to-source maps. A pretty interpolated pixel is never an additional
 DFT observation. The claim limits above must remain in the abstract, results,
-captions, and conclusions when wording changes.
+captions, and conclusions when wording changes. The direct manuscript-number
+regression `tests/test_cpc_numeric_claims.py` recomputes headline GaN barriers,
+BTO blind errors and monotonic endpoint rise, Slurm launch reductions, and
+the HfO$_2$ per-cell conversion from committed source tables.
 
 ## Remaining gates for this CPC submission
 
