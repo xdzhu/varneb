@@ -2,7 +2,7 @@
 
 This record is a submission gate for Table 2 of `varneb_CPC.tex`, not a new
 algorithm benchmark. The six rows use **total** image counts (including two
-fixed endpoints) and the public stopping criterion `fmax = 0.10 eV/Å`. The
+fixed endpoints) and the common analysis criterion `fmax ≤ 0.10 eV/Å`. The
 archived BTO comparisons begin at the same serial step-9 chain; the HfO₂
 comparisons begin at the same archived initial chain. All reported savings
 are case-specific, not a universal speedup guarantee. The launch counts below
@@ -16,6 +16,13 @@ were independently checked against Slurm job-step accounting on hf on
 To verify without hf access, run
 `python -m scripts.audit_acceleration_slurm_accounting audit --raw benchmarks/convergence/hf_slurm_abacus_steps_20260928.psv --output tmp/accel_slurm_audit_check.json`
 from the repository root (choose a new output name for a repeated run).
+
+The common `0.10 eV/Å` value is the **analysis threshold**, not an identical
+historical `--fmax` run-stop flag. The BTO global-FIRE baseline was launched
+with `--fmax 0.02`, the HfO₂ global-FIRE baseline with `--fmax 0.05`, and
+the accelerated branches with `--fmax 0.10`. Each baseline's later steps are
+excluded after its first `0.10` crossing; neither the stricter eventual
+baseline convergence nor its total job launches is counted in Table 2.
 
 | Case and policy | First crossing | Force at crossing (eV/Å) | ABACUS launches to crossing | Provenance |
 | --- | ---: | ---: | ---: | --- |
@@ -91,6 +98,21 @@ Both HfO₂ baseline and accelerated variants use the baseline's original
 `a5cff9b6a5d51070fbe72602a2b2072c8ab44b7fb13e5bd716a549b57b6c7f0c`);
 the staged refine resumes its own coarse step-23 snapshot (SHA-256
 `dcaeb05ba327f0ee30f6745e1146d0b70fe4efdc662b70bcc27dd5259851d889`).
+
+The baseline HfO₂ command recorded `--cell-interpolation linear`, while the
+accelerated commands recorded `log_strain`. This is **not** a change to the
+initial compared seed: the coarse stage resumes the baseline's archived
+initial trajectory, and the refine stage resumes its own step-23 snapshot.
+Both pass `--resume`, which reads the specified trajectory before the
+fresh-interpolation branch. The actual hf
+benchmark source at
+`20260920-varneb-fire-benchmark/repo/examples/run_vcneb_abacus.py`
+(SHA-256 `e056ea4aabbee0e9e0a9036363d04405629bd853eceea78d91450f50308f6d18`)
+was checked read-only on 2026-09-28: the `args.resume` branch calls
+`read_chain_trajectory`, and only its `else` branch passes
+`args.cell_interpolation` into `interpolate_vcneb`. The summary's
+`cell_interpolation` field records a CLI choice, not an interpolation actually
+performed during these resumed runs.
 
 The resulting BTO and HfO₂ ABACUS-launch reductions are respectively
 `(205−44)/205 = 78.5%` and `(217−134)/217 = 38.2%` after rounding. The
