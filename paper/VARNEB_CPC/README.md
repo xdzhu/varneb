@@ -75,7 +75,9 @@ Per-path literature figures remain archived under
 text.
 
 The panel-by-panel argument, data normalization, and plotting conventions are
-recorded in `FIGURE_LOGIC_AND_STYLE.md`. Plot generators remain in `scripts/`;
+recorded in `FIGURE_LOGIC_AND_STYLE.md`. The current bounded-claim and
+submission checklist is `SUBMISSION_READINESS.md`; the older dated stage gate
+is retained for provenance. Plot generators remain in `scripts/`;
 the manuscript reads the files under `figures/` explicitly, so stale root-level
 exports cannot silently replace a revised panel.
 

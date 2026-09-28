@@ -3,7 +3,8 @@
 **Historical layout snapshot:** the ten-page/separate-supplement target below
 was superseded on 2026-09-28. The current single manuscript has no page-count
 limit; key BTO/GaN mode and landscape figures are in the main text and only
-material-path controls remain in its appendix. See `README.md` and
+material-path controls remain in its appendix. See
+`SUBMISSION_READINESS.md` for the current gate and
 `FIGURE_LOGIC_AND_STYLE.md` for the current figure map.
 
 This is a claim gate, not a request to change a calculator parameter or to run
