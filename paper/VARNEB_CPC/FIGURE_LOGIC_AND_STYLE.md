@@ -1,10 +1,11 @@
 # Figure argument and style contract
 
-The five main figures follow one claim sequence: the software keeps control of
-the path; its output can be interpreted against a vibrational-basis energy cut; material paths
-preserve their expected topology; the same controller works with distinct
-first-principles calculators; and a separate local diagnostic examines
-atom--strain coupling at the GaN candidate barrier top. Estimated new-image
+The seven main figures follow one claim sequence: the software keeps control
+of the path; its output can be interpreted against a vibrational-basis energy
+cut; material paths preserve their expected topology; the same controller
+works with distinct first-principles calculators; GaN's local atom--strain
+coupling, whole-path mode evolution, and directly sampled central enthalpy cut
+then expose both the mechanism and its numerical limits. Estimated new-image
 evaluation savings appear in Table 2 alongside matched controls and negative
 transfers; these totals are not an electronic-launch-by-launch audit.
 
@@ -15,6 +16,8 @@ transfers; these totals are not an electronic-launch-by-launch audit.
 | 3, materials | BTO is monotonic while HfO2 has a resolved interior maximum; image count, interpolation, and CI change distinct aspects of the HfO2 path. | ABACUS source summaries and CSV. Panel (a) uses one BTO formula unit per cell, so its endpoint is **0.08713 eV/f.u.** Panel (b)--(d) divide the Hf4O8 cell by four for energy. The literature barriers use different calculation contracts. |
 | 4, GaN backends | Five converged calculators recover the same dominant B4-to-B1 barrier topology, while forward and reverse activation barriers use their own endpoint baselines. | 29 total images at 45.7 GPa, normalized by two GaN units. Panel (a) uses normalized image index; the literature curve is an approximate digitization. Panels (b) and (c) are aligned horizontal-bar comparisons of $H_{\rm peak}-H_{\rm B4}$ and $H_{\rm peak}-H_{\rm B1}$, respectively. Only the forward panel carries the published 0.34-eV/GaN guide; CP2K enters only after the whole path passed audit. |
 | 5, GaN local coupling | A local negative direction appears only after atomic and cell-strain coordinates are combined; endpoint optical-mode subspaces geometrically resolve its atomic component. | The joint Hessian, endpoint $\Gamma$ bases, and path all use the original 600-eV VASP contract. The 0.02-Å joint step gives one negative eigenvalue, but the 0.0232-eV/Å energy–force mismatch prevents strict TS certification. Optical projections are geometric overlaps, not mode energy contributions. No global path uniqueness or finite-temperature transition-state claim follows. Source: `benchmarks/numerical_integrity/gan_600eV_joint_gamma_bridge_20260928.json`, `figures/gan_joint_mode_600eV_source_data.csv`. |
+| 6, GaN all-image modes | The full 29-image B4-to-B1 path has compact endpoint-$\Gamma$ atomic projections but substantial independent cell strain. | B4 and B1 optical bases are separate and must not be relabelled as common modes. The leading groups reconstruct this particular mapped atomic path to within 0.00043/0.00139 $\sqrt{\mathrm{amu}}$ Å, while B4-referenced normal strains reach 34.0%, 24.3%, and 17.8%. These are geometric projections, not enthalpy contributions or a globally complete low-dimensional PES. Source: `figures/gan_gamma_path_600eV_source_data.csv` and `_qa.json`. |
+| 7, GaN central two-coordinate cut | At a common external pressure of 45.7 GPa, directly sampled $H(s,q_\perp)$ resolves the central barrier region and shows the actual VCNEB centerline within it. | The 90 coordinates comprise 18 path centers and 72 atomic-only transverse statics at their respective fixed cells, all under the original 600-eV VASP contract. Maximum prospective along-path/inner-transverse interpolation errors are 0.166/0.159 meV/GaN under 1-meV gates. This is a bounded frozen central cut, not a whole-path, pointwise pressure-relaxed, conditional-minimum, or TS-certified surface. Source: `figures/gan_600eV_atomic_dense_surface_source_data.csv`, `_qa.json`, and `benchmarks/numerical_integrity/gan_600eV_atomic_tube_dense_20260928.json`. |
 
 The separate BTO path-adapted panel `figures/bto_frozen_path_adapted_79.*`
 is a **supplementary candidate, not a replacement for Fig. 2**. It uses a
@@ -35,8 +38,8 @@ two-soft-mode plane or its conditional pilot. The source CSVs, source QA,
 visual-guide CSV explicitly marked `not_DFT`, and regenerated QA JSON travel
 with the supplementary candidate.
 
-An additional GaN central atomic-tube diagnostic, **not** a sixth validated
-main-text surface figure, is `figures/gan_600eV_atomic_tube_samples.*`. It
+An additional GaN central atomic-tube diagnostic, **not** the validated
+main-text Fig. 7, is `figures/gan_600eV_atomic_tube_samples.*`. It
 places all 28 same-600-eV off-path statics at their measured `(s,q)` values;
 no contour or unsampled minimum is drawn. Its maximum linear LOO error
 `2.329 meV/GaN` exceeds the predeclared `1.0` gate, so use it only as an
@@ -51,7 +54,7 @@ actual DFT enthalpies with model predictions. Its maximum axial holdout
 error is `0.04974 meV/GaN`, below the predeclared `0.20` gate. This can
 support a local-mode discussion, but must not be captioned as a certified
 whole-path surface or transition state. Keep it supplementary unless the
-five-figure manuscript is deliberately restructured and re-typeset.
+seven-figure manuscript is deliberately restructured and re-typeset.
 
 All plotted panels use a 183-mm figure width, editable SVG/PDF text, and a
 600-dpi PNG preview. Panel labels are regular-weight `(a)`, `(b)`, ... at
