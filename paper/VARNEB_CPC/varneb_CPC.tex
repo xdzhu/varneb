@@ -50,9 +50,11 @@ tetragonal-route value is 0.34 eV/GaN. A feasibility-aware family of
 image-scaled, image-local, block, and staged FIRE updates reduce counted ABACUS
 launches to the common force threshold by 38--79\% in controlled BTO/HfO$_2$
 transfers; negative-transfer cases are retained. Finally, a Phonopy-based
-$\Gamma$-mode projection
-identifies the triply degenerate unstable cubic-BTO subspace as the principal
-atomic component of the T-to-C path. VARNEB therefore contributes an
+$\Gamma$-mode projection identifies the unstable cubic-BTO subspace as the
+principal atomic path component. A symmetry-restricted variable-cell two-mode
+sheet fitted to nine audited BTO nodes predicts two prospective DFT holdouts
+within 0.98 meV/BTO; the omitted third soft mode and released strain remain
+explicit. VARNEB therefore contributes an
 auditable, backend-independent execution and analysis layer around established
 VCNEB theory, rather than claiming a new physical formalism.
 \end{abstract}
@@ -126,7 +128,8 @@ record. Second, image-local and staged updates combine with a pre-calculation
 feasibility gate to reduce expensive image evaluations; matched starting
 chains and negative transfers bound the speed claim. Third, endpoint phonon
 eigenvectors resolve the atomic part of a converged path into invariant mode
-subspaces while cell strain remains explicit. We test these claims with a
+subspaces and define auditable symmetry-restricted energy cuts, while cell
+strain remains explicit. We test these claims with a
 barrierless BTO path, an activated HfO$_2$ path, five completed GaN backends,
 and mapping-sensitive controls. Material-level agreement requires a recorded
 pressure, normalization, endpoint identity, calculator contract, complete
@@ -425,45 +428,57 @@ complete-basis reconstruction residual stays below
 $5.9\times10^{-16}\sqrt{\mathrm{amu}}$\AA{}. These are subspace projections,
 not single-eigenvector identities or cell-strain amplitudes.
 
-We sampled 59 static ABACUS points in two cubic-endpoint unstable $\Gamma$
-directions, freezing the cubic cell and all omitted atomic coordinates.
-Their Clough--Tocher display contour has a maximum 5.14-meV/BTO interior
-leave-one-out error; earlier independent center/edge holdouts of coarser
-interpolants reached 32.57/14.83 meV/BTO. The variable-cell path is only
-projected onto this frozen cut: off-plane motion and strain prevent reading
-its actual enthalpy or barrier from the contour.
+An initial 59-point frozen-cubic-cell cut exposed the interpolation risk:
+interior leave-one-out error reached 5.14 meV/BTO, and independent coarse-grid
+holdouts were worse. It cannot represent the variable-cell path because stable
+atomic modes and strain move. We therefore fixed two signed cubic soft-mode
+amplitudes $(Q_z,Q_x)$, imposed $Q_y=0$ at every evaluation, and released the
+remaining 15 independent atom--strain coordinates after removing rigid
+translations. The physical T endpoint projects to
+$(Q_z,Q_x,Q_y)=(1.2043,0,0)\sqrt{\mathrm{amu}}$\AA{}, while its stable-mode
+atomic residual is $0.2900\sqrt{\mathrm{amu}}$\AA{} and its cell strain is
+nonzero; C is the origin. The endpoint thus belongs to the restricted
+\emph{coordinate slice}, not the frozen two-eigenvector plane.
 
-Separately, we released the omitted atomic and strain coordinates at four
-fixed $(Q_z,Q_x)$ points and one preselected center. All five have a higher
-$Q_y=0$ stationary branch and lower, nearly degenerate $\pm Q_y$ branches.
-After measured mirror-branch alignment, the four-corner bilinear prediction
-misses the center by 0.476 meV/BTO in energy and
-$0.1254\sqrt{\mathrm{amu}}$\AA{} in the mass--strain metric, mostly in strain.
-All five pass the stated orthogonal-gradient/1-kbar stress screens and have
-positive two-step 16D orthogonal curvature. Yet the weak positive curvature lacks a
-rigorous numerical error bound, and one cell plus one holdout does not certify
-a continuous conditional surface. These candidates are distinct from the
-frozen Fig.~\ref{fig:bto-frozen-mode-cut} and from a VC-NEB barrier.
-More fundamentally, cubic C has three independent unstable $\Gamma$ directions:
-the omitted $Q_y$ remains downhill when $(Q_z,Q_x)=(0,0)$ is fixed. A fully
-minimized two-coordinate lower envelope therefore cannot pass through the C
-endpoint at $E_C$. A T-to-C sheet must instead constrain that symmetry branch,
-retain all three soft coordinates, or use a path-adapted cut; we do not equate
-these distinct constructions.
+The local $Q_y=0$ sheet has nine raw-audited training nodes. A simple
+piecewise-linear interpolation failed two of three earlier off-grid energy
+checks (3.66 and 6.26 meV/BTO). We subsequently fitted a symmetry-even
+sixth-order $Q_z,Q_x$ model to the nine nodes only and froze two new predictions
+\emph{before} DFT. Their independently audited errors were 0.150 and
+0.977 meV/BTO, both below the predeclared 2-meV/BTO gate; the corresponding
+full atom--strain seed errors were 0.0601 and
+$0.0510\sqrt{\mathrm{amu}}$\AA{}, with orthogonal gradients below
+$0.003$ eV/$(\sqrt{\mathrm{amu}}$\AA{}) and raw stresses below 2 kbar.
+The separately optimized T endpoint differs from the model by 0.993 meV/BTO,
+but this is a retrospective check, not a third blind holdout.
+Figure~\ref{fig:bto-qy0-sheet} confines the fitted contour to the convex
+hull of measured coordinates; all calculated locations remain visible.
+
+The restriction is scientifically essential. Cubic C has a triply degenerate
+unstable $\Gamma$ mode, and allowing the omitted $Q_y$ to relax lowers four
+tested off-axis states by 28--57 meV/BTO. Thus a fully minimized
+two-coordinate lower envelope cannot contain C at $E_C$. This figure is a
+symmetry-restricted local energy sheet, not a global PES, a finite-temperature
+free-energy surface, or a T-to-C activation barrier. The two blind points
+validate local prediction, not curvature or branch identity everywhere.
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=\textwidth]{figures/bto_frozen_soft_mode_landscape.pdf}
-\caption{BTO frozen $\Gamma$-mode cut and variable-cell T-to-C path.
-(a) Fixed-cubic-cell energies $E-E_C$ at 59 ABACUS/PBE points (white circles);
-colored contours interpolate for display only. Orange symbols and the black
-guide project seven VC-NEB images, not a minimum-energy path on this cut.
-(b) Direct variable-cell $E-E_T$ at zero pressure: a monotonic 0.08713-eV/BTO
-rise without an interior barrier. (c) Mass-weighted atomic distance from the
-frozen plane; cell strain is excluded. The cut is not a relaxed conditional
-surface. Source data contain all computed points; this deterministic figure
-has no statistical error bars.}
-\label{fig:bto-frozen-mode-cut}
+\includegraphics[width=\textwidth]{figures/bto_qy0_restricted_even_mode_sheet.pdf}
+\caption{Symmetry-restricted BTO $Q_y=0$ variable-cell energy sheet at zero
+pressure (ABACUS/PBE, 100 Ry, 10-au DZP, $4\times4\times4$ electronic mesh;
+cubic $1\times1\times1$ $\Gamma$ force constants). (a) The even sixth-order
+model of $E-E_C$, trained on nine raw-audited white-circle nodes, is shaded
+only inside the measured-coordinate hull. Gray circles are four retrospective
+checks; diamonds are two predictions frozen before their independent DFT
+calculations. Red symbols project the seven-image variable-cell T-to-C path;
+stable atomic modes and strain are released and are not represented by the
+two axes. (b) DFT-minus-model energies; the band marks the predeclared
+$\pm2$-meV/BTO blind-point gate. T is a separately optimized retrospective
+endpoint, not a fitting node. This is neither an unconstrained PES nor a
+finite-temperature free-energy surface; no statistical error bars are implied.
+Source-data tables and raw-output hashes accompany the figure.}
+\label{fig:bto-qy0-sheet}
 \end{figure*}
 
 \subsection{\texorpdfstring{HfO$_2$}{HfO2} tetragonal to polar orthorhombic path}
@@ -777,8 +792,11 @@ barrier topology. On matched BTO and HfO$_2$ chains, image-local or staged updat
 reduce counted ABACUS launches to the common threshold by 78.5\% and 38.2\%,
 respectively, with
 negative transfers retained to delimit the claim. An endpoint-$\Gamma$ basis
-then identifies the unstable BTO subspace that carries most of the atomic path
-displacement while cell strain is reported separately. These three capabilities
+identifies the unstable BTO subspace that carries most of the atomic path
+displacement while cell strain is reported separately. Two prospective BTO
+DFT points pass a 2-meV/BTO local model gate on a $Q_y=0$ restricted sheet;
+the omitted soft-mode instability precludes an unrestricted two-coordinate
+PES through cubic C. These three capabilities
 make variable-cell pathways easier to execute, audit, compare, and interpret
 without changing the underlying VCNEB formalism. A same-protocol, raw-audited
 GaN central two-coordinate enthalpy cut further resolves the barrier region;
@@ -796,6 +814,9 @@ CP2K path and its source-data record. The GaN central-cut figure
 source table, per-output hashes, and interpolation-gate audit. The all-image
 endpoint-$\Gamma$ profile (Fig.~\ref{fig:gan-gamma-path}) has a committed
 29-image mode/strain/residual table and calculation-input hash record.
+The BTO restricted-sheet figure (Fig.~\ref{fig:bto-qy0-sheet}) includes its
+measured/model source tables, prospectively frozen predictions, raw-output
+holdout audits, and figure QA hashes.
 The signed GaN basin-return and same-protocol final-static audits, including
 complete output hashes and the 2-kbar stress gate, are archived under
 \texttt{benchmarks/numerical\_integrity/}.

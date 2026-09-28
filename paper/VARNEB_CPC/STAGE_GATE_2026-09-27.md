@@ -4,6 +4,10 @@ This is a claim gate, not a request to change a calculator parameter or to run
 CI. The 2026-09-28 compiled draft PDF has 13 pages; the intended CPC article
 is about 10. A same-day GaN-section edit removed repeated execution and audit
 prose, but the rebuilt PDF remains 13 pages with seven legible main figures.
+The 2026-09-28 BTO replacement figure also compiles, but the length gate remains
+open. The working deadline is an October 3 data freeze and October 10
+submission-ready manuscript package; do not make HfO₂/2D extensions or a strict
+GaN TS certificate prerequisites for this focused CPC paper.
 The length gate is still open. Further cuts must preserve mode/PES claim
 boundaries and figure readability; a secondary diagnostic belongs in
 supplementary material before shrinking labels or dropping caveats.
@@ -13,7 +17,7 @@ the specific artifacts being revised.
 ## What can already be shown
 
 1. **BTO T→C:** seven real ABACUS VCNEB images and a cubic Γ-mode projection
-   are in `figures/bto_gamma_mode_path.*`. The main-text exploratory figure
+   are in `figures/bto_gamma_mode_path.*`. The archival exploratory figure
    `figures/bto_frozen_soft_mode_landscape.*`, copied from the independently
    audited 59-point source under `outputs/batio3_t_to_c_pbe100_dzp10au/`,
    contains 59 audited *frozen cubic-cell* DFT samples. Its smooth contour is
@@ -50,6 +54,19 @@ the specific artifacts being revised.
    error bound. This five-point pilot does not promote the four-point stage
    figure to a continuous conditional-PES contour. Source:
    `benchmarks/numerical_integrity/bto_conditional_five_point_patch_2026-09-28.json`.
+   Separately, a *symmetry-restricted* `Q_y=0` variable-cell sheet now uses
+   nine raw-audited training nodes, a sixth-order even-mode model, and two
+   genuine prospective DFT holdouts under the same ABACUS 100-Ry/10-au-DZP
+   contract. Both full raw-output audits passed (13 and 18 DFT evaluations).
+   The independent energy errors are −0.150 and −0.977 meV/BTO against a
+   preregistered ±2-meV/BTO gate; atom–strain seed, orthogonal-gradient, and
+   2-kbar stress gates also pass. The T endpoint projects to
+   `(Q_z,Q_x,Q_y)=(1.2043,0,0) sqrt(amu) Å`, with nonzero stable-mode
+   displacement and strain, and C is the origin. The new main-text
+   `figures/bto_qy0_restricted_even_mode_sheet.*` is drawn only inside the
+   measured-coordinate hull and marks all DFT points. It is *not* an
+   unrestricted globally minimized PES or finite-temperature FES. Source:
+   `benchmarks/numerical_integrity/bto_qy0_even_mode_two_holdout_gate_20260928.json`.
 3. **GaN B4→B1, 45.7 GPa:** `figures/gan_multibackend_validation.*` shows
    five converged *one-dimensional* variable-cell enthalpy paths, normalized
    per GaN: ABACUS/VASP/QE/ABINIT/CP2K forward barriers
@@ -81,9 +98,10 @@ the specific artifacts being revised.
 
 ## Minimum submission gates for a focused CPC software paper
 
-- Keep the 59-point BTO contour explicitly labeled as an exploratory frozen
-  cut; leave the conditional surface as staged work until its stronger gate
-  below is complete. The main text now follows this narrower claim.
+- Keep the 59-point frozen-cell BTO contour archival. The main text now uses
+  the blinded-check-passing `Q_y=0` restricted model contour with all measured
+  locations visible; never call it an unrestricted conditional PES. No further
+  grid densification is required merely for a smoother illustration.
 - Freeze figure-to-data provenance and captions: explicit `E` versus
   `H=E+PV`, pressure, formula-unit normalization, reference zero, number of
   computed points, interpolation status, and backend-specific settings.
@@ -102,7 +120,7 @@ the specific artifacts being revised.
 
 ## Stronger mode-surface / TS claims: evidence still needed
 
-- **BTO conditional 2D surface:** the second curvature step and direct
+- **BTO unrestricted conditional 2D surface (not a CPC prerequisite):** the second curvature step and direct
   soft-direction checks at both `Q_z=0.9` sites are complete. Three
   independently audited static starts at `(0.75,0.15)` and their
   conditional relaxations (`27787487`) are complete. An independent audit of
@@ -113,11 +131,12 @@ the specific artifacts being revised.
   deterministic replay reconstructed all three with zero new DFT calls.
   Local holdout curvature has since been screened at two finite-difference
   steps, but its weak positive value is not a rigorously certified minimum.
-  Competing branch and continuity checks across the sampled domain; quantified
-  interpolation error and a clear definition of released atomic/strain
-  variables. Confirm that the actual T endpoint is represented by, or is
-  explicitly off, the chosen two-mode manifold. Only then promote a contour
-  from sampled candidates to a conditional surface.
+  The new restricted `Q_y=0` model has a clear released-coordinate definition
+  and two prospective pointwise errors under 1 meV/BTO, but competing branch,
+  continuity, and restricted-curvature checks across its entire domain remain
+  open. The actual T endpoint is on the restricted coordinate slice, not on
+  the frozen two-eigenvector plane. Do not upgrade the local model contour to
+  a globally certified conditional PES on pointwise holdouts alone.
   There is also an endpoint-level obstruction to the proposed *fully
   minimized* two-coordinate lower envelope: cubic C has three independent
   unstable Γ directions, but fixed `(Q_z,Q_x)` leaves `Q_y` free. At C, the
