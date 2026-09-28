@@ -10,6 +10,7 @@ import numpy as np
 import pytest
 
 from scripts.plot_gan_600eV_atomic_dense_surface import load, model_surface
+from scripts.plot_gan_600eV_atomic_transverse_landscape import transverse_surface
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -42,7 +43,10 @@ def test_dense_model_preserves_path_and_outer_transverse_points() -> None:
     }
     full_h = np.full(29, -100.0)
     s_mesh, q_mesh, surface = model_surface(report, full_h)
+    _, _, transverse = transverse_surface(report, full_h)
     assert s_mesh.shape == q_mesh.shape == surface.shape == (201, 401)
+    assert transverse.shape == surface.shape
+    assert np.allclose(transverse[100], 0.0, atol=1e-9)
     for position, index in ((0, 0), (-1, 17)):
         assert surface[100, position] == pytest.approx((h0[index] - full_h[0]) * 500)
         assert surface[0, position] == pytest.approx(
@@ -51,6 +55,8 @@ def test_dense_model_preserves_path_and_outer_transverse_points() -> None:
         assert surface[-1, position] == pytest.approx(
             (h0[index] - full_h[0]) * 500 + matrix[index, -1]
         )
+        assert transverse[0, position] == pytest.approx(matrix[index, 0])
+        assert transverse[-1, position] == pytest.approx(matrix[index, -1])
 
 
 def test_frozen_dense_figure_has_ninety_traceable_coordinates() -> None:

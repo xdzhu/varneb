@@ -101,6 +101,11 @@ the specific artifacts being revised.
    `0.16578 < 1.0 meV/GaN`; the inner-transverse quadratic check is
    `0.15888 < 1.0 meV/GaN`. Its validated central contour is
    `figures/gan_600eV_atomic_dense_surface.*` with source CSV and QA JSON.
+   Main Fig. 5 now plots the same audited central model as
+   `figures/gan_600eV_atomic_transverse_landscape.*`, subtracting the
+   centerline enthalpy to make the ≤20.60-meV/GaN transverse response visible;
+   its second panel keeps the full absolute barrier. No new DFT points or
+   expanded two-dimensional domain are implied by this presentation change.
    This remains a frozen atomic-only transverse chart around a variable-cell
    centerline, not a global two-phonon plane, all-path surface, conditional
    minimum, or TS certificate. Earlier 1000-eV diagnostics are archival and
