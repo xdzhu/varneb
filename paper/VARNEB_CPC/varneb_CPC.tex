@@ -47,9 +47,10 @@ ABINIT, and CP2K give barriers of 0.3274, 0.3385, 0.3297, 0.2924, and
 0.2928 eV/GaN,
 respectively, and recover the same dominant barrier topology; the published
 tetragonal-route value is 0.34 eV/GaN. A feasibility-aware family of
-image-scaled, image-local, block, and staged FIRE updates reduces estimated new
-image evaluations by 38--79\% in controlled BTO/HfO$_2$ transfers, while preserving
-negative transfer cases. Finally, a Phonopy-based $\Gamma$-mode projection
+image-scaled, image-local, block, and staged FIRE updates reduce counted ABACUS
+launches to the common force threshold by 38--79\% in controlled BTO/HfO$_2$
+transfers; negative-transfer cases are retained. Finally, a Phonopy-based
+$\Gamma$-mode projection
 identifies the triply degenerate unstable cubic-BTO subspace as the principal
 atomic component of the T-to-C path. VARNEB therefore contributes an
 auditable, backend-independent execution and analysis layer around established
@@ -515,10 +516,12 @@ the figure.}
 Table~\ref{tab:acceleration} isolates the update policy from the calculator:
 each comparison starts from the same archived chain and holds the endpoints,
 image count, spring, pressure, calculator settings, and $0.10$ eV/\AA{}
-stopping rule fixed. New image evaluations are reconstructed from the logged
-update counts and the fixed-endpoint/interior-image evaluation policy; available
-worker manifests are cross-checked, but the totals remain estimates rather than
-an independent audit of every electronic launch. Wall time is reported for
+stopping rule fixed. New ABACUS launches to first threshold crossing are
+counted independently from the completed, consecutively numbered Slurm
+\texttt{srun abacus} steps and aligned with optimizer-log timestamps. They
+include each run's initial fixed-endpoint statics but not repeated endpoints
+within later steps; HfO$_2$ staging counts both run starts. This is a launch
+audit, not retrospective verification of every SCF history. Wall time is reported for
 context but includes scheduler and filesystem variation.
 All listed variants reach the common force threshold and retain the same
 endpoint-defined energy scale.
@@ -527,13 +530,13 @@ endpoint-defined energy scale.
 \centering
 \footnotesize
 \caption{First-principles convergence ablations. $n$ denotes total images;
-``saved'' compares estimated new image evaluations with global FIRE for the same case.
+``saved'' compares counted ABACUS launches to first crossing with global FIRE for the same case.
 BlockFIRE parentheses give the per-image generalized-coordinate step cap.
 The final generalized force is in eV/\AA{}.}
 \label{tab:acceleration}
 \begin{tabular}{@{}llrrrrr@{}}
 \toprule
-Case & Update policy & Steps & Time (s) & Est. image evals & Saved (\%) & Final $f_{\max}$ \\
+Case & Update policy & Steps & Time (s) & ABACUS launches & Saved (\%) & Final $f_{\max}$ \\
 \midrule
 BTO $n=9$ & global FIRE & 28 & 2669 & 205 & --- & 0.0967 \\
 BTO $n=9$ & BlockFIRE (0.02) & 10 & 963 & 79 & 61.5 & 0.0865 \\
@@ -545,9 +548,14 @@ HfO$_2$ $n=7$ & StagedFIRE & 24 & 3513 & 134 & 38.2 & 0.0924 \\
 \end{tabular}
 \end{table}
 
-The conservative BTO BlockFIRE setting lowers new image evaluations by
+The conservative BTO BlockFIRE setting lowers new ABACUS launches by
 78.5\% and measured threshold time by 82.1\%; the staged HfO$_2$ transfer
-lowers them by 38.2\% and 33.0\%, respectively. A matched global-cap control
+lowers them by 38.2\% and 33.0\%, respectively. At the first crossing,
+common normalized atom--strain arc comparisons give maximum profile
+differences of 1.32 meV/BTO and 4.84 meV/HfO$_2$, with maximum joint-geometry
+separations of 0.0126 and 0.0795~\AA{} for those two fastest variants. These
+post-hoc diagnostics do not certify identical minimum-energy paths or saddles.
+A matched global-cap control
 and a SplitFIRE transfer in the project benchmark show negative transfer, and
 BlockFIRE plateaus on one 20-image HfO$_2$ chain. These observations support
 the image-local and staged controls on the tested chains, while leaving the
@@ -773,7 +781,8 @@ VARNEB makes established VCNEB physics usable through a documented generalized
 force, calculator, execution, and evidence contract. Five converged GaN
 backends share one 29-image path controller and recover the same dominant
 barrier topology. On matched BTO and HfO$_2$ chains, image-local or staged updates
-reduce estimated new calculator evaluations by 78.5\% and 38.2\%, respectively, with
+reduce counted ABACUS launches to the common threshold by 78.5\% and 38.2\%,
+respectively, with
 negative transfers retained to delimit the claim. An endpoint-$\Gamma$ basis
 then identifies the unstable BTO subspace that carries most of the atomic path
 displacement while cell strain is reported separately. These three capabilities
