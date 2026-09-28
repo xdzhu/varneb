@@ -7,10 +7,19 @@ GaN five-backend path comparison, GaN local atom--strain diagnostic, and
 validated central GaN two-coordinate cut remain in the main text. The
 BTO/HfO2 material-control figure and all-image GaN endpoint-mode profile are
 Supplementary Figs. S1 and S2; their original source data remain linked.
-This meets the length target without shrinking the plotted labels. The working
-deadline is an October 3 data freeze and October 10
-submission-ready manuscript package; do not make HfO₂/2D extensions or a strict
-GaN TS certificate prerequisites for this focused CPC paper.
+This meets the length target without shrinking the plotted labels. The former
+October 3/10 dates were a contingency buffer, not a requirement for new DFT.
+The revised execution target is a science-and-figure freeze by September 29
+and a complete technical manuscript/source package by September 30. Literal
+submission still requires author-supplied metadata and a resolved or honestly
+bounded GaN original-output claim. No new material calculation is planned.
+Prioritize the CP2K original-output/per-call join in a bounded read-only audit
+through September 29; if it remains inconclusive, retain the verified
+chain/cache-level evidence but explicitly limit the five-backend claim to
+that level, rather than assert raw per-image agreement, restart the path, or
+delay the written draft indefinitely. Do not make
+HfO₂/2D extensions or a strict GaN TS certificate prerequisites for this
+focused CPC paper.
 The working tree contains unrelated and ongoing user research files: stage only
 the specific artifacts being revised.
 
