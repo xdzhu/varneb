@@ -32,6 +32,7 @@ def main() -> None:
         ("preclude a matched algorithm benchmark", "BTO literature qualifier"),
         ("0.1291722", "HfO2 CI barrier evidence"),
         ("reported 32 meV per formula unit", "HfO2 literature comparison"),
+        ("initial atom-dominated stage shared by", "CdSe comparator identity"),
         ("78.5\\% and 38.2\\%", "bounded acceleration result"),
         ("not separately ablate the feasibility gate", "acceleration/safety boundary"),
         ("(b) Forward $H_{\\rm peak}-H_{\\rm B4}$", "forward GaN barrier panel"),
@@ -59,6 +60,17 @@ def main() -> None:
     require(manuscript, "\\cite{BTOReaxFF2019}", label="BTO citation key")
     require(bibliography, "@article{BTOReaxFF2019,", label="BTO bibliography record")
     require(bibliography, "10.1039/C9CP02955A", label="BTO DOI")
+    for fragment, label in (
+        ("Xiao, Penghao and Chemelewski, William and Johnson, Duane D.",
+         "G-SSNEB author order"),
+        ("Ghasemi, Arman and Xiao, Penghao and Gao, Wei",
+         "finite-deformation NEB authors"),
+        ("Hjorth Larsen, Ask and others", "ASE first-author family name"),
+        ("Makri, Stela and Ortner, Christoph", "preconditioning authors"),
+        ("Hansen, Martin H. and Boes, Jacob R. and Bligaard, Thomas",
+         "surrogate NEB authors"),
+    ):
+        require(bibliography, fragment, label=label)
     print("cpc_manuscript_contract=ok")
 
 

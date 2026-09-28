@@ -33,7 +33,9 @@ the HfO$_2$ per-cell conversion from committed source tables.
 2. Obtain a final scientific read-through of every literature comparator,
    pressure and formula-unit normalization, figure caption, and Data
    availability statement. In particular, retain the BTO PBEsol distortion
-   versus NEB distinction and the GaN/CP2K and TS limitations.
+   versus NEB distinction and the GaN/CP2K and TS limitations. The first
+   DOI/source-page pass and five corrected author records are documented in
+   `CITATION_AUDIT_2026-09-28.md`; this does not replace the final read-through.
 3. On the final source revision, rerun the full test suite, manuscript claim
    check, LaTeX build, and rendered-page inspection. Record failures rather
    than treating an old green result as proof for changed files.
