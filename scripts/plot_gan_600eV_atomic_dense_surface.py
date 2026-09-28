@@ -5,7 +5,8 @@ response around the variable-cell path.  Panel (a) is a two-coordinate,
 atomic-only frozen central cut with all 90 measured grid locations; panel (b)
 places its domain on the full 29-image barrier profile.  The only plotted
 interpolant is linear in path arc fraction and quadratic in atomic q, and is
-refused unless both prospectively declared holdout gates pass.
+refused unless both documented holdout gates pass. The along-s gate was in
+the submitted manifest; the q gate was fixed before inspecting new outputs.
 """
 
 from __future__ import annotations
@@ -183,8 +184,9 @@ def draw(report: dict, frames: list) -> plt.Figure:
     peak_local = 15 - CENTRAL_IMAGES[0]
     ax_a.scatter(s[peak_local], 0, s=135, marker="*", color=ORANGE,
                  edgecolor="white", linewidth=0.7, zorder=7)
-    ax_a.set_xlim(s[0], s[-1])
-    ax_a.set_ylim(-0.05, 0.05)
+    ax_a.set_xlim(s[0] - 0.004, s[-1] + 0.004)
+    ax_a.set_ylim(-0.054, 0.054)
+    ax_a.set_yticks([-0.05, -0.025, 0, 0.025, 0.05])
     ax_a.set_xlabel(r"VCNEB arc fraction $s$")
     ax_a.set_ylabel(r"Atomic transverse coordinate $q_{\perp}$ (Å)")
     ax_a.tick_params(direction="in", top=True, right=True, length=4, pad=4)
@@ -196,7 +198,7 @@ def draw(report: dict, frames: list) -> plt.Figure:
         Line2D([], [], marker="o", linestyle="none", markerfacecolor="white",
                markeredgecolor=INK, markersize=5, label="DFT grid (90)"),
         Line2D([], [], color=INK, lw=1.5, label="VCNEB centerline"),
-    ], loc="center", bbox_to_anchor=(0.365, 0.232), ncol=2,
+    ], loc="center", bbox_to_anchor=(0.370, 0.928), ncol=2,
         fontsize=8.6, frameon=True, facecolor="white",
         edgecolor="#8B969C", framealpha=0.84, borderpad=0.35)
 
@@ -211,11 +213,12 @@ def draw(report: dict, frames: list) -> plt.Figure:
     ax_b.set_xlabel(r"VCNEB arc fraction $s$")
     ax_b.set_ylabel(r"$H-H_{\mathrm{B4}}$ (meV/GaN)")
     ax_b.tick_params(direction="in", top=True, right=True, length=4, pad=4)
-    ax_b.legend(handles=[
+    fig.legend(handles=[
         Line2D([], [], color=BLUE, lw=1.7, marker="o", markersize=4,
                label="29-image path"),
         Line2D([], [], color="#DCE8EE", lw=7, label="2D domain"),
-    ], loc="upper right", fontsize=8.4, frameon=True, facecolor="white",
+    ], loc="center", bbox_to_anchor=(0.835, 0.160), fontsize=8.4,
+        frameon=True, facecolor="white",
         edgecolor="#8B969C", framealpha=0.84, borderpad=0.35)
     return fig
 
@@ -243,11 +246,16 @@ def main() -> None:
     fig = draw(report, frames)
     fig.savefig(paths[".pdf"])
     fig.savefig(paths[".svg"])
+    svg = paths[".svg"]
+    svg.write_text(
+        "\n".join(line.rstrip() for line in svg.read_text(encoding="utf-8").splitlines())
+        + "\n", encoding="utf-8"
+    )
     fig.savefig(paths[".tiff"], dpi=600, pil_kwargs={"compression": "tiff_lzw"})
     fig.savefig(paths[".png"], dpi=200)
     plt.close(fig)
     qa = {
-        "status": "GaN_600eV_central_dense_atomic_enthalpy_contour_prospectively_validated",
+        "status": "GaN_600eV_central_dense_atomic_enthalpy_contour_holdout_validated",
         "core_conclusion": "The 600-eV GaN VCNEB barrier has a measured atomic-transverse enthalpy response across its central path segment.",
         "archetype": "quantitative grid; central 2D contour hero plus full-path context",
         "backend": "Python/matplotlib",

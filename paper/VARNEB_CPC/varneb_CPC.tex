@@ -646,6 +646,43 @@ a strict TS; source data and numerical-integrity checks accompany the figure.}
 \label{fig:gan-joint-mode}
 \end{figure*}
 
+The local mode analysis is complemented by an explicitly sampled,
+path-adapted two-coordinate enthalpy cut (Fig.~\ref{fig:gan-dense-surface}).
+Here $s$ follows the audited variable-cell VCNEB arc, while the transverse
+coordinate $q_{\perp}$ displaces atoms at each image's \emph{fixed} cell.
+The transported atomic normal remains coherent over central images 5--22;
+it is not a single global phonon mode. We evaluated the 18 path centers and
+$q_{\perp}=\pm0.025,\pm0.05$~\AA{} at each of these images, reusing 28
+previously audited off-path statics and running only 44 missing points with
+the unchanged 600-eV VASP input. All 44 new SCF, geometry, energy, force,
+stress, and input-hash audits passed. A linear-in-$s$, quadratic-in-$q_{\perp}$
+interpolant predicts eight preselected along-path holdout values to within
+0.166~meV/GaN; the 36 inner-$q_{\perp}$ checks deviate by at most
+0.159~meV/GaN. Both are below their documented 1.0-meV/GaN gates. The
+sampled transverse excess enthalpy spans 0--20.60~meV/GaN, against the
+0.33849-eV/GaN barrier of the complete 29-image path. This validates a
+\emph{central frozen cut} and its bounded interpolation, not a conditional
+minimum-energy surface, endpoint-spanning two-mode landscape, or strictly
+certified transition state.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/gan_600eV_atomic_dense_surface.pdf}
+\caption{GaN central path-adapted enthalpy cut at 45.7 GPa under the original
+VASP/PBE 600-eV contract. (a) $H(s,q_{\perp})-H_{\rm B4}$ within the sampled
+central rectangle. White markers show all 90 measured coordinates (18
+audited path centers and 72 off-path statics), the dark line is the actual
+VCNEB centerline, and the star marks its highest image. The colored
+interpolant is linear in $s$ and quadratic in atomic-only $q_{\perp}$;
+maximum prospective along-$s$ and inner-$q_{\perp}$ holdout errors are
+0.166 and 0.159 meV/GaN, respectively. (b) Full 29-image VCNEB enthalpy
+profile, with the central two-dimensional chart domain shaded. The plot is
+a frozen enthalpy cut, not a finite-temperature free-energy surface or a
+strict transition-state certificate; source data and raw-output hashes
+accompany the figure.}
+\label{fig:gan-dense-surface}
+\end{figure*}
+
 \subsection{Additional path-transfer benchmarks}
 
 Independent VASP/PBE transfers test mapping sensitivity beyond the five-code
@@ -662,7 +699,6 @@ quantitative reproduction of the 2.4 meV/atom G-SSNEB reference
 literature overlays, hashes, and normalization are archived under
 \texttt{outputs/neb\_literature\_benchmarks/}.
 
-\FloatBarrier
 \section{Scope, limitations, and outlook}
 \label{sec:limits}
 
@@ -703,7 +739,9 @@ negative transfers retained to delimit the claim. An endpoint-$\Gamma$ basis
 then identifies the unstable BTO subspace that carries most of the atomic path
 displacement while cell strain is reported separately. These three capabilities
 make variable-cell pathways easier to execute, audit, compare, and interpret
-without changing the underlying VCNEB formalism.
+without changing the underlying VCNEB formalism. A same-protocol, raw-audited
+GaN central two-coordinate enthalpy cut further resolves the barrier region;
+its frozen atomic-transverse scope and numerical TS limit remain explicit.
 
 \section*{Data availability}
 
@@ -712,7 +750,9 @@ tables are available at \url{https://github.com/xdzhu/varneb}. Full
 first-principles output directories are retained with the project calculation
 archive. Figures~\ref{fig:materials} and \ref{fig:gan-multibackend} are generated
 from committed CSV tables; the latter includes the audited, force-converged
-CP2K path and its source-data record.
+CP2K path and its source-data record. The GaN central-cut figure
+(Fig.~\ref{fig:gan-dense-surface}) likewise has a committed 90-coordinate
+source table, per-output hashes, and interpolation-gate audit.
 
 \section*{CRediT authorship contribution statement}
 Draft placeholder: confirm roles and author order before submission.

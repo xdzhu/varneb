@@ -2,12 +2,17 @@
 
 from __future__ import annotations
 
+import csv
 import json
+from pathlib import Path
 
 import numpy as np
 import pytest
 
 from scripts.plot_gan_600eV_atomic_dense_surface import load, model_surface
+
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_dense_figure_refuses_unaudited_report(tmp_path) -> None:
@@ -46,3 +51,23 @@ def test_dense_model_preserves_path_and_outer_transverse_points() -> None:
         assert surface[-1, position] == pytest.approx(
             (h0[index] - full_h[0]) * 500 + matrix[index, -1]
         )
+
+
+def test_frozen_dense_figure_has_ninety_traceable_coordinates() -> None:
+    report_path = ROOT / "benchmarks/numerical_integrity/gan_600eV_atomic_tube_dense_20260928.json"
+    trajectory = (
+        ROOT / "paper/VARNEB_CPC/evidence/gan_45p7_final_chains_20260927"
+        / "gan_vasp_45p7_final_chain.traj"
+    )
+    report, frames = load(report_path, trajectory)
+    assert len(frames) == 29
+    assert report["maximum_prospective_s_holdout_error_meV_per_GaN"] < 0.17
+    assert report["maximum_q_halfstep_error_meV_per_GaN"] < 0.16
+    assert len({case["outcar_sha256"] for case in report["new_cases"]}) == 44
+    csv_path = ROOT / "paper/VARNEB_CPC/figures/gan_600eV_atomic_dense_surface_source_data.csv"
+    with csv_path.open(newline="", encoding="utf-8") as handle:
+        rows = list(csv.DictReader(handle))
+    assert len(rows) == 90
+    assert sum(row["source_kind"] == "path_trajectory" for row in rows) == 18
+    assert sum(row["source_kind"] == "prior_static" for row in rows) == 28
+    assert sum(row["source_kind"] == "new_static" for row in rows) == 44

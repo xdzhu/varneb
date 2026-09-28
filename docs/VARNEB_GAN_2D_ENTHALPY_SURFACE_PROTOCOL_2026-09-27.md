@@ -264,8 +264,9 @@ error of a linear-in-`s`, quadratic-in-`q` prediction of their off-path
 ≤1.0 meV/GaN. The inner `q=±0.025 Å` values separately test a quadratic
 interpolant fitted to `q=0,±0.05 Å`, with a ≤1.0 meV/GaN analysis gate
 fixed before inspecting the new outputs (unlike the along-`s` gate, this
-second gate was not in the submitted manifest). The raw audit must establish SCF termination, unchanged
-geometry/input hashes, finite energy/force/stress and both validation errors
+second gate was not in the submitted manifest). The raw audit must establish
+SCF termination, unchanged geometry/input hashes, finite energy/force/stress
+and both validation errors
 before a smooth central-segment contour is promoted. Even a pass would not
 turn this atomic-only central chart into a global two-phonon PES, close the
 endpoint mode-identity seams, or certify the full-variable-cell TS.
@@ -279,8 +280,26 @@ width (~183 mm), editable PDF/SVG plus 600-dpi TIFF, source CSV and hash/QA
 JSON. Panel labels are normal-weight `(a)`/`(b)`, all four spines are shown,
 ticks and legends remain readable at final size, and any legend has a
 semi-transparent white framed background away from the data. If either
-prospective gate fails, show measured samples and report the failure rather
+validation gate fails, show measured samples and report the failure rather
 than styling an unvalidated interpolant as a publication PES.
+
+**Dense-grid outcome (same day).** All 44 array elements of `27793051`
+finished `COMPLETED 0:0`; the independent raw audit passed every input hash,
+SCF-completion marker, unchanged atomic/cell geometry, and finite energy,
+force, and stress. The eight prospective along-`s` holdout values have a
+maximum interpolation error of **0.16578 meV/GaN**, below the pre-submission
+1.0 meV/GaN gate. The 36 inner-`q` tests have a maximum quadratic-model
+error of **0.15888 meV/GaN**, below the separately fixed pre-audit 1.0
+meV/GaN gate. The sampled transverse excess enthalpy spans 0–20.60
+meV/GaN. The validated central contour and full 29-image path comparison are
+`paper/VARNEB_CPC/figures/gan_600eV_atomic_dense_surface.pdf` (also SVG,
+PNG and a local 600-dpi TIFF); the adjacent `_source_data.csv` has all 90
+measured coordinates with source hashes, and `_qa.json` records the figure
+scope. The machine-readable audit is
+`benchmarks/numerical_integrity/gan_600eV_atomic_tube_dense_20260928.json`.
+The figure is a **validated central frozen atomic-transverse enthalpy cut**
+around a variable-cell path—not a global two-phonon surface, conditional
+minimum-energy surface, finite-temperature free energy, or certified TS.
 
 ## Gates and stop conditions
 
