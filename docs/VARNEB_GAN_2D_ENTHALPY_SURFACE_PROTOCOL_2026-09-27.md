@@ -5,8 +5,15 @@ Pressure: 45.7 GPa. The four-atom Ga2N2 cell contains two GaN formula units.
 Every plotted energy must be the enthalpy `H=E+PV` at this pressure and must
 state whether the reference is B4, B1, or the near-TS center. **All new GaN
 mode, surface and path calculations use the original VASP production contract:
-PBE, Ga_d+N PAW, ENCUT=600 eV, Gamma 8×8×6, ISYM=-1, SYMPREC=1e-4,
-EDIFF=1e-7.** Keep the original POTCAR and k-point convention, atom order,
+PBE, Ga_d+N PAW, ENCUT=600 eV, Gamma-centered k sampling anchored to the
+reference 8×8×6 mesh, ISYM=-1, SYMPREC=1e-4, EDIFF=1e-7.** The archived
+production path and the already completed mode/surface statics used the same
+integer 8×8×6 mesh. For *future* variable-cell points, an integer mesh change
+is allowed when a predeclared reciprocal-space spacing/density rule keeps the
+sampling comparable; record the chosen mesh and check energy, force and stress
+continuity on both sides of any switch. A changed mesh alone is not a failed
+calculation, and forcing identical integers is not a physical requirement.
+Keep the original POTCAR and k-point centering convention, atom order,
 pressure and VASP version. Do not change ENCUT for a diagnostic, a pilot or an
 individual failed point, and do not mix 600-eV and 1000-eV enthalpies or mode
 vectors as though they were one quantitative surface.
