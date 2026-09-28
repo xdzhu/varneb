@@ -249,6 +249,39 @@ the QA record states the failed `2.329 > 1.0 meV/GaN` LOO
 gate. It is suitable as a transparent interim or supplementary diagnostic,
 not a substitute for the requested validated smooth whole-path 2D surface.
 
+**Dense central-grid test submitted 2026-09-28.** To turn the barrier-region
+chart into an explicitly sampled two-coordinate cut, Slurm array `27793051`
+on hf `hfacnormal01` fills the central images 5–22 at
+`q_atom = −0.05, −0.025, 0, +0.025, +0.05 Å`. Of the 90 chart coordinates,
+18 path centers and 28 signed off-path statics are already audited and
+reused; only 44 missing statics are submitted (32 MPI each, at most four
+concurrent). The transverse displacement is **atomic-only** and retains each
+audited variable-cell image cell. All 44 inputs have the original 600-eV
+INCAR/KPOINTS/POTCAR hashes and pass the geometry preflight. Images 10 and
+16 were designated as prospective along-`s` holdouts before DFT; the maximum
+error of a linear-in-`s`, quadratic-in-`q` prediction of their off-path
+*excess* enthalpies must be
+≤1.0 meV/GaN. The inner `q=±0.025 Å` values separately test a quadratic
+interpolant fitted to `q=0,±0.05 Å`, with a ≤1.0 meV/GaN analysis gate
+fixed before inspecting the new outputs (unlike the along-`s` gate, this
+second gate was not in the submitted manifest). The raw audit must establish SCF termination, unchanged
+geometry/input hashes, finite energy/force/stress and both validation errors
+before a smooth central-segment contour is promoted. Even a pass would not
+turn this atomic-only central chart into a global two-phonon PES, close the
+endpoint mode-identity seams, or certify the full-variable-cell TS.
+
+Figure contract for the next GaN composite: the hero panel plots the
+path-adapted central `(s,q_atom)` enthalpy cut and every raw grid point,
+with the audited `q=0` VCNEB path traced explicitly. A subordinate panel
+shows the complete 29-image one-dimensional barrier profile and identifies
+the central chart domain. The figure uses Python/matplotlib at double-column
+width (~183 mm), editable PDF/SVG plus 600-dpi TIFF, source CSV and hash/QA
+JSON. Panel labels are normal-weight `(a)`/`(b)`, all four spines are shown,
+ticks and legends remain readable at final size, and any legend has a
+semi-transparent white framed background away from the data. If either
+prospective gate fails, show measured samples and report the failure rather
+than styling an unvalidated interpolant as a publication PES.
+
 ## Gates and stop conditions
 
 - Before any new DFT submission, verify every generated cell and the
