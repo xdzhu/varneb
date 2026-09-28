@@ -1,14 +1,19 @@
 # VARNEB manuscript evidence gate — 2026-09-27
 
 This is a claim gate, not a request to change a calculator parameter or to run
-CI. The 2026-09-28 two-column `elsarticle` draft now compiles to 10 main-text
-pages plus a separate three-page supplement. The BTO restricted-sheet figure,
+CI. The 2026-09-28 two-column `elsarticle` draft currently compiles to 12 PDF
+pages, including approximately ten pages of scientific text/figures and the
+end-matter/references, plus a separate four-page supplement. Two wide GaN
+floats occupy nearly standalone pages; a final journal-layout pass remains.
+The BTO restricted-sheet figure,
 GaN five-backend path comparison, GaN local joint-coordinate cut, and
 validated central GaN two-coordinate cut remain in the main text. The
 BTO/HfO2 material-control figure, all-image GaN endpoint-mode profile, and
-original GaN Hessian/endpoint-mode chart are Supplementary Figs. S1--S3;
+original GaN Hessian/endpoint-mode chart, and the 81-point frozen BTO grid
+are Supplementary Figs. S1--S4;
 their original source data remain linked.
-This meets the length target without shrinking the plotted labels. The former
+The scientific narrative remains near the intended length without shrinking
+the plotted labels, but the current PDF is not literally ten pages. The former
 October 3/10 dates were a contingency buffer, not a requirement for new DFT.
 The revised execution target is a science-and-figure freeze by September 29
 and a complete technical manuscript/source package by September 30. Literal
@@ -29,11 +34,14 @@ the specific artifacts being revised.
 
 1. **BTO T→C:** seven real ABACUS VCNEB images and a cubic Γ-mode projection
    are in `figures/bto_gamma_mode_path.*`. The archival exploratory figure
-   `figures/bto_frozen_soft_mode_landscape.*`, copied from the independently
-   audited 59-point source under `outputs/batio3_t_to_c_pbe100_dzp10au/`,
-   contains 59 audited *frozen cubic-cell* DFT samples. Its smooth contour is
-   display interpolation (35 interior leave-one-out points; maximum absolute
-   error 5.14 meV/BTO on the final set; earlier independent center and edge
+   `figures/bto_frozen_soft_mode_landscape.*` had 59 independently audited
+   *frozen cubic-cell* DFT samples. The updated complete 9×9 version is
+   `figures/bto_frozen_soft_mode_81_20260928.*` (Supplementary Fig. S4),
+   adding 22 raw-audited statics under the unchanged 100-Ry contract.
+   Their maximum prospective prediction error from the prior 59-point
+   interpolant is 0.441 meV/BTO. The full-grid smooth contour remains
+   display interpolation (49 interior leave-one-out points; maximum absolute
+   error 5.14 meV/BTO; earlier independent center and edge
    holdouts reached 32.57 and 14.83 meV/BTO). The variable-cell path is
    projected onto that plane
    but leaves it: the contour is neither a relaxed conditional PES nor a
@@ -93,11 +101,15 @@ the specific artifacts being revised.
    local atom–strain instability candidate under the **same original 600-eV
    VASP contract** as the path and endpoint Γ bases. Its `0.0232 eV/Å`
    energy–force mismatch still prevents a strict full-variable-cell TS
-   certificate. The separate local `q_u/q_v` frozen quadratic cut now has
-   eight same-input grid statics and four axial half-step holdouts, with
-   maximum holdout error `0.04974 < 0.20 meV/GaN`; its contour is confined
-   to those measured coordinate bounds. This does not validate off-axis
-   interior points, an orthogonally relaxed PES, or the whole path. The
+   certificate. The separate local `q_u/q_v` cut began with eight same-input
+   grid statics and four axial half-step holdouts, with maximum original-model
+   holdout error `0.04974 < 0.20 meV/GaN`. It now has 81 measured
+   coordinates on a complete 9×9 grid under the same 600-eV contract; a
+   prior 25-point interpolation prospectively predicts the last 56 points
+   within 0.0135 meV/GaN. Main Fig. 4 uses
+   `figures/gan_600eV_local_joint_dft81_v2_20260928.*`, interpolated from
+   the 81 actual enthalpies and confined to measured bounds. This does not
+   validate an orthogonally relaxed PES, a stationary TS, or the whole path. The
    supplementary candidate
    `figures/gan_600eV_atomic_tube_samples.*` plots 28 audited central
    off-path statics without interpolation; the `2.329 meV/GaN` maximum LOO
@@ -148,12 +160,19 @@ the specific artifacts being revised.
   documented in `docs/VARNEB_LOCAL_REGRESSION_2026-09-28.md`. These checks
   do not replace remote material-output audits, a pristine-checkout check,
   or an actual tagged release.
-- Preserve the now 10-page main text and three-page supplement while checking
-  journal formatting, final PDF layout, bibliography, figure legibility, and
+- Review the current 12-page main PDF and four-page supplement while checking
+  journal formatting, float placement, bibliography, figure legibility, and
   source-data availability. Do not regain length by dropping method derivation
   or evidence limits. Author order,
   affiliations, CRediT roles, funding and the competing-interest declaration
   still contain explicit draft placeholders and require author confirmation.
+  On 2026-09-28 both TeX projects compiled successfully with TeX Live; the
+  updated main Fig. 4 and supplementary Fig. S4 were rendered and visually
+  checked, with no clipped labels or unresolved references detected. A
+  `\raggedbottom` layout correction removed stretched whitespace between the
+  conclusion heading and text. Main Figs. 4 and 5 still occupy near-standalone
+  float pages, so the current 12-page PDF should not be presented as a final
+  ten-page layout.
 
 ## Stronger mode-surface / TS claims: evidence still needed
 

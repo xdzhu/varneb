@@ -13,6 +13,7 @@
 \graphicspath{{figures/}}
 \setlength{\textfloatsep}{10pt plus 2pt minus 2pt}
 \setlength{\dbltextfloatsep}{10pt plus 2pt minus 2pt}
+\raggedbottom
 \bibliographystyle{elsarticle-num}
 \journal{Computer Physics Communications}
 
@@ -432,8 +433,13 @@ not single-eigenvector identities or cell-strain amplitudes.
 
 An initial 59-point frozen-cubic-cell cut exposed the interpolation risk:
 interior leave-one-out error reached 5.14 meV/BTO, and independent coarse-grid
-holdouts were worse. It cannot represent the variable-cell path because stable
-atomic modes and strain move. We therefore fixed two signed cubic soft-mode
+holdouts were worse. We completed its $9\times9$ grid with 22 additional
+static DFT points under the unchanged 100-Ry contract; the prior 59-point
+interpolant predicted these new nodes within 0.441 meV/BTO. The full-grid
+display and its 5.14-meV/BTO maximum interior leave-one-out error appear in
+Supplementary Fig.~S4. The frozen cut still cannot represent the
+variable-cell path because stable atomic modes and strain move. We therefore
+fixed two signed cubic soft-mode
 amplitudes $(Q_z,Q_x)$, imposed $Q_y=0$ at every evaluation, and released the
 remaining 15 independent atom--strain coordinates after removing rigid
 translations. The physical T endpoint projects to
@@ -626,9 +632,15 @@ Independent half-step energy probes preserve the negative path-direction
 and positive transverse-direction signs, but are not a second full Hessian.
 The frozen two-coordinate cut in Fig.~\ref{fig:gan-joint-mode}a shows this
 local curvature directly. Eight off-center statics and four preselected
-axial half-step checks constrain the quadratic model within its measured
-rectangle; its largest axial holdout error is 0.050 meV/GaN
-(Fig.~\ref{fig:gan-joint-mode}b).
+axial half-step checks constrained the original quadratic model; its largest
+axial holdout error is 0.050 meV/GaN. We then added 12 off-axis and 56
+interleaved static calculations without changing the 600-eV electronic
+contract, producing a complete $9\times9$ grid of 81 measured enthalpies.
+The intermediate 25-point interpolation predicted the 56 subsequently
+computed nodes within 0.0135 meV/GaN; Fig.~\ref{fig:gan-joint-mode}a
+interpolates the audited 81-point grid for display, while panel (b) compares
+the raw DFT values to the original quadratic model. Neither interpolation
+is used to certify a saddle.
 The largest center-gradient/enthalpy-secant discrepancy is $0.0232$
 eV/\AA{}. Integrating the force/stress gradients over the same finite step
 reduces the atomic and shear residuals below $0.0006$ eV/\AA{}, but leaves
@@ -663,19 +675,20 @@ barrier nor certify a variable-cell TS phonon.
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=\textwidth]{figures/gan_600eV_local_joint_cut.pdf}
+\includegraphics[width=\textwidth]{figures/gan_600eV_local_joint_dft81_v2_20260928.pdf}
 \caption{GaN local joint-coordinate enthalpy cut near the B4-to-B1 highest
 image at 45.7 GPa, using the production VASP/PBE 600-eV contract.
-(a) A frozen quadratic model in the coupled unstable direction $q_u$ and
-stable joint direction $q_v$, displayed only within the measured rectangle.
-Circles show eight grid statics; squares show four preselected axial
-half-step checks; the star is the center. (b) Direct DFT enthalpy changes
-against model predictions, with the shaded $\pm0.2$-meV/GaN acceptance band.
-The largest axial holdout error is 0.050 meV/GaN. These joint coordinates
-include atom and cell components, but the cut is not orthogonally relaxed,
-does not cover the full path, and does not certify a stationary transition
-state; the Hessian and endpoint-mode projections appear in Supplementary
-Fig.~S3.}
+(a) Display interpolation of 81 raw-audited DFT enthalpies on a complete
+$9\times9$ grid in the coupled unstable coordinate $q_u$ and stable joint
+coordinate $q_v$; circles mark 80 off-center statics and the star marks the
+center. (b) Direct DFT enthalpy changes against the \emph{original} quadratic
+model. The shaded $\pm0.2$-meV/GaN band was predeclared for the four original
+axial half-step checks only; it is not a retrospective acceptance test for
+the additional 68 points. The preceding 25-point interpolation prospectively
+predicts the final 56 nodes within 0.0135 meV/GaN. These atom--cell joint
+coordinates define a frozen local enthalpy slice, not an orthogonally relaxed
+or whole-path surface or a certified stationary transition state; Hessian
+and endpoint-mode projections appear in Supplementary Fig.~S3.}
 \label{fig:gan-joint-mode}
 \end{figure*}
 
@@ -794,8 +807,9 @@ the omitted soft-mode instability precludes an unrestricted two-coordinate
 PES through cubic C. These three capabilities
 make variable-cell pathways easier to execute, audit, compare, and interpret
 without changing the underlying VCNEB formalism. A same-protocol, raw-audited
-GaN central two-coordinate enthalpy cut further resolves the barrier region;
-its frozen atomic-transverse scope and numerical TS limit remain explicit.
+GaN central two-coordinate enthalpy cut and an independently sampled
+81-point local atom--strain slice further resolve the barrier region;
+their frozen scope and numerical TS limit remain explicit.
 
 \section*{Data availability}
 
@@ -812,6 +826,12 @@ The GaN central-cut figure
 source table, per-output hashes, and interpolation-gate audit. The all-image
 endpoint-$\Gamma$ profile (Supplementary Fig.~S2) has a committed
 29-image mode/strain/residual table and calculation-input hash record.
+The local joint-mode figure (Fig.~\ref{fig:gan-joint-mode}) has an 81-row
+source table and separate 13-, 25-, and 81-point raw-output audits;
+the 56 last-grid points provide a prospective check of the 25-point
+interpolant. Supplementary Fig.~S4 has an 81-point frozen-cell BTO source
+table, including the 22-point prospective extension from its earlier 59-point
+cut and explicit interpolation-error diagnostics.
 The BTO restricted-sheet figure (Fig.~\ref{fig:bto-qy0-sheet}) includes its
 measured/model source tables, prospectively frozen predictions, raw-output
 holdout audits, and figure QA hashes.

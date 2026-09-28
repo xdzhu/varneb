@@ -17,7 +17,7 @@ latexmk -pdf -interaction=nonstopmode -halt-on-error varneb_CPC_supplement.tex
 
 The outputs are `varneb_CPC.pdf` and `varneb_CPC_supplement.pdf`. The main
 source uses the two-column `elsarticle` 5p layout; the supplement is a separate
-two-page article. The package uses `elsarticle-num`, supplied by standard
+four-page article in the current build. The package uses `elsarticle-num`, supplied by standard
 Elsevier/TeX Live installations. `figures/` contains the PDF source used by
 the manuscript and its CSV source data.
 
@@ -29,8 +29,10 @@ The manuscript distinguishes three evidence levels:
    coordinate, force, CI, and restart mechanics.
 2. ABACUS/PBE material calculations establish the BTO and HfO2 examples.
    BTO's cubic Gamma projection uses the five-atom `1x1x1` phonon cell;
-   its 59-point contour is a *frozen-cell* slice, not a relaxed conditional
-   surface. The main text now shows the separately audited `Q_y=0`
+   its complete 81-point two-soft-mode contour (59 prior plus 22 new static
+   points) is a *frozen-cell* slice, not a relaxed conditional surface;
+   it is Supplementary Fig. S4. The main text instead shows the separately
+   audited `Q_y=0`
    symmetry-restricted variable-cell sheet, with nine measured training nodes
    and two prospective DFT holdouts below the predeclared 2-meV/BTO gate. It
    does not claim an unrestricted conditional PES or a finite-temperature
@@ -62,14 +64,17 @@ the ZStar reference package. The working target is approximately ten typeset
 pages including the Program Summary, figures, tables, and references. Add
 material only when it closes a reproducibility, method, or verification gap;
 do not pad the manuscript with duplicate workflow descriptions or unsupported
-benchmark claims. The 2026-09-28 draft compiles to **10 main-text pages plus
-three supplement pages/figures**. Author metadata and journal-specific final checks
+benchmark claims. The 2026-09-28 draft compiles to **12 PDF pages, including
+two near-standalone GaN figure pages, plus four supplement pages/figures**.
+This is not literally the ten-page target; final journal layout remains open.
+Author metadata and journal-specific final checks
 remain submission gates. The main evidence set contains the architecture
 figure, BTO restricted-sheet/path projection, GaN five-backend comparison,
 the same-600-eV local GaN joint-coordinate cut, and the validated **central**
 GaN atomic-transverse enthalpy cut. The BTO/HfO2 material controls and the
 all-image GaN endpoint-Gamma mode/strain projection, and the supporting
-GaN Hessian/endpoint-mode chart are Supplementary Figs. S1--S3. The central
+GaN Hessian/endpoint-mode chart, and the 81-point frozen BTO grid are
+Supplementary Figs. S1--S4. The central
 GaN cut is not a full-path or
 conditionally relaxed two-mode landscape, and the local candidate is not a
 certified variable-cell transition state.
