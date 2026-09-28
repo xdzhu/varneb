@@ -62,13 +62,14 @@ pages including the Program Summary, figures, tables, and references. Add
 material only when it closes a reproducibility, method, or verification gap;
 do not pad the manuscript with duplicate workflow descriptions or unsupported
 benchmark claims. The 2026-09-28 draft compiles to **10 main-text pages plus
-two supplement pages**. Author metadata and journal-specific final checks
+three supplement pages/figures**. Author metadata and journal-specific final checks
 remain submission gates. The main evidence set contains the architecture
 figure, BTO restricted-sheet/path projection, GaN five-backend comparison,
-the same-600-eV local GaN atom--strain diagnostic, and the validated **central**
+the same-600-eV local GaN joint-coordinate cut, and the validated **central**
 GaN atomic-transverse enthalpy cut. The BTO/HfO2 material controls and the
-all-image GaN endpoint-Gamma mode/strain projection are Supplementary Figs.
-S1 and S2. The central GaN cut is not a full-path or
+all-image GaN endpoint-Gamma mode/strain projection, and the supporting
+GaN Hessian/endpoint-mode chart are Supplementary Figs. S1--S3. The central
+GaN cut is not a full-path or
 conditionally relaxed two-mode landscape, and the local candidate is not a
 certified variable-cell transition state.
 Per-path literature figures remain archived under

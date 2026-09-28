@@ -2,11 +2,12 @@
 
 This is a claim gate, not a request to change a calculator parameter or to run
 CI. The 2026-09-28 two-column `elsarticle` draft now compiles to 10 main-text
-pages plus a separate two-page supplement. The BTO restricted-sheet figure,
-GaN five-backend path comparison, GaN local atom--strain diagnostic, and
+pages plus a separate three-page supplement. The BTO restricted-sheet figure,
+GaN five-backend path comparison, GaN local joint-coordinate cut, and
 validated central GaN two-coordinate cut remain in the main text. The
-BTO/HfO2 material-control figure and all-image GaN endpoint-mode profile are
-Supplementary Figs. S1 and S2; their original source data remain linked.
+BTO/HfO2 material-control figure, all-image GaN endpoint-mode profile, and
+original GaN Hessian/endpoint-mode chart are Supplementary Figs. S1--S3;
+their original source data remain linked.
 This meets the length target without shrinking the plotted labels. The former
 October 3/10 dates were a contingency buffer, not a requirement for new DFT.
 The revised execution target is a science-and-figure freeze by September 29
