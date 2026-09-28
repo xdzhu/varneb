@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import shutil
 import sys
 
 from ase import Atoms
@@ -11,6 +12,9 @@ from ase.io import write
 
 from vcneb.cli import main
 from vcneb import material_runner
+
+
+QUICKSTART = Path(__file__).resolve().parents[1] / "examples/quickstart/ase_cu_fixed"
 
 
 def _toy_config(tmp_path: Path) -> Path:
@@ -117,3 +121,31 @@ def test_config_dispatch_keeps_factory_and_optimizer_independent(monkeypatch, tm
     assert seen[seen.index("--image-workers") + 1] == "2"
     assert seen[seen.index("--backend-label") + 1] == "cp2k"
     assert json.loads(seen[seen.index("--parameters-json") + 1]) == {"cutoff_ry": 400}
+
+
+def test_documented_ase_cli_quickstart_is_runnable(monkeypatch, tmp_path, capsys):
+    for name in ("initial.vasp", "final.vasp", "varneb.json"):
+        shutil.copyfile(QUICKSTART / name, tmp_path / name)
+    config = tmp_path / "varneb.json"
+
+    for command in ("validate-config", "prepare"):
+        monkeypatch.setattr(sys, "argv", ["varneb", command, str(config)])
+        assert main() == 0
+    prepared = tmp_path / "run" / "initial-vcneb.traj"
+    assert prepared.is_file()
+    prepared_hash = prepared.read_bytes()
+
+    monkeypatch.setattr(sys, "argv", ["varneb", "run", str(config), "--execute"])
+    assert main() == 0
+    capsys.readouterr()
+    summary = json.loads((tmp_path / "run/vcneb_summary.json").read_text(encoding="utf-8"))
+    assert summary["backend_label"] == "ase"
+    assert summary["n_images"] == 3
+    assert summary["n_interior_images"] == 1
+    assert summary["requires_stress"] is False
+    assert summary["endpoint_evaluation_policy"] == "fixed_cached_once"
+    assert summary["converged"] is True
+    assert summary["status"] == "converged"
+    assert summary["final_max_generalized_force_eV_per_A"] <= 0.1
+    assert abs(summary["barrier_enthalpy_eV"]) < 1e-9
+    assert prepared.read_bytes() == prepared_hash

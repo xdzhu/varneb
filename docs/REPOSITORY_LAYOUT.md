@@ -8,12 +8,12 @@ restart directory, so cleanup is staged and backwards compatible.
 
 ```text
 vcneb/                 Python package and public calculator adapters
-examples/quickstart/   tiny calculator-free examples
+examples/quickstart/   tiny analytic and bundled-ASE examples
 examples/cases/        compact, documented material fixtures
 docs/                  theory, user manual, backend and validation contracts
 cluster/               HF/Slurm templates only
 scripts/               bounded analysis and case-preparation utilities
-tests/                 calculator-free regression and adapter-contract tests
+tests/                 external-code-free regression and adapter-contract tests
 benchmarks/            reproducible timing/convergence inputs
 validation/            accepted gates and provenance manifests
 outputs/               reviewed result artifacts and source data
@@ -58,7 +58,7 @@ potential, pseudopotential, or unit system from a filename.
 
 1. Add or update a canonical entry under `examples/quickstart`, `examples/cases`,
    or `docs`; keep a compatibility wrapper when an old path is used by tests.
-2. Verify calculator-free tests and input preflight.
+2. Verify external-code-free tests and input preflight.
 3. Move only an explicitly inventoried, inactive result directory; record the
    old-to-new path in its manifest.
 4. Remove obsolete wrappers only in a separate, reviewed change.

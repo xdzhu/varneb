@@ -19,7 +19,12 @@ python examples/run_toy_vcneb.py
 
 It writes `toy_vcneb_run/` and should report a barrier near **0.25 eV**.
 The potential is analytic: this verifies variable-cell forces and the run
-interface, not a material prediction. To prepare a real material path next:
+interface, not a material prediction. For the same public CLI used by material
+runs, try the complete external-code-free
+[`ASE/EMT example`](examples/quickstart/ase_cu_fixed/README.md), which exercises
+`validate-config → prepare → run --execute` with bundled inputs.
+
+To prepare a real material path:
 
 ```bash
 varneb backends
@@ -62,7 +67,7 @@ parameter guess.
 
 - `vcneb/` — the stable Python API, VC-NEB core, optimizers, provenance,
   modal/phonon analysis, and thin calculator adapters.
-- `examples/` — calculator-free quickstarts and compact material fixtures.
+- `examples/` — external-code-free quickstarts and compact material fixtures.
 - `docs/` — theory, backend contracts, validation plans, and the detailed
   user manual.
 - `cluster/` — scheduler templates.  Production jobs run on HF through Slurm;

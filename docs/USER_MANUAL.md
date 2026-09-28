@@ -20,6 +20,9 @@ install SciPy, Matplotlib, and other transitive dependencies; `plot` and
 the corresponding VARNEB workflows. Add
 the `dev` extra only when running the test suite. The README's analytic toy
 run is the quickest executable check before configuring any DFT backend.
+The [three-image ASE/EMT CLI smoke](../examples/quickstart/ase_cu_fixed/README.md)
+then exercises the complete public JSON workflow without a DFT executable;
+its one-step result is an interface check, not a converged material path.
 
 `doctor` only checks Python adapter imports and executables on `PATH`. On HF,
 load a module inside the Slurm script, then run `varneb doctor` with the same
