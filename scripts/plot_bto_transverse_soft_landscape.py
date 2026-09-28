@@ -3,7 +3,7 @@
 Figure contract: the real T-to-C VCNEB path projects onto the longitudinal
 soft axis, while its cell strain and omitted stable-mode motion keep it off
 the two-dimensional frozen cubic-cell surface. Panel (a) shows 25, 41, or 59 audited
-DFT samples and an explicitly interpolated display contour; (b) the seven actual
+or 81 audited DFT samples and an explicitly interpolated display contour; (b) the seven actual
 variable-cell image energies; (c) their off-plane atomic residual. This is a
 quantitative-grid figure, not a conditional PES or an activation-barrier map.
 Python/matplotlib is the existing project plotting workflow. Editable SVG and
@@ -130,6 +130,8 @@ def main() -> None:
                         help="optional independently scored 16-center result; plots 41 real points")
     parser.add_argument("--analysis59", type=Path,
                         help="optional independently scored 18-edge result; requires --analysis41")
+    parser.add_argument("--analysis81", type=Path,
+                        help="optional raw-audited 22-node completion; requires --analysis59")
     parser.add_argument("--output-prefix", type=Path, required=True)
     parser.add_argument("--allow-exploratory-contours", action="store_true")
     args = parser.parse_args()
@@ -137,6 +139,8 @@ def main() -> None:
         raise ValueError("exploratory interpolated contours require --allow-exploratory-contours")
     if args.analysis59 is not None and args.analysis41 is None:
         raise ValueError("59-point plot requires its 41-point provenance source")
+    if args.analysis81 is not None and args.analysis59 is None:
+        raise ValueError("81-point plot requires its 59-point provenance source")
     outputs = [args.output_prefix.with_suffix(suffix) for suffix in (".png", ".pdf", ".svg")]
     outputs += [Path(str(args.output_prefix) + suffix) for suffix in ("_source_data.csv", "_qa.json")]
     if any(path.exists() for path in outputs):
@@ -183,11 +187,36 @@ def main() -> None:
         if (len({tuple(point) for point in measured_points}) != 59
                 or not np.all(np.isfinite(measured_energies))):
             raise ValueError("59-point measured source has duplicate or nonfinite values")
+    analysis81 = None
+    if args.analysis81 is not None:
+        analysis81 = _load(args.analysis81)
+        if (analysis81.get("kind") != "BTO_transverse_soft_frozen_C_cell_81_real_DFT_points_not_conditional_PES_or_MEP"
+                or analysis81.get("status") != "22_new_nodes_raw_energy_force_stress_audited"
+                or analysis81.get("n_total_DFT_points") != 81
+                or analysis81.get("source_sha256", {}).get("prior_59_audit") != _sha256(args.analysis59)
+                or analysis81.get("axis_labels") != assembled.get("axis_labels")
+                or len(analysis81.get("samples", [])) != 81):
+            raise ValueError("81-point result is not tied to its audited 59-point source")
+        measured_points = np.asarray([[sample["q_parallel_sqrt_amu_A"],
+                                       sample["q_transverse_sqrt_amu_A"]]
+                                      for sample in analysis81["samples"]], dtype=float)
+        measured_energies = np.asarray([sample["energy_minus_C_eV_per_BTO"]
+                                        for sample in analysis81["samples"]], dtype=float)
+        if (len({tuple(point) for point in measured_points}) != 81
+                or not np.all(np.isfinite(measured_energies))):
+            raise ValueError("81-point measured source has duplicate or nonfinite values")
     surface, interpolation = _interpolation_audit(measured_points, measured_energies, q1, q2)
     if analysis41 is not None:
         interpolation["independent_16_center_prediction_errors"] = analysis41["holdout_errors"]
     if analysis59 is not None:
         interpolation["independent_18_adaptive_edge_prediction_errors"] = analysis59["holdout_errors"]
+    if analysis81 is not None:
+        interpolation["independent_22_missing_node_max_abs_error_meV_per_BTO"] = analysis81[
+            "prospective_22_point_max_abs_error_meV_per_BTO"
+        ]
+        interpolation["independent_22_missing_node_rms_error_meV_per_BTO"] = analysis81[
+            "prospective_22_point_rms_error_meV_per_BTO"
+        ]
     gx, gy = np.meshgrid(np.linspace(q1[0], q1[-1], surface.shape[1]),
                          np.linspace(q2[0], q2[-1], surface.shape[0]))
     span = max(abs(np.min(surface)), abs(np.max(surface)))
@@ -245,6 +274,11 @@ def main() -> None:
     args.output_prefix.parent.mkdir(parents=True, exist_ok=True)
     for output in outputs[:3]:
         fig.savefig(output, dpi=400, bbox_inches="tight", facecolor="white")
+    svg_path = args.output_prefix.with_suffix(".svg")
+    svg_path.write_text(
+        "\n".join(line.rstrip() for line in svg_path.read_text(encoding="utf-8").splitlines())
+        + "\n", encoding="utf-8"
+    )
     plt.close(fig)
     with outputs[3].open("w", newline="", encoding="utf-8") as handle:
         writer = csv.writer(handle)
@@ -263,7 +297,9 @@ def main() -> None:
                           **({"analysis41": _sha256(args.analysis41)}
                              if args.analysis41 is not None else {}),
                           **({"analysis59": _sha256(args.analysis59)}
-                             if args.analysis59 is not None else {})},
+                             if args.analysis59 is not None else {}),
+                          **({"analysis81": _sha256(args.analysis81)}
+                             if args.analysis81 is not None else {})},
         "interpolation": interpolation,
         "figure_contract": {
             "core_conclusion": "The variable-cell T-to-C path projects onto the longitudinal soft mode but leaves the frozen cubic-cell two-mode plane.",

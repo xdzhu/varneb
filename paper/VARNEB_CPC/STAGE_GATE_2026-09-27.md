@@ -39,6 +39,12 @@ the specific artifacts being revised.
    but leaves it: the contour is neither a relaxed conditional PES nor a
    T→C barrier. The cubic Γ source is the five-atom `1×1×1` cell, with
    ABACUS PBE/`ecutwfc=100 Ry`/10 au DZP/`4×4×4` electronic k points.
+   A second, visually clearer 79-point frozen soft-plus-stable-mode chart,
+   `figures/bto_frozen_path_adapted_79.*`, is also available for explicitly
+   labeled illustration. Its preselected 16-point interpolation check has
+   maximum error 7.19 meV/BTO, and the projected path is not contained in
+   the fixed-cell plane. It must not replace the independently checked
+   restricted variable-cell sheet merely because its contour is smoother.
 2. **BTO conditional mode plane, stage figure:**
    `figures/bto_conditional_four_point_stage_2026-09-27.*` shows four
    independently calculated fixed-`(Q_z,Q_x)` coordinates and the lower
@@ -114,21 +120,35 @@ the specific artifacts being revised.
 
 ## Minimum submission gates for a focused CPC software paper
 
-- Keep the 59-point frozen-cell BTO contour archival. The main text now uses
-  the blinded-check-passing `Q_y=0` restricted model contour with all measured
-  locations visible; never call it an unrestricted conditional PES. No further
-  grid densification is required merely for a smoother illustration.
+- Keep the frozen-cell BTO soft/soft contour exploratory. On 2026-09-28 the
+  original 59 measured points were extended to the full 9×9 grid by 22
+  **new** 100-Ry/10-au-DZP/4×4×4 ABACUS static calculations (Slurm
+  `27796862`), without recomputing an old point or changing the electronic
+  contract. Their raw energy/force/stress logs pass the independent audit
+  `benchmarks/numerical_integrity/bto_transverse_soft_frozen81_20260928.json`;
+  the old 59-point interpolant predicts the 22 prospective nodes with
+  0.4411 meV/BTO maximum absolute error. The updated display-only contour
+  `figures/bto_frozen_soft_mode_81_20260928.*` and its source CSV/QA mark
+  all 81 measured locations. Interior leave-one-out maximum remains 5.14
+  meV/BTO and the cubic interpolation can overshoot a measured minimum by
+  1.78 meV/BTO, so do not infer an unverified extremum from the color field.
+  The main text still uses the blinded-check-passing `Q_y=0` restricted model
+  contour; neither sheet is an unrestricted conditional PES or the T→C
+  activation barrier.
 - Freeze figure-to-data provenance and captions: explicit `E` versus
   `H=E+PV`, pressure, formula-unit normalization, reference zero, number of
   computed points, interpolation status, and backend-specific settings.
 - Reconcile code, examples, quick-start README, detailed manual, and paper
   around the same backend/optimizer interface and supported feature matrix.
   Re-run relevant unit/integration checks locally; do not trigger CI merely
-  by pushing ordinary commits. The 2026-09-28 tracked local suite has
-  549 passes and one skip, documented in
-  `docs/VARNEB_LOCAL_REGRESSION_2026-09-28.md`; it does not replace remote
-  material-output audits or a clean release-build check.
-- Preserve the now 10-page main text and two-page supplement while checking
+  by pushing ordinary commits. The post-change 2026-09-28 tracked local
+  suite now has 606 passes and one skip (including the static-grid selection
+  and GaN interpolation tests); a rebuilt sdist/wheel passed isolated
+  clean-venv installation, metadata, toy, and CLI-input smoke checks as
+  documented in `docs/VARNEB_LOCAL_REGRESSION_2026-09-28.md`. These checks
+  do not replace remote material-output audits, a pristine-checkout check,
+  or an actual tagged release.
+- Preserve the now 10-page main text and three-page supplement while checking
   journal formatting, final PDF layout, bibliography, figure legibility, and
   source-data availability. Do not regain length by dropping method derivation
   or evidence limits. Author order,
@@ -167,8 +187,24 @@ the specific artifacts being revised.
   stationary point under one energy protocol at 45.7 GPa; verify the complete
   atom-plus-cell Hessian has exactly one unstable direction, appropriate
   endpoint connections, pressure/metric conventions, and finite-difference
-  convergence. The current negative local joint direction is evidence for
-  coupling, not full TS certification. A validated **central** two-coordinate
+  convergence. The 600-eV local joint-coordinate cut was extended from 13 to
+  a raw-audited 5×5 grid of 25 measured 45.7-GPa enthalpies (12 new VASP
+  statics, Slurm `27796842`), with maximum absolute deviation from the
+  original quadratic model of 0.0864 meV/GaN at the new nodes. A further
+  9×9 completion reused these 25 and added only 56 new static calculations
+  under the **same** VASP inputs (Slurm `27796914`, completed 2026-09-28).
+  All new OUTCAR SCFs, 600-eV input hashes, 32-core VASP 6.3.2 headers,
+  input/output geometry agreement, finite energy/force/stress records, and
+  45.7-GPa `H=E+PV` normalization pass
+  `benchmarks/numerical_integrity/gan_600eV_ts_2d_9x9_refinement_20260928.json`.
+  The prior 5×5 interpolation prospectively predicts the 56 new enthalpies
+  within 0.0135 meV/GaN (maximum absolute error). The explicitly
+  **DFT-interpolated** local 81-point contour is
+  `figures/gan_600eV_local_joint_dft81_v2_20260928.*`, with every measured
+  location, model parity, source CSV and figure QA retained. This very small
+  local interpolation error does not remove the existing derivative/stress
+  mismatch or certify the center as a true TS. The current negative local joint direction
+  is evidence for coupling, not full TS certification. A validated **central** two-coordinate
   cut now exists, but endpoint seams and a full-path chart remain separate
   work. The two-sided native VASP 600-eV/45.7-GPa basin-relaxation array
   `27793292` completed and its full raw audit verifies identical first ten

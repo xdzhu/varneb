@@ -119,6 +119,7 @@ def main() -> None:
         "inert_frozen_cubic_cell_transverse_soft_increment20_not_T_to_C_barrier",
         "inert_frozen_cubic_cell_transverse_soft_centers16_not_T_to_C_barrier",
         "inert_frozen_cubic_cell_transverse_soft_edges18_not_T_to_C_barrier",
+        "inert_frozen_cubic_cell_transverse_soft_missing22_not_T_to_C_barrier",
     }
     if manifest.get("kind") not in supported:
         raise ValueError("unrecognized or non-frozen BTO point manifest")
@@ -164,6 +165,20 @@ def main() -> None:
                        or (point["grid_index_q1_q2"][0] + point["grid_index_q1_q2"][1]) % 2 != 1
                        for point in manifest["points"])):
             raise ValueError("transverse-soft edge increment lacks its 18-point provenance")
+    if manifest["kind"] == "inert_frozen_cubic_cell_transverse_soft_missing22_not_T_to_C_barrier":
+        indices = [tuple(point.get("grid_index_q1_q2", ())) for point in manifest["points"]]
+        if (manifest["n_points"] != 22
+                or manifest.get("no_dft_launched") is not True
+                or manifest.get("grid") is not None
+                or not all(manifest.get(key) for key in (
+                    "source_dense_manifest_sha256", "source_59_analysis_sha256"))
+                or manifest.get("axis_definition")
+                   != "Ti_z-minus-Ba_z_and_Ti_x-minus-Ba_x_projected_to_Gamma_unstable_triplet"
+                or len(manifest.get("axis_mode_weights", [])) != 15
+                or len(set(indices)) != 22
+                or any(len(index) != 2 or any(type(value) is not int or value < 0 or value > 8
+                                             for value in index) for index in indices)):
+            raise ValueError("transverse-soft 22-node completion lacks its provenance")
     asset_paths = {**{f"pp_{symbol}": args.pseudo_dir / name for symbol, name in PP.items()},
                    **{f"basis_{symbol}": args.basis_dir / name for symbol, name in BASIS.items()}}
     for label, path in asset_paths.items():
