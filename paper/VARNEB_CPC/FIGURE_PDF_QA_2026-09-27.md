@@ -1,5 +1,23 @@
 # CPC working-PDF and figure QA, 2026-09-27 (dated snapshot)
 
+## Current single-document QA, 2026-09-28
+
+The separate supplement and ten-page target were retired. The current
+`varneb_CPC.tex` compiles with TeX Live/`latexmk` to one 14-page PDF with
+eight main-text figures and Appendix Fig. A.1. BTO's measured 81-point frozen
+mode grid is Fig. 3; GaN's 600-eV joint-Hessian and whole-path endpoint-mode
+charts are Figs. 6 and 7. Setting their inclusion widths to 0.85 and 0.90
+times `\textwidth`, respectively, places both readable vector figures on
+page 10 instead of leaving a nearly empty float-only page. The appendix
+control is legible on page 13 and precedes references on page 14. Rendered
+pages 7, 10, and 13 were checked for panel alignment, legibility, and clipping.
+The compilation log has no missing-reference or duplicate-PDF-anchor warning;
+the only remaining overfull box is 1.9 pt in the page-1 output routine.
+This is a layout and source audit, not a submission certificate: author,
+affiliation, funding, and CPC Library metadata still require confirmation.
+
+The remainder of this file preserves earlier dated layouts for provenance.
+
 This is a **working-tree review**, not a submission certificate. The current
 TeX project builds successfully with TeX Live/`latexmk` into an isolated
 `build_review_20260927/` directory. The rendered manuscript is **12
