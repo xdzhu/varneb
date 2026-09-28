@@ -1,7 +1,8 @@
 """Reconstruct the CPC acceleration table from archived optimizer traces.
 
-These are evaluation *estimates* from the recorded update count, not an
-independent audit of every DFT launch. See the manuscript evidence audit.
+The formula here is an update-count estimate. The separate archived Slurm
+accounting test corroborates actual ABACUS process launches; neither test
+audits every SCF history. See the manuscript evidence audit.
 """
 
 from __future__ import annotations

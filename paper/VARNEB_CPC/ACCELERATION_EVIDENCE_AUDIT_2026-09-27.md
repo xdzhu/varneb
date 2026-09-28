@@ -7,7 +7,15 @@ archived BTO comparisons begin at the same serial step-9 chain; the HfO₂
 comparisons begin at the same archived initial chain. All reported savings
 are case-specific, not a universal speedup guarantee. The launch counts below
 were independently checked against Slurm job-step accounting on hf on
-2026-09-28; they are no longer only optimizer-trace estimates.
+2026-09-28; they are no longer only optimizer-trace estimates. The full
+859-row accounting response is now archived as
+`benchmarks/convergence/hf_slurm_abacus_steps_20260928.psv` (SHA-256
+`2a6f31d279e301fbee2d4b920877ef5e43f771471b5eff2678f6d82cc8c7ce3a`);
+`scripts/audit_acceleration_slurm_accounting.py` regenerates the compact
+`benchmarks/convergence/hf_slurm_abacus_launch_audit_20260928.json` offline.
+To verify without hf access, run
+`python -m scripts.audit_acceleration_slurm_accounting audit --raw benchmarks/convergence/hf_slurm_abacus_steps_20260928.psv --output tmp/accel_slurm_audit_check.json`
+from the repository root (choose a new output name for a repeated run).
 
 | Case and policy | First crossing | Force at crossing (eV/Å) | ABACUS launches to crossing | Provenance |
 | --- | ---: | ---: | ---: | --- |
@@ -25,7 +33,7 @@ were explicitly labeled **estimated** because manager manifests alone cannot
 distinguish new DFT from reused ASE results: some near-zero-duration records
 still populate `cache_misses`. Slurm accounting now supplies an independent
 external-launch count. The read-only query was `sacct -j <job ids>
---format=JobID,JobName,State,Elapsed,ExitCode -n -P` on hf. For every job
+--format=JobID,JobName,State,Start,End,ExitCode -n -P` on hf. For every job
 below, numbered steps are contiguous from zero, named `abacus`, and all are
 `COMPLETED` with exit code `0:0`:
 
@@ -45,14 +53,17 @@ per fixed endpoint plus one launch per interior image at every printed step:
 for example `2 + 7 × (28 + 1) = 205` and `2 + 7 × (5 + 1) = 44`.
 The HfO₂ staged first crossing counts **both** starts,
 `[2 + 5 × (23 + 1)] + [2 + 5 × (1 + 1)] = 134`.
-The chronological boundary is visible independently: Slurm
+The chronological boundary is visible to **one-second resolution**: Slurm
 `27675981.204` ended at 14:25:35, matching the BTO `FIRE: 28` log time;
-`27675981.205` began afterward. Likewise `27678924.216` ended before
-the HfO₂ `FIRE: 42` line (06:45:09), and `.217` began afterward.
-For the staged coarse segment, `27729066.121` ended before its `FIRE: 23`
-line (01:45:08), and `.122` began afterward. These checks establish the
-**number of successful ABACUS process launches through first crossing**,
-not a retrospective per-launch audit of every SCF residual or an independent
+`.205`–`.208` started in that same second, not demonstrably afterward.
+Likewise `27678924.216` ended before the HfO₂ `FIRE: 42` line (06:45:09),
+and `.217` began afterward. For staged coarse, `27729066.121` ended at
+its `FIRE: 23` time (01:45:08), while `.122`–`.126` started in that same
+second. Contiguous step numbering, completed-step times and the optimizer's
+per-iteration launch grouping corroborate the **number of successful ABACUS
+process launches through first crossing**; Slurm alone cannot order events
+within a tied second. The checks do not provide a retrospective per-launch
+audit of every SCF residual or an independent
 physical convergence certificate; threshold forces come from the archived
 optimizer logs.
 
@@ -125,10 +136,11 @@ misclassified as a new geometry.
 
 ## Outstanding before a submission-grade quantitative claim
 
-1. Preserve the above Slurm step accounting and source logs while remote
-   accounting retains the records. The number of ABACUS **launches** is now
-   independently verified, but their individual raw SCF histories were not
-   archived; do not call these retrospectively SCF-audited evaluations.
+1. The full Slurm step accounting and source logs are now preserved locally
+   with hashes and an offline auditor. The number of successful ABACUS
+   **launches** is corroborated, subject to second-resolution boundary ties;
+   individual raw SCF histories were not archived, so these are not
+   retrospectively SCF-audited evaluations.
 2. The first-crossing common-arc comparison is complete, but no equivalence
    tolerance was predeclared. Retain the measured discrepancies, negative
    transfers and this limitation; do not recast a post-hoc diagnostic as a
