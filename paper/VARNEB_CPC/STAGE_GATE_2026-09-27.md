@@ -154,12 +154,13 @@ the specific artifacts being revised.
   around the same backend/optimizer interface and supported feature matrix.
   Re-run relevant unit/integration checks locally; do not trigger CI merely
   by pushing ordinary commits. The post-change 2026-09-28 tracked local
-  suite now has 606 passes and one skip (including the static-grid selection
-  and GaN interpolation tests); a rebuilt sdist/wheel passed isolated
+  suite now has 609 passes and one skip (including figure-source/raw-audit
+  and manuscript-claim guards); an earlier rebuilt sdist/wheel passed isolated
   clean-venv installation, metadata, toy, and CLI-input smoke checks as
-  documented in `docs/VARNEB_LOCAL_REGRESSION_2026-09-28.md`. These checks
-  do not replace remote material-output audits, a pristine-checkout check,
-  or an actual tagged release.
+  documented in `docs/VARNEB_LOCAL_REGRESSION_2026-09-28.md`. That package
+  smoke predates the latest README/manual edits and is not an exact-current-
+  revision package test. These checks do not replace remote material-output
+  audits, a pristine-checkout check, or an actual tagged release.
 - Review the current 12-page main PDF and four-page supplement while checking
   journal formatting, float placement, bibliography, figure legibility, and
   source-data availability. Do not regain length by dropping method derivation

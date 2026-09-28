@@ -150,3 +150,21 @@ prove a pristine checkout, remote material reproducibility, or a new release.
 No CI, release tag, PyPI upload, DFT run, or cluster job was started by this
 **packaging smoke**. Subsequent separately audited BTO/GaN static-grid jobs
 are recorded in `paper/VARNEB_CPC/STAGE_GATE_2026-09-27.md`.
+
+## CPC figure-evidence and manuscript-gate regression
+
+After the 81-point BTO and GaN figures entered the paper, a read-only test
+now checks each committed figure source CSV against its SHA-256 figure-QA pin,
+the independent 22/56-new-point raw audit, and a complete unique 9×9
+coordinate grid. It also checks that the corresponding PDF is included in
+the intended main or supplementary TeX source. The older manual manuscript
+claim guard had gone stale because it matched line wrapping and an earlier
+figure location; it now normalizes prose whitespace, checks the current
+scientific limits, and runs under pytest. The focused checks give **3 passed**.
+
+The full visible local suite after these changes gave **609 passed, 1 skipped,
+209 warnings** in 74.94 s. This run did not launch any calculator, CI, or
+release workflow. The previous isolated wheel/sdist smoke above is still
+useful but predates the latest README/manual text and these repository-only
+paper tests; it is not evidence that an exact-current-revision package has
+been rebuilt or tested in a pristine checkout.
