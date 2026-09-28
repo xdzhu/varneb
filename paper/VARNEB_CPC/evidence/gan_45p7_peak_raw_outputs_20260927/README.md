@@ -45,3 +45,27 @@ or other physical setting should be changed to force agreement.
 
 The machine-readable result is `audit.json`. Endpoint static outputs, the
 other 28 images, and executable/pseudopotential freezing remain open.
+
+## 2026-09-28 unit-conversion correction and whole-interior audit
+
+The apparent energy mismatch is a conversion-constant artifact, not a
+different peak calculation. A read-only comparison of all 53 image-15 cache
+entries with the 53 cumulative `FORCE_EVAL` records finds the same call order
+and one effective Hartree-to-eV factor, `27.21138385655639`; the maximum
+residual after that conversion is `5.0e-11 eV`. The historical script used the
+local ASE factor `27.211386024367243` on the raw Hartree values, creating an
+artificial `0.00036648 eV` final-total-energy offset. The historical
+`audit.json` is preserved as the *pre-reconciliation* finding, not the current
+energy conclusion.
+
+The source-hashed 27-interior-image report at
+`benchmarks/numerical_integrity/gan_cp2k_final_chain_raw_energy_stress_20260928.json`
+locks the conversion on image 15 and independently checks the other 26 final
+images. All 27 exact-geometry caches equal the final trajectory in energy,
+forces, and stress; all 27 last raw SCFs have converged markers; raw text
+energy/stress agree to `5.64e-11 eV`/`3.50e-13 eV/Å³`. This does **not**
+certify raw atomic forces (not printed in the cumulative text) or normal
+completion of the last run (no visible final `PROGRAM ENDED` marker in any of
+the 27 images). The adapter's later output-persistence fix cannot reconstruct
+those omitted historical lines. No physical calculator setting was changed
+and no DFT was rerun for this audit.

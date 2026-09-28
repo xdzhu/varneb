@@ -585,8 +585,12 @@ for independently relaxed endpoint geometries and distinct basis and
 pseudopotential families. The defensible cross-backend claim is therefore a
 common dominant topology and barrier scale, not numerical identity. The CP2K
 chain passes recorded 29-image energy/force/stress and geometry checks
-(endpoint pressure residuals 0.416/0.249 kbar), although an independent audit
-of every raw electronic-output file remains outstanding.
+(endpoint pressure residuals 0.416/0.249 kbar). For all 27 final interior
+images, exact-geometry caches reproduce the chain energy, forces, and stress;
+the cumulative CP2K text energies and stresses also agree after one
+image-15-anchored unit conversion. The historical text omits raw atomic forces
+and each last-run completion marker, so this does not certify those two raw
+output properties.
 
 \begin{figure*}[t]
 \centering
@@ -781,7 +785,10 @@ tables are available at \url{https://github.com/xdzhu/varneb}. Full
 first-principles output directories are retained with the project calculation
 archive. Supplementary Fig.~S1 and Fig.~\ref{fig:gan-multibackend} are generated
 from committed source tables; the latter includes the audited, force-converged
-CP2K path and its source-data record. The GaN central-cut figure
+CP2K path, its source-data record, and the 27-image raw-energy/stress versus
+exact-cache reconciliation in
+\texttt{benchmarks/numerical\_integrity/gan\_cp2k\_final\_chain\_raw\_energy\_stress\_20260928.json}.
+The GaN central-cut figure
 (Fig.~\ref{fig:gan-dense-surface}) likewise has a committed 90-coordinate
 source table, per-output hashes, and interpolation-gate audit. The all-image
 endpoint-$\Gamma$ profile (Supplementary Fig.~S2) has a committed

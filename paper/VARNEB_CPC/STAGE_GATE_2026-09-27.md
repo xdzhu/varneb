@@ -11,13 +11,14 @@ This meets the length target without shrinking the plotted labels. The former
 October 3/10 dates were a contingency buffer, not a requirement for new DFT.
 The revised execution target is a science-and-figure freeze by September 29
 and a complete technical manuscript/source package by September 30. Literal
-submission still requires author-supplied metadata and a resolved or honestly
-bounded GaN original-output claim. No new material calculation is planned.
-Prioritize the CP2K original-output/per-call join in a bounded read-only audit
-through September 29; if it remains inconclusive, retain the verified
-chain/cache-level evidence but explicitly limit the five-backend claim to
-that level, rather than assert raw per-image agreement, restart the path, or
-delay the written draft indefinitely. Do not make
+submission still requires author-supplied metadata and an honestly bounded
+GaN original-output claim. No new material calculation is planned. The CP2K
+read-only join is now complete for all 27 final interior images: exact caches
+match the final chain in energy/forces/stress, and original cumulative-text
+energy/stress match after a single image-15-anchored unit conversion. Raw
+atomic forces are not printed, and the last-run completion markers are absent;
+the paper must retain both limits rather than assert full original-output
+certification, restart the path, or delay the written draft. Do not make
 HfO₂/2D extensions or a strict GaN TS certificate prerequisites for this
 focused CPC paper.
 The working tree contains unrelated and ongoing user research files: stage only

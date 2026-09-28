@@ -9,6 +9,18 @@ raw evidence lives; they do not prove the other 28 images were individually
 checked. The compact plotted values are in
 `gan_45p7_multibackend_vcneb_20260924.json`.
 
+**2026-09-28 correction:** the later read-only audit in
+`benchmarks/numerical_integrity/gan_cp2k_final_chain_raw_energy_stress_20260928.json`
+now joins all 27 CP2K final *interior* images to exact-geometry caches and
+reconciles each image's last raw-text energy and stress. The apparent peak
+energy mismatch described below came from applying ASE's Hartree-to-eV
+constant to CP2K shell values that use a slightly different conversion;
+53/53 peak call pairs agree after one consistent factor. The old source-index
+statements below document the pre-correction state. Raw atomic forces and
+final completion markers remain absent from the cumulative CP2K text, and
+other backends are not upgraded to a full 29-image raw-output audit by this
+CP2K-specific result.
+
 Let `R=/public/home/iai806/abacus/agent-runs/20260921-varneb-material`,
 `M=$R/cases/gan`, and
 `V=/public/home/iai806/abacus/agent-runs/20260918-varneb-vasp-hf/gan_b4_b1_vasp_pbe_paw_qian`.
