@@ -1,5 +1,5 @@
 % !TEX TS-program = pdflatex
-\documentclass[final,3p,times]{elsarticle}
+\documentclass[final,5p,times,twocolumn]{elsarticle}
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{amsmath}
@@ -277,9 +277,9 @@ updates. Consequently, the backend and optimizer are orthogonal choices. The
 same VCNEB object can use a conservative BlockFIRE update with VASP or ABACUS,
 for example, without a backend branch in the tangent or force code.
 
-\begin{figure}[H]
+\begin{figure*}[t]
 \centering
-\includegraphics[width=\textwidth]{figures/varneb_architecture.pdf}
+\includegraphics[width=0.9\textwidth]{figures/varneb_architecture.pdf}
 \caption{VARNEB software architecture. Endpoint identity, mapping, and path
 geometry are checked before DFT. One calculator-independent manager owns image
 order, the path force, optimizer state, convergence, and restart data. Only
@@ -289,7 +289,7 @@ fixed endpoints are cached once. The update policy is independent of the
 calculator choice. Audits and mode
 projections consume the same durable trajectory and provenance records.}
 \label{fig:architecture}
-\end{figure}
+\end{figure*}
 
 Specialized factories cover the file and process protocols of ABACUS, VASP,
 Quantum ESPRESSO, CP2K, and ABINIT; a generic factory accepts any ASE calculator
@@ -506,20 +506,9 @@ chain and then releases all degrees of freedom.  Its full-space force reached
 additional observed steps.  We archive the step-275 path only under the
 conventional loose 0.10 eV/\AA{} ordinary-NEB convention; it is excluded from
 the strict ordinary/CI barrier comparison and literature discussion.
-
-\begin{figure*}[!t]
-\centering
-\includegraphics[width=0.96\textwidth]{figures/vcneb_material_validation.pdf}
-\caption{Material paths and qualified literature comparison. (a) ABACUS/PBE
-BTO T-to-C at 5, 7, and 9 total images: monotonic 0.08713-eV/f.u. endpoint
-rise, not an activation barrier. (b) HfO$_2$ T-to-PO log-strain paths,
-linear-cell control, and staged CI refinement; the open circle is the climbing
-image and the dotted line is the external literature barrier. (c) HfO$_2$
-barriers per formula unit; the literature bar is not a statistical replicate.
-(d) Relative volume along the variable-cell paths. Source data accompany
-the figure.}
-\label{fig:materials}
-\end{figure*}
+The full BTO/HfO$_2$ path profiles, volume changes, and literature comparison
+are retained as Supplementary Fig.~S1, rather than duplicating the main-text
+BTO mode-sheet and GaN barrier figures.
 
 \subsection{Calculator-work reduction on matched chains}
 \label{sec:efficiency}
@@ -538,7 +527,7 @@ context but includes scheduler and filesystem variation.
 All listed variants reach the common force threshold and retain the same
 endpoint-defined energy scale.
 
-\begin{table}[H]
+\begin{table*}[t]
 \centering
 \footnotesize
 \caption{First-principles convergence ablations. $n$ denotes total images;
@@ -558,7 +547,7 @@ HfO$_2$ $n=7$ & global FIRE & 42 & 5242 & 217 & --- & 0.0942 \\
 HfO$_2$ $n=7$ & StagedFIRE & 24 & 3513 & 134 & 38.2 & 0.0924 \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{table*}
 
 The conservative BTO BlockFIRE setting lowers new ABACUS launches by
 78.5\% and measured threshold time by 82.1\%; the staged HfO$_2$ transfer
@@ -674,7 +663,7 @@ a strict TS; source data and numerical-integrity checks accompany the figure.}
 \end{figure*}
 
 We also resolve the \emph{entire} 29-image 600-eV path against the two
-independently calculated endpoint $\Gamma$ bases (Fig.~\ref{fig:gan-gamma-path}).
+independently calculated endpoint $\Gamma$ bases (Supplementary Fig.~S2).
 For each endpoint reference, the three optical groups with the largest
 integrated path amplitudes contain five eigenvectors and capture more than
 $99.99\%$ of the squared atomic optical displacement along this
@@ -686,24 +675,6 @@ Thus a compact description of the \emph{atomic geometry} does not eliminate
 the cell coordinate. The large capture reflects this path's symmetry and
 chosen mapping; it is neither a mode-resolved enthalpy partition nor proof
 that an unconstrained two- or three-mode PES contains the transformation.
-
-\begin{figure*}[t]
-\centering
-\includegraphics[width=0.94\textwidth]{figures/gan_gamma_path_600eV.pdf}
-\caption{All-image GaN B4-to-B1 mode and strain evolution at 45.7 GPa,
-using the original VASP/PBE 600-eV electronic contract and independent
-$1\times1\times1$ endpoint $\Gamma$ force constants. The 29 total images
-share one normalized variable-cell path coordinate. (a,b) Atomic displacement
-norms in the three leading optical $\Gamma$ subspaces of B4 and B1,
-respectively; the labels rank each endpoint basis separately and do not
-identify modes across phases. (c) Symmetric strain relative to B4.
-(d) Atomic reconstruction residual after those three groups; the ordinate
-is in $10^{-3}\sqrt{\mathrm{amu}}\,\text{\AA}$. The dotted line marks the highest
-\emph{discrete} image (15), not a certified stationary saddle. Mode amplitudes
-are geometric projections, not contributions to the barrier; the figure's
-29-row source data and input-hash audit accompany the paper.}
-\label{fig:gan-gamma-path}
-\end{figure*}
 
 An explicitly sampled two-coordinate cut follows the audited variable-cell
 arc $s$, with atomic transverse displacements $q_{\perp}$ at each image's
@@ -783,6 +754,7 @@ work will test a metric-consistent atom--strain preconditioner, adaptive image
 insertion followed by a frozen-image recertification, and strict
 release-and-refine mode-guided paths.
 
+\FloatBarrier
 \section{Conclusions}
 
 VARNEB makes established VCNEB physics usable through a documented generalized
@@ -807,12 +779,12 @@ its frozen atomic-transverse scope and numerical TS limit remain explicit.
 The source code, examples, tests, manuscript source, and compact source-data
 tables are available at \url{https://github.com/xdzhu/varneb}. Full
 first-principles output directories are retained with the project calculation
-archive. Figures~\ref{fig:materials} and \ref{fig:gan-multibackend} are generated
-from committed CSV tables; the latter includes the audited, force-converged
+archive. Supplementary Fig.~S1 and Fig.~\ref{fig:gan-multibackend} are generated
+from committed source tables; the latter includes the audited, force-converged
 CP2K path and its source-data record. The GaN central-cut figure
 (Fig.~\ref{fig:gan-dense-surface}) likewise has a committed 90-coordinate
 source table, per-output hashes, and interpolation-gate audit. The all-image
-endpoint-$\Gamma$ profile (Fig.~\ref{fig:gan-gamma-path}) has a committed
+endpoint-$\Gamma$ profile (Supplementary Fig.~S2) has a committed
 29-image mode/strain/residual table and calculation-input hash record.
 The BTO restricted-sheet figure (Fig.~\ref{fig:bto-qy0-sheet}) includes its
 measured/model source tables, prospectively frozen predictions, raw-output

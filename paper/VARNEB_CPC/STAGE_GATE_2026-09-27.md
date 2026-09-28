@@ -1,16 +1,16 @@
 # VARNEB manuscript evidence gate — 2026-09-27
 
 This is a claim gate, not a request to change a calculator parameter or to run
-CI. The 2026-09-28 compiled draft PDF has 13 pages; the intended CPC article
-is about 10. A same-day GaN-section edit removed repeated execution and audit
-prose, but the rebuilt PDF remains 13 pages with seven legible main figures.
-The 2026-09-28 BTO replacement figure also compiles, but the length gate remains
-open. The working deadline is an October 3 data freeze and October 10
+CI. The 2026-09-28 two-column `elsarticle` draft now compiles to 10 main-text
+pages plus a separate two-page supplement. The BTO restricted-sheet figure,
+GaN five-backend path comparison, GaN local atom--strain diagnostic, and
+validated central GaN two-coordinate cut remain in the main text. The
+BTO/HfO2 material-control figure and all-image GaN endpoint-mode profile are
+Supplementary Figs. S1 and S2; their original source data remain linked.
+This meets the length target without shrinking the plotted labels. The working
+deadline is an October 3 data freeze and October 10
 submission-ready manuscript package; do not make HfO₂/2D extensions or a strict
 GaN TS certificate prerequisites for this focused CPC paper.
-The length gate is still open. Further cuts must preserve mode/PES claim
-boundaries and figure readability; a secondary diagnostic belongs in
-supplementary material before shrinking labels or dropping caveats.
 The working tree contains unrelated and ongoing user research files: stage only
 the specific artifacts being revised.
 
@@ -112,9 +112,10 @@ the specific artifacts being revised.
   549 passes and one skip, documented in
   `docs/VARNEB_LOCAL_REGRESSION_2026-09-28.md`; it does not replace remote
   material-output audits or a clean release-build check.
-- Tighten the 13-page draft toward about 10 pages without deleting method
-  derivation or evidence limits; check PDF layout, bibliography, figure
-  legibility, source-data availability, and journal formatting. Author order,
+- Preserve the now 10-page main text and two-page supplement while checking
+  journal formatting, final PDF layout, bibliography, figure legibility, and
+  source-data availability. Do not regain length by dropping method derivation
+  or evidence limits. Author order,
   affiliations, CRediT roles, funding and the competing-interest declaration
   still contain explicit draft placeholders and require author confirmation.
 

@@ -12,11 +12,14 @@ From this directory, run:
 
 ```text
 latexmk -pdf -interaction=nonstopmode -halt-on-error varneb_CPC.tex
+latexmk -pdf -interaction=nonstopmode -halt-on-error varneb_CPC_supplement.tex
 ```
 
-The main output is `varneb_CPC.pdf`. The package uses `elsarticle-num`, which
-is supplied by standard Elsevier/TeX Live installations. `figures/` contains
-the PDF source used by the manuscript and its CSV source data.
+The outputs are `varneb_CPC.pdf` and `varneb_CPC_supplement.pdf`. The main
+source uses the two-column `elsarticle` 5p layout; the supplement is a separate
+two-page article. The package uses `elsarticle-num`, supplied by standard
+Elsevier/TeX Live installations. `figures/` contains the PDF source used by
+the manuscript and its CSV source data.
 
 ## Evidence policy
 
@@ -27,14 +30,17 @@ The manuscript distinguishes three evidence levels:
 2. ABACUS/PBE material calculations establish the BTO and HfO2 examples.
    BTO's cubic Gamma projection uses the five-atom `1x1x1` phonon cell;
    its 59-point contour is a *frozen-cell* slice, not a relaxed conditional
-   surface. The main text now shows this exploratory cut beside the direct
-   seven-image energy path and off-plane residual. The four-point conditional
-   analysis and local curvature checks remain staged evidence. Its five
+   surface. The main text now shows the separately audited `Q_y=0`
+   symmetry-restricted variable-cell sheet, with nine measured training nodes
+   and two prospective DFT holdouts below the predeclared 2-meV/BTO gate. It
+   does not claim an unrestricted conditional PES or a finite-temperature
+   free-energy surface. The exploratory frozen cut and four-point conditional
+   analysis remain staged evidence. The five
    hash-matched input JSON files are under `evidence/`; the plotting command
    and claim limits are in `FIGURE_LOGIC_AND_STYLE.md`.
    A separately sourced 79-point path-adapted frozen plane is retained as a
    supplementary candidate; it combines an unstable and a stable $\Gamma$
-   triplet and must not be substituted for the main two-soft-mode figure.
+   triplet and must not be substituted for the main symmetry-restricted sheet.
    Regenerate it from the repository root with
    `python scripts/plot_bto_paper_path_adapted_79.py`; the committed QA
    distinguishes 79 DFT nodes from interpolated pixels and visual guides.
@@ -55,13 +61,14 @@ the ZStar reference package. The working target is approximately ten typeset
 pages including the Program Summary, figures, tables, and references. Add
 material only when it closes a reproducibility, method, or verification gap;
 do not pad the manuscript with duplicate workflow descriptions or unsupported
-benchmark claims. The 2026-09-28 compiled draft is **13 pages**, so length,
-figure-by-figure evidence, and author metadata remain submission gates. The
-main evidence set contains the architecture figure, the BTO frozen-mode cut
-and path projection, the ABACUS BTO/HfO2 validation figure, the GaN multi-backend
-comparison, the same-600-eV local GaN atom--strain diagnostic, the all-image
-GaN endpoint-Gamma mode/strain projection, and the validated **central**
-GaN atomic-transverse enthalpy cut. The latter is not a full-path or
+benchmark claims. The 2026-09-28 draft compiles to **10 main-text pages plus
+two supplement pages**. Author metadata and journal-specific final checks
+remain submission gates. The main evidence set contains the architecture
+figure, BTO restricted-sheet/path projection, GaN five-backend comparison,
+the same-600-eV local GaN atom--strain diagnostic, and the validated **central**
+GaN atomic-transverse enthalpy cut. The BTO/HfO2 material controls and the
+all-image GaN endpoint-Gamma mode/strain projection are Supplementary Figs.
+S1 and S2. The central GaN cut is not a full-path or
 conditionally relaxed two-mode landscape, and the local candidate is not a
 certified variable-cell transition state.
 Per-path literature figures remain archived under
