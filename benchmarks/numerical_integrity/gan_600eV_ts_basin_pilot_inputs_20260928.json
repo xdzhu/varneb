@@ -1,0 +1,65 @@
+{
+  "status": "inputs_finalized_no_DFT",
+  "purpose": "GaN_45p7_600eV_signed_native_VASP_basin_10step_pilot",
+  "claim_limit": "Ten-step two-sided descent pilot; not a TS or basin certificate",
+  "pressure_GPa": 45.7,
+  "PSTRESS_kbar": 457.0,
+  "encut_eV": 600,
+  "ionic_settings": {
+    "IBRION": 2,
+    "ISIF": 3,
+    "NSW": 10,
+    "EDIFFG_eV_per_A": -0.02,
+    "POTIM": 0.25
+  },
+  "n_cases": 2,
+  "cases": [
+    {
+      "name": "grid_um_vz",
+      "q_u_A": -0.02,
+      "source_static_delta_enthalpy_meV_per_GaN": -0.324827128983074,
+      "source_OUTCAR_sha256": "152df01ed70fcbabfa2effe6f0907ee563c6a3e98cd9e2c5b3989c1262c4c80e",
+      "input_sha256": {
+        "POSCAR": "995969fcb18bcaa7be9f3ea85f9a99f4979ad6b00bacc0e1cb2f9fbfb86291d9",
+        "INCAR": "b80ec58f028c62672e2973e2c8f397c3e06a55260a72befe4e9076f2dcf6dc1f",
+        "KPOINTS": "b5215f3e7608c27f49d45e8129d3edca2cfaa3ba88b8c389d4b52604715712ee",
+        "POTCAR": "f94781ce6cf9b9454c093353320c5e80a2a0aceea6fb8353b33b01ac37b95168"
+      },
+      "geometry_preflight": {
+        "volume_A3": 36.58387052446865,
+        "minimum_distance_A": 1.8793707346299595,
+        "basal_projection_A": 3.075706192374989e-05,
+        "empirical_near_symmetry_warning": false
+      }
+    },
+    {
+      "name": "grid_up_vz",
+      "q_u_A": 0.02,
+      "source_static_delta_enthalpy_meV_per_GaN": -0.49078556730197676,
+      "source_OUTCAR_sha256": "8979abe791b1a78900d5b40ae209e40750be2cf12ec49ef6e85e70d81d202ad0",
+      "input_sha256": {
+        "POSCAR": "7dacdd1bc34dd2e0bf83289deb5e6c593ef7eb8f1ef3cb35adec6939245202ee",
+        "INCAR": "b80ec58f028c62672e2973e2c8f397c3e06a55260a72befe4e9076f2dcf6dc1f",
+        "KPOINTS": "b5215f3e7608c27f49d45e8129d3edca2cfaa3ba88b8c389d4b52604715712ee",
+        "POTCAR": "f94781ce6cf9b9454c093353320c5e80a2a0aceea6fb8353b33b01ac37b95168"
+      },
+      "geometry_preflight": {
+        "volume_A3": 36.73949340121794,
+        "minimum_distance_A": 1.8772106616395623,
+        "basal_projection_A": 4.201453179372343e-05,
+        "empirical_near_symmetry_warning": false
+      }
+    }
+  ],
+  "source_sha256": {
+    "static_grid_manifest": "05f329fd548c1206251884e5c49b647af49c76bdf3fd9ca709e1beb54c57e139",
+    "static_grid_audit": "a57deb1eac4ba1c41147a29c94a5057c01296fbcf038e1d17f505a9975b729ff",
+    "preparer": "f4ab44f682b61e3dc04743869ab5ac2de9e90a6c2f7f540cc698a3c7d7d33d08"
+  },
+  "limitations": [
+    "A ten-step cap is not a convergence or phase-identity criterion.",
+    "VASP PSTRESS adds P*V during relaxation; do not add P*V again to its printed enthalpy.",
+    "Native VASP cell relaxation may expose a Bravais classifier failure at a later step.",
+    "The same-600-eV strain energy/stress derivative discrepancy remains unresolved."
+  ]
+}

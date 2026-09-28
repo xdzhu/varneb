@@ -115,6 +115,32 @@ remain labeled separately. An optional conditional relaxation at fixed `(s,q_per
 is a later, explicitly labeled calculation: frozen, relaxed-orthogonal, and
 strict-subspace barriers remain different quantities.
 
+### Same-600-eV two-sided basin-link pilot (submitted 2026-09-28)
+
+The audited local cut contains two static seeds at `q_u=−0.02/+0.02 Å`,
+`q_v=0`, lower than the near-stationary center by `0.324827/0.490786 meV/GaN`.
+Their raw OUTCAR and original VASP 600-eV input hashes are checked
+before any continuation. A bounded **native VASP** `ISIF=3`, `IBRION=2`,
+`NSW=10` pilot has been staged for these two seeds only, with the *same*
+600-eV/PBE/Ga_d+N/Γ8×8×6/EDIFF/ISYM/SYMPREC contract and
+`PSTRESS=457 kbar` (45.7 GPa). The job is Slurm array `27793196` on
+`hfacnormal01`, 32 MPI tasks per branch, at most two simultaneous. The
+remote work root is
+`/public/home/iai806/abacus/agent-runs/gan_600eV_ts_basin_pilot_20260928`;
+its submitted manifest SHA-256 is
+`7fc24267fbed98edcef5c28de757907745adaf651e99f8481e5b011276d53d63`.
+A portable, newline-normalized content copy is
+`benchmarks/numerical_integrity/gan_600eV_ts_basin_pilot_inputs_20260928.json`.
+The array was **running when recorded**, not yet audited. No phase/basin link
+or strict TS claim follows from a ten-step cap or the source downhill statics.
+On completion, audit the raw per-step enthalpy/force/stress and whether
+`CONTCAR` is an actually evaluated geometry before deciding whether either
+branch warrants continuation. VASP's [PSTRESS](https://vasp.at/wiki/PSTRESS)
+and [ISIF](https://vasp.at/wiki/ISIF) specifications establish the pressure
+unit and allowed degrees of freedom; do not add a second `PV` to VASP's
+printed relaxation enthalpy. This diagnostic does not remove the existing
+600-eV energy–stress derivative discrepancy.
+
 ### Measured narrow-tube outcome (2026-09-28)
 
 The first nine-anchor 600-eV frozen tube passed all 18 raw static audits but
