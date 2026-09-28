@@ -14,8 +14,10 @@ varneb optimizers --json > optimizer-capabilities.json
 varneb doctor
 ```
 
-The base package needs only ASE and NumPy; `plot` supplies Matplotlib for
-figure-producing examples, and `mode` supplies SciPy for mode analysis. Add
+VARNEB declares ASE and NumPy as its direct base dependencies. ASE may itself
+install SciPy, Matplotlib, and other transitive dependencies; `plot` and
+`mode` explicitly require the minimum Matplotlib and SciPy versions used by
+the corresponding VARNEB workflows. Add
 the `dev` extra only when running the test suite. The README's analytic toy
 run is the quickest executable check before configuring any DFT backend.
 
