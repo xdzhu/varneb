@@ -177,3 +177,40 @@ coordinates**. Show every actual DFT node. If branch continuity or holdout
 tests fail, keep a measured-point/triangulated stage figure rather than a
 smooth conditional-PES contour. The actual seven-image variable-cell T→C
 energy and strain stay in separate panels and are never read from this sheet.
+
+## Pre-registered interpolation gate: failed, with a bounded model response
+
+All three holdout calculations have now finished on `hfacnormal01`; the first
+needed a cache-preserving stress-only continuation rather than a repeated SCF.
+The independent raw-output auditor covered **6, 13, and 18** DFT evaluations,
+respectively. The frozen-plan comparison is reproducible with
+`scripts/audit_bto_qy0_preregistered_holdouts.py` and recorded in
+`benchmarks/numerical_integrity/bto_qy0_three_holdout_gate_20260928.json`.
+The first two energy errors exceed the predeclared `2 meV/BTO` figure gate;
+all three open-subspace gradients, raw stresses, and full atom-plus-strain
+coordinate errors pass their respective gates:
+
+| `(Q_z,Q_x)` (`sqrt(amu) Å`) | Measured `E−E_C` (meV/BTO) | Linear predicted (meV/BTO) | Measured−predicted (meV/BTO) | Structure error (`sqrt(amu) Å`) |
+| --- | ---: | ---: | ---: | ---: |
+| `(0.15,0.15)` | −7.199 | −13.458 | +6.259 | 0.0733 |
+| `(0.45,0.15)` | −31.295 | −34.956 | +3.661 | 0.0650 |
+| `(1.05,0.20)` | −86.142 | −84.372 | −1.770 | 0.0607 |
+
+This is an interpolation-model failure, not a failed electronic calculation
+or a reason to alter `ecutwfc`, orbital radius, k sampling, or the physical
+stress gate. In particular, a bilinear function of *amplitudes* misses the
+quadratic energy behavior close to the cubic soft-mode origin.
+
+We therefore froze an exploratory **even, axis-exchange-symmetric sixth-order
+energy polynomial**, with its intercept fixed to `E_C`, fitted only to the
+**nine previously measured grid nodes**. The script and coefficient/prediction
+artifact are `scripts/plan_bto_qy0_even_mode_validation.py` and
+`benchmarks/numerical_integrity/bto_qy0_even_mode_two_holdout_plan_20260928.json`.
+Its training RMS is `0.213 meV/BTO`; errors at the four already-known interior
+points are `0.455`, `−0.225`, `−0.133`, and `−1.040 meV/BTO`. **Those four are
+retrospective checks, not independent validation of a model chosen after
+seeing three of them.** Two genuinely new off-grid predictions are frozen at
+`(0.45,0.25): −36.297 meV/BTO` and `(1.05,0.25): −86.706 meV/BTO`, with the
+same `2 meV/BTO` energy and `0.10 sqrt(amu) Å` full-structure gates. Even if
+they pass, representative restricted-subspace curvature and branch continuity
+must still be checked before calling the chart a conditional-minimum sheet.
