@@ -47,7 +47,7 @@ def test_optimizer_registry_is_independent_from_backend_registry() -> None:
     assert get_optimizer_spec("split-fire").name == "SplitFIRE"
     rows = optimizer_capability_matrix()
     assert rows
-    assert {row["backend_independent"] for row in rows} == {"true"}
+    assert {row["backend_independent"] for row in rows} == {True}
 
 
 def test_run_config_accepts_cross_backend_optimizer_combinations(tmp_path) -> None:
@@ -404,6 +404,11 @@ def test_cli_backend_and_init_commands(tmp_path) -> None:
         cwd=ROOT, capture_output=True, text=True, check=True,
     )
     assert {row["name"] for row in json.loads(result.stdout)} >= {"lammps", "cp2k"}
+    result = subprocess.run(
+        [sys.executable, "-m", "vcneb", "optimizers", "--json"],
+        cwd=ROOT, capture_output=True, text=True, check=True,
+    )
+    assert all(row["backend_independent"] is True for row in json.loads(result.stdout))
     target = tmp_path / "case" / "varneb.json"
     result = subprocess.run(
         [sys.executable, "-m", "vcneb", "init", str(target)],

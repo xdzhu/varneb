@@ -79,7 +79,7 @@ def _print_optimizers(as_json: bool) -> int:
     for row in rows:
         print(
             f"{row['name']:<18}  {row['family']:<11}  "
-            f"{row['backend_independent']:<19}  {row['notes']}"
+            f"{str(row['backend_independent']).lower():<19}  {row['notes']}"
         )
     return 0
 

@@ -49,10 +49,10 @@ def get_optimizer_spec(name: str) -> OptimizerSpec:
     raise ValueError(f"unknown VARNEB optimizer {name!r}; choose one of: {choices}")
 
 
-def optimizer_capability_matrix() -> list[dict[str, str]]:
+def optimizer_capability_matrix() -> list[dict[str, str | bool]]:
     """Return JSON-friendly strategy metadata independent of backend choice."""
 
-    return [{"name": spec.name, "family": spec.family, "notes": spec.notes, "backend_independent": "true"}
+    return [{"name": spec.name, "family": spec.family, "notes": spec.notes, "backend_independent": True}
             for spec in _OPTIMIZERS]
 
 
