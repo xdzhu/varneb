@@ -57,6 +57,19 @@ Each result is a candidate only until the original SCF/forces/stresses,
 fixed-\(Q_y\) coordinate, gradient, stress, branch identity and input hashes
 have been audited. A Slurm `COMPLETED` state alone does not pass the gate.
 
+The first array element `(0,0.3)` finished seven valid ABACUS evaluations and
+reached open-subspace gradient `0.0023853`, but maximum raw stress was
+`2.3176 kbar`, above the predeclared `2 kbar` gate. Its Slurm state is
+`FAILED 1:0` because the runner deliberately rejected this **stress-only**
+failure; it is not an SCF or geometry crash. The seven raw points passed the
+independent audit at
+`/public/home/iai806/abacus/agent-runs/20260928-varneb-bto-qy0-pilot/audit-q000_q030-27794649_0-v2.json`.
+Warm continuation `27794672` lowers only the optimizer-coordinate gradient
+target from `0.003` to `0.001` while keeping the same Hamiltonian, Q
+constraints, `2 kbar` physical stress gate and existing completed cache.
+This is a targeted response to the measured residual, not a retrospective
+loosening of the stress threshold; its result remains pending audit.
+
 Before plotting an interpolated restricted surface, assemble a measured
 path-covering grid from these points plus **audited, nonduplicated** existing
 stationary branches; fill any missing T-side boundary point, measure interior

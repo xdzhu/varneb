@@ -316,9 +316,13 @@ def main() -> None:
         for seed in preflight["branch_starts"]:
             expected = np.asarray(seed["coordinates_u_A_eta_voigt"], dtype=float)
             found = [directory for directory in args.workdir.glob("eval-*-*")
-                     if (directory / "result.json").is_file() and np.array_equal(
-                         np.asarray(json.loads((directory / "result.json").read_text(encoding="utf-8"))["coordinates"],
-                                    dtype=float), expected)]
+                     if (directory / "result.json").is_file() and (
+                         np.allclose(
+                             np.asarray(json.loads((directory / "result.json").read_text(encoding="utf-8"))["coordinates"],
+                                        dtype=float), expected, rtol=0.0, atol=1e-10)
+                         if lock_soft_y else np.array_equal(
+                             np.asarray(json.loads((directory / "result.json").read_text(encoding="utf-8"))["coordinates"],
+                                        dtype=float), expected))]
             if len(found) != 1:
                 raise ValueError(f"a reviewed soft/soft branch start is absent: {seed['label']}")
     matches = [record for record in records if (
@@ -418,7 +422,9 @@ def main() -> None:
                  if lock_soft_y else
                  "bto_transverse_soft_conditional_single_point_audit_not_PES_or_barrier"
                  if physical_soft_plane else "bto_q1q2_conditional_single_point_audit_not_PES_or_barrier"),
-        "status": ("verified_gradient_stationary_branch_candidate_local_curvature_unchecked"
+        "status": ("verified_gradient_stationary_stress_target_failed_curvature_unchecked"
+                   if summary.get("stress_target_passed") is False else
+                   "verified_gradient_stationary_branch_candidate_local_curvature_unchecked"
                    if branch_basis is not None else
                    "verified_gradient_stationary_candidate_curvature_and_branches_unchecked"),
         "q1_q2_sqrt_amu_A": q.tolist(),
