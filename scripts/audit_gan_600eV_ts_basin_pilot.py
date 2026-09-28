@@ -17,12 +17,15 @@ from ase.io import read
 from ase.units import GPa
 
 from scripts.audit_gan_ts_basin_pilot import energy_triples, ga_n_coordination
+from scripts.compare_gan_basin_endpoint import relative_displacement_metrics
 from scripts.prepare_gan_600eV_ts_basin_pilot import CASES, sha256
 from scripts.prepare_gan_600eV_ts_hessian import same_geometry
 from scripts.prepare_gan_600eV_ts_newton_canary import PRODUCTION_INPUT_SHA256
 
 
 EXPECTED_CHAIN_SHA256 = "952298c1830b293690b8fc4722649147cba236e50e149d07dae45ff75fc2bb7e"
+ARCHIVED_INPUTS = (Path(__file__).resolve().parents[1]
+                   / "benchmarks/numerical_integrity/gan_600eV_ts_basin_pilot_inputs_20260928.json")
 
 
 def audit(work: Path, chain_path: Path, output: Path) -> dict:
@@ -30,7 +33,9 @@ def audit(work: Path, chain_path: Path, output: Path) -> dict:
         raise FileExistsError(output)
     manifest_path = work / "manifest.json"
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    if (manifest.get("status") != "inputs_finalized_no_DFT"
+    archived_manifest = json.loads(ARCHIVED_INPUTS.read_text(encoding="utf-8"))
+    if (manifest != archived_manifest
+            or manifest.get("status") != "inputs_finalized_no_DFT"
             or manifest.get("purpose") != "GaN_45p7_600eV_signed_native_VASP_basin_10step_pilot"
             or manifest.get("encut_eV") != 600
             or manifest.get("pressure_GPa") != 45.7
@@ -66,10 +71,11 @@ def audit(work: Path, chain_path: Path, output: Path) -> dict:
         outcar = directory / "OUTCAR"
         raw = outcar.read_text(encoding="utf-8", errors="replace")
         if ("General timing and accounting informations" not in raw
-                or "aborting loop because EDIFF is reached" not in raw
                 or "PSTRESS=  457.0" not in raw):
             raise ValueError(f"VASP pilot raw output is incomplete or pressure differs: {outcar}")
         triples = energy_triples(raw)
+        if raw.count("aborting loop because EDIFF is reached") != len(triples):
+            raise ValueError(f"not every ionic step reached the electronic SCF criterion: {outcar}")
         final = read(outcar)
         if (len(final) != 4
                 or final.get_chemical_symbols() != ["Ga", "Ga", "N", "N"]
@@ -79,6 +85,7 @@ def audit(work: Path, chain_path: Path, output: Path) -> dict:
             raise ValueError(f"VASP pilot final E/PV, forces, stress or geometry differ: {outcar}")
         contcar = directory / "CONTCAR"
         next_geometry = read(contcar, format="vasp")
+        seed = read(directory / "POSCAR", format="vasp")
         results.append({
             "case": record["name"],
             "q_u_A": record["q_u_A"],
@@ -95,6 +102,13 @@ def audit(work: Path, chain_path: Path, output: Path) -> dict:
             "contcar_is_last_evaluated_geometry": same_geometry(final, next_geometry),
             "last_evaluated_volume_difference_from_B4_A3": float(final.get_volume() - reference[0].get_volume()),
             "last_evaluated_volume_difference_from_B1_A3": float(final.get_volume() - reference[-1].get_volume()),
+            "mapped_endpoint_distances_A": {
+                phase: {
+                    "seed": relative_displacement_metrics(seed, endpoint),
+                    "last_evaluated": relative_displacement_metrics(final, endpoint),
+                }
+                for phase, endpoint in (("B4", reference[0]), ("B1", reference[-1]))
+            },
             "input_sha256": hashes,
             "outcar_sha256": sha256(outcar),
             "contcar_sha256": sha256(contcar),
@@ -109,6 +123,7 @@ def audit(work: Path, chain_path: Path, output: Path) -> dict:
         "cases": results,
         "source_sha256": {
             "manifest": sha256(manifest_path),
+            "archived_input_manifest_normalized_copy": sha256(ARCHIVED_INPUTS),
             "600eV_final_chain": sha256(chain_path),
             "auditor": sha256(Path(__file__)),
         },

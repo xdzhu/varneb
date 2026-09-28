@@ -115,7 +115,7 @@ remain labeled separately. An optional conditional relaxation at fixed `(s,q_per
 is a later, explicitly labeled calculation: frozen, relaxed-orthogonal, and
 strict-subspace barriers remain different quantities.
 
-### Same-600-eV two-sided basin-link pilot (submitted 2026-09-28)
+### Same-600-eV two-sided basin-link pilot (raw-audited 2026-09-28)
 
 The audited local cut contains two static seeds at `q_u=−0.02/+0.02 Å`,
 `q_v=0`, lower than the near-stationary center by `0.324827/0.490786 meV/GaN`.
@@ -131,11 +131,20 @@ its submitted manifest SHA-256 is
 `7fc24267fbed98edcef5c28de757907745adaf651e99f8481e5b011276d53d63`.
 A portable, newline-normalized content copy is
 `benchmarks/numerical_integrity/gan_600eV_ts_basin_pilot_inputs_20260928.json`.
-The array was **running when recorded**, not yet audited. No phase/basin link
-or strict TS claim follows from a ten-step cap or the source downhill statics.
-On completion, audit the raw per-step enthalpy/force/stress and whether
-`CONTCAR` is an actually evaluated geometry before deciding whether either
-branch warrants continuation. VASP's [PSTRESS](https://vasp.at/wiki/PSTRESS)
+Both array elements completed with exit code zero (12:33 and 10:37 elapsed).
+The raw-output audit is
+`benchmarks/numerical_integrity/gan_600eV_ts_basin_pilot_audit_20260928.json`:
+all ten ionic evaluations in each branch reached the electronic SCF criterion,
+the two printed `PSTRESS` values are 457.0 kbar, and their VASP `enthalpy`
+records contain the 45.7-GPa `PV` term. From the first to last evaluated step,
+the two cell enthalpies fell by 25.56 and 6.08 meV, respectively (12.78 and
+3.04 meV/GaN). The final 2.4-Å Ga--N coordination screens are 5/5 for the
+negative seed and 4/4 for the positive seed; the corresponding maximum
+atomic forces are still 2.11 and 0.57 eV/Å. Both `CONTCAR` geometries equal
+the final evaluated geometries. These are **not** converged endpoints or
+certified two-basin links, and a ten-step cap does not establish a strict TS.
+Follow-up must start from the last evaluated geometry and keep the same
+electronic and 45.7-GPa pressure contracts. VASP's [PSTRESS](https://vasp.at/wiki/PSTRESS)
 and [ISIF](https://vasp.at/wiki/ISIF) specifications establish the pressure
 unit and allowed degrees of freedom; do not add a second `PV` to VASP's
 printed relaxation enthalpy. This diagnostic does not remove the existing
