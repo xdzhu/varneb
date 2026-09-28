@@ -398,62 +398,52 @@ CP2K 2024.1 & PBE & GTH-PBE/DZVP-MOLOPT-SR & 800/80 Ry & $4\times4\times3$ & GaN
 
 \subsection{\texorpdfstring{BaTiO$_3$}{BaTiO3} tetragonal to cubic path}
 
-BaTiO$_3$ is a compact direct perovskite case. ABACUS/PBE calculations use
-100 Ry and full 10-au DZP Ba/Ti/O orbitals, a $4\times4\times4$ k mesh, and
-independently relaxed fixed endpoints. Ordinary 5-, 7-, and 9-total-image paths
-meet the default $0.10$ eV/\AA{} maximum-generalized-force criterion and are
-all monotonic.
-Their reaction enthalpy is $0.0871289$ eV per formula unit; there is no interior
-barrier, so CI is correctly withheld. A tighter $6\times6\times6$ and $10^{-9}$
-SCF comparison preserves the path topology but shifts the absolute endpoint
-difference by about 15 meV. An independent CP2K/PBE calculation with nine
-total images also converges without an interior maximum
-($f_{\max}=0.08183$ eV/\AA{}); its endpoint rise is 0.06080 eV/f.u. The CP2K
-run is a topology and calculator-contract check, not a demand that the standard
-BTO workflow use nine images: seven total images (five interior) remains the
-compact production choice.
+For BaTiO$_3$, ABACUS/PBE uses 100 Ry, full 10-au DZP Ba/Ti/O orbitals,
+a $4\times4\times4$ electronic k mesh, and independently relaxed fixed
+endpoints. The 5-, 7-, and 9-total-image paths all meet the default
+$0.10$ eV/\AA{} criterion and rise monotonically by $0.0871289$ eV/BTO;
+there is no interior barrier, so CI is withheld. Seven total images (five
+interior) remain the compact production choice. A diagnostic $6\times6\times6$
+k mesh and $10^{-9}$ SCF threshold preserve the topology but shift the
+endpoint difference by about 15 meV. Independent CP2K/PBE with nine images
+is likewise monotonic ($f_{\max}=0.08183$ eV/\AA{}, rise 0.06080 eV/BTO).
+The ABACUS rise is comparable in scale to a restrained PBEsol NEB report
+(2.01 versus 2.1 kcal mol$^{-1}$) \cite{BTOReaxFF2019}, not a matched
+algorithm benchmark.
 
-The result corresponds to $2.01$ kcal mol$^{-1}$ and is close in energy scale
-to a reported $2.1$ kcal mol$^{-1}$ restrained PBEsol NEB result
-\cite{BTOReaxFF2019}. This is not a strict algorithm benchmark: the literature
-calculation uses different exchange-correlation treatment and local restraints,
-whereas the present result is an unconstrained variable-cell path.
+At the cubic endpoint, six $\pm0.01$-\AA{} displacements in a
+$1\times1\times1$ \emph{phonon supercell} yield the direct Phonopy $\Gamma$
+basis \cite{Togo2015}; the electronic k mesh remains $4\times4\times4$.
+The ABACUS--Phonopy force-constant unit, $\mathrm{eV}/(\text{\AA}\,\mathrm{au})$,
+is recorded in provenance. No finite-$q$ dispersion or non-analytical LO--TO
+correction is inferred. After the recorded O permutation, translation gauge,
+and removal of rigid translation, the $-298.956$-cm$^{-1}$ unstable triplet
+captures a maximum path-coordinate norm of $1.2043\sqrt{\mathrm{amu}}$\AA{}
+and a segment-tangent overlap of 0.9974. The $175.809$-cm$^{-1}$ stable
+triplet also participates (maximum $0.2863\sqrt{\mathrm{amu}}$\AA{}); the
+complete-basis reconstruction residual stays below
+$5.9\times10^{-16}\sqrt{\mathrm{amu}}$\AA{}. These are subspace projections,
+not single-eigenvector identities or cell-strain amplitudes.
 
-To separate a path-coordinate description from a phonon claim, we also evaluated
-the cubic endpoint with a $1\times1\times1$ finite-displacement calculation
-($\delta=0.01$ \AA{}, six signed displacements) and assembled the $\Gamma$-point
-force constants and direct $\Gamma$ eigenvectors with Phonopy \cite{Togo2015}.
-The $1\times1\times1$ factor is the \emph{phonon supercell}, sufficient for
-the present $q=0$ mode projection; the independent electronic Brillouin-zone
-sampling remains $4\times4\times4$. We do not infer a phonon dispersion from
-these data, and no non-analytical LO--TO correction is applied.
-The ABACUS--Phonopy force-constant convention,
-$\mathrm{eV}/(\text{\AA}\,\mathrm{au})$, is retained explicitly in the provenance
-of the direct Phonopy $q=0$ calculation. The spectrum contains a triply degenerate unstable
-subspace at $-298.956$ cm$^{-1}$. After applying the
-recorded O-atom permutation and endpoint translation gauge, then removing each
-image's mass-weighted rigid translation, the seven-image T-to-C atomic path has
-a maximum soft-subspace coordinate norm of $1.2043\sqrt{\mathrm{amu}}$\AA{} and
-a maximum segment-tangent overlap of 0.9974 with that subspace. The complete-mode
-reconstruction residual is below $5.9\times10^{-16}\sqrt{\mathrm{amu}}$\AA{}.
-The $175.809$ cm$^{-1}$ stable triplet also participates (maximum coordinate norm
-$0.2863\sqrt{\mathrm{amu}}$\AA{}), so this is a subspace-resolved mechanism
-analysis rather than an assertion that one arbitrarily phased eigenvector alone
-defines the path. Homogeneous cell strain remains a separate VC-NEB coordinate,
-not a phonon amplitude.
+We sampled 59 static ABACUS points in two cubic-endpoint unstable $\Gamma$
+directions, freezing the cubic cell and all omitted atomic coordinates.
+Their Clough--Tocher display contour has a maximum 5.14-meV/BTO interior
+leave-one-out error; earlier independent center/edge holdouts of coarser
+interpolants reached 32.57/14.83 meV/BTO. The variable-cell path is only
+projected onto this frozen cut: off-plane motion and strain prevent reading
+its actual enthalpy or barrier from the contour.
 
-We additionally sampled 59 static ABACUS energies on a plane spanned by two
-directions within the cubic-endpoint unstable $\Gamma$ subspace, holding the
-cubic cell and all omitted atomic coordinates fixed. This is a frozen-mode
-energy cut, not a conditionally relaxed surface. A Clough--Tocher contour is
-used for display between the computed points: on the final 59-point set its
-35 interior leave-one-out errors reach 5.14 meV/BTO. Earlier independent
-center and adaptive-edge holdouts of the coarser interpolants reached 32.57
-and 14.83 meV/BTO, respectively, motivating the additional samples and
-precluding quantitative claims about unsampled extrema. Projecting the real
-seven-image variable-cell path onto the plane gives a useful coordinate
-shadow, but its nonzero off-plane displacement and evolving cell mean that
-neither its energy nor a T-to-C barrier can be read from the frozen contour.
+Separately, we released the omitted atomic and strain coordinates at four
+fixed $(Q_z,Q_x)$ points and one preselected center. All five have a higher
+$Q_y=0$ stationary branch and lower, nearly degenerate $\pm Q_y$ branches.
+After measured mirror-branch alignment, the four-corner bilinear prediction
+misses the center by 0.476 meV/BTO in energy and
+$0.1254\sqrt{\mathrm{amu}}$\AA{} in the mass--strain metric, mostly in strain.
+All five pass the stated orthogonal-gradient/1-kbar stress screens and have
+positive two-step 16D orthogonal curvature. Yet the weak positive curvature lacks a
+rigorous numerical error bound, and one cell plus one holdout does not certify
+a continuous conditional surface. These candidates are distinct from the
+frozen Fig.~\ref{fig:bto-frozen-mode-cut} and from a VC-NEB barrier.
 
 \begin{figure*}[t]
 \centering

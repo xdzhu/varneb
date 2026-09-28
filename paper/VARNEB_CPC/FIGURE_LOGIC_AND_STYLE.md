@@ -19,6 +19,13 @@ transfers; these totals are not an electronic-launch-by-launch audit.
 | 6, GaN all-image modes | The full 29-image B4-to-B1 path has compact endpoint-$\Gamma$ atomic projections but substantial independent cell strain. | B4 and B1 optical bases are separate and must not be relabelled as common modes. The leading groups reconstruct this particular mapped atomic path to within 0.00043/0.00139 $\sqrt{\mathrm{amu}}$ Å, while B4-referenced normal strains reach 34.0%, 24.3%, and 17.8%. These are geometric projections, not enthalpy contributions or a globally complete low-dimensional PES. Source: `figures/gan_gamma_path_600eV_source_data.csv` and `_qa.json`. |
 | 7, GaN central two-coordinate cut | At a common external pressure of 45.7 GPa, directly sampled $H(s,q_\perp)$ resolves the central barrier region and shows the actual VCNEB centerline within it. | The 90 coordinates comprise 18 path centers and 72 atomic-only transverse statics at their respective fixed cells, all under the original 600-eV VASP contract. Maximum prospective along-path/inner-transverse interpolation errors are 0.166/0.159 meV/GaN under 1-meV gates. This is a bounded frozen central cut, not a whole-path, pointwise pressure-relaxed, conditional-minimum, or TS-certified surface. Source: `figures/gan_600eV_atomic_dense_surface_source_data.csv`, `_qa.json`, and `benchmarks/numerical_integrity/gan_600eV_atomic_tube_dense_20260928.json`. |
 
+The BTO text also reports a separate five-point, branch-resolved conditional
+pilot with one preselected holdout. Its source and limitations are recorded in
+`benchmarks/numerical_integrity/bto_conditional_five_point_patch_2026-09-28.json`
+and `docs/VARNEB_BTO_CONDITIONAL_FIVE_POINT_AUDIT_2026-09-28.md`.
+None of those conditional points is silently merged into Fig. 2's 59-point
+frozen-cell contour; this pilot does not certify a continuous conditional PES.
+
 The separate BTO path-adapted panel `figures/bto_frozen_path_adapted_79.*`
 is a **supplementary candidate, not a replacement for Fig. 2**. It uses a
 different plane: $Q_1$ combines the unstable cubic $\Gamma$ modes 0–2 and
