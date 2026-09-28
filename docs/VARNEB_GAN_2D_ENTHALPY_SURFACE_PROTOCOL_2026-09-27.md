@@ -150,6 +150,51 @@ unit and allowed degrees of freedom; do not add a second `PV` to VASP's
 printed relaxation enthalpy. This diagnostic does not remove the existing
 600-eV energy–stress derivative discrepancy.
 
+The evaluated ionic history adds an important restart gate. The negative
+branch dipped to `-11.568613 eV/cell` at step 7, briefly rose by
+`0.607694 eV/cell` at step 8, and finished at `-11.522424 eV/cell`;
+therefore the last step is not the lowest evaluated enthalpy. The positive
+branch's ten recorded enthalpies decreased from `-11.497198` to
+`-11.503275 eV/cell`. A same-geometry, same-600-eV/45.7-GPa one-step restart
+array (`27793241`) completed, but its negative/positive enthalpy differences
+from the corresponding pilot final evaluations are `+5.365/-0.838 meV/cell`.
+The negative side **fails** the predeclared 1 meV/cell continuity gate.
+Raw evidence is in
+`benchmarks/numerical_integrity/gan_600eV_basin_restart_canary_audit_20260928.json`;
+its input manifest is archived alongside it as
+`gan_600eV_basin_restart_canary_inputs_20260928.json`.
+No 40-step continuation was submitted on this evidence. Comparing the
+original and restart OUTCAR headers identified a numerical-grid change on
+the negative side: coarse FFT `24×24×40` to `24×24×36`, fine FFT
+`48×48×80` to `48×48×72`; the positive side kept the original grids.
+VASP's [FFT-mesh documentation](https://vasp.at/wiki/FFT_meshes) and
+[volume-relaxation guidance](https://vasp.at/wiki/Volume_relaxation) describe
+how an automatically chosen grid can jump as the cell changes. An isolated
+negative-branch test (`27793268`) restored the **original pilot FFT
+dimensions** at unchanged `ENCUT=600 eV`, KPOINTS, PAW, geometry and
+`PSTRESS=457 kbar`; it completed and its raw audit found a still-present
+`+5.371 meV/cell` offset. The grid change is thus **not** the cause of the
+measured restart offset. At the first k-point the pilot/automatic/locked-grid
+plane-wave counts were `1221/1139/1139`. VASP's
+[ISTART documentation](https://vasp.at/wiki/ISTART) explains that cell
+relaxations use a constant plane-wave basis and require `ISTART=2` plus a
+valid `WAVECAR` for a basis-consistent restart; both pilot `WAVECAR` files
+are zero bytes because their original `LWAVE=.FALSE.`. This is a
+well-supported basis-reset explanation, but the decisive test is whether
+an uninterrupted run from the identical signed seed reproduces the first
+ten evaluations. The FFT test's raw provenance is
+`benchmarks/numerical_integrity/gan_600eV_fft_restart_canary_audit_20260928.json`.
+Its input manifest is archived alongside it as
+`gan_600eV_fft_restart_canary_inputs_20260928.json`.
+Accordingly, no discontinuous 40-step CONTCAR restart was submitted.
+Instead, array `27793292` starts both branches anew from their original
+signed seeds with `NSW=100`, unchanged 600-eV/45.7-GPa physics and optimizer
+settings, and only the output flag `LWAVE=.TRUE.` so that a future
+`ISTART=2` restart is possible. Its first ten ionic enthalpies must be
+checked against the audited pilot before either branch is used as evidence.
+The submitted contract is archived as
+`benchmarks/numerical_integrity/gan_600eV_basin_uninterrupted_inputs_20260928.json`.
+
 ### Measured narrow-tube outcome (2026-09-28)
 
 The first nine-anchor 600-eV frozen tube passed all 18 raw static audits but
