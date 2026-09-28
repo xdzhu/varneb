@@ -85,11 +85,11 @@ def draw(report: dict, frames: list) -> plt.Figure:
                  colors=INK, alpha=0.28, linewidths=0.55)
     grid_s, grid_q = np.meshgrid(s, q, indexing="ij")
     ax_a.scatter(grid_s.ravel(), grid_q.ravel(), s=14, marker="o",
-                 facecolors="white", edgecolors=INK, linewidths=0.55, zorder=4)
+                 facecolors="white", edgecolors=INK, linewidths=0.55, zorder=7)
     ax_a.plot(s, np.zeros_like(s), color="white", lw=2.8, zorder=5)
     ax_a.plot(s, np.zeros_like(s), color=INK, lw=1.45, zorder=6)
     ax_a.scatter(s[15 - CENTRAL_IMAGES[0]], 0, s=135, marker="*",
-                 color=ORANGE, edgecolor="white", linewidth=0.7, zorder=7)
+                 color=ORANGE, edgecolor="white", linewidth=0.7, zorder=8)
     ax_a.set_xlim(s[0] - 0.004, s[-1] + 0.004)
     ax_a.set_ylim(-0.054, 0.054)
     ax_a.set_yticks([-0.05, -0.025, 0, 0.025, 0.05])

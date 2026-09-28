@@ -53,3 +53,26 @@ labels, axes, markers, model colorbar, and captions remain readable and
 unclipped. The additional supplement page does not alter the main-paper
 page count. Author metadata and final journal-specific export checks remain
 open submission gates.
+
+## Fig. 5 transverse-cut clarification and layer QA
+
+The main paper embeds `gan_600eV_atomic_transverse_landscape.pdf`, not the
+separate archived `gan_600eV_atomic_dense_surface.pdf`. The former colors
+`H(s,q_perp)-H(s,0)`; panel (b) alone shows the full B4-referenced barrier.
+All 72 measured off-path excess enthalpies are positive (minimum
+0.09591 meV/GaN). The bounded quadratic interpolant reaches
+−0.26230 meV/GaN between samples; this is a model undershoot, not an
+observed lower-enthalpy DFT route. Main text and caption now say so.
+
+The Python figure was regenerated after placing all 90 sampled-coordinate
+markers above the centerline strokes. The Fig. 5 regression checks verify
+the manuscript file identity, source-script hash, sampled/model distinction,
+and marker layer order; the targeted BTO and GaN figure suite passes 8/8.
+The new main build is still 10 pages; page 9 was rendered and inspected at
+1.5×, with no marker, axis, legend, or caption clipping. Export SHA256:
+
+| File | SHA256 |
+| --- | --- |
+| `gan_600eV_atomic_transverse_landscape.pdf` | `aa4e6d108520d4ea906443bf43a468f7b448bf8cb4444697eaf18a9da30cd906` |
+| `gan_600eV_atomic_transverse_landscape.svg` | `4a002e60c5fa6801f65de95230b3526110c68534defb91f67cb63c9fac1c27d7` |
+| `gan_600eV_atomic_transverse_landscape.png` | `02e9321a63045d4ce8b3f1acfdb2f7907c6be4c836734213fc8ebc05bdc4fdc4` |

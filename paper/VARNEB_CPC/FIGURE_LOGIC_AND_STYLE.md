@@ -19,6 +19,13 @@ paths, and external literature curves must remain visually and verbally distinct
 | Table 1, calculator contracts | Per-backend GaN pseudopotential, basis/cutoff, mesh, pressure and force settings. | Do not silently mix different contracts or change the VASP 600-eV path for a prettier comparison. |
 | Table 2, acceleration | Matched-start BTO and HfO₂ first crossings of the common 0.10-eV/Å criterion; ABACUS process-launch totals are independently checked against contiguous Slurm job steps. Source: `ACCELERATION_EVIDENCE_AUDIT_2026-09-27.md` and `benchmarks/convergence/hf_slurm_abacus_launch_audit_20260928.json`. | BTO 78.5% and HfO₂ 38.2% reductions are case-specific. Slurm timestamps have one-second ties; optimizer records establish the first-crossing grouping. Negative transfers remain archived, and no universal speedup or identical saddle basin is claimed. |
 
+Fig. 5 specifically uses `gan_600eV_atomic_transverse_landscape.*`, whose
+color is `H(s,q_perp)-H(s,0)`; the archived
+`gan_600eV_atomic_dense_surface.*` instead colors absolute `H-H_B4` and is
+not the main-paper artwork. All sampled off-path DFT excess enthalpies in Fig. 5
+are nonnegative. The bounded quadratic interpolant alone dips to
+−0.262 meV/GaN between nodes; this is not evidence of a lower DFT route.
+
 ## Archived controls, not additional main figures
 
 The 59-point BTO frozen-cubic two-soft-mode cut in
