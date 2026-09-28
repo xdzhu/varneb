@@ -55,12 +55,15 @@ the ZStar reference package. The working target is approximately ten typeset
 pages including the Program Summary, figures, tables, and references. Add
 material only when it closes a reproducibility, method, or verification gap;
 do not pad the manuscript with duplicate workflow descriptions or unsupported
-benchmark claims. The current compiled draft is eleven pages, close to the
-ten-page target; figure-by-figure evidence and author-metadata audits remain
-submission gates. The
+benchmark claims. The 2026-09-28 compiled draft is **13 pages**, so length,
+figure-by-figure evidence, and author metadata remain submission gates. The
 main evidence set contains the architecture figure, the BTO frozen-mode cut
 and path projection, the ABACUS BTO/HfO2 validation figure, the GaN multi-backend
-comparison, and a separately labeled local GaN atom--strain diagnostic.
+comparison, the same-600-eV local GaN atom--strain diagnostic, the all-image
+GaN endpoint-Gamma mode/strain projection, and the validated **central**
+GaN atomic-transverse enthalpy cut. The latter is not a full-path or
+conditionally relaxed two-mode landscape, and the local candidate is not a
+certified variable-cell transition state.
 Per-path literature figures remain archived under
 `outputs/neb_literature_benchmarks/` rather than being duplicated in the main
 text.
@@ -74,6 +77,13 @@ The CP2K GaN path is now part of the converged five-backend figure. Its
 45.7-GPa, 29-image chain reached `fmax=0.09409 eV/Å` and a
 `0.29276 eV/GaN` barrier at image 15. The source-data CSV, exact evaluated
 chain, and endpoint/geometry evidence are kept with the manuscript package.
+
+The acceleration table uses Slurm-accounted, consecutively numbered ABACUS
+process launches through the common `0.10 eV/Å` force threshold, not estimated
+manager cache misses. Six first-crossing chains and common-arc profile/geometry
+diagnostics are archived in `benchmarks/convergence/`; the source-bound claim
+limits are in `ACCELERATION_EVIDENCE_AUDIT_2026-09-27.md`. These results do
+not establish identical saddle basins or a universal speedup.
 
 ## Author metadata
 

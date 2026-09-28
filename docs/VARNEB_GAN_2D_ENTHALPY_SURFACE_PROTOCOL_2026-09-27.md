@@ -48,11 +48,11 @@ cell derivatives are especially sensitive to a finite plane-wave basis.
 For this study the response is to carry a same-600-eV numerical error budget,
 not to retune the cutoff or combine unequal-cutoff energies.
 
-The current CPC draft's GaN joint-mode panel still depicts the segregated
-1000-eV diagnostic. It is **not** the final same-protocol figure and must be
-replaced or removed before submission; the historical calculation is retained
-only for provenance. Endpoint Γ modes, local joint modes and the 1D path must
-all be compared under the 600-eV contract in the revised analysis.
+The CPC draft's GaN joint-mode panel now uses the same-600-eV
+Hessian/endpoint-Γ evidence. The earlier 1000-eV diagnostic is retained only
+for provenance and must not be mixed into the production-path claim. Endpoint
+Γ modes, local joint modes and the 1D path must all be compared under the
+600-eV contract.
 
 ## Two complementary computed surfaces, with distinct claims
 
@@ -187,19 +187,46 @@ ten evaluations. The FFT test's raw provenance is
 Its input manifest is archived alongside it as
 `gan_600eV_fft_restart_canary_inputs_20260928.json`.
 Accordingly, no discontinuous 40-step CONTCAR restart was submitted.
-Instead, array `27793292` starts both branches anew from their original
+Instead, array `27793292` started both branches anew from their original
 signed seeds with `NSW=100`, unchanged 600-eV/45.7-GPa physics and optimizer
 settings, and only the output flag `LWAVE=.TRUE.` so that a future
-`ISTART=2` restart is possible. Its first ten ionic enthalpies require
-comparison with the audited pilot before either branch is used as evidence.
-At 13:21 elapsed, both Slurm array elements were still running; read-only
-OUTCAR snapshots already contained 11/14 ionic enthalpy records. In both
-branches, **all first ten enthalpy records exactly matched** their original
-10-step pilot to the eight printed decimal places (`0.0 eV/cell` maximum
-difference). This supports uninterrupted numerical continuity; it does not
-pre-empt final raw-output, force/stress, phase or TS audit after completion.
+`ISTART=2` restart would be possible. Both Slurm elements completed with
+`0:0` exit status. The complete OUTCAR audit found 69/51 ionic records in
+the negative/positive branches, every associated SCF converged, and **all
+first ten enthalpies exactly matched** their original ten-step pilots to the
+eight printed decimal places (`0.0 eV/cell` maximum difference). Their final
+four-atom structures match B1/B4 respectively by Ga–N coordination and
+mapped displacement (RMS `0.00130/0.00289 Å`), and VASP reported ionic
+convergence. At the agreed `0.02 eV/Å` force and `2 kbar` residual-stress
+acceptance levels, the positive B4 branch passes (`0.01691 eV/Å`,
+`1.743 kbar`), whereas the negative B1 branch passes force
+(`0.01148 eV/Å`) but narrowly misses stress (`2.528 kbar`). Do not round
+the latter into a pass, or rerun the passing B4 branch merely to pursue
+the historical 1-kbar target. This is structural two-basin evidence, not
+an index-one variable-cell TS certificate. The complete raw-output audit is
+`benchmarks/numerical_integrity/gan_600eV_basin_uninterrupted_audit_20260928.json`.
 The submitted contract is archived as
 `benchmarks/numerical_integrity/gan_600eV_basin_uninterrupted_inputs_20260928.json`.
+
+A fresh **same-600-eV image-contract static** was then evaluated at each
+terminal geometry, without another geometry optimization or any cutoff change
+(Slurm `27793872` for B4 and `27793910` for B1, both `COMPLETED 0:0`).
+The resulting enthalpies are only `+0.207 meV/cell` from the archived B4
+endpoint and `+0.026 meV/cell` from B1, respectively. In contrast, fresh
+static minus native-relax enthalpy is `−7.720/+7.105 meV/cell` for B4/B1;
+the constant-basis cell-relaxation history cannot be mixed with fresh-static
+energies when assessing a meV-scale basin difference. Both fresh statics
+pass the atomic-force gate (`0.01643/0.01129 eV/Å`) but fail the **2-kbar**
+stress gate (`8.165/3.726 kbar`). These facts strengthen the structural and
+same-contract energetic identification of both basins, but do **not** certify
+both endpoints as stress-converged under the fresh-static protocol. The
+separate audits are
+`benchmarks/numerical_integrity/gan_600eV_basin_final_static_positive_audit_20260928.json`
+and
+`benchmarks/numerical_integrity/gan_600eV_basin_final_static_negative_audit_20260928.json`.
+No extra optimization is being started solely to chase this stress gate;
+the numerical basis-history discrepancy must first be treated explicitly
+in any TS or barrier claim.
 
 ### Measured narrow-tube outcome (2026-09-28)
 

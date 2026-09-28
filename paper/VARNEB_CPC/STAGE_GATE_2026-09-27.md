@@ -1,7 +1,8 @@
 # VARNEB manuscript evidence gate — 2026-09-27
 
 This is a claim gate, not a request to change a calculator parameter or to run
-CI. The current draft PDF has 12 pages; the intended CPC article is about 10.
+CI. The 2026-09-28 compiled draft PDF has 13 pages; the intended CPC article
+is about 10.
 The working tree contains unrelated and ongoing user research files: stage only
 the specific artifacts being revised.
 
@@ -52,8 +53,17 @@ the specific artifacts being revised.
    supplementary candidate
    `figures/gan_600eV_atomic_tube_samples.*` plots 28 audited central
    off-path statics without interpolation; the `2.329 meV/GaN` maximum LOO
-   error exceeds the `1.0` gate. A smooth whole-path GaN 2D PES is not
-   certified. Earlier 1000-eV diagnostics are archival and excluded.
+   error exceeds the `1.0` gate. A subsequent **dense central-segment**
+   atomic-transverse cut at images 5–22 has 90 measured coordinates, reusing
+   18 path centers and 28 earlier signed statics and adding 44 raw-audited
+   points. The prospective along-path holdout error is
+   `0.16578 < 1.0 meV/GaN`; the inner-transverse quadratic check is
+   `0.15888 < 1.0 meV/GaN`. Its validated central contour is
+   `figures/gan_600eV_atomic_dense_surface.*` with source CSV and QA JSON.
+   This remains a frozen atomic-only transverse chart around a variable-cell
+   centerline, not a global two-phonon plane, all-path surface, conditional
+   minimum, or TS certificate. Earlier 1000-eV diagnostics are archival and
+   excluded.
 
 ## Minimum submission gates for a focused CPC software paper
 
@@ -67,9 +77,11 @@ the specific artifacts being revised.
   around the same backend/optimizer interface and supported feature matrix.
   Re-run relevant unit/integration checks locally; do not trigger CI merely
   by pushing ordinary commits.
-- Tighten the 12-page draft toward about 10 pages without deleting method
+- Tighten the 13-page draft toward about 10 pages without deleting method
   derivation or evidence limits; check PDF layout, bibliography, figure
-  legibility, source-data availability, and journal formatting.
+  legibility, source-data availability, and journal formatting. Author order,
+  affiliations, CRediT roles, funding and the competing-interest declaration
+  still contain explicit draft placeholders and require author confirmation.
 
 ## Stronger mode-surface / TS claims: evidence still needed
 
@@ -93,8 +105,20 @@ the specific artifacts being revised.
   atom-plus-cell Hessian has exactly one unstable direction, appropriate
   endpoint connections, pressure/metric conventions, and finite-difference
   convergence. The current negative local joint direction is evidence for
-  coupling, not full TS certification. A 2D GaN landscape is a separate
-  computational project, not implied by its converged 1D path.
+  coupling, not full TS certification. A validated **central** two-coordinate
+  cut now exists, but endpoint seams and a full-path chart remain separate
+  work. The two-sided native VASP 600-eV/45.7-GPa basin-relaxation array
+  `27793292` completed and its full raw audit verifies identical first ten
+  signed-pilot evaluations, complete SCFs and B4/B1 structural returns.
+  With the user-accepted 2-kbar stress gate, native B4 passes force/stress,
+  while native B1 has 2.528 kbar residual and narrowly fails stress. Fresh
+  statics on both final geometries reproduce the archived endpoint enthalpies
+  within 0.207/0.026 meV per four-atom cell but have larger 8.165/3.726
+  kbar stress residuals. These data support two-basin identification, **not**
+  a stress-certified two-basin link or an index-one variable-cell TS. Do not
+  mix native constant-basis relaxation enthalpies with fresh-static/path
+  enthalpies; keep the same 600-eV electronic contract and diagnose the
+  stress/basis-history discrepancy before promoting the claim.
 - **Follow-on rather than CPC prerequisites:** bilayer hBN fixed-cell sliding
   versus controlled in-plane cell relaxation, and HfO₂ T→PO multi-mode
   analysis. These require distinct boundary/functional/dispersion and mode
