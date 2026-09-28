@@ -19,7 +19,10 @@ Before tagging:
    manuscript. The wheel should contain the `vcneb` package and metadata,
    not those research artifacts. Run `python -m twine check` on both files,
    then smoke-test `varneb --version`, `varneb backends --json`, and the
-   analytic toy example from the unpacked sdist. Build files are local and
+   analytic toy example from the unpacked sdist. Also exercise the installed
+   `varneb init` → `validate-config` → `prepare` sequence using small reviewed
+   endpoints; confirm `prepare` writes a seven-image calculator-free chain and
+   repeated preparation leaves it unchanged. Build files are local and
    ignored by Git. Use the isolated build by default: `--no-isolation` is
    only valid when the local setuptools meets `pyproject.toml`'s minimum.
 4. Review `git diff` and push the reviewed commit to `main`.

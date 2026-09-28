@@ -44,6 +44,10 @@ initial trajectory, and writes `varneb_preflight.json`. It uses the tested
 `log_strain`/automatic-mapping/MIC/translation-alignment defaults and can
 reject a configured minimum-distance or deformation threshold before any
 external executable is launched.
+`validate-config` checks the schema and field types only; it does not open the
+endpoint files. Unknown top-level or calculator keys are rejected, and JSON
+booleans/numbers must not be quoted strings (`false`, not `"false"`; `45.7`,
+not `"45.7"`). `prepare` performs the geometry check after this schema gate.
 
 `varneb run` uses the *same* configuration; `--execute` is required because it
 can launch first-principles programs. It never submits a Slurm job by itself.

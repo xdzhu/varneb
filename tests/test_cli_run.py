@@ -46,6 +46,19 @@ def test_run_requires_explicit_execution(monkeypatch, tmp_path, capsys):
     assert not (tmp_path / "run").exists()
 
 
+def test_validate_config_reports_type_error_without_preparing(
+    monkeypatch, tmp_path, capsys
+):
+    config = _toy_config(tmp_path)
+    payload = json.loads(config.read_text(encoding="utf-8"))
+    payload["mic"] = "false"
+    config.write_text(json.dumps(payload), encoding="utf-8")
+    monkeypatch.setattr(sys, "argv", ["varneb", "validate-config", str(config)])
+    assert main() == 2
+    assert "config field 'mic' must be a boolean" in capsys.readouterr().err
+    assert not (tmp_path / "run").exists()
+
+
 def test_run_executes_same_config_with_ase_calculator(monkeypatch, tmp_path, capsys):
     config = _toy_config(tmp_path)
     monkeypatch.setattr(sys, "argv", ["varneb", "prepare", str(config)])

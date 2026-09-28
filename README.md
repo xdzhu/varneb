@@ -43,6 +43,9 @@ subspaces remain available via `python -m vcneb.material_runner` (the old
 `examples/run_vcneb_ase.py` remains compatible). See
 [`docs/USER_MANUAL.md`](https://github.com/xdzhu/varneb/blob/main/docs/USER_MANUAL.md) for the full contract. To run the
 repository tests, install the additional `dev` extra and use `python -m pytest -q`.
+`validate-config` checks JSON fields and types without reading endpoint files;
+`prepare` is the endpoint and initial-geometry preflight. Use JSON booleans and
+numbers, not quoted strings: typos and silent type coercions are rejected.
 
 `varneb backends --json` prints the machine-readable backend capability table.
 `varneb optimizers --json` prints the calculator-independent path strategy

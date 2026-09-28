@@ -78,3 +78,22 @@ Git-tracked `tests/test_*.py` set gave **562 passed, 1 skipped** in 36.74 s
 (209 warnings). The tested working tree still contains unrelated user
 research files; this is not a pristine-checkout claim. No release tag, CI,
 PyPI upload, DFT calculation, or other cluster job was started.
+
+## Config-input safety after the distribution smoke
+
+The isolated 0.0.2 wheel also completed `varneb init` → `validate-config` →
+`prepare` from a separate run directory using the toy run's two endpoints and
+the generic ASE backend. The preflight reported `calculator_attached=false`
+and wrote seven images. A second identical `prepare` was idempotent;
+`varneb run` without `--execute` returned status
+2 before any calculator could start.
+
+That exercise exposed a source-level risk not yet corrected in the tested
+0.0.2 wheel: JSON `"false"` had been coerced to Python `True`, a fractional
+`n_images` to an integer, and unknown keys (for example `pressure_GPa`) were
+ignored. The development source now rejects these with named-field errors at
+`validate-config`, before endpoint preparation or DFT. It also rejects
+unknown calculator keys and non-object JSON. The focused config/CLI tests gave
+24 passes; the Git-tracked suite after this change gave **575 passed, 1
+skipped** (209 warnings, 28.91 s). This is a source-tree safety improvement
+for a subsequent release, not a retroactive claim about the tested wheel.

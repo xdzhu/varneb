@@ -17,6 +17,37 @@ from .optimizer_registry import get_optimizer_spec
 from .provenance import endpoint_structure_record
 
 
+def _text(value: object, field_name: str) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(f"config field {field_name!r} must be a non-empty string")
+    return value
+
+
+def _integer(value: object, field_name: str, *, nullable: bool = False) -> int | None:
+    if value is None and nullable:
+        return None
+    if type(value) is not int:
+        raise ValueError(f"config field {field_name!r} must be an integer")
+    return value
+
+
+def _number(value: object, field_name: str, *, nullable: bool = False) -> float | None:
+    if value is None and nullable:
+        return None
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise ValueError(f"config field {field_name!r} must be a number")
+    try:
+        return float(value)
+    except OverflowError as exc:
+        raise ValueError(f"config field {field_name!r} exceeds the numeric range") from exc
+
+
+def _boolean(value: object, field_name: str) -> bool:
+    if type(value) is not bool:
+        raise ValueError(f"config field {field_name!r} must be a boolean")
+    return value
+
+
 @dataclass(frozen=True)
 class RunConfig:
     """Resolved, calculator-independent run configuration."""
@@ -89,63 +120,83 @@ class RunConfig:
     def from_file(cls, path: str | Path) -> "RunConfig":
         source = Path(path).expanduser().resolve()
         data = json.loads(source.read_text(encoding="utf-8"))
-        if data.get("schema_version") != 1:
+        if not isinstance(data, dict):
+            raise ValueError("VARNEB config must be a JSON object")
+        if type(data.get("schema_version")) is not int or data["schema_version"] != 1:
             raise ValueError("config schema_version must be 1")
+        unknown = set(data) - set(cls.__dataclass_fields__) - {"schema_version"}
+        if unknown:
+            raise ValueError(f"unknown config field(s): {', '.join(sorted(unknown))}")
         base = source.parent
         path_fields = {}
         for key in ("initial", "final", "workdir"):
-            value = data.get(key)
-            if not isinstance(value, str) or not value.strip():
-                raise ValueError(f"config field {key!r} must be a non-empty path")
+            value = _text(data.get(key), key)
             path_fields[key] = (base / value).resolve()
         calculator = data.get("calculator", {})
         if not isinstance(calculator, dict):
             raise ValueError("calculator must be a mapping")
+        extra_calculator = set(calculator) - {
+            "kind", "symbol", "parameters", "command", "factory_kwargs"
+        }
+        if extra_calculator:
+            raise ValueError(
+                f"unknown calculator field(s): {', '.join(sorted(extra_calculator))}"
+            )
+        for key in ("kind", "symbol"):
+            if calculator.get(key) is not None:
+                _text(calculator[key], f"calculator.{key}")
+        if calculator.get("command") is not None and not isinstance(calculator["command"], str):
+            raise ValueError("calculator.command must be a string")
         if not isinstance(calculator.get("parameters", {}), dict):
             raise ValueError("calculator.parameters must be a mapping")
         if not isinstance(calculator.get("factory_kwargs", {}), dict):
             raise ValueError("calculator.factory_kwargs must be a mapping")
         values = {
-            "backend": str(data.get("backend", "")),
+            "backend": _text(data.get("backend"), "backend"),
             **path_fields,
-            "n_images": int(data.get("n_images", 7)),
-            "fmax_ev_per_angstrom": float(data.get("fmax_ev_per_angstrom", 0.10)),
-            "k": float(data.get("k", 0.20)),
-            "pressure_gpa": float(data.get("pressure_gpa", 0.0)),
-            "cell_mode": str(data.get("cell_mode", "full")),
-            "cell_interpolation": str(data.get("cell_interpolation", "log_strain")),
-            "mapping": str(data.get("mapping", "auto")),
-            "mic": bool(data.get("mic", True)),
-            "align_translation": bool(data.get("align_translation", True)),
-            "minimum_distance": (
-                None if data.get("minimum_distance") is None
-                else float(data["minimum_distance"])
+            "n_images": _integer(data.get("n_images", 7), "n_images"),
+            "fmax_ev_per_angstrom": _number(
+                data.get("fmax_ev_per_angstrom", 0.10), "fmax_ev_per_angstrom"
             ),
-            "maximum_deformation": (
-                None if data.get("maximum_deformation") is None
-                else float(data["maximum_deformation"])
+            "k": _number(data.get("k", 0.20), "k"),
+            "pressure_gpa": _number(data.get("pressure_gpa", 0.0), "pressure_gpa"),
+            "cell_mode": _text(data.get("cell_mode", "full"), "cell_mode"),
+            "cell_interpolation": _text(
+                data.get("cell_interpolation", "log_strain"), "cell_interpolation"
             ),
-            "climb": bool(data.get("climb", False)),
-            "climb_after": (
-                None if data.get("climb_after") is None else int(data["climb_after"])
+            "mapping": _text(data.get("mapping", "auto"), "mapping"),
+            "mic": _boolean(data.get("mic", True), "mic"),
+            "align_translation": _boolean(
+                data.get("align_translation", True), "align_translation"
             ),
-            "optimizer": str(data.get("optimizer", "FIRE")),
-            "steps": int(data.get("steps", 300)),
-            "image_workers": int(data.get("image_workers", 0)),
-            "image_retries": int(data.get("image_retries", 0)),
-            "candidate_step_retries": int(data.get("candidate_step_retries", 0)),
-            "maxstep": None if data.get("maxstep") is None else float(data["maxstep"]),
-            "maximum_cell_step": (
-                None if data.get("maximum_cell_step") is None
-                else float(data["maximum_cell_step"])
+            "minimum_distance": _number(
+                data.get("minimum_distance"), "minimum_distance", nullable=True
             ),
-            "minimum_endpoint_separation": (
-                None if data.get("minimum_endpoint_separation") is None
-                else float(data["minimum_endpoint_separation"])
+            "maximum_deformation": _number(
+                data.get("maximum_deformation"), "maximum_deformation", nullable=True
+            ),
+            "climb": _boolean(data.get("climb", False), "climb"),
+            "climb_after": _integer(data.get("climb_after"), "climb_after", nullable=True),
+            "optimizer": _text(data.get("optimizer", "FIRE"), "optimizer"),
+            "steps": _integer(data.get("steps", 300), "steps"),
+            "image_workers": _integer(data.get("image_workers", 0), "image_workers"),
+            "image_retries": _integer(data.get("image_retries", 0), "image_retries"),
+            "candidate_step_retries": _integer(
+                data.get("candidate_step_retries", 0), "candidate_step_retries"
+            ),
+            "maxstep": _number(data.get("maxstep"), "maxstep", nullable=True),
+            "maximum_cell_step": _number(
+                data.get("maximum_cell_step"), "maximum_cell_step", nullable=True
+            ),
+            "minimum_endpoint_separation": _number(
+                data.get("minimum_endpoint_separation"),
+                "minimum_endpoint_separation", nullable=True
             ),
             "endpoint_static_summary": (
                 None if data.get("endpoint_static_summary") is None
-                else (base / str(data["endpoint_static_summary"])).resolve()
+                else (base / _text(
+                    data["endpoint_static_summary"], "endpoint_static_summary"
+                )).resolve()
             ),
             "calculator": calculator,
         }

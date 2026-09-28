@@ -98,3 +98,47 @@ def test_identity_mapping_rejects_reordered_endpoint(tmp_path) -> None:
         assert "identity mapping" in str(exc)
     else:  # pragma: no cover - assertion guard
         raise AssertionError("identity mapping unexpectedly accepted reordered endpoints")
+
+
+@pytest.mark.parametrize("field,value,message", [
+    ("pressure_GPa", 45.7, "unknown config field"),
+    ("n_images", 7.5, "n_images.*integer"),
+    ("n_images", True, "n_images.*integer"),
+    ("pressure_gpa", "45.7", "pressure_gpa.*number"),
+    ("pressure_gpa", 10**400, "pressure_gpa.*numeric range"),
+    ("mic", "false", "mic.*boolean"),
+    ("align_translation", 0, "align_translation.*boolean"),
+    ("climb", "false", "climb.*boolean"),
+    ("steps", 10.5, "steps.*integer"),
+])
+def test_config_file_rejects_silent_coercions_and_typo(
+    tmp_path, field, value, message
+) -> None:
+    payload = {
+        "schema_version": 1,
+        "backend": "ase",
+        "initial": "initial.vasp",
+        "final": "final.vasp",
+        "workdir": "run",
+    }
+    payload[field] = value
+    path = tmp_path / "varneb.json"
+    path.write_text(json.dumps(payload), encoding="utf-8")
+    with pytest.raises(ValueError, match=message):
+        RunConfig.from_file(path)
+
+
+@pytest.mark.parametrize("payload,message", [
+    (["not", "an", "object"], "JSON object"),
+    ({"schema_version": True}, "schema_version must be 1"),
+    ({"schema_version": 1, "backend": "ase", "initial": "is.vasp",
+      "final": "fs.vasp", "workdir": "run",
+      "calculator": {"commnad": "vasp_std"}}, "unknown calculator field"),
+])
+def test_config_file_rejects_invalid_shape_or_calculator_typo(
+    tmp_path, payload, message
+) -> None:
+    path = tmp_path / "varneb.json"
+    path.write_text(json.dumps(payload), encoding="utf-8")
+    with pytest.raises(ValueError, match=message):
+        RunConfig.from_file(path)
