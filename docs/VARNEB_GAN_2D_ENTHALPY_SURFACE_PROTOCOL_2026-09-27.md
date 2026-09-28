@@ -190,8 +190,14 @@ Accordingly, no discontinuous 40-step CONTCAR restart was submitted.
 Instead, array `27793292` starts both branches anew from their original
 signed seeds with `NSW=100`, unchanged 600-eV/45.7-GPa physics and optimizer
 settings, and only the output flag `LWAVE=.TRUE.` so that a future
-`ISTART=2` restart is possible. Its first ten ionic enthalpies must be
-checked against the audited pilot before either branch is used as evidence.
+`ISTART=2` restart is possible. Its first ten ionic enthalpies require
+comparison with the audited pilot before either branch is used as evidence.
+At 13:21 elapsed, both Slurm array elements were still running; read-only
+OUTCAR snapshots already contained 11/14 ionic enthalpy records. In both
+branches, **all first ten enthalpy records exactly matched** their original
+10-step pilot to the eight printed decimal places (`0.0 eV/cell` maximum
+difference). This supports uninterrupted numerical continuity; it does not
+pre-empt final raw-output, force/stress, phase or TS audit after completion.
 The submitted contract is archived as
 `benchmarks/numerical_integrity/gan_600eV_basin_uninterrupted_inputs_20260928.json`.
 
