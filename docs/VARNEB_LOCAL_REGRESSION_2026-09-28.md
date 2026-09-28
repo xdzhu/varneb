@@ -97,3 +97,56 @@ unknown calculator keys and non-object JSON. The focused config/CLI tests gave
 24 passes; the Git-tracked suite after this change gave **575 passed, 1
 skipped** (209 warnings, 28.91 s). This is a source-tree safety improvement
 for a subsequent release, not a retroactive claim about the tested wheel.
+
+## Current-source clean-wheel and sdist smoke
+
+The post-config-fix development source at base commit `3661880` plus the
+selective README, manual, backend-note, and test changes was rebuilt with
+isolated `python -m build` under ignored `tmp/package_smoke_20260928_03`.
+`python -m twine check` passed both archives, and
+`python tests/check_release_metadata.py --tag v0.0.2` passed. The 51-entry
+sdist includes the README, detailed manual, and analytic toy example; it
+contains no `cluster/`, `outputs/`, `validation/`, `benchmarks/`, `paper/`, or
+`tests/` tree. The 37-entry wheel contains only `vcneb/` and its metadata.
+The local test-archive SHA-256 values are
+`293cc04668b3dcb7d22b87ca961fd602e11400a707bfd01cb26e341af74fd844`
+(sdist) and
+`0cc028912fd963597c881966ed5cab1d7ea23843e73003b5c6e6958bbc627fee`
+(wheel); neither is a tagged or published release artifact.
+
+A fresh Python 3.10.9 virtual environment was verified to have
+`include-system-site-packages = false`. The first dependency resolution
+hit transient PyPI timeouts for `python-dateutil`; an independent HTTP HEAD
+check later returned 200. Pin-installing `python-dateutil==2.9.0.post0`
+into that *same clean venv* allowed the declared `wheel[plot,mode]`
+dependencies to resolve from PyPI (including ASE 3.29.0, NumPy 2.2.6,
+SciPy 1.15.3, and Matplotlib 3.10.9). This was a network/retry workaround,
+not a change to package requirements or a system-site-packages fallback.
+After installing the final rebuilt wheel, `pip check` passed and, from a
+separate run directory, `vcneb.__file__` resolved to that venv's
+`site-packages`; `varneb --version` reported `0.0.2`.
+
+The unpacked *final* sdist's analytic toy run again returned
+`barrier_eV=0.250004` and `delta_eV=0.000000`. On the final installed wheel,
+`varneb init` → `validate-config` → `prepare` succeeded for the toy endpoints
+and generic ASE backend. The seven-image calculator-free preparation was
+idempotent (trajectory SHA-256 unchanged on the second call). Three invalid
+configuration probes—string `"false"` for `mic`, fractional `n_images=7.5`,
+and an unknown `pressure_GPa` key—each failed with exit code 2; so did
+`varneb run` without `--execute`. No DFT was launched.
+
+The clean ASE 3.29.0 Windows installation did not provide
+`ase.calculators.abacus`, and `varneb doctor --backend abacus` correctly
+reported that the optional adapter or an explicit custom factory is needed.
+This is a local installation prerequisite, not a contradiction of the
+archived material-level ABACUS validation. The static `validated` label and
+the README/manual now distinguish those two meanings.
+
+Post-change local tests: all visible `tests/`, including unrelated untracked
+research tests, yielded **599 passed, 1 skipped, 209 warnings** in 32.86 s;
+the Git-tracked `tests/test_*.py` set yielded **580 passed, 1 skipped, 209
+warnings** in 34.50 s. Both runs used a dirty working tree, so they do not
+prove a pristine checkout, remote material reproducibility, or a new release.
+No CI, release tag, PyPI upload, DFT run, or cluster job was started by this
+**packaging smoke**. Subsequent separately audited BTO/GaN static-grid jobs
+are recorded in `paper/VARNEB_CPC/STAGE_GATE_2026-09-27.md`.

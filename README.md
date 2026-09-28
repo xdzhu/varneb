@@ -114,6 +114,15 @@ per-image directories and static force/stress preflight. See the
 result and an important MPI-affinity warning before enabling multiple CP2K
 image workers.
 
+In `varneb backends`, **validated** describes archived material evidence, not
+readiness of the current machine. In particular, the clean ASE 3.29.0 wheel
+used in our distribution smoke lacks `ase.calculators.abacus`; VARNEB does
+not bundle that optional adapter or the ABACUS executable. Before an ABACUS
+run, use a compatible ASE/ABACUS adapter in the job's Python environment or
+provide an explicit custom calculator factory, check
+`varneb doctor --backend abacus`, and pass a one-image energy/force/stress
+preflight. An executable on `PATH` alone is not sufficient.
+
 For HF module environments, inspect first and load only what the job needs:
 
 ```bash

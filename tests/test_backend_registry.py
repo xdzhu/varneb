@@ -40,6 +40,7 @@ def test_backend_matrix_has_all_supported_adapters() -> None:
     assert all(statuses[name] == "validated"
                for name in ("abacus", "vasp", "qe", "cp2k", "abinit"))
     assert statuses["lammps"] == "adapter"
+    assert "optional ASE ABACUS adapter or custom factory" in get_backend_spec("abacus").notes
 
 
 def test_optimizer_registry_is_independent_from_backend_registry() -> None:

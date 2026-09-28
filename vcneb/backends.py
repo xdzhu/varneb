@@ -106,7 +106,7 @@ _BACKENDS: tuple[BackendSpec, ...] = (
     ),
     BackendSpec(
         "abacus", "vcneb.abacus", "abacus", True, "validated",
-        "ASE ABACUS adapter; use static force/stress evaluations per image.",
+        "GaN path validated; requires an optional ASE ABACUS adapter or custom factory.",
     ),
     BackendSpec(
         "vasp", "vcneb.vasp", "vasp_std", True, "validated",

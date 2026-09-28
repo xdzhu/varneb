@@ -23,6 +23,13 @@ run is the quickest executable check before configuring any DFT backend.
 load a module inside the Slurm script, then run `varneb doctor` with the same
 Python environment. Do not install a second copy of LAMMPS, QE, CP2K, or
 ABINIT when the cluster module provides it.
+The static `validated` backend label refers to completed material calculations,
+not to a ready local installation. The clean ASE 3.29.0 wheel checked on
+Windows did not provide `ase.calculators.abacus`. For ABACUS, a compatible
+ASE/ABACUS adapter in the same Python environment or an explicitly supplied
+custom calculator factory is therefore required in addition to the executable;
+confirm the adapter with `varneb doctor --backend abacus` and a single-image
+energy/force/stress preflight before allocating a multi-image job.
 
 ## 2. Configuration and path semantics
 
