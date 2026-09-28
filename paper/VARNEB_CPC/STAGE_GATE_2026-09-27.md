@@ -111,6 +111,15 @@ the specific artifacts being revised.
   variables. Confirm that the actual T endpoint is represented by, or is
   explicitly off, the chosen two-mode manifold. Only then promote a contour
   from sampled candidates to a conditional surface.
+  There is also an endpoint-level obstruction to the proposed *fully
+  minimized* two-coordinate lower envelope: cubic C has three independent
+  unstable Γ directions, but fixed `(Q_z,Q_x)` leaves `Q_y` free. At C, the
+  free `Q_y` direction has negative curvature, so the lower envelope cannot
+  contain C at its reference energy. The source-bound proof is
+  `benchmarks/numerical_integrity/bto_soft_triplet_conditional_endpoint_20260928.json`.
+  Do not launch a dense lower-envelope grid as a surrogate T→C surface;
+  explicitly choose a symmetry-restricted `Q_y=0` sheet, a three-soft-mode
+  surface, or a path-adapted chart before further sampling.
 - **GaN true variable-cell TS mode:** refine the highest image to a
   stationary point under one energy protocol at 45.7 GPa; verify the complete
   atom-plus-cell Hessian has exactly one unstable direction, appropriate

@@ -24,6 +24,40 @@ DZP / 4×4×4 电子 k 网格。模式来自五原子 `1×1×1` 立方胞的 Γ
 同量级；最大对角差并非严格本征值误差上界。因此只能称**局域
 稳定候选**，不能给出严格条件极小值或全域下包络证书。
 
+## 立方端点对“二维条件下包络”的限制
+
+把固定坐标取为立方 Γ 软模的 `(Q_z,Q_x)`、再对遗漏的 `Q_y`、其余原子
+坐标和应变全部最小化，定义的是一个**下包络**，而不是自动包含真实
+T→C 两端点的能量面。已归档的立方 C 端 Γ 本征频率前三项均为
+`−8.9624663 THz`（虚频，约 `−298.956 cm⁻¹`）。按 Ti−Ba 的 z、x、y
+位移锚定，这三方向在不稳定子空间中的投影满秩；`Q_y` 在固定 z/x
+平面外的分量比例为 `1.0`。七像路径的 C 端投影为 `(0,0)`，但在
+该点保持其他坐标不动、沿自由 `Q_y` 作足够小的扰动就有负二阶
+能量变化。因此 C **不可能**是释放 `Q_y` 后的局域条件极小值；
+完全最小化的二维下包络在 `(0,0)` 的能量必低于 `E_C`。
+
+四个离端点的实算条件点独立显示同一分支风险：`±Q_y` 低支比
+分别弛豫的 `Q_y=0` 驻定支低 `28.308–57.467 meV/BTO`。这不是
+在 C 点实测的条件能差，也不能外推为整片面的分支差。它说明
+**继续加密当前下包络不能解决端点定义问题**。若要在二维图上
+同时保留 T→C 的 C 端，应显式固定 `Q_y=0` 对称支，再释放其余
+坐标/应变并报告其横向不稳定性；或者保留三个软模坐标作三维面，
+或采用以真实路径为中心的局部 `(s,q_\perp)` 切片。三者回答的
+物理问题不同，不得把其中一种改名为完整“条件双模 PES”。
+
+该判断可从已跟踪的 Γ 本征对、力常数、四点分支 CSV 和七像投影 CSV
+离线复算。在仓库根目录运行（输出文件须选一个尚不存在的路径）：
+
+```text
+python -m scripts.audit_bto_soft_triplet_conditional_endpoint --eigenpairs outputs/batio3_t_to_c_pbe100_dzp10au/bto_cubic_phonopy_gamma_eigenpairs.npz --force-constants outputs/batio3_t_to_c_pbe100_dzp10au/bto_cubic_gamma_force_constants.npz --provenance outputs/batio3_t_to_c_pbe100_dzp10au/bto_cubic_phonopy_gamma_eigenpairs_provenance.json --force-sets outputs/batio3_t_to_c_pbe100_dzp10au/bto_cubic_gamma_FORCE_SETS --branches paper/VARNEB_CPC/figures/bto_conditional_four_point_stage_2026-09-27_source_data.csv --path-projection paper/VARNEB_CPC/figures/bto_frozen_soft_mode_landscape_source_data.csv --output tmp/bto_soft_triplet_endpoint_check.json
+```
+
+已归档输出为
+[`bto_soft_triplet_conditional_endpoint_20260928.json`](../benchmarks/numerical_integrity/bto_soft_triplet_conditional_endpoint_20260928.json)。
+此结论使我们暂不提交无判别力的致密二维下包络作业；BTO 的
+ABACUS/PBE/100 Ry/10 au DZP、Γ 声子 `1×1×1` 和电子 `4×4×4` 契约
+均未更改。
+
 ## 独立留点与分支身份
 
 四角双线性预测的中心能量为 `−0.106411735308 eV/BTO`；预留中心
