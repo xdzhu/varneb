@@ -358,16 +358,28 @@ audited nodes. Two predictions fixed before independent ABACUS calculations
 have absolute errors of 0.150 and 0.977 meV/BTO, within the declared
 2-meV/BTO gate. The contour is drawn only inside the measured-coordinate
 hull; it is a **symmetry-restricted local sheet**, not the global conditional
-lower envelope. The older 59-point BTO figure is a distinct **frozen cubic**
-cut; the five-point branch pilot demonstrates lowering when `Q_y` is released
-but does not certify a continuous PES. Source tables and exact claim limits
-are in [`FIGURE_LOGIC_AND_STYLE.md`](../paper/VARNEB_CPC/FIGURE_LOGIC_AND_STYLE.md).
-For GaN, the audited 45.7-GPa surface is a **central frozen
+lower envelope. The separate **frozen cubic** two-soft-mode cut now contains
+81 measured static ABACUS points on a complete 9×9 grid (59 earlier points
+plus 22 newly computed ones). The earlier 59-point interpolant predicted
+the 22 new nodes within 0.441 meV/BTO, but the final grid's interior
+leave-one-out error still reaches 5.14 meV/BTO and its display interpolant
+undershoots a measured minimum by 1.78 meV/BTO. The variable-cell path
+does not lie in this frozen plane. The five-point branch pilot demonstrates
+lowering when `Q_y` is released but does not certify a continuous PES. Source
+tables and exact claim limits are in
+[`FIGURE_LOGIC_AND_STYLE.md`](../paper/VARNEB_CPC/FIGURE_LOGIC_AND_STYLE.md).
+For GaN, the audited 45.7-GPa path-adapted surface is a **central frozen
 atomic-transverse enthalpy cut** around a variable-cell path, not an
 endpoint-spanning or orthogonally relaxed two-mode surface. It uses 18 path
 centers and 72 off-path VASP/600-eV statics, with independently checked
 along-path and inner-transverse interpolation errors of 0.166 and
-0.159 meV/GaN. See
+0.159 meV/GaN. A different **local atom–strain** cut around the highest
+image has 81 measured VASP/600-eV static enthalpies on a 9×9 grid. Its
+preceding 25-point interpolant predicted the 56 subsequently computed nodes
+within 0.0135 meV/GaN; this checks local display interpolation, not
+stationarity of the center image or an index-one saddle. Each sampled
+structure receives a fixed-geometry self-consistent calculation, not one
+electronic iteration or another structure optimization. See
 [`MANUSCRIPT_EVIDENCE.md`](../paper/VARNEB_CPC/MANUSCRIPT_EVIDENCE.md) for
 the bounded point counts and holdout errors. Do not derive a new activation
 barrier from either interpolated contour; obtain it from the converged VCNEB
