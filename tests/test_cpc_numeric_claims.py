@@ -3,9 +3,12 @@
 from __future__ import annotations
 
 import csv
+import hashlib
 import json
 import re
 from pathlib import Path
+
+from ase.units import Ry
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -91,6 +94,46 @@ def test_gan_plot_source_matches_archived_chain_evidence_and_cp2k_caveat() -> No
         "stress_ev_per_angstrom3": 0,
     }
     assert "original-text atomic forces and final run-end markers are unavailable" in MANUSCRIPT
+
+
+def test_gan_calculator_table_matches_generated_peak_inputs() -> None:
+    inputs = PAPER / "evidence/gan_45p7_final_peak_inputs_20260927"
+    source_index = (
+        PAPER / "evidence/gan_45p7_remote_source_index_20260927.md"
+    ).read_text(encoding="utf-8")
+    expected_hashes = {
+        "qe.pwi": "b558fff1f3b16379a009f905514fa92c141062f24bb2859d1b323e57b190c767",
+        "abinit.in": "b4d4388996655c4d13aae3c786dd3bd15f01c81ab13a23198a2d74e13b2069f3",
+        "cp2k.inp": "935170d769aa368ddc8f1bc3089223953b275ea5b52bc70168b84285ab93cff1",
+    }
+    for filename, expected_hash in expected_hashes.items():
+        assert hashlib.sha256((inputs / filename).read_bytes()).hexdigest() == expected_hash
+        assert expected_hash in source_index
+
+    qe = (inputs / "qe.pwi").read_text(encoding="utf-8")
+    assert re.search(r"\becutwfc\s*=\s*100\b", qe)
+    assert re.search(r"\becutrho\s*=\s*600\b", qe)
+    assert "K_POINTS automatic\n4 4 3  0 0 0" in qe
+    assert "PseudoDojo-NC-SR-PBE-v0.4-standard" in qe
+
+    abinit = (inputs / "abinit.in").read_text(encoding="utf-8")
+    assert "ecut 1400 eV" in abinit
+    assert "ngkpt 4 4 3" in abinit
+    assert "PseudoDojo-NC-SR-PBE-v0.4-standard" in abinit
+
+    cp2k = (inputs / "cp2k.inp").read_text(encoding="utf-8")
+    cutoff = re.search(r"\bCUTOFF \[eV\] ([\d.e+\-]+)", cp2k)
+    assert cutoff is not None
+    assert abs(float(cutoff.group(1)) / Ry - 800) < 1e-9
+    assert "REL_CUTOFF 80" in cp2k
+    assert "SCHEME MONKHORST-PACK 4 4 3" in cp2k
+    assert "BASIS_SET DZVP-MOLOPT-SR-GTH" in cp2k
+    assert "POTENTIAL GTH-PBE" in cp2k
+
+    assert "QE 7.0 & PBE & PseudoDojo NC-SR UPF & 100/600 Ry" in MANUSCRIPT
+    assert "ABINIT 8.6.1 & PBE & PseudoDojo NC-SR PSP8 & 1400 eV" in MANUSCRIPT
+    assert "CP2K 2024.1 & PBE & GTH-PBE/DZVP-MOLOPT-SR & 800/80 Ry" in MANUSCRIPT
+    assert "independently converged calculator contracts" not in MANUSCRIPT
 
 
 def test_bto_prospective_errors_and_monotonic_rise_match_manuscript() -> None:
