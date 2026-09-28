@@ -64,11 +64,23 @@ reached open-subspace gradient `0.0023853`, but maximum raw stress was
 failure; it is not an SCF or geometry crash. The seven raw points passed the
 independent audit at
 `/public/home/iai806/abacus/agent-runs/20260928-varneb-bto-qy0-pilot/audit-q000_q030-27794649_0-v2.json`.
-Warm continuation `27794672` lowers only the optimizer-coordinate gradient
+Warm continuation `27794672` lowered only the optimizer-coordinate gradient
 target from `0.003` to `0.001` while keeping the same Hamiltonian, Q
 constraints, `2 kbar` physical stress gate and existing completed cache.
+It `COMPLETED 0:0` after ten new evaluations: gradient `0.00084591`,
+maximum raw stress `0.53564 kbar`, and `E−E_C=−0.0137253015 eV/BTO`.
+All 17 original-plus-new DFT points passed the independent raw audit at
+`/public/home/iai806/abacus/agent-runs/20260928-varneb-bto-qy0-pilot/audit-q000_q030-27794672.json`.
 This is a targeted response to the measured residual, not a retrospective
-loosening of the stress threshold; its result remains pending audit.
+loosening of the stress threshold. It still lacks a restricted-subspace
+curvature and grid-interpolation certificate.
+
+The `(0.3,0)` and `(0.3,0.3)` elements had the same stress-only outcome after
+seven raw-audited points each: maximum stress `2.32295` and `3.40490 kbar`,
+respectively. Their cache-preserving, `0.001`-gradient continuations are Slurm
+array `27794708`, submitted only after independent audit. The `(1.2,0.3)`
+initial element remained active at this writing; its outcome is not inferred
+from the other three.
 
 Before plotting an interpolated restricted surface, assemble a measured
 path-covering grid from these points plus **audited, nonduplicated** existing
