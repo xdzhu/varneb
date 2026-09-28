@@ -57,6 +57,8 @@ def parse_args() -> argparse.Namespace:
                         help="new, nonexisting JSON basename for this optimizer stage")
     parser.add_argument("--start-from-result", type=Path,
                         help="audited result JSON in the same workdir for warm continuation")
+    parser.add_argument("--start-from-failed-cache-audit", type=Path,
+                        help="independent raw audit of a nonstationary bound-hit cache in this workdir")
     parser.add_argument("--max-absolute-stress-kbar", type=float,
                         help="optional raw Cartesian stress gate, e.g. 1.0 kbar")
     parser.add_argument("--curvature-only", action="store_true",
@@ -123,6 +125,10 @@ def main() -> None:
         raise FileExistsError(f"this optimizer-stage result already exists: {result_path}")
     if args.start_from_result is not None and not args.resume:
         raise ValueError("start-from-result requires --resume")
+    if args.start_from_failed_cache_audit is not None and (
+            not args.resume or args.start_from_result is not None
+            or args.curvature_only or branch_requested or args.canary_starts_only):
+        raise ValueError("failed-cache continuation requires --resume and no other start/curvature mode")
     preflight = json.loads(args.preflight.read_text(encoding="utf-8"))
     lock_soft_y = preflight.get("kind") == "bto_symmetry_restricted_soft_qy_zero_preflight_no_dft"
     physical_soft_plane = (preflight.get("kind") == "bto_transverse_soft_conditional_preflight_no_dft"
@@ -209,6 +215,7 @@ def main() -> None:
                for start in starts):
             raise ValueError("transverse-soft branch starts changed fixed Q")
     old_summary = None
+    failed_cache_audit = None
     if args.start_from_result is not None:
         if args.start_from_result.resolve().parent != args.workdir.resolve():
             raise ValueError("warm-start result must belong to the same evaluator workdir")
@@ -240,6 +247,35 @@ def main() -> None:
         if (len(cached_matches) != 1 or cached_matches[0][1]["contract_sha256"] !=
                 old_summary["evaluator_contract_sha256"]):
             raise ValueError("warm-start coordinates must match one completed cached DFT point")
+        starts = (start,)
+    if args.start_from_failed_cache_audit is not None:
+        if not lock_soft_y or args.start_from_failed_cache_audit.resolve().parent != args.workdir.resolve().parent:
+            raise ValueError("failed-cache audit must belong to this Qy=0 evaluator root")
+        failed_cache_audit = json.loads(args.start_from_failed_cache_audit.read_text(encoding="utf-8"))
+        basename = failed_cache_audit.get("candidate_evaluation_directory")
+        if (failed_cache_audit.get("status") != "all_raw_DFT_points_validated_nonstationary_bound_hit"
+                or failed_cache_audit.get("source_sha256", {}).get("preflight") != sha256(args.preflight)
+                or failed_cache_audit.get("q_parallel_q_transverse_sqrt_amu_A") != q.tolist()
+                or not isinstance(basename, str) or Path(basename).name != basename
+                or failed_cache_audit.get("gradient_tolerance_eV_per_sqrt_amu_A") < args.gradient_tolerance
+                or failed_cache_audit.get("orthogonal_amplitude_bound_sqrt_amu_A", float("inf"))
+                   >= args.orthogonal_amplitude_bound
+                or failed_cache_audit.get("stress_target_kbar") != args.max_absolute_stress_kbar):
+            raise ValueError("failed-cache audit or unchanged physical/tolerance contract is invalid")
+        candidate_path = args.workdir / basename / "result.json"
+        if (not candidate_path.is_file()
+                or sha256(candidate_path) != failed_cache_audit.get("candidate_result_sha256")
+                or len(list(args.workdir.glob("eval-*-*")))
+                   != failed_cache_audit.get("n_individually_audited_DFT_points")):
+            raise ValueError("audited failed-cache candidate or evaluation count changed")
+        candidate = json.loads(candidate_path.read_text(encoding="utf-8"))
+        start = np.asarray(candidate["coordinates"], dtype=float)
+        if (candidate.get("status") != "complete"
+                or candidate.get("contract_sha256") != failed_cache_audit.get("contract_sha256")
+                or start.shape != (chart.coordinate_count,)
+                or not np.allclose(plane.project(start), q, atol=1e-8, rtol=0)
+                or abs(float(third @ (plane.metric_weights * start))) > 1e-8):
+            raise ValueError("audited failed-cache geometry changed fixed mode or evaluator")
         starts = (start,)
     grid = json.loads(args.grid_result_manifest.read_text(encoding="utf-8"))
     if grid.get("status") != "converged" or grid.get("mpi_ranks") != args.mpi_ranks:
@@ -324,6 +360,11 @@ def main() -> None:
         validation_id = recorded.get("validation_id", "")
         if not isinstance(validation_id, str) or not validation_id.startswith("bto-abacus-converged-static-v1:"):
             raise ValueError("existing evaluator has an unrecognized validation contract")
+        if failed_cache_audit is not None and (
+                recorded.get("contract_sha256") != failed_cache_audit["contract_sha256"]
+                or sha256(args.workdir / "contract.json")
+                   != failed_cache_audit["source_sha256"]["evaluator_contract"]):
+            raise ValueError("failed-cache continuation changed the audited evaluator contract")
         if old_summary is not None:
             origin_summary = old_summary
             seen_hashes = set()
@@ -465,7 +506,8 @@ def main() -> None:
     safeguarded = branch_requested or physical_soft_plane
     result = relax_orthogonal_at_q(
         plane, q, relative_energy_and_gradient,
-        starts=starts, include_frozen_start=((physical_soft_plane and old_summary is None)
+        starts=starts, include_frozen_start=((physical_soft_plane and old_summary is None
+                                             and failed_cache_audit is None)
                                              or not bool(starts)),
         frozen_directions=frozen_directions,
         orthogonal_amplitude_bound=args.orthogonal_amplitude_bound,
@@ -485,7 +527,9 @@ def main() -> None:
     if len(matched) != 1:
         raise RuntimeError("optimized geometry must match exactly one complete cached DFT evaluation")
     final_directory, final_record = matched[0]
-    if lock_soft_y and old_summary is None:
+    if failed_cache_audit is not None:
+        start_labels = ["audited_bound_hit_warm_start"]
+    elif lock_soft_y and old_summary is None:
         start_labels = ["Q_y=0_frozen"]
     elif physical_soft_plane and old_summary is None:
         start_labels = ["frozen", "+Q_y", "-Q_y"]
@@ -557,6 +601,9 @@ def main() -> None:
         "final_evaluation_directory": final_directory.name,
         "start_from_result_sha256": (None if args.start_from_result is None
                                      else sha256(args.start_from_result)),
+        "start_from_failed_cache_audit_sha256": (
+            None if args.start_from_failed_cache_audit is None
+            else sha256(args.start_from_failed_cache_audit)),
         "coordinates_u_A_eta_voigt": result.coordinates.tolist(),
         "preflight_sha256": sha256(args.preflight),
         "evaluator_contract_sha256": evaluator.contract["contract_sha256"],

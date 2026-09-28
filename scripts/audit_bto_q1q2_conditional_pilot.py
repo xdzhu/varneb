@@ -135,6 +135,34 @@ def main() -> None:
             or summary.get("kind") != expected_kind
             or summary.get("preflight_sha256") != sha256(args.preflight)):
         raise ValueError("conditional result or preflight hash is invalid")
+    failed_cache_hash = summary.get("start_from_failed_cache_audit_sha256")
+    historical_bound_start_label = False
+    if failed_cache_hash is not None:
+        matches = [path for path in args.workdir.parent.glob("audit-*.json")
+                   if sha256(path) == failed_cache_hash]
+        if len(matches) != 1:
+            raise ValueError("failed-cache warm start has no unique independent audit")
+        failed = json.loads(matches[0].read_text(encoding="utf-8"))
+        candidate_name = failed.get("candidate_evaluation_directory")
+        historical_bound_start_label = (
+            summary.get("branch_start_labels") == ["Q_y=0_frozen"]
+            and summary.get("runner_sha256")
+            == "42b9e1d5ebecf096261a85c79606ce62843e40a92e51e286821f74f44a148258"
+        )
+        if (failed.get("status") != "all_raw_DFT_points_validated_nonstationary_bound_hit"
+                or failed.get("source_sha256", {}).get("preflight") != sha256(args.preflight)
+                or failed.get("contract_sha256") != summary.get("evaluator_contract_sha256")
+                or not isinstance(candidate_name, str)
+                or Path(candidate_name).name != candidate_name
+                or sha256(args.workdir / candidate_name / "result.json")
+                   != failed.get("candidate_result_sha256")
+                or failed.get("candidate_orthogonal_gradient_norm_eV_per_sqrt_amu_A", 0)
+                   <= failed.get("gradient_tolerance_eV_per_sqrt_amu_A", float("inf"))
+                or summary.get("orthogonal_amplitude_bound_sqrt_amu_A", 0)
+                   <= failed.get("orthogonal_amplitude_bound_sqrt_amu_A", float("inf"))
+                or (summary.get("branch_start_labels") != ["audited_bound_hit_warm_start"]
+                    and not historical_bound_start_label)):
+            raise ValueError("failed-cache warm-start chain is not provenance-consistent")
     if physical_soft_plane:
         if any(path is None for path in (args.gamma_provenance, args.force_sets,
                                          args.eigenpairs_provenance)):
@@ -443,6 +471,7 @@ def main() -> None:
             None if third is None else float(third @ (plane.metric_weights * (final_coordinates - frozen_start)))
         ),
         "third_soft_mode_restricted_at_zero": lock_soft_y,
+        "historical_bound_warm_start_label_corrected_by_audit": historical_bound_start_label,
         "final_negative_curvature_amplitudes_sqrt_amu_A": final_branch_projection,
         "n_current_branch_job_DFT_points": None if branch_job_points is None else len(branch_job_points),
         "signed_basin_converged_candidates": signed_basin_candidates,
@@ -455,6 +484,7 @@ def main() -> None:
             "grid_result_manifest": sha256(args.grid_result_manifest),
             "curvature_audit": branch_audit_hash,
             "canary_audit": sha256(args.canary_audit) if args.canary_audit is not None else None,
+            "failed_cache_audit": failed_cache_hash,
         },
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)

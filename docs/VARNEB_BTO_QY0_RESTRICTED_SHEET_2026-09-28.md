@@ -37,15 +37,39 @@ these are not the ordinary NEB `0.10 eV/Å` stopping criterion.
   Thus the C endpoint is representable **under this explicit restriction**.
   Orthogonal curvature and branch/global-minimum status remain unchecked.
 
-The earlier independently audited open-\(Q_y\) pilot already contains the
-`Q_y≈0` stationary branch at four off-center coordinates. Its energies are
-recorded separately in
-`paper/VARNEB_CPC/figures/bto_conditional_four_point_stage_2026-09-27_source_data.csv`.
-They are not rerun merely to populate this sheet; their full raw cache,
-\(Q_y\) amplitude, mode basis and 15-dimensional restricted gradients must be
-cross-audited before promotion to restricted-sheet data. The previously
-selected open-\(Q_y\) lower branches lie `28.308–57.467 meV/BTO` below those
-stationary branches and must never be silently substituted into this sheet.
+The earlier open-\(Q_y\) pilot already contains `Q_y≈0` stationary branches
+at `(0.6,0)`, `(0.6,0.3)`, `(0.9,0)`, and `(0.9,0.3)`. A new independent
+read-only cross-audit, `scripts/audit_bto_qy0_reuse.py`, matched each branch
+replay to its original cached point and raw SCF energy/force/stress, checked
+the common 100-Ry INPUT/KPT hashes and Γ basis, verified `Q_y≈0`, and rebuilt
+the 15-dimensional restricted gradients. All four pass the `0.003`
+gradient/`2 kbar` stress gate **without new DFT**. Their energies are
+`−0.0447322552`, `−0.0549838599`, `−0.0740973712`, and
+`−0.0816209937 eV/BTO`; the restricted gradient norms are `0.00120035`,
+`0.00179149`, `0.00266678`, and `0.00173965`. The hf source-path
+manifest including the independent center holdout is
+`benchmarks/numerical_integrity/bto_qy0_reuse_sources_with_holdout_2026-09-28.json`;
+the compact five-point report includes all 21-component terminal geometries
+and original log hashes.
+They are now **eligible measured nodes** of the restricted sheet, not
+curvature-certified minima. The previously selected open-\(Q_y\) lower
+branches lie `28.308–57.467 meV/BTO` below them and must never be silently
+substituted into this sheet.
+
+The **independently pre-existing center** `(0.75,0.15)` also has a `Q_y≈0`
+branch. The same read-only raw-log/metric audit passes it without new DFT:
+`E−E_C=−0.0630474180 eV/BTO`, restricted gradient `0.00219180`, maximum
+stress `0.27434 kbar`. The five-branch report is
+`benchmarks/numerical_integrity/bto_qy0_reuse_with_holdout_audit_20260928.json`
+(SHA-256 `20a25940ee4abc860102b88472d9eda4b9f3d5f2038218ff02758febc880919a`),
+with its own hf source-path manifest. Four-corner bilinear interpolation on
+`(0.6,0)–(0.9,0.3)` predicts `−0.0638586200 eV/BTO` at that center;
+the independent measured energy differs by `+0.81120 meV/BTO`. The
+full atom-plus-strain metric-coordinate discrepancy is
+`0.06591 sqrt(amu) Å` (`0.00960` atomic, `0.06520` strain). This validates
+**one local cell at one center**, not the entire restricted sheet; the
+structure discrepancy and branch continuity still require an explicit
+figure-level interpretation.
 
 ## Finite next sampling block, not a dense blind grid
 
@@ -77,10 +101,73 @@ curvature and grid-interpolation certificate.
 
 The `(0.3,0)` and `(0.3,0.3)` elements had the same stress-only outcome after
 seven raw-audited points each: maximum stress `2.32295` and `3.40490 kbar`,
-respectively. Their cache-preserving, `0.001`-gradient continuations are Slurm
-array `27794708`, submitted only after independent audit. The `(1.2,0.3)`
-initial element remained active at this writing; its outcome is not inferred
-from the other three.
+respectively. Their cache-preserving, `0.001`-gradient continuations were Slurm
+array `27794708`; both `COMPLETED 0:0`. Independent raw audits cover all 17 and
+19 completed DFT evaluations, respectively, and verify the same fixed $Q_y=0$
+and INPUT/KPT contract. At `(0.3,0)`, the final gradient is `0.00084038`,
+stress `0.54363 kbar`, and `E−E_C=−0.0137356970 eV/BTO`; its audit is
+`audit-q030_q000-27794708_0.json` (SHA-256
+`24cc7a026dca36700b356a90e1577da6d1eb8f3c5de6a43aa2775fb647cb0ac1`).
+At `(0.3,0.3)`, the corresponding values are `0.00086182`, `0.31064 kbar`,
+and `−0.0263718031 eV/BTO`; its audit is
+`audit-q030_q030-27794708_1.json` (SHA-256
+`6ce52295156a45c2e9f31a3e87f02849d07a7b218aacad772366b65496a9521b`).
+These are gradient/stress-eligible local candidates, not curvature-certified
+conditional minima.
+
+The `(1.2,0.3)` initial element `27794649_3` terminated after 22 **valid**
+ABACUS SCFs. The safeguarded optimizer reached the predeclared orthogonal
+coordinate amplitude bound `3.0 sqrt(amu) Å`; the final open-subspace gradient
+was still `0.0591044 eV/(sqrt(amu) Å)` and maximum raw stress `18.1299 kbar`.
+This is an optimizer-coordinate boundary hit, **not** DFT convergence, an
+acceptable sheet node, or an electronic failure. A dedicated independent audit
+of all 22 raw energies, forces, stresses, geometry, fixed $Q_y$, input hashes,
+and MPI records is `audit-q120_q030-27794649_3.json` (SHA-256
+`d92f7c9de77f9c78f691092b40f94c66d6d3b9a6ccddcfdd718d8d644b76e722`).
+The active orthogonal coordinate was `2.99999993`; the nearby actual T endpoint
+has a larger $\eta_{zz}$ than the failed point, so the `3.0` optimizer bound
+was not a physically justified cap on this T-side boundary. The cache-preserving
+continuation `27794797` used an independently audited cached starting geometry
+and a `4.0` optimizer-coordinate bound. It changed **no ABACUS Hamiltonian,
+100 Ry cutoff, 10 au DZP orbital, k mesh, fixed order parameter, or 2 kbar
+physical stress target**. It `COMPLETED 0:0` after 17 new DFT points. The
+independent audit of **all 39** old-plus-new raw SCFs, energies, forces,
+stresses, fixed Q values, and input hashes passes:
+`E−E_C=−0.0921388405 eV/BTO`, open-subspace gradient `0.00279650`,
+maximum stress `0.42050 kbar`, and $Q_y≈0$. Audit:
+`audit-q120_q030-27794797.json` (SHA-256
+`0aab778d111913404f28cd485cc467684b737e96b7c27510af660af5fb811c03`).
+The frozen runner version mislabeled this warm start as `Q_y=0_frozen` in its
+human-facing branch label; the independent auditor required that exact runner
+hash and the failed-cache-audit hash before recording the label correction.
+The calculation was seeded from the audited terminal cache geometry, with no
+repeat of the first 22 DFT evaluations. This is now an eligible T-side
+measured node, still not a curvature-certified minimum.
+
+The five new pilot nodes, four older grid nodes, and the older independent
+center holdout have been assembled **without interpolation** into
+`benchmarks/numerical_integrity/bto_qy0_ten_measured_nodes_20260928.json`
+(SHA-256 `c04a2c0927f5d57279f1ae21405eddd3b97ec36d40541f6f26a03a912df73a07`)
+and a compact CSV sibling. The assembler verifies each new summary against
+its independent raw audit and its SHA-256, rejects duplicate Q coordinates,
+and preserves all ten 21-component terminal atom-plus-strain geometries.
+There are **nine grid nodes and one independent center holdout**; this is a
+measured patch, not yet an accepted smooth conditional-PES contour. The
+archived source manifest also records the remote raw-audit paths and hashes.
+
+Before calculating any further center energies, we froze a three-point
+holdout plan at `(0.15,0.15)`, `(0.45,0.15)`, and `(1.05,0.20)` in
+`benchmarks/numerical_integrity/bto_qy0_three_holdout_plan_20260928.json`
+(SHA-256 `b3bef1ea6360c662d4913c1d8c4d8dcf4c09d5ec9efd687c67869b3fdf9bfced`).
+The first two are centers of previously measured rectangular cells; the last
+is inside the T-side measured triangle. It records the already-computed
+bilinear/barycentric energy and full-structure predictions, plus prospective
+`2 meV/BTO` energy and `0.10 sqrt(amu) Å` full atom-plus-strain coordinate
+error screens. These numerical screens are local figure gates, not rigorous
+global error bounds. All three fresh Qy=0 preflights passed the same source
+and minimum-distance checks; Slurm array `27794991` runs at most two 32-MPI
+tasks concurrently on `hfacnormal01`. No holdout result is accepted merely
+because its Slurm task finishes; each will be independently raw-audited.
 
 Before plotting an interpolated restricted surface, assemble a measured
 path-covering grid from these points plus **audited, nonduplicated** existing
