@@ -33,6 +33,7 @@ def main() -> None:
         ("0.1291722", "HfO2 CI barrier evidence"),
         ("reported 32 meV per formula unit", "HfO2 literature comparison"),
         ("78.5\\% and 38.2\\%", "bounded acceleration result"),
+        ("not separately ablate the feasibility gate", "acceleration/safety boundary"),
         ("(b) Forward $H_{\\rm peak}-H_{\\rm B4}$", "forward GaN barrier panel"),
         ("(c) Reverse $H_{\\rm peak}-H_{\\rm B1}$", "reverse GaN barrier panel"),
         ("At the 2-kbar stress gate", "GaN basin stress gate"),
