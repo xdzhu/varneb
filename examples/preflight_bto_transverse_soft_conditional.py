@@ -59,6 +59,7 @@ def _minimum_distance(atoms) -> float:
 
 def build_preflight(args: argparse.Namespace) -> dict:
     q = np.array([args.q_parallel, args.q_transverse], dtype=float)
+    lock_soft_y = bool(getattr(args, "lock_third_soft_at_zero", False))
     if (not np.all(np.isfinite(q)) or not np.isfinite(args.seed_amplitude)
             or args.seed_amplitude <= 0.0 or not np.isfinite(args.minimum_distance_A)
             or args.minimum_distance_A <= 0.0):
@@ -88,10 +89,12 @@ def build_preflight(args: argparse.Namespace) -> dict:
     if np.max(np.abs(gauge.T @ (plane.metric_weights * third))) > 1e-8:
         raise ValueError("third soft direction overlaps rigid translation")
     frozen = plane.frozen_coordinates(q)
-    starts = [frozen, frozen + args.seed_amplitude * third,
-              frozen - args.seed_amplitude * third]
+    starts = ([frozen] if lock_soft_y else
+              [frozen, frozen + args.seed_amplitude * third,
+               frozen - args.seed_amplitude * third])
     seed_rows = []
-    for label, start in zip(("frozen", "+Q_y", "-Q_y"), starts):
+    labels = ("frozen",) if lock_soft_y else ("frozen", "+Q_y", "-Q_y")
+    for label, start in zip(labels, starts):
         atoms = chart.to_atoms(start)
         distance = _minimum_distance(atoms)
         if not np.allclose(plane.project(start), q, rtol=0.0, atol=1e-10):
@@ -130,7 +133,8 @@ def build_preflight(args: argparse.Namespace) -> dict:
         "grid_result_manifest": sha256(args.grid_result_manifest),
     }
     return {
-        "kind": "bto_transverse_soft_conditional_preflight_no_dft",
+        "kind": ("bto_symmetry_restricted_soft_qy_zero_preflight_no_dft"
+                 if lock_soft_y else "bto_transverse_soft_conditional_preflight_no_dft"),
         "axis_kind": "cubic_Gamma_unstable_triplet_Ti_z_Ba_z_and_Ti_x_Ba_x_anchored",
         "q_parallel_q_transverse_sqrt_amu_A": q.tolist(),
         "reference_id": plane.reference_id,
@@ -143,8 +147,11 @@ def build_preflight(args: argparse.Namespace) -> dict:
         "n_total_coordinates": chart.coordinate_count,
         "n_fixed_q_axes": 2,
         "n_fixed_rigid_translations": 3,
-        "n_relaxed_orthogonal_coordinates": chart.coordinate_count - 5,
+        "n_fixed_third_soft_axes": int(lock_soft_y),
+        "n_relaxed_orthogonal_coordinates": chart.coordinate_count - 5 - int(lock_soft_y),
         "remaining_soft_y_metric_unit_direction": third.tolist(),
+        "third_soft_mode_constraint": ("Q_y=0 at every evaluation; transverse stability is not implied"
+                                       if lock_soft_y else "Q_y open"),
         "seed_amplitude_sqrt_amu_A": args.seed_amplitude,
         "minimum_allowed_atomic_distance_A": args.minimum_distance_A,
         "branch_starts": seed_rows,
@@ -163,6 +170,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--q-parallel", type=float, required=True)
     parser.add_argument("--q-transverse", type=float, required=True)
     parser.add_argument("--seed-amplitude", type=float, default=0.4)
+    parser.add_argument("--lock-third-soft-at-zero", action="store_true",
+                        help="fix the independent cubic Gamma Q_y coordinate at zero")
     parser.add_argument("--minimum-distance-A", type=float, default=1.6)
     return parser.parse_args()
 

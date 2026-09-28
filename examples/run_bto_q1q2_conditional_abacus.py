@@ -124,10 +124,12 @@ def main() -> None:
     if args.start_from_result is not None and not args.resume:
         raise ValueError("start-from-result requires --resume")
     preflight = json.loads(args.preflight.read_text(encoding="utf-8"))
-    physical_soft_plane = preflight.get("kind") == "bto_transverse_soft_conditional_preflight_no_dft"
+    lock_soft_y = preflight.get("kind") == "bto_symmetry_restricted_soft_qy_zero_preflight_no_dft"
+    physical_soft_plane = (preflight.get("kind") == "bto_transverse_soft_conditional_preflight_no_dft"
+                           or lock_soft_y)
     if not physical_soft_plane and preflight.get("kind") != "bto_q1q2_conditional_preflight_no_dft":
         raise ValueError("missing reviewed BTO conditional preflight")
-    if args.canary_starts_only and (not physical_soft_plane or args.curvature_only
+    if args.canary_starts_only and (not physical_soft_plane or lock_soft_y or args.curvature_only
                                    or branch_requested or args.start_from_result is not None):
         raise ValueError("starts-only canary requires the transverse-soft preflight without continuation")
     paths = {
@@ -163,7 +165,9 @@ def main() -> None:
     q = np.asarray(preflight[q_key], dtype=float)
     if q.shape != (2,) or not np.all(np.isfinite(q)) or plane.reference_id != preflight["reference_id"]:
         raise ValueError("conditional Q coordinates or mode reference changed")
-    if chart.coordinate_count != preflight["n_total_coordinates"] or preflight["n_relaxed_orthogonal_coordinates"] != chart.coordinate_count - 5:
+    expected_open = chart.coordinate_count - 5 - int(lock_soft_y)
+    if (chart.coordinate_count != preflight["n_total_coordinates"]
+            or preflight["n_relaxed_orthogonal_coordinates"] != expected_open):
         raise ValueError("coordinate or gauge dimensions changed")
     frozen_start = (preflight["branch_starts"][0]["coordinates_u_A_eta_voigt"] if physical_soft_plane
                     else preflight["starting_coordinates_u_A_eta_voigt"])
@@ -171,10 +175,12 @@ def main() -> None:
                        atol=1e-10, rtol=0.0):
         raise ValueError("starting coordinate chart differs from preflight")
     starts = ()
+    frozen_directions = chart.rigid_translation_directions()
     if physical_soft_plane:
         branch_starts = preflight.get("branch_starts", [])
-        if [row.get("label") for row in branch_starts] != ["frozen", "+Q_y", "-Q_y"]:
-            raise ValueError("transverse-soft preflight lacks both signed third-soft-mode seeds")
+        expected_labels = (["frozen"] if lock_soft_y else ["frozen", "+Q_y", "-Q_y"])
+        if [row.get("label") for row in branch_starts] != expected_labels:
+            raise ValueError("transverse-soft preflight has the wrong third-soft-mode seed contract")
         starts = tuple(np.asarray(row["coordinates_u_A_eta_voigt"], dtype=float)
                        for row in branch_starts[1:])
         third = np.asarray(preflight["remaining_soft_y_metric_unit_direction"], dtype=float)
@@ -182,10 +188,21 @@ def main() -> None:
         if (third.shape != (chart.coordinate_count,) or not np.all(np.isfinite(third))
                 or not np.isfinite(amplitude) or amplitude <= 0.0
                 or abs(np.sqrt(np.dot(plane.metric_weights * third, third)) - 1.0) > 1e-8
-                or not np.allclose(starts[0], plane.frozen_coordinates(q) + amplitude * third,
-                                   rtol=0.0, atol=1e-10)
-                or not np.allclose(starts[1], plane.frozen_coordinates(q) - amplitude * third,
-                                   rtol=0.0, atol=1e-10)):
+                or np.max(np.abs(plane.axis_vectors.T @ (plane.metric_weights * third))) > 1e-8
+                or np.max(np.abs(frozen_directions.T @ (plane.metric_weights * third))) > 1e-8):
+            raise ValueError("transverse-soft branch seeds differ from the reviewed signed direction")
+        if lock_soft_y:
+            if (preflight.get("n_fixed_third_soft_axes") != 1
+                    or preflight.get("third_soft_mode_constraint")
+                    != "Q_y=0 at every evaluation; transverse stability is not implied"
+                    or not np.allclose(branch_starts[0]["coordinates_u_A_eta_voigt"],
+                                       plane.frozen_coordinates(q), rtol=0.0, atol=1e-10)):
+                raise ValueError("the symmetry-restricted branch must start at Q_y=0")
+            frozen_directions = np.column_stack([frozen_directions, third])
+        elif (not np.allclose(starts[0], plane.frozen_coordinates(q) + amplitude * third,
+                              rtol=0.0, atol=1e-10)
+              or not np.allclose(starts[1], plane.frozen_coordinates(q) - amplitude * third,
+                                  rtol=0.0, atol=1e-10)):
             raise ValueError("transverse-soft branch seeds differ from the reviewed signed direction")
         if any(start.shape != (chart.coordinate_count,)
                or not np.allclose(plane.project(start), q, rtol=0.0, atol=1e-10)
@@ -196,7 +213,9 @@ def main() -> None:
         if args.start_from_result.resolve().parent != args.workdir.resolve():
             raise ValueError("warm-start result must belong to the same evaluator workdir")
         old_summary = json.loads(args.start_from_result.read_text(encoding="utf-8"))
-        expected_kind = ("bto_transverse_soft_variable_cell_conditional_local_candidate_not_PES_or_barrier"
+        expected_kind = ("bto_symmetry_restricted_qy_zero_variable_cell_local_candidate_not_PES_or_barrier"
+                         if lock_soft_y else
+                         "bto_transverse_soft_variable_cell_conditional_local_candidate_not_PES_or_barrier"
                          if physical_soft_plane else
                          "bto_fixed_q1q2_variable_cell_conditional_local_candidate_not_T_to_C_barrier")
         if (old_summary.get("kind") != expected_kind
@@ -207,6 +226,8 @@ def main() -> None:
         if (start.shape != (chart.coordinate_count,) or not np.all(np.isfinite(start))
                 or not np.allclose(plane.project(start), q, atol=1e-8, rtol=0.0)):
             raise ValueError("warm-start coordinates are invalid or change Q")
+        if lock_soft_y and abs(float(third @ (plane.metric_weights * start))) > 1e-8:
+            raise ValueError("warm-start coordinates leave the Q_y=0 restricted sheet")
         if old_summary.get("evaluator_contract_sha256") is None:
             raise ValueError("warm-start result lacks an evaluator contract hash")
         cached_matches = []
@@ -275,7 +296,7 @@ def main() -> None:
         starts = orthogonal_branch_seeds(
             plane, starts[0], negative[index]["metric_normalized_chart_direction"],
             amplitude=args.branch_amplitude,
-            frozen_directions=chart.rigid_translation_directions(),
+            frozen_directions=frozen_directions,
             orthogonal_amplitude_bound=args.orthogonal_amplitude_bound,
         )
         seed_distances = []
@@ -355,6 +376,8 @@ def main() -> None:
     )
 
     def relative_energy_and_gradient(coordinates):
+        if lock_soft_y and abs(float(third @ (plane.metric_weights * coordinates))) > 1e-8:
+            raise ValueError("candidate left the Q_y=0 restricted sheet before ABACUS")
         if evaluator.n_new_evaluations >= args.max_new_evaluations:
             raise RuntimeError("maximum new DFT evaluations reached; existing point directories are preserved")
         energy, gradient = evaluator(coordinates)
@@ -402,12 +425,12 @@ def main() -> None:
         return
 
     if args.curvature_only:
-        if args.max_new_evaluations < 2 * (chart.coordinate_count - 5):
+        if args.max_new_evaluations < 2 * expected_open:
             raise ValueError("curvature budget must cover two probes per open orthogonal direction")
         curvature = audit_orthogonal_curvature(
             plane, starts[0], relative_energy_and_gradient,
             step_amplitude=args.curvature_step,
-            frozen_directions=chart.rigid_translation_directions(),
+            frozen_directions=frozen_directions,
         )
         summary = {
             "kind": "bto_fixed_q1q2_single_point_orthogonal_curvature_screen_not_PES_or_barrier",
@@ -444,7 +467,7 @@ def main() -> None:
         plane, q, relative_energy_and_gradient,
         starts=starts, include_frozen_start=((physical_soft_plane and old_summary is None)
                                              or not bool(starts)),
-        frozen_directions=chart.rigid_translation_directions(),
+        frozen_directions=frozen_directions,
         orthogonal_amplitude_bound=args.orthogonal_amplitude_bound,
         gradient_tolerance=args.gradient_tolerance,
         max_iterations=args.max_iterations,
@@ -462,7 +485,9 @@ def main() -> None:
     if len(matched) != 1:
         raise RuntimeError("optimized geometry must match exactly one complete cached DFT evaluation")
     final_directory, final_record = matched[0]
-    if physical_soft_plane and old_summary is None:
+    if lock_soft_y and old_summary is None:
+        start_labels = ["Q_y=0_frozen"]
+    elif physical_soft_plane and old_summary is None:
         start_labels = ["frozen", "+Q_y", "-Q_y"]
     elif branch_requested:
         start_labels = ["+curvature", "-curvature"]
@@ -501,7 +526,9 @@ def main() -> None:
               "orthogonal_gradient_converged_curvature_unchecked" if stress_passed else
               "orthogonal_gradient_converged_stress_target_failed_curvature_unchecked")
     summary = {
-        "kind": ("bto_transverse_soft_variable_cell_conditional_local_candidate_not_PES_or_barrier"
+        "kind": ("bto_symmetry_restricted_qy_zero_variable_cell_local_candidate_not_PES_or_barrier"
+                 if lock_soft_y else
+                 "bto_transverse_soft_variable_cell_conditional_local_candidate_not_PES_or_barrier"
                  if physical_soft_plane else
                  "bto_fixed_q1q2_variable_cell_conditional_local_candidate_not_T_to_C_barrier"),
         "axis_kind": preflight.get("axis_kind", "archived_soft_stable"),
@@ -509,6 +536,9 @@ def main() -> None:
         "q1_q2_sqrt_amu_A": q.tolist(),
         "q_parallel_q_transverse_sqrt_amu_A": q.tolist() if physical_soft_plane else None,
         "phonon_supercell": preflight.get("phonon_supercell") if physical_soft_plane else None,
+        "third_soft_mode_constraint": preflight.get("third_soft_mode_constraint") if lock_soft_y else None,
+        "q_y_sqrt_amu_A": (float(third @ (plane.metric_weights * result.coordinates))
+                             if lock_soft_y else None),
         "electronic_kpoints": parameters["kpts"],
         "branch_start_labels": start_labels,
         "branch_outcomes": branch_outcomes,

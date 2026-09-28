@@ -23,6 +23,7 @@ from examples.bto_q1q2_reference import (
     bto_transverse_soft_plane, load_bto_q1q2_reference, sha256,
     validate_bto_gamma_source,
 )
+from examples.preflight_bto_transverse_soft_conditional import remaining_soft_y_direction
 from vcneb.mode_surface import _orthogonal_directions
 
 
@@ -118,8 +119,12 @@ def main() -> None:
     summary = json.loads(summary_path.read_text(encoding="utf-8"))
     preflight = json.loads(args.preflight.read_text(encoding="utf-8"))
     grid = json.loads(args.grid_result_manifest.read_text(encoding="utf-8"))
-    physical_soft_plane = preflight.get("kind") == "bto_transverse_soft_conditional_preflight_no_dft"
-    expected_kind = ("bto_transverse_soft_variable_cell_conditional_local_candidate_not_PES_or_barrier"
+    lock_soft_y = preflight.get("kind") == "bto_symmetry_restricted_soft_qy_zero_preflight_no_dft"
+    physical_soft_plane = (preflight.get("kind") == "bto_transverse_soft_conditional_preflight_no_dft"
+                           or lock_soft_y)
+    expected_kind = ("bto_symmetry_restricted_qy_zero_variable_cell_local_candidate_not_PES_or_barrier"
+                     if lock_soft_y else
+                     "bto_transverse_soft_variable_cell_conditional_local_candidate_not_PES_or_barrier"
                      if physical_soft_plane else
                      "bto_fixed_q1q2_variable_cell_conditional_local_candidate_not_T_to_C_barrier")
     if (summary.get("status") not in {
@@ -132,17 +137,20 @@ def main() -> None:
         raise ValueError("conditional result or preflight hash is invalid")
     if physical_soft_plane:
         if any(path is None for path in (args.gamma_provenance, args.force_sets,
-                                         args.eigenpairs_provenance, args.canary_audit)):
-            raise ValueError("soft/soft audit requires the Gamma source and independent canary audit")
+                                         args.eigenpairs_provenance)):
+            raise ValueError("soft/soft audit requires the Gamma source")
         gamma_hashes = validate_bto_gamma_source(
             args.gamma_provenance, args.force_sets, args.eigenpairs_provenance,
         )
         if any(preflight["source_sha256"].get(key) != value for key, value in gamma_hashes.items()):
             raise ValueError("soft/soft Gamma source changed after preflight")
-        canary = json.loads(args.canary_audit.read_text(encoding="utf-8"))
-        if (canary.get("status") != "all_three_raw_DFT_points_validated"
-                or canary.get("source_sha256", {}).get("preflight") != sha256(args.preflight)):
-            raise ValueError("independent three-start canary audit does not match this preflight")
+        if not lock_soft_y:
+            if args.canary_audit is None:
+                raise ValueError("open-Q_y pilot requires the independent three-start canary audit")
+            canary = json.loads(args.canary_audit.read_text(encoding="utf-8"))
+            if (canary.get("status") != "all_three_raw_DFT_points_validated"
+                    or canary.get("source_sha256", {}).get("preflight") != sha256(args.preflight)):
+                raise ValueError("independent three-start canary audit does not match this preflight")
     loaded = load_bto_q1q2_reference(
         args.report, args.reference, args.force_constants, args.phonopy_eigenpairs,
         strain_metric_weights_amu_A2=np.asarray(preflight["strain_metric_weights_amu_A2"], dtype=float),
@@ -151,7 +159,20 @@ def main() -> None:
     plane = (bto_transverse_soft_plane(
         loaded, strain_metric_weights_amu_A2=np.asarray(preflight["strain_metric_weights_amu_A2"], dtype=float),
     ) if physical_soft_plane else loaded.plane)
-    open_directions = _orthogonal_directions(plane, chart.rigid_translation_directions())
+    third = (np.asarray(preflight["remaining_soft_y_metric_unit_direction"], dtype=float)
+             if physical_soft_plane else None)
+    frozen_directions = chart.rigid_translation_directions()
+    if lock_soft_y:
+        rebuilt = remaining_soft_y_direction(loaded.modes, plane)
+        if (preflight.get("n_fixed_third_soft_axes") != 1
+                or preflight.get("n_relaxed_orthogonal_coordinates") != chart.coordinate_count - 6
+                or third.shape != rebuilt.shape
+                or not np.allclose(third, rebuilt, rtol=0.0, atol=1e-10)
+                or summary.get("third_soft_mode_constraint")
+                   != "Q_y=0 at every evaluation; transverse stability is not implied"):
+            raise ValueError("restricted third-soft-mode source or constraint is invalid")
+        frozen_directions = np.column_stack([frozen_directions, third])
+    open_directions = _orthogonal_directions(plane, frozen_directions)
     branch_basis = None
     branch_center = None
     branch_audit_hash = None
@@ -202,8 +223,6 @@ def main() -> None:
     reference_energy = float(cubic[0]["energy_eV"])
     expected_input = grid["points"][0]["input_sha256"]
     records = []
-    third = (np.asarray(preflight["remaining_soft_y_metric_unit_direction"], dtype=float)
-             if physical_soft_plane else None)
     frozen_start = plane.frozen_coordinates(q)
     for directory in sorted(args.workdir.glob("eval-*-*")):
         if not directory.is_dir():
@@ -238,6 +257,8 @@ def main() -> None:
             raise ValueError(f"result cache identity/contract invalid: {directory}")
         if not np.allclose(plane.project(coordinates), q, atol=1e-8, rtol=0.0):
             raise ValueError(f"evaluation drifted from fixed Q1/Q2: {directory}")
+        if lock_soft_y and abs(float(third @ (plane.metric_weights * (coordinates - frozen_start)))) > 1e-8:
+            raise ValueError(f"evaluation drifted from Q_y=0: {directory}")
         atoms = chart.to_atoms(coordinates)
         point_distances = atoms.get_all_distances(mic=True)
         np.fill_diagonal(point_distances, np.inf)
@@ -393,7 +414,9 @@ def main() -> None:
         ):
             raise ValueError("reported selected branch is higher than an audited converged signed candidate")
     output = {
-        "kind": ("bto_transverse_soft_conditional_single_point_audit_not_PES_or_barrier"
+        "kind": ("bto_symmetry_restricted_qy_zero_single_point_audit_not_PES_or_barrier"
+                 if lock_soft_y else
+                 "bto_transverse_soft_conditional_single_point_audit_not_PES_or_barrier"
                  if physical_soft_plane else "bto_q1q2_conditional_single_point_audit_not_PES_or_barrier"),
         "status": ("verified_gradient_stationary_branch_candidate_local_curvature_unchecked"
                    if branch_basis is not None else
@@ -413,6 +436,7 @@ def main() -> None:
         "final_third_soft_y_amplitude_sqrt_amu_A": (
             None if third is None else float(third @ (plane.metric_weights * (final_coordinates - frozen_start)))
         ),
+        "third_soft_mode_restricted_at_zero": lock_soft_y,
         "final_negative_curvature_amplitudes_sqrt_amu_A": final_branch_projection,
         "n_current_branch_job_DFT_points": None if branch_job_points is None else len(branch_job_points),
         "signed_basin_converged_candidates": signed_basin_candidates,
@@ -424,7 +448,7 @@ def main() -> None:
             "preflight": sha256(args.preflight),
             "grid_result_manifest": sha256(args.grid_result_manifest),
             "curvature_audit": branch_audit_hash,
-            "canary_audit": sha256(args.canary_audit) if physical_soft_plane else None,
+            "canary_audit": sha256(args.canary_audit) if args.canary_audit is not None else None,
         },
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
