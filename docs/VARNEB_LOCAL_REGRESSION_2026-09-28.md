@@ -168,3 +168,34 @@ release workflow. The previous isolated wheel/sdist smoke above is still
 useful but predates the latest README/manual text and these repository-only
 paper tests; it is not evidence that an exact-current-revision package has
 been rebuilt or tested in a pristine checkout.
+
+## Committed-package-source smoke after the optimizer JSON fix
+
+At commit `06baea6`, `git archive` exported only the tracked packaging inputs
+(`pyproject.toml`, `MANIFEST.in`, licence, both READMEs, `vcneb/`, the detailed
+manual, and the analytic toy example) into a separate ignored directory.
+An isolated `python -m build` produced both `varneb-0.0.2` archives from that
+clean source snapshot; `twine check` passed both. The sdist contains the
+README, manual, toy and package source, not `tests/`, `cluster/`, `outputs/`,
+`benchmarks/` or `paper/`. Local artifact SHA-256 values are:
+
+- sdist: `b7fe06534a692b77eb4d9f2239eb567934e86e1a3bb84518052d0bdcac3fedca`;
+- wheel: `6a67c181630246bea7fb0b4eb7c6017254b3b6fd04b87cbfeb309ce980f5bc33`.
+
+The clean Python 3.10.9 venv created for the previous committed snapshot has
+`include-system-site-packages = false`. Its dependencies were installed from
+PyPI, then the `06baea6` wheel replaced the prior local wheel using
+`--force-reinstall --no-deps`. From a separate run directory, `vcneb.__file__`
+resolved to that venv's `site-packages`; `pip check`, `varneb --version`,
+`backends --json`, `optimizers --json`, `varneb init`, and `validate-config`
+passed. The optimizer registry now emits eight JSON boolean `true` values
+rather than string `"true"`, consistent with the backend matrix. A copied
+analytic toy example ran against the installed wheel and returned
+`barrier_eV=0.250004`, `delta_eV=0.000000`. The full local source suite after
+the change gave **609 passed, 1 skipped, 209 warnings** in 56.69 s.
+
+This is a clean *package-source* snapshot and installed-wheel smoke, not a
+full-repository pristine checkout, a new tagged release, a PyPI publication,
+or material-level DFT reproducibility. The version remains `0.0.2`; these
+local artifacts are not the already-published PyPI files. No CI or DFT was
+started by this check.
