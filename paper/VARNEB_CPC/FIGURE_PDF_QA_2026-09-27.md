@@ -75,3 +75,33 @@ output-box overfull warning persists. Eleven pages meet the approximate
 ten-page length aim without shrinking plot text, but this is not a final
 submission certificate: author/affiliation/funding placeholders and complete
 raw-output and figure-source audits remain open.
+
+## 2026-09-28 addendum: current 10-page manuscript and supplement
+
+The current main source includes the `Q_y=0` restricted BTO sheet as Fig. 2,
+the five-backend GaN comparison as Fig. 3, the same-600-eV atom–strain
+diagnostic as Fig. 4, and the baseline-subtracted central GaN transverse
+enthalpy contour as Fig. 5. Supplementary Figs. S1 and S2 hold the material
+controls and all-image GaN mode/strain profile. TeX Live/`latexmk` compiled
+the main PDF to **10 A4 pages** and the supplement to **2 A4 pages**. Neither
+log reports undefined references or citations; the main log retains only a
+1.9-pt overfull output box.
+
+Pages 6, 9, and 10 of the compiled main PDF and both supplement pages were
+rendered with Poppler at 130 dpi and visually inspected. The BTO measured
+markers, two blind holdouts, path projection and model-residual panel are
+distinct on page 6. The new GaN Fig. 5 shows all 90 measured coordinates,
+its local transverse color scale and the separate full barrier without
+clipped labels or legend overlap on page 9. The page-10 declarations and
+references are legible; the two supplementary figures and captions fit their
+pages without clipping. This targeted render does not re-audit every earlier
+manuscript page or any underlying DFT output.
+
+The text audit also removed one overstatement: CP2K meets the common path
+force threshold and has 27/27 exact-cache energy/force/stress agreement plus
+raw-text energy/stress reconciliation, but the historical text lacks final
+raw atomic forces and run-end markers. The current limitations section no
+longer calls that a full original-output audit. The architecture PDF/SVG
+remain modified in the shared working tree, so this render is not a frozen
+figure-hash manifest. Author order, affiliation, CRediT and funding metadata
+still require the authors' decisions before literal submission.
