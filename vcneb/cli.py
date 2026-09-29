@@ -160,7 +160,7 @@ def _prepare_config(path: str) -> int:
     return 0
 
 
-def _run_config(path: str) -> int:
+def _run_config(path: str, *, full_summary: bool = False) -> int:
     """Execute the packaged material runner from an explicit reviewed config."""
 
     config = RunConfig.from_file(path)
@@ -201,6 +201,7 @@ def _run_config(path: str) -> int:
         "--cell-interpolation", config.cell_interpolation,
         "--mapping", config.mapping,
         "--backend-label", config.backend,
+        "--summary-format", "json" if full_summary else "brief",
         "--config-source", str(Path(path).resolve()),
         "--parameters-json", json.dumps(calculator.get("parameters", {})),
         "--factory-kwargs-json", json.dumps(factory_kwargs),
@@ -275,6 +276,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     run.add_argument("path", nargs="?", default="varneb.json")
     run.add_argument("--execute", action="store_true", help="acknowledge this may launch external calculators")
+    run.add_argument("--full-summary", action="store_true", help="print full JSON instead of the brief result line")
     return parser
 
 
@@ -296,7 +298,7 @@ def main() -> int:
         if args.command == "run":
             if not args.execute:
                 raise ValueError("run requires --execute; use prepare for calculator-free validation")
-            return _run_config(args.path)
+            return _run_config(args.path, full_summary=args.full_summary)
     except (FileExistsError, OSError, ValueError, json.JSONDecodeError) as exc:
         print(f"varneb: {exc}", file=sys.stderr)
         return 2

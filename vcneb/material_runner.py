@@ -109,6 +109,10 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         help="pin the exact subspace artifact bytes; required for a production subspace run",
     )
     parser.add_argument("--workdir", required=True)
+    parser.add_argument(
+        "--summary-format", choices=("json", "brief"), default="json",
+        help="stdout summary style; full JSON is always saved in the workdir",
+    )
     parser.add_argument("--n-images", type=int, default=7)
     parser.add_argument("--fmax", type=float, default=0.10)
     parser.add_argument("--steps", type=int, default=300)
@@ -508,7 +512,15 @@ def main(argv: list[str] | None = None, *, symbol_loader=None) -> None:
     (workdir / "vcneb_summary.json").write_text(
         json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )
-    print(json.dumps(summary, indent=2, sort_keys=True))
+    if args.summary_format == "brief":
+        print(
+            f"VARNEB {summary['status']}: {summary['n_images']} images, "
+            f"fmax={summary['final_max_generalized_force_eV_per_A']:.6g} eV/A, "
+            f"barrier={summary['barrier_enthalpy_eV']:.6g} eV; "
+            f"summary: {workdir / 'vcneb_summary.json'}"
+        )
+    else:
+        print(json.dumps(summary, indent=2, sort_keys=True))
 
 
 if __name__ == "__main__":

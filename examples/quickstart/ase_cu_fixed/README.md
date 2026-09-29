@@ -20,6 +20,10 @@ the same safety boundary for all calculators.
 The summary is `examples/quickstart/ase_cu_fixed/run/vcneb_summary.json`.
 With the specified one-step budget it should report `status: converged` and
 `final_max_generalized_force_eV_per_A` below the default 0.10-eV/Å gate.
+The public `varneb run` command prints a short result line; the full audit
+record stays in that JSON file. Use `--full-summary` to echo the saved JSON
+to the terminal. The lower-level `python -m vcneb.material_runner` entry
+point retains full JSON on stdout by default.
 A second `run` in the same workdir is refused to protect its records. For
 another trial, change `workdir` in a copy of the JSON rather than overwriting
 the first run.

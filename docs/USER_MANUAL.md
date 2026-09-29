@@ -64,7 +64,10 @@ not `"45.7"`). `prepare` performs the geometry check after this schema gate.
 `varneb run` uses the *same* configuration; `--execute` is required because it
 can launch first-principles programs. It never submits a Slurm job by itself.
 The initial path and preflight are checked again, and a prior execution in the
-same workdir is refused rather than overwritten. For a standard ASE
+same workdir is refused rather than overwritten. The public command prints
+a concise outcome and the path to
+`vcneb_summary.json`; `--full-summary` restores the full JSON on stdout.
+The summary file is written in either mode. For a standard ASE
 calculator, set the following fields in `varneb.json` (shown with a
 calculator-free toy class; substitute a reviewed material calculator and
 settings for production):

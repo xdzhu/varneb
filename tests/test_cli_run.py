@@ -72,7 +72,10 @@ def test_run_executes_same_config_with_ase_calculator(monkeypatch, tmp_path, cap
 
     monkeypatch.setattr(sys, "argv", ["varneb", "run", str(config), "--execute"])
     assert main() == 0
-    capsys.readouterr()
+    output = capsys.readouterr().out
+    assert "VARNEB " in output
+    assert "vcneb_summary.json" in output
+    assert '"calculator_reports"' not in output
     summary = json.loads((tmp_path / "run" / "vcneb_summary.json").read_text(encoding="utf-8"))
     assert summary["backend_label"] == "ase"
     assert summary["requires_stress"] is False
@@ -96,6 +99,17 @@ def test_run_rejects_implicit_dft_launcher(monkeypatch, tmp_path, capsys):
     assert main() == 2
     assert "explicit calculator.command" in capsys.readouterr().err
     assert not (tmp_path / "run").exists()
+
+
+def test_run_full_summary_opt_in(monkeypatch, tmp_path, capsys):
+    config = _toy_config(tmp_path)
+    monkeypatch.setattr(
+        sys, "argv", ["varneb", "run", str(config), "--execute", "--full-summary"]
+    )
+    assert main() == 0
+    output = capsys.readouterr().out
+    assert '"calculator_reports"' in output
+    assert '"final_max_generalized_force_eV_per_A"' in output
 
 
 def test_config_dispatch_keeps_factory_and_optimizer_independent(monkeypatch, tmp_path):
@@ -137,7 +151,9 @@ def test_documented_ase_cli_quickstart_is_runnable(monkeypatch, tmp_path, capsys
 
     monkeypatch.setattr(sys, "argv", ["varneb", "run", str(config), "--execute"])
     assert main() == 0
-    capsys.readouterr()
+    output = capsys.readouterr().out
+    assert "VARNEB converged:" in output
+    assert len(output) < 1000
     summary = json.loads((tmp_path / "run/vcneb_summary.json").read_text(encoding="utf-8"))
     assert summary["backend_label"] == "ase"
     assert summary["n_images"] == 3

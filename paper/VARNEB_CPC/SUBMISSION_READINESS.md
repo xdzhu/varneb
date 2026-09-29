@@ -44,7 +44,7 @@ the HfO$_2$ per-cell conversion from committed source tables.
 
 ## Technical QA snapshot, 2026-09-29
 
-On the current working tree, `python -m pytest -q` completed with 615 passed,
+On the current working tree, `python -m pytest -q` completed with 616 passed,
 one skipped, and 209 warnings (mostly ASE/spglib/Phonopy deprecations). The
 TeX Live `latexmk` build exited successfully; `pdfinfo` reports 15 A4 pages.
 All pages were rendered for visual inspection. No missing figure, clipped
@@ -55,6 +55,9 @@ main-text float barrier past the conclusion put figures after their discussion,
 so that trial was reverted. This snapshot is not a final-release test: the
 shared working tree contains unrelated modified figures and untracked tests,
 and author/submission metadata will still change the document.
+The documented ASE/EMT quickstart also passed in a copied isolated directory:
+the public CLI now emits one concise line while preserving the complete
+`vcneb_summary.json`; `--full-summary` retains the old verbose option.
 
 ## Remaining gates for this CPC submission
 

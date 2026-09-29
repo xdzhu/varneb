@@ -42,8 +42,10 @@ does **not** run DFT. Set `calculator.kind` to `ase_class` or `factory`, pin its
 `module:attribute` symbol, reviewed parameters and (for named DFT backends)
 an explicit command before `run`. `run --execute` uses that same JSON and
 starts calculators **in the current process**; it does not submit a scheduler
-job or guess pseudopotentials/cutoffs. A seven-image path has five interior
-workers; `image_workers: 0` runs them sequentially. Advanced restarts and mode
+job or guess pseudopotentials/cutoffs. It prints one result line and saves
+the full `vcneb_summary.json`; use `--full-summary` to echo that JSON.
+A seven-image path has five interior workers; `image_workers: 0` runs them
+sequentially. Advanced restarts and mode
 subspaces remain available via `python -m vcneb.material_runner` (the old
 `examples/run_vcneb_ase.py` remains compatible). See
 [`docs/USER_MANUAL.md`](https://github.com/xdzhu/varneb/blob/main/docs/USER_MANUAL.md) for the full contract. To run the
