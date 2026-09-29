@@ -9,12 +9,12 @@ from pathlib import Path
 
 import numpy as np
 import pytest
-from ase.units import GPa
 from matplotlib.collections import PathCollection
 import matplotlib.pyplot as plt
 
 from scripts.plot_gan_600eV_atomic_dense_surface import load, model_surface
-from scripts.plot_gan_600eV_atomic_transverse_landscape import draw, transverse_surface
+from scripts.plot_gan_600eV_atomic_transverse_landscape import transverse_surface
+from scripts.plot_gan_600eV_atomic_transverse_q9 import draw as draw_q9, load as load_q9
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -83,43 +83,67 @@ def test_frozen_dense_figure_has_ninety_traceable_coordinates() -> None:
     assert sum(row["source_kind"] == "new_static" for row in rows) == 44
 
 
-def test_main_figure_is_transverse_and_does_not_imply_lower_dft_route() -> None:
+def test_main_transverse_figure_tracks_162_dft_points_without_claiming_lower_mep() -> None:
     figures = ROOT / "paper/VARNEB_CPC/figures"
+    stem = "gan_600eV_atomic_transverse_162_20260929_v2"
     qa = json.loads(
-        (figures / "gan_600eV_atomic_transverse_landscape_qa.json").read_text(encoding="utf-8")
+        (figures / f"{stem}_qa.json").read_text(encoding="utf-8")
     )
     manuscript = (ROOT / "paper/VARNEB_CPC/varneb_CPC.tex").read_text(encoding="utf-8")
-    assert r"{figures/gan_600eV_atomic_transverse_landscape.pdf}" in manuscript
+    assert f"{{figures/{stem}.pdf}}" in manuscript
     assert r"{figures/gan_600eV_atomic_dense_surface.pdf}" not in manuscript
-    assert qa["status"] == "GaN_600eV_central_atomic_transverse_landscape"
+    assert qa["status"] == "GaN_600eV_central_18x9_frozen_transverse_figure"
+    assert qa["n_audited_DFT_points"] == 162
+    assert qa["n_measured_lower_than_centerline_by_0p05_meV"] == 2
+    assert "not a whole-path" in qa["claim_limit"]
     assert qa["source_sha256"]["plotter"] == hashlib.sha256(
-        (ROOT / "scripts/plot_gan_600eV_atomic_transverse_landscape.py").read_bytes()
+        (ROOT / "scripts/plot_gan_600eV_atomic_transverse_q9.py").read_bytes()
+    ).hexdigest()
+    csv_path = figures / f"{stem}_source_data.csv"
+    assert qa["source_sha256"]["source_data"] == hashlib.sha256(
+        csv_path.read_bytes()
     ).hexdigest()
 
-    report, frames = load(
-        ROOT / "benchmarks/numerical_integrity/gan_600eV_atomic_tube_dense_20260928.json",
+    report, full_arc, full_h = load_q9(
+        ROOT / "benchmarks/numerical_integrity/gan_600eV_atomic_tube_q9_20260929.json",
+        ROOT / "benchmarks/numerical_integrity/gan_600eV_atomic_tube_refinement_20260928.json",
         ROOT / "paper/VARNEB_CPC/evidence/gan_45p7_final_chains_20260927/gan_vasp_45p7_final_chain.traj",
     )
     measured = np.asarray(report["excess_enthalpy_meV_per_GaN"], dtype=float)
-    assert np.allclose(measured[:, 2], 0.0)
-    assert measured[:, [0, 1, 3, 4]].min() > 0.0
-    full_h = np.asarray([
-        frame.get_potential_energy() + 45.7 * GPa * frame.get_volume()
-        for frame in frames
-    ])
-    _, _, interpolated = transverse_surface(report, full_h)
-    assert interpolated.min() == pytest.approx(
-        qa["transverse_energy_min_max_meV_per_GaN"][0], abs=1e-9
+    assert report["pressure_GPa"] == 45.7
+    assert report["n_reused_measured_points"] == 90
+    assert report["n_new_raw_audited_statics"] == 72
+    assert measured.shape == (18, 9)
+    assert np.allclose(measured[:, 4], 0.0, atol=1e-8)
+    assert int(np.count_nonzero(measured < -0.05)) == 2
+    assert measured.min() == pytest.approx(
+        qa["minimum_measured_excess_meV_per_GaN"], abs=1e-9
     )
-    assert -0.3 < interpolated.min() < -0.2
+    assert report["prospective_gate_pass"] is True
+    assert report["prospective_max_abs_error_meV_per_GaN"] < 0.01
+    with csv_path.open(newline="", encoding="utf-8") as handle:
+        rows = list(csv.DictReader(handle))
+    assert len(rows) == 162
+    assert {row["kind"] for row in rows} == {"audited_DFT"}
+    assert np.allclose(
+        [float(row["excess_enthalpy_meV_per_GaN"]) for row in rows],
+        measured.ravel(), atol=1e-9, rtol=0,
+    )
 
-    fig = draw(report, frames)
+    fig = draw_q9(report, full_arc, full_h)
     try:
         panel = fig.axes[0]
         sampled_grid = next(
             item for item in panel.collections
-            if isinstance(item, PathCollection) and len(item.get_offsets()) == 90
+            if isinstance(item, PathCollection) and len(item.get_offsets()) == 162
         )
-        assert sampled_grid.get_zorder() > max(line.get_zorder() for line in panel.lines)
+        assert sampled_grid.get_zorder() > 2  # above the filled contour
+        lower_markers = next(
+            item for item in panel.collections
+            if isinstance(item, PathCollection) and len(item.get_offsets()) == 2
+        )
+        assert lower_markers.get_zorder() > max(
+            line.get_zorder() for line in panel.lines
+        )
     finally:
         plt.close(fig)

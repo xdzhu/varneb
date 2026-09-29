@@ -47,13 +47,13 @@ def main() -> None:
         ("81 measured enthalpies", "GaN local DFT point count"),
         ("or whole-path surface or a certified stationary transition state",
          "GaN local TS limit"),
-        ("Fig.~\\ref{fig:bto-frozen-soft81}", "BTO frozen-grid main-text boundary"),
+        ("Fig.~\\ref{fig:bto-frozen-soft289}", "BTO frozen-grid main-text boundary"),
     ):
         require(manuscript, fragment, label=label)
 
     for figure, label in (
         ("vcneb_material_validation.pdf", "material-control appendix"),
-        ("bto_frozen_soft_mode_81_20260928.pdf", "audited BTO grid in main text"),
+        ("bto_frozen_soft_mode_289_20260929.pdf", "audited BTO grid in main text"),
         ("gan_gamma_path_600eV.pdf", "GaN whole-path modes in main text"),
         ("gan_joint_mode_600eV.pdf", "GaN joint modes in main text"),
     ):

@@ -1,7 +1,7 @@
 # VARNEB CPC submission gate
 
 Current scope: one manuscript with no page limit and no separate supplement.
-The 2026-09-28 build has eight main-text figures and one same-document
+The 2026-09-29 build has eight main-text figures and one same-document
 appendix figure. This gate supersedes the layout targets in the dated
 `STAGE_GATE_2026-09-27.md`; it does not supersede raw-data audits.
 
@@ -28,9 +28,9 @@ Library accession.
 | Manuscript claim | Evidence to check | Allowed conclusion and boundary |
 | --- | --- | --- |
 | Established NEB extended to variable cell through a backend-independent controller | `varneb_CPC.tex` Secs. 2–3; `tests/check_vcneb_forces.py`; fixed-cell and finite-difference regressions | A tested implementation and execution contract, **not** a new VCNEB physical formalism. |
-| BTO/ABACUS barrierless T→C path and cubic Γ decomposition | Fig. 2/3 source data, `outputs/batio3_t_to_c_pbe100_dzp10au/` provenance, `bto_qy0_even_mode_two_holdout_gate_20260928.json` | Under PBE, 100 Ry, 10-au DZP, and a 4×4×4 electronic mesh, the seven-total-image path is monotonic; the 1×1×1 Γ basis explains atomic geometry. The 81-point frozen cut and nine-training/two-prospective-point `Q_y=0` restricted sheet are different objects. Neither is an unrestricted conditional PES, finite-temperature free energy, or activation barrier. |
+| BTO/ABACUS barrierless T→C path and cubic Γ decomposition | Figs. 2–3 source CSV/QA, `outputs/batio3_t_to_c_pbe100_dzp10au/` provenance, `bto_qy0_27_node_sheet_20260929.json`, `bto_transverse_soft_frozen289_20260929.json` | Under PBE, 100 Ry, 10-au DZP, and a 4×4×4 electronic mesh, the seven-total-image path is monotonic; the 1×1×1 Γ basis explains atomic geometry. The 27-point `Q_y=0` restricted variable-cell sheet and 289-point frozen-cubic two-soft-mode cut are different objects. Their prospectively sampled increments pass 1.131- and 0.488-meV/BTO maximum-error checks, respectively. Neither is an unrestricted conditional PES, finite-temperature free energy, or activation barrier. |
 | GaN 45.7-GPa B4→B1 multi-backend barrier topology | Fig. 4 source data, `evidence/gan_45p7_multibackend_vcneb_20260924.json`, `evidence/gan_45p7_full_image_input_contract_audit_20260929.md`, `benchmarks/numerical_integrity/gan_cp2k_final_chain_raw_energy_stress_20260928.json` | Five 29-total-image paths satisfy the common 0.10-eV/Å generalized-force criterion and share a dominant peak. The final visible inputs have consistent per-backend settings, but this is not a historical-call or raw-output audit. Cross-backend energies use separate endpoint baselines and calculator contracts. The 45.7-GPa pressure is adopted from Qian, not re-established as each PBE backend's coexistence pressure; Qian's PW91/ultrasoft/force-norm protocol differs. CP2K original-text atomic forces and final run-end markers are unavailable; cache-chain forces and raw energy/stress reconciliation do not replace them. |
-| GaN atom–strain and mode interpretation | Figs. 5–8 source CSV/QA, `gan_600eV_joint_gamma_bridge_20260928.json`, `gan_600eV_ts_2d_9x9_refinement_20260928.json`, `gan_600eV_atomic_tube_dense_20260928.json` | At the original VASP/PBE 600-eV, 45.7-GPa contract, the local joint Hessian has a negative direction and sampled 81-point and central 90-point frozen cuts support a bounded mechanism interpretation. The energy–force/stress mismatch and incomplete stationary-point test preclude a strict variable-cell TS certificate. The central cut is not a whole-path or relaxed two-mode surface. |
+| GaN atom–strain and mode interpretation | Figs. 5–8 source CSV/QA, `gan_600eV_joint_gamma_bridge_20260928.json`, `gan_600eV_ts_2d_9x9_refinement_20260928.json`, `gan_600eV_atomic_tube_q9_20260929.json` | At the original VASP/PBE 600-eV, 45.7-GPa contract, the local joint Hessian has a negative direction. The independently sampled 81-point local atom–strain cut and 162-point central path-transverse cut support a bounded mechanism interpretation. Two newly measured transverse points are about 0.2 meV/GaN below their frozen-cell centerline references; they are not a fully relaxed lower MEP. The energy–force/stress mismatch and incomplete stationary-point test preclude a strict variable-cell TS certificate. The central cut is not a whole-path or relaxed two-mode surface. |
 | Case-specific convergence acceleration | Table 2, `ACCELERATION_EVIDENCE_AUDIT_2026-09-27.md`, Slurm launch audit | Matched-start ABACUS chains use the same first-crossing threshold of 0.10 eV/Å; BTO/HfO₂ counted-launch reductions are 78.5%/38.2%. Negative transfers and path differences remain visible. Do not advertise universal speedup or identical saddle basins. The pre-DFT feasibility gate is a separate safety mechanism; this ablation did not isolate its contribution to launch savings. |
 | Installable and usable source package | `docs/RELEASE_NOTES_v0.0.2.md` hosted-artifact smoke; `docs/USER_MANUAL.md`; `tests/test_cli_run.py`, `tests/test_config.py` | PyPI 0.0.2 passes an isolated CLI smoke but predates the later QE/CP2K/ABINIT evidence. The current source is now numbered 0.0.3, which has separately passed isolated local wheel/sdist build, Twine checks, fresh wheel install, and the sdist analytic toy. No 0.0.3 tag or publication exists; neither artifact smoke certifies a user's DFT executable. |
 
@@ -44,13 +44,23 @@ the HfO$_2$ per-cell conversion from committed source tables.
 
 ## Technical QA snapshot, 2026-09-29
 
-On the shared working tree, `python -m pytest -q` completed with 616 passed,
-one skipped, and 209 warnings (mostly ASE/spglib/Phonopy deprecations).
+On the shared working tree after the 289/27/162-point figure update,
+`python -m pytest -q --disable-warnings` completed with **617 passed, one
+skipped**, and 209 suppressed warnings (mostly ASE/spglib/Phonopy
+deprecations). The first unscoped attempt collected duplicate test modules
+from retained `tmp/` source snapshots and failed during collection; the
+repository now declares `testpaths = ["tests"]`, and both the explicitly
+scoped and plain-root entry points pass. Figure regression tests have been
+updated to check the current main-text CSVs against the 27/289/162-node
+audit records rather than merely expecting old filenames.
 The clean `17a4f08` Git archive separately passed 597 tests and compiled its
-15-page manuscript without missing figures or citations. Increasing the
+15-page manuscript without missing figures or citations. That result is
+historical, not a clean-archive certification of the newer `4a2f7fb`
+figure commit. Increasing the
 permitted double-column top-float occupancy then packed GaN Figs. 5--8
 beside their discussion across pages 9--11; a fresh working-tree TeX Live
-build is 14 A4 pages. Its late pages were rendered and checked for clipping;
+build after the new figures is **15 A4 pages**. Pages 6, 7, and 10–13 were
+rendered and checked for clipping;
 the remaining appendix/reference-page whitespace and one 1.9-pt overfull
 box are layout polish, not missing calculations. Moving the main-text float
 barrier past the conclusion instead placed figures after their discussion,

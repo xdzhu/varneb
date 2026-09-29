@@ -29,11 +29,13 @@ The manuscript distinguishes three evidence levels:
    coordinate, force, CI, and restart mechanics.
 2. ABACUS/PBE material calculations establish the BTO and HfO2 examples.
    BTO's cubic Gamma projection uses the five-atom `1x1x1` phonon cell;
-   its complete 81-point two-soft-mode contour (59 prior plus 22 new static
-   points) is a *frozen-cell* slice, not a relaxed conditional surface;
+   its complete 289-point two-soft-mode contour (the audited 81-point grid
+   plus 208 new static points) is a *frozen-cell* slice, not a relaxed
+   conditional surface;
    it is a main-text figure alongside the separately audited `Q_y=0`
-   symmetry-restricted variable-cell sheet, with nine measured training nodes
-   and two prospective DFT holdouts below the predeclared 2-meV/BTO gate. It
+   symmetry-restricted variable-cell sheet, with 27 measured nodes. Its
+   original nine-node model predicted 15 new conditional DFT nodes within
+   1.131 meV/BTO, below the predeclared 2-meV/BTO gate. It
    does not claim an unrestricted conditional PES or a finite-temperature
    free-energy surface. The exploratory frozen cut and four-point conditional
    analysis remain staged evidence. The five
@@ -63,11 +65,13 @@ statistical replica.
 ## Scope and organization
 
 There is no page-count target or separate supplement. The main text contains
-the architecture, BTO `Q_y=0` restricted sheet and 81-point frozen-mode grid,
+the architecture, BTO 27-point `Q_y=0` restricted sheet and 289-point frozen-mode grid,
 five-backend GaN barriers, the 81-point local GaN joint-coordinate cut,
 the GaN joint Hessian and endpoint-mode projections, whole-path endpoint-mode
-and strain evolution, and the validated **central** GaN atomic-transverse
-enthalpy cut. The BTO/HfO2 image-count, interpolation, and volume controls
+and strain evolution, and the 162-point **central** GaN atomic-transverse
+enthalpy cut. Two measured transverse samples lie about 0.2 meV/GaN below
+their frozen-cell centerline references; this does not certify a lower relaxed
+MEP. The BTO/HfO2 image-count, interpolation, and volume controls
 are in the same document's appendix. Keep the figures legible and retain the
 reproducibility and scientific limits rather than compressing for page count.
 The central GaN cut is not a full-path or conditionally relaxed two-mode
