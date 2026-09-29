@@ -46,6 +46,9 @@ for current numbering.
 | Figure argument and style contract | `FIGURE_LOGIC_AND_STYLE.md` | each panel has a claim, source, normalization, and risk boundary; aligned axes, readable labels, framed legends, and explicit pending data |
 | Real-material strict-mode release-and-refine | no authoritative material run | explicitly future work |
 
-The manuscript must not claim algorithmic novelty over Qian VC-NEB,
+The original-page, unit, mapping, and protocol boundaries for the four
+quantitative literature comparators are consolidated in
+`FINAL_PRIMARY_SOURCE_READTHROUGH_2026-09-29.md`; Qian's plotted curve is
+digitized only approximately. The manuscript must not claim algorithmic novelty over Qian VC-NEB,
 G-SSNEB/SSNEB, or FD-NEB. Its software contribution is an open, pure-Python,
 calculator-agnostic, restartable and evidence-oriented implementation.

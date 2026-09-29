@@ -132,12 +132,14 @@ archived source test is a fresh DFT audit or a final CPC/Mendeley deposit.
    with author-approved statements. Confirm the CPiP article route and
    resolve the Program Summary's pending CPC Library field through the actual
    CPC/Mendeley submission workflow.
-2. Obtain a final scientific read-through of every literature comparator,
-   pressure and formula-unit normalization, figure caption, and Data
-   availability statement. In particular, retain the BTO PBEsol distortion
-   versus NEB distinction and the GaN/CP2K and TS limitations. The first
-   DOI/source-page pass and five corrected author records are documented in
-   `CITATION_AUDIT_2026-09-28.md`; this does not replace the final read-through.
+2. The four quantitative external comparators have a primary-page read-through
+   in `FINAL_PRIMARY_SOURCE_READTHROUGH_2026-09-29.md`; the BTO PBEsol
+   distortion versus NEB distinction and Qian/Sheppard/Liu protocol limits
+   are retained. Before submission, obtain an author-level final read of
+   captions, pressure and formula-unit normalization, the CP2K and TS limits,
+   general-method citations, and the Data availability statement. The DOI
+   metadata and corrected author records are separately documented in
+   `CITATION_AUDIT_2026-09-28.md`.
 3. On the final source revision, rerun the full test suite, manuscript claim
    check, LaTeX build, and rendered-page inspection. Review the late-figure
    spacing without moving figures past the conclusions. Record failures
