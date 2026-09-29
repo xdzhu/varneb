@@ -618,7 +618,9 @@ best update policy material- and path-dependent.
 
 GaN B4-to-B1 at 45.7 GPa supplies a finite-barrier production benchmark: a
 29-image, four-atom path using Qian's tetragonal mapping, with enthalpy per
-two GaN formula units. The manager reuses fixed endpoints and schedules only
+two GaN formula units. We adopt the pressure reported by Qian
+\emph{et al.}, rather than re-estimating a coexistence pressure separately for
+each PBE backend. The manager reuses fixed endpoints and schedules only
 the 27 interior images in private calculator directories; backend-specific
 MPI launch and affinity settings are recorded with each run.
 
@@ -629,6 +631,11 @@ VASP, QE, ABINIT, and CP2K, respectively. The first three lie within
 0.013 eV/GaN of the
 0.34 eV/GaN tetragonal-route value reported by Qian \emph{et al.}
 \cite{Qian2013}; ABINIT and CP2K are lower by 0.0476 and 0.0472 eV/GaN.
+This proximity is not a same-protocol replication: Qian \emph{et al.} used
+QE/PW91 with ultrasoft pseudopotentials, 75 Ry and a $\Gamma$-centered
+$8\times8\times6$ mesh, and required 0.03 eV/\AA{} RMS image force
+(0.01 eV/\AA{} at the saddle). Our paths use PBE and a 0.10-eV/\AA{}
+maximum generalized-force criterion, whose norm is not directly equivalent.
 The reverse B1-to-B4 barriers, computed against each backend's own B1
 endpoint, span 0.3431--0.3605 eV/GaN. The endpoint reaction
 enthalpy is more code-sensitive ($-0.0585$ to $-0.0046$ eV/GaN), as expected

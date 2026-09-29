@@ -21,7 +21,13 @@ Comparator interpretation checked against the source pages:
   Figs. 5, 6, and 8: GaN tetragonal B4→B1 0.34 eV/GaN at 45.7 GPa;
   hexagonal B4→B1 0.39 eV/GaN; B3→B1 at 45.0 GPa has three peaks around
   0.57 eV/GaN in a joined path. The manuscript does not treat its one B3
-  chain as three independently converged segments.
+  chain as three independently converged segments. The original's Methods
+  (PDF page 3) specify QE/PW91, ultrasoft pseudopotentials, 75 Ry, a
+  Γ-centered 8×8×6 mesh, 27 interior images, and 0.03-eV/Å RMS image-force
+  convergence (0.01 eV/Å at the saddle). VARNEB shares the nominal pressure
+  and image count but not that electronic or force-norm contract; 45.7 GPa
+  was adopted from the reference, not recomputed as each PBE backend's
+  coexistence pressure.
 - [Sheppard et al.](https://doi.org/10.1063/1.3684549), Fig. 11: the
   2.4-meV/atom DFT feature is the small initial peak on the atom-dominated
   stage that the later cell-dominated route initially shares. The latter
