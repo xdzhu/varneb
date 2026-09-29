@@ -5,6 +5,24 @@ The 2026-09-28 build has eight main-text figures and one same-document
 appendix figure. This gate supersedes the layout targets in the dated
 `STAGE_GATE_2026-09-27.md`; it does not supersede raw-data audits.
 
+## CPC article route
+
+The present Program Summary and installable-software emphasis make this a
+candidate *Computer Programs in Physics* (CPiP) submission. The
+[publisher's journal description](https://shop.elsevier.com/journals/computer-physics-communications/0010-4655)
+distinguishes CPiP from *Computational Physics Papers*: CPiP software is
+archived in the CPC Program Library on Mendeley Data and must have an approved
+open-source licence. The repository declares GPL-3.0-or-later in
+`pyproject.toml` and includes the GPLv3 licence text, but the CPC archive has
+not yet been deposited and no library link exists. Do not replace that field
+with a guessed DOI. The same journal description asks authors to articulate
+novelty and physics significance for a general audience; the manuscript must
+therefore lead with the portable execution/evidence/mode-analysis capability
+and its demonstrated GaN/BTO use, not suggest a new VCNEB physical formalism.
+The authors should confirm the CPiP route and archive requirements during
+submission rather than silently treating a GitHub or PyPI link as the CPC
+Library accession.
+
 ## Claims the present evidence can support
 
 | Manuscript claim | Evidence to check | Allowed conclusion and boundary |
@@ -28,8 +46,9 @@ the HfO$_2$ per-cell conversion from committed source tables.
 
 1. Replace author-order, affiliation, corresponding-author, CRediT,
    funding/computing-acknowledgement, and competing-interest placeholders
-   with author-approved statements. Resolve the Program Summary's pending
-   CPC Library field according to the submission workflow.
+   with author-approved statements. Confirm the CPiP article route and
+   resolve the Program Summary's pending CPC Library field through the actual
+   CPC/Mendeley submission workflow.
 2. Obtain a final scientific read-through of every literature comparator,
    pressure and formula-unit normalization, figure caption, and Data
    availability statement. In particular, retain the BTO PBEsol distortion
