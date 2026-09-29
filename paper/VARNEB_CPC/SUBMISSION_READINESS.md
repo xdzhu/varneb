@@ -88,6 +88,20 @@ potentials, and nonredistributable raw inputs out of that public snapshot;
 verify its contents and licence before deposit. The PyPI sdist smoke proves
 installation, not reproduction of the material-level paper figures.
 
+An independent `git archive` extraction exposed a repository-only failure
+that the shared working-tree test had hidden: the first clean snapshot had
+12 failures (585 passed, one skipped). Raw-byte SHA-256 links broke when
+archive line-ending conversion changed hash-bound CSV, JSON, Python, and
+Phonopy text files; the BTO restricted-sheet test also needed seven small
+provenance/structure/trajectory inputs present locally but omitted from Git by
+the local `outputs/` exclusion. A staged-source candidate now preserves those
+raw bytes through explicit `.gitattributes` rules, tracks only the seven
+required BTO files, and passes its independent archive suite (597 passed,
+one skipped). The count is lower than the 616-pass shared-tree snapshot
+because the latter includes untracked tests from another work stream. The
+archived source test is a reproducibility check, not a fresh DFT audit or a
+final CPC/Mendeley deposit.
+
 ## Remaining gates for this CPC submission
 
 1. Replace author-order, affiliation, corresponding-author, CRediT,
