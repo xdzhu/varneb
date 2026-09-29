@@ -66,6 +66,16 @@ version 0.0.3, and exposed the expected CLI; the unpacked sdist toy returned
 working-tree suite (616 passed, one skipped) passed. This is an unpublished
 candidate, not a CPC Library deposit or PyPI release.
 
+A targeted manuscript artifact check found all nine referenced PDF figures
+and nine corresponding scientific source CSVs present and Git-tracked. The
+TeX source has 27 labels and 15 unique references with no missing target;
+19 unique citation keys resolve against 20 BibTeX entries. This is a
+presence/linkage check, not a raw-DFT audit. Figure 1's architecture PDF and
+SVG are locally modified in the shared working tree (the SVG diff is limited
+to generation metadata and clip IDs); they were not staged or pushed here.
+The final frozen manuscript build must use a reviewed, committed version of
+that figure so its bytes match the archived source revision.
+
 ## Remaining gates for this CPC submission
 
 1. Replace author-order, affiliation, corresponding-author, CRediT,
