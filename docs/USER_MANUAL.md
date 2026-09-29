@@ -361,17 +361,19 @@ For BTO, cubic C has three independent unstable Gamma directions. Fixing only
 `(Q_z,Q_x)` while freely minimizing the omitted `Q_y` therefore cannot yield
 a two-dimensional lower envelope that passes through C at its cubic reference
 energy. The manuscript's current BTO panel instead fixes `Q_y=0`, releases
-the remaining atom--strain coordinates, and fits an even-mode model to nine
-audited nodes. Two predictions fixed before independent ABACUS calculations
-have absolute errors of 0.150 and 0.977 meV/BTO, within the declared
-2-meV/BTO gate. The contour is drawn only inside the measured-coordinate
-hull; it is a **symmetry-restricted local sheet**, not the global conditional
-lower envelope. The separate **frozen cubic** two-soft-mode cut now contains
-81 measured static ABACUS points on a complete 9×9 grid (59 earlier points
-plus 22 newly computed ones). The earlier 59-point interpolant predicted
-the 22 new nodes within 0.441 meV/BTO, but the final grid's interior
-leave-one-out error still reaches 5.14 meV/BTO and its display interpolant
-undershoots a measured minimum by 1.78 meV/BTO. The variable-cell path
+the remaining atom--strain coordinates. Its current 9×3 sheet contains 27
+audited conditional-DFT nodes: 12 reused and 15 newly computed. An even-mode
+model fixed from the original nine fit nodes predicted the 15 new energies
+within 1.131 meV/BTO, below the declared 2-meV/BTO gate; two earlier blind
+holdouts had absolute errors of 0.150 and 0.977 meV/BTO. The display contour
+interpolates only within the measured rectangle; it is a
+**symmetry-restricted local sheet**, not the global conditional lower
+envelope. The separate **frozen cubic** two-soft-mode cut now contains 289
+measured static ABACUS points on a complete 17×17 grid (the prior 81-point
+grid plus 208 newly computed statics). The prior 9×9 interpolant predicted
+those 208 points within 0.488 meV/BTO. The refined grid's interior
+leave-one-out maximum is 1.61 meV/BTO, and its display interpolant
+undershoots a measured minimum by 0.637 meV/BTO. The variable-cell path
 does not lie in this frozen plane. The five-point branch pilot demonstrates
 lowering when `Q_y` is released but does not certify a continuous PES. Source
 tables and exact claim limits are in
@@ -379,9 +381,12 @@ tables and exact claim limits are in
 For GaN, the audited 45.7-GPa path-adapted surface is a **central frozen
 atomic-transverse enthalpy cut** around a variable-cell path, not an
 endpoint-spanning or orthogonally relaxed two-mode surface. It uses 18 path
-centers and 72 off-path VASP/600-eV statics, with independently checked
-along-path and inner-transverse interpolation errors of 0.166 and
-0.159 meV/GaN. A different **local atom–strain** cut around the highest
+centers and 144 off-path VASP/600-eV statics. The 72 newly computed
+interleaved nodes pass a prospective 0.0073-meV/GaN maximum-error check;
+earlier along-path and inner-transverse checks gave 0.166 and
+0.159 meV/GaN. Two measured transverse nodes lie about 0.2 meV/GaN below
+their fixed-cell centerline references, but neither certifies a lower
+fully relaxed MEP. A different **local atom–strain** cut around the highest
 image has 81 measured VASP/600-eV static enthalpies on a 9×9 grid. Its
 preceding 25-point interpolant predicted the 56 subsequently computed nodes
 within 0.0135 meV/GaN; this checks local display interpolation, not

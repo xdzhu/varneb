@@ -185,3 +185,18 @@ def test_acceleration_and_hfo2_claims_match_audited_sources() -> None:
     )
     per_cell = 4 * float(ci["barrier_eV_per_formula_unit"])
     assert f"{per_cell:.7f} eV per 12-atom cell" in MANUSCRIPT
+
+
+def test_quickstart_and_manual_describe_current_mode_surfaces() -> None:
+    readme = re.sub(r"\s+", " ", (ROOT / "README.md").read_text(encoding="utf-8"))
+    manual = re.sub(
+        r"\s+", " ", (ROOT / "docs/USER_MANUAL.md").read_text(encoding="utf-8")
+    )
+    assert "27 audited conditional-DFT nodes on a 9×3 grid" in readme
+    assert "17×17 grid of 289 *static DFT* points" in readme
+    assert "144 off-path static evaluations (162 measured coordinates total)" in readme
+    assert "9×3 sheet contains 27 audited conditional-DFT nodes" in manual
+    assert "289 measured static ABACUS points on a complete 17×17 grid" in manual
+    assert "18 path centers and 144 off-path VASP/600-eV statics" in manual
+    assert "does not establish a lower relaxed MEP" in readme
+    assert "neither certifies a lower fully relaxed MEP" in manual
