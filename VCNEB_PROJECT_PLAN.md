@@ -1,5 +1,19 @@
 # VCNEB 项目标准化任务清单
 
+> **现行投稿边界（2026-09-29）：** 本文件保留历史研究记录与长期
+> Definition of Done；下方旧作业号、旧节点建议、旧后端状态及“约 8 页/补充材料”
+> 设想不是当前执行指令。VARNEB 的 CPC 稿件以
+> [`paper/VARNEB_CPC/SUBMISSION_READINESS.md`](paper/VARNEB_CPC/SUBMISSION_READINESS.md)
+> 和 [`MANUSCRIPT_EVIDENCE.md`](paper/VARNEB_CPC/MANUSCRIPT_EVIDENCE.md)
+> 为投稿门禁与数字来源。当前正文无页数上限、无独立补充材料；BTO/ABACUS
+> Γ 模及受限双模面、GaN 45.7 GPa 五后端路径与有界原子--应变分析是主线。
+> 未认证的完整条件 PES、严格变胞 TS、HfO₂ 多模面和双层 hBN 不写成已完成。
+> 普通 NEB 默认 `0.10 eV/Å`；不改 BTO `100 Ry/10 au DZP` 或 GaN
+> VASP `600 eV` 的既定计算契约。当前无需为了已限定的论文结论再提交材料
+> 作业；不得按本文件旧段落去 235/cu17 重跑或未经状态核验重复提交。
+> 方法学扩展继续作为后续研究，不阻塞该 CPC 稿件的作者信息、CPC 程序归档、
+> 最终来源核读和终版测试/编译。
+
 > **2026-09-20 架构与多后端推进：** 已建立 `README.md` 快速上手入口、
 > `docs/REPOSITORY_LAYOUT.md`/`docs/ARCHITECTURE_AND_USER_WORKFLOW.md` 架构规范，
 > 新增 `varneb backends/doctor/init/validate-config` 命令和统一 image 目录工厂。
