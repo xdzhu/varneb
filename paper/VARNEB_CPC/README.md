@@ -47,9 +47,10 @@ The manuscript distinguishes three evidence levels:
    distinguishes 79 DFT nodes from interpolated pixels and visual guides.
 3. ABACUS, VASP, QE, ABINIT, and CP2K have each completed a 45.7-GPa GaN
    B4-to-B1 material path. The five paths support a common dominant barrier
-   topology, not identical calculator protocols or barriers. A representative
-   generated-input check, with source hashes and explicit raw-output limits,
-   is recorded in `evidence/gan_45p7_input_contract_audit_20260928.md`.
+   topology, not identical calculator protocols or barriers. A complete
+   final-visible-image input-contract check, with source hashes and explicit
+   raw-output limits, is recorded in
+   `evidence/gan_45p7_full_image_input_contract_audit_20260929.md`.
    Additional VASP
    GaN and CdSe paths remain mapping and functional-sensitivity controls.
 

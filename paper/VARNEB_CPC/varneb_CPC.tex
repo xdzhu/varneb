@@ -386,14 +386,17 @@ energies from different codes or a basis-set convergence study. QE and ABINIT
 use the PseudoDojo norm-conserving PBE family
 \cite{vanSetten2018}. CP2K uses a mixed Gaussian/plane-wave representation,
 whereas VASP and QE use plane waves and ABACUS uses numerical atomic orbitals.
-We checked the tabulated cutoffs and $k$ meshes against the generated
-image-15 calculator inputs, not just profile templates: hash-pinned
-ABACUS \texttt{INPUT/KPT} and VASP \texttt{INCAR/KPOINTS} on the production
-host, and archived QE \texttt{espresso.pwi}, ABINIT \texttt{abinit.in}, and
-CP2K \texttt{cp2k.inp}. CP2K writes its 800-Ry grid cutoff as
-10,884.5544 eV and its relative cutoff as 80 Ry. This representative input
-check does not establish per-image SCF or raw-output completeness; the
-evaluated-chain and CP2K text-audit limits are reported with the GaN results.
+We checked the final visible calculator inputs in every image directory of
+the five GaN production trees, not just profile templates. ABACUS, QE,
+ABINIT, and CP2K each retain inputs for images 0--28; VASP retains static
+\texttt{INCAR/KPOINTS} for the 27 active interior images while its endpoints
+are cached. Within each backend, the tabulated cutoffs, $k$ meshes, and
+potential/basis identifiers are consistent across these inputs; all 29 VASP
+\texttt{POTCAR} copies have one SHA-256 hash. CP2K writes its 800-Ry grid
+cutoff as 10,884.5544 eV and its relative cutoff as 80 Ry. This input
+audit does not cover overwritten historical calls, per-image SCF completion,
+or raw-output completeness; the evaluated-chain and CP2K text-audit limits
+are reported with the GaN results.
 
 \begin{table*}[t]
 \centering
