@@ -14,7 +14,7 @@ appendix figure. This gate supersedes the layout targets in the dated
 | GaN 45.7-GPa B4→B1 multi-backend barrier topology | Fig. 4 source data, `evidence/gan_45p7_multibackend_vcneb_20260924.json`, `evidence/gan_45p7_full_image_input_contract_audit_20260929.md`, `benchmarks/numerical_integrity/gan_cp2k_final_chain_raw_energy_stress_20260928.json` | Five 29-total-image paths satisfy the common 0.10-eV/Å generalized-force criterion and share a dominant peak. The final visible inputs have consistent per-backend settings, but this is not a historical-call or raw-output audit. Cross-backend energies use separate endpoint baselines and calculator contracts. The 45.7-GPa pressure is adopted from Qian, not re-established as each PBE backend's coexistence pressure; Qian's PW91/ultrasoft/force-norm protocol differs. CP2K original-text atomic forces and final run-end markers are unavailable; cache-chain forces and raw energy/stress reconciliation do not replace them. |
 | GaN atom–strain and mode interpretation | Figs. 5–8 source CSV/QA, `gan_600eV_joint_gamma_bridge_20260928.json`, `gan_600eV_ts_2d_9x9_refinement_20260928.json`, `gan_600eV_atomic_tube_dense_20260928.json` | At the original VASP/PBE 600-eV, 45.7-GPa contract, the local joint Hessian has a negative direction and sampled 81-point and central 90-point frozen cuts support a bounded mechanism interpretation. The energy–force/stress mismatch and incomplete stationary-point test preclude a strict variable-cell TS certificate. The central cut is not a whole-path or relaxed two-mode surface. |
 | Case-specific convergence acceleration | Table 2, `ACCELERATION_EVIDENCE_AUDIT_2026-09-27.md`, Slurm launch audit | Matched-start ABACUS chains use the same first-crossing threshold of 0.10 eV/Å; BTO/HfO₂ counted-launch reductions are 78.5%/38.2%. Negative transfers and path differences remain visible. Do not advertise universal speedup or identical saddle basins. The pre-DFT feasibility gate is a separate safety mechanism; this ablation did not isolate its contribution to launch savings. |
-| Installable and usable source package | `docs/RELEASE_NOTES_v0.0.2.md` local artifact smoke; `docs/USER_MANUAL.md`; `tests/test_cli_run.py`, `tests/test_config.py` | The clean local wheel/sdist build, fresh virtual-environment install, calculator-free seven-image `prepare`, and analytic toy run have passed. This does not certify the hosted PyPI artifact or a user's DFT executable. |
+| Installable and usable source package | `docs/RELEASE_NOTES_v0.0.2.md` local and hosted-artifact smoke; `docs/USER_MANUAL.md`; `tests/test_cli_run.py`, `tests/test_config.py` | The clean local wheel/sdist build, fresh virtual-environment install, calculator-free seven-image `prepare`, and analytic toy run have passed. The hosted PyPI 0.0.2 wheel separately passes version/backend/optimizer CLI smoke, but its backend-status registry predates the later QE/CP2K/ABINIT material evidence and does not certify a user's DFT executable. |
 
 `MANUSCRIPT_EVIDENCE.md` and `FIGURE_LOGIC_AND_STYLE.md` are the current
 figure-to-source maps. A pretty interpolated pixel is never an additional
@@ -39,6 +39,10 @@ the HfO$_2$ per-cell conversion from committed source tables.
 3. On the final source revision, rerun the full test suite, manuscript claim
    check, LaTeX build, and rendered-page inspection. Record failures rather
    than treating an old green result as proof for changed files.
+4. Pin the exact final code revision in the CPC program deposit and data
+   availability record. PyPI 0.0.2 is an earlier snapshot: either publish a
+   later reviewed release or cite the final repository commit explicitly;
+   do not identify 0.0.2 as the code state used for the later GaN evidence.
 
 No new material calculation is a prerequisite for the **bounded claims
 actually made in this draft**, unless a final source audit finds an error.

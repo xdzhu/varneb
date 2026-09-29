@@ -34,3 +34,25 @@ calculator-free chain; a repeated `prepare` preserved its SHA-256. Bare
 `varneb run` refused execution without `--execute`. This is local artifact
 validation, not proof of the currently hosted PyPI file or any DFT backend,
 and it did not trigger publication.
+
+## Hosted PyPI artifact check, 2026-09-29
+
+The [PyPI 0.0.2 release](https://pypi.org/project/varneb/0.0.2/) serves a
+wheel and sdist. The wheel SHA-256 is
+`11c07667a6b623aa0cfe0ddbf6ad5207270f100cb0c4fde5e76e521814c71691`.
+In a new Windows Python 3.10
+virtual environment, `pip install --no-cache-dir varneb==0.0.2` installed the
+hosted wheel with ASE 3.29.0 and NumPy 2.2.6; the installed `varneb --version`,
+`varneb backends --json`, and `varneb optimizers --json` commands all exited
+successfully. This checks the published entry point, not DFT executables or
+material calculations. The import package is `vcneb`, so `python -m varneb`
+is not a supported invocation.
+
+The published 0.0.2 wheel is a September 24 snapshot. Its backend registry
+still labels QE, CP2K, and ABINIT as `adapter`; later source revisions label
+them `validated` based on archived GaN material runs. This is stale
+capability metadata in the published snapshot, not evidence that the hosted
+wheel ran those subsequent production cases. The manuscript and case archive
+must identify a final source commit or a future release containing those
+later revisions; they must not present 0.0.2 as bit-for-bit equivalent to
+the current manuscript source.
