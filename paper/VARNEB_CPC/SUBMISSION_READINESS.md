@@ -60,6 +60,12 @@ and author/submission metadata will still change the document.
 The documented ASE/EMT quickstart also passed in a copied isolated directory:
 the public CLI now emits one concise line while preserving the complete
 `vcneb_summary.json`; `--full-summary` retains the old verbose option.
+The exact `519a697` Git-source archive independently ran the README analytic
+toy (0.250004-eV barrier) and the bundled ASE/EMT JSON quickstart through
+`python -m vcneb validate-config`, `prepare`, and `run --execute`. The latter
+converged in its one-step interface check with a zero barrier and
+`fmax=1.52e-18 eV/Å`; it did not launch DFT. The installed
+`varneb` console entry point is checked separately by the wheel smoke.
 After distinguishing the post-0.0.2 source as version 0.0.3, a new local
 isolated build produced wheel and sdist artifacts that passed `twine check`.
 The wheel installed in a fresh Python 3.10 virtual environment, reported
