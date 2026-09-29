@@ -77,7 +77,11 @@ reproducible software
 \noindent {\em CPC Library link to program files:} pending program deposit and accession\\
 \noindent {\em Developer's repository link:} \url{https://github.com/xdzhu/varneb}\\
 \noindent {\em Licensing provisions: GNU General Public License 3.0 or later}\\
-\noindent {\em Programming language: Python}\\
+\noindent {\em Programming language: Python 3.10 or later}\\
+\noindent {\em External libraries and executables:} ASE and NumPy are base
+dependencies; SciPy and Matplotlib support optional analysis and plotting.
+Electronic-structure executables, pseudopotentials, and basis sets are
+supplied separately and are not bundled with VARNEB.\\
 \noindent {\em Nature of problem:} Conventional NEB implementations commonly
 assume a shared simulation cell. Solid--solid transitions may change cell
 lengths, angles, and volume, and require atomic and cell forces to be treated
@@ -94,6 +98,11 @@ path while isolated workers evaluate interior images concurrently; fixed
 endpoints are evaluated once. Image-local and staged step control is combined
 with a pre-calculation cell-feasibility gate. JSON summaries, trajectories,
 audits, source-data exports, and mode projections provide reproducible reports.
+\\
+\noindent {\em Restrictions:} Variable-cell paths require consistent energy,
+Cartesian forces, and stress for matched ordered endpoints under the
+documented hydrostatic enthalpy convention. Fixed-cell paths require energy
+and forces only; general nonhydrostatic loading is not implemented.
 \end{small}
 
 \section{Introduction}
