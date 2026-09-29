@@ -45,7 +45,7 @@ the HfO$_2$ per-cell conversion from committed source tables.
 ## Technical QA snapshot, 2026-09-29
 
 On the shared working tree after the 289/27/162-point figure update,
-`python -m pytest -q --disable-warnings` completed with **617 passed, one
+`python -m pytest -q --disable-warnings` completed with **618 passed, one
 skipped**, and 209 suppressed warnings (mostly ASE/spglib/Phonopy
 deprecations). The first unscoped attempt collected duplicate test modules
 from retained `tmp/` source snapshots and failed during collection; the
@@ -54,7 +54,7 @@ scoped and plain-root entry points pass. Figure regression tests have been
 updated to check the current main-text CSVs against the 27/289/162-node
 audit records rather than merely expecting old filenames.
 An independently extracted clean Git archive containing the 27/289/162-point
-figures passed **598 tests, one skipped**, and compiled the 15-page manuscript
+figures passed **599 tests, one skipped**, and compiled the 15-page manuscript
 without missing figures or citations. This checks committed source rather
 than relying on the shared working tree. Its smaller test count reflects
 untracked tests in that tree, not failures. The first archive audit exposed
