@@ -227,7 +227,13 @@ can be interpreted in a vibrational basis after a calculation. Let
 $e_\nu$ be mass-normalized $\Gamma$-point eigenvectors of a selected endpoint,
 $M$ the diagonal atomic-mass matrix, and $u_i$ the Cartesian displacement of
 image $i$ after applying the recorded atom mapping, periodic translation
-gauge, and rigid-translation removal. VARNEB evaluates
+gauge, and rigid-translation removal.
+The displacement is expressed in the \emph{fixed reference cell} of that
+endpoint: before translation removal,
+$u_{ia}=(s_{ia}^{\mathrm{aligned}}-s_a^{\mathrm{ref}})h_{\mathrm{ref}}$,
+with periodic differences minimum-imaged in the recorded atom gauge.
+Subtracting current-cell Cartesian positions directly would mix homogeneous
+strain into the atomic mode amplitudes. VARNEB evaluates
 \begin{equation}
  q_{i\nu}=e_\nu^{T}M^{1/2}u_i .
  \label{eq:mode-coordinate}
