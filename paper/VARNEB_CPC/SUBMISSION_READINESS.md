@@ -76,6 +76,18 @@ to generation metadata and clip IDs); they were not staged or pushed here.
 The final frozen manuscript build must use a reviewed, committed version of
 that figure so its bytes match the archived source revision.
 
+The locally built 0.0.3 PyPI source distribution is an **installable package**,
+not the complete CPC research archive. Its 51 tar entries include 31 `vcneb`
+Python modules, the user manual, and one analytic toy example, but no tests,
+material-case inputs, or manuscript source data; this follows `MANIFEST.in`.
+The CPiP program deposit should therefore be prepared from a pinned final
+repository revision (or an equivalently complete, reviewed source snapshot),
+with the package, tests, representative runnable examples, and the figure/data
+provenance index together. Keep the copyrighted DFT executables, licensed
+potentials, and nonredistributable raw inputs out of that public snapshot;
+verify its contents and licence before deposit. The PyPI sdist smoke proves
+installation, not reproduction of the material-level paper figures.
+
 ## Remaining gates for this CPC submission
 
 1. Replace author-order, affiliation, corresponding-author, CRediT,
@@ -97,8 +109,9 @@ that figure so its bytes match the archived source revision.
    availability record. PyPI 0.0.2 is an earlier snapshot; 0.0.3 is locally
    built but unpublished. Publish a reviewed 0.0.3 release only when the
    source and submission package are frozen, or cite the final repository
-   commit explicitly. Do not identify 0.0.2 as the code state used for the
-   later GaN evidence.
+   commit explicitly. Prepare and inspect a complete CPC source snapshot
+   separately from the deliberately minimal PyPI sdist. Do not identify
+   0.0.2 as the code state used for the later GaN evidence.
 
 No new material calculation is a prerequisite for the **bounded claims
 actually made in this draft**, unless a final source audit finds an error.
