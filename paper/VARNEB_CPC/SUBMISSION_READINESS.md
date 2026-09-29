@@ -42,6 +42,20 @@ regression `tests/test_cpc_numeric_claims.py` recomputes headline GaN barriers,
 BTO blind errors and monotonic endpoint rise, Slurm launch reductions, and
 the HfO$_2$ per-cell conversion from committed source tables.
 
+## Technical QA snapshot, 2026-09-29
+
+On the current working tree, `python -m pytest -q` completed with 615 passed,
+one skipped, and 209 warnings (mostly ASE/spglib/Phonopy deprecations). The
+TeX Live `latexmk` build exited successfully; `pdfinfo` reports 15 A4 pages.
+All pages were rendered for visual inspection. No missing figure, clipped
+panel, or unresolved citation was seen. One 1.9-pt overfull box remains in
+the LaTeX log. The late two-column GaN figures occupy sparsely filled pages
+10--12; this is a layout-polish issue, not a missing calculation. Moving the
+main-text float barrier past the conclusion put figures after their discussion,
+so that trial was reverted. This snapshot is not a final-release test: the
+shared working tree contains unrelated modified figures and untracked tests,
+and author/submission metadata will still change the document.
+
 ## Remaining gates for this CPC submission
 
 1. Replace author-order, affiliation, corresponding-author, CRediT,
@@ -56,8 +70,9 @@ the HfO$_2$ per-cell conversion from committed source tables.
    DOI/source-page pass and five corrected author records are documented in
    `CITATION_AUDIT_2026-09-28.md`; this does not replace the final read-through.
 3. On the final source revision, rerun the full test suite, manuscript claim
-   check, LaTeX build, and rendered-page inspection. Record failures rather
-   than treating an old green result as proof for changed files.
+   check, LaTeX build, and rendered-page inspection. Review the late-figure
+   spacing without moving figures past the conclusions. Record failures
+   rather than treating an old green result as proof for changed files.
 4. Pin the exact final code revision in the CPC program deposit and data
    availability record. PyPI 0.0.2 is an earlier snapshot: either publish a
    later reviewed release or cite the final repository commit explicitly;
