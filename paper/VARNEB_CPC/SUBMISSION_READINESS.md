@@ -44,15 +44,17 @@ the HfO$_2$ per-cell conversion from committed source tables.
 
 ## Technical QA snapshot, 2026-09-29
 
-On the current working tree, `python -m pytest -q` completed with 616 passed,
-one skipped, and 209 warnings (mostly ASE/spglib/Phonopy deprecations). The
-TeX Live `latexmk` build exited successfully; `pdfinfo` reports 15 A4 pages.
-All pages were rendered for visual inspection. No missing figure, clipped
-panel, or unresolved citation was seen. One 1.9-pt overfull box remains in
-the LaTeX log. The late two-column GaN figures occupy sparsely filled pages
-10--12; this is a layout-polish issue, not a missing calculation. Moving the
-main-text float barrier past the conclusion put figures after their discussion,
-so that trial was reverted. This snapshot is not a final-release test: the
+On the shared working tree, `python -m pytest -q` completed with 616 passed,
+one skipped, and 209 warnings (mostly ASE/spglib/Phonopy deprecations).
+The clean `17a4f08` Git archive separately passed 597 tests and compiled its
+15-page manuscript without missing figures or citations. Increasing the
+permitted double-column top-float occupancy then packed GaN Figs. 5--8
+beside their discussion across pages 9--11; a fresh working-tree TeX Live
+build is 14 A4 pages. Its late pages were rendered and checked for clipping;
+the remaining appendix/reference-page whitespace and one 1.9-pt overfull
+box are layout polish, not missing calculations. Moving the main-text float
+barrier past the conclusion instead placed figures after their discussion,
+so that earlier trial was reverted. This is not a final-release test: the
 shared working tree contains unrelated modified figures and untracked tests,
 and author/submission metadata will still change the document.
 The documented ASE/EMT quickstart also passed in a copied isolated directory:
