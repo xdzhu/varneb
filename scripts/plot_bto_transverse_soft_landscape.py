@@ -2,8 +2,8 @@
 
 Figure contract: the real T-to-C VCNEB path projects onto the longitudinal
 soft axis, while its cell strain and omitted stable-mode motion keep it off
-the two-dimensional frozen cubic-cell surface. Panel (a) shows 25, 41, or 59 audited
-or 81 audited DFT samples and an explicitly interpolated display contour; (b) the seven actual
+the two-dimensional frozen cubic-cell surface. Panel (a) shows 25, 41, 59,
+81, or 289 audited DFT samples and an explicitly interpolated display contour; (b) the seven actual
 variable-cell image energies; (c) their off-plane atomic residual. This is a
 quantitative-grid figure, not a conditional PES or an activation-barrier map.
 Python/matplotlib is the existing project plotting workflow. Editable SVG and
@@ -132,6 +132,8 @@ def main() -> None:
                         help="optional independently scored 18-edge result; requires --analysis41")
     parser.add_argument("--analysis81", type=Path,
                         help="optional raw-audited 22-node completion; requires --analysis59")
+    parser.add_argument("--analysis289", type=Path,
+                        help="optional raw-audited nested 17x17 completion; requires --analysis81")
     parser.add_argument("--output-prefix", type=Path, required=True)
     parser.add_argument("--allow-exploratory-contours", action="store_true")
     args = parser.parse_args()
@@ -141,6 +143,8 @@ def main() -> None:
         raise ValueError("59-point plot requires its 41-point provenance source")
     if args.analysis81 is not None and args.analysis59 is None:
         raise ValueError("81-point plot requires its 59-point provenance source")
+    if args.analysis289 is not None and args.analysis81 is None:
+        raise ValueError("289-point plot requires its 81-point provenance source")
     outputs = [args.output_prefix.with_suffix(suffix) for suffix in (".png", ".pdf", ".svg")]
     outputs += [Path(str(args.output_prefix) + suffix) for suffix in ("_source_data.csv", "_qa.json")]
     if any(path.exists() for path in outputs):
@@ -205,6 +209,25 @@ def main() -> None:
         if (len({tuple(point) for point in measured_points}) != 81
                 or not np.all(np.isfinite(measured_energies))):
             raise ValueError("81-point measured source has duplicate or nonfinite values")
+    analysis289 = None
+    if args.analysis289 is not None:
+        analysis289 = _load(args.analysis289)
+        if (analysis289.get("status") != "BTO_frozen_soft_mode_17x17_raw_audited"
+                or analysis289.get("n_reused_measured_points") != 81
+                or analysis289.get("n_new_raw_audited_statics") != 208
+                or analysis289.get("source_sha256", {}).get("old_audit")
+                   != _sha256(args.analysis81)):
+            raise ValueError("289-point result is not tied to the audited 81-point source")
+        fine_q1 = np.asarray(analysis289["q1"], dtype=float)
+        fine_q2 = np.asarray(analysis289["q2"], dtype=float)
+        measured_energies = np.asarray(
+            analysis289["energy_minus_C_eV_per_BTO"], dtype=float).T.ravel()
+        fine_x, fine_y = np.meshgrid(fine_q1, fine_q2)
+        measured_points = np.c_[fine_x.ravel(), fine_y.ravel()]
+        if (len(measured_points) != 289 or not np.isfinite(measured_energies).all()
+                or not np.allclose(fine_q1[::4], q1, atol=1e-12, rtol=0)
+                or not np.allclose(fine_q2[::4], q2, atol=1e-12, rtol=0)):
+            raise ValueError("289-point nested measured grid is incomplete")
     surface, interpolation = _interpolation_audit(measured_points, measured_energies, q1, q2)
     if analysis41 is not None:
         interpolation["independent_16_center_prediction_errors"] = analysis41["holdout_errors"]
@@ -216,6 +239,13 @@ def main() -> None:
         ]
         interpolation["independent_22_missing_node_rms_error_meV_per_BTO"] = analysis81[
             "prospective_22_point_rms_error_meV_per_BTO"
+        ]
+    if analysis289 is not None:
+        interpolation["prospective_208_nested_node_max_abs_error_meV_per_BTO"] = analysis289[
+            "prospective_max_abs_error_meV_per_BTO"
+        ]
+        interpolation["prospective_208_nested_node_rms_error_meV_per_BTO"] = analysis289[
+            "prospective_rms_error_meV_per_BTO"
         ]
     gx, gy = np.meshgrid(np.linspace(q1[0], q1[-1], surface.shape[1]),
                          np.linspace(q2[0], q2[-1], surface.shape[0]))
@@ -232,7 +262,8 @@ def main() -> None:
                          cmap="RdBu_r", norm=norm, extend="both")
     ax.contour(gx, gy, surface, levels=np.linspace(-span, span, 13),
                colors="#3e4c59", linewidths=0.45, alpha=0.7)
-    ax.scatter(measured_points[:, 0], measured_points[:, 1], s=15,
+    ax.scatter(measured_points[:, 0], measured_points[:, 1],
+               s=8 if analysis289 is not None else 15,
                facecolors="white", edgecolors="#30485c",
                linewidths=0.65, zorder=4,
                label=f"{len(measured_points)} computed DFT points")
@@ -299,7 +330,9 @@ def main() -> None:
                           **({"analysis59": _sha256(args.analysis59)}
                              if args.analysis59 is not None else {}),
                           **({"analysis81": _sha256(args.analysis81)}
-                             if args.analysis81 is not None else {})},
+                             if args.analysis81 is not None else {}),
+                          **({"analysis289": _sha256(args.analysis289)}
+                             if args.analysis289 is not None else {})},
         "interpolation": interpolation,
         "figure_contract": {
             "core_conclusion": "The variable-cell T-to-C path projects onto the longitudinal soft mode but leaves the frozen cubic-cell two-mode plane.",

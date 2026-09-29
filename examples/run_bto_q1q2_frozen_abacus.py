@@ -120,11 +120,28 @@ def main() -> None:
         "inert_frozen_cubic_cell_transverse_soft_centers16_not_T_to_C_barrier",
         "inert_frozen_cubic_cell_transverse_soft_edges18_not_T_to_C_barrier",
         "inert_frozen_cubic_cell_transverse_soft_missing22_not_T_to_C_barrier",
+        "inert_frozen_cubic_cell_transverse_soft_mode_points_not_T_to_C_barrier",
     }
     if manifest.get("kind") not in supported:
         raise ValueError("unrecognized or non-frozen BTO point manifest")
     if manifest.get("n_points") != len(manifest.get("points", [])) or not manifest["points"]:
         raise ValueError("point manifest has inconsistent point count")
+    if manifest["kind"] == "inert_frozen_cubic_cell_transverse_soft_mode_points_not_T_to_C_barrier":
+        indices = [tuple(point.get("grid_index_q1_q2", ())) for point in manifest["points"]]
+        if (manifest.get("status") != "inputs_finalized_no_DFT"
+                or manifest.get("new_only") is not True
+                or manifest.get("no_dft_launched") is not True
+                or manifest.get("full_grid_shape") != [17, 17]
+                or manifest.get("n_points") != 26
+                or not all(manifest.get("source_sha256", {}).get(key) for key in (
+                    "old_manifest", "old_audit", "report", "reference",
+                    "force_constants", "phonopy_eigenpairs"))
+                or len(indices) != len(set(indices))
+                or any(len(index) != 2 or any(type(value) is not int or value < 0 or value > 16
+                                             for value in index)
+                       or (index[0] % 2 == 0 and index[1] % 2 == 0)
+                       for index in indices)):
+            raise ValueError("nested 17x17 shard lacks complete new-only provenance")
     if manifest["kind"] == "inert_frozen_cubic_cell_transverse_soft_increment20_not_T_to_C_barrier":
         if (manifest["n_points"] != 20
                 or manifest.get("no_dft_launched") is not True

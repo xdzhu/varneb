@@ -58,8 +58,8 @@ gate rejects invalid candidate cells, but its cost effect is not isolated in
 this benchmark. Finally, a Phonopy-based
 $\Gamma$-mode projection identifies the unstable cubic-BTO subspace as the
 principal atomic path component. A symmetry-restricted variable-cell two-mode
-sheet fitted to nine audited BTO nodes predicts two prospective DFT holdouts
-within 0.98 meV/BTO; the omitted third soft mode and released strain remain
+sheet contains 27 audited BTO nodes; the initial nine-node model predicts
+15 newly sampled nodes within 1.13 meV/BTO. The omitted third soft mode and released strain remain
 explicit. A separate 81-point GaN atom--strain enthalpy cut resolves opposing
 local curvatures near the highest image, without certifying a stationary
 transition state. VARNEB therefore contributes an
@@ -473,9 +473,14 @@ An initial 59-point frozen-cubic-cell cut exposed the interpolation risk:
 interior leave-one-out error reached 5.14 meV/BTO, and independent coarse-grid
 holdouts were worse. We completed its $9\times9$ grid with 22 additional
 static DFT points under the unchanged 100-Ry contract; the prior 59-point
-interpolant predicted these new nodes within 0.441 meV/BTO. The full-grid
-display and its 5.14-meV/BTO maximum interior leave-one-out error appear in
-Fig.~\ref{fig:bto-frozen-soft81}. The frozen cut still cannot represent the
+interpolant predicted those new nodes within 0.441 meV/BTO. We then nested a
+$17\times17$ grid around the same mode axes, reused all 81 audited nodes,
+and evaluated only its 208 missing structures. The pre-existing $9\times9$
+cubic interpolant predicted these prospective DFT points within
+0.488 meV/BTO (0.197-meV/BTO root-mean-square); the 289-point interior
+leave-one-out maximum is 1.61 meV/BTO and its display interpolation
+undershoots the sampled minimum by 0.637 meV/BTO. This refinement and its
+measured-node markers appear in Fig.~\ref{fig:bto-frozen-soft289}. The frozen cut still cannot represent the
 variable-cell path because stable atomic modes and strain move. We therefore
 fixed two signed cubic soft-mode
 amplitudes $(Q_z,Q_x)$, imposed $Q_y=0$ at every evaluation, and released the
@@ -486,7 +491,7 @@ atomic residual is $0.2900\sqrt{\mathrm{amu}}$\AA{} and its cell strain is
 nonzero; C is the origin. The endpoint thus belongs to the restricted
 \emph{coordinate slice}, not the frozen two-eigenvector plane.
 
-The local $Q_y=0$ sheet has nine raw-audited training nodes. A simple
+The local $Q_y=0$ sheet began with nine raw-audited training nodes. A simple
 piecewise-linear interpolation failed two of three earlier off-grid energy
 checks (3.66 and 6.26 meV/BTO). We subsequently fitted a symmetry-even
 sixth-order $Q_z,Q_x$ model to the nine nodes only and froze two new predictions
@@ -497,30 +502,40 @@ $0.0510\sqrt{\mathrm{amu}}$\AA{}, with orthogonal gradients below
 $0.003$ eV/$(\sqrt{\mathrm{amu}}$\AA{}) and raw stresses below 2 kbar.
 The separately optimized T endpoint differs from the model by 0.993 meV/BTO,
 but this is a retrospective check, not a third blind holdout.
-Figure~\ref{fig:bto-qy0-sheet} confines the fitted contour to the convex
-hull of measured coordinates; all calculated locations remain visible.
+We subsequently completed a regular $9\times3$ restricted-sheet grid,
+reusing 12 earlier measured coordinates and adding 15 independently
+raw-audited conditional relaxations (215 new DFT evaluations). Two stations
+initially passed the orthogonal-gradient test but exceeded the 2-kbar stress
+gate; same-input continuation with a tighter optimizer-gradient tolerance
+brought both below 2 kbar. The original nine-node model, frozen before this
+increment, predicts all 15 new energies within 1.131 meV/BTO, below its
+2-meV/BTO pointwise gate. Figure~\ref{fig:bto-qy0-sheet} now interpolates
+the 27 \emph{measured} restricted-branch energies inside their rectangle;
+it does not turn the fitted model into additional DFT points.
 
 The restriction is scientifically essential. Cubic C has a triply degenerate
 unstable $\Gamma$ mode, and allowing the omitted $Q_y$ to relax lowers four
 tested off-axis states by 28--57 meV/BTO. Thus a fully minimized
 two-coordinate lower envelope cannot contain C at $E_C$. This figure is a
 symmetry-restricted local energy sheet, not a global PES, a finite-temperature
-free-energy surface, or a T-to-C activation barrier. The two blind points
-validate local prediction, not curvature or branch identity everywhere.
+free-energy surface, or a T-to-C activation barrier. The two earlier blind
+points and 15 new grid nodes validate local prediction, not curvature or
+branch identity everywhere.
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=\textwidth]{figures/bto_qy0_restricted_even_mode_sheet.pdf}
+\includegraphics[width=\textwidth]{figures/bto_qy0_restricted_sheet_27_20260929.pdf}
 \caption{Symmetry-restricted BTO $Q_y=0$ variable-cell energy sheet at zero
 pressure (ABACUS/PBE, 100 Ry, 10-au DZP, $4\times4\times4$ electronic mesh;
-cubic $1\times1\times1$ $\Gamma$ force constants). (a) The even sixth-order
-model of $E-E_C$, trained on nine raw-audited white-circle nodes, is shaded
-only inside the measured-coordinate hull. Gray circles are four retrospective
-checks; diamonds are two predictions frozen before their independent DFT
-calculations. Red symbols project the seven-image variable-cell T-to-C path;
+cubic $1\times1\times1$ $\Gamma$ force constants). (a) White circles are 27
+individually audited conditional-DFT nodes on a $9\times3$ restricted grid;
+smooth color is shape-preserving display interpolation within the measured
+rectangle, not additional DFT. Red symbols project the seven-image
+variable-cell T-to-C path;
 stable atomic modes and strain are released and are not represented by the
-two axes. (b) DFT-minus-model energies; the band marks the predeclared
-$\pm2$-meV/BTO blind-point gate. T is a separately optimized retrospective
+two axes. (b) DFT-minus-original-nine-node-model energies for 15 new grid
+nodes (colored by $Q_x$) and two earlier blind holdouts (diamonds); the band
+marks the predeclared $\pm2$-meV/BTO pointwise gate. T is a separately optimized retrospective
 endpoint, not a fitting node. This is neither an unconstrained PES nor a
 finite-temperature free-energy surface; no statistical error bars are implied.
 Source-data tables and raw-output hashes accompany the figure.}
@@ -529,22 +544,22 @@ Source-data tables and raw-output hashes accompany the figure.}
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=\textwidth]{figures/bto_frozen_soft_mode_81_20260928.pdf}
+\includegraphics[width=\textwidth]{figures/bto_frozen_soft_mode_289_20260929.pdf}
 \caption{Exploratory cubic-cell BTO two-soft-mode cut, distinct from the
 symmetry-restricted variable-cell sheet in Fig.~\ref{fig:bto-qy0-sheet}.
 ABACUS/PBE static calculations retain the 100-Ry/10-au-DZP basis and
 $4\times4\times4$ electronic mesh; the mode axes derive from cubic
-$1\times1\times1$ $\Gamma$ force constants. (a) The 81 circles are measured
-DFT energies on a complete $9\times9$ $(Q_\parallel,Q_\perp)$ grid; smooth
+$1\times1\times1$ $\Gamma$ force constants. (a) The 289 circles are measured
+DFT energies on a complete $17\times17$ $(Q_\parallel,Q_\perp)$ grid; smooth
 color is display interpolation, not additional DFT. The black line is only
 the seven-image T-to-C VCNEB projection onto this frozen plane. (b) Actual
 variable-cell path energies relative to T. (c) Atomic displacement norm
-omitted by the plane. The prior 59-point interpolant predicted the 22 newly
-computed nodes within 0.441 meV/BTO, whereas full-grid interior
-leave-one-out error reaches 5.14 meV/BTO and the display interpolant
-undershoots a measured minimum by 1.78 meV/BTO. Neither the interpolated
+omitted by the plane. The previously audited $9\times9$ grid predicted the
+208 newly computed nodes within 0.488 meV/BTO; the $17\times17$ interior
+leave-one-out maximum is 1.61 meV/BTO and the display interpolant
+undershoots a measured minimum by 0.637 meV/BTO. Neither the interpolated
 minimum nor a point on the projected line is a relaxed T-to-C barrier.}
-\label{fig:bto-frozen-soft81}
+\label{fig:bto-frozen-soft289}
 \end{figure*}
 
 \subsection{\texorpdfstring{HfO$_2$}{HfO2} tetragonal to polar orthorhombic path}
@@ -811,39 +826,44 @@ input-hash audit accompany the project archive.}
 
 An explicitly sampled two-coordinate cut follows the audited variable-cell
 arc $s$, with atomic transverse displacements $q_{\perp}$ at each image's
-fixed cell (Fig.~\ref{fig:gan-dense-surface}). All 90 points use
+fixed cell (Fig.~\ref{fig:gan-dense-surface}). All 162 points use
 $H=E+P_{\mathrm{ext}}V$ at $P_{\mathrm{ext}}=45.7$~GPa, divided by two GaN
 formula units; off-path static stresses need not equal this pressure. The
 transported normal is coherent over images 5--22, not a global phonon mode.
-At these 18 centers, $q_{\perp}=\pm0.025,\pm0.05$~\AA{} supplies 72 off-path
-statics, including 44 new raw-audited calculations under the original 600-eV
-input. Preselected along-path and inner-transverse interpolation errors are
-0.166 and 0.159~meV/GaN, below their 1.0-meV/GaN gates; transverse excess
-enthalpy reaches 20.60~meV/GaN versus the path's 0.33849-eV/GaN barrier.
-All sampled off-path DFT points lie above their centerline reference. The
-interpolant alone dips by 0.262~meV/GaN below zero between sampled points;
-this small model undershoot is not evidence for a lower DFT path.
+At these 18 centers, $q_{\perp}=\pm0.0125,\pm0.025,\pm0.0375,\pm0.05$~\AA{}
+supplies 144 off-path statics. The 72 interleaved nodes were evaluated under
+the byte-identical original 600-eV input; their prospective maximum error
+against a quartic interpolation frozen from the earlier 90-point dataset was
+0.0073~meV/GaN, well below the predeclared 1.0-meV/GaN gate. The earlier
+along-path and inner-transverse holdout errors were 0.166 and
+0.159~meV/GaN, respectively. Transverse excess enthalpy reaches
+20.60~meV/GaN versus the path's 0.33849-eV/GaN barrier. The denser grid
+resolves two genuinely lower static DFT points: at images 19 and 20,
+$q_{\perp}=+0.0125$~\AA{} gives $-0.237$ and $-0.205$~meV/GaN relative to
+its fixed-cell centerline reference. This establishes a small local
+transverse lowering, not a fully relaxed alternative MEP or a lower barrier.
 This supports a bounded \emph{central frozen cut}, not an endpoint-spanning
 conditional PES or strict TS.
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=\textwidth]{figures/gan_600eV_atomic_transverse_landscape.pdf}
+\includegraphics[width=\textwidth]{figures/gan_600eV_atomic_transverse_162_20260929_v2.pdf}
 \caption{GaN central path-adapted transverse enthalpy landscape at a common external
 pressure of 45.7 GPa under the original VASP/PBE 600-eV contract.
 (a) $H(s,q_{\perp})-H(s,0)$ within the sampled
-central rectangle. White markers indicate the 90 sampled coordinates (18
-audited path centers and 72 off-path statics), the dark line is the actual
+central rectangle. White markers indicate 162 sampled coordinates (18
+audited path centers and 144 off-path statics); orange diamonds identify
+the two slightly lower measured transverse points, the dark line is the
 VCNEB centerline, and the star overlays its highest image. The colored
-interpolant is linear in $s$ and quadratic in atomic-only $q_{\perp}$;
-maximum prospective along-$s$ and inner-$q_{\perp}$ holdout errors are
-0.166 and 0.159 meV/GaN, respectively. (b) Full 29-image VCNEB enthalpy
+shape-preserving interpolant is for display; the 72 newly sampled
+interleaved $q_{\perp}$ coordinates agree with the prior frozen quartic
+predictions within 0.0073 meV/GaN. (b) Full 29-image VCNEB enthalpy
 profile relative to B4, with the central two-dimensional chart domain shaded. Separating
 the 20.60-meV/GaN transverse scale from the 338.49-meV/GaN path barrier reveals
 the local cross-sectional shape without suppressing the activation profile. The plot is
-a frozen enthalpy cut; its small negative interpolated excess is not an
-observed lower-energy DFT route, nor is it a finite-temperature free-energy surface or a
-strict transition-state certificate; source data and raw-output hashes
+a frozen enthalpy cut; the two measured negative excesses do not establish a
+fully relaxed lower-energy route, a finite-temperature free-energy surface, or a
+strict transition-state certificate. Source data and raw-output hashes
 accompany the figure.}
 \label{fig:gan-dense-surface}
 \end{figure*}
@@ -909,14 +929,17 @@ reduce counted ABACUS launches to the common threshold by 78.5\% and 38.2\%,
 respectively, with
 negative transfers retained to delimit the claim. An endpoint-$\Gamma$ basis
 identifies the unstable BTO subspace that carries most of the atomic path
-displacement while cell strain is reported separately. Two prospective BTO
-DFT points pass a 2-meV/BTO local model gate on a $Q_y=0$ restricted sheet;
+displacement while cell strain is reported separately. The 27-point
+$Q_y=0$ restricted sheet, including 15 new conditional relaxations, passes
+a 2-meV/BTO prospective local model gate;
 the omitted soft-mode instability precludes an unrestricted two-coordinate
 PES through cubic C. These three capabilities
 make variable-cell pathways easier to execute, audit, compare, and interpret
 without changing the underlying VCNEB formalism. A same-protocol, raw-audited
-GaN central two-coordinate enthalpy cut and an independently sampled
-81-point local atom--strain slice further resolve the barrier region;
+GaN central 162-point transverse enthalpy cut and an independently sampled
+81-point local atom--strain slice further resolve the barrier region. The
+transverse cut contains two measured $\sim0.2$-meV/GaN local lower points,
+not a certified lower relaxed route;
 their frozen scope and numerical TS limit remain explicit.
 
 \section*{Data availability}
@@ -926,9 +949,9 @@ figure-QA and audit records are available at
 \url{https://github.com/xdzhu/varneb}. The repository's
 \path{paper/VARNEB_CPC/MANUSCRIPT_EVIDENCE.md} indexes the displayed figures
 and principal quantitative claims to source data, hashes, and claim limits.
-It covers the BTO restricted and 81-point frozen sheets; five-backend GaN
+It covers the BTO 27-point restricted and 289-point frozen sheets; five-backend GaN
 paths and the CP2K raw-energy/stress reconciliation; the 81-point local and
-90-point central GaN cuts; endpoint-$\Gamma$ projections; and the Slurm
+162-point central GaN cuts; endpoint-$\Gamma$ projections; and the Slurm
 acceleration accounting. The index distinguishes measured DFT points from
 display interpolation and records unavailable original-output properties.
 Full first-principles output directories are retained in the project
