@@ -28,12 +28,17 @@ Comparator interpretation checked against the source pages:
   and image count but not that electronic or force-norm contract; 45.7 GPa
   was adopted from the reference, not recomputed as each PBE backend's
   coexistence pressure.
-- [Sheppard et al.](https://doi.org/10.1063/1.3684549), Fig. 11: the
+- [Sheppard et al.](https://doi.org/10.1063/1.3684549), PDF page 8
+  (journal page 074103-7), Fig. 11 (text and rendered figure checked on
+  2026-09-29): the
   2.4-meV/atom DFT feature is the small initial peak on the atom-dominated
-  stage that the later cell-dominated route initially shares. The latter
-  subsequently rotates atoms; our 7.22-meV/atom cell mapping has no
-  demonstrated matching saddle or identical electronic contract. The
-  original explicitly uses PW91; our run uses PBE.
+  stage that the later cell-dominated route initially shares. After their
+  common state (c), the latter follows a second, atom-rotation event toward
+  its specified final cell. Thus 2.4 meV/atom is not a separately established
+  barrier for that later branch. Section III D specifies VASP/PAW/PW91,
+  455 eV, eight atoms, and a 10×10×10 Monkhorst–Pack mesh; our PBE
+  7.22-meV/atom cell mapping has neither an identical electronic contract
+  nor a demonstrated matching saddle.
 - [Liu and Hanrahan](https://liutheory.westlake.edu.cn/pdf/Liu19p054404.pdf),
   Methods and Table I: 40 images, LDA/QE with GBRV ultrasoft potentials,
   and T→PO forward barrier 0.032 eV/HfO₂. Our 0.1291722-eV value is per
