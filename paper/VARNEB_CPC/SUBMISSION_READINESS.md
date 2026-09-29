@@ -53,10 +53,15 @@ repository now declares `testpaths = ["tests"]`, and both the explicitly
 scoped and plain-root entry points pass. Figure regression tests have been
 updated to check the current main-text CSVs against the 27/289/162-node
 audit records rather than merely expecting old filenames.
-The clean `17a4f08` Git archive separately passed 597 tests and compiled its
-15-page manuscript without missing figures or citations. That result is
-historical, not a clean-archive certification of the newer `4a2f7fb`
-figure commit. Increasing the
+An independently extracted clean Git archive containing the 27/289/162-point
+figures passed **598 tests, one skipped**, and compiled the 15-page manuscript
+without missing figures or citations. This checks committed source rather
+than relying on the shared working tree. Its smaller test count reflects
+untracked tests in that tree, not failures. The first archive audit exposed
+that Git normalized three CRLF raw-audit JSON files to LF, breaking their
+figure-QA SHA-256 links; exact-file `.gitattributes` rules now preserve those
+bytes. Current regressions check the report, plotter, and source-data hashes.
+Increasing the
 permitted double-column top-float occupancy then packed GaN Figs. 5--8
 beside their discussion across pages 9--11; a fresh working-tree TeX Live
 build after the new figures is **15 A4 pages**. Pages 6, 7, and 10–13 were
@@ -115,10 +120,10 @@ provenance/structure/trajectory inputs present locally but omitted from Git by
 the local `outputs/` exclusion. A staged-source candidate now preserves those
 raw bytes through explicit `.gitattributes` rules, tracks only the seven
 required BTO files, and passes its independent archive suite (597 passed,
-one skipped). The count is lower than the 616-pass shared-tree snapshot
-because the latter includes untracked tests from another work stream. The
-archived source test is a reproducibility check, not a fresh DFT audit or a
-final CPC/Mendeley deposit.
+one skipped). That count was lower than the corresponding shared-tree
+snapshot because it included untracked tests from another work stream. The
+newer clean-archive check above supersedes this historical count. Neither
+archived source test is a fresh DFT audit or a final CPC/Mendeley deposit.
 
 ## Remaining gates for this CPC submission
 

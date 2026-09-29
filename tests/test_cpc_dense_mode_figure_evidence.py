@@ -56,6 +56,9 @@ def test_bto_main_text_grid_is_289_measured_statics() -> None:
     ) == 1
     assert (FIGURES / f"{stem}.pdf").is_file()
     assert qa["interpolation"]["n_measured_DFT_samples"] == 289
+    assert qa["source_sha256"]["analysis289"] == _sha256(
+        AUDITS / "bto_transverse_soft_frozen289_20260929.json"
+    )
     assert audit["status"] == "BTO_frozen_soft_mode_17x17_raw_audited"
     assert audit["n_reused_measured_points"] == 81
     assert audit["n_new_raw_audited_statics"] == len(audit["new_samples"]) == 208

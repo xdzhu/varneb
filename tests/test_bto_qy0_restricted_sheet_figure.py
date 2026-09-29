@@ -26,6 +26,9 @@ def test_main_text_27_node_sheet_is_measured_and_stress_gated():
     assert f"{{figures/{stem}.pdf}}" in manuscript
     assert (figures / f"{stem}.pdf").is_file()
     assert qa["source_sha256"]["source_data"] == hashlib.sha256(source.read_bytes()).hexdigest()
+    assert qa["source_sha256"]["plotter"] == hashlib.sha256(
+        (ROOT / "scripts/plot_bto_qy0_restricted_sheet27.py").read_bytes()
+    ).hexdigest()
     assert qa["n_measured_DFT_nodes"] == report["n_total_measured_nodes"] == len(rows) == 27
     assert report["n_reused_measured_nodes"] == 12
     assert report["n_new_raw_audited_nodes"] == len(report["new"]) == 15

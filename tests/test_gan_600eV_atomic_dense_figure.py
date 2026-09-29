@@ -99,6 +99,9 @@ def test_main_transverse_figure_tracks_162_dft_points_without_claiming_lower_mep
     assert qa["source_sha256"]["plotter"] == hashlib.sha256(
         (ROOT / "scripts/plot_gan_600eV_atomic_transverse_q9.py").read_bytes()
     ).hexdigest()
+    assert qa["source_sha256"]["audit"] == hashlib.sha256(
+        (ROOT / "benchmarks/numerical_integrity/gan_600eV_atomic_tube_q9_20260929.json").read_bytes()
+    ).hexdigest()
     csv_path = figures / f"{stem}_source_data.csv"
     assert qa["source_sha256"]["source_data"] == hashlib.sha256(
         csv_path.read_bytes()
