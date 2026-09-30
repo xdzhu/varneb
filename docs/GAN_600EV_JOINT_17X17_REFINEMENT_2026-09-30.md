@@ -40,8 +40,9 @@ statics represent roughly 1.9 h of pure execution and about 250 core-hours;
 queue waits and outliers are additional. The account's simultaneous-submit
 limit is 200 shared with other work, so the 208 points are divided into
 disjoint Slurm arrays. `27807980` covers `0–103`; `27808164` covers
-`104–155`; `27808203` covers `156–169`. The final `170–207` indices
-remain **unsubmitted** until quota is available. All arrays use the same hash-pinned staged manifest and
+`104–155`; `27808203` covers `156–169`; `27808241` covers `170–187`;
+`27808272` covers `188–207`. All 208 new coordinates have therefore been
+submitted exactly once. All arrays use the same hash-pinned staged manifest and
 `cluster/hf_gan_600eV_ts_2d_dense17.slurm`. The scheduler's test-only
 start dates have been unreliable; use actual `squeue`/`sacct` state for
 progress and completion estimates.
