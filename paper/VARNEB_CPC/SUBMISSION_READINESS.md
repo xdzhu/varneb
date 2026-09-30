@@ -83,6 +83,23 @@ in file bytes from `1176eb3`, but both versions rasterize to an identical
 approve the local edit. This is a reproducibility check for a provisional
 revision, not the final CPC Library deposit or a replacement for author review.
 
+The pushed `c754714` layout revision independently passes **605 tests, one
+skipped** and builds a **15-page** PDF from a fresh Git archive; its rendered
+pages 13--14 match the working-tree inspection pixels. A temporary virtual
+environment created inside that archive ran the README's documented editable
+install with normal build isolation (`pip install -e ".[plot]"`), reporting
+VARNEB 0.0.3. The analytic toy returned a 0.250004-eV barrier. The bundled
+ASE/EMT JSON then passed `validate-config`, `prepare`, and `run --execute`:
+three total images, zero barrier, and final force
+`1.52e-18 eV/Å`; a second execution was correctly refused. `backends --json`,
+`optimizers --json`, `doctor`, and the `v0.0.3` metadata check also succeeded.
+The virtual environment inherited ASE/NumPy from the host, so this is a
+clean-source CLI smoke, not a fully isolated dependency-resolution test or a
+DFT-backend certification. A deliberately non-documentary
+`--no-build-isolation` attempt failed against the host's old setuptools;
+the documented build-isolated install succeeded without changing package
+metadata. No DFT executable was present on this local `PATH`.
+
 ## Historical technical QA snapshot, 2026-09-29
 
 On the shared working tree after the 289/27/162-point figure update,
