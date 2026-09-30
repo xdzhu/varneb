@@ -1,7 +1,7 @@
 # VARNEB CPC submission gate
 
 Current scope: one manuscript with no page limit and no separate supplement.
-The 2026-09-29 build has eight main-text figures and one same-document
+The 2026-09-30 build has eight main-text figures and one same-document
 appendix figure. This gate supersedes the layout targets in the dated
 `STAGE_GATE_2026-09-27.md`; it does not supersede raw-data audits.
 
@@ -42,7 +42,24 @@ regression `tests/test_cpc_numeric_claims.py` recomputes headline GaN barriers,
 BTO blind errors and monotonic endpoint rise, Slurm launch reductions, and
 the HfO$_2$ per-cell conversion from committed source tables.
 
-## Technical QA snapshot, 2026-09-29
+## Clean-source QA snapshot, 2026-09-30
+
+The pushed `037ace6` source exposed a packaging gap that the shared working
+tree hid: the four-landscape rebuild used three small BTO numeric provenance
+JSON files under ignored `outputs/`. Its first independent Git-archive test
+had one failure (602 passed, one skipped); no DFT or figure-audit result was
+invalidated. Commit `8ba4971` added exactly those three source inputs without
+changing their bytes or any ABACUS calculation parameter. From a fresh
+`git archive` of `8ba4971`, the suite passes **603 tests, one skipped**;
+the one-command rebuild regenerates all four main BTO/GaN landscapes with
+source CSVs and PNGs byte-identical to the archived artwork, including the
+new GaN 17×17 cut. The archive's LaTeX build passes and yields 15 A4 pages.
+The shared working-tree suite after the GaN-figure update passes **622 tests,
+one skipped**; its extra tests include unrelated untracked local work and
+cannot substitute for the clean-source check. These checks validate the
+packaged data-to-figure pipeline, not a new DFT or index-one TS certificate.
+
+## Historical technical QA snapshot, 2026-09-29
 
 On the shared working tree after the 289/27/162-point figure update,
 `python -m pytest -q --disable-warnings` completed with **618 passed, one
