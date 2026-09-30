@@ -59,14 +59,29 @@ one skipped**; its extra tests include unrelated untracked local work and
 cannot substitute for the clean-source check. These checks validate the
 packaged data-to-figure pipeline, not a new DFT or index-one TS certificate.
 
-The subsequent bounded VASP-transfer wording and evidence-map update pass the
-shared working-tree suite (**624 passed, one skipped**). TeX Live builds the
-current draft as **16 A4 pages**. The extra page is bibliography/layout spill,
-not a new figure or computation; the page-13 two-column whitespace remains a
-final-layout issue. A trial forced page break before the conclusions did not
-improve it and was reverted. Author metadata and the final-source clean build
-remain open gates; this working-tree build includes an unrelated locally
-modified architecture figure and must not be called a frozen submission PDF.
+The bounded VASP-transfer wording and evidence-map update passed the shared
+working-tree suite (**624 passed, one skipped**). It initially built as 16 A4
+pages with a sparse two-column conclusions page and a separate nearly empty
+appendix-introduction page. A forced page break did not help and was reverted.
+The subsequent local layout edit balances the last two-column page and places
+the appendix text beside its figure in one-column backmatter; TeX Live now
+builds **15 A4 pages**, and pages 13--15 were visually inspected. Two existing
+minor overfull boxes remain (1.9 and 0.58 pt); there are no unresolved
+references or citations in the build log. Author metadata and the final-source
+clean build remain open gates; this working-tree build includes an unrelated
+locally modified architecture figure and must not be called a frozen
+submission PDF.
+
+An independent `git archive` of the pushed `1176eb3` revision now closes the
+source-only check for this draft stage: **605 tests passed, one skipped** from
+the extracted tree; TeX Live independently compiled the archived source to
+**16 A4 pages**. Its one-command four-landscape rebuild reproduced all four
+archived source CSVs and PNGs byte for byte, with the expected 27, 289, 289,
+and 162 measured-node counts. The locally modified architecture PDF differs
+in file bytes from `1176eb3`, but both versions rasterize to an identical
+144-dpi PNG at the same page size; that visual equivalence does not stage or
+approve the local edit. This is a reproducibility check for a provisional
+revision, not the final CPC Library deposit or a replacement for author review.
 
 ## Historical technical QA snapshot, 2026-09-29
 
