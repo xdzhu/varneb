@@ -86,6 +86,10 @@ def draw(report: dict, full_arc: np.ndarray, full_h: np.ndarray) -> plt.Figure:
     s = np.asarray(report["arc_fraction_s"], dtype=float)
     q = np.asarray(report["q_atom_A"], dtype=float)
     path = (full_h - full_h[0]) * 500.0
+    peak_index = int(np.argmax(full_h))
+    if peak_index != 15 or peak_index not in report["central_image_indices"]:
+        raise ValueError("audited GaN path no longer peaks at central image 15")
+    peak_row = report["central_image_indices"].index(peak_index)
     plt.rcParams.update({
         "font.family": "sans-serif", "font.sans-serif": ["Arial", "DejaVu Sans"],
         "svg.fonttype": "none", "pdf.fonttype": 42,
@@ -114,7 +118,7 @@ def draw(report: dict, full_arc: np.ndarray, full_h: np.ndarray) -> plt.Figure:
                  linewidths=0.8, zorder=9)
     ax_a.plot(s, np.zeros_like(s), color="white", lw=2.8, zorder=7)
     ax_a.plot(s, np.zeros_like(s), color=INK, lw=1.5, zorder=8)
-    ax_a.scatter(s[10], 0, s=135, marker="*", color=ORANGE,
+    ax_a.scatter(s[peak_row], 0, s=135, marker="*", color=ORANGE,
                  edgecolors="white", linewidths=0.7, zorder=9)
     ax_a.set_xlim(s[0] - 0.004, s[-1] + 0.004)
     ax_a.set_ylim(-0.054, 0.054)
@@ -132,11 +136,18 @@ def draw(report: dict, full_arc: np.ndarray, full_h: np.ndarray) -> plt.Figure:
         Line2D([], [], color=INK, lw=1.5, label="VCNEB centerline"),
     ], loc="center", bbox_to_anchor=(0.4, 0.935), ncol=2, fontsize=9.2,
         frameon=True, facecolor="white", edgecolor="#89959D", framealpha=0.86)
+    fig.legend(handles=[
+        Line2D([], [], marker="*", linestyle="none", color="none",
+               markerfacecolor=ORANGE, markeredgecolor="white", markersize=10,
+               label="Peak image 15"),
+    ], loc="center left", bbox_to_anchor=(0.795, 0.935), fontsize=8.2,
+        frameon=True, facecolor="white", edgecolor="#89959D",
+        framealpha=0.86, borderpad=0.35, handletextpad=0.35)
     ax_b.axvspan(s[0], s[-1], color="#DCE8EE", alpha=0.73, zorder=0)
     ax_b.plot(full_arc, path, color=BLUE, lw=1.8, zorder=2)
     ax_b.scatter(full_arc, path, s=21, color=BLUE, edgecolors="white",
                  linewidths=0.5, zorder=3)
-    ax_b.scatter(full_arc[15], path[15], s=155, marker="*", color=ORANGE,
+    ax_b.scatter(full_arc[peak_index], path[peak_index], s=155, marker="*", color=ORANGE,
                  edgecolors="white", linewidths=0.7, zorder=4)
     ax_b.set_xlim(0, 1)
     ax_b.set_ylim(min(-18, path.min() - 8), path.max() + 23)
@@ -182,6 +193,7 @@ def main() -> None:
         "minimum_measured_excess_meV_per_GaN": float(np.min(
             report["excess_enthalpy_meV_per_GaN"])),
         "interpolation": "separable shape-preserving cubic Hermite; only 162 marked nodes are DFT",
+        "star_marker": "highest discrete VCNEB image 15; neither endpoint nor certified stationary TS",
         "maximum_prospective_error_meV_per_GaN": report[
             "prospective_max_abs_error_meV_per_GaN"],
         "source_sha256": {

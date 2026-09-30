@@ -119,6 +119,13 @@ def draw(rows: list[dict], dense17: dict) -> plt.Figure:
     cax = fig.add_axes((0.16, 0.095, 0.32, 0.027))
     fig.text(0.105, 0.928, "(a)", fontsize=13, fontweight="normal", color=INK)
     fig.text(0.650, 0.928, "(b)", fontsize=13, fontweight="normal", color=INK)
+    fig.legend(handles=[
+        Line2D([], [], marker="*", linestyle="none", color="none",
+               markerfacecolor=BLUE, markeredgecolor="white", markersize=10,
+               label="One-step-refined image 15"),
+    ], loc="center left", bbox_to_anchor=(0.165, 0.935), fontsize=8.2,
+        frameon=True, facecolor="white", edgecolor="#8B969C",
+        framealpha=0.86, borderpad=0.35, handletextpad=0.35)
     contour = ax_a.contourf(
         uu, vv, z, levels=levels, cmap="PuOr_r",
         norm=TwoSlopeNorm(vmin=-0.50, vcenter=0, vmax=0.15), extend="neither",
@@ -191,6 +198,10 @@ def main() -> None:
     fig = draw(rows, dense17)
     fig.savefig(paths[".pdf"])
     fig.savefig(paths[".svg"])
+    svg_lines = paths[".svg"].read_text(encoding="utf-8").splitlines()
+    paths[".svg"].write_text(
+        "\n".join(line.rstrip() for line in svg_lines) + "\n", encoding="utf-8"
+    )
     fig.savefig(paths[".tiff"], dpi=600, pil_kwargs={"compression": "tiff_lzw"})
     fig.savefig(paths[".png"], dpi=250)
     plt.close(fig)
@@ -207,6 +218,7 @@ def main() -> None:
         "prospective_rms_error_meV_per_GaN": dense17["prior_9x9_prospective_rms_error_meV_per_GaN"],
         "prospective_gate": dense17["prior_9x9_prospective_gate"],
         "interpolation": "Clough-Tocher within the measured 17x17 rectangle; pixels are not DFT nodes",
+        "star_marker": "one-step-refined image-15 static used as the local cut center; neither endpoint nor certified stationary TS",
         "claim_limit": dense17["claim_limit"],
         "source_sha256": {
             "pilot_audit": sha256(args.pilot_audit),

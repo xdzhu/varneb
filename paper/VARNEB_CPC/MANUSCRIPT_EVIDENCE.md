@@ -47,6 +47,15 @@ for current numbering.
 | Figure argument and style contract | `FIGURE_LOGIC_AND_STYLE.md` | each panel has a claim, source, normalization, and risk boundary; aligned axes, readable labels, framed legends, and explicit pending data |
 | Real-material strict-mode release-and-refine | no authoritative material run | explicitly future work |
 
+The star in main Fig. 5 is the one-step-refined image-15 static used as the
+local 289-point cut's origin; the star in Fig. 8 is the highest *discrete*
+VCNEB image 15 on the original 29-image chain. Neither star denotes B4/B1 or
+certifies a stationary saddle. The separate signed-basin audit reports native
+B4/B1 raw-stress residuals of 1.743/2.528 kbar against the diagnostic 2-kbar
+gate, and fresh-statics residuals of 8.165/3.726 kbar under a changed basis
+history. Those endpoint diagnostics must not be inferred from either star or
+used to silently alter the 600-eV calculation contract.
+
 The original-page, unit, mapping, and protocol boundaries for the four
 quantitative literature comparators are consolidated in
 `FINAL_PRIMARY_SOURCE_READTHROUGH_2026-09-29.md`; Qian's plotted curve is

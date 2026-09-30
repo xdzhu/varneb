@@ -100,6 +100,17 @@ DFT-backend certification. A deliberately non-documentary
 the documented build-isolated install succeeded without changing package
 metadata. No DFT executable was present on this local `PATH`.
 
+On 2026-09-30, the two GaN two-dimensional figures received explicit,
+non-obscuring star-marker legends. Fig. 5's blue star is a one-step-refined
+image-15 static and Fig. 8's orange star is the original path's highest
+discrete image 15; neither is an endpoint or a strict TS certificate. Their
+source CSV bytes and DFT counts are unchanged. The shared-tree suite now
+passes **626 tests, one skipped**; an independent four-landscape rebuild
+reproduces all archived source CSVs and PNGs byte for byte with the expected
+27/289/289/162 measured nodes. The revised TeX compiles to **15 A4 pages**,
+and the affected figure pages 10 and 12 were rendered and visually checked.
+These are figure/claim-clarity and reproducibility checks, not new DFT.
+
 ## Historical technical QA snapshot, 2026-09-29
 
 On the shared working tree after the 289/27/162-point figure update,
