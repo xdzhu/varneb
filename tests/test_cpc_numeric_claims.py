@@ -9,6 +9,7 @@ import re
 from pathlib import Path
 
 from ase.units import Ry
+from scripts.audit_bto_conditional_five_point_patch import audit_patch
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -160,6 +161,18 @@ def test_bto_prospective_errors_and_monotonic_rise_match_manuscript() -> None:
         energies = [float(row["relative_enthalpy_eV_per_formula_unit"]) for row in curve]
         assert all(right >= left for left, right in zip(energies, energies[1:]))
         assert f"${energies[-1]:.7f}$ eV/BTO" in MANUSCRIPT
+
+
+def test_bto_branch_alignment_and_holdout_claims_match_source() -> None:
+    result = audit_patch(
+        ROOT / "benchmarks/numerical_integrity/"
+        "bto_conditional_five_point_patch_2026-09-28.json"
+    )
+    assert result["status"] == "five_point_metrics_recomputed_not_conditional_PES_certificate"
+    assert f"${result['raw_selected_holdout_coordinate_error_sqrt_amu_A']:.3f}\\sqrt" in MANUSCRIPT
+    assert f"${result['full_coordinate_error_sqrt_amu_A']:.3f}\\sqrt" in MANUSCRIPT
+    assert f"${result['measured_minus_predicted_energy_meV_per_BTO']:.3f}$ meV/BTO" in MANUSCRIPT
+    assert "not a continuous lower-envelope or local-minimum certificate" in MANUSCRIPT
 
 
 def test_acceleration_and_hfo2_claims_match_audited_sources() -> None:
