@@ -62,6 +62,13 @@ def rebuild(output_dir: Path, strict_png: bool = False) -> list[dict]:
     output_dir.mkdir(parents=True)
     records = []
     for name, module, options, archive_name, expected_nodes in FIGURES:
+        for position, option in enumerate(options[:-1]):
+            if option.startswith("--") and not options[position + 1].startswith("--"):
+                source = ROOT / options[position + 1]
+                if not source.is_file():
+                    raise FileNotFoundError(
+                        f"{name}: required archived figure input is missing: {source}"
+                    )
         prefix = output_dir / name
         command = [sys.executable, "-m", module, *options,
                    "--output-prefix", str(prefix)]
