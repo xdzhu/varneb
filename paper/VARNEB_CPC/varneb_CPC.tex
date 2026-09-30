@@ -918,13 +918,15 @@ rather than a saddle search. The CP2K GaN result meets the common path-force
 threshold, with the original-output limitations stated above; its lower
 barrier does not establish which code is closer to the exact functional limit.
 
-The acceleration evidence is also bounded. Image-local state is highly
-effective for the BTO ablation and rescues CdSe and selected VASP chains, but
-it plateaus on one 20-image HfO$_2$ transfer. The measured acceleration
-contribution is image-count normalization, local state isolation, and staged
-trust radii on the tested chains. Pre-DFT feasibility checks with explicit
-failure semantics are a separate safety contribution; their savings were not
-isolated by this ablation. Future
+The acceleration evidence remains bounded. Beyond the matched-start ABACUS
+ablation, BlockFIRE crossed 0.10~eV/\AA{} in one update for a 29-image GaN
+and four updates for a 17-image CdSe VASP continuation. The CdSe control was
+censored before crossing, so no speedup ratio follows. BlockFIRE plateaued
+on a 20-image HfO$_2$ transfer; candidate-aware StagedFIRE later crossed the
+threshold after an accepted half-step. Image-count normalization, local state
+isolation, and staged trust radii help selected chains, not all materials.
+Pre-DFT feasibility checks with explicit failure semantics are a separate
+safety contribution; their savings were not isolated by this ablation. Future
 work will test a metric-consistent atom--strain preconditioner, adaptive image
 insertion followed by a frozen-image recertification, and strict
 release-and-refine mode-guided paths.

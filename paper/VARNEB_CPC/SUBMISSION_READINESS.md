@@ -59,6 +59,15 @@ one skipped**; its extra tests include unrelated untracked local work and
 cannot substitute for the clean-source check. These checks validate the
 packaged data-to-figure pipeline, not a new DFT or index-one TS certificate.
 
+The subsequent bounded VASP-transfer wording and evidence-map update pass the
+shared working-tree suite (**624 passed, one skipped**). TeX Live builds the
+current draft as **16 A4 pages**. The extra page is bibliography/layout spill,
+not a new figure or computation; the page-13 two-column whitespace remains a
+final-layout issue. A trial forced page break before the conclusions did not
+improve it and was reverted. Author metadata and the final-source clean build
+remain open gates; this working-tree build includes an unrelated locally
+modified architecture figure and must not be called a frozen submission PDF.
+
 ## Historical technical QA snapshot, 2026-09-29
 
 On the shared working tree after the 289/27/162-point figure update,
