@@ -66,7 +66,7 @@ statistical replica.
 
 There is no page-count target or separate supplement. The main text contains
 the architecture, BTO 27-point `Q_y=0` restricted sheet and 289-point frozen-mode grid,
-five-backend GaN barriers, the 81-point local GaN joint-coordinate cut,
+five-backend GaN barriers, the 289-point local GaN joint-coordinate cut,
 the GaN joint Hessian and endpoint-mode projections, whole-path endpoint-mode
 and strain evolution, and the 162-point **central** GaN atomic-transverse
 enthalpy cut. Two measured transverse samples lie about 0.2 meV/GaN below

@@ -60,7 +60,7 @@ $\Gamma$-mode projection identifies the unstable cubic-BTO subspace as the
 principal atomic path component. A symmetry-restricted variable-cell two-mode
 sheet contains 27 audited BTO nodes; the initial nine-node model predicts
 15 newly sampled nodes within 1.13 meV/BTO. The omitted third soft mode and released strain remain
-explicit. A separate 81-point GaN atom--strain enthalpy cut resolves opposing
+explicit. A separate 289-point GaN atom--strain enthalpy cut resolves opposing
 local curvatures near the highest image, without certifying a stationary
 transition state. VARNEB therefore contributes an
 auditable, backend-independent execution and analysis layer around established
@@ -702,17 +702,16 @@ interior raw energies and stresses reconcile with the cached chain.}
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=\textwidth]{figures/gan_600eV_local_joint_dft81_v2_20260928.pdf}
+\includegraphics[width=\textwidth]{figures/gan_600eV_local_joint_dft289_20260930_v2.pdf}
 \caption{GaN local joint-coordinate enthalpy cut near the B4-to-B1 highest
 image at 45.7 GPa, using the production VASP/PBE 600-eV contract.
-(a) Display interpolation of 81 raw-audited DFT enthalpies on a complete
-$9\times9$ grid in the coupled unstable coordinate $q_u$ and stable joint
-coordinate $q_v$; circles mark 80 off-center statics and the star marks the
-center. (b) Direct DFT enthalpy changes against the \emph{original} quadratic
-model. The shaded $\pm0.2$-meV/GaN band was predeclared for the four original
-axial half-step checks only; it is not a retrospective acceptance test for
-the additional 68 points. The preceding 25-point interpolation prospectively
-predicts the final 56 nodes within 0.0135 meV/GaN. These atom--cell joint
+(a) Display interpolation of 289 raw-audited DFT enthalpies on a complete
+$17\times17$ grid in the coupled unstable coordinate $q_u$ and stable joint
+coordinate $q_v$; circles mark 288 off-center statics and the star marks the
+center. (b) The 208 new midpoint statics against the \emph{prior} $9\times9$
+interpolation. Its prospectively declared maximum/RMS error limits were
+0.02/0.01 meV/GaN (shaded maximum-error band); the measured errors are
+0.00698/0.00228 meV/GaN. These atom--cell joint
 coordinates define a frozen local enthalpy slice, not an orthogonally relaxed
 or whole-path surface or a certified stationary transition state; Hessian
 and endpoint-mode projections appear in Fig.~\ref{fig:gan-joint-hessian}.}
@@ -739,9 +738,13 @@ axial holdout error is 0.050 meV/GaN. We then added 12 off-axis and 56
 interleaved static calculations without changing the 600-eV electronic
 contract, producing a complete $9\times9$ grid of 81 measured enthalpies.
 The intermediate 25-point interpolation predicted the 56 subsequently
-computed nodes within 0.0135 meV/GaN; Fig.~\ref{fig:gan-joint-mode}a
-interpolates the audited 81-point grid for display, while panel (b) compares
-the raw DFT values to the original quadratic model. Neither interpolation
+computed nodes within 0.0135 meV/GaN. To resolve the visible sample grid,
+we nested a $17\times17$ grid, reused all 81 points and computed only the
+208 missing structures. The frozen prior $9\times9$ interpolant predicted
+these independently sampled points with a 0.00698-meV/GaN maximum and
+0.00228-meV/GaN RMS error, below predeclared 0.02/0.01-meV/GaN limits.
+Figure~\ref{fig:gan-joint-mode}a displays the audited 289-point cut;
+panel (b) shows this prospective prediction check. Neither interpolation
 is used to certify a saddle.
 The largest center-gradient/enthalpy-secant discrepancy is $0.0232$
 eV/\AA{}. Integrating the force/stress gradients over the same finite step
@@ -937,7 +940,7 @@ PES through cubic C. These three capabilities
 make variable-cell pathways easier to execute, audit, compare, and interpret
 without changing the underlying VCNEB formalism. A same-protocol, raw-audited
 GaN central 162-point transverse enthalpy cut and an independently sampled
-81-point local atom--strain slice further resolve the barrier region. The
+289-point local atom--strain slice further resolve the barrier region. The
 transverse cut contains two measured $\sim0.2$-meV/GaN local lower points,
 not a certified lower relaxed route;
 their frozen scope and numerical TS limit remain explicit.
@@ -950,7 +953,7 @@ figure-QA and audit records are available at
 \path{paper/VARNEB_CPC/MANUSCRIPT_EVIDENCE.md} indexes the displayed figures
 and principal quantitative claims to source data, hashes, and claim limits.
 It covers the BTO 27-point restricted and 289-point frozen sheets; five-backend GaN
-paths and the CP2K raw-energy/stress reconciliation; the 81-point local and
+paths and the CP2K raw-energy/stress reconciliation; the 289-point local and
 162-point central GaN cuts; endpoint-$\Gamma$ projections; and the Slurm
 acceleration accounting. The index distinguishes measured DFT points from
 display interpolation and records unavailable original-output properties.

@@ -102,32 +102,39 @@ def test_bto_main_text_grid_is_289_measured_statics() -> None:
     assert qa["interpolation"]["interpolated_downward_overshoot_meV_per_BTO"] > 0
 
 
-def test_gan_main_local_grid_is_81_measured_statics() -> None:
-    stem = "gan_600eV_local_joint_dft81_v2_20260928"
+def test_gan_main_local_grid_is_289_measured_statics() -> None:
+    stem = "gan_600eV_local_joint_dft289_20260930_v2"
     csv_path = FIGURES / f"{stem}_source_data.csv"
     qa = _json(FIGURES / f"{stem}_qa.json")
-    audit = _json(AUDITS / "gan_600eV_ts_2d_9x9_refinement_20260928.json")
+    audit_path = AUDITS / "gan_600eV_ts_2d_17x17_refinement_20260930.json"
+    audit = _json(audit_path)
     rows = _rows(csv_path)
 
     assert (PAPER / "varneb_CPC.tex").read_text(encoding="utf-8").count(
         f"{{figures/{stem}.pdf}}"
     ) == 1
     assert (FIGURES / f"{stem}.pdf").is_file()
-    assert _sha256(csv_path) == qa["source_sha256"]["source_csv"]
-    assert audit["status"] == "GaN_600eV_local_joint_9x9_refinement_raw_audited"
+    assert _sha256(csv_path) == qa["source_sha256"]["source_data"]
+    assert _sha256(audit_path) == qa["source_sha256"]["dense17_audit"]
+    assert audit["status"] == "GaN_600eV_local_joint_17x17_refinement_raw_audited"
     assert qa["pressure_GPa"] == audit["pressure_GPa"] == 45.7
-    assert qa["TS_certified"] is False
-    assert qa["whole_path_2D_surface_certified"] is False
-    assert audit["n_prior_DFT_points"] == 25
-    assert audit["n_new_DFT_points"] == len(audit["cases"]) == 56
-    assert audit["n_total_DFT_points"] == len(rows) == 81
-    _assert_complete_grid(rows, "q_u_A", "q_v_A", 9, 9)
+    assert "not" in qa["claim_limit"].lower()
+    assert audit["n_prior_DFT_points"] == 81
+    assert audit["n_new_DFT_points"] == len(audit["cases"]) == 208
+    assert audit["n_total_DFT_points"] == qa["n_measured_DFT_points"] == len(rows) == 289
+    _assert_complete_grid(rows, "q_u_A", "q_v_A", 17, 17)
     assert {row["kind"] for row in rows} == {
-        "center", "grid", "axial_holdout", "offaxis_refinement", "dense9_refinement"
+        "center", "grid", "axial_holdout", "offaxis_refinement",
+        "dense9_refinement", "dense17_midpoint"
     }
 
-    new_rows = {row["case"]: row for row in rows if row["kind"] == "dense9_refinement"}
-    assert len(new_rows) == 56
+    old_rows = _rows(FIGURES / "gan_600eV_local_joint_dft81_v2_20260928_source_data.csv")
+    by_case = {row["case"]: row for row in rows}
+    for old_row in old_rows:
+        assert by_case[old_row["case"]] == old_row
+
+    new_rows = {row["case"]: row for row in rows if row["kind"] == "dense17_midpoint"}
+    assert len(new_rows) == 208
     for new_point in audit["cases"]:
         row = new_rows[new_point["case"]]
         assert row["raw_OUTCAR_sha256"] == new_point["outcar_sha256"]
@@ -137,7 +144,8 @@ def test_gan_main_local_grid_is_81_measured_statics() -> None:
             abs_tol=1e-9,
         )
     assert math.isclose(
-        qa["prospective_5x5_max_abs_error_meV_per_GaN"],
-        audit["prior_5x5_prospective_max_abs_error_meV_per_GaN"],
+        qa["prospective_max_abs_error_meV_per_GaN"],
+        audit["prior_9x9_prospective_max_abs_error_meV_per_GaN"],
         abs_tol=1e-9,
     )
+    assert audit["prior_9x9_prospective_gate"]["pass"] is True

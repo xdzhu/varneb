@@ -164,8 +164,6 @@ def draw(rows: list[dict], dense17: dict) -> plt.Figure:
     ax_b.legend(handles=[
         Line2D([], [], marker="o", color="none", markerfacecolor=BLUE,
                markeredgecolor="white", markersize=6, label="208 new DFT statics"),
-        Line2D([], [], color="#C8D2D9", lw=8, alpha=0.7,
-               label=r"Prospective ±0.02 meV/GaN"),
     ], loc="upper left", fontsize=8.2, frameon=True, facecolor="white",
         edgecolor="#8B969C", framealpha=0.86, borderpad=0.42,
         handlelength=1.2, handletextpad=0.45)
