@@ -387,11 +387,12 @@ earlier along-path and inner-transverse checks gave 0.166 and
 0.159 meV/GaN. Two measured transverse nodes lie about 0.2 meV/GaN below
 their fixed-cell centerline references, but neither certifies a lower
 fully relaxed MEP. A different **local atom–strain** cut around the highest
-image has 81 measured VASP/600-eV static enthalpies on a 9×9 grid. Its
-preceding 25-point interpolant predicted the 56 subsequently computed nodes
-within 0.0135 meV/GaN; this checks local display interpolation, not
-stationarity of the center image or an index-one saddle. Each sampled
-structure receives a fixed-geometry self-consistent calculation, not one
+image has 289 measured VASP/600-eV static enthalpies on a 17×17 grid. The
+prior 9×9 interpolant predicted its 208 newly computed nodes with
+0.00698-meV/GaN maximum and 0.00228-meV/GaN RMS errors, below the
+predeclared 0.02/0.01-meV/GaN limits. This checks local display
+interpolation, not stationarity of the center image or an index-one saddle.
+Each sampled structure receives a fixed-geometry self-consistent calculation, not one
 electronic iteration or another structure optimization. See
 [`MANUSCRIPT_EVIDENCE.md`](../paper/VARNEB_CPC/MANUSCRIPT_EVIDENCE.md) for
 the bounded point counts and holdout errors. Do not derive a new activation

@@ -149,3 +149,17 @@ def test_gan_main_local_grid_is_289_measured_statics() -> None:
         abs_tol=1e-9,
     )
     assert audit["prior_9x9_prospective_gate"]["pass"] is True
+
+
+def test_public_docs_identify_current_gan_local_grid() -> None:
+    audit = _json(AUDITS / "gan_600eV_ts_2d_17x17_refinement_20260930.json")
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    manual = (ROOT / "docs" / "USER_MANUAL.md").read_text(encoding="utf-8")
+    maximum = f"{audit['prior_9x9_prospective_max_abs_error_meV_per_GaN']:.5f}"
+
+    assert audit["n_total_DFT_points"] == 289
+    assert audit["n_new_DFT_points"] == 208
+    assert "289 measured static" in readme
+    assert "289 measured VASP/600-eV static" in manual
+    assert "17×17" in readme and "17×17" in manual
+    assert maximum in readme and maximum in manual

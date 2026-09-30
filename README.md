@@ -170,8 +170,9 @@ Its two mode-surface examples have deliberately different scopes:
   relaxed MEP. The five-backend
   B4→B1 barrier paths separately validate the path controller; the
   two-coordinate cut does not certify a strict transition state. A separate
-  local atom–strain cut near the highest image contains 81 measured static
-  DFT enthalpies on a 9×9 grid, under the same 600-eV protocol.
+  local atom–strain cut near the highest image contains 289 measured static
+  DFT enthalpies on a 17×17 grid, under the same 600-eV protocol. The prior
+  9×9 interpolant predicted its 208 new DFT nodes within 0.00698 meV/GaN.
 
 All plotted contours display interpolation only inside their sampled domains;
 barriers come from converged VCNEB chains, not from contour pixels.
