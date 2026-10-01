@@ -150,6 +150,21 @@ centers are 117.54/158.50 meV/GaN below the discrete peak, and their
 strengthens the sampled-landscape interpretation while leaving an alternative
 fully relaxed MEP unproven; it is not a reason to rerun the full chain.
 
+The pushed `9484e72` revision was then checked from a fresh `git archive`,
+outside the shared working tree. Its complete suite passed **621 tests, two
+skipped**; the skips were the unavailable `ase.io.abacus` module in this
+local ASE installation and the intentionally undistributed licensed VASP
+POTCAR. TeX Live independently built the archive to **15 A4 pages**. The
+one-command four-landscape rebuild passed with strict PNG identity: all four
+source CSVs and PNGs match the tracked manuscript versions byte for byte,
+with 27/289/289/162 measured nodes. Rendered pages 9 and 12 were visually
+checked after the latest GaN text edit; the cross-column paragraph and Fig. 8
+star/caption are legible with no clipping or overlap. This verifies the
+committed source and displayed figure pipeline at this revision, not the
+licensed DFT executables, a new MEP, or final author-approved metadata. The
+unrelated local architecture-figure modifications are absent from this
+archive and remain unreviewed.
+
 ## Historical technical QA snapshot, 2026-09-29
 
 On the shared working tree after the 289/27/162-point figure update,
