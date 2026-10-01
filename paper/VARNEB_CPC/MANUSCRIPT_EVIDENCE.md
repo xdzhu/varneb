@@ -50,11 +50,32 @@ for current numbering.
 The star in main Fig. 5 is the one-step-refined image-15 static used as the
 local 289-point cut's origin; the star in Fig. 8 is the highest *discrete*
 VCNEB image 15 on the original 29-image chain. Neither star denotes B4/B1 or
-certifies a stationary saddle. The separate signed-basin audit reports native
-B4/B1 raw-stress residuals of 1.743/2.528 kbar against the diagnostic 2-kbar
-gate, and fresh-statics residuals of 8.165/3.726 kbar under a changed basis
-history. Those endpoint diagnostics must not be inferred from either star or
-used to silently alter the 600-eV calculation contract.
+certifies a stationary saddle. The hash-bound *production* endpoint audit
+`benchmarks/numerical_integrity/gan_45p7_vasp_endpoint_static_audit_20260930.json`
+independently pairs original VASP image-0/28 static OUTCARs with the archived
+chain: B4/B1 force maxima are 0.00553/0.00004 eV/A and raw-stress residuals
+are 2.912/0.239 kbar against the diagnostic 2-kbar gate. Thus the original
+B4 endpoint narrowly misses the gate. The separate signed-basin audit instead
+reports native B4/B1 residuals of 1.743/2.528 kbar, and fresh-statics
+residuals of 8.165/3.726 kbar under a changed basis history. Neither the
+basin-return structures nor either star may substitute for the production
+endpoints or motivate an unrecorded change to the 600-eV contract.
+An isolated two-stage native-VASP test of the original B4 geometry retains
+the same 600-eV/PBE/Ga_d+N/Γ8×8×6 electronic contract and 45.7-GPa pressure.
+Job 27812043 stopped after one evaluated frame at `EDIFFG=-0.02 eV/A`, with
+the original 2.912-kbar raw-stress residual unchanged. Job 27812112 changed
+only the ionic stop to `-0.005 eV/A` (and the step cap); five evaluated frames
+yielded 0.000151 eV/A maximum atomic force, 0.05888-kbar maximum raw-stress
+residual, 0.00225-Å maximum relative atomic displacement, and a
+4.11×10⁻⁵ relative volume change. The native-run enthalpy shift was
+-0.03598 meV/GaN. Sources are
+`benchmarks/numerical_integrity/gan_45p7_vasp_b4_endpoint_refine_run1_20261001.json`,
+`gan_45p7_vasp_b4_endpoint_strict_run2_20261001.json`, and their archived raw
+outputs in `evidence/gan_vasp_b4_endpoint_{refine,strict}_20261001/`.
+This quantifies a small endpoint numerical slack; the original production
+image 0, barrier, and both figure stars remain unchanged. Fig. 5 is local to
+image 15 and does not contain either endpoint; Fig. 8 samples a central arc,
+not the endpoint neighborhoods.
 
 The original-page, unit, mapping, and protocol boundaries for the four
 quantitative literature comparators are consolidated in

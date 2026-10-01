@@ -111,6 +111,27 @@ reproduces all archived source CSVs and PNGs byte for byte with the expected
 and the affected figure pages 10 and 12 were rendered and visually checked.
 These are figure/claim-clarity and reproducibility checks, not new DFT.
 
+A subsequent hash-bound read of the original VASP production image-0/28
+static OUTCARs, now archived without POTCAR, corrects an endpoint-provenance
+ambiguity: original B4/B1 raw-stress residuals are **2.912/0.239 kbar** at
+45.7 GPa, whereas 1.743/2.528 kbar belong to later, structurally close
+signed basin-return relaxations. Both original endpoint forces are below
+0.02 eV/Å and their raw energies match the final chain exactly. The B4
+production endpoint misses the separately adopted 2-kbar diagnostic gate;
+the present paper reports this rather than claiming endpoint stress
+certification or silently replacing its endpoint.
+
+On 2026-10-01, a bounded same-electronic-contract B4 endpoint check resolved
+this narrow miss: the first native relaxation (27812043) stopped immediately
+at `EDIFFG=-0.02 eV/A` and retained 2.912 kbar; its stricter isolated
+continuation (27812112, `EDIFFG=-0.005 eV/A`) took five evaluated frames and
+reached 0.059 kbar with 0.000151 eV/Å maximum atomic force. Relative atomic
+displacement from the original B4 is at most 0.00225 Å and the native
+enthalpy change is -0.036 meV/GaN. The jobs did not modify the production
+chain, its endpoint cache, the figures, or the reported barrier. They show
+small numerical endpoint slack, not a different basin or a strict TS
+certificate. The local-cut star is an image-15 reference, not an endpoint.
+
 ## Historical technical QA snapshot, 2026-09-29
 
 On the shared working tree after the 289/27/162-point figure update,

@@ -19,10 +19,15 @@ paths, and external literature curves must remain visually and verbally distinct
 | Table 1, calculator contracts | Per-backend GaN pseudopotential, basis/cutoff, mesh, pressure and force settings. | Do not silently mix different contracts or change the VASP 600-eV path for a prettier comparison. |
 | Table 2, acceleration | Matched-start BTO and HfO₂ first crossings of the common 0.10-eV/Å criterion; ABACUS process-launch totals are independently checked against contiguous Slurm job steps. Source: `ACCELERATION_EVIDENCE_AUDIT_2026-09-27.md` and `benchmarks/convergence/hf_slurm_abacus_launch_audit_20260928.json`. | BTO 78.5% and HfO₂ 38.2% reductions are case-specific. Slurm timestamps have one-second ties; optimizer records establish the first-crossing grouping. Negative transfers remain archived, and no universal speedup or identical saddle basin is claimed. |
 
+GaN star/endpoint distinction: Fig. 5 is a local cut centered on a one-step-refined image-15 static, so neither endpoint lies in its plotted coordinate rectangle. Fig. 8 covers only a central path arc; its star is the original discrete peak image 15 at `q_perp=0`. Neither star is a relaxed endpoint or a certified saddle. The original B4 image 0 narrowly misses the separate 2-kbar stress diagnostic (2.912 kbar), but a same-600-eV isolated continuation reaches 0.059 kbar with only 0.00225 Å maximum relative atomic displacement and -0.036 meV/GaN native enthalpy change. This does not move either star or alter the production-chain barrier; see the endpoint and continuation raw audits in `MANUSCRIPT_EVIDENCE.md`.
+
 The Fig. 5 blue star is the one-step-refined image-15 static defining the
 local cut's origin, while the Fig. 8 orange stars are the original path's
 highest discrete image 15. Neither is an endpoint or a strict TS certificate;
 the revised legends state both identities without obscuring the data.
+The original VASP image-0/28 raw-static audit records B4/B1 stress residuals
+of 2.912/0.239 kbar against the diagnostic 2-kbar gate; separate signed
+basin-return residuals must not be used as Fig. 4's endpoint values.
 
 Fig. 8 specifically uses `gan_600eV_atomic_transverse_162_20260929_v2.*`, whose
 color is `H(s,q_perp)-H(s,0)`; the archived

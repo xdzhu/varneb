@@ -200,6 +200,30 @@ def test_acceleration_and_hfo2_claims_match_audited_sources() -> None:
     assert f"{per_cell:.7f} eV per 12-atom cell" in MANUSCRIPT
 
 
+def test_gan_original_endpoint_stress_claim_is_not_basin_return() -> None:
+    from scripts.audit_gan_45p7_vasp_endpoints import audit
+
+    original = audit()["endpoints"]
+    assert [row["phase"] for row in original] == ["B4", "B1"]
+    values = "/".join(f"{row['max_raw_stress_residual_kbar']:.3f}"
+                      for row in original)
+    assert values == "2.912/0.239"
+    assert f"{values} kbar" in MANUSCRIPT
+    assert "original B4 misses this diagnostic pressure gate" in MANUSCRIPT
+    assert "separate signed basin-return" in MANUSCRIPT
+
+
+def test_gan_strict_endpoint_diagnostic_is_not_barrier_replacement() -> None:
+    from scripts.audit_gan_45p7_vasp_b4_refine import audit
+
+    report = audit(PAPER / "evidence/gan_vasp_b4_endpoint_strict_20261001",
+                   slurm_job=27812112)
+    assert report["n_evaluated_ionic_frames"] == 5
+    assert report["stress_pass_2kbar"]
+    assert f"{report['final_max_raw_stress_residual_kbar']:.3f} kbar" in MANUSCRIPT
+    assert "do not replace image~0 or recertify the reported VCNEB barrier" in MANUSCRIPT
+
+
 def test_quickstart_and_manual_describe_current_mode_surfaces() -> None:
     readme = re.sub(r"\s+", " ", (ROOT / "README.md").read_text(encoding="utf-8"))
     manual = re.sub(
