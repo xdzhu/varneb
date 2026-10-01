@@ -77,6 +77,20 @@ image 0, barrier, and both figure stars remain unchanged. Fig. 5 is local to
 image 15 and does not contain either endpoint; Fig. 8 samples a central arc,
 not the endpoint neighborhoods.
 
+For the separate image-15 energy–stress consistency caveat, 12 additional
+same-600-eV statics in Slurm array `27812251` repeat only the three
+volume-changing joint-coordinate directions at ±0.01 and ±0.005 Å. The
+raw-audited report
+`benchmarks/numerical_integrity/gan_600eV_normal_strain_step_dependence_20261001.json`
+recomputes the prior ±0.02-Å comparison and finds residual magnitudes
+0.0205–0.0238 eV/Å across all three steps. At ±0.005 Å, the sides differ
+in k-point plane-wave counts at 355–361/384 k points, including an axis
+whose maximum count remains 1242. Smaller steps therefore do not remove
+the discrepancy; a changing finite basis remains plausible but not proven
+as the unique cause. The 12 raw OUTCARs, unlicensed inputs, and manifest are
+archived at `evidence/gan_600eV_normal_strain_steps_20261001/` without POTCAR.
+This check does not change Fig. 5, its 289 measured energies, or the barrier.
+
 The original-page, unit, mapping, and protocol boundaries for the four
 quantitative literature comparators are consolidated in
 `FINAL_PRIMARY_SOURCE_READTHROUGH_2026-09-29.md`; Qian's plotted curve is

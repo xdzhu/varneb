@@ -132,6 +132,16 @@ chain, its endpoint cache, the figures, or the reported barrier. They show
 small numerical endpoint slack, not a different basin or a strict TS
 certificate. The local-cut star is an image-15 reference, not an endpoint.
 
+A further 12-case same-600-eV normal-strain step-size audit (Slurm array
+`27812251`) finds that the image-15 energy–stress residual persists at
+0.0205–0.0238 eV/Å across 0.02, 0.01, and 0.005 Å steps. This rules out a
+simple large-step truncation explanation over that tested range, not every
+possible numerical cause. Individual k-point plane-wave counts change in
+355–361/384 k points even for the 0.005-Å pairs, consistent with but not
+uniquely proving a finite-basis contribution. The manuscript now reports
+this evidence and keeps the strict TS claim explicitly unproven; the
+enthalpy landscape and original barrier are unchanged.
+
 ## Historical technical QA snapshot, 2026-09-29
 
 On the shared working tree after the 289/27/162-point figure update,

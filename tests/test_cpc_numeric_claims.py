@@ -224,6 +224,19 @@ def test_gan_strict_endpoint_diagnostic_is_not_barrier_replacement() -> None:
     assert "do not replace image~0 or recertify the reported VCNEB barrier" in MANUSCRIPT
 
 
+def test_gan_normal_strain_step_check_is_claimed_within_audited_limits() -> None:
+    report = json.loads((ROOT / "benchmarks/numerical_integrity/"
+                         "gan_600eV_normal_strain_step_dependence_20261001.json")
+                        .read_text(encoding="utf-8"))
+    assert report["n_new_statics"] == 12
+    magnitudes = [abs(value) for row in report["comparison_to_prior_0p02_A"]
+                  for value in row["residual_eV_per_A"]]
+    assert round(min(magnitudes), 4) == 0.0205
+    assert round(max(magnitudes), 4) == 0.0238
+    assert "$0.0205$--$0.0238$ eV/\\AA{}" in MANUSCRIPT
+    assert "plausible contributor, not a uniquely established cause" in MANUSCRIPT
+
+
 def test_quickstart_and_manual_describe_current_mode_surfaces() -> None:
     readme = re.sub(r"\s+", " ", (ROOT / "README.md").read_text(encoding="utf-8"))
     manual = re.sub(
