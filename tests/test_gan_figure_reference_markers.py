@@ -23,6 +23,19 @@ def test_joint_cut_star_is_refined_image15_reference():
     newton = json.loads((NUMERIC / "gan_600eV_ts_newton_canary_20260928.json")
                         .read_text(encoding="utf-8"))
     assert pilot["source_sha256"]["center_OUTCAR"] == newton["OUTCAR_sha256"]
+    _, _, original_enthalpy = load_transverse(
+        NUMERIC / "gan_600eV_atomic_tube_q9_20260929.json",
+        NUMERIC / "gan_600eV_atomic_tube_refinement_20260928.json",
+        ROOT / "paper/VARNEB_CPC/evidence/gan_45p7_final_chains_20260927/gan_vasp_45p7_final_chain.traj",
+    )
+    np.testing.assert_allclose(original_enthalpy[15], newton["center_enthalpy_eV_per_cell"],
+                               atol=1e-10, rtol=0)
+    np.testing.assert_allclose(pilot["center_enthalpy_eV_per_cell"],
+                               newton["candidate_enthalpy_eV_per_cell"], atol=1e-10, rtol=0)
+    delta_meV_per_GaN = (pilot["center_enthalpy_eV_per_cell"] - original_enthalpy[15]) * 500
+    np.testing.assert_allclose(delta_meV_per_GaN, -0.0258741717909, atol=1e-9, rtol=0)
+    manuscript = (ROOT / "paper/VARNEB_CPC/varneb_CPC.tex").read_text(encoding="utf-8")
+    assert "0.0259~meV/GaN below the unmodified chain image 15" in manuscript
     rows, report = load_rows(
         NUMERIC / "gan_600eV_ts_2d_pilot_20260928.json",
         NUMERIC / "gan_600eV_ts_2d_5x5_refinement_20260928.json",

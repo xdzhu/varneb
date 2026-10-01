@@ -50,7 +50,13 @@ for current numbering.
 The star in main Fig. 5 is the one-step-refined image-15 static used as the
 local 289-point cut's origin; the star in Fig. 8 is the highest *discrete*
 VCNEB image 15 on the original 29-image chain. Neither star denotes B4/B1 or
-certifies a stationary saddle. The hash-bound *production* endpoint audit
+certifies a stationary saddle. The archived original trajectory gives
+$H_{15}=-11.496159738823943$ eV per two-GaN cell, exactly the center
+enthalpy in `gan_600eV_ts_newton_canary_20260928.json`; the one-step
+candidate and the raw-audited 2D-pilot center both give
+$-11.496211487167525$ eV per cell, lower by 0.025874 meV/GaN. The figure
+stars therefore denote distinct nearby structures, without modifying the
+production barrier. The hash-bound *production* endpoint audit
 `benchmarks/numerical_integrity/gan_45p7_vasp_endpoint_static_audit_20260930.json`
 independently pairs original VASP image-0/28 static OUTCARs with the archived
 chain: B4/B1 force maxima are 0.00553/0.00004 eV/A and raw-stress residuals
