@@ -15,6 +15,8 @@ from pathlib import Path
 
 import numpy as np
 
+from vcneb.phonons import identify_acoustic_modes
+
 
 THZ_TO_CM1 = 33.35640951981521
 
@@ -23,30 +25,35 @@ def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def _read_family(directory: Path, label: str) -> tuple[dict, np.ndarray, np.ndarray]:
+def _read_family(directory: Path, label: str) -> tuple[dict, np.ndarray, np.ndarray, np.ndarray]:
     projection = json.loads((directory / f"{label}_path_projection.json").read_text(encoding="utf-8"))
     with np.load(directory / f"{label}.npz", allow_pickle=False) as data:
         frequency_thz = np.asarray(data["frequencies_thz"], dtype=float)
         basis = np.asarray(data["eigenvectors_mass_weighted"], dtype=float)
+        masses = np.asarray(data["masses_amu"], dtype=float)
     coordinates = np.asarray(projection["normal_coordinates_sqrt_amu_A"], dtype=float)
     if (projection["n_images"] != 29 or projection["n_atoms"] != 4
             or coordinates.shape != (29, 12) or basis.shape != (12, 12)
-            or frequency_thz.shape != (12,)):
+            or frequency_thz.shape != (12,) or masses.shape != (4,)):
         raise ValueError(f"incomplete GaN Gamma path projection: {label}")
     np.testing.assert_allclose(
         np.asarray(projection["frequencies_cm1"]),
         frequency_thz * THZ_TO_CM1, rtol=0, atol=1e-8,
     )
     np.testing.assert_allclose(basis.T @ basis, np.eye(12), rtol=0, atol=1e-8)
-    return projection, coordinates, basis
+    return projection, coordinates, basis, masses
 
 
-def _dominant_groups(projection: dict, coordinates: np.ndarray) -> list[dict]:
+def _dominant_groups(projection: dict, coordinates: np.ndarray,
+                     acoustic_indices: set[int]) -> list[dict]:
     groups = []
     for record in projection["degenerate_mode_subspaces"]:
         indices = [int(index) for index in record["mode_indices"]]
         frequency = float(record["frequency_cm1"])
-        if min(indices) < 3 or abs(frequency) < 10.0:
+        overlap = acoustic_indices.intersection(indices)
+        if overlap and len(overlap) != len(indices):
+            raise ValueError("mixed acoustic/optical Gamma group cannot be ranked as optical")
+        if overlap:
             continue
         groups.append({
             "mode_indices": indices,
@@ -69,11 +76,16 @@ def audit(directory: Path, path_csv: Path) -> tuple[dict, list[dict]]:
     all_rows = []
     phase_reports = {}
     for phase in ("B4", "B1"):
-        small, q_small, u_small = _read_family(directory, f"{phase}_d0.01")
-        large, q_large, u_large = _read_family(directory, f"{phase}_d0.02")
-        groups = _dominant_groups(small, q_small)
+        small, q_small, u_small, masses_small = _read_family(directory, f"{phase}_d0.01")
+        large, q_large, u_large, masses_large = _read_family(directory, f"{phase}_d0.02")
+        acoustic_small, _ = identify_acoustic_modes(u_small, masses_small)
+        acoustic_large, _ = identify_acoustic_modes(u_large, masses_large)
+        if not np.array_equal(acoustic_small, acoustic_large):
+            raise ValueError("GaN acoustic mode indices changed across finite-difference steps")
+        acoustic_set = set(acoustic_small)
+        groups = _dominant_groups(small, q_small, acoustic_set)
         selected = sorted(index for group in groups for index in group["mode_indices"])
-        optical = list(range(3, 12))
+        optical = [index for index in range(12) if index not in acoustic_set]
         total = float(np.sum(q_small[:, optical] ** 2))
         captured = float(np.sum(q_small[:, selected] ** 2) / total)
         residual = np.linalg.norm(np.delete(q_small, selected, axis=1), axis=1)

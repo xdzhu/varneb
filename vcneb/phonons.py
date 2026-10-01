@@ -53,6 +53,40 @@ def translation_basis(masses: Array) -> Array:
     return basis
 
 
+def identify_acoustic_modes(
+    eigenvectors_mass_weighted: Array,
+    masses_amu: Array,
+    *,
+    minimum_principal_overlap: float = 0.99,
+) -> tuple[Array, float]:
+    """Identify three Gamma acoustic eigenvectors by rigid-translation overlap.
+
+    Finite-displacement acoustic frequencies need not be exactly zero, and a
+    soft optical mode can lie below them. The selected three-mode subspace
+    must span the ideal mass-weighted translations to the declared tolerance;
+    otherwise individual eigenvector labels are ambiguous and we fail rather
+    than classify modes from an arbitrary frequency cutoff.
+    """
+
+    masses = _validated_masses(masses_amu)
+    vectors = np.asarray(eigenvectors_mass_weighted, dtype=float)
+    width = 3 * len(masses)
+    if (vectors.shape != (width, width) or not np.isfinite(vectors).all()
+            or not np.allclose(vectors.T @ vectors, np.eye(width), rtol=1e-8, atol=1e-8)):
+        raise ValueError("Gamma eigenvectors must form a finite orthonormal mass-weighted basis")
+    if not np.isfinite(minimum_principal_overlap) or not 0 < minimum_principal_overlap <= 1:
+        raise ValueError("minimum_principal_overlap must be within (0, 1]")
+    overlap = translation_basis(masses).T @ vectors
+    scores = np.sum(overlap**2, axis=0)
+    selected = np.sort(np.argsort(scores)[-3:])
+    principal = np.linalg.svd(overlap[:, selected], compute_uv=False)
+    minimum = float(np.min(principal))
+    if minimum < minimum_principal_overlap:
+        raise ValueError("Gamma acoustic eigenvectors do not resolve rigid translations; "
+                         "review force constants or the degenerate subspace")
+    return selected, minimum
+
+
 def mass_weighted_dynamical_matrix(force_constants: Array, masses: Array) -> Array:
     """Build the symmetric Gamma dynamical matrix in eV/(A^2 amu)."""
 
@@ -392,6 +426,7 @@ __all__ = [
     "diagonalize_gamma_modes",
     "force_constants_to_eV_per_A2",
     "gamma_modes_from_phonopy_eigenpairs",
+    "identify_acoustic_modes",
     "load_gamma_force_constants",
     "load_phonopy_gamma_eigenpairs",
     "mass_weighted_dynamical_matrix",

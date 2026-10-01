@@ -9,6 +9,7 @@ from vcneb.phonons import (
     diagonalize_gamma_modes,
     force_constants_to_eV_per_A2,
     gamma_modes_from_phonopy_eigenpairs,
+    identify_acoustic_modes,
     load_phonopy_gamma_eigenpairs,
     mass_weighted_dynamical_matrix,
     phonopy_gamma_eigenpairs,
@@ -44,6 +45,26 @@ def test_translation_projection_removes_acoustic_component() -> None:
     assert np.allclose(translations.T @ translations, np.eye(3))
     assert np.count_nonzero(np.abs(modes.eigenvalues_eV_per_A2_amu) < 1e-12) == 5
     assert np.isclose(modes.eigenvalues_eV_per_A2_amu[-1], 1.0)
+
+
+def test_acoustic_modes_follow_rigid_translation_not_frequency_order() -> None:
+    translations = translation_basis([1.0, 1.0])
+    optical = np.zeros((6, 3))
+    for axis in range(3):
+        optical[axis, axis] = 1 / np.sqrt(2)
+        optical[axis + 3, axis] = -1 / np.sqrt(2)
+    # Place a soft optical vector before all three acoustic vectors.
+    vectors = np.column_stack((optical[:, 0], translations,
+                               optical[:, 1], optical[:, 2]))
+    indices, minimum = identify_acoustic_modes(vectors, [1.0, 1.0])
+    np.testing.assert_array_equal(indices, [1, 2, 3])
+    assert minimum == pytest.approx(1.0)
+
+
+def test_ambiguous_acoustic_subspace_is_rejected() -> None:
+    # Every Cartesian eigenvector has only 50% rigid-translation character.
+    with pytest.raises(ValueError, match="do not resolve rigid translations"):
+        identify_acoustic_modes(np.eye(6), [1.0, 1.0])
 
 
 def test_known_mode_mixture_is_recovered() -> None:

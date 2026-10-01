@@ -304,6 +304,17 @@ At a stationary endpoint, generate or load Gamma force constants and use
 - VCNEB reaction coordinate and segment lengths;
 - per-image squared-amplitude contribution fractions and dominant modes.
 
+By default the script removes each image's mass-weighted rigid translation
+before projection. It identifies the three acoustic eigenvectors by their
+subspace overlap with ideal mass-weighted translations (minimum principal
+overlap 0.99), **not** by demanding exactly zero finite-displacement
+frequencies. An unresolved translation
+subspace is an error when optical modes are requested; check the force
+constants, acoustic sum rule, and endpoint mapping rather than silently
+classifying a soft optical mode as acoustic. `--include-translations` retains
+all mode labels in the ranking, whereas `--keep-translations` also retains
+rigid path displacement; these options serve different purposes.
+
 The cell degrees of freedom are reported separately. A Gamma mode projection
 does not prove that a non-stationary path image is a saddle or that the mode is
 the unique reaction coordinate. Preserve the endpoint mapping and any

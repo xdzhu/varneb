@@ -8,15 +8,47 @@ import json
 from pathlib import Path
 
 import numpy as np
+import pytest
 from ase.io import read
 from ase.units import GPa
 
 from examples.analyze_path_gamma_modes import make_report
-from vcneb.phonons import load_gamma_force_constants, load_phonopy_gamma_eigenpairs
+from scripts.analyze_gan_gamma_path_subspaces import _dominant_groups, audit as audit_subspaces
+from vcneb.phonons import (
+    identify_acoustic_modes,
+    load_gamma_force_constants,
+    load_phonopy_gamma_eigenpairs,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
 EVIDENCE = ROOT / "outputs" / "gan_b4_b1_gamma_1x1x1_20260926"
+
+
+def test_soft_optical_group_is_not_discarded_by_acoustic_frequency_cutoff() -> None:
+    coordinates = np.zeros((29, 12))
+    coordinates[:, 0] = 3.0  # genuine soft optical mode ordered before acoustics
+    coordinates[:, 4] = 2.0
+    coordinates[:, 5] = 1.0
+    groups = _dominant_groups({"degenerate_mode_subspaces": [
+        {"mode_indices": [0], "frequency_cm1": -2.0},
+        {"mode_indices": [1, 2, 3], "frequency_cm1": 0.2},
+        {"mode_indices": [4], "frequency_cm1": 100.0},
+        {"mode_indices": [5], "frequency_cm1": 200.0},
+    ]}, coordinates, {1, 2, 3})
+    assert [group["mode_indices"] for group in groups] == [[0], [4], [5]]
+    with pytest.raises(ValueError, match="mixed acoustic/optical"):
+        _dominant_groups({"degenerate_mode_subspaces": [
+            {"mode_indices": [0, 1], "frequency_cm1": -2.0},
+        ]}, coordinates, {1, 2, 3})
+
+
+def test_geometric_acoustic_identification_preserves_archived_gan_projections() -> None:
+    source = ROOT / "benchmarks/numerical_integrity/gan_b4_b1_tetragonal_empirical_atomic_strain_20260926.csv"
+    reproduced, rows = audit_subspaces(EVIDENCE, source)
+    archived = json.loads((EVIDENCE / "subspace_audit_v2.json").read_text(encoding="utf-8"))
+    assert reproduced == archived
+    assert len(rows) == 58
 
 
 def test_endpoint_gamma_evidence_contract_and_numerical_stability() -> None:
@@ -105,3 +137,41 @@ def test_public_final_chain_reproduces_endpoint_gamma_projections() -> None:
                 reproduced["normal_coordinates_sqrt_amu_A"],
                 stored["normal_coordinates_sqrt_amu_A"], rtol=0, atol=1e-10,
             )
+            assert reproduced["interpretation"]["acoustic_mode_indices"] == [0, 1, 2]
+            assert reproduced["interpretation"]["minimum_rigid_translation_subspace_overlap"] > 0.999
+
+
+def test_gan_three_group_residual_separates_optical_and_acoustic_components() -> None:
+    subspaces = json.loads((EVIDENCE / "subspace_audit_v2.json").read_text(encoding="utf-8"))
+    figure_csv = ROOT / "paper/VARNEB_CPC/figures/gan_gamma_path_600eV_source_data.csv"
+    with figure_csv.open(newline="", encoding="utf-8") as handle:
+        plotted = list(csv.DictReader(handle))
+    assert len(plotted) == 29
+    expected = {"B4": (0.0002362187675, 0.0003597366448),
+                "B1": (0.0001826949300, 0.0013915895328)}
+    for phase in ("B4", "B1"):
+        with np.load(EVIDENCE / f"{phase}_d0.01.npz", allow_pickle=False) as data:
+            acoustic, minimum = identify_acoustic_modes(
+                data["eigenvectors_mass_weighted"], data["masses_amu"]
+            )
+        assert minimum > 0.999
+        coordinates = np.asarray(json.loads(
+            (EVIDENCE / f"{phase}_d0.01_path_projection.json").read_text(encoding="utf-8")
+        )["normal_coordinates_sqrt_amu_A"])
+        selected = {index for group in subspaces["phases"][phase]["groups_ranked_by_path_amplitude"]
+                    for index in group["mode_indices"]}
+        acoustic_set = set(acoustic)
+        optical_remainder = [i for i in range(12) if i not in selected | acoustic_set]
+        total_remainder = [i for i in range(12) if i not in selected]
+        optical = np.linalg.norm(coordinates[:, optical_remainder], axis=1)
+        leakage = np.linalg.norm(coordinates[:, acoustic], axis=1)
+        total = np.linalg.norm(coordinates[:, total_remainder], axis=1)
+        np.testing.assert_allclose(total**2, optical**2 + leakage**2, atol=1e-12)
+        np.testing.assert_allclose(total,
+            [float(row[f"{phase}_three_group_residual_sqrt_amu_A"]) for row in plotted],
+            rtol=0, atol=1e-12)
+        assert np.max(optical) == pytest.approx(expected[phase][0], abs=1e-9)
+        assert np.max(leakage) == pytest.approx(expected[phase][1], abs=1e-9)
+    manuscript = (ROOT / "paper/VARNEB_CPC/varneb_CPC.tex").read_text(encoding="utf-8")
+    assert "0.000236/0.000183" in manuscript
+    assert "0.000360/0.001392" in manuscript

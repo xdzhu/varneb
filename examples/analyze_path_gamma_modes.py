@@ -28,6 +28,7 @@ from vcneb import (
     diagonalize_gamma_modes,
     force_constants_to_eV_per_A2,
     gamma_modes_from_phonopy_eigenpairs,
+    identify_acoustic_modes,
     load_gamma_force_constants,
     load_phonopy_gamma_eigenpairs,
     project_displacements_onto_gamma_modes,
@@ -237,8 +238,14 @@ def make_report(
     overlaps = tangent_mode_overlaps(coordinates)
     reaction_coordinate, segment_lengths = path_reaction_coordinate(images)
     contribution_fractions = mode_contribution_fractions(coordinates)
-    translation_mask = np.abs(modes.frequencies_cm1) < 1e-3
-    candidate = np.ones(len(modes.frequencies_cm1), dtype=bool) if include_translations else ~translation_mask
+    translation_mask = np.zeros(len(modes.frequencies_cm1), dtype=bool)
+    minimum_translation_overlap = None
+    if not include_translations:
+        acoustic_indices, minimum_translation_overlap = identify_acoustic_modes(
+            modes.eigenvectors, masses_amu,
+        )
+        translation_mask[acoustic_indices] = True
+    candidate = ~translation_mask
     peak = np.max(np.abs(coordinates), axis=0)
     ranking = [int(index) for index in np.argsort(-peak) if candidate[index]]
     groups = frequency_groups(modes.frequencies_cm1)
@@ -246,12 +253,16 @@ def make_report(
     for indices in groups:
         group_coordinates = np.linalg.norm(coordinates[:, indices], axis=1)
         group_overlaps = np.linalg.norm(overlaps[:, indices], axis=1)
+        acoustic_count = int(np.count_nonzero(translation_mask[indices]))
         grouped_modes.append(
             {
                 "mode_indices": indices,
                 "frequency_cm1": float(np.mean(modes.frequencies_cm1[indices])),
                 "degeneracy": len(indices),
-                "translation_subspace": bool(np.all(translation_mask[indices])),
+                "translation_subspace": (
+                    None if include_translations or 0 < acoustic_count < len(indices)
+                    else acoustic_count == len(indices)
+                ),
                 "max_coordinate_norm_sqrt_amu_A": float(np.max(group_coordinates)),
                 "max_segment_tangent_subspace_overlap": float(np.max(group_overlaps)),
                 "mean_squared_segment_tangent_subspace_overlap": float(np.mean(group_overlaps**2)),
@@ -275,6 +286,13 @@ def make_report(
             "cell_degrees_of_freedom": "excluded; analyze separately through VCNEB generalized coordinates",
             "translations_projected_before_diagonalization": bool(modes.translations_projected),
             "rigid_translations_removed_from_path": bool(remove_translations),
+            "acoustic_mode_indices": np.flatnonzero(translation_mask).tolist()
+            if not include_translations else None,
+            "minimum_rigid_translation_subspace_overlap": minimum_translation_overlap,
+            "acoustic_identification": (
+                "mass-weighted rigid-translation overlap"
+                if not include_translations else "not requested; translations included"
+            ),
         },
         "n_atoms": len(reference),
         "n_images": len(images),
