@@ -181,6 +181,22 @@ the CPC Library deposit. Filename screening cannot certify redistribution
 rights or detect every secret: author-level archive/licence review and final
 metadata approval remain necessary before publication.
 
+The subsequent `c302619` revision corrects the reusable Gamma postprocessor's
+acoustic-mode identification: a three-dimensional mass-weighted rigid-
+translation overlap replaces the overly strict near-zero-frequency cutoff. The
+legacy GaN projection reports' `translation_subspace` booleans are therefore
+not a reliable acoustic label, but their normal coordinates and three selected
+optical groups are unchanged. Fig. 7(d)'s total residual is now explicitly
+partitioned in the text: maximum unselected optical remainders are
+0.000236/0.000183 `sqrt(amu) Å` for B4/B1, whereas acoustic-subspace leakage
+reaches 0.000360/0.001392. The regenerated Fig. 7 source CSV and PNG are
+byte-identical to the tracked originals; no VASP input, DFT result, chain, or
+figure artwork changed. From the `c302619` ZIP extracted afresh, the suite
+passed **636 tests, two skipped**, the four-landscape CSV/PNG rebuild passed
+strictly, the Fig. 7 CSV/PNG rebuild matched byte for byte, and TeX Live built
+**15 pages**. This is postprocessing/claim correction, not a new phonon or TS
+calculation; the final author-controlled source freeze remains open.
+
 ## Historical technical QA snapshot, 2026-09-29
 
 On the shared working tree after the 289/27/162-point figure update,
