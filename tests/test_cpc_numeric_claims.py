@@ -237,6 +237,40 @@ def test_gan_normal_strain_step_check_is_claimed_within_audited_limits() -> None
     assert "plausible contributor, not a uniquely established cause" in MANUSCRIPT
 
 
+def test_gan_two_frozen_transverse_lowerings_match_path_force_slopes() -> None:
+    numerical = ROOT / "benchmarks/numerical_integrity"
+    grid = json.loads((numerical / "gan_600eV_atomic_tube_q9_20260929.json")
+                      .read_text(encoding="utf-8"))
+    components = json.loads((numerical / "gan_600eV_atomic_tube_components_20260928.json")
+                            .read_text(encoding="utf-8"))
+    trajectory = PAPER / "evidence/gan_45p7_final_chains_20260927/gan_vasp_45p7_final_chain.traj"
+    assert hashlib.sha256(trajectory.read_bytes()).hexdigest() == grid["source_sha256"]["trajectory"]
+    assert grid["n_new_raw_audited_statics"] == 72
+    q = grid["q_atom_A"]
+    minus, center, plus = (q.index(value) for value in (-0.0125, 0.0, 0.0125))
+    assert grid["central_image_indices"][10] == 15
+    peak_h = grid["path_enthalpy_eV_per_cell"][10]
+    forces = {row["image_index"]: row for row in components["anchor_components"]}
+    for image, expected_drop, expected_gap in ((19, -0.236568957, 117.541829),
+                                               (20, -0.205159309, 158.500804)):
+        row = grid["central_image_indices"].index(image)
+        values = grid["excess_enthalpy_meV_per_GaN"][row]
+        assert abs(values[center]) < 1e-9
+        assert abs(values[plus] - expected_drop) < 1e-6
+        raw_cases = [item for item in grid["new_cases"]
+                     if item["image_index"] == image and item["q_atom_A"] in (-0.0125, 0.0125)]
+        assert len(raw_cases) == 2 and all(len(item["outcar_sha256"]) == 64
+                                           for item in raw_cases)
+        secant = (values[plus] - values[minus]) * 2 / 1000 / (q[plus] - q[minus])
+        force_slope = forces[image]["path_force_transverse_slope_eV_per_A"]
+        assert abs(secant - force_slope) < 0.0003
+        gap = (peak_h - grid["path_enthalpy_eV_per_cell"][row]) * 500
+        assert abs(gap - expected_gap) < 1e-5
+        assert f"{secant:.5f}" in MANUSCRIPT
+        assert f"{gap:.2f}" in MANUSCRIPT
+    assert "No orthogonal atomic or cell degrees of freedom were released" in MANUSCRIPT
+
+
 def test_quickstart_and_manual_describe_current_mode_surfaces() -> None:
     readme = re.sub(r"\s+", " ", (ROOT / "README.md").read_text(encoding="utf-8"))
     manual = re.sub(

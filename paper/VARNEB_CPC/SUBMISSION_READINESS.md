@@ -142,6 +142,14 @@ uniquely proving a finite-basis contribution. The manuscript now reports
 this evidence and keeps the strict TS claim explicitly unproven; the
 enthalpy landscape and original barrier are unchanged.
 
+The GaN Fig. 8 negative off-center points now also have a near-center
+energy–force consistency check: image-19/20 ±0.0125-Å secants differ from
+projected path-force slopes by only 0.0002893/0.0000017 eV/Å. The two
+centers are 117.54/158.50 meV/GaN below the discrete peak, and their
+0.237/0.205-meV/GaN frozen lowering does not change that peak. This
+strengthens the sampled-landscape interpretation while leaving an alternative
+fully relaxed MEP unproven; it is not a reason to rerun the full chain.
+
 ## Historical technical QA snapshot, 2026-09-29
 
 On the shared working tree after the 289/27/162-point figure update,

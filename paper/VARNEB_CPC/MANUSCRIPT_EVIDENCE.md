@@ -91,6 +91,18 @@ as the unique cause. The 12 raw OUTCARs, unlicensed inputs, and manifest are
 archived at `evidence/gan_600eV_normal_strain_steps_20261001/` without POTCAR.
 This check does not change Fig. 5, its 289 measured energies, or the barrier.
 
+The two negative off-center points in main Fig. 8 have a separate local
+energy–force cross-check. At image 19/20, the measured ±0.0125-Å energy
+secants are -0.0842148/-0.0901200 eV per cell per Å, compared with
+-0.0839255/-0.0901217 eV per cell per Å from the original-path transverse
+force projections (`gan_600eV_atomic_tube_components_20260928.json`). The
+absolute discrepancies are 0.0002893/0.0000017 eV/Å. These two centers are
+117.54/158.50 meV/GaN below peak image 15; their measured lowering of
+0.237/0.205 meV/GaN therefore cannot by itself lower the original discrete
+peak. This validates the *frozen local* lowering, not a relaxed MEP or a
+transition-state certificate. The computation is regression-tested from the
+archived 18×9 raw-audited grid, not from display interpolation.
+
 The original-page, unit, mapping, and protocol boundaries for the four
 quantitative literature comparators are consolidated in
 `FINAL_PRIMARY_SOURCE_READTHROUGH_2026-09-29.md`; Qian's plotted curve is
