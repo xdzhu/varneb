@@ -165,6 +165,22 @@ licensed DFT executables, a new MEP, or final author-approved metadata. The
 unrelated local architecture-figure modifications are absent from this
 archive and remain unreviewed.
 
+The dedicated source-snapshot procedure in `CPC_SOURCE_SNAPSHOT.md` now
+produces a candidate from a pinned Git commit instead of confusing the
+minimal PyPI sdist with the CPC evidence set. A trial from `9eb5af5`
+contained 1329 committed files (18,553,301 ZIP bytes), passed 39 required
+file-presence checks and the common potential/orbital/secret filename gate,
+and excluded uncommitted local work. Its ZIP SHA-256 is
+`51be7ee002fd1a2e882f2ea41d784d0241aaca91891783b2e5a2733e3d08cdad`.
+After extraction in a fresh directory, the full suite passed **631 tests,
+two skipped** (local ASE ABACUS-import and undistributed VASP POTCAR);
+all four landscape CSVs and PNGs rebuilt byte-identically with the expected
+27/289/289/162 measured nodes, and the manuscript compiled to **15 pages**.
+This is a tested candidate workflow, not a final frozen-source revision or
+the CPC Library deposit. Filename screening cannot certify redistribution
+rights or detect every secret: author-level archive/licence review and final
+metadata approval remain necessary before publication.
+
 ## Historical technical QA snapshot, 2026-09-29
 
 On the shared working tree after the 289/27/162-point figure update,
