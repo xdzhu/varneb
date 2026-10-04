@@ -39,6 +39,16 @@ def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def _json_default(value):
+    if isinstance(value, Path):
+        return str(value)
+    if isinstance(value, np.ndarray):
+        return value.tolist()
+    if isinstance(value, np.generic):
+        return value.item()
+    raise TypeError(f"cannot serialize {type(value).__name__}")
+
+
 def _same_periodic_geometry(a, b, *, cell_tolerance_A=2e-5,
                             position_tolerance_A=2e-5) -> bool:
     if a.get_chemical_symbols() != b.get_chemical_symbols():
@@ -207,7 +217,7 @@ def prepare(*, trajectory: Path, center_static: Path, initial_static: Path,
                                       parameters=params, fingerprints=fingerprints,
                                       outcar=outcar)
             (root / f"static_{role}.json").write_text(
-                json.dumps(payload, indent=2) + "\n", encoding="utf-8"
+                json.dumps(payload, indent=2, default=_json_default) + "\n", encoding="utf-8"
             )
         manifest["segments"][name] = {
             "source_image_indices_inclusive": indices,

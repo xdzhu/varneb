@@ -27,7 +27,7 @@ if [[ "${SEGMENT}" == left ]]; then n_images=16; else n_images=14; fi
 export OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 PYTHONUNBUFFERED=1
 export I_MPI_PMI_LIBRARY=/opt/gridview/slurm/lib/libpmi2.so
 export VASP_COMMAND="srun --exclusive --exact --nodes=1 --ntasks=32 --ntasks-per-node=32 --cpus-per-task=1 --distribution=block:block --mpi=pmi2 ${VASP_ROOT}/bin/vasp_std"
-export VCNEB_GIT_REVISION="$(<"${SPLIT_ROOT}/source_revision.txt")"
+export VCNEB_GIT_REVISION="${VCNEB_GIT_REVISION:?pass the archived source commit}"
 export IMAGE_CACHE_NAMESPACE="hf-vasp6.3.2-$(sha256sum "${VASP_ROOT}/bin/vasp_std" | cut -d' ' -f1)"
 cd "${repo}"
 "${python}" examples/run_vcneb_vasp.py \

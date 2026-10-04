@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+import json
 import numpy as np
 import pytest
 from ase import Atoms
 from ase.calculators.singlepoint import SinglePointCalculator
 
 from scripts.prepare_gan_45p7_two_segment_vcneb import (
+    _json_default,
     _static_summary,
     split_frames,
 )
@@ -48,10 +50,12 @@ def test_static_summary_preserves_raw_results_for_fixed_endpoint(tmp_path):
     outcar = tmp_path / "OUTCAR"
     outcar.write_text("test raw output", encoding="utf-8")
     report = _static_summary(raw, target, role="final", n_images=16,
-                             parameters={"encut": 600}, fingerprints={},
+                             parameters={"encut": 600, "kpts": np.array([8, 8, 6])}, fingerprints={},
                              outcar=outcar)
+    loaded = json.loads(json.dumps(report, default=_json_default))
     assert report["evaluated_image_index"] == 15
     assert report["n_images"] == 16
     assert report["potential_energy_eV"] == -23.1
     assert report["forces_eV_per_A"] == [[0.001] * 3] * 4
     assert report["stress_eV_per_A3_voigt"] == [-0.29] * 6
+    assert loaded["calculator_parameters"]["kpts"] == [8, 8, 6]
