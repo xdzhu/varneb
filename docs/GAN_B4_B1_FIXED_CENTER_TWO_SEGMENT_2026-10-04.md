@@ -25,8 +25,8 @@ The prepared case is `case-v2`. An initial `case` preparation stopped before its
 
 | Segment | Slurm job | Expected active interiors | Submission state |
 |---|---:|---:|---|
-| B4→candidate | `27850073` | 14 | Running at initial check, 2026-10-04 |
-| candidate→B1 | `27850074` | 12 | Running at initial check, 2026-10-04 |
+| B4→candidate | `27850073` | 14 | Completed; converged at FIRE step 0, final maximum generalized force 0.096528 eV/Å |
+| candidate→B1 | `27850074` | 12 | Completed; converged at FIRE step 3, final maximum generalized force 0.074809 eV/Å |
 
 Do not infer completion from Slurm disappearance alone. For each job, require a
 completed manager summary, `final_max_generalized_force_eV_per_A ≤ 0.10`,
@@ -38,10 +38,50 @@ and whether any interior image overtakes the fixed center. If either segment
 does not converge within wall time, restart from its latest *complete* chain
 without changing the electronic contract.
 
-For display, project only the refined images inside the measured local
-`(q_u,q_v)` rectangle onto the 289-point cut; do not imply that the full
-B4→B1 path lives inside that local chart. The central transverse `(s,q⊥)`
-figure can show the stitched path with an explicitly recomputed full-path arc
-coordinate. The figure legend must distinguish the original production chain,
-the two fixed-center refined segments, and the measured DFT grid. A visually
-smooth join is not a stationary-TS certificate.
+For display, distinguish actual refined images inside the measured local
+`(q_u,q_v)` rectangle from any interpolation between images; do not imply
+that the full B4→B1 path lives inside that local chart. The full stitched
+profile must use a recomputed full-path arc coordinate. Label the two fixed-
+center segments and the measured DFT grid unambiguously. A visually smooth
+join is not a stationary-TS certificate.
+
+## Completed result and figure boundary
+
+`scripts/audit_gan_45p7_two_segment_result.py` compared all 26 active-image
+OUTCARs to the final complete trajectory snapshots. Each raw output contains
+an electronic-convergence marker and normal VASP completion footer; energy,
+force, stress, geometry, generated INCAR/KPOINTS/POTCAR hashes, and effective
+symmetry contract agree with the manager record. The left and right fixed
+center are the same structure and enthalpy. In the 29-image stitched chain the
+center remains the highest sampled image: the barriers relative to B4 and B1
+are 338.465 and 343.061 meV/GaN, respectively. These are per formula unit;
+the calculation cell contains two GaN formula units.
+
+The incoming/outgoing one-sided generalized tangent cosine at the join is
+0.9636. Their squared overlaps with the local negative-curvature joint mode
+are 0.9762 and 0.9863. Thus the segments meet in a similar direction, but
+neither the join nor the path-force gate remedies the independently reported
+normal-strain energy/stress derivative discrepancy at the candidate. Do not
+call it a formally certified stationary/index-one transition state.
+
+The measured 17×17 local mode chart spans only $|q_u|\le0.020$ Å and
+$|q_v|\le0.0125$ Å. Projection of the stitched chain puts **only image 15**
+inside this rectangle. Image 14 projects to approximately
+$(+0.07221,+0.00944)$ Å and image 16 to $(-0.10237,+0.00965)$ Å. Therefore
+the dashed center-to-neighbor rays in the new figure are clipped linear
+coordinate connections, not additional NEB images, DFT statics, or a relaxed
+local MEP. Panel (b) plots all 29 actual images against a recomputed full-chain
+generalized arc fraction. This honest overlay is the current limit of the
+fixed-center two-segment refinement. If an image-resolved line *within* the
+small local mode chart is required later, near-center image insertion and
+fresh same-contract DFT evaluations are necessary.
+
+Reproducibility bundle:
+`paper/VARNEB_CPC/evidence/gan_45p7_split_20261004/` (raw audit, manifest,
+two trajectory histories and manager summaries, joint Hessian modes), plus
+`paper/VARNEB_CPC/figures/gan_45p7_split_local_mode_20261004_v4_*` (source
+table and QA record alongside PDF/SVG/PNG). Licensed POTCAR contents stay on
+hf. Recreate the figure with
+`python -m scripts.plot_gan_45p7_two_segment_on_local_cut` using that evidence
+directory, its `joint_hessian.npz`, and the archived
+`gan_600eV_local_joint_dft289_20260930_v2_source_data.csv`.

@@ -732,8 +732,50 @@ and endpoint-mode projections appear in Fig.~\ref{fig:gan-joint-hessian}.}
 The star in Fig.~\ref{fig:gan-joint-mode} is the one-step-refined local-cut
 origin, whose enthalpy is 0.0259~meV/GaN below the unmodified chain image 15
 marked in Fig.~\ref{fig:gan-dense-surface}. The two stars thus identify
-nearby but distinct reference structures; this static refinement does not
-replace an image in the production chain or change its reported barrier.
+nearby but distinct reference structures. The production-chain benchmark
+retains the original image and its reported barrier; a separate fixed-center
+two-segment refinement below uses the one-step-refined static instead.
+
+To test whether that locally refined candidate joins two converged branches,
+we split the archived 29-image VASP path at image 15 and fixed the refined
+static as the common endpoint. The B4-to-candidate and candidate-to-B1 halves
+retain 14 and 12 active interior images. Both use the original 45.7-GPa,
+600-eV electronic contract and ordinary, non-climbing VCNEB at the
+0.10-eV/\AA{} generalized-force gate; completed endpoint statics are reused.
+The left half already meets the gate at step 0 ($0.0965$ eV/\AA{}), and the
+right meets it after three FIRE updates ($0.0748$ eV/\AA{}). A raw-output
+audit checks electronic convergence and matching energy, force, stress,
+geometry, and static-input fingerprints for all 26 interior images. The
+stitched center remains the highest sampled image, giving forward/reverse
+barriers of 338.465/343.061 meV/GaN relative to B4/B1. Its one-sided
+generalized tangents have cosine 0.964; the two squared overlaps with the
+local negative-curvature joint mode are 0.976 and 0.986. These path-level
+checks support a coherent two-sided crossing, but not strict stationarity.
+Figure~\ref{fig:gan-split-mode} places the stitched result beside the same
+measured local mode cut. Only the common center image actually lies inside
+the small measured rectangle: the short dashed path segments are clipped
+linear projections from that image to its nearest converged neighbors,
+neither further DFT points nor a relaxed local MEP.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/gan_45p7_split_local_mode_20261004_v4.pdf}
+\caption{Fixed-center two-segment GaN refinement under the unchanged
+45.7-GPa VASP/PBE 600-eV input contract. (a) The measured 289-static local
+frozen joint-coordinate cut around the refined image-15 candidate. White
+circles mark DFT sampling nodes; the star is the sole actual VCNEB image
+inside this rectangle. The colored dashed rays are clipped straight-line
+coordinate connections to the adjacent converged images outside the chart,
+not additional path images or DFT samples. (b) All 29 actual images of the
+stitched two-segment VCNEB chain versus a recomputed full-chain generalized
+arc fraction. The center is the highest sampled image, with
+338.465/343.061-meV/GaN forward/reverse barriers. Both halves meet the
+0.10-eV/\AA{} path-force gate, but the independently observed
+normal-strain energy/stress inconsistency prevents a strict stationary-TS
+claim. Source trajectories, raw-image audit, projected-coordinate table and
+figure QA record accompany the code.}
+\label{fig:gan-split-mode}
+\end{figure*}
 
 A separate local VASP diagnostic examines why the B4-to-B1 candidate is
 unstable when atomic and cell freedoms are combined. The production electronic
@@ -1011,6 +1053,9 @@ make variable-cell pathways easier to execute, audit, compare, and interpret
 without changing the underlying VCNEB formalism. A same-protocol, raw-audited
 GaN central 162-point transverse enthalpy cut and an independently sampled
 289-point local atom--strain slice further resolve the barrier region. The
+fixed-center two-segment VASP refinement converges on both sides of the local
+candidate and leaves it as the highest sampled image, without promoting it to
+a strictly certified stationary saddle. The
 transverse cut contains two measured $\sim0.2$-meV/GaN local lower points,
 not a certified lower relaxed route;
 their frozen scope and numerical TS limit remain explicit.
@@ -1024,7 +1069,8 @@ figure-QA and audit records are available at
 and principal quantitative claims to source data, hashes, and claim limits.
 It covers the BTO 27-point restricted and 289-point frozen sheets; five-backend GaN
 paths and the CP2K raw-energy/stress reconciliation; the 289-point local and
-162-point central GaN cuts; endpoint-$\Gamma$ projections; and the Slurm
+162-point central GaN cuts and fixed-center two-segment VASP refinement;
+endpoint-$\Gamma$ projections; and the Slurm
 acceleration accounting. The index distinguishes measured DFT points from
 display interpolation and records unavailable original-output properties.
 Full first-principles output directories are retained in the project
