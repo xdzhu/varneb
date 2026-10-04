@@ -15,14 +15,15 @@ source /public/home/iai806/Software/VASP/env.sh 6.3.2
 [[ "${RUN_DFT:-0}" == 1 ]] || exit 2
 [[ "${SLURM_NTASKS:-0}" == 194 && "${SLURM_JOB_NUM_NODES:-0}" == 2 ]] || exit 2
 : "${SPLIT_ROOT:?set the prepared two-segment directory}"
+: "${CASE_NAME:?set the prepared case directory name}"
 : "${SEGMENT:?set left or right}"
 [[ "${SEGMENT}" == left || "${SEGMENT}" == right ]] || exit 2
-[[ -s "${SPLIT_ROOT}/manifest.json" ]] || exit 3
-[[ ! -e "${SPLIT_ROOT}/${SEGMENT}/run/vcneb.traj" ]] || exit 3
+[[ -s "${SPLIT_ROOT}/${CASE_NAME}/manifest.json" ]] || exit 3
+[[ ! -e "${SPLIT_ROOT}/${CASE_NAME}/${SEGMENT}/run/vcneb.traj" ]] || exit 3
 
 python=/public/home/iai806/.conda/envs/icu/bin/python
 repo="${SPLIT_ROOT}/source"
-case_dir="${SPLIT_ROOT}/${SEGMENT}"
+case_dir="${SPLIT_ROOT}/${CASE_NAME}/${SEGMENT}"
 if [[ "${SEGMENT}" == left ]]; then n_images=16; else n_images=14; fi
 export OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 PYTHONUNBUFFERED=1
 export I_MPI_PMI_LIBRARY=/opt/gridview/slurm/lib/libpmi2.so
