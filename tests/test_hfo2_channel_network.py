@@ -60,3 +60,25 @@ def test_changed_frozen_evidence_is_not_a_network_result(tmp_path, fault):
         if fault == "optimizer_row": report["optimizer_log_row"]["fmax_eV_A"] += .001
         report_path.write_text(json.dumps(report))
     with pytest.raises(ValueError): read_evaluated_observation(folder)
+
+
+def test_terminal_switch_health_observation_does_not_promote_a_barrier_ranking(tmp_path):
+    actual = analyze(ROOT / "terminal_switch_step10_specification.json", tmp_path / "latest.json")
+    assert actual["existing_image_evaluations"] == 37 and actual["new_DFT_calls"] == 0
+    assert not actual["ready_for_bounded_discrete_comparison"]
+    assert actual["selectivity_interval_eV_fu"] is None
+    assert all(interval is None for interval in actual["minimum_barrier_intervals_eV_fu"].values())
+    assert [source["snapshot_step"] for source in actual["sources"]] == [10, 10, 10, 10]
+    assert [source["source_job_id"] for source in actual["sources"][-2:]] == ["28288045", "28288063"]
+    preserving, reversing = actual["channels"][-2:]
+    assert preserving["barrier_from_common_initial_eV_fu"] == pytest.approx(.09720146879044478, abs=1e-10)
+    assert reversing["barrier_from_common_initial_eV_fu"] == pytest.approx(.4107436409649381, abs=1e-10)
+    modes = actual["reference_mode_observations_in_source_direction"][-2:]
+    # The largest residual can move away from the energy maximum. Both energy
+    # maxima are cell-dominated; the reversing chain's largest residual is now
+    # atomic. Do not force one mechanism label onto every image/iteration.
+    assert modes[0]["residual_dominant_block"] == "cell"
+    assert modes[1]["residual_dominant_block"] == "atomic"
+    assert all(mode["images"][4]["NEB_dominant_block"] == "cell" for mode in modes)
+    assert .57 < modes[0]["images"][4]["parent_pattern_captured_squared_norm_fraction"] < .58
+    assert modes[1]["images"][4]["parent_pattern_captured_squared_norm_fraction"] < 1e-20

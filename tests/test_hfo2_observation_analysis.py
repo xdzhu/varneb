@@ -15,7 +15,15 @@ CASE = Path(__file__).resolve().parents[1] / "benchmarks/hfo2_channels/20261008"
 
 def test_actual_HF_observations_replay_without_DFT(tmp_path):
     expected = json.loads((CASE / "chain_observations/analysis.json").read_text())
-    actual = analyze(CASE / "chain_observations", CASE / "reference_variants",
+    # Freeze the exact seven observations named by the historical analysis.
+    # New audit snapshots must neither silently enter this comparison nor
+    # force a rewrite of the original numeric/provenance report.
+    historical_scope = tmp_path / "historical_observations"
+    historical_scope.mkdir()
+    for record in expected["observations"]:
+        name = record["observation"]
+        shutil.copytree(CASE / "chain_observations" / name, historical_scope / name)
+    actual = analyze(historical_scope, CASE / "reference_variants",
                      CASE / "gamma_analysis/T_d0.01.npz", tmp_path / "analysis.json")
     assert actual["new_DFT_calls"] == 0 and not actual["physical_parameters_changed"]
     assert len(actual["observations"]) == len(expected["observations"]) >= 7

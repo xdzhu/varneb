@@ -156,3 +156,35 @@ def test_published_terminal_restart_replays_without_remote_DFT(case, count, expe
     assert np.linalg.norm(forces, axis=1).max() == pytest.approx(expected, abs=1e-10)
     assert preflight["fmax_eV_A"] == pytest.approx(expected, abs=1e-10)
     assert manifest["restart_fmax_eV_A"] == pytest.approx(expected, abs=1e-10)
+
+
+@pytest.mark.parametrize("case,job_id,expected", [
+    ("PO_minus_T_preserving", "28288045", .980656798544163),
+    ("PO_minus_T_reversing", "28288063", .7002788564042406),
+])
+def test_terminal_switching_restart_replays_complete_fixed_contract_cache(case, job_id, expected):
+    from scripts.analyze_hfo2_channel_network import read_evaluated_observation
+
+    root = Path(__file__).resolve().parents[1] / "benchmarks/hfo2_channels/20261008"
+    seed = root / "switching_continuation" / f"{case}_restart"
+    manifest = json.loads((seed / "manifest.json").read_text())
+    preflight = json.loads((seed.parent / f"{case}_cache_preflight.json").read_text())
+    observation, report, _ = read_evaluated_observation(root / "chain_observations" / f"{case}_step10")
+    assert manifest["source_job"]["job_id"] == job_id == report["source_job_id"]
+    assert manifest["source_job"]["state"] == "COMPLETED"
+    assert manifest["source_snapshot_step"] == report["snapshot_step"] == 10
+    assert manifest["n_total_images"] == 9 and manifest["n_active_images"] == 7
+    assert manifest["new_DFT_calls"] == preflight["new_SCF_calls"] == 0
+    assert manifest["all_seed_SCFs_reused"] and preflight["cached_evaluations"] == 9
+    assert not manifest["climb"] and not manifest["physical_inputs_changed"]
+    assert not manifest["old_optimizer_state_reused"] and manifest["fmax_eV_A"] == .10
+    assert manifest["next_optimizer_step_cap"] == 80 and manifest["wall_cap_hours"] == 24
+    assert preflight["status"] == "passed_actual_production_factory_without_DFT"
+    assert preflight["seed_manifest_sha256"] == restart.sha256(seed / "manifest.json")
+    assert preflight["seed_traj_sha256"] == restart.sha256(seed / "seed.traj")
+    assert preflight["verification_script_sha256"] == restart.sha256(seed.parent / "verify_production_cache.py")
+    assert all(restart.sha256(seed / name) == digest for name, digest in manifest["seed_file_sha256"].items())
+    images = read(seed / "seed.traj", index=":")
+    assert len(images) == len(observation) == 9 and all(image.calc is None for image in images)
+    assert all(restart.same_ordered_geometry(image, original) for image, original in zip(images, observation))
+    assert manifest["restart_fmax_eV_A"] == preflight["fmax_eV_A"] == pytest.approx(expected, abs=1e-10)

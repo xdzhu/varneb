@@ -14,7 +14,8 @@ Their geometric Gamma distortions reverse. In a normalized rotated T-pattern
 triplet the initial T amplitude is (0,0,0.831575) Angstrom and PO is approximately
 (-0.972368,0,0). One candidate keeps the major x pattern; the other reverses it.
 These geometric patterns have not been relabelled as phonon eigenvectors or
-specific X irreps, and electronic polarization branches are still pending.
+specific X irreps. A continuous polarization branch along the paths remains
+pending; the later endpoint electronic inversion check is reported below.
 
 Both candidates were calculated independently in array28246022. Their total
 energies are -9783.249675811965 and -9783.249675811956 eV/cell, with maximum
@@ -226,4 +227,44 @@ atomic-dominated decay-path observations. This provides a concrete reason
 to retain joint cell/atomic freedoms and test path-adapted retained directions,
 rather than assuming a complete shared T-triplet plane. It is a descriptive
 early-stage basis limitation, not evidence for the final TS modes, energetic
-decomposition or predictive model. The source allocations continue normally.
+decomposition or predictive model. The source allocations continued normally
+at that stage; their terminal health-segment audit follows below.
+
+## Terminal flip-segment observations and a moving optimization bottleneck
+
+Both first ten-step switching allocations completed with a step-limit
+termination, not ordinary convergence. Every one of the 18 final-snapshot
+images was matched to an exact completed SCF and re-audited for geometry,
+fixed input, and full energy/forces/stress. The ordinary residuals replay as
+0.980656799 and0.700278856eV/Angstrom. No new DFT was used for this audit.
+
+Their common-PO+ discrete maxima are now97.201 and410.744meV/f.u., compared
+with145.779 and435.169 at step1. The preserving candidate differs from the
+earlier PO--M observation by only2.002meV/f.u.; none of these unconverged
+curves establishes a reliable optimized ordering, let alone noninferiority
+under a changed mechanical boundary. Sampling and measured error gates
+remain absent, and the selectivity result is deliberately unset.
+
+Both energy maxima (image4) remain cell-dominated: atomic/cell vector maxima
+are0.397045/0.980657 and0.143499/0.691671eV/Angstrom. Yet the reversing
+candidate's largest *chain* residual has moved to atomic motion at image2.
+Energy maxima and optimization bottlenecks need not coincide. Basis and
+accelerator selection must therefore use the actual local atomic--cell
+response rather than impose one early residual label on every image.
+
+The T-pattern triplet captures57.39% and approximately zero of the peak
+parent-relative squared displacement. These are representation diagnostics,
+not an energetic decomposition or local phonon/saddle result. Complete
+mode--strain curvature, branch stability and independent channel-response
+prediction are still required before drawing the proposed JCTC conclusion.
+
+Fresh-state ordinary continuations28319570/28319571 were queued after both
+current decay-path allocations28298794/28300425, preserving two active
+study chains. The actual immutable production factory reused all18 initial
+SCFs with its DFT entry disabled during verification. Only new moved interior
+geometries will require SCFs in production. Input parameters, nine-total/seven-
+interior image counts, the0.10 criterion, and ordinary non-CI policy remain
+unchanged. Geometry continuation is not an acceleration benchmark or a full
+FIRE-state restart. Frozen evidence and submission details are in
+`../../benchmarks/hfo2_channels/20261008/switching_continuation/` and
+`../../benchmarks/hfo2_channels/20261008/submission_handles_r17.json`.

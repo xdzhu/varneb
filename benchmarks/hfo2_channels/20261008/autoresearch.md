@@ -439,3 +439,31 @@ See submission_handles_r13.json; no switching results or G2 DFT claimed yet.
   HF substrate drift8.0321e-20A. Windows worktree EOL-normalization differences
   are retained and disclosed, not confused with a changed historical module.
   Source code unchanged after testing; all checks made zero DFT calls.
+
+## E016: terminal switching evidence and exact-cache continuation
+
+- Both first10-step flip segments ended normally above0.10. Audit18 complete
+  rawSCFs/geometry/input/fullE/F/stress; ordinary replay0.980656799/0.700278856.
+  No newSCF, source modification, relifting, remapping or physics changes.
+- Execute oldR12production factory with its DFT entry disabled: all18 cached
+  evaluations pass and reproduce the seed residuals. Actual old production
+  CLI geometry/periodic-lift preflight passes, not a replacement factory mock.
+- Submit once each28319570/28319571, afterany28298794/28300425, 32MPI/OMP1,
+  80steps/24h,9total/7active. Actualscontrol verifies PendingDependency;
+  the maximum2active-chain cap and registeredcandidate matrix are unchanged.
+- New frozen four-channel comparison retains the earlier step1 data. The
+  preserving flip/PO--M discrete maxima differ by2.002meV/fu; all unconverged,
+  sampling/error bounds missing, selectivityunset. No finalranking/H1 claim.
+- Both flip peaks remain cell-dominated, but the reversing chain's largest
+  residual moved to image2atomic motion. Peak-triplet capture57.39%/near0
+  is descriptive, not a phonon/Hessian/energetic contribution orTScertificate.
+- Regression caught the growing root (9observations) entering a historical
+  7-observation baseline. Pin its original7named inputs, preserve old data,
+  and add3independent newevidence tests.72focusedtests pass in33.58s; final
+  clean delivered-tree regression is next. Verifier/raw bytes pinned by Git.
+- Decision: retain same-physics ordinary continuations and use actual moving
+  bottlenecks for subsequent joint-basis selection. No acceleration claimed.
+- Final delivery:867passed/2skipped/84.72s from clean f575cd8f /2c00c537.
+  All four ignoredtraj files are explicitly present; executed verifier byte
+  hash agrees onHF/local/clean archive. Historical data retained. Only receipts
+  and documentation follow the test; no extraDFT or sourcecode changes.
