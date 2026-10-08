@@ -1,0 +1,41 @@
+{
+  "format_version": 1,
+  "date": "2026-10-08",
+  "purpose": "use one capacity slot freed by a terminal ordinary G1 allocation; no new submission",
+  "terminal_predecessor": {
+    "job_id": 28300425,
+    "sacct_state": "COMPLETED",
+    "exit_code": "0:0",
+    "start_CST": "2026-10-08T21:47:06",
+    "end_CST": "2026-10-08T23:13:32",
+    "production_termination": "force_threshold",
+    "replayed_fmax_eV_A": 0.05988161569025288
+  },
+  "existing_job_updated": 28319570,
+  "original_submission_journal_preserved": "submission_handles_r17.json",
+  "update_sequence": [
+    {
+      "time_CST": "2026-10-08T23:16:32",
+      "command": "scontrol update JobId=28319570 Dependency=afterany:28300425",
+      "observed": "eligible Reason=None, but scontrol still displayed the old unfulfilled dependency"
+    },
+    {
+      "time_CST": "2026-10-08T23:17:15",
+      "command": "scontrol update JobId=28319570 Dependency=0",
+      "observed": "PENDING Reason=None Dependency=(null), same batch command/resources/workdir"
+    }
+  ],
+  "actual_squeue_check_CST": "2026-10-08T23:20:18",
+  "actual_states": {
+    "28298794": "RUNNING node26; PO-M step7 residual0.207600 eV/A",
+    "28319570": "RUNNING node11; elapsed00:03:02",
+    "28319571": "PENDING Dependency; afterany:28298794"
+  },
+  "max_active_study_chains": 2,
+  "capacity_argument": "Before the update only PO-M was active. Preserving flip uses the free slot. Reversing flip still waits for PO-M to terminate, so at most two study chains can run.",
+  "new_jobs_submitted": 0,
+  "production_source_changed": false,
+  "physical_parameters_changed": false,
+  "resource_requests_changed": false,
+  "SCFs_added_by_audits": 0
+}

@@ -268,3 +268,64 @@ unchanged. Geometry continuation is not an acceleration benchmark or a full
 FIRE-state restart. Frozen evidence and submission details are in
 `../../benchmarks/hfo2_channels/20261008/switching_continuation/` and
 `../../benchmarks/hfo2_channels/20261008/submission_handles_r17.json`.
+
+## Measured mixed response and failure of a closed two-direction slice
+
+An exploratory re-analysis of the eight completed G0 probes retains their
+full42-coordinate gradient differences. The fixed original directions are an
+atomic chain secant and scaled symmetric xx+yy strain; neither is an identified
+phonon, and this free-cell chart is not the G2 fixed-substrate ensemble. No new
+DFT calculation or electronic parameter change is involved. At0.01 Angstrom,
+the raw projected matrix, in eV/Angstrom squared, is
+
+```text
+ 4.671228720   -3.318399815
+-3.318981707   19.070358556
+```
+
+The mixed entries agree closely at0.02 Angstrom(-3.317902953/-3.319421332),
+while raw reciprocity defects of4.08e-5 and1.07e-4 remain visible. The full
+Hessian-action operator changes by0.117872 eV/Angstrom squared across the
+two amplitudes. This finite-step spread is not a rigorous total DFT error bar.
+
+The two positive projected eigenvalues(3.94316,19.79843 eV/Angstrom squared)
+coexist with transverse action norms5.86712 and7.09425. Thus positive curvature
+in the displayed slice does not establish stability of omitted directions.
+Their self-curvatures are unknown; no Schur elimination of that complement is
+performed. The center gradient norm0.118695 eV/Angstrom is nonzero, independently
+excluding a stationarity claim. These measurements support retaining full
+atom--cell response in subsequent basis selection, not a full-space saddle,
+conditional surface, independent barrier prediction or new mode-coupling theorem.
+Fresh raw-source verification is recorded with the corresponding delivery.
+
+The actual HF re-audit verifies all eight probe geometries, calculator-input
+bytes, SCF convergence at32MPI, full energy/force/stress and original raw-log
+hashes. Rebuilt full Hessian actions agree exactly with the archive replay.
+This reuses the initial measured data and is not a new independent validation
+of any barrier prediction.
+
+## First ordinary G1 T--PO band closure
+
+The sampling-repair continuation28300425 reaches the ordinary0.10 eV/Angstrom
+criterion at step6, with an exactly replayed maximum vector0.0598816. The
+allocation ends normally by force threshold at23:13:32 CST, not a step cap.
+All ten final images match complete same-contract raw SCFs, and the original
+ordered T/PO endpoint geometries are unchanged. The continuation uses48 new
+interior SCFs, zero new endpoint SCFs, and46.10 allocation core-hours. These
+costs exclude the earlier seed/health stages and are not an acceleration claim.
+
+The discrete T→PO maximum is33.889 meV/f.u.; from the shared PO+ initial state,
+the reverse PO→T maximum is115.210 meV/f.u. Their difference equals the endpoint
+energy change-81.321 meV/f.u. The maximum is image3, whereas the largest
+remaining residual is atomic motion at image2. This supplies the first
+ordinary-residual-passed G1 edge, not a full-variable TS certificate or a
+sampling/error-converged absolute barrier. No CI task or parameter retuning
+follows this pass. The other candidate channels and G2/G3 remain incomplete.
+
+To use the freed capacity, only the existing preserving-flip job28319570 has
+its capacity dependency removed; it is confirmed running onnode11 at23:20.
+Reversing flip28319571 still waits for PO--M28298794. Thus the two-active-chain
+limit remains intact, without a duplicate submission or production-source
+change. Frozen evidence is in
+`../../benchmarks/hfo2_channels/20261008/converged_gap/`; the original
+submission journal and separate scheduling update both remain available.

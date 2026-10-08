@@ -497,3 +497,47 @@ See submission_handles_r13.json; no switching results or G2 DFT claimed yet.
   reciprocity1.04768e-5, two-step spread1.59885e-4eV/A2, substrate
   drift4.8736e-20A. Legacy module unchanged. No code changed after tests,
   only receipts/documentation. Actual22:58logs stillstep5/4above0.10.
+
+## E018: extract real mixed atom--cell response from completed G0 probes
+
+- Question: do the existing8 full-gradient G0 probes contain measurable mixed
+  response, and is their two-direction slice sufficient for reduction?
+- Action: reuse the original free-cell chart/atomic secant/biaxial strain,
+  not G2's substrate chart. Assemble both42-coordinate Hessian actions with
+  the new API; retain original numeric reports, pair tags and raw matrix.
+- Preliminary archive evidence: mixedentries-3.31840/-3.31898eV/A2 at0.01A,
+  -3.31790/-3.31942at0.02A. Positive projected eigenvalues3.94316/19.79843
+  coexist with transverse norms5.86712/7.09425. Centergradient0.118695eV/A
+  is nonzero; no full stability index, Schur elimination or TS is claimed.
+- Decision: selected directions expose coupling but are not a closed conditional
+  plane. This is exploratory reuse of measured DFT, not a new prediction test.
+  Fresh HF raw-source/geometry/input/SCF/gradient audit and clean delivery follow.
+  Initial46focusedtests pass/2.60s; metadata naming then clarified and rechecked.
+- No extra DFT, production source overwrite, parameter retuning or G2 submission.
+  At23:02R14Runningstep6/5,residual0.217313/0.101538; flipsPendingDependency.
+- Actual delivery:c06169bc/archive250857fc,903passed/2skipped/88.61s.
+  HF rechecks center+8rawSCFs, allgeometry/contract/DSIZE32/convergence/gradient
+  and original log hashes. Full actions agree exactly with local archive;
+  two script/API hashes match. Raw/normalized manifest hashes differ only
+  through Git text normalization, content equals; DFT input hashes remain strict.
+
+## E019: first ordinary G1 edge passes the residual gate
+
+- Actual28300425COMPLETED0:0 at23:13:32,force_thresholdstep6, notstep_limit.
+  Ten finalimageSCFs/geometry/input/E/F/stress audited; numeric-only replay
+  0.05988161569025288HF/0.059881615690252875local. Original endpoints retained.
+- DiscreteT→PO33.888971/PO→T115.210164meV/fu,deltaE-81.321193;peakimage3,
+  largestresidualimage2atomic. No fullTS/sampling/error-bound orG1completeclaim.
+- Actualcontinuation48completeinteriorSCFs,0endpointcalls,5186s/32ranks=
+  46.09778allocationcorehours; earlierhealth/seedcostexcluded,notacceleration.
+- Existingflip28319570capacitydependencycleared afterterminalpredecessor,
+  noresubmissionorinputchange. At23:20Runningnode11;PO--MRunningnode26,
+  flip28319571stillwaitsPO--M. Initialjournalretained,overrideinnewreceipt.
+  This preserves atmost2activechains. ProductionarchiveSHA df4c12ee unchanged.
+- 29focusedmaterial/source/replaytests pass/14.87s. Finalclean regression of
+  the combinednewresultdataset andraw-hash packaging follows beforepush.
+- Finalcombinedclean tree42994505/archive1ec261f4:905passed/2skipped/89.01s.
+  Trajectory included andrawdatahashes preserved; analysis/API match actualHF
+  validation bytes,legacyjointcurvature unchanged. Post-test changes only
+  receipts/docs. At23:32:46PO--Mstep8fmax0.201984, preservingflipstep1
+  0.900383, bothRunning; reversingflipPendingDependency. NoG1completionclaim.
