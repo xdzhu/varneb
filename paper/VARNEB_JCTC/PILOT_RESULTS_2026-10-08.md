@@ -158,3 +158,13 @@ production guard were implemented; recovery must use identical ordered
 periodic geometries, unchanged physical inputs and a fresh optimizer state.
 The eight independent curvature tests and electronic endpoint tests do not
 use these path tangents and remain valid.
+
+On the identical nineteen cached E/F/stress records, correcting only the
+registered integer lattice lifts changes the gap-repair residual from
+1.386789 to0.829145eV/Angstrom and PO--M from0.990800 to0.881649. All energies
+are unchanged. Public trajectories, integer shifts and raw E/F/stress permit
+this attribution to be replayed without the private cluster. The lower
+residual is not an accelerator result: it compares erroneous and corrected
+input coordinates, not two valid optimizers. Fresh-state ordinary-NEB
+allocations28274895/28275259 continue the corrected paths with unchanged
+physical settings; final barriers are still pending.

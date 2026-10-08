@@ -61,3 +61,32 @@ def test_partial_or_unrelated_snapshot_is_rejected_before_output(tmp_path):
     with pytest.raises(ValueError,match='belong'):
         repair.prepare(work,tmp_path,tmp_path/'out','synthetic')
     assert not (tmp_path/'out').exists()
+
+
+@pytest.mark.parametrize('label', ['gap_lifted_seed', 'PO_M_lifted_seed'])
+def test_actual_hf_force_attribution_replays_from_public_E_F_stress(label):
+    # Replays genuine cached hf data, not a new DFT or accelerator benchmark.
+    from ase.calculators.singlepoint import SinglePointCalculator
+    from vcneb import VCNEB
+    root=Path(__file__).resolve().parents[1]/'benchmarks/hfo2_channels/20261008/lift_recovery'/label
+    manifest=json.loads((root/'manifest.json').read_text())
+    evidence=json.loads((root/'raw_evaluations.json').read_text())
+    preflight=json.loads((root/'preflight.json').read_text())
+    assert evidence['all_raw_evidence_freshly_verified'] and not evidence['DFT_executed']
+    assert sha256(root/'seed.traj')==evidence['seed_traj_sha256']
+    assert sha256(root/'manifest.json')==evidence['manifest_sha256']
+    lifted=read(root/'seed.traj',index=':')
+    original=[a.copy() for a in lifted]
+    for a,shift in zip(original,manifest['periodic_lift_audit']['integer_lattice_shifts_by_image_atom']):
+        a.set_scaled_positions(a.get_scaled_positions(wrap=False)-np.asarray(shift))
+    with pytest.raises(ValueError,match='continuous periodic lift'):
+        validate_periodic_path_lift(original)
+    validate_periodic_path_lift(lifted)
+    for name,images in (('original_broken_lift',original),('explicit_continuous_lift',lifted)):
+        for i,(a,raw) in enumerate(zip(images,evidence['points'])):
+            assert raw['image_index']==i
+            a.calc=SinglePointCalculator(a,energy=raw['energy_eV_cell'],
+                forces=np.array(raw['forces_eV_A']),stress=np.array(raw['stress_eV_A3_voigt']))
+        fmax=np.linalg.norm(VCNEB(images,k=.2,climb=False).get_forces(),axis=1).max()
+        assert fmax==pytest.approx(preflight['force_attribution'][name]['fmax_eV_A'],abs=1e-10)
+    assert preflight['not_an_acceleration_claim']
