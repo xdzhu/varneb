@@ -24,8 +24,32 @@ Date: 2026-10-08. No physical result is inferred from a unit-test fixture.
   six ASE stress components, energy/force/stress differences, timing, affinity.
 - Expected precision: 1e-5 eV/cell, 1e-4 eV/Å force, 0.02 kbar stress. These are
   reproducibility tolerances, not new endpoint/NEB convergence requirements.
-- Decision: pending real SCF. A pass does not certify either peak as a TS or
-  identify which nonpolar mode changed sign.
+- Decision: ordinary peak passed real SCF in job `28237630_0` (node11), exact
+  energy/force/stress agreement and SCF wall time 128.43 s. Job `28237630_1`
+  failed at Hydra bootstrap on node26 before ABACUS began; no electronic result
+  exists for that element. Preserve that failure, retry only the missing case.
+  A pass does not certify either peak as a TS or identify which nonpolar mode
+  changed sign.
+- Launcher-only repair: within a one-node 32-CPU Slurm allocation use Intel MPI
+  `I_MPI_HYDRA_BOOTSTRAP=fork`, then verify 32 ranks/affinity and the raw SCF
+  again. The physical files stay byte-identical. This is documented by Intel:
+  https://www.intel.com/content/www/us/en/docs/mpi-library/developer-reference-linux/2021-15/hydra-environment-variables.html
+- Full local worktree: 690 passed, one skipped after normalization tests.
+
+## E003 — Ordered geometry comparison
+
+- Historical final snapshots: ordinary step30 and guided step300, seven total
+  images each, downloaded read-only from the source runs.
+- Both ordered initial/final structural hashes match exactly; nearest-link
+  final periodic unwrap integers also match. Therefore this audit does not
+  show an endpoint permutation or different final lattice winding.
+- Maximum translation-free atomic RMS separation at equal normalized geometric
+  arc is 0.1695786428 Å. The interpolation here aligns geometries only; it does
+  not create DFT points, phonon labels, a topology proof or a new TS.
+- Measurement: `geometry_comparison.json` contains complete per-image cells,
+  displacement/translation records and source file hashes; together with the
+  endpoint fractional coordinates the ordered structures can be reconstructed.
+- Decision: retain distinct channel candidates; mode identity still pending.
 
 ## Existing evidence and non-results
 

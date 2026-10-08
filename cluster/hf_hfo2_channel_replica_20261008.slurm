@@ -31,6 +31,12 @@ for name in "${files[@]}"; do [[ -s "${source_dir}/${name}" ]] || exit 2; done
 module purge
 source /public/home/iai806/apprepo/abacus/v3.10.0LTS-intelmpi2025/scripts/env.sh
 unset I_MPI_PMI_LIBRARY I_MPI_HYDRA_BOOTSTRAP_EXEC_EXTRA_ARGS I_MPI_HYDRA_BOOTSTRAP
+# Local fork is permitted only inside this single-node, 32-CPU Slurm allocation.
+# It avoids an extra srun bootstrap when the Hydra proxy cannot start; it is
+# never used for multi-node execution or on a login node.
+bootstrap=${MPI_BOOTSTRAP:-slurm}
+[[ "${bootstrap}" == slurm || "${bootstrap}" == fork ]] || exit 2
+export I_MPI_HYDRA_BOOTSTRAP=${bootstrap}
 export OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1
 export PYTHONPATH="${audit_root}/source${PYTHONPATH:+:${PYTHONPATH}}"
 abacus=/public/home/iai806/apprepo/abacus/v3.10.0LTS-intelmpi2025/app/bin/abacus
