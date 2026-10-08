@@ -224,3 +224,21 @@ Date: 2026-10-08. No physical result is inferred from a unit-test fixture.
 
 Submission metadata, real job handles and audited results are appended to this
 directory at each evidence-bearing milestone; no repeated/duplicate submissions.
+
+## E009: exact clamped-plane boundary before the strain matrix
+
+- Hypothesis: a fixed substrate requires an affine deformation subspace;
+  reusing the slab mask would release the wrong variables. Holding two ASE
+  cell rows fixes the plane exactly through deltaF=v outer n.
+- Action: one explicit tilt option, pre-projection chain validation, a matching
+  ASE BFGS endpoint filter, and stress-work derivatives with stated units.
+  All atomic freedoms retained. No DFT parameter change or DFT submission.
+- Evidence:22 new tests;29 focused including prior slab/joint tests.
+  Clean staged-tree archive b8666a3:748passed/2skipped,80.94s.
+  Module6034e42d byte-identical on HF; ASE3.23.1b1 analytic EMT checks give
+  maximum derivative error9.42282336e-10eV/A, zero substrate drift and9 BFGS
+  steps for both normal-only and tilt-released boundaries.
+- Decision: retain as the G2 mechanical interface, select tilt-released
+  constraints for the finite study. HfO2 clamped endpoint/chain DFT and
+  channel predictions are pending; this is not an acceleration or novelty
+  claim. Do not require zero substrate reaction stress.

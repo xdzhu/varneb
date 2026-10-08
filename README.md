@@ -77,6 +77,12 @@ parameter guess.
 - `outputs/`, `validation/`, `benchmarks/` — auditable result and benchmark
   artifacts, never required for installing the library.
 
+For a fixed substrate plane, use the explicit Python
+[epitaxial boundary API](docs/EPITAXIAL_BOUNDARY.md): the endpoint BFGS filter
+and NEB share the same open cell subspace. This is different from the
+in-plane-variable slab/vacuum boundary and is not selected automatically by
+the CLI.
+
 The old `README_VCNEB.md`, `run_NEB/`, and `run_VCNEB/` names remain as
 compatibility entry points for existing research scripts.  New work should use
 the public CLI, `vcneb` API, and the layout documented in

@@ -284,3 +284,37 @@ df4c12eef03d00d02c3ae357e3f47143b6500b96b7bd12f479f2e2083abd5220，
 16:55:41 Slurm两者均RUNNING/node26，完整缓存step0已记录，
 首个新image SCF的日志均确认DSIZE32。实际公开数据的两个受力重放测试通过；
 本轮共24项聚焦回归通过（6.64s），不是两条生产链已经收敛。
+
+## 夹持力学边界：代码与验证，不是材料结果
+
+17:40前完成 `vcneb/epitaxial_boundary.py`：固定ASE行0/1、开放第三矢量的长度
+和可选两个倾斜方向，一般斜胞使用 `deltaF=v outer n` 的精确正交子空间。
+既有slab接口释放面内并固定真空，不能拿来反用。新增 `ClampedPlaneFilter`
+支持ASE BFGS端点优化，NEB原链在任何内部投影前拒绝不共基底的images。
+禁止未明确组合的额外ASE约束；非法负体积提案在修改原结构前拒绝。
+夹持反力不混入开放梯度门禁，普通0.10阈值和全部DFT参数保持不变。
+
+22项新回归，包括真实T/PO自由胞的预拒绝、斜胞、力—能量/应力功一致性、
+每步固定基底的BFGS；加既有slab/joint共29项聚焦通过（1.21s）。
+只含自有暂存变更的干净Git tree `b8666a3658605b44f8eb490352cb62b0cb8811de`
+归档全回归748 passed/2 skipped/80.94s；归档SHA256
+`c0d4da7b7af551cb3bb8ed57c6ab5e3ece71ec200a329e582770166c74fbd23d`。
+随后只追加README/本日志/实验记录，无源码修改；用户BTO/CPC工作树变更未纳入。
+
+HF无DFT兼容检查命名空间
+`/public/home/iai806/abacus/agent-runs/20261008-clamp-api-check.XhIX3x`；
+新模块SHA256 `6034e42d7cf3d197d2c80a85929989da828c01766d21cc221d8724e2ffc52266`
+本地与远端逐字节一致。HF ASE3.23.1b1两种边界均BFGS9步达到0.02，
+最大能量有限差分误差9.42282336e-10 eV/Å、基底漂移0；只用EMT，DFT调用0。
+这是实现/兼容验证，不是HfO₂端点或应变生产数据。
+
+最接近文献边界审计写入outputs并有provenance：Liu全固定胞与外延端点区分，
+Delodovici固定切片/体积守恒应变，Ma出版版能量基准，Qi预印本条件优化分支跳变，
+Lee所见出版HTML图3b只应变初态的定义。Methods新增同边界端点/链及应力功。
+SI、Qi出版修订、Lee双DOI关系尚未完成对读，Zhou方法正文访问失败，均明确留空。
+这些已有理论不claim首创；是否能独立预测应变/通道势垒仍是研究验收关口。
+
+17:31作业查询两者RUNNING/32CPU/node26；实际log至gap step3 fmax0.215938、
+PO→M step3 fmax0.370291，尚未达0.10。gap近期14.2–14.6min/步，
+PO→M近期10.8–11.0min/步；10步健康段预计约18:40–19:30，
+不是全研究或收敛承诺。不重复提交、不覆盖R12源码，两个翻转候选待2链容量释放。

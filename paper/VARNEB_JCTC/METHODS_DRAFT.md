@@ -213,3 +213,30 @@ The source-version output protocol follows the
 and [Berry implementation](https://github.com/deepmodeling/abacus-develop/blob/f7cb1d3/source/module_io/berryphase.cpp).
 These established Berry/unit conventions are validation requirements, not
 claimed methodological innovations of VARNEB.
+
+## 7. One mechanical ensemble for endpoints and bands
+
+For a prescribed substrate, two non-collinear ASE row-cell vectors are held
+fixed at every endpoint and image. With H=H0 F^T and their unit normal n,
+the exact allowed deformation is deltaF=v n^T. Three components of v permit
+normal relaxation and two out-of-plane tilts; restricting v parallel to n
+instead defines a different, normal-only ensemble. The present finite strain
+study selects the tilt-released ensemble. A general rotated substrate cannot
+be represented by independently zeroing Cartesian stress components.
+
+The same orthonormal deformation subspace is applied to the endpoint BFGS
+filter and the NEB controller. Original seed cells are checked before general
+subspace projection, rather than silently converted to a common substrate.
+In-plane reaction stresses are recorded but excluded from the open-gradient
+stationarity criterion. Geometry and EMT energy/stress finite differences
+verify the implementation; they do not establish material barrier accuracy.
+
+For an explicit cell derivative dotH, the fixed-fractional-coordinate work is
+V(sigma+P I):(dotH^T H^{-T}). This is a branch envelope derivative only when
+all open variables are stationary. On a continuous endpoint/saddle branch,
+subtracting their work derivatives predicts a barrier strain response.
+An ordinary NEB peak need not be a stationary saddle, and fixed-cell Gamma
+phonons do not certify the joint open atom/cell Hessian index. Released P=0
+and clamped epsilon=0 are compared as different boundary conditions, never
+as adjacent points of a single strain derivative. These work and envelope
+relations are established tools, not claims of new mathematical theory.
