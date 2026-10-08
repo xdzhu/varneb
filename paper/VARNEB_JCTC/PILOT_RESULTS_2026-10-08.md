@@ -329,3 +329,43 @@ limit remains intact, without a duplicate submission or production-source
 change. Frozen evidence is in
 `../../benchmarks/hfo2_channels/20261008/converged_gap/`; the original
 submission journal and separate scheduling update both remain available.
+
+## A converged band does not define a complete low-dimensional mode plane
+
+![Audited ordinary T--PO band](figures/hfo2_T_PO_ordinary_20261008/hfo2_T_PO_ordinary_modes.png)
+
+**Figure | Reference-mode coverage along the ordinary T--PO band.**
+(a) Discrete energy relative to T at zero external pressure, with ten audited
+SCF images and straight connections only. (b) Geometric amplitudes in the
+three rotated-T-pattern directions. (c) Diagonal Green strains relative to
+the original ordered T cell. (d) Squared displacement norm captured by the
+complete pattern triplet in the unweighted parent-scaffold metric.
+(e) Optical mass-weighted displacement fractions relative to T, grouped into
+complete reference-frequency subspaces. The5.22THz doublet and9.69THz singlet
+are selected by their weights at the sampled maximum; the complement includes
+all other optical modes. The fraction at T is undefined, not zero. (f) Atomic
+and scaled-cell ordinary-NEB residuals at the eight moving images; fixed
+endpoints have no NEB residual. The dashed line is the ordinary0.10eV/Angstrom
+target. The curves are one deterministic chain, not replicate statistics;
+no numerical-uncertainty bars have yet been measured. The reference modes are
+not local path phonons, mode populations or energy contributions, and the
+sampled maximum is not labelled a certified TS. Source data accompany the figure.
+
+The triplet captures95.54% of the squared displacement norm at image3 but
+only31.43% at the PO endpoint. Thus a locally compact geometric description
+near the maximum cannot be promoted to a complete global path representation.
+In a different metric and reference, the two displayed T-Gamma subspaces account
+for62.16% and28.53% of the image3 optical squared displacement norm; the two
+lowest-frequency optical doublets together account for only3.54%. These are
+descriptive weights at a finite displacement, not evidence that the5.22THz
+reference doublet becomes the TS unstable direction. All T optical reference
+frequencies are positive; full atomic--cell stationarity and stability of the
+actual bottleneck still require separate measurements.
+
+The largest remaining ordinary residual is at image2 rather than the energy
+maximum at image3. This distinguishes the optimization bottleneck from the
+sampled energetic bottleneck when selecting future local probes. No additional
+SCFs, changed Hamiltonian, eliminated unstable block or prospective prediction
+are introduced by this figure. The [contract](FIGURE_CONTRACT_HFO2_T_PO.md)
+and [reproduction bundle](figures/hfo2_T_PO_ordinary_20261008/README.md) retain
+the reference, source hashes, complete-subspace rule and explicit limits.

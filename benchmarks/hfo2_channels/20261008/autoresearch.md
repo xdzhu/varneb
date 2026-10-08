@@ -541,3 +541,26 @@ See submission_handles_r13.json; no switching results or G2 DFT claimed yet.
   validation bytes,legacyjointcurvature unchanged. Post-test changes only
   receipts/docs. At23:32:46PO--Mstep8fmax0.201984, preservingflipstep1
   0.900383, bothRunning; reversingflipPendingDependency. NoG1completionclaim.
+
+## E020: descriptive coverage of the first converged ordinary band
+
+- Question: does a compact reference-pattern description at the maximum also
+  span the full path, and are the lowest T optical modes the dominant weights?
+- Re-audit ten frozen SCFs and replay all archived descriptors before plotting.
+  Triplet coverage95.54% at image3 versus31.43% at PO; T-reference5.22THz
+  doublet/9.69THz singlet carry62.16%/28.53% of peak optical squared norm.
+  The two lowest optical doublets sum3.54%. Bases/metrics differ explicitly.
+- Keep complete degenerate groups, undefined zero-reference fractions and
+  absent fixed-endpoint NEB residuals. No energypartition, localTSphonon,
+  independentprediction, frozenconditionalplane or accelerationclaim.
+- Six aligned panels, normal(a), four spines, framedtranslucentlegends.
+  PNG reviewed;61SVGtext elements and446PDFcharacters/3embeddedTrueTypefonts.
+  Script/sourceCSV/vector/raster/QA/caption provided, with no interpolation.
+- Initial16focusedtests pass10.10s. Bundle-hash check and finalclean suite
+  follow beforepush. NoDFT, calculatorchange, jobmutation or userfileoverwrite.
+- Actualfinalclean treeb2663974/archiveb3c411ac:915passed/2skipped/100.09s.
+  Samearchive regeneratedCSV andPNG are byteidentical. Vector timestamps/IDs
+  are not claimed byte-deterministic. Post-test changes only receipts/docs and
+  generated-SVG-specific whitespace metadata; no code/data/figure rewrite.
+  Actual23:56:49PO--Mstep10fmax0.189975, preservingflipstep3fmax0.747910,
+  bothRunning; reversingflip stillDependency. Twoactivechains unchanged.

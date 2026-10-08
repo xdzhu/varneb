@@ -77,3 +77,9 @@ failure and coverage limits retained. See the primary-source
 Definitions and the physical rationale for same-initial-state selectivity are
 developed in [METHODS_DRAFT.md](METHODS_DRAFT.md). It is a theory/methods working
 draft, not a completed Results section or an assertion of new theorems.
+
+The first ordinary-residual-passed T--PO band now has an audited six-panel
+energy/pattern/strain/reconstruction/Gamma-subspace/residual figure in
+[PILOT_RESULTS_2026-10-08.md](PILOT_RESULTS_2026-10-08.md). It shows why good
+local pattern coverage need not imply a complete global few-mode plane;
+it is not a boundary-response prediction or a full-variable TS result.
