@@ -675,3 +675,34 @@ See submission_handles_r13.json; no switching results or G2 DFT claimed yet.
   Only originalsourceaudit library versions and capturedwarning lists differ,
   retained in both reports. NoDFT, installation, nodeallocation, production
   sourceoverwrite or source/test edit after clean regression.
+
+## E024: nonstationary same-center response, not a merged-reference Hessian
+
+- Hypothesis: the existing mixed G0 block can quantify a restricted local
+  atomic-release correction without pretending its center is stationaryT.
+  Reject merging the historical image02 block with the differentT Gamma matrix.
+- Implement backend-independent nonstationary quadratic condensation with
+  affine response, gradient and energy shift; omitted variables stay clamped.
+  Stable-block gate, covariance, scalar/vector shapes and immutable arrays
+  are regression-tested. Schur condensation is not claimed as new mathematics.
+- Actual8existing G0SCFs: one-direction release softens strain curvature
+  12.36%/12.43%; offset.021648A, energy lowering.00109457eV/12atomcell.
+ 35otheratomic+5cell variables fixed, no unmeasured stability assertion.
+- Short-step gradients+center predict four previously seen long-axis energy
+  changes with maximum.0000416931eV/cell; projected/full-gradient-action
+  errors.0044273/.0050403eV/A. Retrospective, not blind/independentbarrier evidence.
+- The entire requested response segment is outside the axis-probe convex
+  hull. This is a real coverage failure: reject a releasedDFTbranch/TS claim,
+  not the measured mixed response. No extraG0DFT is added to beautify a contour.
+- Explicit qcell=sqrt(2)*L*epsilon units/Jacobian and offline static audit
+  pass; no installedPint, fake statistical sigma or environment retuning.
+-45focused pass/.80s; cleantree9038c05b/archive0c2c662b:997pass2skip/100.64s.
+  Initialworktree vs archive differs only in three legacyLF/CRLF metadata
+  hashes. Both reports retained; all other fields exactly identical, noDFT
+  inputhash relaxation or source edit after clean regression.
+- Actual01:59CST twoexistingchainsRunning:PO--Mstep19.159754 and
+  preservingflipstep13.264869; reversingflipPendingDependency. Nojobmutation.
+- Samearchive originalHFcenter+8SCF rawreplay succeeds; final numeric/source
+  comparison and delivery receipt are archived before ordinary push.
+- Decision: retain restricted response/API and explicit failure coverage;
+  G1/G2/G3 materialprediction and JCTCcompletion remain unproven.

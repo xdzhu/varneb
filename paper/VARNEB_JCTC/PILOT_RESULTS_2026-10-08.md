@@ -408,3 +408,28 @@ reference, path adaptation or joint-cell reduction. Nonlinear fixed-reference
 relaxation and larger spaces remain viable controls. Source/scalar evidence,
 all equivalent frames and limits are in the
 [reproduction bundle](../../benchmarks/hfo2_channels/20261008/cmma_path_mapping/README.md).
+
+## E024: measured atom–strain softening, with a release-coverage failure
+
+The eight original G0 probes supply a same-reference2x2 mixed block at the
+nonstationary guided-chain image02. Combining it with the stationary T atomic
+Hessian would mix geometries and is not done. With all other variables fixed,
+releasing only the one measured atomic chain-secant direction lowers the model
+strain-coordinate curvature by12.36%/12.43% at the two step sizes. Its predicted
+atomic offset0.02165Angstrom and reference energy lowering1.095meV/cell arise
+from the nonzero orthogonal gradient, not from a stationary phonon instability.
+
+The short-step matrix reproduces four known longer-axis energy changes to
+0.04169meV/cell maximum residual, with projected/full-gradient-action errors
+0.004427/0.005040eV/Angstrom. This is a retrospective local quadratic check,
+not a blind holdout, a claim of total energy uncertainty, or a barrier forecast.
+Two-step consistency and projected positive curvature do not measure the
+unselected modes' self-curvature.
+
+More importantly, the predicted release line lies wholly outside the convex
+hull of the measured axes over the requested cell-coordinate interval. It
+cannot be promoted to a validated conditional DFT branch without actual
+released-point checks. The measured coupling is retained, while a conditional
+surface, full TS index and improved independent prediction remain unestablished.
+The [pilot and unit/sampling contract](../../benchmarks/hfo2_channels/20261008/restricted_quadratic/README.md)
+record this success/failure boundary with no new SCF or parameter change.

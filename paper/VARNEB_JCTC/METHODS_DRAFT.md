@@ -441,3 +441,31 @@ zero displacement is undefined rather than measured zero coverage. Complete
 frequency doublets are retained in the equal-rank low-frequency T control.
 Neither a high span fraction nor small projected curvature certifies full
 stability, a conditional minimum or independently accurate barrier prediction.
+
+## 13. Nonstationary restricted quadratic responses
+
+The curvature-only Schur result in Section3 is insufficient at a generic
+finite-image reference because the selected orthogonal gradient need not vanish.
+`condition_quadratic_energy` therefore includes the affine response offset,
+effective retained gradient and reference relaxation energy as well as K_eff.
+It uses the same strict stable-block gate, but does not remove translations,
+rescale units, substitute another reference Hessian or release omitted variables.
+Analytic energy/gradient and frame-rotation tests verify the implementation.
+The formula remains established harmonic mathematics, not our novelty claim.
+
+For incomplete directional measurements, the model can be built in their
+measured orthonormal span while every unmeasured coordinate remains fixed.
+Raw reciprocity defects and any explicit symmetrization remain in the evidence.
+The reference E, g, measured H, coordinate Jacobian and mechanical boundary
+must all refer to the same center and calculator contract. A stationary T
+Gamma matrix cannot supply missing blocks for a different, nonstationary image.
+
+Sampling coverage is checked separately from the algebraic stable-block test.
+Paired axis probes enclose a cross-polytope, not the full coordinate box; a
+predicted relaxed position outside that convex hull is an extrapolation even
+when each retained coordinate individually lies within its sampled range.
+Neither hull inclusion nor a stable restricted block certifies a conditional
+DFT minimum, unmeasured stability, branch continuity or barrier prediction.
+Previously inspected step-size checks are explicitly retrospective, not newly
+independent tests. The same-center [G0 pilot](../../benchmarks/hfo2_channels/20261008/restricted_quadratic/README.md)
+illustrates both a measured mixed response and failure of released-point coverage.
