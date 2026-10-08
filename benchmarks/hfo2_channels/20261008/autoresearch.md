@@ -467,3 +467,33 @@ See submission_handles_r13.json; no switching results or G2 DFT claimed yet.
   All four ignoredtraj files are explicitly present; executed verifier byte
   hash agrees onHF/local/clean archive. Historical data retained. Only receipts
   and documentation follow the test; no extraDFT or sourcecode changes.
+
+## E017: selected-direction joint probes retain transverse response
+
+- Question: can the existing square-gradient assembler safely consume k<d
+  selected directions? No. Discarding the full-chart gradient loses H*B
+  coupling and cannot measure the missing complement's self-curvature.
+- Action: calculator-free paired probe generator and a separate directional
+  assembler with full H*B, raw/symmetric projected matrices and transverse
+  action. No implicit normalization, atom remapping, boundary modification,
+  calculator attachment or unsampled-block elimination. Physical enthalpy
+  gradients are required; NEB/spring forces are not curvature measurements.
+- Evidence:72focusedtests/4.32s;720inertHfgeometryprobes and180CuEMT
+  evaluations with two amplitudes, normal/tilt release and global rotations.
+  Local energy/gradient curvature difference9.17149e-5eV/A2, reciprocity
+  defect1.04768e-5, two-step operator spread1.59885e-4eV/A2. These are
+  implementation bounds, not material DFT uncertainty or TS certification.
+- A misplaced assertion in an expanded test caused a NameError and was fixed
+  in the test; the physical implementation cases did not fail. HF has no
+  pytest; do not install it, use the standalone same-archive verifier.
+- At22:47:58 twoR14jobsRunning,PO--Mstep5fmax0.230286 andT/POstep4
+  0.136163; twoR17flipsPendingDependency. Single rebounds are not stop rules.
+- Decision: retain backend-independent G3 preparation. No new DFT, production
+  parameter change, extra active chain, material Hessian or prediction claim.
+  Clean full-suite and same-archive HF delivery checks follow before publishing.
+- Delivery: clean treea6dad26a/archive45dd4d67,895passed/2skipped/91.30s.
+  Same archive verifies onHF ASE3.23.1b1 with six matching module byte hashes,
+  720geometryprobes/180EMT; maxenergy-gradient difference9.17198e-5eV/A2,
+  reciprocity1.04768e-5, two-step spread1.59885e-4eV/A2, substrate
+  drift4.8736e-20A. Legacy module unchanged. No code changed after tests,
+  only receipts/documentation. Actual22:58logs stillstep5/4above0.10.

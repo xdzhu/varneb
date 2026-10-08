@@ -106,6 +106,10 @@ probe = chart.displaced(delta)  # len(delta) = 3*N + boundary.cell_dofs，单位
 检查10个已有未弛豫HfO₂几何种子及Cu/EMT斜胞、旋转和已形变点的有限差分功；
 不会运行DFT，也不会提交作业。EMT的非零压力只是分析校验，不修改HfO₂的P=0。
 
+后续方向采样使用[联合曲率探针与推断范围](JOINT_CURVATURE_PROBES.md)：
+少量选定方向也保留完整梯度及未采样方向的耦合，不把k×k投影当全Hessian。
+采样和解析独立于计算器，配对物理梯度不能替换为NEB投影力或弹簧力。
+
 ## 当前验证范围
 
 `tests/test_epitaxial_boundary.py` 包括一般斜胞/旋转基底、全三个面外自由度、

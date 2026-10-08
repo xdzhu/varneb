@@ -24,6 +24,10 @@ from .calculator import (
 )
 from .periodic_path import minimum_image_path_lift, validate_periodic_path_lift
 from .continuous_projection import continuous_reference_coordinates, project_reference_basis
+from .joint_stencil import (
+    JointCurvatureProbe, DirectionalJointCurvature,
+    joint_curvature_probes, assemble_joint_directional_curvature,
+)
 from .channel_competition import ChannelPath, summarize_competing_paths, compare_channel_selectivity
 from .modes import (
     Mode,
@@ -188,6 +192,10 @@ __all__ = [
     "clamped_plane_vcneb_boundary",
     "cell_work_derivative",
     "ActiveJointCurvatureCoordinates",
+    "JointCurvatureProbe",
+    "DirectionalJointCurvature",
+    "joint_curvature_probes",
+    "assemble_joint_directional_curvature",
     "ConditionalSurfaceContinuityAudit",
     "audit_conditional_surface_continuity",
     "OrthogonalCurvatureAudit",

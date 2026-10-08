@@ -274,6 +274,19 @@ and its published-source hash are preserved separately. Geometry and EMT
 work checks validate this implementation, not an HfO2 bottleneck Hessian,
 its index, or independent material-barrier prediction.
 
+For a declared orthonormal joint-coordinate direction matrix B, paired full
+physical gradients measure A_j=[g(y0+h B_j)-g(y0-h B_j)]/(2h), approximating
+H B. The projected matrix B^T A retains its raw reciprocity defect before
+symmetrization. The transverse response A-B(B^T A) exposes coupling outside
+the sampled subspace, but does not measure the complement's self-curvature.
+It cannot establish stability of unsampled modes or justify their elimination.
+Both directions and steps use the same chart metric and mechanical boundary;
+NEB-projected and spring forces are not Hessian inputs. Signed energy checks
+at two amplitudes provide an independent gradient-consistency diagnostic.
+Step-size spread is not a rigorous total DFT uncertainty. The staging and
+assembly interfaces call no calculator and change no physical input; separate
+geometry/input/raw-SCF provenance remains required for material use.
+
 ## 8. Continuous reference projections and numerical observation audit
 
 For a supplied, already continuous periodic lift, integer representatives are
