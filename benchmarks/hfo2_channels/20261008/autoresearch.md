@@ -35,6 +35,26 @@ Date: 2026-10-08. No physical result is inferred from a unit-test fixture.
   again. The physical files stay byte-identical. This is documented by Intel:
   https://www.intel.com/content/www/us/en/docs/mpi-library/developer-reference-linux/2021-15/hydra-environment-variables.html
 - Full local worktree: 690 passed, one skipped after normalization tests.
+- Missing guided point completed as `28238926_1` (node11, single-node fork):
+  genuine DSIZE=32, SCF 123.37 s, exact source energy/force/stress agreement.
+  Both historical peak results now pass static reproducibility. This excludes
+  replica launcher/input drift as the cause of their energy difference, but
+  does not identify the channel modes or establish sub-meV barrier accuracy.
+
+## E004 — Atomic/strain local work probes
+
+- Eight new SCFs only: atomic component of the local chain secant and scaled
+  symmetric xx+yy strain, both at ±0.01 and ±0.02 Å chart steps. P_ext remains 0.
+- Geometry changes are the intended variable. INPUT/KPT/pseudopotential/orbital
+  hashes remain identical to the historical 100-Ry/10-au baseline.
+- Preparation requires actual HF ASE-ABACUS STRU roundtrip, ordered Hf4O8,
+  positive volume and minimum distance >1.6 Å before any submission.
+- Measurements: finite-energy derivative versus force/stress derivative, paired
+  energy curvature versus gradient curvature, and two-step dependence. These
+  are local nonstationary diagnostics, not Γ phonons or full-space TS certification.
+- Budget: eight points, one node ×32 MPI each, max three simultaneously, 30-min
+  wall-time cap per element. No endpoint optimization or full landscape rerun.
+- Decision: pending true DFT. All sources must be immutable commit archives.
 
 ## E003 — Ordered geometry comparison
 
