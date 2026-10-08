@@ -469,3 +469,46 @@ DFT minimum, unmeasured stability, branch continuity or barrier prediction.
 Previously inspected step-size checks are explicitly retrospective, not newly
 independent tests. The same-center [G0 pilot](../../benchmarks/hfo2_channels/20261008/restricted_quadratic/README.md)
 illustrates both a measured mixed response and failure of released-point coverage.
+
+## 14. Executable null controls and prospective output provenance
+
+For a selected edge j and two matched-boundary training conditions x0,x1,
+the direct control is B0_j(x*)=(1-w)B_j(x0)+wB_j(x1), with
+w=(x*-x0)/(x1-x0). The selected representative uses lower-condition training
+intervals only: candidates whose lower bound does not exceed the minimum
+upper bound remain possible minima, and the preregistered lexical rule resolves
+the representative, not the physical uncertainty. The same edge is retained
+if the upper training condition selects a different candidate. Two held-out
+edges do not supply the unseen network minimum.
+
+Two zero-fit endpoint controls subtract the initial-well shift from the
+anchor barrier: B1_fixed=B_j(x0)-Delta E_IS, or
+B1_follow=B_j(x0)+Delta E_FS-Delta E_IS. Here the endpoint shifts are raw
+cell-energy differences divided by the formula-unit count. Their assumptions
+are respectively a fixed absolute bottleneck or one following the final well.
+They are conventional null models, not new physics or observed behaviours.
+Missing endpoint inputs remain unavailable and carry no implicit zero shift.
+When supplied, target endpoint features and their complete DFT preparation
+cost are visible inputs shared by all compared models.
+
+The present endpoint-only feature schema is restricted to zero pressure.
+Finite-pressure energy shifts require the corresponding volume/enthalpy
+terms; raw E differences alone cannot supply Delta H. This unsupported use
+is rejected rather than silently applied to the high-pressure GaN example.
+Interpolation of audited training H barriers remains separately well-defined.
+
+Propagation of the training-reference intervals through B0 does not bound
+unseen-condition nonlinearity or prediction error; that error bound remains
+unmeasured. An assumed bottleneck below either visible target endpoint violates
+the endpoint-inclusive barrier definition. The raw signed prediction is retained
+as an abstention, without clipping or correction using the target path. This
+distinguishes failed assumptions from successful accurate forecasts.
+
+A fresh output bundle records input/code/protocol hashes, predictions and
+creation time before target path labels are read. The unread-label attestation
+is explicit, but hashes/timestamps do not independently prove operator blinding.
+The current implementation freezes B0/B1 controls, not a complete B2--B5
+forecast batch. Real G2 training and independent material error/advantage
+measurements remain incomplete. The [executable contract](../../docs/PREDICTION_CONTROLS.md)
+and [negative G1 gate check](../../benchmarks/hfo2_channels/20261008/prediction_controls/README.md)
+therefore document workflow preparation rather than a JCTC prediction result.

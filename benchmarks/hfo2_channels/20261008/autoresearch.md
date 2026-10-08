@@ -744,3 +744,46 @@ See submission_handles_r13.json; no switching results or G2 DFT claimed yet.
   generic API or an inflated claim. Finish G1, then the registeredG2/G3
   response and strong-control/independent-prediction tests. JCTCstillopen.
   Full receipt:network_update_20261009/validation_delivery.json.
+
+## E026: registered null controls can execute, but G1 is not G2 training
+
+- Preparation question: can the v1 B0/B1 definitions and training-only edge
+  selection be executed without silently using target path labels, changing
+  mechanical families, clipping impossible barriers or fabricating error bounds?
+  The formulas and selection rule were preregistered before this implementation;
+  they are conventional controls, not new theoretical results.
+- Implement direct interpolation and both endpoint-response null models in a
+  calculator-free module. Retain possible lowest channels under training bounds,
+  lexical representative and upper-condition changes. Propagated training
+  intervals explicitly do not bound unseen model error. Missing endpoint inputs
+  stay unavailable; all supplied endpoint feature calls count in visible cost.
+- Fresh HfO2 entry point records code/data/protocol hashes and caller unread-label
+  attestation, not independent blinding proof. Original100Ry/full10au contract,
+  tilt-open common substrate,0/+1% and unseen+0.5%, ordinary0.10 are fixed.
+  It freezes B0/B1 only; B2--B5 forecasts and full holdout gate remain incomplete.
+- Actual37-imageG1report is rejected by numeric and registered gates before
+  output creation. Source SHA7bd2dbf7 retained. No material forecast is invented.
+  Correcting G1 into fake strain/convergence labels is not used as a fixture.
+- First clean run1044pass2skip/117.13s, then prepublication review identifies
+  that rawE-only B1 features must not silently omitP*deltaV at finite pressure.
+  Restrict that schema toP=0, retainP in output, and add a rejection regression;
+  no HfO2 physical parameter changes. B0 still uses audited trainingH barriers.
+-64focusedpass/1.68s. Finalcleantreee02e1417/archive7cd0277e:1045pass2skip,
+  313warnings/114.03s; all three source/test bytes match the tested archive.
+  Post-final-test changes are docs/receipts only.33new cases are mathematical workflow
+  regressions, not independent HfO2 prediction successes.
+- Actual samearchiveHFCLI rejects realG1 with the expected condition error and
+  creates no output. Exact archived synthetic fixture functions independently
+  reproduce B0(.275,.475),B1(.18,.19)eV/f.u. within1e-12 with existing libraries;
+  source/archive hashes exact; finitepressureE-only misuse is rejected as well.
+  These numbers are synthetic, not DFT labels.
+- Actual03:09:48CST:PO--M28298794Runningstep23.146978,node26;
+  preserving28319570Runningstep19.180742,node11;reversing28319571PendingDependency.
+  No job mutation/newDFT/install/production overwrite or earlyG2/holdout.
+- Decision: keep necessary executable controls and explicit limitations. Finish
+  existing G1, then material boundary-response and independent prediction work;
+  neither library tests nor hashes establish JCTC readiness. Receipt:
+  prediction_controls/validation_delivery.json.
+- Before delivery03:28:55CST recheck:PO--MRunningstep25.140413,
+  preservingRunningstep21.162964,reversingPendingDependency. Same two active
+  jobs, no resubmission or parameter/source change; both continue improving.
