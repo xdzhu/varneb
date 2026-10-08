@@ -282,3 +282,32 @@ inputs and cached endpoints. `afterany:28274895:28275259` waits for both
 current allocations to finish, preserving at most2 active study chains.
 This is scheduling, not a claim that the predecessor paths have converged.
 See submission_handles_r13.json; no switching results or G2 DFT claimed yet.
+
+## E011: continuous-reference projections and actual force attribution
+
+- Question: can the same rotated-T triplet represent both pilot bottlenecks,
+  and is the gap-chain rebound primarily caused by springs or cell forces?
+- Method: freeze seven complete exact-SCF observations (66 existing image
+  records), replay E/F/stress, retain the initial integer gauge along each
+  path, and separate atomic/cell/perpendicular/spring force diagnostics.
+  Preserve original Gamma masses, record complete F/Green strain, no DFT.
+- Measurement: gap step6 peak triplet displacement fraction0.939053 versus
+  PO--M step10 fraction0.528366. At the rebounding gap image1, atom/cell
+  residual0.344031/0.030582 and spring0.023657eV/A; true perpendicular
+  force0.346935. PO--M step10 remains0.293325 despite Slurm COMPLETED.
+- Decision: retain a descriptive three-pattern tracker, reject a complete
+  common triplet landscape claim; continue ordinary relaxation, not parameter
+  retuning or a rebound-triggered stop. Neither provisional barrier nor full
+  T-Gamma reconstruction certifies a TS or predictive energy model.
+- Evidence: chain_observations/analysis.json and the dedicated report;
+  29 focused tests pass. Clean-tree/HF results appended after execution.
+
+- Final clean tree001a7229/archivecc915dc6:791passed/2skipped/69.10s.
+  The first archive lacked ignored.traj evidence (3 failures); explicit
+  versioning fixes delivery without changing data. First HF comparison
+  caught platform-dependent pathlib ordering; explicit casefold sorting
+  followed by a second full clean regression and actual HF replay passes.
+- Actual HF ASE3.23.1b1:66 records, maximum fmax difference5.55e-16eV/A,
+  Gamma Q difference1.78e-15sqrt(amu)A, Green-strain difference0; DFT0.
+  Record:chain_observations/hf_replay_check.json. Numerical reconstruction
+  accuracy is not a material-convergence, harmonic-validity or novelty claim.

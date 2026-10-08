@@ -168,3 +168,38 @@ residual is not an accelerator result: it compares erroneous and corrected
 input coordinates, not two valid optimizers. Fresh-state ordinary-NEB
 allocations28274895/28275259 continue the corrected paths with unchanged
 physical settings; final barriers are still pending.
+
+## Complete-SCF path observations and a representation failure boundary
+
+Seven complete snapshots of the corrected bands were exported without a
+new electronic calculation (66 previously evaluated images). Each image
+matches an identical ordered periodic SCF, with unchanged physical input and
+raw-log checksums. Numeric-only trajectories reproduce the production force
+and energy logs. All observations remain above the ordinary0.10-eV/Angstrom
+NEB threshold; their discrete peaks are not certified transition states.
+
+At step6, the T--PO forward discrete barrier is36.560meV/f.u.; referenced
+instead to the same PO well, the reverse value is117.881meV/f.u. At step10,
+the PO--M forward value is95.199meV/f.u., with a reverse value166.584meV/f.u.
+These are provisional values, not a conclusion about the lowest competing
+channel. A normal Slurm completion of the ten-step PO--M allocation coexists
+with the material termination `max_steps_reached`, not convergence.
+
+The T--PO residual rises from0.215938 at step3 to0.344031 at step6 while
+the maximum moves from image3 to image1. At the latter image, atomic/cell
+maximum vectors are0.344031/0.030582, versus a0.023657 spring contribution
+and0.346935 physical perpendicular force (eV/Angstrom). Thus the observed
+rebound is primarily unresolved atomic relaxation, not a spring-dominated
+artifact; a subsequent log row falls to0.300872. The chain is not terminated
+on this rebound, nor are electronic parameters changed to suppress it.
+
+In a continuous, fixed-initial-gauge projection, the rotated-T geometric
+triplet captures93.91% of the parent-relative displacement squared norm at
+the step6 T--PO peak but only52.84% at the step10 PO--M peak. Fixed endpoints
+also lie substantially outside this triplet. This rejects a complete common
+three-pattern representation of all channels, while preserving its use for
+variant tracking. Captured displacement is not an energy contribution.
+The stationary-T Gamma full basis reconstructs the atomic part, but this is
+not evidence for local harmonic validity or a joint atom/cell saddle index.
+These findings guide subsequent basis selection and independent validation;
+they do not yet establish a predictive mode--strain mechanism.

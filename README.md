@@ -182,3 +182,17 @@ Its two mode-surface examples have deliberately different scopes:
 
 All plotted contours display interpolation only inside their sampled domains;
 barriers come from converged VCNEB chains, not from contour pixels.
+
+### Focused hafnia research track
+
+A separate [HfO₂ research plan](docs/VARNEB_JCTC_HFO2_RESEARCH_PLAN.md) tests
+whether mode–strain control can reduce switching barriers without lowering
+competing decay barriers from the same polar well. This is an ongoing,
+bounded study, not a completed JCTC paper or a new-theory claim.
+[Exact-SCF chain observations](benchmarks/hfo2_channels/20261008/chain_observations/README.md)
+provide public energy/force/stress replay, continuous-reference mode
+projections and independent cell-strain records without invoking DFT.
+Their [representation/force audit](docs/HFO2_CONTINUOUS_CHAIN_OBSERVATIONS_2026-10-08.md)
+documents why a common three-pattern plane does not fully represent the
+current PO→M bottleneck. Provisional peaks remain distinct from converged
+paths, certified saddles and independently validated energy predictions.

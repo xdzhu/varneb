@@ -260,3 +260,30 @@ phonons do not certify the joint open atom/cell Hessian index. Released P=0
 and clamped epsilon=0 are compared as different boundary conditions, never
 as adjacent points of a single strain derivative. These work and envelope
 relations are established tools, not claims of new mathematical theory.
+
+## 8. Continuous reference projections and numerical observation audit
+
+For a supplied, already continuous periodic lift, integer representatives are
+chosen only at image zero relative to the ordered reference. The same
+per-atom integer shift n is applied at every image, giving
+u_i=(q_i+n-q_ref)H_ref in a fixed reference metric. Independent nearest-image
+folding to the reference is not performed: it can hide a winding or introduce
+artificial mode-coordinate discontinuities. Ambiguous initial half-cell
+representatives, broken adjacent lifts and changed atomic order are rejected.
+No calculator is invoked and no image geometry is modified by this analysis.
+
+Cartesian geometric patterns use unit metric weights; Gamma eigenvectors
+use their original phonon mass metric. Rigid translation is removed with
+the corresponding weighted mean. Complete degenerate-subspace squared
+amplitudes are invariant to internal basis rotations; individual mode
+coordinates are not. Cell deformation F=solve(H_ref,H_i)^T and Green strain
+(F^T F-I)/2 are recorded separately. This is a declared coordinate convention,
+not a new decomposition theorem or a partition of energy among modes.
+
+Every retained observation matches a complete, identical ordered SCF and
+binds input, structure and raw-log checksums. Complete numeric E/F/stress
+are then attached to nonexecuting SinglePointCalculator objects to reproduce
+the ordinary extended-space NEB force. Atomic, cell, physical perpendicular
+and spring contributions are reported separately. A residual gate, an
+optimizer step limit, a scheduler exit status and full-variable saddle
+stationarity are distinct checks; none is substituted for another.
