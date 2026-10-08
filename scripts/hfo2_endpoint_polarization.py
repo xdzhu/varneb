@@ -27,6 +27,9 @@ LABELS = ("PO_plus", "PO_minus_T_preserving", "PO_minus_T_reversing")
 GRIDS = (2, 4, 8)  # transverse 2x2 unchanged; longitudinal convergence only
 OUTPUT_ADDITION = b"\nout_chg 1\nout_bandgap 1\n"
 ABI_SOURCE = "https://github.com/deepmodeling/abacus-develop/tree/f7cb1d3/examples/berryphase/lcao_PbTiO3"
+# f7cb1d3 berryphase.cpp unit3 versus modern e and ASE's Bohr. This is a
+# specified unit conversion, not a fitted DFT correction or a branch change.
+NATIVE_SI_FACTOR = (1.60097e-19 / 1.602176634e-19) * (5.29177210903e-11 / 5.29177e-11)**2
 
 
 def input_values(text):
@@ -50,7 +53,7 @@ def berry_input(base):
     return ("INPUT_PARAMETERS\n" + "".join(f"{k} {v}\n" for k, v in values.items())).encode()
 
 
-def prepare(sources, root, charge_caches=None):
+def prepare(sources, root, charge_caches=None, nscf_caches=None):
     if root.exists():
         raise FileExistsError("refusing existing polarization namespace")
     if set(sources) != set(LABELS):
@@ -58,6 +61,10 @@ def prepare(sources, root, charge_caches=None):
     charge_caches = charge_caches or {}
     if set(charge_caches) - set(LABELS):
         raise ValueError("charge cache labels must match declared endpoints")
+    nscf_caches = nscf_caches or {}
+    if (set(nscf_caches) - set(charge_caches)
+            or any(set(v) - {str(n) for n in GRIDS} for v in nscf_caches.values())):
+        raise ValueError("NSCF caches require corresponding audited charge and declared grids")
     records = []
     geometries = []
     for label in LABELS:
@@ -100,6 +107,7 @@ def prepare(sources, root, charge_caches=None):
             nscf_inputs.append({"nz": nz, "input_sha256": {n: sha256(folder / n) for n in INPUT_FILES}})
         records.append({"label": label, "source_directory": str(source),
                         "cached_scf_directory": charge_caches.get(label),
+                        "cached_nscf_directories": nscf_caches.get(label, {}),
                         "baseline_log_sha256": sha256(source / "OUT.ABACUS/running_scf.log"),
                         "baseline_results": {k: v.tolist() if isinstance(v, np.ndarray) else v for k, v in raw.items()},
                         "baseline_input_sha256": {n: sha256(source / n) for n in INPUT_FILES},
@@ -113,6 +121,7 @@ def prepare(sources, root, charge_caches=None):
               "NSCF_delta": {"calculation": "nscf", "init_chg": "file", "symmetry": "-1",
                              "berry_phase": "1", "gdir": "3", "cal_force": "0", "cal_stress": "0", "out_stru": "0", "out_band": "1"},
               "NSCF_meshes": [[2, 2, n] for n in GRIDS], "NSCF_energies_used_for_barriers": False,
+              "ABACUS_native_to_modern_SI_factor": NATIVE_SI_FACTOR,
               "tolerances": {"SCF_energy_eV_cell": 1e-5, "SCF_force_eV_A": 1e-4, "SCF_stress_kbar": .02,
                              "sampled_gap_min_eV": .1, "longitudinal_P_convergence_C_m2": .01,
                              "inversion_modular_residual_C_m2": .01},
@@ -124,6 +133,9 @@ def prepare(sources, root, charge_caches=None):
             cache = Path(point["cached_scf_directory"])
             audit = audit_scf(root, index, cache)
             point["cached_scf_audit"] = audit
+            point["cached_nscf_audits"] = {
+                nz: audit_nscf(root, index, int(nz), Path(path), audit)
+                for nz, path in point["cached_nscf_directories"].items()}
     (root / "manifest.json").write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
     return record
 
@@ -133,10 +145,17 @@ def check_inputs(folder, expected):
         raise ValueError(f"staged input mutated: {folder}")
 
 
+def check_runtime_version(body):
+    if (not re.search(r"ABACUS\s+v3\.10\.0\b", body)
+            or not re.search(r"Commit:\s*f7cb1d3\b", body)):
+        raise ValueError("native unit/output contract requires actual ABACUS3.10.0/f7cb1d3")
+
+
 def audit_scf(root, index, work):
     manifest = json.loads((root / "manifest.json").read_text())
     point = manifest["points"][index]
     check_inputs(work, point["scf_input_sha256"])
+    check_runtime_version((work / "OUT.ABACUS/running_scf.log").read_text())
     raw = audited_results(work)
     baseline = point["baseline_results"]
     errors = {"energy_eV_cell": abs(float(raw["energy"] - baseline["energy"])),
@@ -162,6 +181,7 @@ def audit_nscf(root, index, nz, work, scf_audit):
     check_inputs(work, expected["input_sha256"])
     log = work / "OUT.ABACUS/running_nscf.log"
     body = log.read_text()
+    check_runtime_version(body)
     if re.findall(r"\bDSIZE\s*=\s*(\d+)", body) != ["32"] or not re.search(r"Total\s+Time\s*:", body):
         raise ValueError("incomplete or non-32-rank NSCF")
     for name, expected_hash in scf_audit["charge_sha256"].items():
@@ -181,10 +201,14 @@ def audit_nscf(root, index, nz, work, scf_audit):
     ratio = berry["reported_modulus_C_m2"] / q
     # This exact ABACUS source uses older SI constants and modulus=2 for
     # nspin=1 with even ionic valences. Do not silently divide printed P by 2.
-    if abs(ratio - 2) > .001:
+    expected_modulus = 2 * q * NATIVE_SI_FACTOR
+    if abs(berry["reported_modulus_C_m2"] - expected_modulus) > 1.5e-7:
         raise ValueError("reported spin-paired modulus inconsistent with source/cell")
     return {"label": point["label"], "nz": nz, **berry, "bands": bands,
             "physical_quantum_C_m2": q, "native_modulus_over_physical_quantum": ratio,
+            "expected_native_modulus_C_m2": expected_modulus, "native_to_modern_SI_factor": NATIVE_SI_FACTOR,
+            "value_modern_SI_C_m2": berry["value_C_m2"] / NATIVE_SI_FACTOR,
+            "reported_modulus_modern_SI_C_m2": berry["reported_modulus_C_m2"] / NATIVE_SI_FACTOR,
             "log_sha256": sha256(log), "input_sha256": expected["input_sha256"]}
 
 
@@ -226,8 +250,13 @@ def run_endpoint(root, index):
     (destination / "scf_audit.json").write_text(json.dumps(scf_audit, indent=2) + "\n")
     for inputs in point["nscf_inputs"]:
         nz = inputs["nz"]
-        work = execute(f"nscf_22{nz}", inputs["input_sha256"], scf)
+        cached = point.get("cached_nscf_directories", {}).get(str(nz))
+        work = Path(cached) if cached else execute(f"nscf_22{nz}", inputs["input_sha256"], scf)
         audit = audit_nscf(root, index, nz, work, scf_audit)
+        if cached and audit != point["cached_nscf_audits"][str(nz)]:
+            raise ValueError("cached NSCF evidence changed after preflight")
+        audit["directory"] = str(work)
+        audit["reused_completed_NSCF"] = bool(cached)
         (destination / f"berry_22{nz}.json").write_text(json.dumps(audit, indent=2) + "\n")
         print(json.dumps({"label": point["label"], "nz": nz, "P_native_C_m2": audit["value_C_m2"]}), flush=True)
 
@@ -238,26 +267,28 @@ def summarize(root):
               for label in LABELS}
     convergence = {}
     for label, records in audits.items():
-        mods = [r["reported_modulus_C_m2"] for r in records]
+        mods = [r["reported_modulus_modern_SI_C_m2"] for r in records]
         if np.ptp(mods) > 1e-7:
             raise ValueError("modulus changes at fixed cell")
-        convergence[label] = abs(modular_difference(records[-1]["value_C_m2"], records[-2]["value_C_m2"], mods[-1]))
+        convergence[label] = abs(modular_difference(records[-1]["value_modern_SI_C_m2"], records[-2]["value_modern_SI_C_m2"], mods[-1]))
     plus = audits["PO_plus"][-1]
-    residuals = {label: abs(modular_difference(audits[label][-1]["value_C_m2"],
-                                              -plus["value_C_m2"], plus["reported_modulus_C_m2"])) for label in LABELS[1:]}
-    if any(abs(audits[label][-1]["reported_modulus_C_m2"] - plus["reported_modulus_C_m2"]) > 1e-7 for label in LABELS):
+    residuals = {label: abs(modular_difference(audits[label][-1]["value_modern_SI_C_m2"],
+                                              -plus["value_modern_SI_C_m2"], plus["reported_modulus_modern_SI_C_m2"])) for label in LABELS[1:]}
+    if any(abs(audits[label][-1]["reported_modulus_modern_SI_C_m2"] - plus["reported_modulus_modern_SI_C_m2"]) > 1e-7 for label in LABELS):
         raise ValueError("inversion endpoints have different polarization moduli")
     tol = manifest["tolerances"]
     passed = (all(x <= tol["longitudinal_P_convergence_C_m2"] for x in convergence.values())
               and all(x <= tol["inversion_modular_residual_C_m2"] for x in residuals.values()))
     # Modular opposition alone cannot distinguish a polar state from a
     # self-inverse 0/half-quantum class. Report, never erase, this ambiguity.
-    self_inverse = abs(modular_difference(plus["value_C_m2"], -plus["value_C_m2"], plus["reported_modulus_C_m2"]))
-    record = {"status": "passed" if passed and self_inverse > 2*tol["inversion_modular_residual_C_m2"] else "review_required",
+    self_inverse = abs(modular_difference(plus["value_modern_SI_C_m2"], -plus["value_modern_SI_C_m2"], plus["reported_modulus_modern_SI_C_m2"]))
+    physical_self_inverse = abs(modular_difference(plus["value_modern_SI_C_m2"], -plus["value_modern_SI_C_m2"], plus["physical_quantum_C_m2"]))
+    record = {"status": "passed" if passed and min(self_inverse, physical_self_inverse) > 2*tol["inversion_modular_residual_C_m2"] else "review_required",
               "manifest_sha256": sha256(root / "manifest.json"), "native_Berry_audits": audits,
               "SCF_output_only_audits": {l: json.loads((root / "calculations" / l / "scf_audit.json").read_text()) for l in LABELS},
               "longitudinal_224_to_228_modular_change_C_m2": convergence,
               "inversion_modular_residual_C_m2": residuals, "plus_self_inverse_distance_C_m2": self_inverse,
+              "plus_physical_quantum_self_inverse_distance_C_m2": physical_self_inverse,
               "limitations": manifest["limitations"], "spontaneous_polarization_C_m2": None,
               "switching_path_branch_selected": False}
     (root / "summary.json").write_text(json.dumps(record, indent=2) + "\n")
@@ -270,11 +301,13 @@ def main():
     parser.add_argument("--root", type=Path, required=True)
     parser.add_argument("--sources", type=Path)
     parser.add_argument("--charge-caches", type=Path)
+    parser.add_argument("--nscf-caches", type=Path)
     parser.add_argument("--index", type=int, choices=range(3))
     args = parser.parse_args()
     if args.action == "prepare":
         caches = json.loads(args.charge_caches.read_text()) if args.charge_caches else None
-        report = prepare(json.loads(args.sources.read_text()), args.root, caches)
+        nscf_caches = json.loads(args.nscf_caches.read_text()) if args.nscf_caches else None
+        report = prepare(json.loads(args.sources.read_text()), args.root, caches, nscf_caches)
         print(json.dumps({"staged_endpoints": len(report["points"]), "NSCF_meshes": report["NSCF_meshes"]}))
     elif args.action == "run":
         if args.index is None:

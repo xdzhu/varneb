@@ -73,14 +73,24 @@ def test_summary_preserves_branches_and_rejects_self_inverse(tmp_path):
         folder.mkdir(parents=True)
         (folder / "scf_audit.json").write_text("{}")
         for nz in flow.GRIDS:
-            (folder / f"berry_22{nz}.json").write_text(json.dumps({"value_C_m2": p, "reported_modulus_C_m2": 1.2}))
+            (folder / f"berry_22{nz}.json").write_text(json.dumps({"value_C_m2": p, "reported_modulus_C_m2": 1.2,
+                "value_modern_SI_C_m2": p, "reported_modulus_modern_SI_C_m2": 1.2, "physical_quantum_C_m2": .6}))
     summary = flow.summarize(tmp_path)
     assert summary["status"] == "passed"
     assert summary["spontaneous_polarization_C_m2"] is None
     assert not summary["switching_path_branch_selected"]
     for label in flow.LABELS:
         for nz in flow.GRIDS:
-            (tmp_path / "calculations" / label / f"berry_22{nz}.json").write_text(json.dumps({"value_C_m2": .6, "reported_modulus_C_m2": 1.2}))
+            (tmp_path / "calculations" / label / f"berry_22{nz}.json").write_text(json.dumps({"value_C_m2": .6, "reported_modulus_C_m2": 1.2,
+                "value_modern_SI_C_m2": .6, "reported_modulus_modern_SI_C_m2": 1.2, "physical_quantum_C_m2": .6}))
+    assert flow.summarize(tmp_path)["status"] == "review_required"
+    # Half the PHYSICAL eR/V quantum is also compatible with inversion,
+    # even when it is not self-inverse under the spin-paired native 2eR/V.
+    for label, p in zip(flow.LABELS, (.3, -.3, .9)):
+        for nz in flow.GRIDS:
+            (tmp_path / "calculations" / label / f"berry_22{nz}.json").write_text(json.dumps({"value_C_m2": p,
+                "reported_modulus_C_m2": 1.2, "value_modern_SI_C_m2": p,
+                "reported_modulus_modern_SI_C_m2": 1.2, "physical_quantum_C_m2": .6}))
     assert flow.summarize(tmp_path)["status"] == "review_required"
 
 
@@ -92,7 +102,8 @@ def test_actual_audit_contract_uses_different_scf_and_nscf_eigenvalue_files(tmp_
     out = work / "OUT.ABACUS"
     out.mkdir()
     (out / "SPIN1_CHG.cube").write_text("immutable charge")
-    (out / "running_scf.log").write_text("fixture SCF")
+    version = "ABACUS v3.10.0\nCommit: f7cb1d3\n"
+    (out / "running_scf.log").write_text(version + "fixture SCF")
     # Eight kpoints, 48 occupied bands and at least one empty band.
     energies = list(np.arange(48)/48 - 1) + [3.]
     istate = "".join("BAND Energy(ev) Occupation Kpoint = %d\n" % (k+1) +
@@ -110,11 +121,23 @@ def test_actual_audit_contract_uses_different_scf_and_nscf_eigenvalue_files(tmp_
     assert not (out / "BANDS_1.dat").exists()
     (out / "istate.info").unlink()  # NSCF does not write this file in actual f7cb1d3.
     (out / "BANDS_1.dat").write_text("".join(f"{k+1} 0 " + " ".join(map(str, energies)) + "\n" for k in range(8)))
-    modulus = np.linalg.norm(np.array(point["quantum_lattice_C_m2"])[2])*2
-    (out / "running_nscf.log").write_text(f"DSIZE = 32\nThe calculated polarization direction is in R3 direction\n"
+    modulus = np.linalg.norm(np.array(point["quantum_lattice_C_m2"])[2])*2*flow.NATIVE_SI_FACTOR
+    (out / "running_nscf.log").write_text(version + f"DSIZE = 32\nThe calculated polarization direction is in R3 direction\n"
         f"P = 0.5 (mod {modulus:.7f}) (0.0, 0.0, 0.5) C/m^2\n Total Time : 28\n")
     result = flow.audit_nscf(tmp_path, 0, 2, work, audit)
     assert result["bands"]["source_format"] == "ABACUS_BANDS_1.dat"
+    assert result["value_modern_SI_C_m2"] == .5/flow.NATIVE_SI_FACTOR
+    # Actual reported period and the independently specified source constants.
+    assert flow.NATIVE_SI_FACTOR * 2 == pytest.approx(1.9984953495838538, abs=1e-14)
+    native_log = (out / "running_nscf.log").read_text()
+    (out / "running_nscf.log").write_text(native_log.replace(f"mod {modulus:.7f}", f"mod {modulus+.001:.7f}"))
+    with pytest.raises(ValueError, match="modulus inconsistent"):
+        flow.audit_nscf(tmp_path, 0, 2, work, audit)
+    (out / "running_nscf.log").write_text(native_log)
+    (out / "running_nscf.log").write_text(native_log.replace("f7cb1d3", "abcdef0"))
+    with pytest.raises(ValueError, match="actual ABACUS"):
+        flow.audit_nscf(tmp_path, 0, 2, work, audit)
+    (out / "running_nscf.log").write_text(native_log)
     (out / "SPIN1_CHG.cube").write_text("changed charge")
     with pytest.raises(ValueError, match="charge changed"):
         flow.audit_nscf(tmp_path, 0, 2, work, audit)
