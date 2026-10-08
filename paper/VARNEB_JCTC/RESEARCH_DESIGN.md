@@ -62,6 +62,16 @@ they cannot substitute for the missing hafnia predictions.
 No abstract containing unmeasured scientific conclusions will be drafted yet.
 Acceptance gates are evidence-based, not a fixed journal-acceptance promise.
 
+The [connected main-text draft](MANUSCRIPT_DRAFT.md) now joins the physical
+question, cited prior art, operative method definitions and dated pilot
+results. Its missing boundary-response/independent-prediction evidence is
+explicit; it contains no abstract or conclusion asserting H1/H2 success.
+The newest [targeted neighbour check](../../outputs/HFO2_JCTC_RECENT_MODE_BOUNDARY_AUDIT_2026-10-09.md)
+adds the 2026 phonon-pair domain-wall study and the 2025 Pbcn functional/boundary
+benchmark. Neither multi-mode compensation nor boundary-dependent switching
+alone is the proposed novelty. Their interface/full-cell quantities are not
+equated with our homogeneous/partially clamped measurements.
+
 ## Prospective controls and prior-art boundary
 
 The [prospective prediction protocol](../../docs/HFO2_PREDICTION_PROTOCOL.md)
