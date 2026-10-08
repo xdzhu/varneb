@@ -1,0 +1,44 @@
+% !TEX program = lualatex
+% The scientific text has one source: MANUSCRIPT_DRAFT.md.
+% Compile with the existing LuaLaTeX/markdown package, no shell escape.
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=25mm]{geometry}
+\usepackage{fontspec}
+\setmainfont{TeX Gyre Termes}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx,booktabs,adjustbox,etoolbox}
+\usepackage{microtype}
+\usepackage{xcolor,xurl,xstring}
+\usepackage[colorlinks=true,urlcolor=blue!50!black,linkcolor=blue!50!black]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[pipeTables,texMathDollars]{markdown}
+\setlength{\headheight}{14pt}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt plus 1pt minus 1pt}
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Hafnia pathway study}
+\fancyhead[R]{Working draft: material tests incomplete}
+\fancyfoot[C]{\thepage}
+\raggedbottom
+\hypersetup{pdftitle={Competing switching and phase-escape channels in hafnia},
+  pdfsubject={Evidence-bound working manuscript, not submission-ready}}
+\BeforeBeginEnvironment{tabular}{\begin{adjustbox}{max width=\linewidth}}
+\AfterEndEnvironment{tabular}{\end{adjustbox}}
+\markdownSetup{
+  outputDir={build},
+  rendererPrototypes={
+    headingOne={\begin{center}\Large #1\end{center}\bigskip},
+    headingTwo={\section*{#1}},
+    headingThree={\subsection*{#1}},
+    link={\IfBeginWith{#3}{http}{\href{#3}{#1}}{\href{../#3}{#1}}},
+    image={\begin{center}
+      \includegraphics[width=\linewidth,height=.70\textheight,keepaspectratio]{#3}
+      \end{center}}
+  }
+}
+\begin{document}
+\markdownInput{MANUSCRIPT_DRAFT.md}
+\end{document}

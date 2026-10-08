@@ -83,32 +83,32 @@ mechanical active space are independent choices. Ordered atoms, reference
 cells and continuous periodic lifts are preserved during optimization and
 analysis; an image-wise remapping is not a physical pathway improvement.
 
-For candidate channel alpha at condition c, define its bottleneck barrier
-from the same initial well I as
+For candidate channel $\alpha$ at condition $c$, define its bottleneck barrier
+from the same initial well $I$ as
 
-\[
+$$
 B_\alpha(c)=E^\dagger_\alpha(c)-E_I(c).
-\]
+$$
 
 Here a stationary bottleneck and a discrete sampled maximum are distinguished;
-the latter is denoted by a hat in the pilot interpretation. With a common I,
-the initial-well energy cancels from B_alpha-B_beta. A change in relative
+the latter is denoted by a hat in the pilot interpretation. With a common $I$,
+the initial-well energy cancels from $B_\alpha-B_\beta$. A change in relative
 channel selectivity thus cannot be explained by shifting that common well
 alone. In the declared candidate set, we use
 
-\[
+$$
 B_s=\min_{\alpha\in\mathcal S}B_\alpha,\qquad
 B_d=\min_{\alpha\in\mathcal D}B_\alpha,\qquad S=B_d-B_s.
-\]
+$$
 
-An increased S is relative selectivity, not improved absolute resistance to
-escape. The stronger prospective test requires a resolved reduction of B_s
-and a lower uncertainty bound on Delta B_d no smaller than zero. An unresolved
+An increased $S$ is relative selectivity, not improved absolute resistance to
+escape. The stronger prospective test requires a resolved reduction of $B_s$
+and a lower uncertainty bound on $\Delta B_d$ no smaller than zero. An unresolved
 decay response is inconclusive, not evidence of noninferiority. This primary
 allowable-loss margin is fixed before boundary-response labels. Both T and M escape candidates
 are retained. These are candidate-set statements, not an exhaustive network
 or a calculation of device lifetime. At finite prescribed pressure the
-objective would be E+PV; all hafnia results here instead use P=0 and E.
+objective would be $E+PV$; all hafnia results here instead use $P=0$ and $E$.
 
 ### 2.2. Mechanical ensembles and branch-aware reduction
 
@@ -120,19 +120,19 @@ is not an open-coordinate convergence failure. Zero applied stress and
 zero nominal substrate strain are distinct ensembles, and are not adjacent
 points of a single strain derivative.
 
-A retained coordinate q can specify one mode or a declared combination of
-modes. A frozen slice keeps the remaining coordinates r fixed. A conditional
+A retained coordinate $q$ can specify one mode or a declared combination of
+modes. A frozen slice keeps the remaining coordinates $r$ fixed. A conditional
 surface instead follows a particular local minimum in the permitted r
-space at each q; the lower envelope over branches is a third object.
-With q and r measured from the same expansion centre and stable H_rr, local
+space at each $q$; the lower envelope over branches is a third object.
+With $q$ and $r$ measured from the same expansion centre and stable $H_{rr}$, local
 quadratic release gives
 
-\[
+$$
 r^*(q)=-H_{rr}^{-1}(g_r+H_{rq}q),\qquad
 K_{\mathrm{eff}}=H_{qq}-H_{qr}H_{rr}^{-1}H_{rq}.
-\]
+$$
 
-The offset from a nonzero g_r is retained. The Schur complement is standard
+The offset from a nonzero $g_r$ is retained. The Schur complement is standard
 mathematics, not a new theorem. An unresolved or unstable eliminated block
 invalidates this release; a physical unstable direction cannot be removed
 by a pseudoinverse. Unmeasured directions remain fixed, not implicitly stable.
@@ -191,7 +191,7 @@ instructions are in the [figure bundle](figures/hfo2_T_PO_ordinary_20261008/READ
 All four candidate observations share the ordered PO+ energy
 -9783.249675811956 eV/cell. The dated network snapshot is:
 
-| Candidate from PO+ | Frozen source job/step | Ordinary residual (eV/Angstrom) | Sampled maximum (meV/f.u.) | Ordinary pass |
+| Candidate from PO+ | Source job/step | Residual | Maximum | Pass |
 |---|---|---:|---:|---|
 | PO-to-T, reverse view | 28300425/6 | 0.059882 | 115.210 | Yes |
 | PO-to-M | 28298794/20 | 0.156521 | 82.136 | No |
@@ -200,8 +200,9 @@ All four candidate observations share the ordered PO+ energy
 
 Table 1. Provisional observations, not a converged ranking. Snapshot steps
 and times differ, three sources remain unconverged, and numerical/sampling
-barrier bounds have not been measured. Values include the endpoints and use
-four formula units per cell. The two flip labels denote registered geometric
+barrier bounds have not been measured. Residuals are in eV/Angstrom and
+sampled maxima in meV/f.u.; maxima include the endpoints and use four formula
+units per cell. The two flip labels denote registered geometric
 operations, not certified distinct MEPs or assignments to published irreps.
 The [37-record audit](../../benchmarks/hfo2_channels/20261008/network_update_20261009/README.md)
 includes cached endpoints and reused records, not 37 new or independent SCFs.

@@ -66,6 +66,9 @@ The [connected main-text draft](MANUSCRIPT_DRAFT.md) now joins the physical
 question, cited prior art, operative method definitions and dated pilot
 results. Its missing boundary-response/independent-prediction evidence is
 explicit; it contains no abstract or conclusion asserting H1/H2 success.
+The [reading/build guide](README.md) provides the single-source LuaLaTeX
+recipe and dated compile/visual receipt, without maintaining a duplicate
+scientific body or claiming an evidence-complete PDF.
 The newest [targeted neighbour check](../../outputs/HFO2_JCTC_RECENT_MODE_BOUNDARY_AUDIT_2026-10-09.md)
 adds the 2026 phonon-pair domain-wall study and the 2025 Pbcn functional/boundary
 benchmark. Neither multi-mode compensation nor boundary-dependent switching
