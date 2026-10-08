@@ -181,6 +181,17 @@ Date: 2026-10-08. No physical result is inferred from a unit-test fixture.
   with orthogonal residuals and finite-step spread. Do not extrapolate it into
   full conditional relaxation, a joint-cell channel or an activation barrier.
 
+## E008: endpoint electronic polarization (preregistered)
+
+- Verify PO+ and two ordered inversion-mapped PO- with native ABACUS f7cb1d3 LCAO Berry.
+- Budget3 output-only SCFs +9 fixed-charge NSCFs. Start only PO+ before validating other endpoints.
+- Keep100Ry/full10auDZP/SCF2x2x2 and strict original physical contract. Output addition must reproduce E/F/stress.
+- On the same charge use R3 NSCF222/224/228. These energies never enter barrier comparisons.
+- Before DFT: sampled gap>.1eV;224-to228 modulo difference<=.01C/m²;
+  POminus/Pplus inversion residual<=.01C/m². Reject self-inverse ambiguity.
+- Record native2eR/V modulus and physical eR/V separately. No spontaneous-P or path-branch claim.
+- Reuse hf installed binary and ASE; first actual protocol outcome pending.
+
 ## Existing evidence and non-results
 
 - ABACUS ordinary-7/9: 39.187725/39.0523 meV/f.u.; historical CI-7: 32.29305.

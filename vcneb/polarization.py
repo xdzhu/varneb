@@ -1,0 +1,88 @@
+"""Explicit polarization-branch bookkeeping, not a spontaneous-P estimator.
+
+ABACUS logs can report a spin-paired modulo 2eR/V rather than eR/V.
+Keep that reported modulus; never silently identify it with the physical
+quantum or choose a branch merely by taking the smallest absolute value.
+"""
+
+from __future__ import annotations
+
+import re
+import numpy as np
+
+
+def quantum_lattice(cell_A):
+    """Row lattice e*a_i/V in C/m^2 for row cell vectors in Angstrom."""
+    cell = np.asarray(cell_A, dtype=float)
+    if cell.shape != (3, 3) or not np.isfinite(cell).all():
+        raise ValueError("finite 3x3 cell required")
+    volume = float(np.linalg.det(cell))
+    if volume <= 0 or np.linalg.cond(cell) > 1e8:
+        raise ValueError("positive, nondegenerate right-handed cell required")
+    return 16.02176634 * cell / volume
+
+
+def modular_difference(value, reference, reported_modulus):
+    """Signed nearest scalar difference modulo an explicitly supplied period.
+
+    This does not select a physical path branch. At a half-period tie two
+    choices are equally close; callers must not use this to unwrap a path.
+    """
+    values = np.asarray([value, reference, reported_modulus], dtype=float)
+    if not np.isfinite(values).all() or reported_modulus <= 0:
+        raise ValueError("finite values and positive explicit modulus required")
+    delta = float(value - reference)
+    return delta - reported_modulus * np.rint(delta / reported_modulus)
+
+
+def parse_abacus_berry(body):
+    """Read exactly one direction's native C/m^2 output without branch edits."""
+    directions = re.findall(r"calculated polarization direction is in R([123]) direction", body)
+    number = r"[-+]?\d+(?:\.\d*)?(?:[Ee][-+]?\d+)?"
+    pattern = (rf"P\s*=\s*({number})\s*\(mod\s*({number})\)\s*"
+               rf"\(\s*({number})\s*,\s*({number})\s*,\s*({number})\s*\)\s*C/m\^2")
+    entries = re.findall(pattern, body)
+    if len(directions) != 1 or len(entries) != 1:
+        raise ValueError("expected exactly one complete Berry direction/C/m^2 result")
+    values = np.asarray(entries[0], dtype=float)
+    if not np.isfinite(values).all() or values[1] <= 0:
+        raise ValueError("invalid Berry value or reported modulus")
+    if not np.isclose(np.linalg.norm(values[2:]), abs(values[0]), atol=3e-7, rtol=0):
+        raise ValueError("scalar Berry value and Cartesian projection disagree")
+    return {"direction": int(directions[0]), "value_C_m2": float(values[0]),
+            "reported_modulus_C_m2": float(values[1]),
+            "cartesian_projection_C_m2": values[2:].tolist(),
+            "branch_selected": False}
+
+
+def sampled_band_gap(body, occupied_bands):
+    """Indirect sampled gap from ABACUS istate.info, not a full BZ certificate.
+
+    The occupation column is k-weighted in ABACUS; do not interpret its
+    numeric value as a per-state electron occupation. The caller must fix
+    the occupied-band count from the audited electron/pseudopotential count.
+    """
+    if not isinstance(occupied_bands, int) or occupied_bands < 1:
+        raise ValueError("positive integer occupied-band count required")
+    blocks = []
+    current = None
+    for line in body.splitlines():
+        if "Kpoint =" in line and "BAND" in line:
+            current = []
+            blocks.append(current)
+        elif current is not None and line.strip():
+            parts = line.split()
+            if len(parts) < 3:
+                raise ValueError("malformed eigenvalue row")
+            index, energy, occupation = int(parts[0]), float(parts[1]), float(parts[2])
+            if index != len(current) + 1 or not np.isfinite([energy, occupation]).all():
+                raise ValueError("nonfinite or unordered band table")
+            current.append(energy)
+    if not blocks or any(len(b) <= occupied_bands for b in blocks):
+        raise ValueError("missing occupied/unoccupied states")
+    if any(np.min(np.diff(b)) < -1e-7 for b in blocks):
+        raise ValueError("eigenvalues are not ordered")
+    vbm = max(b[occupied_bands - 1] for b in blocks)
+    cbm = min(b[occupied_bands] for b in blocks)
+    return {"n_kpoints": len(blocks), "occupied_bands": occupied_bands,
+            "VBM_eV": vbm, "CBM_eV": cbm, "sampled_indirect_gap_eV": cbm - vbm}
