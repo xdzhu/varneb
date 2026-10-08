@@ -379,3 +379,35 @@ See submission_handles_r13.json; no switching results or G2 DFT claimed yet.
   1.026364; bothR14 continuations remainPending/Dependency. Recent11.6--16.6min
   perstep projects the10step health segments to21:40--22:30, not convergence.
   No newallocation orphysical change in thisanalysis milestone.
+
+## E014: close-prior-art audit and prospective prediction controls
+
+- Question: does an apparent mode/NEB prediction increment actually go beyond
+  the closest accepted work, and can the future holdout test distinguish it
+  from interpolation or well shifts?
+- Evidence: Qi2025 accepted manuscript scientific body/AppendicesA–E,
+  visualFig4 per4fu-cell units and the additional oxygen-crossing category;
+  Zhou2022 mainJATS/Methods and allSI, publisher-declared MD5-matched PDF,
+  visualS7 and the500random-start restricted-subspace search.
+- Decision: reject first-mode-landscape/NEB-validation or exhaustive-network
+  novelty claims. Preserve current production matrix, disclose unexamined
+  crossing mechanism; no speculative new variant added.
+- Protocol: freeze+0.005 in-range holdout before materiallabels; retain linear
+  barrier interpolation and both endpoint-response nulls plus frozen/atomic/
+  joint/branch controls. H1strictprimary decay noninferioritymargin0; numerical
+  ambiguity/abstention cannot manufacture a favorable result. Twoheldout edges
+  do not certify allcandidate minima. Amendments retain first predictions.
+- Limits: otherSI and Lee doubleDOI relation remain unresolved; no literature
+  absence proof, newDFT, scientific H1/H2 verdict or finalJCTCreadiness.
+- Live20:51: flips28288045/63Running,step5/6,fmax1.552917/0.890479;
+  R14continuations28298794/28300425PendingDependency. Existing sourceunchanged.
+- Follow-up21:05: Behara2022 accepted manuscript methods and polymorph/variant
+  path sections, Fig9 visual audit. Already contains two-shuffle contours,
+  strain-path mapping and a Pbcn-to-T intermediate change on fixing the Ocell.
+  Retain restricted candidate coverage; reject first-mechanism-change or
+  first-mode/path-overlay claims. SI remains unread, no matrix expansion.
+- Validation:16localMarkdownlinks,39JSONLrecords parse before the validation
+  receipt;43focusedchannel/material/atomic-holdout tests pass in8.87s. No new
+  full-suite claim; source and scientific data unchanged. At21:15:55, flips
+  remainRunning atstep7/8,residual1.314195/0.759024, bothR14PendingDependency.
+  The10-step health segment ETA updates to21:40--22:00, not convergence.

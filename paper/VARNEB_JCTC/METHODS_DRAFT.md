@@ -317,3 +317,39 @@ are not merged into a single strain derivative. These definitions and
 interval rules are conventional analysis, not new physical theory or proof
 that no unexamined decay channel exists. The implementation calls no DFT
 calculator and does not infer a device lifetime or switching rate.
+
+## 10. Prospective validation scope
+
+Before strained material labels are available, we reserve epsilon=+0.005 as
+an in-range unseen condition between 0 and +0.01 within the same clamped-plane
+ensemble. The candidate selected for each role uses training data only.
+Predicted barriers, uncertainty bounds, branch labels, basis, code and data
+hashes are fixed before complete holdout path labels are inspected. Independent
+local-surface points remain outside the fitting set. A direct interpolation of
+training barriers, endpoint-only responses, frozen modes, atomic-only release,
+joint atomic/cell release and branch-aware reduction are compared explicitly.
+Abstention on an unstable branch is a coverage result, not an accurate barrier
+prediction. Two held-out edges do not certify the full network minimum.
+
+The strict primary switching/decay test preregisters zero allowable decay-barrier
+loss, separately from relative selectivity. This is an analysis margin, not an
+altered calculator or NEB threshold. Unresolved intervals do not establish
+noninferiority. Prediction errors and model improvements are compared against
+measured reference resolution; an equally accurate interpolation baseline
+precludes a claim of improved predictive precision. Corrections after inspecting
+holdout labels are recorded as revised training, not successful original forecasts.
+
+Constrained-mode landscapes and NEB-validated switching predictions are already
+present in [Zhou et al. (2022)](https://doi.org/10.1126/sciadv.add5953), including
+the described random-start subspace search in its supplement.
+[Qi et al. (2025)](https://doi.org/10.1103/PhysRevB.111.134106) also discusses
+oxygen-crossing pathways beyond its two main categories. We therefore restrict
+claims to the declared candidate set, mechanical boundary and observed prediction
+advantage. These sources do not establish the novelty or accuracy of our proposed
+joint-cell reduction; those remain questions for the independent material tests.
+
+[Behara and Van der Ven (2022)](https://doi.org/10.1103/PhysRevMaterials.6.054403)
+also reports strain-coordinate paths, a two-shuffle landscape, and a switching
+intermediate changed by fixing the O cell. Our two registered pattern-sign
+candidates are not an enumeration of all its translational variants. Complete
+cell fixing and the present partial substrate clamp define different ensembles.

@@ -31,6 +31,11 @@ nonpolar switching variants and VCNEB also have substantial prior literature.
 Novelty must be established against the specific 2019–2026 works named in the
 execution plan, including Zhou–Zhang–Rappe 2022 and Qi–Singh–Rabe 2025.
 
+Behara–Van der Ven (2022) additionally maps polymorph/variant paths in strain
+coordinates, overlays a path on a two-shuffle energy landscape, and shows a
+Pbcn-to-T intermediate change when the entire O cell is fixed. Neither path
+projection nor a cell-constraint-induced mechanism change is our novelty claim.
+
 ## Proposed main-text sequence
 
 1. A physical dilemma: switchability versus phase escape, not a backend survey.
@@ -47,6 +52,27 @@ they cannot substitute for the missing hafnia predictions.
 
 No abstract containing unmeasured scientific conclusions will be drafted yet.
 Acceptance gates are evidence-based, not a fixed journal-acceptance promise.
+
+## Prospective controls and prior-art boundary
+
+The [prospective prediction protocol](../../docs/HFO2_PREDICTION_PROTOCOL.md)
+is recorded before any G2 material labels. The +0.5% condition is an unseen
+in-range test between 0/+1%, not extrapolation. A direct barrier-interpolation
+baseline and both endpoint-response null models accompany frozen, atomic-only,
+joint-cell and branch-aware reductions. Prediction files are frozen before
+reading complete holdout path labels. Model abstention is reported as coverage,
+not a successful numerical prediction. Two tested edges cannot certify the
+whole candidate network minimum at the holdout condition.
+
+Zhou (2022) already tests random starts in its constrained-mode subspace and
+verifies mode-landscape switching predictions with NEB. Qi (2025)'s accepted
+manuscript explicitly discusses an additional oxygen-crossing switching
+category outside our current registered variants. These observations rule out
+claims of first constrained-mode prediction/DFT validation or a globally
+exhaustive four-edge network. The novelty test is quantitative advantage over
+declared baselines for the matched-boundary switching/escape question, with
+failure and coverage limits retained. See the primary-source
+[audit and version limits](../../outputs/HFO2_JCTC_CLOSEST_PRIOR_ART_2026-10-08.md).
 
 Definitions and the physical rationale for same-initial-state selectivity are
 developed in [METHODS_DRAFT.md](METHODS_DRAFT.md). It is a theory/methods working
