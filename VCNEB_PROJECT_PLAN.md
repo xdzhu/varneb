@@ -1,5 +1,16 @@
 # VCNEB 项目标准化任务清单
 
+> **2026-10-08 新研究目标：** 用户已授权以 HfO₂ 竞争通道和模式—应变耦合为
+> 核心，推进 JCTC 级研究、开发、案例与论文。现行执行方案是
+> [`docs/VARNEB_JCTC_HFO2_RESEARCH_PLAN.md`](docs/VARNEB_JCTC_HFO2_RESEARCH_PLAN.md)，
+> 包括可否证假设、固定输入、最多 11 条新主线链与 2 条 holdout 链的分关矩阵，
+> 以及明确排除项。先审计现有 HfO₂ 高/低势垒路径，进行有限的同参数静态复核；
+> 不一次性全交，不扩展 MPB/后端矩阵。普通 NEB 0.10、ABACUS 100 Ry/完整
+> 10-au DZP 不变，仅 hf/hfacnormal01、真实 mpirun 32 MPI，无提前 CI。
+> 下方“无需新材料作业”只适用于旧 CPC 边界，不覆盖本次新授权。
+> CPC 稿件保持原有证据边界；JCTC 设计在 `paper/VARNEB_JCTC`，不得冒写新结论。
+> 经测试的研究/代码里程碑单独提交并正常 push，保留用户工作树改动。
+
 > **现行投稿边界（2026-09-29）：** 本文件保留历史研究记录与长期
 > Definition of Done；下方旧作业号、旧节点建议、旧后端状态及“约 8 页/补充材料”
 > 设想不是当前执行指令。VARNEB 的 CPC 稿件以
