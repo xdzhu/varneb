@@ -55,6 +55,25 @@ Date: 2026-10-08. No physical result is inferred from a unit-test fixture.
 - Budget: eight points, one node ×32 MPI each, max three simultaneously, 30-min
   wall-time cap per element. No endpoint optimization or full landscape rerun.
 - Decision: pending true DFT. All sources must be immutable commit archives.
+- Submitted array `28240257` from source commit `8923165`: first three complete
+  with SCF/input audits at 12:25:48 Beijing; three running and two waiting for
+  the declared array concurrency cap. First-wave element wall time 154 s.
+  Estimated remaining compute completes around 12:30–12:34 if timing holds;
+  this is an estimate, not a claim of TS/path convergence.
+- Local full-worktree regression after the pilot code: 696 passed, one skipped.
+- Final 12:31:38 check: all eight COMPLETED/exit0; scorer freshly rechecks every
+  input hash and SCF/energy/force/stress, `work_probe_summary.json` is complete.
+- Atomic energy derivative versus center force derivative differs by
+  0.000573/0.001418 eV/Å (0.01/0.02 Å steps); atomic energy curvature
+  4.77348/4.73788 eV/Å², force-gradient curvature 4.67123/4.67278.
+- Biaxial scaled-strain derivative differs by -0.00000434/-0.000484 eV/Å;
+  energy curvature 19.13423/19.05207 eV/Å², stress-gradient curvature
+  19.07036/18.95555. Maximum curvature method spread is 0.10225 eV/Å².
+- Decision: retain a numerically usable *directional* pilot; carry finite-step
+  and energy/gradient spreads forward as resolution evidence, not zero error.
+  Both probed curvatures are positive; unprobed mixed/orthogonal directions
+  remain unknown and center gradient is nonzero. Therefore no TS index,
+  Schur-complement material prediction or sub-meV barrier certification is claimed.
 
 ## E003 — Ordered geometry comparison
 

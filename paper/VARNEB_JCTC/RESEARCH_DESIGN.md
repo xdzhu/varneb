@@ -47,3 +47,7 @@ they cannot substitute for the missing hafnia predictions.
 
 No abstract containing unmeasured scientific conclusions will be drafted yet.
 Acceptance gates are evidence-based, not a fixed journal-acceptance promise.
+
+Definitions and the physical rationale for same-initial-state selectivity are
+developed in [METHODS_DRAFT.md](METHODS_DRAFT.md). It is a theory/methods working
+draft, not a completed Results section or an assertion of new theorems.
