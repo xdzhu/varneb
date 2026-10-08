@@ -379,3 +379,33 @@ also reports strain-coordinate paths, a two-shuffle landscape, and a switching
 intermediate changed by fixing the O cell. Our two registered pattern-sign
 candidates are not an enumeration of all its translational variants. Complete
 cell fixing and the present partial substrate clamp define different ensembles.
+
+## 11. Auditing a strong published parent reference
+
+To avoid attributing a poor fixed-reference choice to a general failure of
+fixed-mode models, the prospective comparison includes the Cmma parent of
+[Qi and Rabe (2025)](https://doi.org/10.1103/9759-kp38). Its published input,
+structure and displacement files are pinned by author commit and byte hashes.
+The author's cell and coordinate frames are connected by an explicit proper
+rotation, integer basis change, translation and species-preserving assignment;
+an independent primitive-to-conventional reconstruction checks the rounded SI
+coordinates. Assignment ambiguity, cell mismatch and unreported strain fitting
+are rejected. An inconsistency in the printed structure table is retained,
+not silently corrected. These operations do not alter a production image.
+
+QE matdyn flvec stores normalized Cartesian displacements rather than
+orthonormal mass-weighted dynamical-matrix eigenvectors. With the author masses
+and original row order, we restore the mass metric and retain complex phases,
+printed normalization and Gram defects. Rigid translations are identified by
+subspace overlap; centering character is measured separately from any irrep
+label. No acoustic sum rule or implicit orthogonalization is imposed, and
+nonzero-q modes are not reclassified as Gamma modes. Only the first complete
+Gamma block is imported.
+
+This audit establishes consistency among representations of the published
+reference, not its mapping onto a production path or its predictive accuracy.
+Published LDA modes are candidate geometric directions, not PBE curvatures or
+energies. Preparation of a real orthonormal comparison subspace, ordered-path
+gauge mapping and same-data material benchmarking remain explicit gates.
+The [source and numerical audit](../../benchmarks/hfo2_channels/20261008/cmma_reference/README.md)
+records these limits. No material setting or running calculation is changed.

@@ -588,3 +588,49 @@ See submission_handles_r13.json; no switching results or G2 DFT claimed yet.
   material-figure regression10passed/3.19s. This is a documentation-only
   milestone, not a fresh full-suite/material-prediction pass. User5tracked
   files and unrelated untracked artifacts remain excluded.
+
+## E022: inert published-Cmma mapping and strict QE Gamma import
+
+- Question: can the stronger fixed parent be defined from the author's data
+  without silently correcting the SI, adopting LDA curvatures, or changing a
+  production cell? Pin author commit a438e4ec and five original Git blobs.
+- Implement a bounded first-Gamma flvec reader with explicit ordered masses,
+  complex phases and measured normalization/Gram defects. Historical official
+  QE6.3 source and current docs agree that flvec is displacement, not an
+  orthonormal dynamical-matrix basis. No QR/ASR or imaginary-part truncation.
+- Real-data checks initially rejected the repeated QE block separator and an
+  incorrect proper-frame candidate. Support the actual separator after a
+  complete3N block; explicitly compose the author's y/z exchange with Cmma
+  inversion/translation. No tolerances or electronic parameters were retuned.
+- Author QE->POSCAR site error8.29164e-7A; independent literal TableS2
+  primitive->conventional reconstruction1.45467e-5A. The TableS1 x=.05000
+  discrepancy is retained. Six->twelve only reconstructs an existing reference,
+  not a production-cell expansion or new Gamma calculation.
+- FirstGamma36modes: restoredGram4.00853e-6; three rigid translations overlap
+  .999992296. Four resolved negative reference modes separate into two odd and
+  two even centering characters; do not infer irreps or reclassify other q.
+- Production-path gauge and a real/exact comparison subspace remain unprepared;
+  the strong material baseline, PBEcurvatures, TS or prediction has not passed.
+  Raw author files remain outsideGit, with no explicit redistribution license
+  seen at repository root. Underlying flfrc/DFPT generation is not audited.
+-34focusedtests pass. Clean stagedtree5d25f8d6/archivea4cab9a5:949passed,
+  2skipped/108.99s; samearchive reference report is byteidentical. A separate
+  working-tree diagnostic969passed/1skipped is not the authoritative delivery
+  test because it includes unrelated untracked files. No code changed after
+  clean tests; subsequent additions are receipts/docs only.
+- Actual00:54:11CST:28298794Runningstep14fmax.176483,node26;
+  28319570Runningstep7fmax.497080,node11;28319571PendingDependency.
+  Original productionarchiveSHA df4c12ee unchanged; no job mutation/newDFT.
+- Decision: retain audited parent-source preparation for a fair strong control,
+  not a claim that the adaptive model beats it. Samearchive HF inert
+  compatibility verification follows; G1/G2/G3 material gates remain open.
+- ActualHFsamearchive inert audit succeeds with existing icu/ASE3.23.1b1;
+  archive/twoAPIbytehashes exact, five raw source hashes exact. All133float
+  fields agree within1e-12(max1.13687e-13); only library-version metadata
+  and three capturedspglibdeprecation lists differ, retained in both reports.
+  Nopytestinstalled/runonHF,DFTcallorproductionoverwrite. Successful source
+  compatibility is not material prediction or TS validation.
+- Packaging check rejected anLF/CRLF-only sourcehash drift; restored exactly
+  the tested sourcebytes and added explicit raw-byte attributes. No semantic
+  code/data edit after clean testing. Final delivery rechecks all six code/
+  reporthashes, JSONL parsing and local document links beforeordinarypush.
