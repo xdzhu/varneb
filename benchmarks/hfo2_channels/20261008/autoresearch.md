@@ -411,3 +411,31 @@ See submission_handles_r13.json; no switching results or G2 DFT claimed yet.
   full-suite claim; source and scientific data unchanged. At21:15:55, flips
   remainRunning atstep7/8,residual1.314195/0.759024, bothR14PendingDependency.
   The10-step health segment ETA updates to21:40--22:00, not convergence.
+
+## E015: joint probes use the endpoint/path mechanical subspace
+
+- Question: is the free-cell symmetric-strain chart consistent with theG2
+  tilt-released fixed substrate? It is not: the exact three rank-one allowed
+  directions are generally nonsymmetric. Sampling six strains changes the
+  experiment instead of measuring its open atom--cell coupling.
+- Action: separate ActiveJointCurvatureCoordinates, shared exact boundary
+  basis and raw atom/cell work; fixed-cell0, normal1, tilt3cell freedoms,
+  translation removal and pre-evaluation geometry rejection. No DFT call.
+- First prototype changed the legacy module and correctly failed one historical
+  GaNsource checksum (66pass/1fail). Do not rewrite the old manifest. Preserve
+  byte-identical legacy6c83d2ec and use an independent subclass; default
+  geometry/gradient equality is additionally regressed.
+- Evidence:70focusedtests/3.67s;10unrelaxedregisteredHfO2starters,50probe
+  geometries,8CuEMTworkcases/232evaluations. Max gradient error1.0997911e-9eV/A,
+  below prespecified3e-5. Clean delivery/HF verification follow, not yet claimed.
+- Decision: retain consistentG3preparation; materialjointHessian/TS/barrier
+  prediction remain pending. Current electronic inputs and active jobs unchanged.
+- At21:47:26 both switch allocationsCOMPLETED0:0 atstep10, residual0.980657/
+  0.700279; bothR14continuationsRunning since21:47:06. A health segment ending
+  above0.10 is not scientific convergence. Exact-cache continuation is next.
+- Delivery evidence: clean tree fed6a95f / archive dba8a5fe, 864 passed,
+  2 skipped in 142.06s. Local/HF identical archive modules match all five
+  hashes; ASE3.28.0/3.23.1b1, max work errors1.100e-9/1.840e-9eV/A,
+  HF substrate drift8.0321e-20A. Windows worktree EOL-normalization differences
+  are retained and disclosed, not confused with a changed historical module.
+  Source code unchanged after testing; all checks made zero DFT calls.

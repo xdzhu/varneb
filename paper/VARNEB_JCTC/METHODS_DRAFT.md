@@ -261,6 +261,19 @@ and clamped epsilon=0 are compared as different boundary conditions, never
 as adjacent points of a single strain derivative. These work and envelope
 relations are established tools, not claims of new mathematical theory.
 
+Curvature probes must obey the same permitted deformation subspace as the
+endpoint and band. A tilt-released fixed plane admits three rank-one
+deformation directions v*n^T, generally nonsymmetric. Replacing them with
+the six symmetric free-cell strains would change the substrate and the
+mechanical experiment. `ActiveJointCurvatureCoordinates.for_clamped_plane`
+uses the exact boundary basis, retaining all atoms and removing three
+translations for curvature analysis. For twelve atoms this chart has39
+coordinates and36 after translation removal. Zero cell directions recover
+the atomic fixed-cell chart. The historical symmetric-strain implementation
+and its published-source hash are preserved separately. Geometry and EMT
+work checks validate this implementation, not an HfO2 bottleneck Hessian,
+its index, or independent material-barrier prediction.
+
 ## 8. Continuous reference projections and numerical observation audit
 
 For a supplied, already continuous periodic lift, integer representatives are

@@ -79,6 +79,33 @@ HfO₂ 有界流程见
 预测 `dB/dε` 要相减鞍点与**共同初态**的导数；独立 ε=+0.5% 的检验不能参与拟合。
 夹持 ε=0 与全释放 P=0 是不同系综，不作跨系综有限差分。
 
+## 同一边界的联合曲率探针
+
+```python
+from vcneb import ActiveJointCurvatureCoordinates
+
+chart = ActiveJointCurvatureCoordinates.for_clamped_plane(
+    reference, cell_scale_A=cell_scale, boundary=boundary,
+)
+probe = chart.displaced(delta)  # len(delta) = 3*N + boundary.cell_dofs，单位Å
+# 用真实同参数DFT的F/stress调用chart.enthalpy_gradient，再构造局部Hessian。
+```
+
+这里直接复用端点/VCNEB的精确开放子空间，倾斜开放时为3个形变方向，
+仅法向开放时为1个。倾斜方向一般不对称，不能用六个对称应变方向替代；
+后者在一般基底上会改变面内矢量并采样另一个边界。传入不兼容参考结构或
+评估结构时直接拒绝，不投影修复，不调用计算器。原子序和周期lift不变。
+
+新接口无约束调用默认6个对称方向；原`JointCurvatureCoordinates`及其历史
+源码哈希保持不变。显式`deformation_basis=np.empty((0,3,3))`
+给固定胞纯原子坐标。给定基矢需Frobenius正交归一，输入不被自动归一化；
+基矢在内部复制并只读。额外ASE原子约束被拒绝，不能悄悄改动宣称的原子自由度。
+该接口只生成探针/计算梯度，尚不代表已取得HfO₂联合Hessian或认证任何鞍点。
+
+复现几何/实现检查：`python -m scripts.verify_clamped_joint_coordinates`。
+检查10个已有未弛豫HfO₂几何种子及Cu/EMT斜胞、旋转和已形变点的有限差分功；
+不会运行DFT，也不会提交作业。EMT的非零压力只是分析校验，不修改HfO₂的P=0。
+
 ## 当前验证范围
 
 `tests/test_epitaxial_boundary.py` 包括一般斜胞/旋转基底、全三个面外自由度、

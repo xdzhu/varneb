@@ -87,6 +87,7 @@ from .slab_boundary import symmetric_inplane_vcneb_boundary
 from .epitaxial_boundary import (
     ClampedPlaneBoundary, ClampedPlaneFilter, clamped_plane_vcneb_boundary, cell_work_derivative,
 )
+from .active_curvature import ActiveJointCurvatureCoordinates
 from .reference_cell import ReferenceCellCoordinates
 from .mode_evaluator import CalculatorModeEvaluator
 from .mode_subspace import (
@@ -186,6 +187,7 @@ __all__ = [
     "ClampedPlaneFilter",
     "clamped_plane_vcneb_boundary",
     "cell_work_derivative",
+    "ActiveJointCurvatureCoordinates",
     "ConditionalSurfaceContinuityAudit",
     "audit_conditional_surface_continuity",
     "OrthogonalCurvatureAudit",
