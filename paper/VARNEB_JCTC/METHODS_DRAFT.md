@@ -71,6 +71,14 @@ independently testable prediction, rather than being claimed as a new theorem.
 It is not applied across a nonsmooth branch crossing or to a nonstationary
 image without qualifications.
 
+An increased decay-minus-switching barrier difference is only improved
+relative selectivity. It can occur even when both absolute barriers decrease.
+The stronger proposed decoupling criterion separately requires a significant
+switching-barrier reduction without a resolved reduction of the easiest
+examined nonpolar-decay barrier. An absolute decay-barrier increase is a
+stronger outcome. Report both M and T leakage channels and measured numerical
+uncertainty; do not turn relative selectivity into a device-retention claim.
+
 ## 3. Modes, local coordinates and conditional branches
 
 Parent-symmetry distortions classify variants and signs; local phonon
