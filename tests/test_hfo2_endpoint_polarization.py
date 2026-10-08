@@ -1,4 +1,6 @@
 import json
+from pathlib import Path
+import shutil
 from ase import Atoms
 import numpy as np
 import pytest
@@ -141,3 +143,19 @@ def test_actual_audit_contract_uses_different_scf_and_nscf_eigenvalue_files(tmp_
     (out / "SPIN1_CHG.cube").write_text("changed charge")
     with pytest.raises(ValueError, match="charge changed"):
         flow.audit_nscf(tmp_path, 0, 2, work, audit)
+
+
+def test_archived_three_endpoint_inversion_gate_recomputes(tmp_path):
+    # I/O/evidence regression; the genuine DFT was performed on hf, not here.
+    root = Path(__file__).resolve().parents[1] / "benchmarks/hfo2_channels/20261008"
+    archived = json.loads((root / "polarization_summary.json").read_text())
+    shutil.copyfile(root / "polarization_manifest_r10.json", tmp_path / "manifest.json")
+    for label in flow.LABELS:
+        folder = tmp_path / "calculations" / label
+        folder.mkdir(parents=True)
+        (folder / "scf_audit.json").write_text(json.dumps(archived["SCF_output_only_audits"][label]))
+        for nz, record in zip(flow.GRIDS, archived["native_Berry_audits"][label]):
+            (folder / f"berry_22{nz}.json").write_text(json.dumps(record))
+    assert flow.summarize(tmp_path) == archived
+    assert archived["status"] == "passed" and not archived["switching_path_branch_selected"]
+    assert max(archived["inversion_modular_residual_C_m2"].values()) == 0

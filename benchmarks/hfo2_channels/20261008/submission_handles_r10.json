@@ -1,0 +1,46 @@
+{
+  "root": "/public/home/iai806/abacus/agent-runs/20261008-varneb-hfo2-channels-r10",
+  "source_commit": "f1a7a4134647d19b1718532b2debf4559f5cf30c",
+  "source_archive_sha256": "155970a2a3441570e02b6047dcc4bda19bbbcab4a6467df680ec839af1b66c07",
+  "clean_archive_local_tests": {"passed": 714, "skipped": 2, "seconds": 56.57},
+  "actual_hf_cache_preflight": "passed before submission: R8 SCF and R9 NSCF222 strict inputs, charge, runtime version, gap, native SI modulus",
+  "jobs": [
+    {
+      "job_id": "28267393_0",
+      "endpoint": "PO_plus",
+      "actual_state_at_2026_10_08_15_23_CST": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed": "00:01:10",
+      "fresh_SCFs": 0,
+      "fresh_NSCFs": 2,
+      "reused_SCF": "R8 POplus/scf",
+      "reused_NSCF222": "R9 POplus/nscf_222"
+    },
+    {
+      "job_id": "28267783",
+      "array": "1-2%2",
+      "endpoints": ["PO_minus_T_preserving", "PO_minus_T_reversing"],
+      "status": "all array elements COMPLETED/0:0; raw outputs independently re-audited",
+      "elements": [
+        {"job_id": "28267783_1", "state": "COMPLETED", "exit_code": "0:0", "elapsed": "00:03:25"},
+        {"job_id": "28267783_2", "state": "COMPLETED", "exit_code": "0:0", "elapsed": "00:03:52"}
+      ],
+      "fresh_SCFs": 2,
+      "fresh_NSCFs": 6
+    }
+  ],
+  "resources_per_element": {"partition": "hfacnormal01", "nodes": 1, "MPI_ranks": 32, "wall_cap": "00:45:00"},
+  "prior_audit_failures_preserved": [
+    {"job_id": "28263474_0", "root": "R8", "state": "FAILED", "reason": "our missing NSCF band output protocol"},
+    {"job_id": "28265429_0", "root": "R9", "state": "FAILED", "reason": "our exact2 modulo guard ignored specified older SI constants"}
+  ],
+  "SCF_physical_parameters_changed": false,
+  "NSCF_energy_used_for_barriers": false,
+  "full_electronic_inversion_gate": "passed for three endpoints; this is not continuous path branch validation",
+  "retained_SCF_audits": 3,
+  "retained_NSCF_audits": 9,
+  "entire_study_actual_SCF_executions": 3,
+  "entire_study_actual_NSCF_executions": 10,
+  "extra_NSCF_reason": "first NSCF222 had no BANDS_1.dat before our source-version output protocol repair",
+  "switching_seed_preflight": "R10 geometry staging exposed a wrapped final-endpoint jump; no switching DFT submitted. Corrected continuous-lift seeds require a new immutable source archive."
+}

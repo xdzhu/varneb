@@ -160,3 +160,39 @@ assessment. Acoustic modes are identified by the rigid-translation subspace
 overlap, not assumed to be the first three sorted frequencies. This is an
 analytic fixed-cell Gamma matrix without LO-TO/NAC corrections, not a
 finite-q dispersion or a joint atom-cell saddle certification.
+
+## 6. Electronic validation of inversion-related endpoints
+
+Geometric parent operations alone do not establish an electronic switching
+branch. For the common PO starting well and two ordered inversion products,
+we evaluate the native LCAO Berry polarization along the third lattice vector.
+The labels PO+ and PO- refer to the registered starting/product wells, not a
+choice of the smallest absolute polarization value. The original SCF geometry,
+100-Ry cutoff, full10-au DZP orbitals, pseudopotentials and2x2x2 mesh are retained.
+Only charge/band-gap output is added, and the resulting energy, forces and
+stress must reproduce the original endpoint before further analysis.
+
+On that fixed charge, NSCF meshes2x2x2,2x2x4 and2x2x8 test the longitudinal
+quadrature. Their total energies are excluded from activation barriers.
+The actual ABACUS3.10.0/f7cb1d3 native output and48 occupied bands are audited:
+the96-electron count follows from the actual Hf/O UPF valences12/6. For this
+version LCAO NSCF eigenvalues require explicit band output; a completed Berry
+log does not itself establish a sampled insulating gap.
+
+For row cell vectors a_i the modern polarization quantum lattice is e*a_i/V.
+The spin-paired native implementation with even ionic valences reports an
+approximately doubled R3 modulus and uses older SI conversion constants.
+Both the native value/modulus and the explicit modern-SI conversion are stored;
+the polarization is never divided by two or assigned a physical path branch
+by minimizing its magnitude. Endpoint inversion is checked modulo the native
+period after unit conversion, while self-inverse classes are additionally
+checked using the physical eR/V quantum. This endpoint test does not determine
+the absolute spontaneous polarization, the full Cartesian polarization or
+the continuously unwrapped change along either optimized switching path.
+The transverse mesh is not converged by the longitudinal test.
+
+The source-version output protocol follows the
+[official native LCAO example](https://github.com/deepmodeling/abacus-develop/tree/f7cb1d3/examples/berryphase/lcao_PbTiO3)
+and [Berry implementation](https://github.com/deepmodeling/abacus-develop/blob/f7cb1d3/source/module_io/berryphase.cpp).
+These established Berry/unit conventions are validation requirements, not
+claimed methodological innovations of VARNEB.

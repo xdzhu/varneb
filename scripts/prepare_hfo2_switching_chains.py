@@ -29,11 +29,19 @@ def ordered_seed(initial, final):
     images = interpolate_vcneb(initial, final, 9, align_cells=False, align_translation=False,
                                mic=True, mapping=list(range(12)), cell_interpolation="linear",
                                minimum_distance=1.6, maximum_deformation=.25)
-    # Preserve exact endpoint representation as well as its periodic geometry.
-    images[0], images[-1] = initial.copy(), final.copy()
+    # Keep the interpolator's continuous periodic lift at the final endpoint.
+    # Restoring the wrapped input here creates a spurious lattice-vector jump
+    # in VCNEB's unwrapped optimization coordinates, although the two periodic
+    # geometries have the same energy. Atom identities are never permuted.
+    images[0] = initial.copy()
+    if not same_ordered_geometry(images[-1], final):
+        raise ValueError("interpolation changed the ordered periodic endpoint")
     for image in images:
         image.calc = None
-    validate_path_geometry(images, minimum_distance=1.6, maximum_deformation=.25)
+    gate = validate_path_geometry(images, minimum_distance=1.6, maximum_deformation=.25)
+    lengths = np.asarray(gate["segment_lengths_A"])
+    if lengths.min() <= 0 or not np.allclose(lengths, lengths[0], atol=1e-10, rtol=1e-10):
+        raise ValueError("ordered linear seed has a discontinuous periodic lift")
     return images
 
 
@@ -93,6 +101,10 @@ def prepare(variants, polar_root, output):
                   "polarization_manifest_sha256": sha256(manifest_path),
                   "initial_geometry_gate": validate_path_geometry(images, minimum_distance=1.6, maximum_deformation=.25),
                   "atom_mapping": "identity after explicit parent operation; no per-image/endpoint auto-remapping",
+                  "periodic_lift": "continuous MIC interpolation; final endpoint differs only by ordered integer lattice translations",
+                  "final_integer_lattice_shifts": np.rint(
+                      images[-1].get_scaled_positions(wrap=False)
+                      - atoms[index].get_scaled_positions(wrap=False)).astype(int).tolist(),
                   "cell_boundary": "initial cells equal; subsequent joint-cell optimization remains full at P=0",
                   "limitations": "distinct seeds/orderings only, not topological inequivalence or optimized barriers; continuous polarization branch still pending"}
         (folder / "manifest.json").write_text(json.dumps(report, indent=2) + "\n")

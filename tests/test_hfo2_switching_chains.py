@@ -6,7 +6,7 @@ import numpy as np
 import pytest
 
 from scripts.prepare_hfo2_switching_chains import ordered_seed, prepare
-from vcneb import endpoint_structure_record
+from vcneb import endpoint_structure_record, validate_path_geometry
 
 
 def test_real_ordered_variants_are_distinct_safe_seeds_and_exact_endpoints():
@@ -17,6 +17,16 @@ def test_real_ordered_variants_are_distinct_safe_seeds_and_exact_endpoints():
         final = read(root / f"{name}.vasp")
         chain = ordered_seed(initial, final)
         assert len(chain) == 9
+        # VCNEB optimizes unwrapped coordinates. Replacing the MIC-lifted
+        # final image by its wrapped input produces a false final long segment.
+        segments = validate_path_geometry(chain)["segment_lengths_A"]
+        assert np.allclose(segments, segments[0], atol=1e-10, rtol=1e-10)
+        fractional_steps = np.diff(np.array([
+            image.get_scaled_positions(wrap=False) for image in chain
+        ]), axis=0)
+        assert np.allclose(fractional_steps, fractional_steps[0], atol=1e-12, rtol=0)
+        final_shift = chain[-1].get_scaled_positions(wrap=False) - final.get_scaled_positions(wrap=False)
+        assert np.allclose(final_shift, np.rint(final_shift), atol=1e-12, rtol=0)
         for expected, actual in ((initial, chain[0]), (final, chain[-1])):
             assert endpoint_structure_record(expected)["sha256"] == endpoint_structure_record(actual)["sha256"]
         for image in chain:

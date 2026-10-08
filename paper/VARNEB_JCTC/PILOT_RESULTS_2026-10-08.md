@@ -109,3 +109,35 @@ Our Python-force route uses Angstrom coordinates/eV-Angstrom forces directly,
 not the native ABACUS-interface Bohr conversion convention. The public M/path
 source is [Ma and Liu, PRL130096801](https://doi.org/10.1103/PhysRevLett.130.096801),
 with the exact repository commit and geometry checksums in the registration.
+
+## Electronic inversion check of the two switching endpoints
+
+All three output-enabled SCFs reproduce their original endpoint energies,
+forces and stress exactly at the recorded precision, without changing the
+100-Ry/full10-au-DZP/2x2x2 physical SCF contract. The native Berry batches are
+complete (28267393_0 and28267783_1/2), and each of the nine retained NSCF
+records has been freshly re-audited against its raw inputs, unchanged charge,
+runtime version, completed32-rank log and sampled eigenvalue table.
+
+At the2x2x8 NSCF quadrature, the modern-SI R3 values are+0.715814325 C/m^2 for
+the designated PO+ well and-0.715814325 C/m^2 for each inversion product.
+The reported spin-paired period is1.204918090 C/m^2; the physical eR3/V quantum
+is0.602459056 C/m^2. The inversion residual is zero at the native seven-decimal
+print precision. All three224-to228 modular differences are0.000526896 C/m^2,
+below the predeclared0.01-C/m^2 threshold. The PO+ sampled gap at228 is
+4.5690863 eV; all sampled-gap gates pass.
+
+These are branch-valued endpoint components, **not** absolute spontaneous
+polarizations or a continuous switching-polarization change. Both inversion
+products remain possible ordered switching endpoints; electronic reversal
+does not establish two topologically inequivalent MEPs. The nine-total-image
+starting bands retain the parent-defined atom identities and contain seven
+interior images. Their barriers and mechanical-boundary response remain to
+be measured before any claim of switching/decay selectivity.
+
+The first two wrapper attempts failed in post-calculation audits (missing
+NSCF eigenvalue output, then an overly literal doubled-quantum unit check),
+not in ABACUS SCF/Berry evaluation. The source-version protocol was corrected
+and completed outputs reused. The entire endpoint study required three SCFs
+and ten NSCF executions, including one duplicate222 NSCF; no physical input
+was retuned. These engineering corrections are not a scientific novelty claim.

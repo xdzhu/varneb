@@ -190,7 +190,20 @@ Date: 2026-10-08. No physical result is inferred from a unit-test fixture.
 - Before DFT: sampled gap>.1eV;224-to228 modulo difference<=.01C/m²;
   POminus/Pplus inversion residual<=.01C/m². Reject self-inverse ambiguity.
 - Record native2eR/V modulus and physical eR/V separately. No spontaneous-P or path-branch claim.
-- Reuse hf installed binary and ASE; first actual protocol outcome pending.
+- Reuse hf installed binary and ASE. Three SCFs and all nine retained NSCFs
+  now pass fresh raw-output audits (28267393_0,28267783_1/2).
+  At228 the modern-SI branch-valued R3 components are+/-0.715814325C/m²,
+  inversion residuals0 at print precision;224-to228 differences0.000526896.
+  No absolute spontaneous polarization or continuous path branch is claimed.
+- Two wrapper audits initially failed after successful DFT: missing NSCF band
+  output, then a unit-period check that ignored source-specific SI constants.
+  Corrected against the actual f7cb1d3 source, reusing completed outputs.
+  Actual study cost3 SCFs+10 NSCFs, including one repeated222.
+- Switching seed inspection caught a restored wrapped final endpoint causing
+  a false long last segment in unwrapped VCNEB coordinates. Preserve the
+  continuous ordered MIC lift and regress every initial segment length.
+  No switching DFT was submitted with the defective seed. This repair changes
+  only integer endpoint lattice translations, not physical geometry or inputs.
 
 ## Existing evidence and non-results
 
