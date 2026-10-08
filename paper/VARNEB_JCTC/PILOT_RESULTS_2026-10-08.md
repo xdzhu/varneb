@@ -69,7 +69,7 @@ must not support a physical low-barrier or acceleration claim. These samples
 do not determine the globally optimized MEP barrier: intermediate geometry
 relaxation is a distinct calculation. The raw historical data are preserved.
 
-## Fixed-cell atomic reduction: a prediction awaiting independent tests
+## Fixed-cell atomic reduction: independently tested local prediction
 
 Projecting the two measured Gamma matrices onto the rotated T-pattern triplet
 and releasing30 orthogonal, nontranslational atomic directions predicts
@@ -81,12 +81,26 @@ are0.10084/0.08814 eV/Angstrom^2, above the observed two-step operator spread
 This spread is an operational gate, not a rigorous total numerical-error bound.
 
 This is an application of the established Schur complement, not a new theorem,
-independent prediction success, full cell release, barrier model or TS result.
-Eight independently evaluated geometries will compare frozen and linearly
-responded Qx at +/-0.05 and +/-0.10 Angstrom. Their prediction and evaluation
-criteria will be committed before DFT; no holdout will be used to refit the
-initial response. A linearly responded structure is not a fully minimized
-conditional surface.
+full cell release, barrier model or TS result. Eight independently evaluated
+geometries in array28257780 now compare frozen and linearly responded Qx at
+both signs of0.05 and0.10 Angstrom. The0.01-Angstrom training-matrix prediction
+and10-percent assessment criterion were committed before DFT; no holdout was
+used to refit the response. All8 raw SCFs pass the unchanged physical contract
+and all4 paired tests pass. Curvatures are in eV/Angstrom^2:
+
+| Direction | Q amplitude, Angstrom | Fixed prediction | DFT energy curvature | DFT force curvature |
+|---|---:|---:|---:|---:|
+| Frozen x | 0.05 | 4.813147 | 4.854014 | 4.820535 |
+| Frozen x | 0.10 | 4.813147 | 4.836618 | 4.846827 |
+| Responded x | 0.05 | 1.979301 | 2.022935 | 1.983617 |
+| Responded x | 0.10 | 1.979301 | 2.000460 | 2.004147 |
+
+The largest prediction error is2.2045 percent. This supports the *local atomic
+harmonic response* prediction in the tested neighborhood, not a global model
+of hafnia. Orthogonal force residuals are retained in the point records: a
+linearly responded structure is not a fully minimized conditional surface.
+Channel ordering, joint mode-strain reduction and a boundary-dependent
+barrier prediction remain untested and are required for the proposed JCTC thesis.
 
 Primary computational workflow references: [Phonopy settings and displacement
 definitions](https://phonopy.github.io/phonopy/setting-tags.html) and

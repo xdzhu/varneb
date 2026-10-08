@@ -22,7 +22,7 @@ field or a domain-wall nucleation barrier.
 |---|---|---|---|
 | Boundary conditions change switching/escape selectivity | Same PO+, matched Hamiltonian, several channels and error-resolved barrier differences | All barriers move together, or differences below uncertainty | Unmeasured |
 | The change is not explained by well shifts alone | Endpoint and transition-region responses, common reference, force–energy consistency | Endpoint-only model predicts equally well | Unmeasured |
-| Stable orthogonal relaxation enables useful reduced predictions | Curvature resolution and stable eliminated block; independent DFT holdouts | Extra unstable directions or branch crossings invalidate one chart | Analytic foundation implemented; material validation pending |
+| Stable orthogonal relaxation enables useful reduced predictions | Curvature resolution and stable eliminated block; independent DFT holdouts | Extra unstable directions or branch crossings invalidate one chart | Analytic foundation and8-point fixed-cell T atomic pilot pass; joint-cell/channel prediction pending |
 | Adaptive mode/branch information improves efficiency | Equal seeds/contracts, DFT-call and core-hour accounting, mechanism agreement | Faster iteration changes pathway or fails held-out prediction | Unmeasured |
 
 The Schur complement and envelope theorem are established mathematics. Neither

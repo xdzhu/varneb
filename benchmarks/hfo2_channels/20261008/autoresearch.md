@@ -173,6 +173,13 @@ Date: 2026-10-08. No physical result is inferred from a unit-test fixture.
   Failure is recorded, not cured by changing cutoff or refitting these holdouts.
 - This local harmonic response line is not fully minimized conditional DFT,
   joint-cell reduction, a barrier model or a new Schur-complement theorem.
+- All8 new SCFs COMPLETED/exit0 in28257780; fresh complete audits pass.
+  Frozen energy curvatures4.854014/4.836618 and force curvatures4.820535/4.846827;
+  responded energy2.022935/2.000460 and force1.983617/2.004147eV/Angstrom².
+  All4 prespecified pairs pass; max prediction error2.2045 percent, no refit.
+- Decision: retain independently verified local atomic harmonic prediction,
+  with orthogonal residuals and finite-step spread. Do not extrapolate it into
+  full conditional relaxation, a joint-cell channel or an activation barrier.
 
 ## Existing evidence and non-results
 

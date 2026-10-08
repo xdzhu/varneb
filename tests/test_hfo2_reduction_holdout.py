@@ -51,3 +51,18 @@ def test_reference_line_endings_are_explicit_not_a_physics_hash_loophole(tmp_pat
     crlf.write_bytes(b"same reference\r\n0.124\r\n")
     with pytest.raises(ValueError, match="beyond LF/CRLF"):
         validate_model_reference(model, crlf)
+
+
+def test_archived_independent_scores_recompute_without_refitting():
+    # Evidence/I-O regression; does not create or substitute for independent DFT.
+    root = Path(__file__).resolve().parents[1] / "benchmarks/hfo2_channels/20261008"
+    manifest = json.loads((root / "reduction_holdout_manifest.json").read_text())
+    summary = json.loads((root / "reduction_holdout_summary.json").read_text())
+    results = {p["index"]: p for p in summary["point_audits"]}
+    assert len(results) == 8 and summary["all_four_pairs_pass"]
+    pairs = score_pairs(manifest, results)
+    assert pairs == summary["pairs"]
+    for p in results.values():
+        assert np.array(p["results"]["forces"]).shape == (12, 3)
+        assert np.array(p["results"]["stress"]).shape == (6,)
+        assert p["orthogonal_nontranslational_force_norm_eV_A"] >= 0
