@@ -11,7 +11,7 @@ hold two non-collinear substrate vectors fixed.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Sequence
+from typing import Callable, Sequence
 
 import numpy as np
 from ase import Atoms
@@ -25,6 +25,17 @@ def _cell(value: np.ndarray, name: str) -> np.ndarray:
     if np.linalg.det(result) <= 1e-12 or np.linalg.cond(result) > 1e12:
         raise ValueError(f"{name} must have positive volume and be nonsingular")
     return result
+
+
+def _stress(value: np.ndarray, pressure: float) -> np.ndarray:
+    sigma = np.array(value, dtype=float, copy=True)
+    if sigma.shape != (3, 3) or not np.all(np.isfinite(sigma)):
+        raise ValueError("stress must be a finite 3x3 matrix")
+    if not np.allclose(sigma, sigma.T, atol=1e-12, rtol=1e-10):
+        raise ValueError("stress must be symmetric in the ASE convention")
+    if not np.isfinite(pressure):
+        raise ValueError("pressure must be finite")
+    return sigma + pressure * np.eye(3)
 
 
 @dataclass(frozen=True)
@@ -49,6 +60,20 @@ class ClampedPlaneBoundary:
     @property
     def cell_dofs(self) -> int:
         return 3 if self.allow_tilt else 1
+
+    def open_traction(self, stress: np.ndarray, *, pressure: float = 0.0) -> np.ndarray:
+        """Residual stress in the released directions, in eV/A^3.
+
+        Moving cell row 2 by w at fixed fractional positions does work
+        ``area * w dot ((sigma + P I) @ n)``. Releasing all three row-2
+        directions thus requires zero traction, not zero in-plane stress.
+        Normal-only boundaries retain just its normal component. Use the
+        vector norm for a rotation-invariant open-stress convergence test.
+        """
+        traction = _stress(stress, pressure) @ self.normal
+        if not self.allow_tilt:
+            traction = np.dot(traction, self.normal) * self.normal
+        return traction
 
     def validate_images(self, images: Sequence[Atoms]) -> None:
         """Check substrate and tilt constraints without modifying any image."""
@@ -126,18 +151,12 @@ def cell_work_derivative(
     or a frozen slice does not establish that condition.
     """
     cell = _cell(current_cell, "current_cell")
-    sigma = np.asarray(stress, dtype=float)
+    sigma = _stress(stress, pressure)
     derivative = np.asarray(cell_derivative, dtype=float)
-    if sigma.shape != (3, 3) or not np.all(np.isfinite(sigma)):
-        raise ValueError("stress must be a finite 3x3 matrix")
-    if not np.allclose(sigma, sigma.T, atol=1e-12, rtol=1e-10):
-        raise ValueError("stress must be symmetric in the ASE convention")
     if derivative.shape != (3, 3) or not np.all(np.isfinite(derivative)):
         raise ValueError("cell_derivative must be a finite 3x3 matrix")
-    if not np.isfinite(pressure):
-        raise ValueError("pressure must be finite")
     velocity_gradient = np.linalg.solve(cell, derivative).T
-    return float(np.linalg.det(cell) * np.sum((sigma + pressure * np.eye(3)) * velocity_gradient))
+    return float(np.linalg.det(cell) * np.sum(sigma * velocity_gradient))
 
 
 class ClampedPlaneFilter(UnitCellFilter):
@@ -154,6 +173,7 @@ class ClampedPlaneFilter(UnitCellFilter):
     def __init__(
         self, atoms: Atoms, boundary: ClampedPlaneBoundary, *,
         cell_scale_A: float, pressure_eV_per_A3: float = 0.0,
+        candidate_validator: Callable[[Sequence[Atoms]], None] | None = None,
     ) -> None:
         if not isinstance(boundary, ClampedPlaneBoundary):
             raise TypeError("boundary must be a ClampedPlaneBoundary")
@@ -163,8 +183,13 @@ class ClampedPlaneFilter(UnitCellFilter):
             raise ValueError("cell_scale_A must be finite and positive")
         if not np.isfinite(pressure_eV_per_A3):
             raise ValueError("pressure_eV_per_A3 must be finite")
+        if candidate_validator is not None and not callable(candidate_validator):
+            raise TypeError("candidate_validator must be callable")
         boundary.validate_images([atoms])
+        if candidate_validator is not None:
+            candidate_validator([atoms])
         self.boundary = boundary
+        self.candidate_validator = candidate_validator
         count = 3 * len(atoms)
         self._cell_basis = boundary.mode_basis[count:, count:]
         super().__init__(atoms, mask=np.ones((3, 3)), cell_factor=cell_scale_A,
@@ -180,7 +205,10 @@ class ClampedPlaneFilter(UnitCellFilter):
         candidate[-3:] = self.cell_factor * deformation
         preview = self.atoms.copy()
         preview.set_cell(self.orig_cell @ deformation.T, scale_atoms=False)
+        preview.set_positions(candidate[:len(self.atoms)] @ deformation.T)
         self.boundary.validate_images([preview])  # reject before mutating atoms
+        if self.candidate_validator is not None:
+            self.candidate_validator([preview])
         super().set_positions(candidate, **kwargs)
 
     def get_forces(self, **kwargs) -> np.ndarray:

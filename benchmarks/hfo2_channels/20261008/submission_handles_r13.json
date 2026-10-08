@@ -1,0 +1,55 @@
+{
+  "format_version": 1,
+  "purpose": "two_preregistered_ordered_switching_candidates_G1",
+  "root": "/public/home/iai806/abacus/agent-runs/20261008-varneb-hfo2-switching-r13",
+  "production_source_commit": "cc536a2b34fa78d55c11331e4e1117218e6d7baf",
+  "production_source_root": "/public/home/iai806/abacus/agent-runs/20261008-varneb-hfo2-channels-r12/source",
+  "production_archive_sha256": "df4c12eef03d00d02c3ae357e3f47143b6500b96b7bd12f479f2e2083abd5220",
+  "seed_source_root": "/public/home/iai806/abacus/agent-runs/20261008-varneb-hfo2-channels-r11/switching_seeds",
+  "seed_source_commit": "b0aa195b1665b1d549059f9a9526bab866867680",
+  "preflight_record": "switching_preflight_r11.json",
+  "preflight": "actual hf geometry/periodic-lift and four exact ordered cached endpoint checks passed with zero new SCFs",
+  "electronic_endpoint_gate": "polarization_summary.json: both ordered products pass electronic inversion; no continuous path branch or topological inequivalence claim",
+  "resources_per_chain": {
+    "partition": "hfacnormal01",
+    "nodes": 1,
+    "ntasks": 1,
+    "cpus_per_task": 32,
+    "MPI_launcher": "mpirun -np 32",
+    "threads_per_rank": 1,
+    "walltime_cap": "04:00:00",
+    "ordinary_optimizer_step_cap": 10,
+    "total_images": 9,
+    "active_images": 7,
+    "fixed_cached_endpoints": 2
+  },
+  "fmax_eV_A": 0.10,
+  "optimizer": "FIRE",
+  "maxstep_A": 0.02,
+  "spring_eV_A2": 0.2,
+  "pressure_GPa": 0.0,
+  "climbing_image_enabled": false,
+  "physical_INPUT_KPT_PP_orbitals_changed": false,
+  "periodic_lift_guard_enabled": true,
+  "dependency": "afterany:28274895:28275259",
+  "dependency_reason": "allocation completion only, to preserve the two-active-chain cap; the independent switching seeds do not require convergence of either predecessor",
+  "state_at_2026_10_08_18_19_01_CST": "PENDING (Dependency), neither new job has started DFT",
+  "jobs": [
+    {
+      "job_id": "28288045",
+      "job_name": "hfo2-switch-preserve",
+      "variant": "PO_minus_T_preserving",
+      "submit_time_CST": "2026-10-08T18:18:12",
+      "workdir": "/public/home/iai806/abacus/agent-runs/20261008-varneb-hfo2-switching-r13/PO_minus_T_preserving_optimization"
+    },
+    {
+      "job_id": "28288063",
+      "job_name": "hfo2-switch-reverse",
+      "variant": "PO_minus_T_reversing",
+      "submit_time_CST": "2026-10-08T18:18:16",
+      "workdir": "/public/home/iai806/abacus/agent-runs/20261008-varneb-hfo2-switching-r13/PO_minus_T_reversing_optimization"
+    }
+  ],
+  "first_segment_estimate": "eligible after both R12 allocations finish, currently approximately 19:20 CST; each 10-step segment approximately 2-3 hours at 90-140 seconds per active-image SCF, excluding queue delay; not a convergence guarantee",
+  "scope": "the two already authorized G1 switching edges; no G2 strain production, new material, new backend, CI or parameter sweep"
+}

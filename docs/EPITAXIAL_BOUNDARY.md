@@ -48,6 +48,24 @@ ASE 约束。负体积等非法步在修改原结构前拒绝。它不自动缩�
 2 kbar 作夹持端点门禁。原始应力、开放子空间梯度、原子受力分别留档。
 NEB 残差、真实切向梯度和原始应力也不能混为同一个收敛量。
 
+`boundary.open_traction(stress, pressure=0)` 返回 eV/Å³ 的开放应力向量。
+释放第三矢量的全部三个分量时，向量为 `(sigma+P I) @ n`；仅开放法向时，
+取该向量沿 n 的投影。用向量范数给出与坐标旋转无关的门槛，而非任意选择
+一个 Cartesian 元素。第三矢量移动 w 的应力功为
+`substrate_area * dot(w, open_traction)`（w 在开放方向内）。
+该关系已在一般斜胞中与完整应力功公式交叉验证。
+
+`ClampedPlaneFilter(..., candidate_validator=guard)` 可组合逐步几何检查；
+检查的是实际变形后的晶胞和原子位置，在修改原 Atoms 前拒绝危险步。
+默认不自动缩步，不改变任何计算参数，也不以对称化“修复”路径。
+
+HfO₂ 有界流程见
+[共同基底端点种子](../benchmarks/hfo2_channels/20261008/clamped_endpoint_seeds/README.md)：
+5类结构×2种基底，共10个几何种子，均无计算结果。
+`scripts.relax_clamped_ase_endpoint` 用 BFGS 分别检查原子受力和开放应力；
+兼容已验证的 ASE 旧/新收敛入口，检查点复用当前几何的缓存而不重复调用计算器。
+达到数值门槛后仍须独立审计相身份、变体以及真实SCF输入/输出，不能仅凭文件名标相。
+
 ## 应力功和势垒应变响应
 
 `cell_work_derivative(stress, H, dH_dlambda, pressure=0)` 给出固定分数坐标的

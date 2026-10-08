@@ -231,3 +231,41 @@ def test_filter_rejects_invalid_step_without_mutating_atoms():
         target.set_positions(proposal)
     np.testing.assert_array_equal(atoms.positions, positions)
     np.testing.assert_array_equal(atoms.cell.array, cell)
+
+
+@pytest.mark.parametrize("allow_tilt", [False, True])
+def test_open_traction_gives_exact_row2_work_in_oblique_cell(allow_tilt):
+    cell = _cell()
+    boundary = clamped_plane_vcneb_boundary(1, cell, allow_tilt=allow_tilt)
+    stress = np.array([[.2, .03, -.04], [.03, -.1, .05], [-.04, .05, .08]])
+    pressure, area = .04, np.linalg.norm(np.cross(cell[0], cell[1]))
+    directions = np.eye(3) if allow_tilt else boundary.normal.reshape(1, 3)
+    for direction in directions:
+        derivative = np.zeros((3, 3))
+        derivative[2] = direction
+        expected = area * np.dot(direction, boundary.open_traction(stress, pressure=pressure))
+        assert cell_work_derivative(stress, cell, derivative, pressure=pressure) == pytest.approx(expected)
+    rotation, _ = np.linalg.qr(np.array([[1., .2, .3], [.4, 1.1, .5], [.6, .7, 1.2]]))
+    rotated = clamped_plane_vcneb_boundary(1, cell @ rotation.T, allow_tilt=allow_tilt)
+    np.testing.assert_allclose(rotated.open_traction(rotation @ stress @ rotation.T, pressure=pressure),
+                               rotation @ boundary.open_traction(stress, pressure=pressure), atol=1e-14)
+
+
+def test_candidate_geometry_guard_precedes_atom_mutation():
+    atoms = Atoms("Ar2", positions=[[1, 1, 1], [3, 3, 3]], cell=np.diag([5., 5., 5.]), pbc=True)
+    boundary = clamped_plane_vcneb_boundary(2, atoms.cell.array, allow_tilt=True)
+    calls = []
+
+    def guard(images):
+        calls.append(images[0].positions.copy())
+        if images[0].get_distance(0, 1, mic=True) < 1:
+            raise ValueError("unsafe geometry")
+
+    target = ClampedPlaneFilter(atoms, boundary, cell_scale_A=5., candidate_validator=guard)
+    before = atoms.positions.copy()
+    proposal = target.get_positions()
+    proposal[1] = proposal[0]
+    with pytest.raises(ValueError, match="unsafe geometry"):
+        target.set_positions(proposal)
+    np.testing.assert_array_equal(atoms.positions, before)
+    assert len(calls) == 2

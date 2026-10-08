@@ -231,6 +231,26 @@ In-plane reaction stresses are recorded but excluded from the open-gradient
 stationarity criterion. Geometry and EMT energy/stress finite differences
 verify the implementation; they do not establish material barrier accuracy.
 
+For substrate area A=|H_0 cross H_1|, moving only the third cell vector by
+w performs work A w dot ((sigma+P I)n). The open-stress residual is therefore
+the norm of (sigma+P I)n in the tilt-released ensemble, or its normal
+projection in the normal-only ensemble. Unlike a Cartesian component test,
+this criterion is invariant under a rigid change of coordinates. Endpoint
+BFGS applies separate atomic-force and open-traction gates, 0.03 eV/Angstrom
+and 2 kbar respectively; in-plane reaction stresses remain part of the data
+but not the convergence gate. The ordinary NEB threshold remains 0.10
+eV/Angstrom and is not a saddle-certification criterion.
+
+The finite strain seeds use one proper cyclic rotation, with new Cartesian
+x/y/z=old z/x/y and the same cyclic cell-row relabeling. Ordered atomic
+identity is unchanged. Every phase shares the T-referenced substrate at
+epsilon=0 or +0.01; +0.005 is reserved for an independent holdout. The zero
+T-referenced substrate already changes the PO free-cell in-plane lengths by
+approximately +3.12% and -3.61%. All affine starters consequently require
+fresh clamped relaxation and independent phase/variant checks; free-cell
+evaluations are not reused as their energies or forces. These prepared
+geometries are not yet strain-dependent material results.
+
 For an explicit cell derivative dotH, the fixed-fractional-coordinate work is
 V(sigma+P I):(dotH^T H^{-T}). This is a branch envelope derivative only when
 all open variables are stationary. On a continuous endpoint/saddle branch,

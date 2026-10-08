@@ -242,3 +242,43 @@ directory at each evidence-bearing milestone; no repeated/duplicate submissions.
   constraints for the finite study. HfO2 clamped endpoint/chain DFT and
   channel predictions are pending; this is not an acceleration or novelty
   claim. Do not require zero substrate reaction stress.
+
+## E010: common-substrate seeds and physical endpoint convergence
+
+- Hypothesis: a single substrate and a rotation-invariant open-traction gate
+  prevent independently strained phases or reaction stress from invalidating
+  the finite G2 comparison.
+- Action: proper cyclic orientation (new x/y/z=old z/x/y, unchanged atom
+  order), five registered structures at epsilon=0/+0.01, and ten hashed
+  geometry starters. Reserve+0.005 holdout. Keep original 100Ry/full10auDZP
+  INPUT/KPT/PP/orbital checksums, drop all free-cell calculator results.
+- The T-zero substrate imposes+3.12094%/-3.60936% PO in-plane length changes;
+  explicitly distinguish this from free-cell P=0. No material conclusion.
+- Matching BFGS tests atomic force<0.03eV/A and open-traction norm<2kbar.
+  Traction formula cross-checks stress work in oblique cells and rotates
+  covariantly. Dangerous geometry is rejected before atom mutation/DFT.
+- Evidence so far:44 focused tests pass. Full clean-tree and installed-HF-ASE
+  verification recorded below after execution. This preparation costs0 DFT;
+  G2 SCFs/matrix remain gated on G1 and a reviewed bounded endpoint canary.
+- Decision: retain the explicit geometry/mechanics contract, not a scientific
+  claim of favourable strain selectivity or a completed HfO2 endpoint.
+
+- Clean staged tree b0f7432, archive4e242396a8ea393fd18c4558b7135923c82892c21b34a88ee6817887ee7eed4d:
+  766passed/2skipped/77.18s. First export51d0963 correctly failed one source
+  checksum gate because Windows core.autocrlf converted hash-bound bytes;
+  targeted .gitattributes preserves original bytes, without loosening guards.
+- Actual HF ASE3.23.1b1 checks all10 archived hashes and independently regenerates
+  all10 seeds. Both EMT endpoint variants converge in9 BFGS steps/10 evaluations,
+  with0 plane drift; atomic force0.0154315eV/A and open traction0.678580kbar.
+  In-plane/full stress14.2747kbar demonstrates why the reaction is excluded.
+  Record:clamped_endpoint_preflight_hf.json. Total new DFT calls remains0.
+
+## G1 switching dispatch R13 (not a strain experiment)
+
+Two registered/electronically verified candidates are now queued as28288045
+and28288063. Each is9total/7active,32MPI,ordinary0.10,10steps/4h. They reuse
+immutable sourcecc536a2/R12 and validatedR11 seeds, with original physical
+inputs and cached endpoints. `afterany:28274895:28275259` waits for both
+current allocations to finish, preserving at most2 active study chains.
+This is scheduling, not a claim that the predecessor paths have converged.
+See submission_handles_r13.json; no switching results or G2 DFT claimed yet.
