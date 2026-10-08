@@ -203,3 +203,27 @@ The stationary-T Gamma full basis reconstructs the atomic part, but this is
 not evidence for local harmonic validity or a joint atom/cell saddle index.
 These findings guide subsequent basis selection and independent validation;
 they do not yet establish a predictive mode--strain mechanism.
+
+## First complete candidate-set observation, not optimized-channel ranking
+
+Four same-contract bands now share the same ordered periodic PO+ initial
+structure and energy: the reverse of terminal T--PO step10, PO--M step10,
+and two registered flip candidates atstep1. The analysis reuses37 complete
+image evaluations with no new DFT calculation. Their provisional discrete
+maxima, referenced toPO+, are116.277,95.199,145.779 and435.169meV/f.u.,
+respectively. The first T--PO forward maximum is34.956meV/f.u.; it is not
+the value to use as a PO decay barrier. All four observations remain above
+the ordinary residual threshold and lack measured sampling/error bounds.
+Consequently, no final channel ordering, H1 conclusion, or distinction
+between two optimized switching MEPs is inferred from this table.
+
+The same T-geometric triplet captures94.92%,52.84%,54.29%, and approximately
+zero of the parent-relative squared displacement at those discrete peaks.
+The two initial flip peaks have atomic/cell maximum vectors0.590196/2.074970
+and0.192700/1.230217eV/Angstrom, with negligible spring forces at their centers.
+These actual source-metric residuals are cell-dominated, unlike the earlier
+atomic-dominated decay-path observations. This provides a concrete reason
+to retain joint cell/atomic freedoms and test path-adapted retained directions,
+rather than assuming a complete shared T-triplet plane. It is a descriptive
+early-stage basis limitation, not evidence for the final TS modes, energetic
+decomposition or predictive model. The source allocations continue normally.

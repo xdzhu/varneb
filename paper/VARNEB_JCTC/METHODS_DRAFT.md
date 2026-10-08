@@ -287,3 +287,33 @@ the ordinary extended-space NEB force. Atomic, cell, physical perpendicular
 and spring contributions are reported separately. A residual gate, an
 optimizer step limit, a scheduler exit status and full-variable saddle
 stationarity are distinct checks; none is substituted for another.
+
+## 9. Common-initial-state channel comparisons and bounded responses
+
+For an explicit set of candidate channels, directional barriers are evaluated
+from one ordered periodic initial state, raw initial energy, and mechanical
+ensemble. The reverse view of an existing T--PO band supplies PO--T without
+an additional path calculation. This change of thermodynamic view does not
+relift atoms, change their identities or replace the source optimization
+metric. Each image retains its raw energy and volume; at prescribed pressure
+the profile is H_i=E_i+P V_i. Both directional maxima include the endpoints,
+and B_forward-B_reverse=H_final-H_initial is checked.
+
+Let B_s and B_d denote the minimum barriers within the explicitly declared
+switching and decay candidates. If B_j lies in a measured interval[L_j,U_j],
+its candidate-set minimum lies in[min_j L_j,min_j U_j]. The lowest candidate
+may change within these bounds. Differences use interval subtraction rather
+than an assumption of independent Gaussian errors. Missing leakage channels
+block the minimum; missing numerical/sampling evidence blocks a bounded
+selectivity verdict. The ordinary force threshold is not converted into a
+barrier uncertainty. Numeric error and sampling audits retain separate hashes.
+
+For S=B_d-B_s, an increased S establishes relative selectivity only; B_d
+can still fall. A stronger, declared-path noninferiority comparison requires
+a resolved reduction in B_s and a lower bound onDelta B_d no smaller than
+-delta, with delta specified before examining responses. Error overlap
+alone does not establish noninferiority. Released and clamped ensembles
+are not merged into a single strain derivative. These definitions and
+interval rules are conventional analysis, not new physical theory or proof
+that no unexamined decay channel exists. The implementation calls no DFT
+calculator and does not infer a device lifetime or switching rate.

@@ -340,3 +340,42 @@ See submission_handles_r13.json; no switching results or G2 DFT claimed yet.
   HF preparation. Only documentation/receipts follow; no code/seed changes.
   Both switching candidates complete step0 at19:39 and continue normally;
   their initial fmax2.214746/1.300483 does not establish the optimized barriers.
+
+## E013: explicit candidate coverage and common-initial-state comparison
+
+- Question: can four observed channels be compared without mixing directional
+  baselines, omitting a decay candidate or confusing relative selectivity with
+  the stronger absolute noninferiority claim?
+- Method: declare both flip variants plusPO--T/PO--M; verify ordered periodic
+  commonPO+ geometry/raw energy/physical-input hashes/ensemble. Retain original
+  force-replay metric when reversing the T--PO thermodynamic view. Numeric
+  barrier/sampling-error evidence is separate from ordinary residual0.10.
+- Measured:37existingSCF images, DFT0. PO-based provisional maxima116.277,
+  95.199,145.779,435.169meV/fu; all unconverged and error/sampling bounds
+  missing, soH1 conclusions are blocked. These are not final MEP rankings.
+- Representation: peak T-triplet fractions94.92%,52.84%,54.29%,approximately0;
+  both flip step1 residuals are cell-dominated and their central spring forces
+  negligible. Retain joint cell/atomic freedoms and test later bottleneck
+  bases, not a forced complete triplet plane or inferred modal energy partition.
+- Software: required-role minima are withheld on missing coverage; deterministic
+  minimum/difference intervals allow uncertainty in which channel is lowest.
+  Same-family conditions only; explicit predeclared noninferiority margin,
+  no Gaussian/independence assumptions or lifetime prediction.
+- Verification:54focusedtests pass. Initialclean643a2af2/archive05c75b63
+  gives844passed/2skipped/76.61s. An additionalNumPy-count JSON test then
+  exposesnumpy.bool_ serialization; normalize the API input count, not the
+  scientific data. Replay changes only the module SHA, no numeric result.
+  Final clean regression and actualHF replay are recorded next.
+- Unit audit: standard-library static checker finds0issues in2modules; an
+  independentSI pressure-volume regression uses library electron charge.
+  NoPint/environment/constant change; measured numerical bounds are not
+  Gaussian standard errors or95%confidence intervals.
+
+- Finalcleanb777ad49/archive70acd20c:845passed/2skipped/78.69s.
+  ActualHF ASE3.23.1b1 replays4channels/37images with force/barrier differences0,
+  patternQ difference3.68e-16A, GammaQ difference1.78e-15sqrt(amu)A,
+  Green-strain difference0; allsource/module hashes agree. DFT0.
+- At20:32, flips28288045/63 areconfirmedRunning atstep3/4, residuals1.802978/
+  1.026364; bothR14 continuations remainPending/Dependency. Recent11.6--16.6min
+  perstep projects the10step health segments to21:40--22:30, not convergence.
+  No newallocation orphysical change in thisanalysis milestone.

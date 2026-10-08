@@ -24,6 +24,7 @@ from .calculator import (
 )
 from .periodic_path import minimum_image_path_lift, validate_periodic_path_lift
 from .continuous_projection import continuous_reference_coordinates, project_reference_basis
+from .channel_competition import ChannelPath, summarize_competing_paths, compare_channel_selectivity
 from .modes import (
     Mode,
     build_direction_basis,
@@ -107,6 +108,9 @@ from .optimizer_registry import (
 )
 
 __all__ = [
+    "ChannelPath",
+    "summarize_competing_paths",
+    "compare_channel_selectivity",
     "continuous_reference_coordinates",
     "project_reference_basis",
     "VCNEB",
