@@ -1,7 +1,8 @@
 import numpy as np
 import pytest
 
-from vcneb.polarization import quantum_lattice, modular_difference, parse_abacus_berry, sampled_band_gap
+from vcneb.polarization import (quantum_lattice, modular_difference, parse_abacus_berry,
+                               sampled_band_gap, sampled_nscf_band_gap)
 
 
 def test_quantum_lattice_units_and_triclinic_rows():
@@ -49,3 +50,14 @@ BAND Energy(ev) Occupation Kpoint = 2 (0.5 0 0)
             sampled_band_gap(invalid, 2)
     with pytest.raises(ValueError):
         sampled_band_gap(body, 3)
+
+
+def test_native_nscf_band_table_not_scf_istate_format():
+    body = "1 0.0 -2 -1 3\n2 0.5 -2 -.5 2\n"
+    result = sampled_nscf_band_gap(body, 2)
+    assert result["sampled_indirect_gap_eV"] == 2.5 and result["n_kpoints"] == 2
+    assert result["source_format"] == "ABACUS_BANDS_1.dat"
+    for bad in (body.replace("2 0.5", "3 0.5"), body.replace("-.5", "nan"),
+                body.replace("-.5 2", "-.5 -.6"), "", "1 0 -2 -1\n"):
+        with pytest.raises(ValueError):
+            sampled_nscf_band_gap(bad, 2)

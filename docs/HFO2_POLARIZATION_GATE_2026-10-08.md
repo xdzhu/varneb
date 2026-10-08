@@ -17,7 +17,7 @@ G1 翻转链前，独立验证 PO+ 与两个 PO−。仅 **3 个 SCF + 9 个固�
 | 环节 | 保持不变 | 声明的差异 |
 |---|---|---|
 | SCF | 原始 STRU、PBE、100 Ry、Hf/O 赝势、完整10au DZP、2×2×2、收敛与混合参数 | 追加 `out_chg 1`、`out_bandgap 1` 输出开关 |
-| Berry NSCF | 同一几何、同一 SCF 电荷、同一泛函/截断/赝势/轨道 | NSCF/读电荷/禁对称/Berry/R3；关闭未使用的力/应力/结构输出；积分网格2×2×2、2×2×4、2×2×8 |
+| Berry NSCF | 同一几何、同一 SCF 电荷、同一泛函/截断/赝势/轨道 | NSCF/读电荷/禁对称/Berry/R3；关闭未使用的力/应力/结构输出；`out_band 1` 输出本版本NSCF的能级文件；积分网格2×2×2、2×2×4、2×2×8 |
 
 NSCF 是固定电荷上新观测量的积分检查，不是重新定义路径能量的 SCF 参数。
 其任何能量都不进入能垒。NEB 固定物理哈希 guard 不放宽；原计算器文件不改。
@@ -51,3 +51,14 @@ SCF 输出追加前后须复现：E ≤1e−5 eV/cell、F ≤1e−4 eV/Å、stre
 
 成功只解锁两个翻转端点的电子解释；失效保留原始输出，按证据修复协议或缩小结论，
 不以无止境提高计算精度兜底。
+
+## 首次实际协议诊断（R8）
+
+28263474_0的SCF/NSCF均正常结束，SCF能量/力/应力与基准逐值相同。
+222原生P=0.7198195、模数1.2040116 C/m²，SCF采样带隙4.589282 eV。
+但是我们的运行后带隙审计误以为NSCF也输出`istate.info`，作业因此FAILED/exit1。
+从该版本`esolver_ks_lcao.cpp`确认：该文件只在SCF/MD/relax写出；NSCF必须显式
+`out_band 1` 并读取 [BANDS_1.dat](https://github.com/deepmodeling/abacus-develop/blob/f7cb1d3/source/module_io/nscf_band.cpp)
+（k序号、累计k距离、各带能量eV）。这是我们的输出协议缺口，不是DFT失败/材料金属性。
+R8原始目录保留。新归档中只补NSCF输出开关和对应解析，PO+复用已完成的、再次严格
+审核的R8 SCF电荷；不重跑端点SCF。多花一次222 NSCF（28秒）作为真实失败成本记录。

@@ -8,6 +8,7 @@ quantum or choose a branch merely by taking the smallest absolute value.
 from __future__ import annotations
 
 import re
+import io
 import numpy as np
 
 
@@ -86,3 +87,29 @@ def sampled_band_gap(body, occupied_bands):
     cbm = min(b[occupied_bands] for b in blocks)
     return {"n_kpoints": len(blocks), "occupied_bands": occupied_bands,
             "VBM_eV": vbm, "CBM_eV": cbm, "sampled_indirect_gap_eV": cbm - vbm}
+
+
+def sampled_nscf_band_gap(body, occupied_bands):
+    """Native BANDS_1.dat: k index, accumulated k distance, band energies(eV).
+
+    ABACUS f7cb1d3 LCAO writes istate.info for SCF/MD/relax only. NSCF
+    eigenvalues require explicit out_band=1; see module_io/nscf_band.cpp.
+    """
+    if not isinstance(occupied_bands, int) or occupied_bands < 1:
+        raise ValueError("positive integer occupied-band count required")
+    if not body.strip():
+        raise ValueError("empty NSCF band table")
+    try:
+        table = np.loadtxt(io.StringIO(body), ndmin=2)
+    except (ValueError, TypeError) as error:
+        raise ValueError("malformed NSCF band table") from error
+    if (table.shape[0] < 1 or table.shape[1] < occupied_bands + 3
+            or not np.isfinite(table).all()
+            or not np.array_equal(table[:, 0], np.arange(1, len(table) + 1))
+            or np.min(np.diff(table[:, 2:], axis=1)) < -1e-7):
+        raise ValueError("missing, nonfinite, incomplete or unordered NSCF bands")
+    vbm = float(table[:, 1 + occupied_bands].max())
+    cbm = float(table[:, 2 + occupied_bands].min())
+    return {"n_kpoints": len(table), "occupied_bands": occupied_bands,
+            "VBM_eV": vbm, "CBM_eV": cbm, "sampled_indirect_gap_eV": cbm - vbm,
+            "source_format": "ABACUS_BANDS_1.dat"}

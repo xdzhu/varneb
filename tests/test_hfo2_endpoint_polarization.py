@@ -16,7 +16,7 @@ def test_nscf_explicit_delta_and_duplicate_rejection():
     new = flow.input_values(flow.berry_input(BASE).decode())
     changes = {k: v for k, v in new.items() if old.get(k) != v}
     assert changes == {"calculation": "nscf", "cal_force": "0", "cal_stress": "0", "out_stru": "0",
-                       "init_chg": "file", "symmetry": "-1", "berry_phase": "1", "gdir": "3"}
+                       "init_chg": "file", "symmetry": "-1", "berry_phase": "1", "gdir": "3", "out_band": "1"}
     assert new["ecutwfc"] == old["ecutwfc"] == "100.0"
     with pytest.raises(ValueError, match="duplicate"):
         flow.input_values("INPUT_PARAMETERS\necutwfc 100\necutwfc 80\n")
@@ -82,3 +82,39 @@ def test_summary_preserves_branches_and_rejects_self_inverse(tmp_path):
         for nz in flow.GRIDS:
             (tmp_path / "calculations" / label / f"berry_22{nz}.json").write_text(json.dumps({"value_C_m2": .6, "reported_modulus_C_m2": 1.2}))
     assert flow.summarize(tmp_path)["status"] == "review_required"
+
+
+def test_actual_audit_contract_uses_different_scf_and_nscf_eigenvalue_files(tmp_path, monkeypatch):
+    work = tmp_path / "work"
+    work.mkdir()
+    (work / "INPUT").write_text("fixture input")
+    hashes = {"INPUT": sha256(work / "INPUT")}
+    out = work / "OUT.ABACUS"
+    out.mkdir()
+    (out / "SPIN1_CHG.cube").write_text("immutable charge")
+    (out / "running_scf.log").write_text("fixture SCF")
+    # Eight kpoints, 48 occupied bands and at least one empty band.
+    energies = list(np.arange(48)/48 - 1) + [3.]
+    istate = "".join("BAND Energy(ev) Occupation Kpoint = %d\n" % (k+1) +
+                     "".join(f"{i+1} {e} .25\n" for i, e in enumerate(energies)) for k in range(8))
+    (out / "istate.info").write_text(istate)
+    point = {"label": "PO_plus", "scf_input_sha256": hashes, "occupied_bands": 48,
+             "baseline_results": {"energy": -10., "forces": np.zeros((12, 3)).tolist(), "stress": np.zeros(6).tolist()},
+             "nscf_inputs": [{"nz": 2, "input_sha256": hashes}], "cell_A": (np.eye(3)*5).tolist(),
+             "quantum_lattice_C_m2": flow.quantum_lattice(np.eye(3)*5).tolist()}
+    manifest = {"points": [point], "tolerances": {"SCF_energy_eV_cell": 1e-5, "SCF_force_eV_A": 1e-4,
+        "SCF_stress_kbar": .02, "sampled_gap_min_eV": .1}}
+    (tmp_path / "manifest.json").write_text(json.dumps(manifest))
+    monkeypatch.setattr(flow, "audited_results", lambda _: {"energy": -10., "forces": np.zeros((12, 3)), "stress": np.zeros(6)})
+    audit = flow.audit_scf(tmp_path, 0, work)
+    assert not (out / "BANDS_1.dat").exists()
+    (out / "istate.info").unlink()  # NSCF does not write this file in actual f7cb1d3.
+    (out / "BANDS_1.dat").write_text("".join(f"{k+1} 0 " + " ".join(map(str, energies)) + "\n" for k in range(8)))
+    modulus = np.linalg.norm(np.array(point["quantum_lattice_C_m2"])[2])*2
+    (out / "running_nscf.log").write_text(f"DSIZE = 32\nThe calculated polarization direction is in R3 direction\n"
+        f"P = 0.5 (mod {modulus:.7f}) (0.0, 0.0, 0.5) C/m^2\n Total Time : 28\n")
+    result = flow.audit_nscf(tmp_path, 0, 2, work, audit)
+    assert result["bands"]["source_format"] == "ABACUS_BANDS_1.dat"
+    (out / "SPIN1_CHG.cube").write_text("changed charge")
+    with pytest.raises(ValueError, match="charge changed"):
+        flow.audit_nscf(tmp_path, 0, 2, work, audit)

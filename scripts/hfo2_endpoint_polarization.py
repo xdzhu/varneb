@@ -19,7 +19,8 @@ import numpy as np
 
 from examples.hfo2_fixed_input_factory import CONTRACT
 from scripts.audit_hfo2_static_replica import INPUT_FILES, audited_results, sha256
-from vcneb.polarization import modular_difference, parse_abacus_berry, quantum_lattice, sampled_band_gap
+from vcneb.polarization import (modular_difference, parse_abacus_berry, quantum_lattice,
+                               sampled_band_gap, sampled_nscf_band_gap)
 
 
 LABELS = ("PO_plus", "PO_minus_T_preserving", "PO_minus_T_reversing")
@@ -44,16 +45,19 @@ def input_values(text):
 def berry_input(base):
     values = input_values(base.decode())
     values.update(calculation="nscf", init_chg="file", symmetry="-1", berry_phase="1", gdir="3",
-                  cal_force="0", cal_stress="0", out_stru="0")
+                  cal_force="0", cal_stress="0", out_stru="0", out_band="1")
     # No changed cutoff, functional, spin, orbital integrals or solver.
     return ("INPUT_PARAMETERS\n" + "".join(f"{k} {v}\n" for k, v in values.items())).encode()
 
 
-def prepare(sources, root):
+def prepare(sources, root, charge_caches=None):
     if root.exists():
         raise FileExistsError("refusing existing polarization namespace")
     if set(sources) != set(LABELS):
         raise ValueError("exactly the three preregistered ordered endpoints required")
+    charge_caches = charge_caches or {}
+    if set(charge_caches) - set(LABELS):
+        raise ValueError("charge cache labels must match declared endpoints")
     records = []
     geometries = []
     for label in LABELS:
@@ -95,6 +99,7 @@ def prepare(sources, root):
             (folder / "KPT").write_bytes(f"K_POINTS\n0\nGamma\n2 2 {nz} 0 0 0\n".encode())
             nscf_inputs.append({"nz": nz, "input_sha256": {n: sha256(folder / n) for n in INPUT_FILES}})
         records.append({"label": label, "source_directory": str(source),
+                        "cached_scf_directory": charge_caches.get(label),
                         "baseline_log_sha256": sha256(source / "OUT.ABACUS/running_scf.log"),
                         "baseline_results": {k: v.tolist() if isinstance(v, np.ndarray) else v for k, v in raw.items()},
                         "baseline_input_sha256": {n: sha256(source / n) for n in INPUT_FILES},
@@ -106,13 +111,19 @@ def prepare(sources, root):
               "SCF_delta": {"out_chg": "1", "out_bandgap": "1"},
               "SCF_physical_settings_changed": False,
               "NSCF_delta": {"calculation": "nscf", "init_chg": "file", "symmetry": "-1",
-                             "berry_phase": "1", "gdir": "3", "cal_force": "0", "cal_stress": "0", "out_stru": "0"},
+                             "berry_phase": "1", "gdir": "3", "cal_force": "0", "cal_stress": "0", "out_stru": "0", "out_band": "1"},
               "NSCF_meshes": [[2, 2, n] for n in GRIDS], "NSCF_energies_used_for_barriers": False,
               "tolerances": {"SCF_energy_eV_cell": 1e-5, "SCF_force_eV_A": 1e-4, "SCF_stress_kbar": .02,
                              "sampled_gap_min_eV": .1, "longitudinal_P_convergence_C_m2": .01,
                              "inversion_modular_residual_C_m2": .01},
               "limitations": "R3 component only; longitudinal quadrature only; no automatic spontaneous-P/path-branch selection, no full-BZ insulating certificate",
               "points": records}
+    (root / "manifest.json").write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
+    for index, point in enumerate(records):
+        if point["cached_scf_directory"]:
+            cache = Path(point["cached_scf_directory"])
+            audit = audit_scf(root, index, cache)
+            point["cached_scf_audit"] = audit
     (root / "manifest.json").write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
     return record
 
@@ -159,7 +170,7 @@ def audit_nscf(root, index, nz, work, scf_audit):
     berry = parse_abacus_berry(body)
     if berry["direction"] != 3:
         raise ValueError("unexpected Berry direction")
-    bands = sampled_band_gap((work / "OUT.ABACUS/istate.info").read_text(), point["occupied_bands"])
+    bands = sampled_nscf_band_gap((work / "OUT.ABACUS/BANDS_1.dat").read_text(), point["occupied_bands"])
     if bands["n_kpoints"] != 4 * nz or bands["sampled_indirect_gap_eV"] <= manifest["tolerances"]["sampled_gap_min_eV"]:
         raise ValueError("NSCF grid/gap gate failed")
     q = float(np.linalg.norm(np.array(point["quantum_lattice_C_m2"])[2]))
@@ -205,8 +216,13 @@ def run_endpoint(root, index):
             subprocess.run(argv, cwd=work, stdout=out, stderr=err, check=True)
         return work
 
-    scf = execute("scf", point["scf_input_sha256"])
+    scf = (Path(point["cached_scf_directory"]) if point.get("cached_scf_directory")
+           else execute("scf", point["scf_input_sha256"]))
     scf_audit = audit_scf(root, index, scf)
+    if point.get("cached_scf_audit") and scf_audit != point["cached_scf_audit"]:
+        raise ValueError("cached SCF evidence changed after preflight")
+    scf_audit["directory"] = str(scf)
+    scf_audit["reused_completed_SCF"] = bool(point.get("cached_scf_directory"))
     (destination / "scf_audit.json").write_text(json.dumps(scf_audit, indent=2) + "\n")
     for inputs in point["nscf_inputs"]:
         nz = inputs["nz"]
@@ -253,10 +269,12 @@ def main():
     parser.add_argument("action", choices=("prepare", "run", "summarize"))
     parser.add_argument("--root", type=Path, required=True)
     parser.add_argument("--sources", type=Path)
+    parser.add_argument("--charge-caches", type=Path)
     parser.add_argument("--index", type=int, choices=range(3))
     args = parser.parse_args()
     if args.action == "prepare":
-        report = prepare(json.loads(args.sources.read_text()), args.root)
+        caches = json.loads(args.charge_caches.read_text()) if args.charge_caches else None
+        report = prepare(json.loads(args.sources.read_text()), args.root, caches)
         print(json.dumps({"staged_endpoints": len(report["points"]), "NSCF_meshes": report["NSCF_meshes"]}))
     elif args.action == "run":
         if args.index is None:
