@@ -22,6 +22,7 @@ from .calculator import (
     validate_calculator,
     validate_image_calculators,
 )
+from .periodic_path import minimum_image_path_lift, validate_periodic_path_lift
 from .modes import (
     Mode,
     build_direction_basis,
@@ -114,6 +115,8 @@ __all__ = [
     "validate_atom_mapping",
     "validate_candidate_cell_step",
     "validate_path_geometry",
+    "minimum_image_path_lift",
+    "validate_periodic_path_lift",
     "CalculatorCapabilities",
     "CalculatorCapabilityError",
     "classify_calculator_failure",

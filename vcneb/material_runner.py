@@ -30,6 +30,7 @@ from . import (
     run_vcneb,
     validate_static_endpoint_identity,
     validate_path_geometry,
+    validate_periodic_path_lift,
     validate_image_calculators,
 )
 from .executor import ThreadedCalculatorExecutor
@@ -153,7 +154,9 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     climb_group.add_argument("--climb", action="store_true", help="Enable climbing image explicitly")
     climb_group.add_argument("--no-climb", action="store_true", help="Legacy explicit ordinary-NEB selection")
     parser.add_argument("--climb-after", type=int, default=None, help="Enable climbing image after this many ordinary-NEB steps")
-    parser.add_argument("--mic", action="store_true")
+    parser.add_argument("--mic", action="store_true", help="minimum-image endpoint interpolation; supplied chains are not implicitly unwrapped")
+    parser.add_argument("--require-continuous-periodic-lift", action="store_true",
+                        help="reject supplied wrapped-coordinate jumps under an explicit short-adjacent-step convention; never modify the path")
     parser.add_argument("--cell-interpolation", choices=("linear", "log_strain"), default="log_strain")
     parser.add_argument("--mapping", choices=("identity", "auto"), default="auto")
     parser.add_argument(
@@ -238,6 +241,7 @@ def main(argv: list[str] | None = None, *, symbol_loader=None) -> None:
         ):
             if expected["sha256"] != actual["sha256"]:
                 raise ValueError(f"supplied chain {label} endpoint does not match the requested endpoint")
+    periodic_lift_gate = validate_periodic_path_lift(images) if args.require_continuous_periodic_lift else None
     cell_mask = _cell_mask_for_mode(args.cell_mode, images, args.pressure_gpa)
     require_stress = cell_mask is None
     geometry = validate_path_geometry(
@@ -365,6 +369,7 @@ def main(argv: list[str] | None = None, *, symbol_loader=None) -> None:
         },
         "endpoint_static_identity_gate": endpoint_identity_gate,
         "initial_path_geometry": geometry,
+        "periodic_path_lift_gate": periodic_lift_gate,
         "mode_subspace": subspace_record,
         "calculator_validation": "not_instantiated_validate_only" if args.validate_only else "factory_configuration_only",
         "calculator_reports": [],

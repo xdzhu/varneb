@@ -33,4 +33,5 @@ n_images=$(/public/home/iai806/.conda/envs/icu/bin/python -c \
   --maxstep 0.02 --k 0.2 --no-climb --mapping identity --mic \
   --no-align-cells --cell-interpolation linear --minimum-distance 1.6 \
   --maximum-deformation 0.25 --maximum-cell-step 0.02 --candidate-step-retries 4 \
+  --require-continuous-periodic-lift \
   --summary-format brief

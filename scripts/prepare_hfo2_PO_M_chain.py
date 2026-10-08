@@ -10,7 +10,7 @@ import numpy as np
 from examples.hfo2_fixed_input_factory import CONTRACT, same_ordered_geometry
 from scripts.audit_hfo2_static_replica import audited_results, sha256
 from scripts.prepare_hfo2_reference_variants import write_clean_poscar
-from vcneb import endpoint_structure_record, validate_path_geometry
+from vcneb import endpoint_structure_record, validate_path_geometry, minimum_image_path_lift, validate_periodic_path_lift
 from vcneb.analysis import path_reaction_coordinate
 
 
@@ -18,6 +18,7 @@ def uniform_seed(controls, initial, final, n_total=9):
     """Ordered piecewise-linear geometry seed; no new atom assignment or DFT."""
     controls = [a.copy() for a in controls]
     controls[0], controls[-1] = initial.copy(), final.copy()
+    controls, _ = minimum_image_path_lift(controls)
     for a in controls:
         a.calc = None
     arc, _ = path_reaction_coordinate(controls)
@@ -30,14 +31,14 @@ def uniform_seed(controls, initial, final, n_total=9):
         left, right = controls[i], controls[i+1]
         q = left.get_scaled_positions(wrap=False)
         dq = right.get_scaled_positions(wrap=False) - q
-        dq -= np.rint(dq)
         a = left.copy()
         a.set_cell((1-fraction)*left.cell.array + fraction*right.cell.array, scale_atoms=False)
         a.set_scaled_positions(q + fraction*dq)
         images.append(a)
-    images.append(final.copy())
+    images.append(controls[-1].copy())
     for a in images:
         a.calc = None
+    validate_periodic_path_lift(images)
     return images
 
 
@@ -82,7 +83,8 @@ def prepare(author_chain, po_path, po_static, m_root, m_audit_path, output):
                 "author_chain_sha256": sha256(author_chain),
                 "initial_geometry_gate": geometry, "initial_arc_A": arc.tolist(),
                 "initial_segment_lengths_A": segments.tolist(),
-                "mapping": "registered fixed permutation retained; no per-image relabel; cached endpoints replaced exactly",
+                "mapping": "registered fixed permutation retained; no per-image relabel; endpoints retain exact ordered periodic geometries",
+                "periodic_lift_audit": validate_periodic_path_lift(images),
                 "limitations": "published geometries guide only the starting chain; neither source energies nor VASP parameters are reused"}
     (output / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     return manifest

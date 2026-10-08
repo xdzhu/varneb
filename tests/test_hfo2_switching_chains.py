@@ -51,3 +51,21 @@ def test_no_switching_seed_before_real_electronic_gate(tmp_path):
     with pytest.raises(ValueError, match="not passed"):
         prepare(tmp_path, polar, tmp_path / "not_created")
     assert not (tmp_path / "not_created").exists()
+
+
+def test_prepared_hf_seed_evidence_keeps_byte_hashes_and_continuous_lifts():
+    from scripts.audit_hfo2_static_replica import sha256
+    from vcneb import validate_periodic_path_lift
+    root = Path(__file__).resolve().parents[1] / "benchmarks/hfo2_channels/20261008"
+    preflight = json.loads((root / "switching_preflight_r11.json").read_text())
+    assert preflight["status"] == "passed" and not preflight["DFT_executed"]
+    for record in preflight["reports"]:
+        folder = root / "switching_seeds" / record["variant"]
+        manifest = json.loads((folder / "manifest.json").read_text())
+        assert sha256(folder / "seed.traj") == record["seed_traj_sha256"]
+        assert sha256(root / "polarization_summary.json") == manifest["polarization_summary_sha256"]
+        assert sha256(root / "polarization_manifest_r10.json") == manifest["polarization_manifest_sha256"]
+        images = read(folder / "seed.traj", index=":")
+        validate_periodic_path_lift(images)
+        assert len(images) == 9 and record["n_active_images"] == 7
+        assert all(a["new_SCFs"] == 0 for a in record["endpoint_cache_audits"])

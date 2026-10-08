@@ -23,6 +23,15 @@ established variable-cell/solid-state NEB ideas, not a new NEB theory. The
 optimizer and mechanical active-space projection act on energy/force/stress
 results through an ASE-compatible interface independently of the backend.
 
+Periodic lifts are part of the input contract: independent image wrapping can
+leave all DFT observables correct while introducing spurious jumps into the
+unwrapped tangent/spring metric. Under an explicitly declared short-adjacent-
+step convention, integer lattice shifts are registered before computation
+and the optimizer rejects an inconsistent supplied lift. No runtime remapping
+or structural repair is performed. Half-cell ambiguities require additional
+path information. Geometry-contract correctness is an engineering prerequisite,
+not evidence of accelerated convergence or a new scientific method.
+
 Under hydrostatic pressure the objective is H=E+PV. At fixed epitaxial vectors
 and zero external normal/shear loading, the objective is E restricted to the
 declared movable variables. A nonzero constrained stress is a substrate

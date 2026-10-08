@@ -10,7 +10,7 @@ from examples.hfo2_fixed_input_factory import CONTRACT, same_ordered_geometry
 from scripts.audit_hfo2_sparse_gap import audit_point
 from scripts.audit_hfo2_static_replica import audited_results, sha256
 from scripts.prepare_hfo2_reference_variants import write_clean_poscar
-from vcneb import endpoint_structure_record, validate_path_geometry
+from vcneb import endpoint_structure_record, validate_path_geometry, minimum_image_path_lift, validate_periodic_path_lift
 
 
 def prepare(source_root, chain, gap_root, output):
@@ -22,6 +22,7 @@ def prepare(source_root, chain, gap_root, output):
         audit_point(gap_root, i)
         gaps.append(read(gap_root / "calculations" / f"{i:02d}" / "STRU", format="abacus"))
     images = originals[:2] + gaps + originals[2:]
+    images, lift_audit = minimum_image_path_lift(images)
     sources = ([source_root / "00", source_root / "01"]
                + [gap_root / "calculations" / f"{i:02d}" for i in range(3)]
                + [source_root / f"{i:02d}" for i in range(2, 7)])
@@ -50,8 +51,10 @@ def prepare(source_root, chain, gap_root, output):
               "optimizer": "FIRE", "maxstep_A": .02, "spring_eV_A2": .2,
               "pressure_GPa": 0, "physical_inputs_changed": False,
               "cached_seed_results": audits, "initial_geometry_gate": geometry,
+              "periodic_lift_audit": lift_audit,
               "limitations": "initial sampled profile is not the optimized MEP; final interval resolution must be audited separately"}
     (output / "manifest.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+    validate_periodic_path_lift(images)
     return report
 
 

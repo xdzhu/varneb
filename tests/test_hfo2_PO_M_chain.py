@@ -4,7 +4,8 @@ from ase.io import read
 import numpy as np
 
 from scripts.prepare_hfo2_PO_M_chain import uniform_seed
-from vcneb import endpoint_structure_record, validate_path_geometry
+from vcneb import endpoint_structure_record, validate_path_geometry, validate_periodic_path_lift
+from vcneb.analysis import path_reaction_coordinate
 
 
 def test_registered_seed_keeps_order_and_exact_cached_endpoints():
@@ -20,4 +21,8 @@ def test_registered_seed_keeps_order_and_exact_cached_endpoints():
     assert all(a.get_chemical_symbols() == po.get_chemical_symbols() for a in images)
     assert all(a.calc is None for a in images)
     validate_path_geometry(images, minimum_distance=1.6, maximum_deformation=.25)
+    validate_periodic_path_lift(images)
+    # Plotting's implicit unwrapping must not conceal jumps seen by the optimizer.
+    _, expected_segments = path_reaction_coordinate(images)
+    np.testing.assert_allclose(validate_path_geometry(images)["segment_lengths_A"], expected_segments, atol=1e-10)
     np.testing.assert_array_equal(images[0].positions, po.positions)

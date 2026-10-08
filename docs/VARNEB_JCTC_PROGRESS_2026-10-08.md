@@ -242,3 +242,29 @@ R10原种子把MIC插值后的末态重新替换成输入的wrapped坐标，造�
 检查，不是DFT故障；正式pilot launcher本已有该参数。
 两个修正种子须从新归档生成到新目录，保留R10原始目录，不覆盖运行源码。
 修正与真实电子证据的12项本地聚焦回归通过（1.92s）。
+
+R11 source b0aa195b1665b1d549059f9a9526bab866867680，archive
+d6cf4510d65193322780a3572207f77fbd224e5696986870c6eb6b6f8501e163；
+干净归档全回归715 passed/2 skipped（61.54s），已普通push到main。
+真实hf ASE3.23.1b1的两条修正翻转种子已完成源哈希、CLI几何与4个端点缓存检查，
+新增SCF数0。各链8段分别均匀为0.360821/0.371752Å；9-total/7-interior。
+对应实际输入和报告公开于switching_seeds、switching_preflight_r11.json。
+R10缺陷种子和本地副本均保留，未提交其DFT。
+
+## R7停止原因：实际输入lift污染了切线和弹簧
+
+16:04左右扩查显示，两条R7的initial geometry报告也有5–10Å的假跳变，
+而绘图/arc函数自行unwrap后显示0.3–0.6Å，导致“图看正常”却优化器坐标不连续。
+已核验实际归档core的_state/_tangent直接使用unwrapped输入，不自动应用mic。
+所以在1h49m05s时明确取消28257778/28257779，Slurm均CANCELLED/0:0；
+理由是已证实的坐标契约错误，不是受力回弹，原始输入/源码/SCF/部分输出均不删。
+完整快照分别保留到guided_gap_optimization/snapshots/step_0006和
+PO_M_optimization/snapshots/step_0007。旧残差不能用于收敛/加速claim。
+
+新的后端无关periodic_path模块只在准备阶段显式选择相邻分数坐标短步lift，
+登记每像每原子整数晶格平移，拒绝半胞歧义；不推断稀疏绕行、不原子重排。
+新CLI `--require-continuous-periodic-lift`只拒绝错误，不在运行时改变路径；
+HfO₂统一pilot必须启用。PO→M与gap源生成器同步修正。
+从停算完整快照逐像匹配相同周期结构的已完成SCF，在新目录复用、重置优化器。
+新增合成恢复/不接受stale SCF/原始证据变动/通用NEB力等价/CLI预DFT拒绝测试。
+Gamma独立8点预测与Berry门禁不使用上述切线，原证据仍成立。

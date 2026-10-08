@@ -141,3 +141,20 @@ not in ABACUS SCF/Berry evaluation. The source-version protocol was corrected
 and completed outputs reused. The entire endpoint study required three SCFs
 and ten NSCF executions, including one duplicate222 NSCF; no physical input
 was retuned. These engineering corrections are not a scientific novelty claim.
+
+## Pilot periodic-coordinate audit
+
+Inspection of the switching seeds exposed a wrapped final-endpoint jump.
+The audit was then extended to the two active pilots,28257778/28257779.
+Their supplied coordinates also contained5--10-Angstrom jumps that plotting's
+implicit unwrapping hid; the corresponding physical short segments were
+approximately0.3--0.6Angstrom. The optimizer directly used the unwrapped input
+metric, so the defective lifts contaminated tangents and spring forces.
+Both pilots were explicitly cancelled after preserving complete snapshots and
+raw SCFs. This decision was based on a verified geometry-contract defect,
+not a single force rebound. Neither pilot's old residual is convergence or
+acceleration evidence. Separate, input-stage lift registration and a rejecting
+production guard were implemented; recovery must use identical ordered
+periodic geometries, unchanged physical inputs and a fresh optimizer state.
+The eight independent curvature tests and electronic endpoint tests do not
+use these path tangents and remain valid.
