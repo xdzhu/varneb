@@ -7,6 +7,7 @@ tested by independent SCFs, not certified by fitting the same force constants.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 
@@ -50,7 +51,9 @@ def analyze(variants, gamma, output):
             "eliminated_condition_number": reduced.eliminated_condition_number,
             "x_softening_fraction": float(reduced.softening[0, 0] / reduced.frozen[0, 0])}
     report = {"schema_version": 1, "source_sha256": source_hashes,
-              "T_reference_sha256": sha256(variants / "T.vasp"), "retained_basis_cartesian": q.tolist(),
+              "T_reference_sha256": sha256(variants / "T.vasp"),
+              "T_reference_lf_sha256": hashlib.sha256((variants / "T.vasp").read_bytes().replace(b"\r\n", b"\n")).hexdigest(),
+              "retained_basis_cartesian": q.tolist(),
               "eliminated_dimensions": 30, "clamped_cell": True,
               "observed_two_step_operator_spread_eV_A2": spread, "families": families,
               "holdout_design": "independent frozen/linearly responded x-pattern statics at +/-0.05 and +/-0.10 Angstrom",

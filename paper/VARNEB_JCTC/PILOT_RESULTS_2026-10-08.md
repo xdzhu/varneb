@@ -50,8 +50,12 @@ and one species assignment register the author's entire PO->M seed to our PO+
 gauge (RMS0.007456/max0.012612 Angstrom). The assignment is not changed along
 the path. Only M has now been optimized: job28251302 completed in19min16s,
 11 BFGS steps, with final force0.011905 eV/Angstrom and stress1.915095 kbar.
-The every-step raw SCF and final phase-identity audits remain the acceptance
-gate. The cached T/PO endpoints are retained.
+All12 retained SCFs and the final energy/geometry/force/stress pass fresh audits.
+The relaxed structure is P1 at symprec0.0001 Angstrom, but P2_1/c at0.001 and
+0.01 Angstrom. This tolerance sensitivity is reported rather than removed by
+post-hoc symmetrization. Its energy is -9783.535214211037 eV/cell, or
+71.384600 meV/f.u. below the common PO+ well. This is a well-energy difference,
+not a decay barrier or lifetime. The cached T/PO endpoints are retained.
 
 The seven-total-image guided historical chain has a large gap between
 pattern amplitudes (-0.06759,0,0.84249) and (-0.79388,0,0.05429) Angstrom.

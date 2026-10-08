@@ -4,7 +4,8 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from scripts.prepare_hfo2_reduction_holdout import holdout_vectors
+from scripts.prepare_hfo2_reduction_holdout import holdout_vectors, validate_model_reference
+from scripts.audit_hfo2_static_replica import sha256
 from scripts.score_hfo2_reduction_holdout import score_pairs
 
 
@@ -39,3 +40,14 @@ def test_preregistered_gate_and_missing_pair():
     assert not score_pairs(manifest, results)[-1]["passes_preregistered_10percent_gate"]
     del results[7]
     assert len(score_pairs(manifest, results)) == 3
+
+
+def test_reference_line_endings_are_explicit_not_a_physics_hash_loophole(tmp_path):
+    lf, crlf = tmp_path / "LF.vasp", tmp_path / "CRLF.vasp"
+    lf.write_bytes(b"same reference\n0.123\n")
+    crlf.write_bytes(b"same reference\r\n0.123\r\n")
+    model = {"T_reference_sha256": sha256(lf), "T_reference_lf_sha256": sha256(lf)}
+    assert validate_model_reference(model, crlf)["reference_line_ending_only_byte_difference"]
+    crlf.write_bytes(b"same reference\r\n0.124\r\n")
+    with pytest.raises(ValueError, match="beyond LF/CRLF"):
+        validate_model_reference(model, crlf)

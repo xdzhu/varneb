@@ -1,6 +1,7 @@
 """Freeze eight independent tests of the atomic harmonic response prediction."""
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 import shutil
@@ -28,12 +29,26 @@ def holdout_vectors(model):
     return vectors
 
 
+def validate_model_reference(model, path):
+    """Only LF/CRLF variation in a reference POSCAR is accepted and recorded.
+
+    This is NOT applied to real ABACUS INPUT/KPT/pseudo/orbital contracts,
+    whose raw byte hashes remain mandatory and unchanged.
+    """
+    actual = sha256(path)
+    normalized = hashlib.sha256(path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
+    if normalized != model.get("T_reference_lf_sha256"):
+        raise ValueError("model T geometry text changed beyond LF/CRLF convention")
+    return {"model_T_reference_raw_sha256": model["T_reference_sha256"],
+            "current_T_reference_raw_sha256": actual, "LF_normalized_reference_sha256": normalized,
+            "reference_line_ending_only_byte_difference": actual != model["T_reference_sha256"]}
+
+
 def prepare(source, variants, model_path, output):
     if output.exists():
         raise FileExistsError("refusing existing holdout namespace")
     model = json.loads(model_path.read_text(encoding="utf-8"))
-    if sha256(variants / "T.vasp") != model["T_reference_sha256"]:
-        raise ValueError("model T geometry changed")
+    reference_hashes = validate_model_reference(model, variants / "T.vasp")
     if any(sha256(source / n) != h for n, h in CONTRACT.items()):
         raise ValueError("historical electronic contract changed")
     t = read(variants / "T.vasp", format="vasp")
@@ -62,6 +77,7 @@ def prepare(source, variants, model_path, output):
                                "minimum_distance_A": minimum,
                                "input_sha256": {n: sha256(directory / n) for n in (*CONTRACT, "STRU")}})
     record = {"purpose": "HfO2_T_atomic_reduction_8_independent_holdouts", "model_sha256": sha256(model_path),
+              "reference_hash_audit": reference_hashes,
               "prediction_fixed_before_DFT": predicted, "direction_vectors": {k: v.tolist() for k, v in vectors.items()},
               "T_energy_eV_cell": float(raw["energy"]), "T_baseline_log_sha256": sha256(source / "OUT.ABACUS/running_scf.log"),
               "relative_curvature_acceptance": .10, "points": points,
