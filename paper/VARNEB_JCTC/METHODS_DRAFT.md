@@ -128,3 +128,35 @@ The closest prior works and pending full-text audit are listed in
 `../../docs/VARNEB_JCTC_HFO2_RESEARCH_PLAN.md`. No conclusion of a favorable
 strain window, novel mode coupling, accelerated convergence or JCTC-level
 scientific novelty is made here before those tests.
+
+## 5. Explicit parent-site gauge for HfO2 variants
+
+An ideal fluorite quarter-site scaffold is embedded in the unmodified
+twelve-atom T lattice. This geometric scaffold is not a separately calculated
+cubic phase. A declared operation maps fractional column coordinates as
+`f' = R f + t`; its species-preserving parent-site permutation is recorded
+before applying it to a distorted product. Product atoms are not subsequently
+relabelled by nearest-site fitting. The operation must preserve the metric
+when the cell is retained. Inversion-related product structures are geometric
+switching candidates; a Berry-phase branch check is a separate validation.
+
+The four fcc translations in this cell give orthogonal character projectors
+onto Gamma and the three X-wavevector sectors, in the scaffold reciprocal
+axes. Their sum reconstructs the displacement after a stated translation
+gauge is removed. These q sectors contain multiple irreducible representations:
+an X-sector amplitude must not be called X2- without further mode identification.
+Likewise, the historical T distortion is only one vector in this space;
+its scalar projection is not a general channel label.
+
+For the local T-cell dynamical matrix, generate central atomic displacements
+at 0.01 and 0.02 Angstrom with a 1x1x1 supercell and identity primitive matrix.
+Phonopy symmetry reduces each family to eight independent force calculations.
+The Python workflow consumes Angstrom coordinates and eV/Angstrom forces,
+so its force constants have units eV/Angstrom^2; it does not use the native
+ABACUS Bohr-coordinate conversion factor. Raw force constants, acoustic-sum
+drift and permutation asymmetry are retained. ASR/permutation symmetrization
+is reported separately, and two-step disagreement is part of the uncertainty
+assessment. Acoustic modes are identified by the rigid-translation subspace
+overlap, not assumed to be the first three sorted frequencies. This is an
+analytic fixed-cell Gamma matrix without LO-TO/NAC corrections, not a
+finite-q dispersion or a joint atom-cell saddle certification.
