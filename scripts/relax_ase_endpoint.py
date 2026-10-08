@@ -60,7 +60,22 @@ class EndpointBFGS(BFGS):
 
     def gradient_converged(self, gradient):
         if self.stress_kbar is None:
-            return super().gradient_converged(gradient)
+            current_api = getattr(super(), "gradient_converged", None)
+            if current_api is not None:
+                return current_api(gradient)
+            # Compatibility for a caller using the gradient API on old ASE.
+            values = np.asarray(gradient, dtype=float).reshape(-1, 3)
+            return bool(np.linalg.norm(values, axis=1).max() < self.fmax)
+        return self._physical_converged()
+
+    def converged(self, *args, **kwargs):
+        # ASE <=3.23 calls converged(forces); newer ASE routes through the
+        # gradient interface. Apply the same physical criteria on both APIs.
+        if self.stress_kbar is None:
+            return super().converged(*args, **kwargs)
+        return self._physical_converged()
+
+    def _physical_converged(self):
         forces = np.asarray(self.endpoint_atoms.get_forces(), dtype=float)
         force_max = float(np.linalg.norm(forces, axis=1).max())
         return force_max < self.fmax and _stress_residual_kbar(

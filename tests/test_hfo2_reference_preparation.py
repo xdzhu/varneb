@@ -11,6 +11,8 @@ from scripts.prepare_hfo2_reference_variants import distortion, fluorite_scaffol
 from scripts.audit_hfo2_static_replica import sha256
 import scripts.audit_hfo2_gamma_and_seeds as scorer
 from vcneb.reference_variants import apply_parent_operation
+from scripts.analyze_hfo2_parent_patterns import rotated_t_triplet
+from scripts.prepare_hfo2_sparse_gap import gap_geometries
 
 
 DATA = Path(__file__).resolve().parents[1] / "benchmarks/hfo2_channels/20261008/reference_variants"
@@ -91,3 +93,27 @@ def test_full_scorer_on_synthetic_harmonic_forces(tmp_path, monkeypatch):
     assert all(family["minimum_translation_principal_overlap"] > .999 for family in report["families"].values())
     with pytest.raises(FileExistsError):
         scorer.audit(tmp_path, tmp_path / "analysis")
+
+
+def test_rotated_t_triplet_resolves_axis_without_irrep_assumption():
+    t = read(DATA / "T.vasp")
+    parent, basis, _ = rotated_t_triplet(t)
+    vector = distortion(t, parent)
+    projections = np.einsum("aij,ij->a", basis, vector)
+    np.testing.assert_allclose(projections[:2], 0, atol=1e-10)
+    assert projections[2] > .8
+    po = distortion(read(DATA / "PO.vasp"), parent)
+    assert abs(np.sum(po * basis[0])) > .5
+
+
+def test_sparse_gap_adds_only_three_fixed_order_geometries():
+    t = read(DATA / "T.vasp")
+    last = t.copy()
+    last.positions[4, 2] += .04
+    added = gap_geometries(t, last)
+    assert len(added) == 3
+    for fraction, atoms in zip((.25, .5, .75), added):
+        assert atoms.get_chemical_symbols() == t.get_chemical_symbols()
+        np.testing.assert_allclose(atoms.cell.array, t.cell.array)
+        np.testing.assert_allclose(atoms.positions - t.positions,
+                                   fraction * (last.positions - t.positions), atol=1e-12)

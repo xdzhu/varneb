@@ -37,6 +37,9 @@ def test_endpoint_bfgs_requires_force_and_explicit_stress_convergence() -> None:
     optimizer.fmax = 0.10
     assert _stress_residual_kbar(atoms, 0.0) > 1.0
     assert optimizer.gradient_converged(gradient) is False
+    # Actual ASE3.23 entry point: must not skip the explicit stress gate.
+    assert optimizer.converged(atoms.get_forces()) is False
+    assert optimizer.converged() is False
 
 
 def test_endpoint_bfgs_preserves_force_only_mode() -> None:
@@ -52,3 +55,16 @@ def test_endpoint_bfgs_preserves_force_only_mode() -> None:
     gradient = np.zeros(3)
     optimizer.fmax = 0.10
     assert bool(optimizer.gradient_converged(gradient)) is True
+
+
+def test_legacy_and_current_entry_points_agree_on_physical_gates() -> None:
+    from ase.calculators.singlepoint import SinglePointCalculator
+    for force, stress_kbar, expected in ((0., 0., True), (.11, 0., False), (0., 2.1, False)):
+        atoms = Atoms("Cu", positions=[[0, 0, 0]], cell=[4, 4, 4], pbc=True)
+        atoms.calc = SinglePointCalculator(atoms, energy=0., forces=[[force, 0, 0]],
+                                           stress=np.array([stress_kbar, 0, 0, 0, 0, 0]) / 1602.176634)
+        optimizer = EndpointBFGS(atoms, endpoint_atoms=atoms, pressure_gpa=0,
+                                 stress_kbar=2, logfile=None)
+        optimizer.fmax = .1
+        assert bool(optimizer.converged(atoms.get_forces())) == expected
+        assert bool(optimizer.gradient_converged(-atoms.get_forces().ravel())) == expected
