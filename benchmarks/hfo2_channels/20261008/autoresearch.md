@@ -147,13 +147,39 @@ Date: 2026-10-08. No physical result is inferred from a unit-test fixture.
   interpolation energy would flag this straight reconstruction as unresolved;
   it cannot establish the globally optimal MEP or prove the two paths differ
   by a specific irreducible mode. Further path optimization is a separate step.
-- Decision: pending preparation/DFT; never replace DFT with contour interpolation.
+- All3 SCFs COMPLETED/exit0 in28251303 with fresh complete audits.
+- Result:35.795717/59.386224/34.045090meV/f.u. above the common T baseline.
+- Decision: reject the historical sub-meV discrete maximum as a resolved
+  physical barrier or accelerator benchmark. Preserve raw history; insert the
+  three audited geometries and optimize a10-total/8-interior ordinary chain.
+  First allocation is a10-step health pilot, no CI or physical-input change.
+  Sampled straight-interpolation energies do not determine the optimized MEP.
+
+## E007 — Independent frozen/atomic-response curvature test
+
+- Apply the two real T Gamma matrices to the3 rotated geometric patterns,
+  release30 orthogonal nontranslational atomic directions, keep the cell fixed.
+- Observed two-step operator spread0.0683446eV/Angstrom² is an operational
+  stability gate, not a rigorous numerical-error bound. Eliminated minima
+  0.100839/0.088140 pass with narrow margins; condition numbers490/561.
+- Before any independent DFT: predict Qx frozen curvature4.813147 and
+  linearly responded curvature1.979301eV/Angstrom² from the0.01-Angstrom matrix.
+  The independent0.02 matrix predicts4.811954/1.976804 and is a step check.
+- New budget8 SCFs: frozen/responded Qx at +/-0.05 and +/-0.10 Angstrom.
+  Response must not be renormalized: the retained projection is the Q axis.
+- Prespecified assessment: paired energy and force-gradient curvatures versus
+  the fixed prediction; <=10% relative curvature error and energy/force
+  disagreement at both amplitudes. Orthogonal force residual is reported too.
+  Failure is recorded, not cured by changing cutoff or refitting these holdouts.
+- This local harmonic response line is not fully minimized conditional DFT,
+  joint-cell reduction, a barrier model or a new Schur-complement theorem.
 
 ## Existing evidence and non-results
 
 - ABACUS ordinary-7/9: 39.187725/39.0523 meV/f.u.; historical CI-7: 32.29305.
-- Guided-7: 0.963925 meV/f.u., fmax=0.0866792767, passes 0.10 but not original 0.05;
-  sub-meV barrier resolution and exact variant identity are not yet established.
+- Guided-7: historical discrete0.963925meV/f.u., fmax=0.0866792767 passes0.10;
+  E006 now shows the straight reconstruction is under-resolved (59.386meV/f.u.
+  internal sample). It is not a reliable low-barrier/acceleration benchmark.
 - VASP 27727755/27727756: Slurm FAILED/exit1 after about 9.5 hours. Actual wrapper
   output reports `step_limit_reached`, fmax 0.2030435724/0.2784290788. This is a
   nonconvergence audit exit, **not a newly observed VASP crash/Bravais error**.

@@ -48,3 +48,42 @@ def test_factory_rejects_hidden_physics_or_mpi_override():
         transport.make_factory(parameters={"source_directory": "x", "ecutwfc": 120}, command="mpirun -np 32 abacus")
     with pytest.raises(ValueError, match="mpirun"):
         transport.FixedHfo2Calculator(source="x", command="srun -n 32 abacus", directory="x")
+
+
+def test_seed_cache_never_silently_relabels_geometry(tmp_path, monkeypatch):
+    source = tmp_path / "source"
+    source.mkdir()
+    (source / "INPUT").write_text("unchanged fixture input")
+    monkeypatch.setattr(transport, "CONTRACT", {"INPUT": sha256(source / "INPUT")})
+    atoms = read(Path(__file__).resolve().parents[1] / "benchmarks/hfo2_channels/20261008/reference_variants/T.vasp")
+    (source / "STRU").write_text("geometry handled by fixture read")
+    (source / "OUT.ABACUS").mkdir()
+    (source / "OUT.ABACUS/running_scf.log").write_text("synthetic only")
+    monkeypatch.setattr(transport, "read", lambda *a, **k: atoms.copy())
+    result = {"energy": -2., "forces": np.zeros((12, 3)), "stress": np.zeros(6)}
+    monkeypatch.setattr(transport, "audited_results", lambda path: result)
+    monkeypatch.setattr(transport.subprocess, "run", lambda *a, **k: pytest.fail("cached identical seed must not launch DFT"))
+    factory = transport.make_seed_cached_factory(parameters={"source_directory": str(source),
+                "seed_static_directories": [str(source)] * 3}, command="mpirun -np 32 abacus")
+    cached = atoms.copy()
+    cached.calc = factory(0, cached, tmp_path / "cached")
+    assert cached.get_potential_energy() == -2
+    np.testing.assert_array_equal(cached.get_forces(), result["forces"])
+    assert (tmp_path / "cached/seed_cache_audit.json").exists()
+    uncached_factory = transport.make_seed_cached_factory(parameters={"source_directory": str(source),
+                    "seed_static_directories": [str(source), None, str(source)]}, command="mpirun -np 32 abacus")
+    assert uncached_factory(1, atoms, tmp_path / "uncached").results == {}
+    changed = atoms.copy()
+    changed.positions[0, 0] += .001
+    with pytest.raises(ValueError, match="geometry differs"):
+        factory(1, changed, tmp_path / "changed")
+
+
+def test_periodic_geometry_cache_is_ordered_not_permutation_invariant():
+    atoms = read(Path(__file__).resolve().parents[1] / "benchmarks/hfo2_channels/20261008/reference_variants/T.vasp")
+    translated = atoms.copy()
+    translated.positions[0] += atoms.cell[0]
+    assert transport.same_ordered_geometry(atoms, translated)
+    swapped = atoms.copy()
+    swapped.positions[[0, 1]] = swapped.positions[[1, 0]]
+    assert not transport.same_ordered_geometry(atoms, swapped)

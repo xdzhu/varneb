@@ -48,16 +48,41 @@ require optimization before it is accepted as an endpoint. Its raw energy
 must not be used as a relaxed decay-channel reference. A fixed z reflection
 and one species assignment register the author's entire PO->M seed to our PO+
 gauge (RMS0.007456/max0.012612 Angstrom). The assignment is not changed along
-the path. Only M will be optimized; the cached T/PO endpoints are retained.
+the path. Only M has now been optimized: job28251302 completed in19min16s,
+11 BFGS steps, with final force0.011905 eV/Angstrom and stress1.915095 kbar.
+The every-step raw SCF and final phase-identity audits remain the acceptance
+gate. The cached T/PO endpoints are retained.
 
 The seven-total-image guided historical chain has a large gap between
 pattern amplitudes (-0.06759,0,0.84249) and (-0.79388,0,0.05429) Angstrom.
 Its discrete0.963925meV/f.u. maximum is therefore not treated as a precision
-benchmark. Three real static samples of this segment are staged to test the
-straight reconstructed path. Even a high sampled energy would not determine
-the globally optimized MEP: intermediate geometry relaxation is a distinct
-calculation. Thus no physical acceleration, new optimal channel, favorable
-strain window or JCTC-level novelty is claimed from this pilot alone.
+benchmark. All three independent samples completed in array28251303 and passed
+the same-input/full-SCF audit. Their energies above the same T reference are
+35.795717, 59.386224 and 34.045090 meV/f.u. at interpolation fractions
+0.25, 0.50 and 0.75. Thus the straight reconstruction of the sparse historical
+chain misses an internal high-energy region. The sub-meV discrete maximum
+must not support a physical low-barrier or acceleration claim. These samples
+do not determine the globally optimized MEP barrier: intermediate geometry
+relaxation is a distinct calculation. The raw historical data are preserved.
+
+## Fixed-cell atomic reduction: a prediction awaiting independent tests
+
+Projecting the two measured Gamma matrices onto the rotated T-pattern triplet
+and releasing30 orthogonal, nontranslational atomic directions predicts
+x/y curvatures of1.97930/1.97680 eV/Angstrom^2, compared with frozen values
+4.81315/4.81195. The predicted softening is58.88/58.92 percent; the z curvature
+is unchanged within this reduction. The eliminated-block minimum eigenvalues
+are0.10084/0.08814 eV/Angstrom^2, above the observed two-step operator spread
+0.06834, but the small margin and condition numbers490/561 require caution.
+This spread is an operational gate, not a rigorous total numerical-error bound.
+
+This is an application of the established Schur complement, not a new theorem,
+independent prediction success, full cell release, barrier model or TS result.
+Eight independently evaluated geometries will compare frozen and linearly
+responded Qx at +/-0.05 and +/-0.10 Angstrom. Their prediction and evaluation
+criteria will be committed before DFT; no holdout will be used to refit the
+initial response. A linearly responded structure is not a fully minimized
+conditional surface.
 
 Primary computational workflow references: [Phonopy settings and displacement
 definitions](https://phonopy.github.io/phonopy/setting-tags.html) and

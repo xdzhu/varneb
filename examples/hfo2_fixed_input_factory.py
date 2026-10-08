@@ -12,6 +12,7 @@ import shutil
 import subprocess
 import time
 
+from ase.io import read
 from ase.calculators.calculator import Calculator, all_changes
 import numpy as np
 
@@ -80,4 +81,51 @@ def make_factory(*, parameters, command):
         raise ValueError("only source_directory accepted; physical parameter overrides prohibited")
     def factory(image_index, atoms, directory):
         return FixedHfo2Calculator(source=parameters["source_directory"], command=command, directory=directory)
+    return factory
+
+
+def same_ordered_geometry(left, right):
+    """Periodic equivalence without atom remapping, rotation or force transforms."""
+    if (left.get_chemical_symbols() != right.get_chemical_symbols()
+            or not np.array_equal(left.pbc, right.pbc)
+            or not np.allclose(left.cell.array, right.cell.array, atol=1e-10, rtol=0)):
+        return False
+    delta = left.get_scaled_positions(wrap=False) - right.get_scaled_positions(wrap=False)
+    delta -= np.rint(delta)
+    return bool(np.max(np.abs(delta @ left.cell.array)) < 1e-10)
+
+
+def make_seed_cached_factory(*, parameters, command):
+    """Reuse individually audited seed SCFs, especially unchanged endpoints.
+
+    A null directory denotes a new, unevaluated interior geometry. Cached
+    results only apply to an identical ordered geometry. ASE invalidates
+    them after movement and the byte-preserving calculator then performs a new
+    SCF. No nearest-neighbor/permutation cache lookup is performed.
+    """
+    if set(parameters) != {"source_directory", "seed_static_directories"}:
+        raise ValueError("seed factory accepts source_directory and exact ordered seed_static_directories only")
+    directories = parameters["seed_static_directories"]
+    if not isinstance(directories, list) or len(directories) < 3:
+        raise ValueError("at least three ordered seed statics required")
+
+    def factory(image_index, atoms, directory):
+        calc = FixedHfo2Calculator(source=parameters["source_directory"], command=command, directory=directory)
+        if directories[image_index] is None:
+            return calc
+        source = Path(directories[image_index])
+        if any(sha256(source / n) != h for n, h in CONTRACT.items()):
+            raise ValueError("seed cached SCF electronic contract changed")
+        if not same_ordered_geometry(atoms, read(source / "STRU", format="abacus")):
+            raise ValueError("seed cache ordered geometry differs; refuse stale energy/forces/stress")
+        raw = audited_results(source)
+        calc.atoms = atoms.copy()
+        calc.results = {k: v.copy() if isinstance(v, np.ndarray) else v for k, v in raw.items()}
+        target = Path(directory)
+        target.mkdir(parents=True, exist_ok=True)
+        record = {"policy": "identical_ordered_seed_geometry_only", "raw_source": str(source),
+                  "input_sha256": {n: sha256(source / n) for n in (*CONTRACT, "STRU")},
+                  "raw_log_sha256": sha256(source / "OUT.ABACUS/running_scf.log")}
+        (target / "seed_cache_audit.json").write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
+        return calc
     return factory

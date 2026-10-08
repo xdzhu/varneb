@@ -99,3 +99,37 @@ CPC 现稿未重写为已完成的 JCTC 稿；JCTC 叙事/claim–evidence 设�
 - 第一份实证结果段落已写入 `paper/VARNEB_JCTC/PILOT_RESULTS_2026-10-08.md`；
   明确哪些结论已被数据支持、哪些仍未通过；没有把计划写成完成态。
 - 本机完整工作树最新回归714 passed / 1 skipped（55.21s）；源码部署后再做hf旧ASE接口回归。
+
+## 当前真实任务：R5
+
+`0cb8df7` 已正常推送；archive SHA256
+`0b2f2f1b02d4a9177d72a5ba839f4effac52f092a80eb02ac258132aabd5d8bf`。
+根目录 `/public/home/iai806/abacus/agent-runs/20261008-varneb-hfo2-channels-r5`。
+
+- `28251302`：M端点BFGS，COMPLETED/exit0/node11，19分16秒、11步，原子力0.011905/应力1.915095。
+  `M_bfgs/endpoint_relax_state.json` 为实际逐步状态；原始SCF在
+  `M_bfgs/calculator/image_0000/scf_000000`及后续编号。以最终summary而非running检查点判状态；不要按日志重复输出误计电子步。
+- `28251303`：历史引导链01→02间的3点SCF，全部COMPLETED/exit0，逐点审计通过，1节点32MPI/点。
+  在 `sparse_gap/calculations/00..02`，新点输入哈希见 `sparse_gap_manifest.json`。
+- hf没有pytest，未安装或谎报21项pytest；直接运行4个真实ASE端点接口测试全部通过，
+  原6个电子文件哈希及3个STRU回读均通过，且未在login节点启动DFT。
+- 源 archive 不覆盖，不重复提交；并行活动为一个M任务+最多3个gap静态任务。
+- 下一关先收gap真实能量，确定低垒链是否漏峰；M完成后核验SG14、原子数、每步SCF与力/应力。
+  再进行Berry分支核验和三条G1普通路径准备。中心点/峰像未被强行当作TS。
+
+## 关键更正：引导链漏峰与局部约化预测
+
+3个gap静态能量为35.795717/59.386224/34.045090meV/f.u.（同一T能量基准）。
+原亚meV离散最大值不能再作为物理低垒/加速实证；既有原始文件不覆盖。
+这些数值属于未松弛的直线重构，不是新的MEP势垒。下一步插入已审计点，
+10-total/8-interior普通链先做10步健康检查，保持0.10/原输入/不CI。
+
+实际Γ矩阵的固定胞原子Schur约化已生成 `T_atomic_reduction.json`：
+x/y预测软化约58.9%，待8点独立冻结/线性响应静态检验；这不是全条件面/新定理/TS。
+两档矩阵差给出的操作性分辨门槛0.06834eV/Å²不是严格DFT误差界。
+M第6步曾原子力达标但应力3.846932kbar，不提前停；第11步双门槛已通过，待逐步原始SCF/相身份审核。
+
+下一份源码归档含统一的HfO₂链10步pilot launcher：修复链10-total/8-interior与
+首条PO→M9-total/7-interior最多同时2条，端点复用原始SCF缓存。
+本机完整工作树回归719 passed/1 skipped后，新增M审计/PO→M种子及相关13项聚焦测试通过。
+这些软件测试不冒充材料预测成功；8点独立检验及新路径仍待提交/实际结果。
