@@ -787,3 +787,22 @@ See submission_handles_r13.json; no switching results or G2 DFT claimed yet.
 - Before delivery03:28:55CST recheck:PO--MRunningstep25.140413,
   preservingRunningstep21.162964,reversingPendingDependency. Same two active
   jobs, no resubmission or parameter/source change; both continue improving.
+
+## Capacity-only scheduling update, 2026-10-09 03:40 CST
+
+- Reversing continuation28319571 has an independent audited nine-record seed;
+  its existing dependency waits for capacity, not PO--M physical outputs.
+  Change only that queued job from `afterany:28298794` to
+  `afterany:28298794?afterany:28319570`, allowing either active allocation to
+  free the slot. This is not a new research experiment or faster-NEB claim.
+- The first controller read was stale. Briefly hold only the pending job to
+  verify the OR dependency, then release it at03:40:17CST. At03:40:53 it is
+  PENDING Dependency with both parents unfulfilled; both parents are RUNNING,
+  and the reverse continuation workdir has not been created. The hold is not
+  left in place. At most two study chains remain active.
+- Production archive/batch hashes are unchanged.32MPI,100Ry/full10auDZP,
+  ordinary0.10, noCI, inputs and running sources remain unchanged; no new
+  submission, DFT call caused by the adjustment, or earlyG2/holdout work.
+  A failed parent may free capacity but still needs separate scientific audit.
+  No actual wait-time saving has yet been measured. Full journal:
+  `scheduling_update_0337CST_20261009.json`.

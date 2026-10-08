@@ -1,0 +1,79 @@
+{
+  "format_version": 1,
+  "date": "2026-10-09",
+  "purpose": "release one existing queued G1 allocation after either active allocation ends; capacity-only dependency, not a new calculation or a convergence-acceleration experiment",
+  "existing_job_updated": 28319571,
+  "original_submission_journal_preserved": "submission_handles_r17.json",
+  "previous_capacity_update_preserved": "scheduling_update_2317CST.json",
+  "previous_dependency": "afterany:28298794",
+  "updated_dependency": "afterany:28298794?afterany:28319570",
+  "update_sequence": [
+    {
+      "time_CST": "2026-10-09T03:37:44",
+      "command": "scontrol update JobId=28319571 Dependency=afterany:28298794?afterany:28319570",
+      "exit_code": 0,
+      "observed": "first controller read still displayed the prior dependency; both parent allocations remained RUNNING"
+    },
+    {
+      "time_CST": "2026-10-09T03:38:06",
+      "command": "scontrol hold 28319571",
+      "observed": "PENDING JobHeldUser; controller now displayed the intended OR dependency with both parents unfulfilled; no allocation had started"
+    },
+    {
+      "time_CST": "2026-10-09T03:40:07",
+      "command": "scontrol show job -o 28319571; squeue -h -u iai806",
+      "observed": "OR dependency independently rechecked while held; both parents still RUNNING"
+    },
+    {
+      "time_CST": "2026-10-09T03:40:17",
+      "command": "scontrol release 28319571",
+      "observed": "PENDING, priority restored to 1163, intended OR dependency retained; no new submission"
+    }
+  ],
+  "actual_post_release_check_CST": "2026-10-09T03:40:53",
+  "actual_states": {
+    "28298794": "RUNNING node26",
+    "28319570": "RUNNING node11",
+    "28319571": "PENDING Dependency; both OR parents unfulfilled; reverse continuation workdir not yet created"
+  },
+  "temporary_pending_job_hold_released": true,
+  "max_active_study_chains": 2,
+  "capacity_argument": "The only two active study allocations are the two OR parents. When either allocation terminates, at most one parent remains active and the queued reverse allocation may start, retaining a maximum of two active study chains. afterany frees capacity even after failure; any failed parent still requires independent scientific diagnosis.",
+  "dependency_is_physical_data_requirement": false,
+  "registered_batch_script_inspected": true,
+  "independent_audited_reverse_seed_records": 9,
+  "resources_unchanged": {
+    "partition": "hfacnormal01",
+    "nodes": 1,
+    "Slurm_ntasks": 1,
+    "cpus_per_task": 32,
+    "MPI_ranks": 32,
+    "threads_per_rank": 1,
+    "Slurm_ReqTRES_memory": "59168M",
+    "wall_cap": "24:00:00",
+    "optimizer_step_cap": 80,
+    "n_total_images": 9,
+    "n_active_images": 7,
+    "fixed_cached_endpoints": 2
+  },
+  "immutable_production_source": {
+    "commit": "cc536a2b34fa78d55c11331e4e1117218e6d7baf",
+    "archive_path": "/public/home/iai806/abacus/agent-runs/20261008-varneb-hfo2-channels-r12/source.tar.gz",
+    "archive_sha256": "df4c12eef03d00d02c3ae357e3f47143b6500b96b7bd12f479f2e2083abd5220",
+    "batch_script_path": "/public/home/iai806/abacus/agent-runs/20261008-varneb-hfo2-active-curvature-r16/source/cluster/hf_hfo2_chain_continue_20261008.slurm",
+    "batch_script_sha256": "be16378dd6dec6f06ec339edc16bd5f1522d25ab5122a29c1e6b39bb35f7a2ae",
+    "hashes_rechecked_after_release_CST": "2026-10-09T03:40:17"
+  },
+  "ordinary_fmax_eV_A": 0.10,
+  "climb": false,
+  "new_jobs_submitted": 0,
+  "production_source_changed": false,
+  "physical_parameters_changed": false,
+  "resource_requests_changed": false,
+  "new_DFT_calls_caused_by_adjustment": 0,
+  "G2_or_holdout_submitted": false,
+  "actual_wait_reduction_measured": false,
+  "limitations": "This optimizes an existing capacity gate only. It does not demonstrate faster NEB convergence, guarantee start time or force convergence, certify a saddle, or advance the G1 scientific acceptance gate.",
+  "official_dependency_reference": "https://slurm.schedmd.com/sbatch.html",
+  "cluster_slurm_version": "24.05.8-3.1.3-668-20260723"
+}
