@@ -366,7 +366,9 @@ This limitation is specific to the measured T reference and selected subspaces;
 it is not evidence that all fixed parent representations fail. A mapped Cmma
 control is now required by the [v2 addendum](../../docs/HFO2_PREDICTION_PROTOCOL_V2_2026-10-09.md)
 before attributing independent predictive benefit to path-adaptive reduction.
-No numerical result or prediction advantage for that control is available yet.
+At the time of the initial figure, no numerical result for that control was
+available. The dated E023 descriptive registration below extends this record;
+no prediction advantage has yet been established.
 
 The largest remaining ordinary residual is at image2 rather than the energy
 maximum at image3. This distinguishes the optimization bottleneck from the
@@ -375,3 +377,34 @@ SCFs, changed Hamiltonian, eliminated unstable block or prospective prediction
 are introduced by this figure. The [contract](FIGURE_CONTRACT_HFO2_T_PO.md)
 and [reproduction bundle](figures/hfo2_T_PO_ordinary_20261008/README.md) retain
 the reference, source hashes, complete-subspace rule and explicit limits.
+
+## E023: a stronger parent is channel-dependent, not automatically sufficient
+
+The author's T orientation and the common production PO+ geometry register
+the published Cmma directions without choosing frames by their modal coverage.
+Of192 proper-frame/origin candidates,16 are T-compatible and four remain tied
+at the closest PO+ registration. All four are retained; reference rows, not
+production images, are permuted. A common T displacement chart transports
+the reference directions explicitly, and a measured-error real subspace
+representation retains four directions without ASR correction or new eigenpair
+claims. The small source translation admixture is reported rather than repaired.
+
+In the common T-origin mass metric, the Cmma four-direction span captures
+27.18--27.19% of the image3 squared displacement norm and52.24% at PO,
+compared with89.69% and30.42% for the rank-three rotated-T triplet. These
+percentages deliberately differ from the earlier fluorite-origin geometric
+fractions: a reference origin and metric change must not be concealed.
+The Cmma-origin linear plane retains endpoint residuals6.43/5.60sqrt(amu)A;
+neither endpoint is thereby contained in a globally sufficient four-mode plane.
+
+The same registration applied to nine earlier unconverged snapshots shows
+that the relative coverage depends on the candidate channel. In particular,
+the recorded reversing-flip maximum has approximately44.8% Cmma coverage
+versus29.2% for the T-triplet, unlike the formation-path maximum. These
+snapshots are not final MEPs, and coverage is not energy partition or a
+barrier predictor. This supports keeping a stronger fixed reference in the
+future comparison; it does not establish universal superiority of either
+reference, path adaptation or joint-cell reduction. Nonlinear fixed-reference
+relaxation and larger spaces remain viable controls. Source/scalar evidence,
+all equivalent frames and limits are in the
+[reproduction bundle](../../benchmarks/hfo2_channels/20261008/cmma_path_mapping/README.md).

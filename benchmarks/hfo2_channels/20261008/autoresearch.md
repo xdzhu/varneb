@@ -634,3 +634,44 @@ See submission_handles_r13.json; no switching results or G2 DFT claimed yet.
   the tested sourcebytes and added explicit raw-byte attributes. No semantic
   code/data edit after clean testing. Final delivery rechecks all six code/
   reporthashes, JSONL parsing and local document links beforeordinarypush.
+
+## E023: register the strong reference in actual frozen production paths
+
+- Question: can the published four-direction reference be compared without
+  arbitrary axes, hidden atom relabeling, origin/metric changes or silent ASR?
+  The naiveCmma->T registration has four equal-distance oxygen ambiguities;
+  its arbitrary-axis low-coverage trial is not accepted as strong-control evidence.
+- Verify an additional pinned authorT file via publicGitHubmetadata/blob/SHA.
+  Enumerate192 proper signed-frame/quarter-origin choices, retain16 T-compatible
+  frames, then all4 commonPO+ nearest-registration ties. Coverage/energy/forces
+  do not enter selection. Global second-best assignment gaps1.47265A.
+- Register reference rows once; leave every production image/lift untouched.
+  Transport directions into the common originalT fractional/mass chart.
+  Explicit real/imagSVD requiresrank4 andrecords complexprojection error2.08355e-6.
+  Source translationadmixture norm.0036854 is retained, notASR-repaired.
+- Ten convergedTPOrecords replayfmax.059881615690252875. CommonT-origin Cmma4
+  peakcoverage.271810-.271901/PO.522401-.522402;Ttriplet3 peak.896905/PO.304151.
+  Differentorigin/metric fractions from E020 are not mixed. Cmmaaffine-plane
+  endpointresiduals6.43182/5.60197sqrt(amu)A block a global four-mode plane claim.
+- Same unchanged registration analyzes9 earlier snapshots/84frozenimage records,
+  including repeated endpoints, not84 new/uniqueSCFs. Reversingflip step10
+  peakCmma~.4478 versusTtriplet~.2921, unlike formation. These are unconverged
+  observations, not final competing barriers or prospective predictions.
+- Synthetic phase/unitary/projector, explicitrank/error, full frequencydoublet,
+  boundedframeenumeration/ambiguity and input-preservation regressions pass.
+  Initialnoise test incorrectly inspected the last rather than the fourth
+  singular value; correct the assertion, not the numerical policy.
+-68focusedtests pass/1.20s. Clean treedc803124/archivec6658bc6:973passed,
+  2skipped/94.46s. Samearchive convergedreport byteidentical. Subsequent
+  changes are reports/docs only, no implementation/test edit after clean tests.
+- Actual01:33:22CST:PO--M28298794Runningstep17fmax.166350,node26;
+  preservingflip28319570Runningstep11fmax.319587,node11;28319571PendingDependency.
+  No newDFT, electronicretuning, productionoverwrite, jobmutation or earlyG2.
+- Decision: retain all registered strong-reference choices and channel-specific
+  descriptive limits. G1complete/G2response/holdout prediction advantage remain
+  unproven. Samearchive HF converged/historical replays and delivery checks follow.
+- ActualHFsamearchive replays both reports successfully. Module/archive and
+  referencesourcehashes exact;1451+3537float fields within1e-12,maximum1.13687e-13.
+  Only originalsourceaudit library versions and capturedwarning lists differ,
+  retained in both reports. NoDFT, installation, nodeallocation, production
+  sourceoverwrite or source/test edit after clean regression.

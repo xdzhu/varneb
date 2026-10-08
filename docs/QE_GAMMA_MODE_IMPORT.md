@@ -45,6 +45,14 @@ An eventual real/orthonormal subspace representation needs its own explicit
 phase, degeneracy and projection-error policy; do not discard imaginary parts
 or silently loosen the projection contract to make a file pass.
 
+2026-10-09 E023 implements one explicit downstream policy in
+`vcneb.mode_subspaces.real_mode_subspace`: SVD of the complete real/imaginary
+column span, declared rank, measured complex-column reconstruction error, and
+failure on unexpected rank/error. It produces a **geometric subspace**, not
+new eigenpairs, and retains source translation admixture without ASR. See the
+[production-path registration](../benchmarks/hfo2_channels/20261008/cmma_path_mapping/README.md).
+The importer itself still does not choose this policy or modify its returned vectors.
+
 ## HfO2 reference audit
 
 The reviewed reproduction entry point is:

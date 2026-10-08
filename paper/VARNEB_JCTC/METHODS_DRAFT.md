@@ -409,3 +409,35 @@ energies. Preparation of a real orthonormal comparison subspace, ordered-path
 gauge mapping and same-data material benchmarking remain explicit gates.
 The [source and numerical audit](../../benchmarks/hfo2_channels/20261008/cmma_reference/README.md)
 records these limits. No material setting or running calculation is changed.
+
+## 12. Reference registration and real geometric spans
+
+The later production-path registration first uses the known stationary T
+geometry to restrict192 proper signed-axis/quarter-origin candidates, then
+uses the known common PO+ geometry to determine the closest Cmma registration.
+All tied choices are retained. Modal coverage and energy are evaluated only
+after registration. This is exploratory G1-informed choice, not a blind
+test or proof of unique physical atom correspondence. The assignment is fixed
+for reference rows and never changed image by image.
+
+Let H_C and H_T be the rotated Cmma and original production T row cells.
+Reference displacement directions are transported into a common fractional
+chart as v_T=v_C H_C^{-1}H_T. This changes an analysis convention, not a
+production geometry or Hamiltonian. In the declared mass metric, SVD of
+[Re(V),Im(V)] supplies a real orthonormal span of prescribed rank. Complex
+reconstruction errors and discarded singular values are reported; unexpected
+rank or excessive error blocks the representation. No real-phase truncation,
+ASR or new phonon-eigenpair interpretation is implicit in the operation.
+Individual SVD axes are arbitrary; its projector and total span weight are
+the invariant comparison quantities. Measured source translation admixture
+is retained, while the geometric projection removes overall rigid translation
+using the pre-existing common mass-metric contract.
+
+Common-origin displacement fractions and reference-origin affine-plane
+residuals answer different questions. Both use the same coordinate metric,
+but the former compares directional coverage and the latter tests whether
+an affine plane contains the endpoint/path. Their denominators are not mixed;
+zero displacement is undefined rather than measured zero coverage. Complete
+frequency doublets are retained in the equal-rank low-frequency T control.
+Neither a high span fraction nor small projected curvature certifies full
+stability, a conditional minimum or independently accurate barrier prediction.
