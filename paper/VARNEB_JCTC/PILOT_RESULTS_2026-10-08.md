@@ -362,6 +362,12 @@ reference doublet becomes the TS unstable direction. All T optical reference
 frequencies are positive; full atomic--cell stationarity and stability of the
 actual bottleneck still require separate measurements.
 
+This limitation is specific to the measured T reference and selected subspaces;
+it is not evidence that all fixed parent representations fail. A mapped Cmma
+control is now required by the [v2 addendum](../../docs/HFO2_PREDICTION_PROTOCOL_V2_2026-10-09.md)
+before attributing independent predictive benefit to path-adaptive reduction.
+No numerical result or prediction advantage for that control is available yet.
+
 The largest remaining ordinary residual is at image2 rather than the energy
 maximum at image3. This distinguishes the optimization bottleneck from the
 sampled energetic bottleneck when selecting future local probes. No additional

@@ -31,6 +31,15 @@ nonpolar switching variants and VCNEB also have substantial prior literature.
 Novelty must be established against the specific 2019–2026 works named in the
 execution plan, including Zhou–Zhang–Rappe 2022 and Qi–Singh–Rabe 2025.
 
+Qi–Rabe's distinct PRL135,046101 (2025) introduces a Cmma reference to organize
+competing polymorphs through unstable phonon branches. It motivates a stronger
+fixed-reference control: poor coverage in our selected T representation alone
+does not establish that path adaptation is necessary. Reference choice and
+orthogonal/branch response must be tested separately. The
+[v2 prospective addendum](../../docs/HFO2_PREDICTION_PROTOCOL_V2_2026-10-09.md)
+records this change after exploratory G1 analysis but before G2/holdout labels,
+without replacing the original protocol or adding a production matrix.
+
 Behara–Van der Ven (2022) additionally maps polymorph/variant paths in strain
 coordinates, overlays a path on a two-shuffle energy landscape, and shows a
 Pbcn-to-T intermediate change when the entire O cell is fixed. Neither path
@@ -82,4 +91,5 @@ The first ordinary-residual-passed T--PO band now has an audited six-panel
 energy/pattern/strain/reconstruction/Gamma-subspace/residual figure in
 [PILOT_RESULTS_2026-10-08.md](PILOT_RESULTS_2026-10-08.md). It shows why good
 local pattern coverage need not imply a complete global few-mode plane;
-it is not a boundary-response prediction or a full-variable TS result.
+it is not a boundary-response prediction or a full-variable TS result, nor an
+exclusion of more suitable fixed parent-mode representations.

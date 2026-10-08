@@ -564,3 +564,27 @@ See submission_handles_r13.json; no switching results or G2 DFT claimed yet.
   generated-SVG-specific whitespace metadata; no code/data/figure rewrite.
   Actual23:56:49PO--Mstep10fmax0.189975, preservingflipstep3fmax0.747910,
   bothRunning; reversingflip stillDependency. Twoactivechains unchanged.
+
+## E021: stronger fixed-parent control before G2 labels
+
+- Read the distinct Qi--Rabe PRL135,046101/arXiv2412.16792v2 scientific body
+  and original20-page ancillary SI. Download signatures/hashes retained;
+  Poppler pages3/5 check the literal coordinate issue and phonon folding.
+- Existing G1 T-pattern coverage is exploratory evidence, not proof that all
+  fixed references fail. Add a mapped Cmma control in prospective protocolv2,
+  separating reference choice from frozen/atomic/joint/branch response.
+  Keep v1 unchanged except its explicit dated pointer; no holdout labels exist.
+- No copied PDFs/figures, new DFT, electronic change, job mutation, expanded
+  channel matrix or claim that the stronger control is implemented/validated.
+  The next preparation is inert ordered-cell/basis mapping, not a new phonon
+  production matrix. Existing SI/DOI access gaps remain disclosed.
+- Actual00:14:40CST: PO--Mstep11fmax0.186321, preservingflipstep4fmax0.677541,
+  bothRunning; reversingflipPendingDependency. At most2activechains retained.
+- Decision: retain the stronger test and reject novelty from a weak-reference
+  comparison alone. Documentation/link/source-hash validation and existing
+  material-figure regression precede ordinary milestone push.
+- Actual delivery checks: both original PDFs match bytes/pages/SHA256;
+  32local document links pass, all53ledger JSONL records parse, existing
+  material-figure regression10passed/3.19s. This is a documentation-only
+  milestone, not a fresh full-suite/material-prediction pass. User5tracked
+  files and unrelated untracked artifacts remain excluded.
