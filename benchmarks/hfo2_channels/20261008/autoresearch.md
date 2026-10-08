@@ -311,3 +311,32 @@ See submission_handles_r13.json; no switching results or G2 DFT claimed yet.
   Gamma Q difference1.78e-15sqrt(amu)A, Green-strain difference0; DFT0.
   Record:chain_observations/hf_replay_check.json. Numerical reconstruction
   accuracy is not a material-convergence, harmonic-validity or novelty claim.
+
+## E012: terminal-run exact-cache ordinary continuation
+
+- Question: can the latest complete health-segment chain be continued without
+  changing physical inputs, re-evaluating endpoints, or forking a live run?
+- Guard: authoritative terminal sacct allocation; latest complete snapshot;
+  freshly matched raw SCF inputs/geometry/logs/E/F/stress; ordinary replay;
+  refuse existing output and already-converged residual. Fresh FIRE state is
+  explicitly distinct from restored optimizer state or acceleration.
+- Measured: both R12 allocations COMPLETED/0:0 at step10, but gap residual
+  0.284995243 and PO--M 0.293325305eV/A remain above0.10. Actual immutable
+  production-factory preflight on HF reproduces both using19 exact caches;
+  all DFT calls forbidden in memory, no new SCF. Separate CLI checks pass.
+- Decision: retain unchanged physics, enlarge execution segment to80steps/24h;
+  submit once as28300425(gap) and28298794(PO--M), verifiedPending/Dependency.
+  Wait for both R13 health allocations viaafterany, preserving2activechains.
+  Do not cancel on a rebound or interpret allocation completion as convergence.
+- Evidence: ordinary_continuation andsubmission_handles_r14.json. Source/template
+  preparation archive100c0de9 passes804tests/2skipped/71.02s; with the two new
+  delivered material-cache replay cases,15focused tests pass. Final clean
+  deliverable regression follows. Two actual R13 first-imageSCFs take98.73/98.43s
+  with32MPI, distinct from the zero-DFT preparation measurement.
+
+- Final clean delivery treecdffc642, archivededec562:
+  806passed/2skipped/77.27s, including both published material-cache replays.
+  Helper and batch SHA agree bytewise between the clean delivery and actual
+  HF preparation. Only documentation/receipts follow; no code/seed changes.
+  Both switching candidates complete step0 at19:39 and continue normally;
+  their initial fmax2.214746/1.300483 does not establish the optimized barriers.
