@@ -144,3 +144,25 @@ M审核和两条种子已在R6根目录生成，未启动DFT；准备8点时参�
 真实ABACUS INPUT/KPT/PP/orb仍严格原字节哈希，不存在调整参数的口子。
 代码从新归档部署，不覆盖R6源码。R6干净Git归档回归701 passed/2 skipped，
 与完整工作树719/1的计数不同，后者包含用户未跟踪测试，不能混报为干净克隆结果。
+
+## 当前执行：R7（14:15北京时间提交）
+
+源码 `9d3a3bb69f53df9060bac3ae60971b7e7c9f62f1`，archive
+`9afcc4a78d86048f8b1b8772bf079d594c467b30544db068e7a74aabd403654f`。
+根目录 `/public/home/iai806/abacus/agent-runs/20261008-varneb-hfo2-channels-r7`。
+两条种子只读复用R6，未覆盖任何归档源码；R7干净归档14项聚焦测试通过。
+真实hf ASE对修复链10个缓存/PO→M两个端点缓存均读E/F/stress通过，未在login跑DFT。
+
+- `28257778` RUNNING：`guided_gap_optimization`，10-total/8-interior；初始全广义力1.361073。
+- `28257779` RUNNING：`PO_M_optimization`，9-total/7-interior；当前第一轮内部像SCF。
+- `28257780`：8点独立曲率检验，`reduction_holdouts`；0/1已见真实SCF收敛，其余受%2并发限制。
+- 两条链均普通FIRE/0.10/maxstep0.02/k0.2/P0，首段10步/4h；原始日志均确认DSIZE32。
+  两端的 `seed_cache_audit.json` 实际存在且 `scf_*` 数为0，非仅配置宣称复用。
+- 8点的固定预测/来源在 `reduction_holdout_manifest.json`；收齐后执行
+  `python -m scripts.score_hfo2_reduction_holdout --root <R7>/reduction_holdouts`。
+  不重拟合holdout，不把线性响应线改称全条件面。
+
+按已有每SCF约2–3分钟估算，8点约14:25–14:35收齐；两条10步pilot约17:00–18:00，
+仅健康段而非整条路径收敛/整项研究完成，实际墙时截止约18:15。
+任务存在时不重复提交，步数上限/墙时结束后从完整链决定续算，不因单次回弹停掉。
+后续还需Berry分支、两个翻转通道、夹持矩阵和独立通道预测；当前不称JCTC稿件已就绪。
