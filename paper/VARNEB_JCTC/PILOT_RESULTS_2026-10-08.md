@@ -433,3 +433,43 @@ released-point checks. The measured coupling is retained, while a conditional
 surface, full TS index and improved independent prediction remain unestablished.
 The [pilot and unit/sampling contract](../../benchmarks/hfo2_channels/20261008/restricted_quadratic/README.md)
 record this success/failure boundary with no new SCF or parameter change.
+
+## E025: distinct nonpolar snapshots in the common-initial-state network
+
+![Provisional common-PO mechanisms](figures/hfo2_G1_provisional_20261009/hfo2_G1_provisional_mechanisms.png)
+
+Two newly frozen complete observations, PO→Mstep20 and the preserving flip
+step14, retain their original E/forces/stress and calculation hashes. Together
+with the ordinary-converged T--PO band and the retained reversing step10,
+they supply37 image records with no new DFT calls. At the shared PO+ energy
+reference, the sampled maxima are115.210,82.136,65.279 and410.744meV/f.u.,
+respectively. Only the first passes ordinary NEB convergence; the other three
+values cannot support a final ranking or a mechanically selective window.
+
+The preserving central sampled maximum is Pbcn at all three declared symmetry
+tolerances,0.001/0.01/0.05Angstrom. Its scaled-cell residual remains0.243948eV/A;
+it is not certified as a TS or a relaxed intermediate. All its discrete sampled
+energies lie below the relaxed T energy,81.321meV/f.u. above PO+, but intervening
+unsampled energies have not been bounded. The reversing centre is Pbca across
+the same tolerance sweep despite essentially zero rotated-T-triplet amplitude.
+Thus neither coordinate zeros nor low-dimensional projection alone identify
+a phase. The PO→M maximum's P1/P2_1 tolerance dependence is retained, not tuned
+to a preferred label. Original atom order and continuous lifts are unchanged.
+
+Pbcn-mediated switching is already known: Behara–Van der Ven report a stable
+Pbcn intermediate below T for a selected variant pair, and a change to a
+T intermediate when the full cell is fixed. Their SCAN result is not a
+same-parameter benchmark for this PBE snapshot. A shared group symbol does
+not establish identical variants, energetics or intermediate stability;
+the phase label itself is not our novelty claim.
+([Primary accepted manuscript, Sec.III.D](https://link.aps.org/accepted/10.1103/PhysRevMaterials.6.054403))
+
+The figure pairs energies with ordinary residuals, the registered geometric
+shuffle and T-referenced Green strain. It exposes the current representation
+and optimization limits rather than hiding them with a smooth contour.
+The finite next step remains completion of G1, then matched-boundary G2 and
+same-centre joint response/independent predictions with strong fixed-parent
+controls. No new material, cutoff, G0 sampling or early CI is introduced.
+The [frozen evidence and reproduction contract](../../benchmarks/hfo2_channels/20261008/network_update_20261009/README.md)
+and [caption/figure QA](figures/hfo2_G1_provisional_20261009/README.md) distinguish
+these descriptive observations from the uncompleted JCTC hypothesis test.

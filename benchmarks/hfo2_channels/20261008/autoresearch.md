@@ -706,3 +706,41 @@ See submission_handles_r13.json; no switching results or G2 DFT claimed yet.
   comparison and delivery receipt are archived before ordinary push.
 - Decision: retain restricted response/API and explicit failure coverage;
   G1/G2/G3 materialprediction and JCTCcompletion remain unproven.
+
+## E025: phase identity is not the zero of a truncated pattern coordinate
+
+- Export complete PO--Mstep20 and preservingflipstep14 directly from original
+  live HF SCFs:18 newly frozen image records, including cached endpoints, no
+  new SCF. Combine19 reused records to make the dated37-image commonPO+ set.
+  Original E/F/stress/INPUT/KPT/orbital/log hashes and32MPI provenance pass.
+- Same PO+ energy reference: sampled maxima115.210/82.136/65.279/410.744meV/f.u.
+  OnlyTPOordinary force criterion passed. No final ranking, sampling error,
+  fullTS or switchability-window claim; discrete low profiles are not a
+  continuous energy bound. G1 remains incomplete, no newG2/G0DFT.
+- Independent immutable pymatgen structure check reports three symprec values
+  with warnings, no standardisation/wrapping/reordering/oxidation guesses.
+  PreservingcentrePbcn; reversingcentrePbca despite nearzeroTtriplet amplitude.
+  OriginalT isP4_2/nmc. MpeakP1/P2_1 tolerance dependence remains explicit.
+  These are structure labels, not stable-phase or TS-index certificates.
+- Check Behara--Van der Ven's primary accepted Sec.III.D: stablePbcn switching
+  intermediate and constraint-inducedT are prior art. Our unconvergedPBEpeak
+  is not that SCAN intermediate, andPbcn occurrence is not our novelty claim.
+- Four-panel energy/residual/shuffle/strain plot follows the user style,
+  straight discrete connections only. Reversing410meV profile is fully in
+  CSV/table, outside the disclosed low-energy(a)panel. Correct first-pass
+  annotation overlap before final tests/actual PNG view.54visible texts stay
+  in canvas;48editableSVG texts. Superseded own outputs moved recoverably
+  to E:/TEMP, no user files removed.
+-24focusedpass/29.71s. Clean tree8344357d/archive53aa5b90:1012pass,2skip,
+  313warnings/113.95s. All clean report fields match; regeneratedCSV/PNG/TIFF
+  bytes identical. Source/tests unchanged after clean regression.
+- SamearchiveHF0DFTreplay passes all source/phase/force/energy fields:
+  697material+2635network floats, maxdifferences2.84217e-14/1.42109e-14.
+  Actual package versions and symmetry-warning lists differ and are retained
+  on both sides; no rawDFT-input policy relaxed, installation or job mutation.
+- Actual02:45:20CST:PO--M28298794Runningstep22.150184,node26;
+  preserving28319570Runningstep17.199587,node11;reversing28319571PendingDependency.
+- Decision: retain material-specific mechanism/evidence figure, not more
+  generic API or an inflated claim. Finish G1, then the registeredG2/G3
+  response and strong-control/independent-prediction tests. JCTCstillopen.
+  Full receipt:network_update_20261009/validation_delivery.json.
