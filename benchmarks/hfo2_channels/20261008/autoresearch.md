@@ -806,3 +806,30 @@ See submission_handles_r13.json; no switching results or G2 DFT claimed yet.
   A failed parent may free capacity but still needs separate scientific audit.
   No actual wait-time saving has yet been measured. Full journal:
   `scheduling_update_0337CST_20261009.json`.
+
+## E027 - Controlled biaxial input versus internal release
+
+- Gap: a fixed-substrate chart samples internal freedom, but cannot measure
+  mixed response to the imposed substrate strain. Add a tagged external input,
+  not a new freely relaxed degree of freedom or a modified Hamiltonian.
+- The new chart shares reference atomic coordinates and exact open-cell basis.
+  Physical current-cell work supplies the external gradient, retaining substrate
+  reactions. Its release basis excludes the control and translations. No
+  augmented-control eigenvalue is counted as a fixed-epsilon TS instability.
+-130focusedpass/6.42s;28new cases. Clean baseline407076a plus four unchanged
+  code/test files:1073pass2skip313warnings/107.29s. User changes are excluded.
+- Same tested source bundle c7d7d9a3 and checker a381619a verified on HF.
+  There is no remote pytest; keep that failed invocation and use existing
+  NumPy/ASE directly, without installing. Eight gradient configurations and
+  two mixed-step checks pass,256EMT evaluations and10uncomputed training-seed
+  geometries per host. Full-gradient error <=1.85e-9eV/A; it is an implementation
+  residual, not a measured HfO2 error. The full suite ran locally only.
+- Original production archive df4c12ee is unchanged. No ABACUS calls, new
+  Slurm jobs, job mutations, calculator retuning, source overwrite or G2/holdout.
+  The preserving chain's latest rebound is observed, not a stop trigger.
+- At04:43:04CST squeue/sacct confirm M28298794Runningstep30/.123663,
+  preserving28319570Runningstep27/.140772, reverse28319571PendingDependency.
+  These log values are not promoted into a new frozen material result bundle.
+- Decision: keep this necessary response-coordinate preparation. It does not
+  complete B2--B5, material conditional branches or independent forecasts.
+  Receipt: `biaxial_control/validation_delivery.json`.

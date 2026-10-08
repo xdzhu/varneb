@@ -92,6 +92,7 @@ from .epitaxial_boundary import (
     ClampedPlaneBoundary, ClampedPlaneFilter, clamped_plane_vcneb_boundary, cell_work_derivative,
 )
 from .active_curvature import ActiveJointCurvatureCoordinates
+from .biaxial_curvature import BiaxialClampedCurvatureCoordinates
 from .reference_cell import ReferenceCellCoordinates
 from .mode_evaluator import CalculatorModeEvaluator
 from .mode_subspace import (
@@ -113,6 +114,7 @@ from .optimizer_registry import (
 )
 
 __all__ = [
+    "BiaxialClampedCurvatureCoordinates",
     "ChannelPath",
     "summarize_competing_paths",
     "compare_channel_selectivity",

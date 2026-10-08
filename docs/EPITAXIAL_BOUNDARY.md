@@ -117,3 +117,8 @@ probe = chart.displaced(delta)  # len(delta) = 3*N + boundary.cell_dofs，单位
 能量—应力有限差分、已变形点的 filter 梯度、每步固定基底的 BFGS。
 这些是几何/实现验证，不是 HfO₂ 应变势垒或有利应变窗口的材料证据。
 当前是 Python API；通用命令行尚未自动选择此机械边界。
+
+外加等双轴应变的响应探针另外使用
+[受控参数坐标](BIAXIAL_CONTROL_CURVATURE.md)：ε参与偏导，但不进入端点/NEB的
+可释放变量；其梯度保留基底反力。固定ε时原39维HfO₂可动空间不变，新增的
+第40坐标只用于受控响应采样，不能把它计入固定ε的TS负方向或当自由胞优化。

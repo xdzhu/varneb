@@ -512,3 +512,32 @@ forecast batch. Real G2 training and independent material error/advantage
 measurements remain incomplete. The [executable contract](../../docs/PREDICTION_CONTROLS.md)
 and [negative G1 gate check](../../benchmarks/hfo2_channels/20261008/prediction_controls/README.md)
 therefore document workflow preparation rather than a JCTC prediction result.
+
+## 15. Prescribed strain is not an internal relaxation coordinate
+
+To measure a mode-strain response, a local sampling chart must distinguish
+the changing substrate parameter from the atomic and out-of-plane freedoms
+released at each prescribed parameter. The implementation now augments the
+exact fixed-plane chart with t=L(epsilon-epsilon0), using an explicitly
+registered geometric scale L. Its first two row-cell vectors are
+`H0[:2] * (1+epsilon)/(1+epsilon0)`; the third vector uses only the previous open
+deformation basis. Atomic reference shifts retain the same ordered fractional
+lift. All augmented coordinates and gradients use Angstrom and eV/Angstrom.
+
+Physical stress work with the current cell/Jacobian supplies the controlled
+gradient; d(E+PV)/d epsilon=L times its final component. Substrate reactions
+do not enter internal convergence, but cannot be discarded from this external
+work derivative. Mixed internal/control probes retain the complete gradient
+and raw reciprocity defect. The control direction is never part of the
+supplied internal release space and is not counted as a physical negative
+direction in a fixed-epsilon saddle test.
+
+This sampling chart is not an endpoint filter, a freely variable-cell path
+optimizer or a certification of the envelope theorem's stationary-branch
+premise. Existing fixed-epsilon BFGS/VCNEB boundaries remain unchanged.
+Cu/EMT energy differences and actual uncomputed training-seed geometries
+verify its implementation only. No new hafnia SCF, boundary-dependent barrier,
+full Hessian or independent material forecast has been obtained by this step.
+The [controlled-coordinate contract](../../docs/BIAXIAL_CONTROL_CURVATURE.md)
+and [E027 receipt](../../benchmarks/hfo2_channels/20261008/biaxial_control/validation_delivery.json)
+retain the precise metric, admissible space and validation limits.

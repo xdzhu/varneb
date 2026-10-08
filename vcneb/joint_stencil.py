@@ -13,6 +13,7 @@ from typing import Callable, Sequence
 import numpy as np
 from ase import Atoms
 
+from .biaxial_curvature import BiaxialClampedCurvatureCoordinates
 from .joint_curvature import JointCurvatureCoordinates, central_difference_hessian
 
 
@@ -49,7 +50,8 @@ class JointCurvatureProbe:
 
 
 def joint_curvature_probes(
-    coordinates: JointCurvatureCoordinates, directions: np.ndarray, *, step_A: float,
+    coordinates: JointCurvatureCoordinates | BiaxialClampedCurvatureCoordinates,
+    directions: np.ndarray, *, step_A: float,
     center_delta_A: np.ndarray | None = None,
     candidate_validator: Callable[[Sequence[Atoms]], None] | None = None,
 ) -> tuple[JointCurvatureProbe, ...]:
@@ -60,7 +62,7 @@ def joint_curvature_probes(
     Optional geometric guards reject candidates; they must not modify them.
     The full stencil is built and validated before returning any point.
     """
-    if not isinstance(coordinates, JointCurvatureCoordinates):
+    if not isinstance(coordinates, (JointCurvatureCoordinates, BiaxialClampedCurvatureCoordinates)):
         raise TypeError("coordinates must be a joint curvature chart")
     if coordinates.reference.constraints:
         raise ValueError("extra ASE constraints require an explicit atomic subspace")
