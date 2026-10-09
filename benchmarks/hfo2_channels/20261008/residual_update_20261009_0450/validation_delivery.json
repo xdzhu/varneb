@@ -1,0 +1,76 @@
+{
+  "experiment": "E028-complete-frame-residual-block-attribution",
+  "date_CST": "2026-10-09",
+  "base_commit": "820ea2dc1c71b1ceccc3bfd04c3fb8e6bad0afa7",
+  "source_root_HF": "/public/home/iai806/abacus/agent-runs/20261009-varneb-biaxial-control-e027/source",
+  "diagnostic_root_HF": "/public/home/iai806/abacus/agent-runs/20261009-varneb-G1-residual-0450",
+  "frozen_observations": [
+    {"job": "28298794", "step": 30, "complete_time_CST": "04:35:40", "folder": "PO_M_step30", "ordinary_fmax_eV_A": 0.12366313331294143},
+    {"job": "28319570", "step": 25, "complete_time_CST": "04:16:23", "folder": "preserving_step25", "ordinary_fmax_eV_A": 0.1341768789520226},
+    {"job": "28319570", "step": 27, "complete_time_CST": "04:38:38", "folder": "preserving_step27", "ordinary_fmax_eV_A": 0.14077189566559412}
+  ],
+  "complete_image_records": 27,
+  "reused_endpoint_records": 6,
+  "records_claimed_as_independent_replicates": false,
+  "raw_SCF_completion_finite_E_F_stress_and_input_hashes_checked_at_export": true,
+  "ordered_periodic_geometry_and_POSCAR_hashes_checked": true,
+  "optimizer_force_and_energy_replay_required": true,
+  "source_and_reference_hashes_match_across_HF_and_local": true,
+  "HF_local_comparison": {
+    "floating_fields": 1923,
+    "maximum_absolute_difference": 2.842170943040401e-14,
+    "absolute_comparison_tolerance": 1e-10,
+    "exact_nonfloating_fields": 365,
+    "all_fields_pass": true
+  },
+  "source_sha256": {
+    "scripts/export_hfo2_chain_observation.py": "4596bf0c08e6e3614a255c63e4ccbc63197fa875fdaeb5893f40b70487e06abe",
+    "scripts/analyze_hfo2_chain_observations.py": "b0ee7f3ec9366f54109882ec4ac065917ed623842e57f646eb7b4481e02d4a01"
+  },
+  "report_sha256": {
+    "PO_M_step30/observation.json": "be20b301fbf88a1aa3f75f455396d92fc8a0c1b8a9a0d80d74f01df356b77ce9",
+    "preserving_step25/observation.json": "9796d10780cbf3612aacca9cabbc35f116d7142ac9d469227be2d1ecc5512dbc",
+    "preserving_step27/observation.json": "e28c15e4d4c9f44736352bc2c57f48b5eee77ef358ebaa5d67bd361939d5e4e5",
+    "analysis_HF.json": "3b13c64998074f5d42fd8485fc1243adfe3c728cd4cd989249e42870165fd0f1",
+    "analysis_local.json": "1fba4f8bc02ff2834906357542a650a4c37d49b2031371ba192f211440e99b3f"
+  },
+  "production_archive_sha256_rechecked_unchanged": "df4c12eef03d00d02c3ae357e3f47143b6500b96b7bd12f479f2e2083abd5220",
+  "focused_regression": {
+    "command": "python -X utf8 -m pytest -q tests/test_hfo2_chain_observation.py tests/test_hfo2_observation_analysis.py tests/test_hfo2_network_update.py",
+    "passed": 30,
+    "seconds": 29.39,
+    "new_implementation_or_tests": false,
+    "additional_HF_full_pytest_suite_claimed": false
+  },
+  "clean_archive_delivery": {
+    "tested_staged_tree": "cea6266a5c485cf19fe2ec764dc7ff8e46d7ff11",
+    "archive_sha256": "77001836fc9b4b14b2a705fa10aedc50f87d331667d63c66bde00a70ef3219c2",
+    "archive_path": "E:/TEMP/varneb-E028-delivery-20261009-0505/staged.tar",
+    "all_37_evidence_files_byte_equal_at_snapshot_verification": true,
+    "raw_byte_Git_attributes_preserve_observations_and_reports": true,
+    "clean_actual_replay_byte_equal_to_analysis_local": true,
+    "clean_focused_regression_passed": 30,
+    "clean_focused_regression_seconds": 28.26,
+    "user_dirty_and_untracked_files_excluded": true,
+    "post_verification_numeric_inputs_source_or_tests_changed": false,
+    "post_verification_updates": "delivery receipt and linked README/journal metadata only"
+  },
+  "physical_contract": {"calculator": "ABACUS/PBE", "ecutwfc_Ry": 100, "basis": "full 10-au DZP", "original_input_KPT_UPF_orbital_hashes": true, "pressure_GPa": 0, "external_E": 0, "ordinary_fmax_eV_A": 0.10, "climb": false},
+  "preserving_rebound_attributed_to_spring_spacing_alone": false,
+  "preserving_rebound_claimed_as_persistent_cell_block_dominance": false,
+  "optimizer_dynamical_cause_or_acceleration_benefit_proven": false,
+  "new_DFT_calls": 0,
+  "new_jobs_or_job_mutations": 0,
+  "calculator_parameters_changed": false,
+  "production_source_or_running_directory_modified": false,
+  "last_live_job_check_CST": "2026-10-09T04:58:23+08:00",
+  "live_jobs_not_promoted_to_frozen_results": {
+    "28298794": {"state": "RUNNING", "node": "node26", "last_complete_log_step": 31, "fmax_log_eV_A": 0.120496},
+    "28319570": {"state": "RUNNING", "node": "node11", "last_complete_log_step": 28, "fmax_log_eV_A": 0.143216},
+    "28319571": {"state": "PENDING", "reason": "Dependency"}
+  },
+  "G2_or_holdout_submitted": false,
+  "frozen_sources_passing_ordinary_residual_criterion": 0,
+  "final_channel_ranking_TS_sampling_error_or_JCTC_complete": false,
+  "decision": "retain exact-SCF residual attribution; continue existing G1 chains, no stop from a force rebound or shortcut into G2"
+}

@@ -833,3 +833,31 @@ See submission_handles_r13.json; no switching results or G2 DFT claimed yet.
 - Decision: keep this necessary response-coordinate preparation. It does not
   complete B2--B5, material conditional branches or independent forecasts.
   Receipt: `biaxial_control/validation_delivery.json`.
+
+## E028 - Residual-block crossover in complete production frames
+
+- Freeze preserving steps25/27 and PO--Mstep30 in a new diagnostic namespace;
+ 27 numeric image records include6 reused endpoints. No new SCF, Slurm mutation,
+ restart, parameter change or production-source overwrite.
+- Exact raw E/F/stress, contract/geometry/log hashes and optimizer replay pass.
+ Same unchanged analysis on HF/local matches1923float fields within2.85e-14
+ and365nonfloat fields exactly.30existing focused tests pass/29.39s.
+- Preserving sampled peak54.238773→51.683480meV/f.u.; atomic NEB residual
+  .134176879→.140771896, cell block.124173502→.103344822eV/A. The dominant
+  component is now atomic at image4, not the earlierstep14cell. Global spring
+  contribution<=.000609eV/A cannot alone explain the residual magnitude.
+- PO--Mstep30is atomic dominated atimage3/.123663133eV/A; its sampled peak's
+ physical tangent-.365998838eV/A remains nonstationary. Ordinary NEB convergence
+ must not be substituted for a full-variable stationary saddle certificate.
+- Decision: keep measured diagnostics, continue both live G1 chains, do not
+ stop from a rebound or open G2 from an unconverged provisional energy ranking.
+ No acceleration performance, new phase identity or independent prediction
+ is inferred. Receipt: `residual_update_20261009_0450/validation_delivery.json`.
+- At04:58:23CST both parents are still Running:PO--Mstep31/.120496,
+ preservingstep28/.143216; reversing continuation remains PendingDependency.
+ These later log values are not substituted for the frozen raw-evidence frames.
+- Staged treecea6266a/archive77001836 preserves all37 evidence files exactly;
+ clean numeric replay is byte-identical and30focused tests pass/28.26s. User
+ changes are excluded. Subsequent updates are README/receipt/journal metadata
+ only, not source, tests or numeric inputs. Raw-byte Git attributes prevent
+ line-ending conversion from invalidating the archived evidence checksums.

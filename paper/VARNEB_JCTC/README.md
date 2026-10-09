@@ -27,6 +27,11 @@ missing. An ordinary residual pass is not a certified saddle or a barrier
 uncertainty bound. No abstract or conclusion asserting these missing results
 is supplied.
 
+The [later complete-frame residual audit](../../benchmarks/hfo2_channels/20261008/residual_update_20261009_0450/README.md)
+tracks the preserving flip's atomic/cell residual crossover without replacing
+the draft's dated table or claiming final channel energies. It is additional
+source-verified pilot evidence, not a new stationary-TS or prediction result.
+
 ## Compile the reading PDF
 
 The scientific text has **one source**, `MANUSCRIPT_DRAFT.md`. The small
