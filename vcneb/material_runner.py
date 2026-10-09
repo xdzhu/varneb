@@ -34,6 +34,7 @@ from . import (
     validate_image_calculators,
 )
 from .executor import ThreadedCalculatorExecutor
+from .epitaxial_boundary import _load_clamped_run_boundary, _validate_clamped_run_options
 from .mode_subspace import _vcneb_x
 
 
@@ -99,7 +100,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     )
     seed_group.add_argument(
         "--initial-chain",
-        help="unconstrained starting chain to project into a declared mode subspace",
+        help="raw seed chain: a global mode artifact may project it; clamped planes reject incompatible seeds",
     )
     parser.add_argument(
         "--subspace-artifact",
@@ -124,6 +125,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         help="full VCNEB (requires stress) or fixed-cell NEB (energy and forces only)",
     )
     parser.add_argument("--optimizer", default="FIRE")
+    parser.add_argument("--cell-scale", type=float, default=None,
+                        help="explicit generalized-coordinate cell scale in Angstrom")
+    parser.add_argument("--clamped-plane-reference", default=None,
+                        help="structure file prescribing fixed cell rows 0/1; never inferred")
+    parser.add_argument("--clamped-allow-tilt", choices=("true", "false"), default=None,
+                        help="explicitly release row-2 tilts (true) or only its normal length (false)")
     parser.add_argument("--maxstep", type=float, default=None)
     parser.add_argument("--image-workers", type=int, default=0)
     parser.add_argument("--image-retries", type=int, default=0)
@@ -211,8 +218,22 @@ def main(argv: list[str] | None = None, *, symbol_loader=None) -> None:
         raise ValueError("production subspace runs require --subspace-artifact-sha256")
     if args.no_align_cells and args.cell_interpolation != "linear":
         raise ValueError("--no-align-cells requires --cell-interpolation linear")
+    allow_tilt = None if args.clamped_allow_tilt is None else args.clamped_allow_tilt == "true"
+    _validate_clamped_run_options(
+        reference=args.clamped_plane_reference, allow_tilt=allow_tilt,
+        cell_scale_A=args.cell_scale, cell_mode=args.cell_mode,
+        align_cells=not args.no_align_cells, cell_interpolation=args.cell_interpolation,
+    )
+    if args.subspace_artifact is not None and (
+        args.clamped_plane_reference is not None or args.cell_scale is not None
+    ):
+        raise ValueError("global mode subspace cannot be combined with clamped plane or --cell-scale")
     initial = read(args.initial)
     final = read(args.final)
+    boundary, boundary_record = _load_clamped_run_boundary(
+        [initial, final], reference=args.clamped_plane_reference,
+        allow_tilt=allow_tilt, cell_scale_A=args.cell_scale,
+    )
     workdir = Path(args.workdir).resolve()
     workdir.mkdir(parents=True, exist_ok=True)
     supplied_chain = args.resume_snapshot or args.initial_chain
@@ -242,10 +263,15 @@ def main(argv: list[str] | None = None, *, symbol_loader=None) -> None:
             if expected["sha256"] != actual["sha256"]:
                 raise ValueError(f"supplied chain {label} endpoint does not match the requested endpoint")
     periodic_lift_gate = validate_periodic_path_lift(images) if args.require_continuous_periodic_lift else None
-    cell_mask = _cell_mask_for_mode(args.cell_mode, images, args.pressure_gpa)
-    require_stress = cell_mask is None
+    if boundary is not None and any(image.constraints for image in images):
+        raise ValueError("clamped plane refuses extra ASE constraints; compose them explicitly")
+    boundary_kwargs = {} if boundary is None else boundary.vcneb_kwargs(images)
+    cell_mask = (boundary_kwargs["cell_mask"] if boundary is not None else
+                 _cell_mask_for_mode(args.cell_mode, images, args.pressure_gpa))
+    require_stress = cell_mask is None or bool(np.any(cell_mask))
     geometry = validate_path_geometry(
         images,
+        cell_scale=args.cell_scale,
         minimum_distance=args.minimum_distance,
         maximum_deformation=args.maximum_deformation,
         minimum_endpoint_separation=args.minimum_endpoint_separation,
@@ -255,8 +281,8 @@ def main(argv: list[str] | None = None, *, symbol_loader=None) -> None:
         if args.endpoint_static_summary is not None
         else None
     )
-    mode_basis = None
-    mode_scale = None
+    mode_basis = boundary_kwargs.get("mode_basis")
+    mode_scale = args.cell_scale
     subspace_record = None
     if args.subspace_artifact is not None:
         artifact_path = Path(args.subspace_artifact).resolve()
@@ -295,6 +321,7 @@ def main(argv: list[str] | None = None, *, symbol_loader=None) -> None:
         images = projected
         geometry = validate_path_geometry(
             images,
+            cell_scale=mode_scale,
             minimum_distance=args.minimum_distance,
             maximum_deformation=args.maximum_deformation,
             minimum_endpoint_separation=args.minimum_endpoint_separation,
@@ -351,6 +378,8 @@ def main(argv: list[str] | None = None, *, symbol_loader=None) -> None:
         "n_interior_images": args.n_images - 2,
         "external_pressure_gpa": args.pressure_gpa,
         "cell_mode": args.cell_mode,
+        "mechanical_boundary": boundary_record,
+        "cell_scale_A": mode_scale,
         "cell_mask": None if cell_mask is None else cell_mask.tolist(),
         "requires_stress": require_stress,
         "fmax_target_eV_per_A": args.fmax,
@@ -374,7 +403,12 @@ def main(argv: list[str] | None = None, *, symbol_loader=None) -> None:
         "calculator_validation": "not_instantiated_validate_only" if args.validate_only else "factory_configuration_only",
         "calculator_reports": [],
     }
-    (workdir / "vcneb_preflight.json").write_text(
+    preflight_path = workdir / "vcneb_preflight.json"
+    if boundary is not None and preflight_path.exists():
+        previous = json.loads(preflight_path.read_text(encoding="utf-8"))
+        if previous.get("mechanical_boundary") != boundary_record:
+            raise FileExistsError("existing workdir has a different mechanical boundary; choose a new workdir")
+    preflight_path.write_text(
         json.dumps(metadata, indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )
     if args.validate_only:
@@ -475,6 +509,16 @@ def main(argv: list[str] | None = None, *, symbol_loader=None) -> None:
         if args.image_workers
         else None
     )
+    candidate_validator = None
+    if boundary is not None:
+        def candidate_validator(candidates):
+            boundary.validate_images(candidates)
+            validate_path_geometry(
+                candidates, cell_scale=mode_scale, minimum_distance=args.minimum_distance,
+                maximum_deformation=args.maximum_deformation,
+                minimum_endpoint_separation=args.minimum_endpoint_separation,
+            )
+
     chain, _ = run_vcneb(
         images,
         pressure_gpa=args.pressure_gpa,
@@ -485,6 +529,7 @@ def main(argv: list[str] | None = None, *, symbol_loader=None) -> None:
         climb_after=args.climb_after,
         mode_basis=mode_basis,
         constraint_mode="subspace" if mode_basis is not None else None,
+        candidate_validator=candidate_validator,
         image_executor=executor,
         optimizer=args.optimizer,
         optimizer_kwargs={} if args.maxstep is None else {"maxstep": args.maxstep},

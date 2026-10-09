@@ -13,6 +13,7 @@ from ase.io import read, write
 
 from .backends import get_backend_spec
 from .core import interpolate_vcneb, path_geometry_diagnostics
+from .epitaxial_boundary import _load_clamped_run_boundary, _validate_clamped_run_options
 from .optimizer_registry import get_optimizer_spec
 from .provenance import endpoint_structure_record
 
@@ -61,9 +62,13 @@ class RunConfig:
     k: float = 0.20
     pressure_gpa: float = 0.0
     cell_mode: str = "full"
+    cell_scale_A: float | None = None
+    clamped_plane_reference: Path | None = None
+    clamped_allow_tilt: bool | None = None
     cell_interpolation: str = "log_strain"
     mapping: str = "auto"
     mic: bool = True
+    align_cells: bool = True
     align_translation: bool = True
     minimum_distance: float | None = None
     maximum_deformation: float | None = None
@@ -97,6 +102,14 @@ class RunConfig:
             raise ValueError("fixed-cell NEB requires zero pressure_gpa")
         if self.cell_interpolation not in {"linear", "log_strain"}:
             raise ValueError("cell_interpolation must be 'linear' or 'log_strain'")
+        _boolean(self.align_cells, "align_cells")
+        _validate_clamped_run_options(
+            reference=self.clamped_plane_reference, allow_tilt=self.clamped_allow_tilt,
+            cell_scale_A=self.cell_scale_A, cell_mode=self.cell_mode,
+            align_cells=self.align_cells, cell_interpolation=self.cell_interpolation,
+        )
+        if not self.align_cells and self.cell_interpolation != "linear":
+            raise ValueError("align_cells false requires cell_interpolation linear")
         if self.mapping not in {"identity", "auto"}:
             raise ValueError("mapping must be 'identity' or 'auto'")
         if self.steps < 1:
@@ -161,11 +174,21 @@ class RunConfig:
             "k": _number(data.get("k", 0.20), "k"),
             "pressure_gpa": _number(data.get("pressure_gpa", 0.0), "pressure_gpa"),
             "cell_mode": _text(data.get("cell_mode", "full"), "cell_mode"),
+            "cell_scale_A": _number(data.get("cell_scale_A"), "cell_scale_A", nullable=True),
+            "clamped_plane_reference": (
+                None if data.get("clamped_plane_reference") is None else
+                (base / _text(data["clamped_plane_reference"], "clamped_plane_reference")).resolve()
+            ),
+            "clamped_allow_tilt": (
+                None if data.get("clamped_allow_tilt") is None else
+                _boolean(data["clamped_allow_tilt"], "clamped_allow_tilt")
+            ),
             "cell_interpolation": _text(
                 data.get("cell_interpolation", "log_strain"), "cell_interpolation"
             ),
             "mapping": _text(data.get("mapping", "auto"), "mapping"),
             "mic": _boolean(data.get("mic", True), "mic"),
+            "align_cells": _boolean(data.get("align_cells", True), "align_cells"),
             "align_translation": _boolean(
                 data.get("align_translation", True), "align_translation"
             ),
@@ -206,8 +229,9 @@ class RunConfig:
         result = asdict(self)
         for key in ("initial", "final", "workdir"):
             result[key] = str(result[key])
-        if result["endpoint_static_summary"] is not None:
-            result["endpoint_static_summary"] = str(result["endpoint_static_summary"])
+        for key in ("endpoint_static_summary", "clamped_plane_reference"):
+            if result[key] is not None:
+                result[key] = str(result[key])
         return result
 
 
@@ -222,11 +246,15 @@ def prepare_run(path: str | Path) -> tuple[RunConfig, Path]:
         raise ValueError("identity mapping requires identical endpoint atom order/species")
     if sorted(initial_symbols) != sorted(final_symbols):
         raise ValueError("endpoint compositions differ; automatic mapping cannot reconcile them")
+    boundary, boundary_record = _load_clamped_run_boundary(
+        [initial, final], reference=config.clamped_plane_reference,
+        allow_tilt=config.clamped_allow_tilt, cell_scale_A=config.cell_scale_A,
+    )
     images = interpolate_vcneb(
         initial,
         final,
         config.n_images,
-        align_cells=True,
+        align_cells=config.align_cells,
         mic=config.mic,
         cell_interpolation=config.cell_interpolation,
         mapping=None if config.mapping == "identity" else "auto",
@@ -239,11 +267,14 @@ def prepare_run(path: str | Path) -> tuple[RunConfig, Path]:
         for image in images
     ):
         raise ValueError("fixed-cell NEB requires identical cells for all images")
+    if boundary is not None:
+        boundary.validate_images(images)
     config.workdir.mkdir(parents=True, exist_ok=True)
     trajectory = config.workdir / "initial-vcneb.traj"
     report = {
         "status": "prepared",
         "calculator_attached": False,
+        "mechanical_boundary": boundary_record,
         "config": config.to_dict(),
         "endpoint_structures": {
             "initial": endpoint_structure_record(initial),
@@ -251,8 +282,10 @@ def prepare_run(path: str | Path) -> tuple[RunConfig, Path]:
         },
         "initial_path_geometry": path_geometry_diagnostics(
             images,
+            cell_scale=config.cell_scale_A,
             minimum_distance=config.minimum_distance,
             maximum_deformation=config.maximum_deformation,
+            minimum_endpoint_separation=config.minimum_endpoint_separation,
         ),
         "trajectory": str(trajectory),
     }

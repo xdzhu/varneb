@@ -116,7 +116,58 @@ probe = chart.displaced(delta)  # len(delta) = 3*N + boundary.cell_dofs，单位
 不兼容内部像和实际 HfO₂ 自由胞端点的预拒绝、反力与开放应力分离，以及 EMT 下的
 能量—应力有限差分、已变形点的 filter 梯度、每步固定基底的 BFGS。
 这些是几何/实现验证，不是 HfO₂ 应变势垒或有利应变窗口的材料证据。
-当前是 Python API；通用命令行尚未自动选择此机械边界。
+通用命令行现在也支持**显式选择**此边界；旧的自由胞/固定胞默认行为不变。
+
+## 生产入口与配置
+
+端点必须先在规定基底下优化并完成相/变体审计。路径入口不替端点弛豫，也不把
+自由胞端点投影成夹持端点。引用文件规定晶胞前两行；普通路径坐标尺度也必须
+显式给出，并与端点和后续曲率坐标一致。HfO₂登记值为5.12968067458423 Å。
+
+```bash
+python -m vcneb.material_runner \
+  --initial path/to/audited-initial/POSCAR \
+  --final path/to/audited-final/POSCAR \
+  --workdir path/to/fresh/clamped-path-preflight \
+  --clamped-plane-reference path/to/T-substrate/POSCAR.seed \
+  --clamped-allow-tilt true --cell-scale 5.12968067458423 \
+  --cell-mode full --no-align-cells --cell-interpolation linear \
+  --mapping identity --mic --require-continuous-periodic-lift \
+  --n-images 9 --no-climb --fmax 0.10 --validate-only
+```
+
+9个总像包含7个内部像和两个固定端点。`--validate-only`不加载计算器符号、
+不构造计算器、不运行DFT；仅写几何与边界来源收据。真正计算须另在合规资源
+分配内提供原计算器/工厂及**原参数**，不由此命令提交自己。
+`--resume-snapshot`和`--initial-chain`均先审核未经改动的所有像。
+不兼容内部像、倾斜被禁止却出现倾斜、额外ASE约束均拒绝，不事后投影修复。
+每个优化候选同时检查基底、所选几何门槛和已有晶胞步长限制；FIRE缩步仍只在
+显式配置的次数内进行，不重试电子故障或改变物理输入。
+
+公共`varneb prepare`/`varneb run ... --execute`使用同一入口。配置中增加：
+
+```json
+{
+  "cell_mode": "full",
+  "cell_scale_A": 5.12968067458423,
+  "clamped_plane_reference": "path/to/T-substrate/POSCAR.seed",
+  "clamped_allow_tilt": true,
+  "align_cells": false,
+  "cell_interpolation": "linear"
+}
+```
+
+这是完整配置中的边界片段，不是独立可执行配置；相对引用路径按配置文件所在
+目录解析。`true`允许第三矢量的三个方向，`false`只开放法向长度，必须显式选择。
+禁止自动晶胞对齐与log-strain插值，避免旋转/插值改动基底。夹持路径仍需要真实
+stress，不能当作纯固定胞NEB。当前不支持与全局模式子空间artifact隐式组合；
+此组合会明确报错，需另外定义与验证交集，不静默截去自由度。
+
+`vcneb_preflight.json`和最终summary记录引用文件SHA256、固定行、法向、
+倾斜策略、开放自由度及尺度；既有目录不能悄悄改成另一机械边界。
+`tests/test_clamped_plane_cli.py`验证公共配置/直接入口、原始链预拒绝、斜胞
+逐步基底不变、串行/双worker端点只算一次，以及计算器参数/命令原样传递。
+10个未弛豫HfO₂种子仅用于几何检查，不能称作G2计算结果。
 
 外加等双轴应变的响应探针另外使用
 [受控参数坐标](BIAXIAL_CONTROL_CURVATURE.md)：ε参与偏导，但不进入端点/NEB的

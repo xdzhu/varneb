@@ -1072,3 +1072,30 @@ See submission_handles_r13.json; no switching results or G2 DFT claimed yet.
 - Keep finite G1->G2->G3 and actual independent evidence requirements. No
   material advantage/JCTC completion verdict. Evidence:
   `g2_delivery_preflight/validation_delivery.json`.
+
+## E037 - Fix the actual clamped production entry before G2
+
+- Found a delivery gap: API/endpoint clamping existed, but generic production
+  full/fixed choices could not preserve the registered substrate. Do not
+  reuse the G1 free-cell invocation as G2 or call the old E036 archive ready
+  for this new path interface. Add explicit config/CLI selection, shared cell
+  scale, raw-chain rejection and candidate-plane/geometry checks; no implicit
+  mode-artifact composition, parameter retuning or boundary guessing.
+- Clean final staged-source suite1197pass/2skip/0fail/error/313warnings,
+  146.56s. Oblique normal/tilt tests include actual few EMT steps, both public
+  prepare/run and direct runner, serial/threaded endpoint-once and unchanged
+  factory options. Initial failures were new test roundoff/schema mistakes,
+  fixed without relaxing mechanical or DFT tolerances. Earlier staged suite
+  is recorded separately, not substituted for the final delivery.
+- Final archive675bcce0 is transferred and actually checked once on HF.
+  Ten valid unrelaxed seed paths and ten corrupted internal planes give the
+  expected accept/reject results with zero calculator symbols loaded, zero
+  DFT or submissions. Rejected internal planes are never projected into a
+  claimed path. This proves entry integration only, not G2 material results.
+-12:40:41same two32CPU handlesRUNNING:preserving68/.104515 on node11,
+  reversing30/.220242 on node26; productiondf4c12ee unchanged. Preserve
+  ordinary0.10/100Ry/full10auDZP, finiteG1->G2->G3 and max two live chains.
+  No CI/cancellation/restart or earlyG2/holdout. Need terminal complete G1
+  audit before the registered PO+ canary; physical forecasts remain missing.
+- Evidence:`clamped_path_entry/validation_delivery.json`; no full-goal or
+  JCTC-ready claim. Milestone receives one normal owned-files commit/push.

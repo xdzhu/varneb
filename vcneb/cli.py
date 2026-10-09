@@ -34,6 +34,7 @@ _CONFIG_TEMPLATE = {
     "cell_interpolation": "log_strain",
     "mapping": "auto",
     "mic": True,
+    "align_cells": True,
     "align_translation": True,
     "minimum_distance": None,
     "maximum_deformation": None,
@@ -211,6 +212,10 @@ def _run_config(path: str, *, full_summary: bool = False) -> int:
         argv += ["--command", command]
     if config.mic:
         argv.append("--mic")
+    if not config.align_cells:
+        argv.append("--no-align-cells")
+    if config.clamped_allow_tilt is not None:
+        argv += ["--clamped-allow-tilt", str(config.clamped_allow_tilt).lower()]
     if config.align_translation:
         argv.append("--align-translation")
     if config.climb:
@@ -223,6 +228,8 @@ def _run_config(path: str, *, full_summary: bool = False) -> int:
         ("--maximum-cell-step", config.maximum_cell_step),
         ("--maxstep", config.maxstep),
         ("--endpoint-static-summary", config.endpoint_static_summary),
+        ("--cell-scale", config.cell_scale_A),
+        ("--clamped-plane-reference", config.clamped_plane_reference),
     ):
         if value is not None:
             argv += [name, str(value)]

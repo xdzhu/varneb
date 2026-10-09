@@ -11,11 +11,14 @@ hold two non-collinear substrate vectors fixed.
 from __future__ import annotations
 
 from dataclasses import dataclass
+import hashlib
+from pathlib import Path
 from typing import Callable, Sequence
 
 import numpy as np
 from ase import Atoms
 from ase.filters import UnitCellFilter
+from ase.io import read
 
 
 def _cell(value: np.ndarray, name: str) -> np.ndarray:
@@ -135,6 +138,55 @@ def clamped_plane_vcneb_boundary(
     for array in (cell, normal, basis, mask):
         array.flags.writeable = False
     return ClampedPlaneBoundary(int(n_atoms), cell, normal, allow_tilt, mask, basis)
+
+
+def _validate_clamped_run_options(
+    *, reference, allow_tilt, cell_scale_A, cell_mode, align_cells, cell_interpolation,
+) -> None:
+    """Shared CLI/config contract; never infer a mechanical ensemble."""
+    if cell_scale_A is not None and (
+        isinstance(cell_scale_A, bool) or not np.isfinite(cell_scale_A) or cell_scale_A <= 0
+    ):
+        raise ValueError("cell_scale_A must be finite and positive when provided")
+    if reference is None:
+        if allow_tilt is not None:
+            raise ValueError("clamped_allow_tilt requires clamped_plane_reference")
+        return
+    if type(allow_tilt) is not bool:
+        raise ValueError("clamped plane requires an explicit boolean clamped_allow_tilt")
+    if cell_scale_A is None:
+        raise ValueError("clamped plane requires an explicit cell_scale_A shared with endpoints")
+    if cell_mode != "full":
+        raise ValueError("clamped plane requires cell_mode full (open cell directions need stress)")
+    if align_cells or cell_interpolation != "linear":
+        raise ValueError("clamped plane requires align_cells false and cell_interpolation linear")
+
+
+def _load_clamped_run_boundary(images, *, reference, allow_tilt, cell_scale_A):
+    """Load the prescribed cell and reject raw structures before interpolation/DFT."""
+    if reference is None:
+        return None, None
+    path = Path(reference).resolve()
+    substrate = read(path)
+    boundary = clamped_plane_vcneb_boundary(
+        len(images[0]), substrate.cell.array, allow_tilt=allow_tilt,
+    )
+    if any(image.constraints for image in images):
+        raise ValueError("clamped plane refuses extra ASE constraints; compose them explicitly")
+    boundary.validate_images(images)
+    record = {
+        "kind": "clamped_plane",
+        "reference_file": str(path),
+        "reference_file_sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+        "reference_cell_A": boundary.reference_cell.tolist(),
+        "fixed_cell_rows": [0, 1],
+        "unit_normal": boundary.normal.tolist(),
+        "allow_tilt": boundary.allow_tilt,
+        "cell_dofs": boundary.cell_dofs,
+        "cell_scale_A": cell_scale_A,
+        "raw_chain_policy": "reject_incompatible_no_projection",
+    }
+    return boundary, record
 
 
 def cell_work_derivative(
