@@ -195,6 +195,34 @@ def test_actual_common_substrate_well_gap_is_not_a_barrier():
     assert gap == pytest.approx(12.35997511412279, abs=1e-9, rel=0)
 
 
+@pytest.mark.parametrize("phase,count,symbol", [("PO_minus_T_preserving",8,"Pca2_1"),
+                                                ("M",18,"P2_1/c")])
+def test_actual_uncached_registered_endpoints_replay_HF(phase,count,symbol):
+    case = CASE/"clamped_endpoint_matrix_20261009/strain_0000"/phase
+    endpoint = case/"completed_HF/endpoint"
+    seed = CASE/"clamped_endpoint_seeds/strain_0000"/phase/"endpoint_seed.json"
+    initial, boundary, _ = load_seed(seed)
+    original = json.loads((case/"raw_audit_HF.json").read_text())
+    summary = json.loads((endpoint/"endpoint_relax_summary.json").read_text())
+    calls = sorted((endpoint/"calculator/image_0000").glob("scf_*"))
+    rows = replay_directories(calls, boundary, full_physical_bytes=False)
+    assert len(rows) == original["new_SCF_calls"] == summary["optimizer_steps"] + 1 == count
+    assert sha256(seed) == summary["seed_manifest_sha256"] == original["seed_manifest_sha256"]
+    assert sha256(endpoint/"endpoint_relax_summary.json") == original["summary_sha256"]
+    assert transport.same_ordered_geometry(initial, transport.read_fixed_hfo2_stru(calls[0]/"STRU"))
+    assert transport.same_ordered_geometry(read(endpoint/"CONTCAR", format="vasp"),
+                                           transport.read_fixed_hfo2_stru(calls[-1]/"STRU"))
+    assert summary["converged"] and rows[-1]["max_atomic_force_eV_A"] < .03
+    assert rows[-1]["open_traction_norm_kbar"] < 2.
+    for a, b in zip(rows, original["rows"]):
+        assert a["input_sha256"] == b["input_sha256"] and a["raw_log_sha256"] == b["raw_log_sha256"]
+        for key in ("energy_eV_cell", "max_atomic_force_eV_A", "open_traction_norm_kbar"):
+            assert a[key] == pytest.approx(b[key], abs=1e-10, rel=0)
+    assert [s["symbol"] for s in rows[-1]["structure_audit"]["symmetry_sweep"]] == [symbol]*3
+    assert sum(r["elapsed_seconds"] for r in rows) == original["SCF_seconds"]
+    assert len([p for p in (case/"completed_HF").rglob("*") if p.is_file()]) == 8*count+8
+
+
 @pytest.mark.parametrize("root,count", [(ROOT.parent, 49), (CONTINUATION/"completed_HF", 26),
                                        (T_CASE/"completed_HF", 17)])
 def test_actual_observable_exports_are_complete_without_licensed_basis(root, count):

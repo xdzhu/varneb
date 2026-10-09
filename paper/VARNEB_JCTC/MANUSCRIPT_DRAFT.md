@@ -2,7 +2,7 @@
 
 Working manuscript, 2026-10-09. This is a connected main-text draft, not a
 submission-ready article. The numerical Results below use explicitly dated
-pilot observations. Two matched-substrate endpoints have now passed their
+pilot observations. Four matched-substrate endpoints have now passed their
 physical screens; G2 channel barriers, local conditional branches and
 independent material predictions are still missing. An abstract and a
 conclusion asserting those unmeasured results are deliberately withheld.
@@ -578,9 +578,9 @@ relaxed T reference at nominal biaxial strain zero and release atomic
 coordinates and the third lattice vector, including tilt, at zero applied
 pressure. Zero strain therefore describes the T-referenced substrate, not
 free-cell conditions or zero strain relative to each phase's own lattice.
-Both endpoints use the original ABACUS/PBE electronic contract.
+All screened endpoints use the original ABACUS/PBE electronic contract.
 
-The PO+ four-step canary retains Pca2_1 but reaches its step cap before
+The PO+ four-step canary retains $Pca2_1$ but reaches its step cap before
 the physical convergence screen. An exact-geometry continuation reuses only
 its terminal E/F/stress, with a fresh BFGS Hessian, and converges after two
 new SCFs. The registered T seed passes after its initial SCF, without an
@@ -592,6 +592,8 @@ registered tolerances, without imposing symmetry on either calculation.
 |---|---:|---:|---:|
 | PO+ | 0.022285 | 1.928435 | 0.000000 |
 | T | 0.000500 | 0.009595 | 12.359975 |
+| M | 0.018207 | 0.843275 | -92.540494 |
+| PO- preserving seed | 0.014888 | 1.692852 | -0.035259 |
 
 Table 3. Screened endpoints at the common T-referenced, partially clamped
 zero-strain substrate. Forces are eV/Angstrom, open traction is kbar and
@@ -599,6 +601,8 @@ energy is meV/HfO2 relative to the PO+ endpoint in this same ensemble.
 The endpoint targets are 0.03 eV/Angstrom and 2 kbar on open components;
 reaction stress in clamped components is not a failed convergence criterion.
 Neither the screen nor the phase label certifies a Hessian minimum.
+The PO- row names its registered seed; polarity and pattern registration
+remain separate from a space-group assignment.
 ([Actual PO+ continuation](../../benchmarks/hfo2_channels/20261008/clamped_PO_continuation_E046_20261009/README.md);
 [actual T endpoint and finite matrix](../../benchmarks/hfo2_channels/20261008/clamped_endpoint_matrix_20261009/README.md))
 
@@ -609,11 +613,22 @@ is unchanged. This is an observed boundary-dependent well separation,
 not a smooth strain derivative between two points in one ensemble.
 In particular it determines neither the switching barrier nor the escape
 barrier: their maxima and possible intermediate branches still need matched
-path calculations. The M and registered opposite-polarity seeds are being
-relaxed without phase-restoring constraints before those bands are formed.
+path calculations. The M-derived endpoint also passes the same physical
+screen after seventeen BFGS steps and retains $P2_1/c$ at the three tolerances,
+without restoring its free-cell geometry or imposing its symmetry.
+Its energy is 92.540494 meV/HfO2 below PO+ in this same ensemble, which does
+not determine the intervening escape maximum. The preserving opposite-polarity
+seed converges after seven BFGS steps and retains $Pca2_1$. Its observed
+-0.035259 meV/HfO2 offset is displayed without enforcing energy equality or
+interpreting it as an intrinsic polar bias or a numerical uncertainty bound.
+Electronic-polarity and ordered-pattern checks remain separate requirements
+before assigning the matched switching channels. The reversing seed is still
+being relaxed as the remaining endpoint of the registered zero-strain set.
 
 The two fresh PO+ continuation evaluations use 236.309 seconds, and the
-single T evaluation uses 125.001 seconds, together 3.211644 SCF core-hours
+single T evaluation uses 125.001 seconds. The eight preserving-seed and
+eighteen M evaluations use 1960.598 and 2554.590 seconds, respectively.
+Together these twenty-nine fresh evaluations cost 43.346645 SCF core-hours
 at 32 ranks. The preceding five-SCF canary cost is recorded separately.
 Initial cached-result reuse avoids an identical SCF; it is not a benchmark
 of optimizer acceleration or evidence of the proposed predictive gain.

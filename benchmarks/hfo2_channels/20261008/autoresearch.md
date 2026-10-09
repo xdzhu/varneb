@@ -1360,3 +1360,39 @@ code, Slurm script, geometry, physical input, raw result or manuscript.
 Reading PDF12pages/23Markdown local targets/20PDF local-file actions all valid;
 changed pages11/12 actually rendered and visually checked, no overfull/fatal.
 Missing G2 barriers/G3/holdout results remain explicitly missing, not certified.
+
+## E048 terminal actual-data update and E049 registered endpoint
+
+Both E048 endpoints actually COMPLETED0:0. Preserving-minus28456313:7steps/
+8SCFs,force.014888417/open1.692852091,Pca2_1at3tols,17.427534SCFcoreh vs
+18.008889allocationcoreh. M28456312:17steps/18SCFs,force.018206569/open
+.843275452,P2_1/cat3tols,22.707467SCFcoreh vs22.773333allocationcoreh.
+Original six physical bytes/native32MPI/fullEFS reviewed on HF,224new raw
+observable files exported without licensed basis/charge. Source/runtime never
+overwritten. Zero-DFT invocation scripts retained; initial preserving audit
+shell-final-blank-CR error occurred after successful audit, rerun corrected
+read-only invocation exit0, no DFT repeated. Physical gate/space group is not
+Hessian, ordered-pattern, electronic-polarity or G2barrier certification.
+
+Nominalepsilon0four wells now screened. Actual M-minus-commonPO+=-92.540494
+meVfu; preserving-minus=-.035259, not forced equal or called intrinsicbias.
+Table3/Section3.6 updated, original two-endpoint build receipt historical.
+Material replay tests35pass1.42s; final clean archive/build checks recorded
+in `clamped_endpoint_matrix_20261009/validation_delivery.json`.
+
+E04928464144 submitted23:50:34CST after actual E048terminals. Existing
+registered reversing-minus seed only, same2a5ca85c/1330preDFTfull/source6bytes,
+32MPI/20steps/max21SCFs/2h/.03/2/.02. One study jobRUNNING23:51:45, no
+unknown/live repeat, CI, parameter change, new phase/strain or holdout matrix.
+Earlier 23:29both-running receipt remains historical. 0133a96normalpush
+verified localHEAD=GitHubmain, before these newly completed result updates.
+Goalactive; next candidate endpoint/pattern audit then bounded registered
++1%training matrix, G3 and genuinely frozen independent predictions.
+
+Final E048result tree848bd52b/archive84ef6c60 passes35focused1.75s; all316
+owned observable files exact-byte matched. Production/helper source unchanged;
+prior1336full regression does not falsely count the two subsequently added
+actual-data tests. Four-well PDF12pages,23Markdown/20PDF local targets valid,
+changed pages11/12 rendered/reviewed. Three space-group math labels corrected
+after the test snapshot, no numeric/DFT/code change; updated compile receipt
+preserves earlier two-endpoint history. Goal still lacks G2/G3/independent gain.

@@ -23,8 +23,9 @@ The manuscript's numerical tables are dated snapshots, not a live job dashboard.
 All four final G1 candidate bands have passed the ordinary residual criterion
 and the whole-candidate evidence gate has passed. The gate permits the
 registered G2 experiment; it does not certify stationary saddles, exhaustive
-escape coverage or distinct winding sectors. Two common-substrate endpoints
-(T and PO+) now pass the declared atomic-force/open-traction screens.
+escape coverage or distinct winding sectors. Four common-substrate endpoints
+(T, PO+, M and the preserving PO- seed) now pass the declared atomic-force/
+open-traction screens; the opposite-polarity/variant gate is separate.
 G2 matched-boundary channel barriers, G3
 conditional-branch validation and independent material predictions remain
 missing. An ordinary residual pass is not a certified saddle or a barrier
@@ -123,6 +124,10 @@ and [single-SCF T endpoint](../../benchmarks/hfo2_channels/20261008/clamped_endp
 Section3.6 reports a12.359975meV/HfO2 common-substrate well separation,
 not a switching or escape barrier. Source checks and the corresponding
 new reading build are recorded in `MANUSCRIPT_DRAFT.clamped-endpoints.validation.json`.
+That receipt refers to the first two-endpoint build. The subsequent four-well
+table and its actual reading-build checks are identified by
+`MANUSCRIPT_DRAFT.zero-strain-wells.validation.json`; the earlier receipt is
+retained as historical evidence, not the hash of the latest PDF.
 
 ## Computation boundaries
 
