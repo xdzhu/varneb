@@ -1,0 +1,20 @@
+{
+  "formula_units": 4,
+  "mechanical_family": "free_cell_P0_E0",
+  "mechanical_parameters": {"pressure_GPa": 0.0, "external_field_V_A": 0.0},
+  "T_reference": "../reference_variants/T.vasp",
+  "T_Gamma_reference": "../gamma_analysis/T_d0.01.npz",
+  "required_channels": {
+    "PO_to_T": "decay",
+    "PO_to_M": "decay",
+    "PO_flip_T_pattern_preserving": "switching",
+    "PO_flip_T_pattern_reversing": "switching"
+  },
+  "channels": [
+    {"name": "PO_to_T", "role": "decay", "reverse": true, "observation": "../converged_gap/gap_converged_step06"},
+    {"name": "PO_to_M", "role": "decay", "reverse": false, "observation": "../morning_update_20261009_0850/PO_M_step39"},
+    {"name": "PO_flip_T_pattern_preserving", "role": "switching", "reverse": false, "observation": "preserving_step69"},
+    {"name": "PO_flip_T_pattern_reversing", "role": "switching", "reverse": false, "observation": "reversing_step32"}
+  ],
+  "limitations": "Three candidate chains pass the ordinary residual criterion; the reversing snapshot remains unconverged. Same-contract shared-PO+ observations only, not a full G1 gate, certified independent MEPs, stable intermediate, stationary TSs, sampling-converged barriers, matched-boundary or independent prediction evidence. Earlier complete T-PO and PO-M records are reused, not rerun."
+}

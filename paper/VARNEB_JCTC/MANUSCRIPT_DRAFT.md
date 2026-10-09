@@ -285,22 +285,22 @@ instructions are in the [figure bundle](figures/hfo2_T_PO_ordinary_20261008/READ
 
 All four candidate observations share the ordered PO+ energy
 -9783.249675811956 eV/cell. The following table uses the complete frozen
-morning frames, not later rounded values from the live optimization logs:
+12:55 update, not later rounded values from live optimization logs:
 
 | Candidate from PO+ | Source job/step | Residual | Maximum | Pass |
 |---|---|---:|---:|---|
 | PO-to-T, reverse view | 28300425/6 | 0.059882 | 115.210 | Yes |
 | PO-to-M | 28298794/39 | 0.097904 | 71.582 | Yes |
-| T-pattern-preserving flip | 28319570/48 | 0.204909 | 39.069 | No |
-| T-pattern-reversing flip | 28319571/12 | 0.455054 | 397.429 | No |
+| T-pattern-preserving flip | 28319570/69 | 0.099372 | 32.806 | Yes |
+| T-pattern-reversing flip | 28319571/32 | 0.200002 | 394.066 | No |
 
 Table 1. Provisional observations, not a converged ranking. Snapshot steps
-and times differ, two switching sources remain unconverged, and numerical/sampling
+and times differ, the reversing source remains unconverged, and numerical/sampling
 barrier bounds have not been measured. Residuals are in eV/Angstrom and
 sampled maxima in meV/f.u.; maxima include the endpoints and use four formula
 units per cell. The two flip labels denote registered geometric
 operations, not certified distinct MEPs or assignments to published irreps.
-The [morning 37-record audit](../../benchmarks/hfo2_channels/20261008/morning_update_20261009_0850/README.md)
+The [12:55 37-record audit](../../benchmarks/hfo2_channels/20261008/switching_converged_update_20261009_1255/README.md)
 includes cached endpoints and reused records, not 37 new or independent SCFs.
 
 PO-to-M terminated normally at the unchanged force threshold. Its ordered
@@ -315,14 +315,27 @@ edge does not establish a stationary bottleneck or its sampling error.
 
 The earlier preserving snapshot at step 14 had a Pbcn central sampled
 maximum across the declared 0.001/0.01/0.05 Angstrom symmetry tolerances.
-The complete step-48 profile has instead split into two sampled local peaks,
-images 3 and 5, at 39.069477 and 39.069483 meV/f.u. Both are Pca2_1 at those
-tolerances. The central image remains Pbcn but is lower, 17.440944 meV/f.u.,
-with a scaled-cell residual of 0.204909 eV/Angstrom. It is neither the current
+The later profile split into two sampled local peaks. At the ordinary-converged
+step 69, images 3 and 5 are approximately 32.806 meV/f.u. above PO+.
+Both are Pca2_1 at those tolerances. The central image remains Pbcn but is
+now below PO+, -14.838 meV/f.u., with an atomic/cell NEB residual of
+0.062019/0.099372 eV/Angstrom. Transverse stability is unmeasured. It is neither the current
 highest image nor a certified stable intermediate. A phase label or an
 earlier central peak cannot therefore fix the eventual bottleneck location.
 
-The reversing centre is Pbca at the same tolerances despite essentially zero
+At the two side peaks, the physical generalized tangential forces are
+approximately +0.242486 and -0.242483 eV/Angstrom, despite small atomic/cell
+NEB residuals at those images. Those forces distinguish the ordinary
+perpendicular-force pass from stationary bottlenecks. The central sampled
+minimum and the side maxima do not certify a two-saddle sequence or justify
+replacing the shared initial well with a new Pbcn endpoint. Its T-referenced
+expansion, F_xx=1.122022, is also a prospective branch-response diagnostic:
+the already registered substrate contains that direction. The existing G2
+matrix must test whether that central branch persists, without adding a
+post hoc phase/path or an additional Hessian to the finite budget.
+
+The reversing centre at step 32 is Pbca/Pa-3/Pa-3 across the same tolerance
+sweep, despite essentially zero
 amplitude in the selected rotated-T pattern triplet. Vanishing coordinates
 in a truncated representation do not identify a cubic structure. Its group
 label in this twelve-atom cell also does not identify a twenty-four-atom
@@ -330,16 +343,22 @@ literature variant or a domain-wall motif. The PO-to-M peak retains its
 P1/P2_1 tolerance dependence rather than being standardized to a preferred
 label.
 
-![Dated common-PO candidate mechanisms](figures/hfo2_G1_provisional_20261009/hfo2_G1_provisional_mechanisms.png)
+![Ordinary-converged preserving flip and physical tangential-force limitation](figures/hfo2_G1_preserving_pass_20261009/hfo2_G1_preserving_pass.png)
 
-Figure 2. Earlier dated common-initial-state observations: steps 6/20/14/10,
-not the later morning frames in Table 1. Discrete energies, residuals,
-registered shuffle and strain are retained without substituting newer
-values into this historical figure. The high reversing profile lies outside
-the explicitly disclosed low-energy panel(a) range; all original values
-remain in its CSV. No final energetic hierarchy follows from this figure.
-The [figure contract](figures/hfo2_G1_provisional_20261009/README.md) retains
-phase checks, original lifts and complete provenance.
+Figure 2. Complete same-PO+ observations at steps 6/39/69/32, corresponding
+to Table 1. (a) Discrete low-energy profiles. (b) The higher, still-unconverged
+reversing candidate is shown separately rather than omitted or clipped.
+(c) Ordinary NEB max-vector residuals on the moving images.
+(d) The preserving band's physical tangential-force magnitude and atomic/cell
+NEB residuals are different diagnostics in the same registered source metric.
+The dashed 0.10 line is the ordinary NEB target, not an independently
+established stationary-TS tolerance for the physical tangent.
+Lines connect calculated images only; endpoints have no NEB residual.
+No final energetic hierarchy or TS certification follows from this figure.
+The [figure contract](figures/hfo2_G1_preserving_pass_20261009/README.md) and CSV
+retain phase checks, original lifts and complete provenance. The
+[earlier dated figure](figures/hfo2_G1_provisional_20261009/README.md) is retained,
+with its original 6/20/14/10 data and hashes, rather than overwritten.
 
 These are mechanism candidates for further relaxation, not discoveries of
 Pbcn-mediated switching or of an antipolar wall. A group symbol at one
@@ -348,12 +367,14 @@ published interface. Fixed and released lattice results must also remain
 separate rather than being pooled under a common phase label.
 
 The preserving band's dominant residual changes from cell rows at step 14
-to atoms at steps 25/27, then back to cell rows at step 48. Its decreasing
+to atoms at steps 25/27, then back to cell rows at steps 48 and 69. Its decreasing
 sampled maximum and rebound of the global force norm are compatible with
 a changing coupled configuration, not proof of a persistent single-block
-cause or of a particular optimizer's benefit. The two switching candidates
-must still be relaxed before this evolving profile supports a channel
-ranking or fixes the locations used for local mode-strain analysis.
+cause or of a particular optimizer's benefit. The preserving continuation
+ended normally on the unchanged force criterion; the reversing candidate
+and the phase/polarization/sampling audits remain incomplete. Three ordinary
+passes alone neither complete G1 nor fix the stationary locations needed
+for local mode-strain predictions.
 
 ### 3.3. Reference choice changes the apparent compactness of the path
 

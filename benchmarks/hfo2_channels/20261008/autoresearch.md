@@ -1117,3 +1117,34 @@ See submission_handles_r13.json; no switching results or G2 DFT claimed yet.
 - Keep E037 data/source history, G1->G2->G3 gates and independent material
   evidence requirements. No new live poll, full-goal/JCTC verdict or new
   matrix. Evidence:`clamped_path_entry/boundary_guard_delivery.json`.
+
+## E039 - Third ordinary pass, split peaks and physical-tangent limitation
+
+- Actual preserving job28319570 ends COMPLETED0:0 at12:50:13, terminal reason
+  force_threshold. Complete step69 replays0.099372458 at unchanged ordinary0.10;
+  two Pca2_1 sampled peaks32.806meV/HfO2 flank a Pbcn centre-14.838meV/HfO2
+  below common PO+. True side-peak tangents approximately+0.242486/-0.242483
+  eV/A prohibit a stationary-TS claim. Lower centre has unmeasured stability;
+  do not add a Pbcn endpoint/Hessian or call two certified saddle segments.
+- Freeze reverting step32/.200001508 and retain its Pbca/Pa-3/Pa-3 tolerance
+  sweep.13:23:51 same handle28319571 RUNNING on node26/hfacnormal01/32CPU,
+  later rounded log step34/.186340. Conditional recent-trend estimate roughly
+ 15:30--18h today; not convergence assurance or reason to retune/restart.
+- Both unchanged-code HF/local physical replays pass:1298 floats/249 exact
+  two-frame fields(max1.42e-14),697 floats/882 exact network fields(max2.84e-14).
+  Preserve all package-version/warning differences.18new frozen records+19
+  reused, not37newSCFs. No DFT/job changes; productiondf4c12ee unchanged.
+- New dated four-panel figure explicitly separates low/high-energy profiles,
+  ordinary residuals and preserving physical tangents. Historical figure and
+  data unchanged. Actual 9-page reading PDF, all pages reviewed, table/image
+  and15local targets checked; no invented abstract/prediction result.
+- Initial staged archive omitted two ignored raw trajectories; source-bound
+  tests correctly report7errors. Add exactly those owned files; no weakening
+  of assertions or change to source/DFT. Final extracted archivee9ef0982 gives
+ 1207pass/2skip/0fail/error/313warnings,139.37s;36numeric/figure/code files
+  match the Git archive byte-for-byte. Keep initial failed archive/report.
+- This third ordinary pass is not fullG1, TS/sampling, matchedG2 or independent
+  G3 evidence. Keep finite gate sequence,100Ry/full10auDZP,noCI/max2chains;
+  do not submit the canary/holdout before G1. Goal active; one normal scoped
+  material-result commit/push. Evidence:
+  `switching_converged_update_20261009_1255/validation_delivery.json`.

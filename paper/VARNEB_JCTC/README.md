@@ -20,8 +20,8 @@ compact projection nor a visually smooth landscape establishes this claim.
   [dated v2 addendum](../../docs/HFO2_PREDICTION_PROTOCOL_V2_2026-10-09.md).
 
 The manuscript's numerical table is a dated snapshot, not a live job dashboard.
-The T-PO and PO-to-M bands have passed the ordinary residual criterion; both
-switching observations in that table have not. G2 matched-boundary comparisons, G3
+The T-PO, PO-to-M and preserving-flip bands have passed the ordinary residual
+criterion; the reversing observation has not. G2 matched-boundary comparisons, G3
 conditional-branch validation and independent material predictions remain
 missing. An ordinary residual pass is not a certified saddle or a barrier
 uncertainty bound. No abstract or conclusion asserting these missing results
@@ -35,9 +35,15 @@ source-verified pilot evidence, not a new stationary-TS or prediction result.
 The [2026-10-09 morning update](../../benchmarks/hfo2_channels/20261008/morning_update_20261009_0850/README.md)
 adds the second ordinary-converged source, PO to M, and the preserving flip's
 developing split-peak profile. Both switching chains remain unconverged.
-The main table and Results now cite these complete morning frames and their
-actual source jobs. Figure2 explicitly remains the earlier step6/20/14/10
-observation; its data and original figure contract are not overwritten.
+Those morning frames and the earlier step6/20/14/10 figure remain historical
+evidence and are not overwritten by later values.
+
+The [12:55 update](../../benchmarks/hfo2_channels/20261008/switching_converged_update_20261009_1255/README.md)
+adds preserving step69 ordinary convergence. Table1 and the new Figure2 now
+use complete step6/39/69/32 records. The central Pbcn image is lower than
+PO+, but not certified stable; physical tangential forces of about
+0.24 eV/Angstrom at the sampled side peaks prevent a stationary-TS label.
+This is new material evidence, not a completed G1 gate or a prediction result.
 
 ## Compile the reading PDF
 
@@ -64,12 +70,12 @@ verification receipt are committed instead. PDF bytes may change with engine
 versions, timestamps or fonts; the receipt identifies the actual local build,
 not a promise of byte-identical PDFs on all machines.
 
-The current morning-update build was compiled with existing TeX Live
+The historical morning-update build was compiled with existing TeX Live
 2023/LuaHBTeX1.16.0. All eight pages were rendered and visually reviewed with
 existing Poppler; the current table's jobs, steps, numbers and pass labels
 were checked against the frozen E029 data. Both unchanged figure assets and
 local evidence-link targets were verified. See
-[the current compile/scientific-check receipt](MANUSCRIPT_DRAFT.morning-update.validation.json).
+[its compile/scientific-check receipt](MANUSCRIPT_DRAFT.morning-update.validation.json).
 That is a reading-layout and source-data consistency check, not scientific
 completion or journal approval. The earlier seven-page
 [compile receipt](MANUSCRIPT_DRAFT.compile.validation.json) is retained as
@@ -79,6 +85,10 @@ The earlier [main-text validation receipt](MANUSCRIPT_DRAFT.validation.json)
 is preserved as a **historical milestone** for commit `456d376`. Its manuscript
 hash predates the current math/table formatting changes and must not be used
 as the hash of the current draft.
+
+The current preserving-pass build and its actual rendered-page/numeric checks
+are identified by [the dated receipt](MANUSCRIPT_DRAFT.preserving-pass.validation.json).
+It includes the new Figure2 without claiming the missing material predictions.
 
 ## Computation boundaries
 
