@@ -1049,3 +1049,26 @@ See submission_handles_r13.json; no switching results or G2 DFT claimed yet.
 - Bibliography/provenance correction only: no new material prediction or
   JCTC-ready claim. Raw responses outsideGit, reproducible URL/fields/hash
   in `../../../outputs/HFO2_LEE_DOI_METADATA_AUDIT_2026-10-09.json`.
+
+## E036 - Preflight the real G2 delivery without evaluating a calculator
+
+- Archive only committed 1e9259c source to a fresh local/HF namespace;
+  22,725,666 bytes, SHA14420324. Runtime/test directories are unchanged from
+  E032's recorded 1162-pass/2-skip suite; that suite is not rerun. New clean
+  focused endpoint/epitaxial/input regression:48pass,0fail/error/skip,1.64s.
+- Initial launcher was rejected before process creation because its workdir
+  did not yet exist. Split archive/extract and clean pytest commands; no
+  numerical or input-threshold repair. Preserve the failure in the receipt.
+- Separately hashed case helper actually executes twice with existing HF
+  ICU/ASE3.23.1b1/NumPy1.26.4. All10 seeds and6 physical-input hashes pass;
+  constructor results stay empty, reserved directory stays absent, bash-n
+  succeeds. No calculator evaluation, DFT, installed software or submission.
+- This is delivery readiness only. Starters are still unrelaxed, phase/variant
+  and G1/G2 material gates remain unpassed; holdout absent. The registered
+  four-step PO+ BFGS canary still waits for G1, not auto-submitted by the check.
+-12:04:16CST same two handles RUNNING:preserving64/.130327 on node11,
+  reversing27/.257145 on node26. Production archive df4c12ee unchanged;
+  ordinary0.10/100Ry/full10auDZP and at most two live study chains preserved.
+- Keep finite G1->G2->G3 and actual independent evidence requirements. No
+  material advantage/JCTC completion verdict. Evidence:
+  `g2_delivery_preflight/validation_delivery.json`.
