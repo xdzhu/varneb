@@ -861,3 +861,38 @@ See submission_handles_r13.json; no switching results or G2 DFT claimed yet.
  changes are excluded. Subsequent updates are README/receipt/journal metadata
  only, not source, tests or numeric inputs. Raw-byte Git attributes prevent
  line-ending conversion from invalidating the archived evidence checksums.
+
+## E029 - Second ordinary pass and a changing preserving-flip profile
+
+- PO--M28298794 ends06:29:53/exit0:0,step39; terminal summary and complete
+ raw-SCF replay agree on ordinary residual.097904490eV/A. Sampled forward/
+ reverse maxima71.582207/142.966807meV/f.u.; M endpoint P2_1/c at all three
+ registered tolerances. Its sampled peak's physical tangent-.383495004eV/A
+ prevents promoting an ordinary pass to a stationary-TS certificate.
+- Preservingstep48has peaks3/5at39.069477/39.069483meV/f.u.; central4/Pbcn
+ is lower17.440944but retains the dominantcell residual.204908776eV/A.
+ The current bottleneck is not the old central Pbcn maximum; no stable
+ intermediate, optimizer cause or acceleration advantage is certified.
+- Reversing28319571starts automatically when M ends, not by resubmission.
+ At08:47 both flips are Running, preserved48/.204909 and reverse12/.455054.
+ Keep at most two active chains and the existing bounded continuations.
+- New dated metadata adapter reuses the original strict physical analysis;
+ legacy source and historical figure remain byte-unchanged/replayable. Two
+ ordinary passes do not certify G1/TS/sampling/predictions.35focused tests
+ pass/58.42s, five new cases. Full independent/clean checks recorded next.
+-27newly frozen plus10reused image records are not new or independent DFT.
+ Three-frame HF/local1923floats agree<=2.85e-14,365nonfloats exact. No new
+ SCF, input change, job mutation, earlyG2 or holdout is used for the update.
+ Evidence: `morning_update_20261009_0850/validation_delivery.json`.
+- Clean staged treed12dd301 passes1078tests/2skip/313warnings in126.51s;
+ code/test hashes remain unchanged after this check. All40 initial evidence
+ files retain their bytes. Clean network replay is byte-identical to local.
+ The exact tested archive b59a331c also runs the same CLI on HF in an isolated
+ directory:697floating fields agree<=2.85e-14,882physical/source nonfloat
+ fields exact. Versions and38warning fields differ and remain in both reports;
+ no remote pytest or installation is claimed. Subsequent changes are delivery
+ metadata and the retained HF report only, not implementation/numeric inputs.
+-09:08:42CST Slurm confirms preserving50/.199713 and reversing13/.435211
+ still Running. Later rounded logs do not replace the frozenstep48/12SCF data.
+ No further DFT call, scheduler mutation, parameter change or production source
+ overwrite is needed for this evidence delivery.

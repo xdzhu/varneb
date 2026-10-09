@@ -32,6 +32,12 @@ tracks the preserving flip's atomic/cell residual crossover without replacing
 the draft's dated table or claiming final channel energies. It is additional
 source-verified pilot evidence, not a new stationary-TS or prediction result.
 
+The [2026-10-09 morning update](../../benchmarks/hfo2_channels/20261008/morning_update_20261009_0850/README.md)
+adds the second ordinary-converged source, PO to M, and the preserving flip's
+developing split-peak profile. Both switching chains remain unconverged.
+These later results are recorded in the pilot text; the compiled main text's
+earlier dated numerical table and figures are not silently overwritten.
+
 ## Compile the reading PDF
 
 The scientific text has **one source**, `MANUSCRIPT_DRAFT.md`. The small

@@ -473,3 +473,38 @@ controls. No new material, cutoff, G0 sampling or early CI is introduced.
 The [frozen evidence and reproduction contract](../../benchmarks/hfo2_channels/20261008/network_update_20261009/README.md)
 and [caption/figure QA](figures/hfo2_G1_provisional_20261009/README.md) distinguish
 these descriptive observations from the uncompleted JCTC hypothesis test.
+
+## E029, 2026-10-09: PO to M ordinary convergence and a split switching profile
+
+The PO to M continuation ends at step39 with independently replayed ordinary
+residual0.097904490eV/Angstrom. Its ordered final endpoint is P2_1/c at each
+declared0.001/0.01/0.05Angstrom symmetry tolerance. At the unchanged common
+PO+ reference, sampled forward/reverse maxima are71.582207/142.966807meV/f.u.;
+the reaction energy is-71.384600meV/f.u. The end of this allocation is not a
+new calculation of the fixed endpoints or a change to the100Ry/full10auDZP
+Hamiltonian. Two of the four current candidates now pass ordinary convergence.
+
+Its highest sampled image still has physical tangential generalized force
+-0.383495004eV/Angstrom. Ordinary convergence therefore does not certify
+that discrete point as a stationary first-order saddle or establish a
+sampling uncertainty. Both switching candidates remain unconverged, so a
+final competing-channel ranking and a favorable mechanical window are not
+claimed from these differently timed observations.
+
+The preserving flip also provides a useful correction to the early picture.
+At step48 its two sampled local maxima are images3/5,39.069477/39.069483meV/f.u.,
+both Pca2_1 across the tolerance sweep. Central image4 remains Pbcn but is now
+lower,17.440944meV/f.u.; its scaled-cell residual0.204908776eV/Angstrom is still
+the global maximum. It is neither the current highest image nor a certified
+stable intermediate. The dominant residual has changed back from the atomic
+block at25/27 to the cell block at48. Neither one historical force component
+nor the midpoint's group symbol can define the final bottleneck in advance.
+The actual terminal path, gradients and transverse stability must be measured
+before selecting the local response/model coordinates.
+
+This changing profile is a mechanism-selection observation, not a new claim
+of Pbcn-mediated switching, an optimizer-speed benchmark or an independent
+prediction. The [morning evidence bundle](../../benchmarks/hfo2_channels/20261008/morning_update_20261009_0850/README.md)
+preserves all original E/F/stress and source/geometry hashes. The older E025
+figure and its one-pass table remain a dated historical result; they are not
+silently relabeled with these later energies or phase assignments.
