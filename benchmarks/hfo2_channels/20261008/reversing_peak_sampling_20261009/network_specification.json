@@ -1,0 +1,18 @@
+{
+  "formula_units": 4,
+  "mechanical_family": "free_cell_P0_E0",
+  "mechanical_parameters": {"pressure_GPa": 0.0, "external_field_V_A": 0.0},
+  "T_reference": "../reference_variants/T.vasp",
+  "T_Gamma_reference": "../gamma_analysis/T_d0.01.npz",
+  "required_channels": {
+    "PO_to_T": "decay", "PO_to_M": "decay",
+    "PO_flip_T_pattern_preserving": "switching", "PO_flip_T_pattern_reversing": "switching"
+  },
+  "channels": [
+    {"name": "PO_to_T", "role": "decay", "reverse": true, "observation": "../converged_gap/gap_converged_step06"},
+    {"name": "PO_to_M", "role": "decay", "reverse": false, "observation": "../terminal_G1_update_20261009_17/M_refined_step01"},
+    {"name": "PO_flip_T_pattern_preserving", "role": "switching", "reverse": false, "observation": "../switching_converged_update_20261009_1255/preserving_step69"},
+    {"name": "PO_flip_T_pattern_reversing", "role": "switching", "reverse": false, "observation": "../terminal_G1_update_20261009_17/reversing_step45"}
+  ],
+  "limitations": "Four ordinary-force passes, not a full G1/TS/stability/polarization or independent strain-prediction certificate; peak statics are audited separately. All cached images retain their original direction and metric."
+}

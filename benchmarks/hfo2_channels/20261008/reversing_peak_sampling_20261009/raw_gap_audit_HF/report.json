@@ -1,0 +1,561 @@
+{
+  "status": "actual_raw_terminal_sampled_gaps_not_full_BZ_or_Berry_branch",
+  "executor_sha256": "91ac83ac8feb78077570437dc1f2417a6e1a3e99125fe241f919bc6190a62b09",
+  "executor_python": "import base64,sys,json,hashlib,shutil\nfrom pathlib import Path\nimport numpy as np\nfrom scripts.analyze_hfo2_channel_network import read_evaluated_observation\nfrom scripts.audit_hfo2_static_replica import audited_results,sha256\nfrom examples.hfo2_fixed_input_factory import CONTRACT,same_ordered_geometry\nfrom ase.io import read\nfrom vcneb.polarization import sampled_band_gap\nbase=Path('benchmarks/hfo2_channels/20261008')\nentries=[('PO_to_T','converged_gap/gap_converged_step06'),('PO_to_M','terminal_G1_update_20261009_17/M_refined_step01'),('PO_flip_T_pattern_preserving','switching_converged_update_20261009_1255/preserving_step69'),('PO_flip_T_pattern_reversing','terminal_G1_update_20261009_17/reversing_step45')]\nout=Path('/public/home/iai806/abacus/agent-runs/20261009-varneb-reversing-peaks-E043-r4/raw_gap_audit')\nassert not out.exists()\nout.mkdir()\nchannels=[]\nfor name,folder in entries:\n images,record,digest=read_evaluated_observation(base/folder)\n assert record['replayed_fmax_eV_A']<=.1\n target=out/name;target.mkdir()\n rows=[]\n for i,(a,p) in enumerate(zip(images,record['raw_image_evaluations'])):\n  d=Path(p['raw_source']);actual=audited_results(d)\n  assert sha256(d/'OUT.ABACUS/running_scf.log')==p['raw_log_sha256']\n  assert all(sha256(d/n)==h for n,h in CONTRACT.items())\n  assert same_ordered_geometry(a,read(d/'STRU',format='abacus'))\n  assert abs(actual['energy']-a.get_potential_energy())<1e-10\n  assert np.allclose(actual['forces'],a.get_forces(),rtol=0,atol=1e-12)\n  assert np.allclose(actual['stress'],a.get_stress(),rtol=0,atol=1e-12)\n  source=d/'OUT.ABACUS/istate.info';dest=target/f'istate_{i:02d}.info';shutil.copyfile(source,dest)\n  gap=sampled_band_gap(source.read_text(),48)\n  rows.append({'source_image_index':i,'raw_source':str(d),'istate_sha256':sha256(source),'raw_log_sha256':p['raw_log_sha256'],'gap':gap})\n channels.append({'name':name,'observation_sha256':digest,'rows':rows,'minimum_sampled_gap_eV':min(x['gap']['sampled_indirect_gap_eV'] for x in rows)})\ncode=base64.b64decode(sys.argv[1])\nresult={'status':'actual_raw_terminal_sampled_gaps_not_full_BZ_or_Berry_branch','executor_sha256':hashlib.sha256(code).hexdigest(),'executor_python':code.decode(),'channels':channels,'records':sum(len(c['rows']) for c in channels),'new_DFT_calls':0,'physical_inputs_changed':False,'ordinary_passes':4,'full_G1_passed':False,'limitations':'sampled Gamma2x2x2 eigenvalues only, 48 occupied bands; no gap along unsampled links, no Berry/path branch selected'}\n(out/'report.json').write_text(json.dumps(result,indent=2,allow_nan=False)+'\\n')\nprint(json.dumps({'records':result['records'],'minimum_sampled_gaps_eV':{c['name']:c['minimum_sampled_gap_eV'] for c in channels},'new_DFT':0}))",
+  "channels": [
+    {
+      "name": "PO_to_T",
+      "observation_sha256": "b0d42fa6797986b038366f6856ba0943d2e2f4930356fd958ac638d1a2bef844",
+      "rows": [
+        {
+          "source_image_index": 0,
+          "raw_source": "/public/home/iai806/abacus/agent-runs/20260912-vcneb-hf/validation/hfo2_t_to_po/vcneb_n7_mode_guided_unconstrained_continue300_maxstep003/00",
+          "istate_sha256": "409841e9fe8c17cb02215d9ec0f8684c731cbeac47a4e698937b7db6913a351a",
+          "raw_log_sha256": "5a06ba5df4d9c4b9aa5dfc9b9f28e2b5009e8be9a6e616c47640d97a6b9008a9",
+          "gap": {
+            "n_kpoints": 6,
+            "occupied_bands": 48,
+            "VBM_eV": 11.10542198466374,
+            "CBM_eV": 15.90773004290426,
+            "sampled_indirect_gap_eV": 4.80230805824052
+          }
+        },
+        {
+          "source_image_index": 1,
+          "raw_source": "/public/home/iai806/abacus/agent-runs/20261008-varneb-hfo2-channels-r14/gap_continuation/image_0001/scf_000005",
+          "istate_sha256": "8184a9d40019ec3e728d36e98fe2e46b1b476c1553975f97dc63f88e3cfdb971",
+          "raw_log_sha256": "c01e71e9ceb22d967b468d330f5b1ea26902fa180028bfc993ca101a7f867ee3",
+          "gap": {
+            "n_kpoints": 8,
+            "occupied_bands": 48,
+            "VBM_eV": 11.05654858998072,
+            "CBM_eV": 15.8920541384676,
+            "sampled_indirect_gap_eV": 4.83550554848688
+          }
+        },
+        {
+          "source_image_index": 2,
+          "raw_source": "/public/home/iai806/abacus/agent-runs/20261008-varneb-hfo2-channels-r14/gap_continuation/image_0002/scf_000005",
+          "istate_sha256": "c94ceb47e89781ef9e4219ad00b35ff29336cdfc8a2ac0d7013d0e7252dd2331",
+          "raw_log_sha256": "7c21a0b55e9f0ceced6637bf15143ca9189019537719f312539e1c7da0cd093c",
+          "gap": {
+            "n_kpoints": 8,
+            "occupied_bands": 48,
+            "VBM_eV": 11.252529145705,
+            "CBM_eV": 15.78848918447836,
+            "sampled_indirect_gap_eV": 4.535960038773361
+          }
+        },
+        {
+          "source_image_index": 3,
+          "raw_source": "/public/home/iai806/abacus/agent-runs/20261008-varneb-hfo2-channels-r14/gap_continuation/image_0003/scf_000005",
+          "istate_sha256": "2550df6f65b4cfc88f7adba396e09fc8fe5959132c78fed271fd991c770ebd01",
+          "raw_log_sha256": "ee2f3a178d1d7c854cfd164b18045938092746432c7917e1620ce6409c3cf2ac",
+          "gap": {
+            "n_kpoints": 8,
+            "occupied_bands": 48,
+            "VBM_eV": 11.37429415569601,
+            "CBM_eV": 15.62633160508088,
+            "sampled_indirect_gap_eV": 4.25203744938487
+          }
+        },
+        {
+          "source_image_index": 4,
+          "raw_source": "/public/home/iai806/abacus/agent-runs/20261008-varneb-hfo2-channels-r14/gap_continuation/image_0004/scf_000005",
+          "istate_sha256": "01c6f6bace6852b8c94d84994fb9988d1796f300e7068188b0ae084c7439946f",
+          "raw_log_sha256": "0a57a2113d0ed5fd80dd01315fdd5d08c6d72407aab8b709d46445b5c07a78b8",
+          "gap": {
+            "n_kpoints": 8,
+            "occupied_bands": 48,
+            "VBM_eV": 11.2924402897632,
+            "CBM_eV": 15.79033571696968,
+            "sampled_indirect_gap_eV": 4.4978954272064815
+          }
+        },
+        {
+          "source_image_index": 5,
+          "raw_source": "/public/home/iai806/abacus/agent-runs/20261008-varneb-hfo2-channels-r14/gap_continuation/image_0005/scf_000005",
+          "istate_sha256": "0229a2a225536e2ce5e2960686437ad5a16bd6364c8c1c33037c302499e34c4a",
+          "raw_log_sha256": "9d50e75db21251c20ab5619fdd62bcb75d4e8c8e9c44deee7abd76e9315a380a",
+          "gap": {
+            "n_kpoints": 8,
+            "occupied_bands": 48,
+            "VBM_eV": 11.10417087223468,
+            "CBM_eV": 15.90420760118848,
+            "sampled_indirect_gap_eV": 4.800036728953799
+          }
+        },
+        {
+          "source_image_index": 6,
+          "raw_source": "/public/home/iai806/abacus/agent-runs/20261008-varneb-hfo2-channels-r14/gap_continuation/image_0006/scf_000005",
+          "istate_sha256": "bae8296a880917d6babdc22e7a7226f4d379a416c2651f091d9311f8b7418eb5",
+          "raw_log_sha256": "13236522b86fc315120f90bbc83c7d825b1411c5964e2a9766a6235ffbf67ab3",
+          "gap": {
+            "n_kpoints": 8,
+            "occupied_bands": 48,
+            "VBM_eV": 11.04871027436746,
+            "CBM_eV": 15.89808889821099,
+            "sampled_indirect_gap_eV": 4.8493786238435295
+          }
+        },
+        {
+          "source_image_index": 7,
+          "raw_source": "/public/home/iai806/abacus/agent-runs/20261008-varneb-hfo2-channels-r14/gap_continuation/image_0007/scf_000005",
+          "istate_sha256": "1e8a57b02dd49a949afc6c5fab0f4d87891a09661c74805cebfb161f1e725642",
+          "raw_log_sha256": "584ca50679d4487b4c397327a7cfe7b0dfba39b16c90044c18d4f4993fc83fc1",
+          "gap": {
+            "n_kpoints": 8,
+            "occupied_bands": 48,
+            "VBM_eV": 11.11239135176133,
+            "CBM_eV": 15.83139701866466,
+            "sampled_indirect_gap_eV": 4.71900566690333
+          }
+        },
+        {
+          "source_image_index": 8,
+          "raw_source": "/public/home/iai806/abacus/agent-runs/20261008-varneb-hfo2-channels-r14/gap_continuation/image_0008/scf_000005",
+          "istate_sha256": "fad1c591707e721b6bad66012cc7b621d99766a8d516b736403ef276781b38c5",
+          "raw_log_sha256": "182c45f64f075ac39ee472cb4f88860a09350a632195dbca744ce0704f5aefaa",
+          "gap": {
+            "n_kpoints": 8,
+            "occupied_bands": 48,
+            "VBM_eV": 11.22566241451865,
+            "CBM_eV": 15.82371144686829,
+            "sampled_indirect_gap_eV": 4.598049032349639
+          }
+        },
+        {
+          "source_image_index": 9,
+          "raw_source": "/public/home/iai806/abacus/agent-runs/20260912-vcneb-hf/validation/hfo2_t_to_po/vcneb_n7_mode_guided_unconstrained_continue300_maxstep003/06",
+          "istate_sha256": "35ee436c24ed0415712d8dce1a23176ba59f6113b201e4afc7a9d18d76ef3062",
+          "raw_log_sha256": "fbf47ddd52b2db05296384ecb00e99c18ae54d18cc760229067137aaa10323c9",
+          "gap": {
+            "n_kpoints": 8,
+            "occupied_bands": 48,
+            "VBM_eV": 11.25417772156195,
+            "CBM_eV": 15.84345973838961,
+            "sampled_indirect_gap_eV": 4.58928201682766
+          }
+        }
+      ],
+      "minimum_sampled_gap_eV": 4.25203744938487
+    },
+    {
+      "name": "PO_to_M",
+      "observation_sha256": "d2ad5af18b18820cc92a3176d727feda13881d80dd0c91d682ee10805566766f",
+      "rows": [
+        {
+          "source_image_index": 0,
+          "raw_source": "/public/home/iai806/abacus/agent-runs/20260912-vcneb-hf/validation/hfo2_t_to_po/vcneb_n7_fire_distributed_resume27678004_v4/06",
+          "istate_sha256": "35ee436c24ed0415712d8dce1a23176ba59f6113b201e4afc7a9d18d76ef3062",
+          "raw_log_sha256": "7fbc15372a83080085735f740cedc42f02475b7ec826f1c3e9ba8cf8e270841b",
+          "gap": {
+            "n_kpoints": 8,
+            "occupied_bands": 48,
+            "VBM_eV": 11.25417772156195,
+            "CBM_eV": 15.84345973838961,
+            "sampled_indirect_gap_eV": 4.58928201682766
+          }
+        },
+        {
+          "source_image_index": 1,
+          "raw_source": "/public/home/iai806/abacus/agent-runs/20261009-varneb-M-refinement-1549/PO_M_refinement/image_0001/scf_000000",
+          "istate_sha256": "e6e842c32b80f7bd9a36347a8e17eea2b3cbb5092ac8c8989f54027538d59278",
+          "raw_log_sha256": "6f246773147c52a42291fd388922683411fc030c0276fc45ccf76bd11b285537",
+          "gap": {
+            "n_kpoints": 8,
+            "occupied_bands": 48,
+            "VBM_eV": 11.22277321288126,
+            "CBM_eV": 15.82297760495213,
+            "sampled_indirect_gap_eV": 4.60020439207087
+          }
+        },
+        {
+          "source_image_index": 2,
+          "raw_source": "/public/home/iai806/abacus/agent-runs/20261009-varneb-M-refinement-1549/PO_M_refinement/image_0002/scf_000000",
+          "istate_sha256": "d23c93f8979308beec33e72eafb9652aca8ea441650bf36235827c8cd0c6d6d4",
+          "raw_log_sha256": "20a9d6ddce2d1ca870f53523033eb06b4b1718ad46b4311fb88bf0bd34744196",
+          "gap": {
+            "n_kpoints": 8,
+            "occupied_bands": 48,
+            "VBM_eV": 11.13918339074108,
+            "CBM_eV": 15.79174680842653,
+            "sampled_indirect_gap_eV": 4.65256341768545
+          }
+        },
+        {
+          "source_image_index": 3,
+          "raw_source": "/public/home/iai806/abacus/agent-runs/20261009-varneb-M-refinement-1549/PO_M_refinement/image_0003/scf_000000",
+          "istate_sha256": "28e702ec67d29ee6ae454dbefcad4c0bef30997e78ae6f667b5617bd1070984c",
+          "raw_log_sha256": "9cc5db9153327ed466130e34cabf592a8c852a8c5468d8f013126cfcb6f818bb",
+          "gap": {
+            "n_kpoints": 8,
+            "occupied_bands": 48,
+            "VBM_eV": 10.93448399733136,
+            "CBM_eV": 15.70116009919398,
+            "sampled_indirect_gap_eV": 4.76667610186262
+          }
+        },
+        {
+          "source_image_index": 4,
+          "raw_source": "/public/home/iai806/abacus/agent-runs/20261009-varneb-M-refinement-1549/PO_M_refinement/image_0004/scf_000000",
+          "istate_sha256": "d83b8e999187035925e3b466a2270a64f9475648e8c8c1cf0b66f689d7599bef",
+          "raw_log_sha256": "94e6bcf26cebda6bff899aa4a08083f565bb705dad857ea6398b3c24f3ecf7ed",
+          "gap": {
+            "n_kpoints": 8,
+            "occupied_bands": 48,
+            "VBM_eV": 10.93440193239173,
+            "CBM_eV": 15.64406819702978,
+            "sampled_indirect_gap_eV": 4.7096662646380505
+          }
+        },
+        {
+          "source_image_index": 5,
+          "raw_source": "/public/home/iai806/abacus/agent-runs/20261009-varneb-M-refinement-1549/PO_M_refinement/image_0005/scf_000000",
+          "istate_sha256": "990249050d239631b3518280f97c9b8f4fb31e57574e036a09031a2a30d0e377",
+          "raw_log_sha256": "59d7b344fdabe0d2375f87a93a6e415d01fe0670db75afbc52d3a82de06e8ff7",
+          "gap": {
+            "n_kpoints": 8,
+            "occupied_bands": 48,
+            "VBM_eV": 10.90348285728112,
+            "CBM_eV": 15.60239979621991,
+            "sampled_indirect_gap_eV": 4.69891693893879
+          }
+        },
+        {
+          "source_image_index": 6,
+          "raw_source": "/public/home/iai806/abacus/agent-runs/20261009-varneb-M-refinement-1549/PO_M_refinement/image_0006/scf_000000",
+          "istate_sha256": "aef576acd1c5f818e462494720aace3a5627d39a296362b7f71433216b2144e6",
+          "raw_log_sha256": "983aedcc1542ade1e3b20043a158828abb1601aa17c49b526a9aa3485632e319",
+          "gap": {
+            "n_kpoints": 8,
+            "occupied_bands": 48,
+            "VBM_eV": 10.84036186216688,
+            "CBM_eV": 15.57621436544329,
+            "sampled_indirect_gap_eV": 4.73585250327641
+          }
+        },
+        {
+          "source_image_index": 7,
+          "raw_source": "/public/home/iai806/abacus/agent-runs/20261009-varneb-M-refinement-1549/PO_M_refinement/image_0007/scf_000000",
+          "istate_sha256": "c7bf2fc0b52e4506b06369256d9b9c5c92b4e305a1afdd2690823cf1d8fe2b28",
+          "raw_log_sha256": "a8d0f491bdef684e593acfc53b48c8e5a292f9030ecfd669a7d3764a1e42236f",
+          "gap": {
+            "n_kpoints": 8,
+            "occupied_bands": 48,
+            "VBM_eV": 10.74654322722379,
+            "CBM_eV": 15.54283778523251,
+            "sampled_indirect_gap_eV": 4.79629455800872
+          }
+        },
+        {
+          "source_image_index": 8,
+          "raw_source": "/public/home/iai806/abacus/agent-runs/20261009-varneb-M-refinement-1549/PO_M_refinement/image_0008/scf_000000",
+          "istate_sha256": "8a0680ae26b3addb1046675efb8c699b9ad6548db0b0d74c0c7813aa7c3b045d",
+          "raw_log_sha256": "c81a1ae530ced76fd28146ffd882df883af65aa86e2f3a5c5a0b147e471c33b6",
+          "gap": {
+            "n_kpoints": 8,
+            "occupied_bands": 48,
+            "VBM_eV": 10.50209293393378,
+            "CBM_eV": 15.14992932322032,
+            "sampled_indirect_gap_eV": 4.647836389286541
+          }
+        },
+        {
+          "source_image_index": 9,
+          "raw_source": "/public/home/iai806/abacus/agent-runs/20261009-varneb-M-refinement-1549/PO_M_refinement/image_0009/scf_000000",
+          "istate_sha256": "42be234e32e2cd8389d70be67658e5139419d4d1826c138dd3eca7077796d7f6",
+          "raw_log_sha256": "901c2a5860fc3f4002ac8945008e444885c63ebf610e20a2b1d158175c42fc79",
+          "gap": {
+            "n_kpoints": 8,
+            "occupied_bands": 48,
+            "VBM_eV": 10.5411387983869,
+            "CBM_eV": 14.88287645449984,
+            "sampled_indirect_gap_eV": 4.34173765611294
+          }
+        },
+        {
+          "source_image_index": 10,
+          "raw_source": "/public/home/iai806/abacus/agent-runs/20261009-varneb-M-refinement-1549/PO_M_refinement/image_0010/scf_000000",
+          "istate_sha256": "21108c4d811331154ca75889db7a0efcc2c534b668460b6bbed8febefb2664ed",
+          "raw_log_sha256": "078d9f70295bf09bfb45f99be07bd2a56508cf2932ae991b70af1717d1824ca6",
+          "gap": {
+            "n_kpoints": 8,
+            "occupied_bands": 48,
+            "VBM_eV": 10.57011801002723,
+            "CBM_eV": 14.77960555208973,
+            "sampled_indirect_gap_eV": 4.209487542062501
+          }
+        },
+        {
+          "source_image_index": 11,
+          "raw_source": "/public/home/iai806/abacus/agent-runs/20261008-varneb-hfo2-channels-r5/M_bfgs/calculator/image_0000/scf_000011",
+          "istate_sha256": "ee625e7f76cebc7850bd88d5512748e22c46802a91f8a0b099d4bf3403f53490",
+          "raw_log_sha256": "cc9654451ebd3075de6cc886bc63899acbc184ae641aa559c6a096d5fb44e19f",
+          "gap": {
+            "n_kpoints": 8,
+            "occupied_bands": 48,
+            "VBM_eV": 10.59387711601208,
+            "CBM_eV": 14.72555286207547,
+            "sampled_indirect_gap_eV": 4.131675746063388
+          }
+        }
+      ],
+      "minimum_sampled_gap_eV": 4.131675746063388
+    },
+    {
+      "name": "PO_flip_T_pattern_preserving",
+      "observation_sha256": "2058e4045e57ddfa23c95d551593aa861e6ccca169b9e98d3f12bf112bd5b229",
+      "rows": [
+        {
+          "source_image_index": 0,
+          "raw_source": "/public/home/iai806/abacus/agent-runs/20260912-vcneb-hf/validation/hfo2_t_to_po/vcneb_n7_fire_distributed_resume27678004_v4/06",
+          "istate_sha256": "35ee436c24ed0415712d8dce1a23176ba59f6113b201e4afc7a9d18d76ef3062",
+          "raw_log_sha256": "7fbc15372a83080085735f740cedc42f02475b7ec826f1c3e9ba8cf8e270841b",
+          "gap": {
+            "n_kpoints": 8,
+            "occupied_bands": 48,
+            "VBM_eV": 11.25417772156195,
+            "CBM_eV": 15.84345973838961,
+            "sampled_indirect_gap_eV": 4.58928201682766
+          }
+        },
+        {
+          "source_image_index": 1,
+          "raw_source": "/public/home/iai806/abacus/agent-runs/20261008-varneb-hfo2-switching-r17/PO_minus_T_preserving_continuation/image_0001/scf_000068",
+          "istate_sha256": "ae4caaefb644fa00623786d8286ceaa25129bc4c474421e6056f0c0362daf62e",
+          "raw_log_sha256": "0bdd58c1a1e41ca9401442e4e46e07e447e00d8fafb918900357a05b6a9b9c38",
+          "gap": {
+            "n_kpoints": 8,
+            "occupied_bands": 48,
+            "VBM_eV": 11.18114252985646,
+            "CBM_eV": 15.79942359445212,
+            "sampled_indirect_gap_eV": 4.61828106459566
+          }
+        },
+        {
+          "source_image_index": 2,
+          "raw_source": "/public/home/iai806/abacus/agent-runs/20261008-varneb-hfo2-switching-r17/PO_minus_T_preserving_continuation/image_0002/scf_000068",
+          "istate_sha256": "fcf9dbeaaf5e3031553cf83e557f1ec68440aa6e216a586dc76f33dca9cff947",
+          "raw_log_sha256": "1f6b00d773095e91dbcf755ded680cc10049aabfc5ce3493fd4a8ad6f0678d51",
+          "gap": {
+            "n_kpoints": 8,
+            "occupied_bands": 48,
+            "VBM_eV": 10.69854058945571,
+            "CBM_eV": 15.54914562508731,
+            "sampled_indirect_gap_eV": 4.850605035631599
+          }
+        },
+        {
+          "source_image_index": 3,
+          "raw_source": "/public/home/iai806/abacus/agent-runs/20261008-varneb-hfo2-switching-r17/PO_minus_T_preserving_continuation/image_0003/scf_000068",
+          "istate_sha256": "5d719af016f0ddbd002d02b0f01ecb326d86e1d588767e25264671d40fea2f66",
+          "raw_log_sha256": "32508fbc87b7a9beea4222ccbce7522d2270e154eb679a2df250ebdf98238082",
+          "gap": {
+            "n_kpoints": 8,
+            "occupied_bands": 48,
+            "VBM_eV": 9.948510056559622,
+            "CBM_eV": 15.14205193365867,
+            "sampled_indirect_gap_eV": 5.193541877099049
+          }
+        },
+        {
+          "source_image_index": 4,
+          "raw_source": "/public/home/iai806/abacus/agent-runs/20261008-varneb-hfo2-switching-r17/PO_minus_T_preserving_continuation/image_0004/scf_000068",
+          "istate_sha256": "5840cd56e07e4319ea5fbcfe8de6ac0ea7a4faddd799cef697fc5a61638eec2d",
+          "raw_log_sha256": "45af952808b452ff90036711d58152cac30874a397d24c61c05cadb9b5fc0f11",
+          "gap": {
+            "n_kpoints": 8,
+            "occupied_bands": 48,
+            "VBM_eV": 9.309826053509374,
+            "CBM_eV": 14.30364347788563,
+            "sampled_indirect_gap_eV": 4.993817424376257
+          }
+        },
+        {
+          "source_image_index": 5,
+          "raw_source": "/public/home/iai806/abacus/agent-runs/20261008-varneb-hfo2-switching-r17/PO_minus_T_preserving_continuation/image_0005/scf_000068",
+          "istate_sha256": "d4a8d438f70fd81a2bfb6ac85443cf6c53f4d66c5b30b9d73d9969117d4cc540",
+          "raw_log_sha256": "38af36af35311b41edc416ad2fa67ae745337a8ff782561890859379918d2fde",
+          "gap": {
+            "n_kpoints": 8,
+            "occupied_bands": 48,
+            "VBM_eV": 9.9485091491094,
+            "CBM_eV": 15.14205125938188,
+            "sampled_indirect_gap_eV": 5.19354211027248
+          }
+        },
+        {
+          "source_image_index": 6,
+          "raw_source": "/public/home/iai806/abacus/agent-runs/20261008-varneb-hfo2-switching-r17/PO_minus_T_preserving_continuation/image_0006/scf_000068",
+          "istate_sha256": "fa06d87ef1691177940087514d2496288015a47eeefea95dc483bf14851faaf3",
+          "raw_log_sha256": "386805adf13f79008f465bf8e70a788a1f6b25a0d404e3b1cc2e8544e87c3838",
+          "gap": {
+            "n_kpoints": 8,
+            "occupied_bands": 48,
+            "VBM_eV": 10.69854039119609,
+            "CBM_eV": 15.54914555352838,
+            "sampled_indirect_gap_eV": 4.85060516233229
+          }
+        },
+        {
+          "source_image_index": 7,
+          "raw_source": "/public/home/iai806/abacus/agent-runs/20261008-varneb-hfo2-switching-r17/PO_minus_T_preserving_continuation/image_0007/scf_000068",
+          "istate_sha256": "b8db2f9ad24ebd699c2f08d984c95fad3fb4fd9a9c29b6965c95e28050b436cf",
+          "raw_log_sha256": "e6b08011cb394c004895c3987060fadedbd006dc3ce5501beb0c7db35bd37837",
+          "gap": {
+            "n_kpoints": 8,
+            "occupied_bands": 48,
+            "VBM_eV": 11.18114251798987,
+            "CBM_eV": 15.79942358715629,
+            "sampled_indirect_gap_eV": 4.618281069166422
+          }
+        },
+        {
+          "source_image_index": 8,
+          "raw_source": "/public/home/iai806/abacus/agent-runs/20261008-varneb-hfo2-channels-r4/gamma_seeds/calculations/16",
+          "istate_sha256": "2881258f172c4b1329c1d5bfd0db16d2aaecd418b7b29d614bd6ebabb7b72108",
+          "raw_log_sha256": "1cae09706663dc444402ae3a2031fc04b63d8aadb79300fb9de327c902d32f82",
+          "gap": {
+            "n_kpoints": 8,
+            "occupied_bands": 48,
+            "VBM_eV": 11.25417772156457,
+            "CBM_eV": 15.84345973838711,
+            "sampled_indirect_gap_eV": 4.5892820168225406
+          }
+        }
+      ],
+      "minimum_sampled_gap_eV": 4.5892820168225406
+    },
+    {
+      "name": "PO_flip_T_pattern_reversing",
+      "observation_sha256": "23c1f7e3799ab0f1b388bd2791418c400f26eccf5679a3353c05dff326ef3f08",
+      "rows": [
+        {
+          "source_image_index": 0,
+          "raw_source": "/public/home/iai806/abacus/agent-runs/20260912-vcneb-hf/validation/hfo2_t_to_po/vcneb_n7_fire_distributed_resume27678004_v4/06",
+          "istate_sha256": "35ee436c24ed0415712d8dce1a23176ba59f6113b201e4afc7a9d18d76ef3062",
+          "raw_log_sha256": "7fbc15372a83080085735f740cedc42f02475b7ec826f1c3e9ba8cf8e270841b",
+          "gap": {
+            "n_kpoints": 8,
+            "occupied_bands": 48,
+            "VBM_eV": 11.25417772156195,
+            "CBM_eV": 15.84345973838961,
+            "sampled_indirect_gap_eV": 4.58928201682766
+          }
+        },
+        {
+          "source_image_index": 1,
+          "raw_source": "/public/home/iai806/abacus/agent-runs/20261008-varneb-hfo2-switching-r17/PO_minus_T_reversing_continuation/image_0001/scf_000044",
+          "istate_sha256": "e0a20b99b955aeeceafa3beb5f26c77284a911b9588b035209d15c0d37b710e5",
+          "raw_log_sha256": "6dffa8236756e6b1739f943cc02586069c8eeec359aab956c83a89f738f06375",
+          "gap": {
+            "n_kpoints": 8,
+            "occupied_bands": 48,
+            "VBM_eV": 11.30657687425621,
+            "CBM_eV": 15.85225429664274,
+            "sampled_indirect_gap_eV": 4.545677422386531
+          }
+        },
+        {
+          "source_image_index": 2,
+          "raw_source": "/public/home/iai806/abacus/agent-runs/20261008-varneb-hfo2-switching-r17/PO_minus_T_reversing_continuation/image_0002/scf_000044",
+          "istate_sha256": "2482334871a8341e21e2047c5a8b729115a22a97ce76369cb8bf53e3e0dc4eb7",
+          "raw_log_sha256": "05ffd2680d59bddddaefdc810ca9fd43bd05da2c89bca64127e4f50fb7b4e59e",
+          "gap": {
+            "n_kpoints": 8,
+            "occupied_bands": 48,
+            "VBM_eV": 11.44631687443791,
+            "CBM_eV": 15.75783475314065,
+            "sampled_indirect_gap_eV": 4.311517878702739
+          }
+        },
+        {
+          "source_image_index": 3,
+          "raw_source": "/public/home/iai806/abacus/agent-runs/20261008-varneb-hfo2-switching-r17/PO_minus_T_reversing_continuation/image_0003/scf_000044",
+          "istate_sha256": "cc4231347fa6de9c34a6caf8a53ea782af246c37e65a796b9f6a32c1f36c45c1",
+          "raw_log_sha256": "aee6570444351c0d27c5d156eac8c0891172e26b08be658cf2cf9dea460c723f",
+          "gap": {
+            "n_kpoints": 8,
+            "occupied_bands": 48,
+            "VBM_eV": 11.40353301430734,
+            "CBM_eV": 15.52463946595863,
+            "sampled_indirect_gap_eV": 4.12110645165129
+          }
+        },
+        {
+          "source_image_index": 4,
+          "raw_source": "/public/home/iai806/abacus/agent-runs/20261008-varneb-hfo2-switching-r17/PO_minus_T_reversing_continuation/image_0004/scf_000044",
+          "istate_sha256": "ecb995b532fe3893b243ddd83465764344a61ebde9563e4997341d350d855c40",
+          "raw_log_sha256": "59514b3591049540c6ad3c858ce417affb3acc4e1a75471d3cf75ca9fab64670",
+          "gap": {
+            "n_kpoints": 8,
+            "occupied_bands": 48,
+            "VBM_eV": 11.32018637485639,
+            "CBM_eV": 15.33750703775854,
+            "sampled_indirect_gap_eV": 4.017320662902151
+          }
+        },
+        {
+          "source_image_index": 5,
+          "raw_source": "/public/home/iai806/abacus/agent-runs/20261008-varneb-hfo2-switching-r17/PO_minus_T_reversing_continuation/image_0005/scf_000044",
+          "istate_sha256": "a0a1fd8eca014fdd5ce6871a04fcb8ab71503ee4a51aadbc0e6b8f290cf501f6",
+          "raw_log_sha256": "8ca0bcc80b5367c8e59cac1b9dcf9e01a49ed1f25d9e53f256cd35ce10e25d11",
+          "gap": {
+            "n_kpoints": 8,
+            "occupied_bands": 48,
+            "VBM_eV": 11.40353301430804,
+            "CBM_eV": 15.52463946595605,
+            "sampled_indirect_gap_eV": 4.121106451648009
+          }
+        },
+        {
+          "source_image_index": 6,
+          "raw_source": "/public/home/iai806/abacus/agent-runs/20261008-varneb-hfo2-switching-r17/PO_minus_T_reversing_continuation/image_0006/scf_000044",
+          "istate_sha256": "453cc7b6a398bd824fd03d5de955dd8b5b5638f3a3130440499348d263d606a9",
+          "raw_log_sha256": "25d56891a6521fd01faf63d0a9d5481dc1cc6f0445f1f1387ad0f4cbdabc54bf",
+          "gap": {
+            "n_kpoints": 8,
+            "occupied_bands": 48,
+            "VBM_eV": 11.44631687443721,
+            "CBM_eV": 15.75783475314001,
+            "sampled_indirect_gap_eV": 4.3115178787028
+          }
+        },
+        {
+          "source_image_index": 7,
+          "raw_source": "/public/home/iai806/abacus/agent-runs/20261008-varneb-hfo2-switching-r17/PO_minus_T_reversing_continuation/image_0007/scf_000044",
+          "istate_sha256": "62cc9104840ece0fa0b5df734521de272b887127500774e62a5ae4f65f7fc896",
+          "raw_log_sha256": "79c2c02b4e8c67610367253dd1c4d6768f4507a5e60114c5c7ea48adaf427677",
+          "gap": {
+            "n_kpoints": 8,
+            "occupied_bands": 48,
+            "VBM_eV": 11.3065773598101,
+            "CBM_eV": 15.85225474200828,
+            "sampled_indirect_gap_eV": 4.54567738219818
+          }
+        },
+        {
+          "source_image_index": 8,
+          "raw_source": "/public/home/iai806/abacus/agent-runs/20261008-varneb-hfo2-channels-r4/gamma_seeds/calculations/17",
+          "istate_sha256": "3dad70d25fbb2c8d31ea248ebc4456b59a63d92a511d9638a724ac8b999ce023",
+          "raw_log_sha256": "b875aadf6c3899425f0af7db94de8c2d872b9f6f896d01e483198564177bb916",
+          "gap": {
+            "n_kpoints": 8,
+            "occupied_bands": 48,
+            "VBM_eV": 11.25417772156385,
+            "CBM_eV": 15.84345973838717,
+            "sampled_indirect_gap_eV": 4.589282016823319
+          }
+        }
+      ],
+      "minimum_sampled_gap_eV": 4.017320662902151
+    }
+  ],
+  "records": 40,
+  "new_DFT_calls": 0,
+  "physical_inputs_changed": false,
+  "ordinary_passes": 4,
+  "full_G1_passed": false,
+  "limitations": "sampled Gamma2x2x2 eigenvalues only, 48 occupied bands; no gap along unsampled links, no Berry/path branch selected"
+}

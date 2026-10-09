@@ -1226,3 +1226,28 @@ Complete remainingRsampling(≤3) and mechanism/variant/polarization gates;
 Pbcn midpoint stability remains unresolved, M/T are not global escape coverage.
 No extra path/Hessian, G2/holdout/CI/retuning; goalactive/incomplete.
 Evidence:`terminal_G1_update_20261009_17/validation.json`.
+
+## E043 - Two reversing peak statics and actual terminal mechanism/gap audit
+
+28410062 COMPLETED0:0,204s/node61/32CPUs. Two actual energies392.822010685/
+392.822010698meV-HfO2 below the old392.822905197 maximum; Hermite's tiny
+increase is not observed. Cached11-image residual.094022846 passes; no
+additional optimizer/SCF. Peak statics13/14, spare not automatically spent.
+SCF147.275712s/1.309117coreh vs allocation1.813333coreh. Same six inputs.
+Four actual terminal bands/40images replayed; Pbcn minimum−14.838201 and
+Pa-3 reversing peak at three stated tolerances, not stability/TS evidence.
+Forty original band files copied with raw hashes; sampled min gaps4.252037/
+4.131676/4.589282/4.017321eV, no full-BZ/Berry-branch claim, analysis0DFT.
+Early incomplete/failed transfers and scriptCRLF/source-hash mismatch were
+preflight-only; noDFT then, retained failure sources, LF immutable runtime
+archive2106f514/treefe559455 passes1260full/2skip261.06s. Actual delivery
+data/tests subsequently checked separately. Goalactive/incomplete; no
+G2/CI/retuning. Next concrete14-interior property audit reuses3PO endpoints,
+bounded14output-onlySCF+42NSCF; no NSCF barrier energies or automatic branch
+choice. Pbcn/global-escape coverage caveat preserved, no extra matrix.
+Evidence:`reversing_peak_sampling_20261009/validation_delivery.json`.
+
+Final actual-data archive4ff1f62a/SHA b532c60d passes26focused25.11s;
+92casefiles exact-byte matched. Three initial local preparation files needed
+targeted Git renormalization after attributes; snapshot-hash test added,
+no physical geometry/DFT change. Receipt/ledger updates are subsequent metadata.
