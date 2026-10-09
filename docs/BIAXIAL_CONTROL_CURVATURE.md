@@ -112,3 +112,10 @@ and current jobs are recorded in the [E027 receipt](../benchmarks/hfo2_channels/
 The original G1 -> G2 -> G3 gates, +0.5% path holdout, two active chains and
 finite DFT budgets stay unchanged. The sampler does not authorize evaluation
 of a held-out condition or any additional production matrix.
+
+The later [restricted stationary-branch interface](CONTROLLED_STATIONARY_BRANCH.md)
+uses this exact tagged control and admissible internal space to follow a
+quadratic minimum or first-order saddle at prescribed t. It retains nonzero
+offsets and does not count the control as a fixed-epsilon instability. Its
+analytic validation is a further implementation prerequisite, not a measured
+hafnia branch, a completed B2--B5 forecast batch or independent prediction.

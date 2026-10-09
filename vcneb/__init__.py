@@ -93,6 +93,9 @@ from .epitaxial_boundary import (
 )
 from .active_curvature import ActiveJointCurvatureCoordinates
 from .biaxial_curvature import BiaxialClampedCurvatureCoordinates
+from .stationary_branch import (
+    StationaryQuadraticPoint, StationaryQuadraticBranch, stationary_quadratic_branch,
+)
 from .reference_cell import ReferenceCellCoordinates
 from .mode_evaluator import CalculatorModeEvaluator
 from .mode_subspace import (
@@ -114,6 +117,9 @@ from .optimizer_registry import (
 )
 
 __all__ = [
+    "StationaryQuadraticPoint",
+    "StationaryQuadraticBranch",
+    "stationary_quadratic_branch",
     "BiaxialClampedCurvatureCoordinates",
     "ChannelPath",
     "summarize_competing_paths",

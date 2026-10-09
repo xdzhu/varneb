@@ -115,9 +115,16 @@ holdout production/reading. The complete registered forecast batch remains
 required. No target error, model advantage, H1 window, TS or JCTC readiness
 is evaluated by this entry point.
 
-Current [G1 evidence](../benchmarks/hfo2_channels/20261008/network_update_20261009/README.md)
+The dated E025 [G1 evidence](../benchmarks/hfo2_channels/20261008/network_update_20261009/README.md)
 is deliberately rejected: it is free-cell and lacks three ordinary passes
 and measured sampling/barrier-error evidence. The
 [E026 delivery](../benchmarks/hfo2_channels/20261008/prediction_controls/README.md)
 contains the actual negative-gate evidence and synthetic algorithm tests,
 not invented G2 training or material forecasts.
+
+The later [fixed-control stationary-branch prerequisite](CONTROLLED_STATIONARY_BRANCH.md)
+retains affine offsets and distinguishes a minimum from a first-order saddle
+inside the actual mechanical internal space. It does not freeze B2--B5,
+choose material branches, authorize holdout or turn the unconverged G1
+observations into predictions. Actual same-contract training and all
+registered uncertainty/stability/coverage gates remain necessary.

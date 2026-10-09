@@ -920,3 +920,32 @@ See submission_handles_r13.json; no switching results or G2 DFT claimed yet.
  These later rounded logs are not replaced into the frozenpaper table. M's
  terminal0:0is unchanged. Continue the same two handles, not a duplicate
  submission or a new matrix; remaining material gates are still incomplete.
+
+## E031 - Fixed-control restricted stationary continuation
+
+- Necessary gap: stable orthogonal condensation alone does not follow a
+ minimum or first-order saddle as external strain changes. Retain its affine
+ offset, solve the resolved internal stationary block and leave the control
+ fixed. The supplied actual mechanical space contains Q/R but excludes c;
+ unrepresented movable gradients and clamped reactions remain distinct.
+- Standard harmonic continuation can harden a saddle's controlled curvature
+ even when stable-mode release softens a block. This sign check is not new
+ theory, a hafnia result or a barrier forecast. No pseudoinverse, automatic
+ branch discovery or physically forbidden release is introduced.
+-94focused pass/1.93s,38new cases. An initial test used a nonexistent boundary
+ factory; corrected only that test to the canonical existing API. Clean tree
+ 63d310c4 excludes user changes:1116pass2skip313warnings/127.54s.
+-8analytic groups/24points verify separate fixed-control linear solves and
+ finite energy derivatives;0DFT/0calculator. Exact archived source also runs
+ on HF:124floats agree<=1.51e-13,83nonfloats/source hashes exact; NumPy
+ versions remain explicit. No remote pytest or installation is claimed.
+- Original working report's raw hash check failed for one legacy module:
+ workingLF versus archivedCRLF. Both raw hashes/reports are retained; exact
+ newline-normalized byte equality is proven without editing that legacy file.
+ Canonical clean-vs-HF source checks remain strict. New code/test bytes stay
+ unchanged after the full suite; later updates are delivery documentation.
+-09:55:19CST both G1 handles still Running:preserving54/.186039,node11;
+ reversing17/.359954,node26. Production archive df4c12ee remains unchanged.
+ No new SCF/job/mutation, calculator retuning, earlyG2 or holdout. Complete
+ B2--B5 freezing and independent material advantage still require real data.
+ Receipt: `stationary_branch/validation_delivery.json`.
