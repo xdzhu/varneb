@@ -90,6 +90,14 @@ The current preserving-pass build and its actual rendered-page/numeric checks
 are identified by [the dated receipt](MANUSCRIPT_DRAFT.preserving-pass.validation.json).
 It includes the new Figure2 without claiming the missing material predictions.
 
+The subsequent six-point sampling audit adds Figure3 and Section3.3:
+the preserving reconstruction's highest observed sample is38.508448meV/f.u.,
+not the original nine-image32.806023 value. It retains the ordinary0.10
+residual target but does not certify a stationary saddle or a relaxed
+continuous MEP. The [new build receipt](MANUSCRIPT_DRAFT.sampling-audit.validation.json)
+identifies the corresponding PDF;
+earlier receipts/figures keep their historical meanings.
+
 ## Computation boundaries
 
 Hafnia uses the registered ABACUS/PBE contract: 100 Ry, full 10-au DZP orbitals,

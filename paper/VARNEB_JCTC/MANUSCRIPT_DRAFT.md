@@ -248,6 +248,9 @@ Ordinary NEB uses 0.10 eV/Angstrom, without climbing images; cached fixed
 endpoints are not recalculated at every iteration. The repaired T-PO band
 has ten total images, while new channel bands have nine total, seven moving.
 A residual pass does not supply a barrier error or a saddle certificate.
+The preserving candidate subsequently receives six same-contract static
+sampling checks, producing a fifteen-image cached reconstruction without
+an additional optimization or endpoint recalculation (Section 3.3).
 
 The subsequent fixed-plane comparison uses strain 0 and +1%, with +0.5%
 reserved as an unseen in-range condition. Predictions and their visible
@@ -376,7 +379,46 @@ and the phase/polarization/sampling audits remain incomplete. Three ordinary
 passes alone neither complete G1 nor fix the stationary locations needed
 for local mode-strain predictions.
 
-### 3.3. Reference choice changes the apparent compactness of the path
+### 3.3. A residual pass does not resolve the sampled maximum
+
+After the preserving band's ordinary pass, its cached physical forces and
+stress give positive-to-negative energy derivatives along the original
+fractional-coordinate/cell segments 2-to-3 and 5-to-6. Three registered
+fractions, 0.25, 0.50 and 0.75, are calculated on each segment. All six
+SCFs converge with genuine 32-rank MPI and the original six electronic
+input hashes; the two sides are calculated rather than imposed as mirrors.
+
+The new highest sample is 38.508448 meV/f.u., 5.702425 meV/f.u. above the
+original nine-image sampled maximum of 32.806023. Mirror-side maxima differ
+by only 0.0000174 meV/f.u.; that agreement is not a total barrier uncertainty.
+An inserted fifteen-image cached band still replays an ordinary maximum
+vector residual of 0.099372458 eV/Angstrom, without optimization or extra
+SCFs. Thus an unchanged residual pass can coexist with a materially different
+sampled maximum. The earlier table and Figure 2 remain the original nine-image
+observation, not a sampling-resolved activation barrier.
+
+![Actual static sampling checks on the preserving reconstruction](figures/hfo2_G1_sampling_bridge_20261009/hfo2_G1_sampling_bridge.png)
+
+Figure 3. Six same-contract static checks of the preserving step-69 path.
+(a) Nine original samples and six added energies on the original normalized
+generalized arc. (b) The two tested segments, each with two original endpoints
+and three new static fractions. Straight connections are sample guides;
+the dotted line is the old sampled maximum. These are neither a smooth
+MEP fit nor a stationary-TS certificate. The source contains fifteen records,
+not fifteen new SCFs or independent replicates. Editable exports, all raw
+SCF audits and source data accompany the [case](../../benchmarks/hfo2_channels/20261008/preserving_sampling_bridge_20261009/README.md).
+
+The six SCF evaluations consume 542.98 seconds, or 4.8265 core-hours at
+32 ranks. Allocation wall time is 601 seconds, or 5.3422 core-hours including
+launch and audit overhead. The checks validate a sampling concern chosen
+from already seen gradients; they are not the prospective material holdout.
+Their higher energies refer to the specified linear reconstruction, not
+an independently relaxed continuous path or a certified barrier error bound.
+Stationarity, transverse stability and matched-boundary predictions remain
+separate tests. The ordinary target, electronic inputs and no-CI policy are
+unchanged.
+
+### 3.4. Reference choice changes the apparent compactness of the path
 
 In the unweighted parent-scaffold chart, the three geometric T patterns
 capture 95.54% of the formation band's squared displacement at its sampled
@@ -395,7 +437,7 @@ model. Published LDA directions are used as geometric candidates, not as
 our PBE Hessian or energy model.
 ([Registration and scalar evidence](../../benchmarks/hfo2_channels/20261008/cmma_path_mapping/README.md))
 
-### 3.4. A measured mixed response exposes a conditional-model limitation
+### 3.5. A measured mixed response exposes a conditional-model limitation
 
 Eight existing same-centre probes at a nonstationary historical image supply
 a restricted atomic-strain quadratic block. Releasing only its measured

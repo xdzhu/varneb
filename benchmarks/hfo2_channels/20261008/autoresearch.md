@@ -1148,3 +1148,42 @@ See submission_handles_r13.json; no switching results or G2 DFT claimed yet.
   do not submit the canary/holdout before G1. Goal active; one normal scoped
   material-result commit/push. Evidence:
   `switching_converged_update_20261009_1255/validation_delivery.json`.
+
+## E040 - Six actual sampling checks after an ordinary pass
+
+- Cached step69 physical derivatives bracket maxima inside2->3 and5->6.
+  Register exactly6fractional/cell reconstruction statics,3per segment.
+  Hermite38.218meV/f.u. is selection evidence, not a DFT result or holdout.
+  Preparation sourceff28bff/archivee0679852 passes1218clean tests/2skip;
+  actual HFpreflight constructs the same calculator with0SCF and verifies
+  all6physical hashes. Generated geometry tails differ at2.22e-16 inq,
+  cells identical; both preparations retained, no electronic normalization.
+- Actual job28374431 COMPLETED0:0,13:52:25--14:02:26,32CPUs/node1. Six
+  real32-rank SCFs converge with full E/F/stress and identical physical
+  INPUT/KPT/UPF/orbital bytes. New highest sample38.508448meV/HfO2 exceeds
+  the old sampled32.806023 by5.702425. It belongs to the specified linear
+  reconstruction, not an independently relaxed continuousMEP or TS.
+- The15total/13moving inserted cached band still replays0.099372458
+  ordinary residual with0optimizer steps/extraSCF. No new whole-band job
+  is submitted. This is evidence that ordinary convergence and sampled
+  peak resolution are distinct, not a claim of a new force threshold.
+- Actual SCFsum542.979671s/4.826486coreh, allocation601s/5.342222coreh.
+  Preserve all6raw logs/structures/EFS/physicalhashes and32unique rank
+  probes. Large repeated orbital/pseudo payloads stay onHF; their bytes
+  were verified there. Source/productionarchives remain unchanged.
+- Initial offline figure tests3fail/4pass because stock localASE has no
+  ABACUS I/O. Reuse the actual fixed production writer for offline token
+  geometry checks; actualHF ASE round-trips unchanged.7focused tests pass.
+  No install or production/DFT change. Final clean deliverytree6afd6a0f /
+  archiveb7b790bf passes1225tests/2skip/0fail/error,314warnings,374.41s.
+  93raw case/figure/runtime-code files match archive bytes; no source-bound
+  assertions weakened. Receipts/ledgers added later, runtime source unchanged.
+- New two-panel figure and10-page reading draft use actual samples only;
+  all10pages/figurepixels,17local targets and numeric captions verified.
+  Historical nine-image figures/data keep their scope. Paper/figure skills
+  enforce no smooth-MEP/TS or blind-prediction label on these adaptive data.
+-14:15:16 same reversing28319571 RUNNING, complete step37/.163922.
+  Continue it, not another chain. FullG1/G2/holdout/TS claims remain false;
+  keep100Ry/full10auDZP/noCI/max2, finite13new-chain matrix and goalactive.
+  Keep the audit and make one scoped normal research commit/push. Evidence:
+  `preserving_sampling_bridge_20261009/validation_delivery.json`.
