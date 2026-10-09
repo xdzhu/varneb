@@ -75,3 +75,12 @@ finite G2 matrix and G3 matched-boundary response/independent predictions
 remain required. This fixes delivery correctness; it is not an innovation,
 a material prediction, a JCTC-ready verdict or completion of the full goal.
 See [the validation receipt](validation_delivery.json).
+
+E038 follow-up closes the reverse reuse direction too: an existing clamped
+directory must not be rerun as free-cell merely by omitting clamped flags.
+Both directions pass the new local tests; final clean suite1199pass/2skip,
+137.82s. An actual HF attempt to use the earlier geometry-only clamped
+directory as free-cell raises the expected `FileExistsError` before factory
+loading, and its preflight SHA remains identical. The trace is a successful
+safety test, not a production DFT failure. E037's source/archive/reports are
+historical and unmodified. See [the additional receipt](boundary_guard_delivery.json).

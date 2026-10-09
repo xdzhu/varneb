@@ -404,9 +404,10 @@ def main(argv: list[str] | None = None, *, symbol_loader=None) -> None:
         "calculator_reports": [],
     }
     preflight_path = workdir / "vcneb_preflight.json"
-    if boundary is not None and preflight_path.exists():
+    if preflight_path.exists():
         previous = json.loads(preflight_path.read_text(encoding="utf-8"))
-        if previous.get("mechanical_boundary") != boundary_record:
+        previous_boundary = previous.get("mechanical_boundary")
+        if (previous_boundary is not None or boundary is not None) and previous_boundary != boundary_record:
             raise FileExistsError("existing workdir has a different mechanical boundary; choose a new workdir")
     preflight_path.write_text(
         json.dumps(metadata, indent=2, sort_keys=True) + "\n", encoding="utf-8"

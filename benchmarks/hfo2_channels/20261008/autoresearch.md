@@ -1099,3 +1099,21 @@ See submission_handles_r13.json; no switching results or G2 DFT claimed yet.
   audit before the registered PO+ canary; physical forecasts remain missing.
 - Evidence:`clamped_path_entry/validation_delivery.json`; no full-goal or
   JCTC-ready claim. Milestone receives one normal owned-files commit/push.
+
+## E038 - Protect the reverse existing-directory boundary change
+
+- Follow-up inspection: E037 refused a new clamped request against a
+  different boundary, but omitting clamped flags could reuse that directory
+  as free-cell. Guard both directions; fresh legacy runs are unchanged.
+  Two additional regression cases preserve the old preflight bytes.
+- Focused101pass/4.38s; final clean staged archiveac0532f9 gives
+  1199pass/2skip/0fail/error/313warnings,137.82s. No older pass count is
+  substituted for this changed source. Scientific/runtime solver and
+  physical inputs remain unchanged; only a pre-calculator directory guard.
+- The same archive actually tested clamped-to-free reuse on HF's prior
+  geometry-only directory. Expected FileExistsError/entry exit1 is the
+  safety success, shell check exits0, preflight SHA3a606216 identical before
+  and after. Zero calculator loading/DFT/submissions; live chains untouched.
+- Keep E037 data/source history, G1->G2->G3 gates and independent material
+  evidence requirements. No new live poll, full-goal/JCTC verdict or new
+  matrix. Evidence:`clamped_path_entry/boundary_guard_delivery.json`.

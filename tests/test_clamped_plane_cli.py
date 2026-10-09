@@ -133,6 +133,22 @@ def test_existing_preflight_cannot_silently_change_boundary(tmp_path):
     assert (tmp_path / "run/vcneb_preflight.json").read_bytes() == saved
 
 
+@pytest.mark.parametrize("clamped_first", [True, False])
+def test_existing_directory_cannot_switch_between_clamped_and_free(tmp_path, clamped_first):
+    _case(tmp_path, False)
+    clamped = _args(tmp_path, False) + ["--validate-only"]
+    free = clamped.copy()
+    for option in ("--clamped-plane-reference", "--clamped-allow-tilt"):
+        index = free.index(option)
+        del free[index:index + 2]
+    first, second = (clamped, free) if clamped_first else (free, clamped)
+    material_runner.main(first, symbol_loader=_forbidden_load)
+    saved = (tmp_path / "run/vcneb_preflight.json").read_bytes()
+    with pytest.raises(FileExistsError, match="different mechanical boundary"):
+        material_runner.main(second, symbol_loader=_forbidden_load)
+    assert (tmp_path / "run/vcneb_preflight.json").read_bytes() == saved
+
+
 def test_extra_atomic_constraint_is_not_silently_ignored(tmp_path):
     initial, _ = _case(tmp_path)
     initial.set_constraint(FixAtoms(indices=[0]))
