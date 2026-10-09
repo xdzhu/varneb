@@ -949,3 +949,29 @@ See submission_handles_r13.json; no switching results or G2 DFT claimed yet.
  No new SCF/job/mutation, calculator retuning, earlyG2 or holdout. Complete
  B2--B5 freezing and independent material advantage still require real data.
  Receipt: `stationary_branch/validation_delivery.json`.
+
+## E032 - Pair the initial-well and bottleneck stationary response
+
+- Added common physical/boundary/control/energy declarations and independent
+  local parameter scales. Pair index0 and index1 at the same external parameter;
+  retain raw-centre gap, stationary-anchor corrections and each energy response.
+  Signed local gaps are not clipped or called certified activation barriers.
+- Explicit caller-declared intervals/radii reject extrapolation and oversized
+  offsets. Omitted admissible gradients and clamped reactions remain distinct;
+  declarations/bounds alone do not prove full stability or probe-hull coverage.
+- Initial test run: 109 pass / 1 fail, because a guessed omitted-gradient >0.1
+  contradicted its direct value 0.071. Replaced that test assertion by the
+  independent gradient calculation, not a revised physical threshold.
+- Focused112pass/1.97s,46new cases. Clean staged tree ccfdb0b5 excludes user
+  edits:1162pass2skip313warnings/133.93s,0errors/failures. New source/test
+  bytes did not change after testing; later edits are delivery documentation.
+- Eight analytic groups/24points and independent solves/finite derivatives,
+  0DFT/0calculator. Same-source HF replay:196float fields agree<=2.09e-12,
+  85nonfloats/source hashes exact, with NumPy versions retained. Original
+  working and canonical reports preserve the unchanged legacy LF/CRLF hashes.
+-10:11:33CST existing G1 handles still RUNNING:preserving55/.182393,node11;
+  reversing18/.343628,node26. M remains COMPLETED0:0. Production archive
+  df4c12ee unchanged; no job mutation, retuning, early G2 or holdout.
+- Actual matched-boundary training, full B2--B5 selection/freezing, independent
+  advantage and JCTC readiness remain unproved. Retain this necessary pairing
+  step, not a substitute end state. Receipt:`stationary_gap/validation_delivery.json`.

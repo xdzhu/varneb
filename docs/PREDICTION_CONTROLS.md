@@ -128,3 +128,8 @@ inside the actual mechanical internal space. It does not freeze B2--B5,
 choose material branches, authorize holdout or turn the unconverged G1
 observations into predictions. Actual same-contract training and all
 registered uncertainty/stability/coverage gates remain necessary.
+
+The [paired stationary-gap step](STATIONARY_GAP_RESPONSE.md) computes the
+initial-versus-bottleneck response with explicit reference corrections and
+per-centre scale factors. It preserves frozen-space residuals and does not
+replace actual G2 training, B2--B5 selection/freezing or independent labels.

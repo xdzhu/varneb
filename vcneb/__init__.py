@@ -96,6 +96,10 @@ from .biaxial_curvature import BiaxialClampedCurvatureCoordinates
 from .stationary_branch import (
     StationaryQuadraticPoint, StationaryQuadraticBranch, stationary_quadratic_branch,
 )
+from .stationary_gap import (
+    StationaryResponseContract, ControlledStationaryModel, StationaryGapResponse,
+    restricted_stationary_gap_response,
+)
 from .reference_cell import ReferenceCellCoordinates
 from .mode_evaluator import CalculatorModeEvaluator
 from .mode_subspace import (
@@ -117,6 +121,10 @@ from .optimizer_registry import (
 )
 
 __all__ = [
+    "StationaryResponseContract",
+    "ControlledStationaryModel",
+    "StationaryGapResponse",
+    "restricted_stationary_gap_response",
     "StationaryQuadraticPoint",
     "StationaryQuadraticBranch",
     "stationary_quadratic_branch",

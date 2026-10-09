@@ -80,3 +80,8 @@ curvatures and input ownership. These are implementation checks, not HfO2
 curvatures, B2--B5 prediction/freezing completion, model advantage or JCTC
 readiness. The complete prospective controls and independent material labels
 remain required. See the [E031 delivery](../benchmarks/hfo2_channels/20261008/stationary_branch/README.md).
+
+The [paired-response interface](STATIONARY_GAP_RESPONSE.md) now combines an
+initial minimum and bottleneck model under matching declarations, retaining
+both anchor corrections and distinct external-coordinate scales. Its signed
+local gap is not a certified activation barrier or completed material forecast.
