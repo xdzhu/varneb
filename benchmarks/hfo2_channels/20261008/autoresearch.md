@@ -1289,3 +1289,32 @@ all395 observable bytes inventory-exact in the archive. Subsequent changes
 are manuscript grammar/spacing and this delivery metadata only, not code,
 Slurm, physical inputs or raw results. LuaLaTeX exit0,11pages,21local links,
 no overfull/fatal log; actual page/figure inspection recorded in receipt.
+
+## E045 - Whole-G1 candidate review and one clamped PO+ canary
+
+Actual local replay and fresh HF40raw-record review both pass the registered
+candidate-connectivity gate: common PO+, four terminal ordinary.10 chains,
+free-endpoint force/stress screens, three symmetry tolerances, thirteen bounded
+peak statics and E044 conditional sampled polarization lifts. Zero DFT for
+this review. This is not continuous-MEP/TS/global-stability/escape-completeness
+or distinct-winding certification; existing Pbcn coverage caveat remains.
+
+Clean treefd738b1734/archive38c8c1da passes1316full/2skip/0fail269.19s and
+63focused23.62s before execution. Actual HF read-only validator checks ten
+seed geometries, shared substrates and the original six physical bytes without
+evaluating a calculator. One registered zero-strain PO+ BFGS canary submitted:
+28446324 at21:54:01CST,1node32CPU/hfacnormal01/directmpirun32,30min cap,
+max4steps/5SCFs/.03atomic/2kbaropentraction/maxstep.02. No whole-G2/G3/holdout
+submission, phase-restoring constraint, CI or physical parameter change.
+
+At21:56:48 it is RUNNING166s/node6; native first-SCF DSIZE32 and ordinary
+electronic iterations observed. Running sacct's0:0 is not a completion code.
+Four-step cap with complete audited SCFs is canary health, not converged endpoint.
+Actual final receipt is added only after observed completion. Preparation
+command failures (Windows final-argumentCR and nonexistent ad hoc precheck
+symbol) launched no DFT; existing read-only validator and final shell comment
+resolved them without changing production code. Source remains immutable.
+
+Evidence:`G1_review_clamped_canary_20261009/validation_delivery.json` and
+`submission.json`; goalactive. The next decision is actual boundary/phase/SCF
+health review, then only an explicitly bounded endpoint continuation if justified.
