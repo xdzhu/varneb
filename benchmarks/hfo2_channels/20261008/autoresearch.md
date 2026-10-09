@@ -1212,3 +1212,17 @@ See submission_handles_r13.json; no switching results or G2 DFT claimed yet.
   16:19,step44/.103449. No retuning, CI, G2/holdout or extra matrix. Cap14
   peakSCFs(11done+3max),13newchannels unchanged. Goalactive/incomplete.
   Evidence:`G1_peak_sampling_20261009/validation_delivery.json`.
+
+## E042 - Two real terminal passes, still not full G1
+
+R28319571 and refinedM28392675 COMPLETED0:0 at16:32:13/16:38:30.
+ActualHF raw SCF/input/lift/EFS/log audit and local frozen replay pass:
+R45/9images/.094022846/392.822905meV-HfO2; M1/12images/.096964013/
+82.679957.21records reuse caches, export0SCF. Four candidates share identical
+PO initial well and pass ordinary.10. No acceleration claim from one M step.
+Archivedtreeef52921d/SHA0758a85c passes9focused tests20.87s; runtime unchanged
+from1244full-pass E041. R/M allocations321.244444/9.884444coreh.
+Complete remainingRsampling(≤3) and mechanism/variant/polarization gates;
+Pbcn midpoint stability remains unresolved, M/T are not global escape coverage.
+No extra path/Hessian, G2/holdout/CI/retuning; goalactive/incomplete.
+Evidence:`terminal_G1_update_20261009_17/validation.json`.
