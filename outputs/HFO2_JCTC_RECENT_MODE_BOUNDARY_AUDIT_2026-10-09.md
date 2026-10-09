@@ -43,3 +43,8 @@ opened for the boundary/strain discussion. It is not a bytewise comparison
 of the publication and preprint. Behara's SI retrieval still fails; the older
 SI/Lee-DOI limitations remain unresolved. No author was contacted, credential
 used, access restriction bypassed, or unavailable content claimed as read.
+
+E035 later resolves only the current Lee registry identity:026 redirects301 to
+025 and returns its metadata; one current record, published3March rather than
+the8April deposit/index date. Reference-PDF/full-text version relationships
+remain unverified. See [the dated correction](HFO2_LEE_DOI_METADATA_AUDIT_2026-10-09.provenance.md).

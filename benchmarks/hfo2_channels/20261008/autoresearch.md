@@ -1031,3 +1031,21 @@ See submission_handles_r13.json; no switching results or G2 DFT claimed yet.
   and Lee direct/PDF access still fail. No missing text read or novelty proof,
   no bypass or agents. G1/G2/G3 gates and protocols unchanged; goal active.
 - Evidence:`switching_update_20261009_1105/validation_delivery.json`.
+
+## E035 - Resolve the current Lee registry identity, not scientific novelty
+
+- Official Crossref exact-DOI calls give one current025 record. A no-follow
+  GET at11:37:08CST confirms026 HTTP301/Location ->025; two downloaded JSON
+  payloads are23901bytes with the sameSHA. Four bounded native GETs total,
+  no filters/pagination/authentication or new full-text/SI read.
+- First026 exact-identity assertion rejected the returned025 despite a
+  successful download. This was not an HTTP error; the explicit redirect
+  resolves that guard failure. Do not infer why the identifier changed or
+  equate indexed reference PDFs from equal metadata alone.
+- Correct publication date3March2026;8April is metadata deposit/index, not
+  a verified version-of-record date. Main manuscript already cites025;
+  its code/tests/body/PDF, protocols, physical inputs and finite budget stay
+  unchanged. No DFT/job mutation or earlyG2/holdout, no new pytest/compile.
+- Bibliography/provenance correction only: no new material prediction or
+  JCTC-ready claim. Raw responses outsideGit, reproducible URL/fields/hash
+  in `../../../outputs/HFO2_LEE_DOI_METADATA_AUDIT_2026-10-09.json`.

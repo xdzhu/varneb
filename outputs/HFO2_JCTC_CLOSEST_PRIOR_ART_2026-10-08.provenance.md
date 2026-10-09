@@ -138,3 +138,13 @@ alpha CLI or agents were used. The optional literature workflow/alpha tools
 remain unavailable. Earlier source-read claims and limitations are preserved.
 The same-goal material follow-up uses only completed raw SCFs in new isolated
 HF/local observation namespaces; it does not change production or budgets.
+
+## 2026-10-09 E035 current registry identity/date correction
+
+The current metadata-identity gap above is now resolved by an explicit
+Crossref026->025 HTTP301/Location check; both downloaded records are identical.
+Use025 and count one current metadata record. Published/published-online is
+3March2026;8April is the deposit/index date, not a verified publication-version
+date. This does not establish why the identifier changed or compare reference
+PDF/full-text versions. No new article or SI was read. Original access records
+are retained; see [E035 receipt and limits](HFO2_LEE_DOI_METADATA_AUDIT_2026-10-09.provenance.md).

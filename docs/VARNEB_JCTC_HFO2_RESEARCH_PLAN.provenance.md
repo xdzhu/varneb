@@ -58,3 +58,14 @@ must change the question/claim, not be hidden.
 The new Schur-complement implementation is verified on analytic fixtures;
 physical predictive benefit remains a hypothesis. All experimental assertions
 must distinguish planned, submitted, SCF-complete, path-converged and TS-certified.
+
+## 10月9日11:37 CST：Lee注册身份与日期更正（E035）
+
+上述历史026来源与版本访问限制继续保留。新的匿名Crossref精确查询确认
+026→025的HTTP301/Location，两次下载返回一份完全相同的025元数据记录。
+当前引用统一025；出版日期3月3日，4月8日是deposit/index日期，不能当成
+版本出版日。首次026的RuntimeException来自我们严格DOI断言拒绝跳转后的
+身份，并非HTTP失败。原始JSON在Git外、SHA与调用计数留存，无新增全文或
+SI读取，不推断正式勘误/版本相同，不据元数据宣布新颖性。详见
+[E035来源/收据](../outputs/HFO2_LEE_DOI_METADATA_AUDIT_2026-10-09.provenance.md)。
+无新增DFT、作业操作、参数/协议/预算修改；正确的正文引用和编译稿保持不变。
