@@ -1003,3 +1003,31 @@ See submission_handles_r13.json; no switching results or G2 DFT claimed yet.
   production/source/job mutation, earlyG2 or holdout. Actual material and
   independent-prediction gates still incomplete. Keep the goal active.
 - Receipt:`../../../paper/VARNEB_JCTC/MANUSCRIPT_DRAFT.stationary-response.validation.json`.
+
+## E034 - Lower central snapshot and tolerance-sensitive reversing maximum
+
+- Freeze two complete existing switching observations, preserving59 and
+  reversing22. Exact32MPI/SCF/input/geometry/raw-hash/log replay passes with
+  zero new DFT. Reuse19 terminal T--PO/M records,37records including duplicates.
+- Preserving peaks3/5 remain~35.045730meV/f.u.; central Pbcn is now
+  -1.605722 below shared PO+, yet atomic/cell residuals .111271/.156442.
+  It is not a stable basin or TS. Its original-T-x expansion may change the
+  branch under the already registered plane: test this in existing G2, no
+  extra Pbcn endpoint/path/Hessian or premature production.
+- Reversing peak4 is Pbca/Pbca/Pa-3 at the original three symmetry tolerances.
+  Whole chain .310501 is atomic-dominated at2 despite peak residual .050829;
+  never select a tolerance or a small peak force as joint-TS certification.
+- Unchanged clean E032 source passes35focused tests/58.74s and reproduces
+  both new local reports byte-identically. HF/local compares1298floats/249
+  nonfloats(two observations),697floats/882nonfloats(network), maximum
+  difference2.842171e-14. Three package and38warning-field differences are
+  explicitly retained, not normalized into agreement. No new full/remote
+  pytest or install claim. Git attributes preserve all evidence bytes.
+-11:17:53same handlesRUNNING:preserving60/.151932,node11;
+  reversing23/.300858,node26. Recent11--15min steps and declining force
+  support only conditional13--15h/15--18h estimates, not promised finish.
+  Audit a terminal step cap before any further continuation. No job mutation.
+- Bounded SI follow-up confirms Behara subscription requirement; public SI
+  and Lee direct/PDF access still fail. No missing text read or novelty proof,
+  no bypass or agents. G1/G2/G3 gates and protocols unchanged; goal active.
+- Evidence:`switching_update_20261009_1105/validation_delivery.json`.

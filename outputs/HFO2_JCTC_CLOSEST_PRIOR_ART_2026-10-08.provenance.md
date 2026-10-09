@@ -120,3 +120,21 @@ about what would still need to be demonstrated for JCTC.
   conditional surface, because the read definition does not establish that.
 - This bounds novelty and candidate coverage. It changes no electronic inputs,
   convergence threshold, active jobs, training label or allocated matrix.
+
+## 2026-10-09 E034 bounded access recheck
+
+Primary links checked again: the Behara publisher abstract and its linked
+`https://link.aps.org/supplemental/10.1103/PhysRevMaterials.6.054403`, plus
+`https://labs.materials.ucsb.edu/vanderven/anton/publications/1176`.
+The publisher explicitly marks SI as subscription-required; the direct SI
+endpoint fails, and the retrieved author-lab page supplies metadata without
+an SI attachment. No alternate public SI was found by the bounded exact-title
+search. This is not proof no public copy exists and not a new full read.
+
+Direct025/026nature article and PDF opens failed (identity redirect/internal
+errors);026reference-PDF indexing still cannot establish version relationships.
+No credentials, author messages, access bypass, downloads, new environment,
+alpha CLI or agents were used. The optional literature workflow/alpha tools
+remain unavailable. Earlier source-read claims and limitations are preserved.
+The same-goal material follow-up uses only completed raw SCFs in new isolated
+HF/local observation namespaces; it does not change production or budgets.
