@@ -1251,3 +1251,41 @@ Final actual-data archive4ff1f62a/SHA b532c60d passes26focused25.11s;
 92casefiles exact-byte matched. Three initial local preparation files needed
 targeted Git renormalization after attributes; snapshot-hash test added,
 no physical geometry/DFT change. Receipt/ledger updates are subsequent metadata.
+
+## E044 - Actual switching-path Berry data and manuscript figures
+
+Array28418996/0–13 allCOMPLETED0:0;14 output-onlySCFs+42 fixed-chargeNSCFs,
+3endpoint results reused, no peak/channel/endpoint repeats. Original source
+treee1fff0ab/archive30acfa0e passed1285full/2skip283.65s before HF execution;
+source remains immutable. Actual6physical bytes/geometry/EFS/charge audited.
+EFS reproduction differences0 at raw-log precision, not a total-error bound.
+Max224→228 sensitivity.000637680/.000838431C/m²; nearest sampled lifts both
+unique, margins.729131/.611964, equal noninteger reduced increment1.623691.
+Do not claim distinct winding sectors, quantized pump, absolute spontaneousP,
+full-BZ insulation, transverseP, continuous-path/TS/fullG1 certification.
+Integer nativeDFT3155s/28.044444coreh vs Slurm4029s/35.813333coreh; genuine
+32MPI and observed disjoint concurrentCPU sets. Max2 allocations retained.
+
+395 observable files hash-bound and local/HF raw replay identical, no
+licensed pseudo/orbital/charge redistribution. Post-DFT NumPybool JSON failure
+fixed in a separate analysis snapshotb08b9a09/archiveb5c8d036 (1290full/2skip);
+no DFT repeated and original runtime untouched. Exact known CRLF/LF native
+adapter pair recognized; arbitrary code hashes still rejected. Later generic
+finite NumPy scalar JSON serialization and real-data figure regressions pass
+27focused/27.86s. Failed figure export retained recoverably outside Git;
+wrong-cwd partial test stopped only own exactPID, excluded from evidence.
+
+New40record terminal network and18row Berry figures retain CSV/vector/raw
+sources and actual pixel QA, regular(a) labels/aligned axes/top-right spines/
+off-curve framed legends. Main manuscript updated without fabrication of
+G2/G3/holdout results. Full final clean delivery regression and compile receipt
+are recorded in `switching_path_polarization_20261009/validation_delivery.json`.
+Keep measured data; winding interpretation inconclusive. Next formal G1review
+then registered clampedPO+canary/G2, no unbounded extra property matrix.
+Physical inputs/ordinary.10/noCI/13chains/14peakstatics remain fixed; goalactive.
+
+Final clean treeb2b5905b/archive43d2993a passes1297full/2skip/0fail248.14s,
+all395 observable bytes inventory-exact in the archive. Subsequent changes
+are manuscript grammar/spacing and this delivery metadata only, not code,
+Slurm, physical inputs or raw results. LuaLaTeX exit0,11pages,21local links,
+no overfull/fatal log; actual page/figure inspection recorded in receipt.

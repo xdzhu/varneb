@@ -250,7 +250,9 @@ has ten total images, while new channel bands have nine total, seven moving.
 A residual pass does not supply a barrier error or a saddle certificate.
 The preserving candidate subsequently receives six same-contract static
 sampling checks, producing a fifteen-image cached reconstruction without
-an additional optimization or endpoint recalculation (Section 3.3).
+an additional optimization or endpoint recalculation (Section 3.3). The M
+edge requires a twelve-image ordinary refinement after its sampling audit;
+this changes resolution on the same edge, not the declared channel set.
 
 The subsequent fixed-plane comparison uses strain 0 and +1%, with +0.5%
 reserved as an unseen in-range condition. Predictions and their visible
@@ -288,31 +290,35 @@ instructions are in the [figure bundle](figures/hfo2_T_PO_ordinary_20261008/READ
 
 All four candidate observations share the ordered PO+ energy
 -9783.249675811956 eV/cell. The following table uses the complete frozen
-12:55 update, not later rounded values from live optimization logs:
+terminal update audited by 18:12 on 9 October, not rounded live-log values:
 
 | Candidate from PO+ | Source job/step | Residual | Maximum | Pass |
 |---|---|---:|---:|---|
 | PO-to-T, reverse view | 28300425/6 | 0.059882 | 115.210 | Yes |
-| PO-to-M | 28298794/39 | 0.097904 | 71.582 | Yes |
+| PO-to-M, refined | 28392675/1 | 0.096964 | 82.680 | Yes |
 | T-pattern-preserving flip | 28319570/69 | 0.099372 | 32.806 | Yes |
-| T-pattern-reversing flip | 28319571/32 | 0.200002 | 394.066 | No |
+| T-pattern-reversing flip | 28319571/45 | 0.094023 | 392.823 | Yes |
 
-Table 1. Provisional observations, not a converged ranking. Snapshot steps
-and times differ, the reversing source remains unconverged, and numerical/sampling
-barrier bounds have not been measured. Residuals are in eV/Angstrom and
+Table 1. Four ordinary-residual-passed candidates, not an error-bounded
+activation-barrier ranking. Snapshot steps and times differ; M has twelve
+images after the separate sampling refinement. Residuals are in eV/Angstrom and
 sampled maxima in meV/f.u.; maxima include the endpoints and use four formula
 units per cell. The two flip labels denote registered geometric
 operations, not certified distinct MEPs or assignments to published irreps.
-The [12:55 37-record audit](../../benchmarks/hfo2_channels/20261008/switching_converged_update_20261009_1255/README.md)
-includes cached endpoints and reused records, not 37 new or independent SCFs.
+The [forty-record terminal audit](../../benchmarks/hfo2_channels/20261008/reversing_peak_sampling_20261009/README.md)
+includes cached endpoints and reused records, not forty new or independent SCFs.
+The earlier nine-image M and incomplete reversing observations remain dated
+evidence in their original archives.
 
 PO-to-M terminated normally at the unchanged force threshold. Its ordered
-M endpoint is P2_1/c at all three declared symmetry tolerances. The sampled
-forward/reverse maxima are 71.582/142.967 meV/f.u., with reaction energy
--71.385 meV/f.u.; their difference follows from the common endpoint energies.
-The sampled peak at image 3 still has a nonzero physical tangential
-generalized force, -0.383495 eV/Angstrom. Thus this second ordinary-converged
-edge does not establish a stationary bottleneck or its sampling error.
+M endpoint is P2_1/c at all three declared symmetry tolerances. The refined
+sampled forward/reverse barriers are 82.680/154.065 meV/f.u., with unchanged
+reaction energy -71.385 meV/f.u.; their difference follows from the common
+endpoint energies. Its initial nine-image maximum was 71.582 meV/f.u.;
+the source's physical tangential force at that sampled peak was -0.383495
+eV/Angstrom. This earlier diagnostic prompted the finite sampling check
+and subsequent ordinary refinement described below. Neither the old nor
+the refined residual pass alone establishes a stationary bottleneck.
 
 ### 3.2. Nonpolar snapshots do not uniquely identify a switching mechanism
 
@@ -325,6 +331,11 @@ now below PO+, -14.838 meV/f.u., with an atomic/cell NEB residual of
 0.062019/0.099372 eV/Angstrom. Transverse stability is unmeasured. It is neither the current
 highest image nor a certified stable intermediate. A phase label or an
 earlier central peak cannot therefore fix the eventual bottleneck location.
+If that lower nonpolar branch is stable, it also supplies a potential escape
+route from the polar well. M/T comparisons alone could then overstate
+protection. This coverage limitation is retained explicitly; the registered
+branch/stability tests must resolve its interpretation before a global
+escape-resistance claim, without adding a post hoc endpoint matrix.
 
 At the two side peaks, the physical generalized tangential forces are
 approximately +0.242486 and -0.242483 eV/Angstrom, despite small atomic/cell
@@ -337,19 +348,19 @@ the already registered substrate contains that direction. The existing G2
 matrix must test whether that central branch persists, without adding a
 post hoc phase/path or an additional Hessian to the finite budget.
 
-The reversing centre at step 32 is Pbca/Pa-3/Pa-3 across the same tolerance
-sweep, despite essentially zero
-amplitude in the selected rotated-T pattern triplet. Vanishing coordinates
-in a truncated representation do not identify a cubic structure. Its group
+The terminal reversing centre at step 45 is Pa-3 at all three tolerances;
+its earlier step-32 Pbca/Pa-3/Pa-3 sensitivity remains recorded. Its amplitude
+in the selected rotated-T pattern triplet is essentially zero, but vanishing
+coordinates in a truncated representation do not identify a cubic structure. Its group
 label in this twelve-atom cell also does not identify a twenty-four-atom
 literature variant or a domain-wall motif. The PO-to-M peak retains its
 P1/P2_1 tolerance dependence rather than being standardized to a preferred
 label.
 
-![Ordinary-converged preserving flip and physical tangential-force limitation](figures/hfo2_G1_preserving_pass_20261009/hfo2_G1_preserving_pass.png)
+![Four ordinary terminal bands and physical tangential-force limitation](figures/hfo2_G1_terminal_20261009/rendered/hfo2_G1_terminal.png)
 
-Figure 2. Complete same-PO+ observations at steps 6/39/69/32, corresponding
-to Table 1. (a) Discrete low-energy profiles. (b) The higher, still-unconverged
+Figure 2. Complete same-PO+ terminal observations at steps 6/1/69/45, corresponding
+to Table 1. (a) Discrete low-energy profiles. (b) The higher, ordinary-converged
 reversing candidate is shown separately rather than omitted or clipped.
 (c) Ordinary NEB max-vector residuals on the moving images.
 (d) The preserving band's physical tangential-force magnitude and atomic/cell
@@ -358,10 +369,11 @@ The dashed 0.10 line is the ordinary NEB target, not an independently
 established stationary-TS tolerance for the physical tangent.
 Lines connect calculated images only; endpoints have no NEB residual.
 No final energetic hierarchy or TS certification follows from this figure.
-The [figure contract](figures/hfo2_G1_preserving_pass_20261009/README.md) and CSV
+The [figure contract](figures/hfo2_G1_terminal_20261009/README.md) and CSV
 retain phase checks, original lifts and complete provenance. The
-[earlier dated figure](figures/hfo2_G1_provisional_20261009/README.md) is retained,
-with its original 6/20/14/10 data and hashes, rather than overwritten.
+[earlier 6/39/69/32 figure](figures/hfo2_G1_preserving_pass_20261009/README.md)
+and [initial dated figure](figures/hfo2_G1_provisional_20261009/README.md) are
+retained with their original data and hashes, rather than overwritten.
 
 These are mechanism candidates for further relaxation, not discoveries of
 Pbcn-mediated switching or of an antipolar wall. A group symbol at one
@@ -375,9 +387,58 @@ sampled maximum and rebound of the global force norm are compatible with
 a changing coupled configuration, not proof of a persistent single-block
 cause or of a particular optimizer's benefit. The preserving continuation
 ended normally on the unchanged force criterion; the reversing candidate
-and the phase/polarization/sampling audits remain incomplete. Three ordinary
-passes alone neither complete G1 nor fix the stationary locations needed
-for local mode-strain predictions.
+subsequently passed as well. Whole-path polarization and transverse-stability
+audits remain distinct. Four ordinary passes alone neither complete G1 nor
+fix the stationary locations needed for local mode-strain predictions.
+
+The forty terminal raw band tables are independently replayed with the
+audited 96-electron, 48-occupied-band contract. Minimum sampled indirect
+gaps are 4.2520, 4.1317, 4.5893 and 4.0173 eV for T/PO, M, preserving and
+reversing, respectively. These Gamma2x2x2 sampled gaps are not a full-Brillouin-zone
+insulating certificate or Berry-phase branch evidence. The separate native
+Berry protocol retains physical $eR/V$ and spin-paired native $2eR/V$ periods;
+actual-cell reduced polarization, not a fixed Cartesian period, is needed
+along the changing lattice. Neither modular endpoint opposition nor a
+unique lift at finite sampled images establishes an absolute spontaneous
+polarization or excludes unsampled winding.
+
+The missing R3 path measurements were then made at all fourteen existing
+switching interiors, reusing the three audited PO endpoint properties.
+Fourteen output-only SCFs reproduce baseline E/F/stress exactly at the
+raw-log precision; this is not a claim of zero total numerical error.
+Forty-two fixed-charge NSCFs use the registered $2\times2\times2$,
+$2\times2\times4$ and $2\times2\times8$ longitudinal quadratures. Maximum
+changes from the second to the third quadrature are 0.00063768 and
+0.00083843 C/m$^2$ for the preserving and reversing candidates, below
+the predeclared 0.01 C/m$^2$ gate. No NSCF energy is used in a barrier.
+
+![Native R3 classes, conditional sampled lift and measured quadrature sensitivity](figures/hfo2_path_Berry_20261009/rendered/hfo2_path_Berry.png)
+
+Figure 3. Native-path electronic property audit. (a) Reported classes in
+actual-cell reduced units $p=P_3/(e|R_3|/V)$. (b) Conditional nearest-sample
+lift retaining native period 2 and explicit initial integer gauge 0, not
+the smallest-absolute-$P$ convention. (c) Changes from $2\times2\times4$
+to $2\times2\times8$; the 10 mC/m$^2$ gate is stated above an axis showing
+the smaller measured range.
+Eighteen plotted rows comprise fourteen new interiors and cached endpoints,
+with common PO+ repeated. Connections join samples, not a continuous-path
+certificate. Source data and editable exports accompany the
+[figure contract](figures/hfo2_path_Berry_20261009/README.md).
+
+Both sampled lifts start at 1.188154, pass near 2 at their central nonpolar
+snapshots and end at 2.811846, giving the same reduced increment 1.623691.
+The minimum uncertainty-adjusted half-period margins are 0.7291 and 0.6120;
+no sampled link is ambiguous under the declared longitudinal sensitivity.
+These data do not justify calling the geometric candidates distinct
+polarization-winding sectors. The increment is not quantized, and a unique
+finite-sample lift still excludes neither unsampled winding nor transverse
+electronic components. It is not an absolute spontaneous-P selection.
+
+Native integer h/min/s timing sums to 3155 s, or 28.0444 reported DFT
+core-hours at 32 ranks; the fourteen Slurm allocations sum to 4029 s, or
+35.8133 core-hours including launch, copying and audit costs. The raw
+fourteen SCF and forty-two NSCF logs/band tables replay identically on HF
+and locally. Electronic settings and source geometries remain unchanged.
 
 ### 3.3. A residual pass does not resolve the sampled maximum
 
@@ -394,12 +455,12 @@ by only 0.0000174 meV/f.u.; that agreement is not a total barrier uncertainty.
 An inserted fifteen-image cached band still replays an ordinary maximum
 vector residual of 0.099372458 eV/Angstrom, without optimization or extra
 SCFs. Thus an unchanged residual pass can coexist with a materially different
-sampled maximum. The earlier table and Figure 2 remain the original nine-image
-observation, not a sampling-resolved activation barrier.
+sampled maximum. The preserving curve in Table 1 and Figure 2 remains its
+original nine-image observation, not a sampling-resolved activation barrier.
 
 ![Actual static sampling checks on the preserving reconstruction](figures/hfo2_G1_sampling_bridge_20261009/hfo2_G1_sampling_bridge.png)
 
-Figure 3. Six same-contract static checks of the preserving step-69 path.
+Figure 4. Six same-contract static checks of the preserving step-69 path.
 (a) Nine original samples and six added energies on the original normalized
 generalized arc. (b) The two tested segments, each with two original endpoints
 and three new static fractions. Straight connections are sample guides;
@@ -423,8 +484,8 @@ edges. Five additional static SCFs checked two near-peak fractions of T-to-PO
 and three fractions of PO-to-M segment3-to-4. The T-to-PO and PO-to-M sources,
 and the preserving flip, use an identical ordered periodic PO initial well;
 their shared energy reference is not an alignment of different endpoint wells.
-The M endpoint has a maximum atomic force of0.011905 eV/Angstrom and maximum
-stress component of1.915095 kbar, within the registered endpoint screen.
+The M endpoint has a maximum atomic force of 0.011905 eV/Angstrom and maximum
+stress component of 1.915095 kbar, within the registered endpoint screen.
 
 | Source path | Old peak | New static | Increase | Residual |
 |---|---:|---:|---:|---:|
@@ -433,24 +494,43 @@ stress component of1.915095 kbar, within the registered endpoint screen.
 
 Table 2. Five real reconstruction SCFs, not stationary transition states or
 an error-bounded continuous MEP. Energies are meV/HfO2 relative to common PO;
-residuals are eV/Angstrom. Each reconstructed band contains12 total/10 moving
-images; only T-to-PO passes the ordinary0.10 residual target. Force replay
+residuals are eV/Angstrom. Each reconstructed band contains 12 total/10 moving
+images; only T-to-PO passes the ordinary 0.10 residual target. Force replay
 uses no optimization or further SCFs. The respective
-forward/reverse sampled barriers are33.900331/115.221524 for T-to-PO and
+forward/reverse sampled barriers are 33.900331/115.221524 for T-to-PO and
 82.747071/154.131671 for PO-to-M. Their differences equal the unchanged
 endpoint energy differences, -81.321193 and -71.384600 meV/HfO2.
 ([Actual five-point audit](../../benchmarks/hfo2_channels/20261008/G1_peak_sampling_20261009/README.md))
 
-Job28380672 completed normally in544 s at32 CPUs. The five actual SCFs
-consumed481.761 s,4.282322 core-hours; allocation cost was4.835556 core-hours.
+Job 28380672 completed normally in 544 s at 32 CPUs. The five actual SCFs
+consumed 481.761 s, or 4.282322 core-hours; allocation cost was 4.835556 core-hours.
 All five retained the original six physical-input hashes, converged SCFs and
-complete E/F/stress. The PO-to-M screen estimated81.718849 meV/HfO2;
-the actual sampled82.747071 is a direct check, not independent validation
-of a barrier predictor. The increased residual requires a bounded ordinary
-refinement of the twelve-image PO-to-M band before calling it converged.
+complete E/F/stress. The PO-to-M screen estimated 81.718849 meV/HfO2;
+the actual sampled maximum of 82.747071 is a direct check, not independent
+validation of a barrier predictor. The increased residual required the bounded
+ordinary refinement of the twelve-image PO-to-M band described below.
 The prior nine-image source is preserved. No electronic retuning, CI or new
 mechanistic channel is introduced; neither a higher static sample nor a
 denser plot substitutes for transverse relaxation or stationarity.
+
+The required M refinement subsequently passed at 0.0969640 eV/Angstrom
+after one new FIRE iteration from all twelve cached initial SCFs. Its sampled
+maximum is 82.679957 meV/f.u. and its fixed endpoints are unchanged. This is
+a continuation of the same edge and must not be called an acceleration
+benchmark: the source representation and force history differ from the
+earlier nine-image trajectory. Allocation cost is 9.884444 core-hours.
+
+The reversing terminal band was checked at two registered near-peak
+fractions, 3-to-4 at 0.99 and 4-to-5 at 0.01. Both same-contract SCFs yield
+392.822011 meV/f.u., below the existing 392.822905 maximum. The screen's
+tiny Hermite-predicted increase is therefore not an observed DFT increase
+or evidence of sub-microelectronvolt total precision. An eleven-image
+cached reconstruction replays 0.0940228 eV/Angstrom, without another
+optimization or SCF. These two measurements cost 1.309117 SCF core-hours
+and 1.813333 allocation core-hours; the finite peak-static budget has used
+thirteen of fourteen points, with no automatic use of the spare point.
+The final sampled values and their sampling/refinement histories are
+retained separately rather than pooled into stationary barrier estimates.
 
 ### 3.4. Reference choice changes the apparent compactness of the path
 

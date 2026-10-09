@@ -36,6 +36,57 @@ def modular_difference(value, reference, reported_modulus):
     return delta - reported_modulus * np.rint(delta / reported_modulus)
 
 
+def sampled_reduced_branch(values_C_m2, quanta_C_m2, reported_periods_C_m2,
+                           uncertainties_C_m2, *, initial_integer=0):
+    """A conditional nearest-neighbour lift in the *actual-cell* reduced units.
+
+    Keep the reported (possibly spin-paired) period, not an assumed eR/V.
+    The first integer is an explicit gauge, not a spontaneous-P reference.
+    Abstain on half-period ties or uncertainty-overlapping alternatives.
+    Even a unique sampled lift cannot exclude winding between sampled images
+    or certify full-BZ insulation. This routine does not close those gates.
+    """
+    arrays = [np.asarray(x, dtype=float) for x in
+              (values_C_m2, quanta_C_m2, reported_periods_C_m2, uncertainties_C_m2)]
+    if (any(x.ndim != 1 for x in arrays) or len(arrays[0]) < 2
+            or any(x.shape != arrays[0].shape or not np.isfinite(x).all() for x in arrays)
+            or np.any(arrays[1] <= 0) or np.any(arrays[2] <= 0) or np.any(arrays[3] < 0)
+            or isinstance(initial_integer, bool) or not isinstance(initial_integer, int)):
+        raise ValueError("aligned finite samples, positive quanta/periods and integer gauge required")
+    values, quanta, periods, errors = arrays
+    ratios = periods / quanta
+    period = float(ratios[0])
+    if not np.allclose(ratios, period, rtol=0, atol=2e-6):
+        raise ValueError("reported reduced period changes along the path")
+    reduced = values / quanta
+    uncertainty = errors / quanta
+    lifted = [float(reduced[0] + initial_integer * period)]
+    integers = [initial_integer]
+    links = []
+    for i in range(1, len(values)):
+        integer = int(np.rint((lifted[-1] - reduced[i]) / period))
+        candidate = float(reduced[i] + integer * period)
+        delta = candidate - lifted[-1]
+        # This is a measured quadrature-sensitivity margin, not a rigorous
+        # total DFT error bar or a bound on unsampled polarization winding.
+        margin = period / 2 - abs(delta) - uncertainty[i] - uncertainty[i-1]
+        unique = bool(margin > 1e-8)
+        links.append({"left": i-1, "right": i, "delta_reduced": delta,
+                      "half_period_margin_reduced": float(margin), "unique": unique})
+        if not unique:
+            return {"status": "ambiguous_sampled_link", "ambiguous_link": [i-1, i],
+                    "reported_reduced_period": period, "links": links,
+                    "lifted_reduced": None, "branch_integers": None,
+                    "continuous_path_certified": False, "spontaneous_P_selected": False}
+        lifted.append(candidate)
+        integers.append(integer)
+    return {"status": "conditional_sampled_lift", "reported_reduced_period": period,
+            "initial_branch_integer": initial_integer, "raw_reduced": reduced.tolist(),
+            "lifted_reduced": lifted, "branch_integers": integers, "links": links,
+            "delta_reduced": lifted[-1] - lifted[0],
+            "continuous_path_certified": False, "spontaneous_P_selected": False}
+
+
 def parse_abacus_berry(body):
     """Read exactly one direction's native C/m^2 output without branch edits."""
     directions = re.findall(r"calculated polarization direction is in R([123]) direction", body)
