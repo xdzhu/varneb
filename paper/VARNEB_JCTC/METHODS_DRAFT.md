@@ -541,3 +541,34 @@ full Hessian or independent material forecast has been obtained by this step.
 The [controlled-coordinate contract](../../docs/BIAXIAL_CONTROL_CURVATURE.md)
 and [E027 receipt](../../benchmarks/hfo2_channels/20261008/biaxial_control/validation_delivery.json)
 retain the precise metric, admissible space and validation limits.
+
+## 16. Restricted stationary branches and paired response
+
+The controlled coordinate remains prescribed while retained internal variables
+follow a resolved index 0 or index 1 quadratic branch. Stable orthogonal release
+retains the nonstationary offset and energy correction. Continuing the saddle's
+negative internal direction is not stable minimization, so its controlled
+curvature correction is not sign definite. The main-text Section 2.3 states
+the equations; the [API](../../docs/CONTROLLED_STATIONARY_BRANCH.md) specifies
+the admissible-space and index checks without declaring a full DFT TS.
+
+The [paired interface](../../docs/STATIONARY_GAP_RESPONSE.md) requires matching
+physical/boundary/control/energy declarations but uses each centre's own
+external scale. It keeps raw gap, stationary-anchor correction, separate
+increments and signed gap response. Declared intervals/radii are not proof
+of probe-hull coverage; omission gradients and clamped reactions are retained.
+No unconverged G1 peak or spring force is promoted to a stationary Hessian.
+
+The actual material comparison may alternatively pair a bottleneck prediction
+with visible audited target initial-well energy, as already allowed by the
+prospective protocol. This avoids silently expanding the initial-well Hessian
+budget. Every control must receive the same endpoint information and full
+feature-preparation cost, and the input/calibration choice must be frozen
+before complete target path labels. It is not zero-DFT prediction or proof
+of a predicted initial-well response.
+
+The [E031](../../benchmarks/hfo2_channels/20261008/stationary_branch/README.md)
+and [E032](../../benchmarks/hfo2_channels/20261008/stationary_gap/README.md)
+receipts document analytic solves, finite derivatives, clean full tests and
+same-source HF replays only. Matched-boundary material training, complete
+B2--B5 model freezing and independent accuracy/coverage remain incomplete.

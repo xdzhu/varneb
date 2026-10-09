@@ -975,3 +975,31 @@ See submission_handles_r13.json; no switching results or G2 DFT claimed yet.
 - Actual matched-boundary training, full B2--B5 selection/freezing, independent
   advantage and JCTC readiness remain unproved. Retain this necessary pairing
   step, not a substitute end state. Receipt:`stationary_gap/validation_delivery.json`.
+
+## E033 - Put the controlled stationary response into the main manuscript
+
+- Main Section2.3 now derives fixed-control internal stationarity, its indefinite
+  saddle curvature correction and paired initial/bottleneck gap derivatives.
+  Raw gap, anchor corrections, separate coordinate scales, omitted internal
+  gradients, signed gaps and actual-TS limitations remain explicit. Standard
+  quadratic mathematics is not presented as our new theorem or material result.
+- Existing protocol permits visible audited target endpoint energies shared by
+  every control. The text states this endpoint-assisted route, its cost and
+  forecast lock; it does not silently add an initial-well Hessian centre to G3.
+  Protocol hashes, two-bottleneck budget and original G1->G2->G3 order unchanged.
+- One closest publisher extraction also compares strain-mode prediction with
+  DFT(Fig.7), so this alone is not novelty. Added its known025DOI citation; new
+  direct page opens fail, SI/dual-DOI relation still unresolved, no full-read
+  claim or subagents. Primary-source limits are in the positioning sidecar.
+- Existing LuaLaTeX/skill compiler succeeds with no new install or shell escape.
+  Nine pages actually rendered/reviewed: equations, unchanged figures and table
+  legible, no clipping/black glyphs/overlap. All10extracted tokens,28PDFURIs,
+  14localPDFtargets and48Markdowntargets checked. Working layout retains large
+  figure-preceding space and short appendix; not journal typesetting certified.
+- Source/test bytes remain those of the1162pass E032 suite; no new pytest is
+  claimed. Old material table/figures and old compilation receipts are retained.
+-10:45:33CST same two handlesRUNNING:preserving58/.162157,node11;
+  reversing21/.319623,node26. M remainsCOMPLETED0:0. No new SCF, retuning,
+  production/source/job mutation, earlyG2 or holdout. Actual material and
+  independent-prediction gates still incomplete. Keep the goal active.
+- Receipt:`../../../paper/VARNEB_JCTC/MANUSCRIPT_DRAFT.stationary-response.validation.json`.

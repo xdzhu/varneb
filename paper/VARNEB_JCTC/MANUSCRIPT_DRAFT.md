@@ -58,6 +58,14 @@ PO-referenced lattice. The present partially clamped T-referenced ensemble
 is different; matching its electronic settings does not erase that distinction.
 ([Fan et al., 2025](https://doi.org/10.1038/s41524-025-01647-w))
 
+Strain-dependent mode-amplitude models have also been compared with DFT under
+uniaxial and biaxial loading and connected to hafnia's formation landscape.
+([Lee, Lee and Yu, 2026](https://doi.org/10.1038/s41535-025-00841-9))
+Predicting a strain-induced distortion is therefore not, on its own, the
+methodological distinction sought here. The test concerns the competing
+barrier responses after subtraction of the same initial well, with their
+actual mechanical freedoms and strong controls kept explicit.
+
 We therefore formulate a narrower test than discovery of a new coupled mode
 or a low-energy intermediate. First, we compare switching and phase escape
 from the same polar initial state, separating absolute barriers from their
@@ -141,7 +149,94 @@ derivative is the difference of bottleneck and initial-state work derivatives,
 evaluated with their actual cell Jacobians and volumes. An ordinary NEB
 sampled peak alone does not justify that stationary-branch formula.
 
-### 2.3. Fixed material contract and prospective comparisons
+### 2.3. Controlled stationary response and paired energy gaps
+
+Stable orthogonal release and continuation of a stationary bottleneck are
+different operations. After the permitted stable r block has been eliminated,
+write the local energy in retained internal coordinates q and a prescribed
+external coordinate t as
+
+$$
+\begin{aligned}
+\mathcal E(q,t)={}&\widetilde E_0+\widetilde g_q^Tq+\widetilde g_t t\\
+&+\tfrac12q^TAq+t b^Tq+\tfrac12d t^2.
+\end{aligned}
+$$
+
+All quantities come from one centre, potential and allowed-space chart.
+The t coordinate is controlled by the substrate, not released or counted
+as an internal unstable direction. If A is resolved and nonsingular, its
+specified stationary branch is
+
+$$
+q^*(t)=-A^{-1}(\widetilde g_q+b t),\qquad
+C=d-b^TA^{-1}b.
+$$
+
+For an internal minimum, A is positive definite and C cannot exceed d.
+For an index-one saddle, A is indefinite and this curvature correction is
+not sign definite. A bottleneck's controlled curvature can therefore harden
+even though elimination of its stable directions softens a retained block.
+This follows from standard quadratic stationary response, not a new theorem;
+softening of one selected mode alone does not determine a barrier change.
+An unresolved inverse is rejected rather than repaired by a pseudoinverse.
+The index is established only in the represented internal space; physically
+movable but unrepresented gradients remain distinct from clamped reactions.
+
+Each centre a uses its own registered scale
+$t_a=L_a(\epsilon-\epsilon_0)$. Let e_a(t) denote its stationary model energy
+change relative to its raw centre energy, including all nonstationary anchor
+corrections. With the independently recorded raw centre gap
+$G_{\mathrm{ref}}=E_{S,\mathrm{ref}}-E_{I,\mathrm{ref}}$, define
+
+$$
+D(\epsilon_0)=\frac{G_{\mathrm{ref}}+e_S(0)-e_I(0)}{n_{\mathrm{fu}}}.
+$$
+
+The small increments $d_a=e_a'(0)t_a+C_a t_a^2/2$ avoid subtracting large
+total energies to obtain response. The paired change and its derivatives are
+
+$$
+\delta D=\frac{d_S-d_I}{n_{\mathrm{fu}}},\qquad
+D(\epsilon)=D(\epsilon_0)+\delta D,
+$$
+
+$$
+\frac{dD}{d\epsilon}=\frac{L_S e_S'(t_S)-L_I e_I'(t_I)}{n_{\mathrm{fu}}},\qquad
+\frac{d^2D}{d\epsilon^2}=\frac{L_S^2 C_S-L_I^2 C_I}{n_{\mathrm{fu}}}.
+$$
+
+Consequently neither equal numerical t values in different charts nor a
+bottleneck response with the initial-well term omitted represents this
+mechanical intervention. The raw gap, stationary-anchor correction and
+parameter response are retained separately. A common energy-zero shift
+does not affect the response; negative model gaps are not clipped into
+apparent activation barriers.
+
+D equals a physical activation barrier only when I and S are the appropriate
+actual stationary initial state and connected bottleneck on the same branch.
+A restricted quadratic solution cannot establish those premises, identify
+the highest bottleneck of a complete path or exclude lower competing routes.
+Adding $\delta D$ to an audited NEB barrier is a separate calibration choice:
+its anchor mismatch must be disclosed and checked, not silently discarded.
+Caller-declared parameter bounds and displacement radii reject obvious
+out-of-domain use but do not prove probe-hull coverage or anharmonic accuracy.
+The [stationary](../../docs/CONTROLLED_STATIONARY_BRANCH.md) and
+[paired-response](../../docs/STATIONARY_GAP_RESPONSE.md) implementations and
+their analytic tests are thus methodological preparation, not new hafnia
+barrier data or a successful independent material prediction.
+
+A full initial-well quadratic need not be constructed for every comparison.
+When audited target endpoint energies are declared visible inputs, the
+bottleneck model can instead be paired with that measured initial-well shift.
+Every control receives the same endpoint information and its preparation
+cost. This is endpoint-assisted bottleneck prediction, not a zero-DFT or
+fully predicted well response. It does not add an unregistered initial-well
+Hessian to the finite two-bottleneck probe budget. The exact input choice,
+basis, domain and calibration must be frozen before complete target path
+labels are read; the present module tests alone do not freeze that batch.
+
+### 2.4. Fixed material contract and prospective comparisons
 
 The production model is periodic Hf4O8, twelve atoms and four formula units,
 with zero external pressure and field. Calculations use ABACUS/PBE, the
