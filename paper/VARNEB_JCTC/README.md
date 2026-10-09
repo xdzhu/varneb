@@ -98,6 +98,15 @@ continuous MEP. The [new build receipt](MANUSCRIPT_DRAFT.sampling-audit.validati
 identifies the corresponding PDF;
 earlier receipts/figures keep their historical meanings.
 
+The subsequent five-point audit adds Table2: T-to-PO sampling changes by only
+0.011360meV/HfO2, while PO-to-M changes by11.164864. The inserted M residual
+0.123408 does **not** pass ordinary0.10, so it requires bounded refinement;
+these static peaks are not final continuous-MEP or TS barriers. The
+[current reading-build receipt](MANUSCRIPT_DRAFT.peak-sampling.validation.json)
+identifies the ten-page PDF and all-page/numeric/layout checks. Earlier build
+receipts remain historical. Missing G2 and independent predictions are not
+filled with placeholder success claims.
+
 ## Computation boundaries
 
 Hafnia uses the registered ABACUS/PBE contract: 100 Ry, full 10-au DZP orbitals,

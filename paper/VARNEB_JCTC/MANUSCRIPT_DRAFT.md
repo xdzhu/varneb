@@ -418,6 +418,40 @@ Stationarity, transverse stability and matched-boundary predictions remain
 separate tests. The ordinary target, electronic inputs and no-CI policy are
 unchanged.
 
+The same bounded screen was then applied to the other two already completed
+edges. Five additional static SCFs checked two near-peak fractions of T-to-PO
+and three fractions of PO-to-M segment3-to-4. The T-to-PO and PO-to-M sources,
+and the preserving flip, use an identical ordered periodic PO initial well;
+their shared energy reference is not an alignment of different endpoint wells.
+The M endpoint has a maximum atomic force of0.011905 eV/Angstrom and maximum
+stress component of1.915095 kbar, within the registered endpoint screen.
+
+| Source path | Old peak | New static | Increase | Residual |
+|---|---:|---:|---:|---:|
+| T-to-PO | 115.210164 | 115.221524 | 0.011360 | 0.060037 |
+| PO-to-M | 71.582207 | 82.747071 | 11.164864 | 0.123408 |
+
+Table 2. Five real reconstruction SCFs, not stationary transition states or
+an error-bounded continuous MEP. Energies are meV/HfO2 relative to common PO;
+residuals are eV/Angstrom. Each reconstructed band contains12 total/10 moving
+images; only T-to-PO passes the ordinary0.10 residual target. Force replay
+uses no optimization or further SCFs. The respective
+forward/reverse sampled barriers are33.900331/115.221524 for T-to-PO and
+82.747071/154.131671 for PO-to-M. Their differences equal the unchanged
+endpoint energy differences, -81.321193 and -71.384600 meV/HfO2.
+([Actual five-point audit](../../benchmarks/hfo2_channels/20261008/G1_peak_sampling_20261009/README.md))
+
+Job28380672 completed normally in544 s at32 CPUs. The five actual SCFs
+consumed481.761 s,4.282322 core-hours; allocation cost was4.835556 core-hours.
+All five retained the original six physical-input hashes, converged SCFs and
+complete E/F/stress. The PO-to-M screen estimated81.718849 meV/HfO2;
+the actual sampled82.747071 is a direct check, not independent validation
+of a barrier predictor. The increased residual requires a bounded ordinary
+refinement of the twelve-image PO-to-M band before calling it converged.
+The prior nine-image source is preserved. No electronic retuning, CI or new
+mechanistic channel is introduced; neither a higher static sample nor a
+denser plot substitutes for transverse relaxation or stationarity.
+
 ### 3.4. Reference choice changes the apparent compactness of the path
 
 In the unweighted parent-scaffold chart, the three geometric T patterns

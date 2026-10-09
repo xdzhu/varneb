@@ -1187,3 +1187,28 @@ See submission_handles_r13.json; no switching results or G2 DFT claimed yet.
   keep100Ry/full10auDZP/noCI/max2, finite13new-chain matrix and goalactive.
   Keep the audit and make one scoped normal research commit/push. Evidence:
   `preserving_sampling_bridge_20261009/validation_delivery.json`.
+
+## E041 - Five actual peak checks and required M refinement
+
+- Five true32MPI statics28380672 COMPLETED0:0,544s/4.835556allocation coreh;
+  SCF481.761171s/4.282322coreh. Same frozen lifts, P0/commonPO and all6
+  physical bytes. Added peaks115.221524(T/PO),82.747071(M), increases
+  .011360/11.164864meV/HfO2. Hermite selects points, not a DFT/holdout result.
+- Twelve-image residuals.060037/.123408: T passes; M does not. Zero optimizer
+  or extraSCF for replay. Three commonPO wells exactly match; endpoint force/
+  stress screens pass, not Hessian stability. Static samples are not TS/MEP.
+- Initial archive995239cc omitted15ignored logs/err:4failed/1240passed/2skip,
+  204.55s; actualHF refuses raw-evidence gap, no SCF/job. Scoped ignore repair,
+  no weaker assertions; retain failed source. Fixedtree512f21b/archive63dd3824
+  passes1244/2skip/0fail/error in218.96s,112raw files byte-match. Later seed/
+  receipts and Table2 editorial layout are not attributed to compute archive.
+- ActualHF12cache/CLI/lift preflight pass with DFT forbidden. NecessaryM
+  refinement28392675 submitted16:19:58, node2/32MPI,12total/10moving/2fixed,
+  20steps/8h/at most200movingSCF, freshFIRE/.02/k.2. Actual step0.123408 with
+  zero exportSCF; first newlogDSIZE32. Old9-image result preserved, no extra
+  scientific edge, state-restoration or acceleration claim. Maximum2live.
+- Ten-page/Table2 draft compiled and all final pages/numbers reviewed,18links
+  valid. No paper success placeholders. Other reversing28319571 RUNNING at
+  16:19,step44/.103449. No retuning, CI, G2/holdout or extra matrix. Cap14
+  peakSCFs(11done+3max),13newchannels unchanged. Goalactive/incomplete.
+  Evidence:`G1_peak_sampling_20261009/validation_delivery.json`.

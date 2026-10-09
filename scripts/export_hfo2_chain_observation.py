@@ -51,8 +51,8 @@ def export(workdir, step, output, source_job_id):
         raise ValueError("a nonnegative snapshot step required")
     snapshot = workdir / "snapshots" / f"step_{step:04d}"
     paths = sorted(snapshot.glob("POSCAR_*"))
-    if len(paths) not in (9, 10) or [p.name for p in paths] != [f"POSCAR_{i:02d}" for i in range(len(paths))]:
-        raise ValueError("a complete nine/ten-image snapshot required")
+    if len(paths) not in (9, 10, 12) or [p.name for p in paths] != [f"POSCAR_{i:02d}" for i in range(len(paths))]:
+        raise ValueError("a complete nine/ten/twelve-image snapshot required")
     before = {p.name: sha256(p) for p in paths}
     row = optimizer_row(workdir / "vcneb.opt.log", step)
     images, evaluations = [], []
