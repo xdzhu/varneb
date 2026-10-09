@@ -19,9 +19,13 @@ compact projection nor a visually smooth landscape establishes this claim.
 - [Prospective protocol](../../docs/HFO2_PREDICTION_PROTOCOL.md) and
   [dated v2 addendum](../../docs/HFO2_PREDICTION_PROTOCOL_V2_2026-10-09.md).
 
-The manuscript's numerical table is a dated snapshot, not a live job dashboard.
-The T-PO, PO-to-M and preserving-flip bands have passed the ordinary residual
-criterion; the reversing observation has not. G2 matched-boundary comparisons, G3
+The manuscript's numerical tables are dated snapshots, not a live job dashboard.
+All four final G1 candidate bands have passed the ordinary residual criterion
+and the whole-candidate evidence gate has passed. The gate permits the
+registered G2 experiment; it does not certify stationary saddles, exhaustive
+escape coverage or distinct winding sectors. Two common-substrate endpoints
+(T and PO+) now pass the declared atomic-force/open-traction screens.
+G2 matched-boundary channel barriers, G3
 conditional-branch validation and independent material predictions remain
 missing. An ordinary residual pass is not a certified saddle or a barrier
 uncertainty bound. No abstract or conclusion asserting these missing results
@@ -31,6 +35,12 @@ The [later complete-frame residual audit](../../benchmarks/hfo2_channels/2026100
 tracks the preserving flip's atomic/cell residual crossover without claiming
 final channel energies. It is additional
 source-verified pilot evidence, not a new stationary-TS or prediction result.
+
+## Historical milestones
+
+The following dated records retain the knowledge and figures available at
+their own timestamps. Statements of nonconvergence there are historical,
+not the current job state.
 
 The [2026-10-09 morning update](../../benchmarks/hfo2_channels/20261008/morning_update_20261009_0850/README.md)
 adds the second ordinary-converged source, PO to M, and the preserving flip's
@@ -106,6 +116,13 @@ these static peaks are not final continuous-MEP or TS barriers. The
 identifies the ten-page PDF and all-page/numeric/layout checks. Earlier build
 receipts remain historical. Missing G2 and independent predictions are not
 filled with placeholder success claims.
+
+The latest source adds the [qualified G1 review and canary](../../benchmarks/hfo2_channels/20261008/G1_review_clamped_canary_20261009/README.md),
+[two-SCF PO+ continuation](../../benchmarks/hfo2_channels/20261008/clamped_PO_continuation_E046_20261009/README.md)
+and [single-SCF T endpoint](../../benchmarks/hfo2_channels/20261008/clamped_endpoint_matrix_20261009/README.md).
+Section3.6 reports a12.359975meV/HfO2 common-substrate well separation,
+not a switching or escape barrier. Source checks and the corresponding
+new reading build are recorded in `MANUSCRIPT_DRAFT.clamped-endpoints.validation.json`.
 
 ## Computation boundaries
 

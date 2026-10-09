@@ -83,3 +83,29 @@ LF file, whereas the Git archive retains that historical JSON's CRLF bytes.
 The exact pair differs in 2255 carriage returns and no numeric/text content;
 both hashes and the failed initial strict comparison are recorded in the
 receipt. No generic hash exception or physical-input mutation is introduced.
+
+## Actual bounded canary result
+
+28446324 completed0:0 at22:07:34CST after812allocation seconds. Five genuine
+32MPI SCFs cost756.647228 measured subprocess seconds/6.725753coreh; the
+allocation cost is7.217778coreh. All six physical bytes and complete E/F/stress
+were audited on HF. The final atomic max is0.037333755eV/A, open traction
+6.948494kbar, so the correct physical status is **step_limit, not converged**.
+All five geometries retain Pca2_1 at .001/.01/.05A/1degree tolerances and the
+fixed plane drift is at floating-point round-off. This is healthy boundary/
+transport evidence, not Hessian/phase stability, electronic polarization or
+G2 channel evidence.
+
+`completed_HF/` contains exactly49 observable files, no pseudo/orbital/charge
+redistribution. Original HF audit/summary/raw bytes are retained. Stock ASE's
+missing ABACUS-I/O registration exposed a local replay limitation; a separate
+post-DFT analysis change adds a strictly case-writer-specific Direct/Hf4O8
+reader. It reproduces the actual data without changing/repeating DFT or
+overwriting the original runtime. The first failed local replay is recorded,
+not counted as a passing check. The original global ignore exception omitted
+the endpoint subdirectory; only this exact case's observable paths are now
+allowed, not arbitrary calculation outputs.
+
+Next registered finite experiment is [one geometry continuation](../clamped_PO_continuation_E046_20261009/README.md):
+max20new steps/SCFs, exact last-clamped-SCF reuse, fresh BFGS Hessian and
+independent raw/phase review before any wider G2 work.

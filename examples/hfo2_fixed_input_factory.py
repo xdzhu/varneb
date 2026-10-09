@@ -13,6 +13,8 @@ import subprocess
 import time
 
 from ase.io import read
+from ase import Atoms
+from ase.units import Bohr
 from ase.calculators.calculator import Calculator, all_changes
 import numpy as np
 
@@ -29,6 +31,33 @@ CONTRACT = {
     "Hf_gga_10au_100Ry_4s2p2d1f.orb": "0c72d33ee28f930f3426a0d81255a233c3f9caf1326b5679d861ea6bf83c0519",
     "O_gga_10au_100Ry_2s2p1d.orb": "af216fe56366f36583f7d0d3f6e8820381327ae6f80ce0efc86fde1a1b6bc1d3",
 }
+
+
+def read_fixed_hfo2_stru(path):
+    """Read only this case's exact Direct/Hf4O8 writer contract.
+
+    Stock ASE does not necessarily register ABACUS I/O. This deliberately
+    narrow reader is not a general STRU parser and never changes coordinates.
+    """
+    lines = [s.strip() for s in Path(path).read_text(encoding="utf-8").splitlines() if s.strip()]
+    expected = {0: "ATOMIC_SPECIES", 1: "Hf 178.49 Hf.upf", 2: "O 15.999 O.upf",
+                3: "NUMERICAL_ORBITAL", 4: "Hf_gga_10au_100Ry_4s2p2d1f.orb",
+                5: "O_gga_10au_100Ry_2s2p1d.orb", 6: "LATTICE_CONSTANT",
+                7: "1.8897261258369282", 8: "LATTICE_VECTORS",
+                12: "ATOMIC_POSITIONS", 13: "Direct", 14: "Hf", 15: "0.0",
+                16: "4", 21: "O", 22: "0.0", 23: "8"}
+    if len(lines) != 32 or any(lines[i] != s for i, s in expected.items()):
+        raise ValueError("only the fixed Hf4O8 Direct STRU writer contract is supported")
+    lattice = [s.split() for s in lines[9:12]]
+    coordinates = [lines[i].split() for i in (*range(17, 21), *range(24, 32))]
+    if any(len(row) != 3 for row in lattice) or any(
+            len(row) != 6 or row[3:] != ["1", "1", "1"] for row in coordinates):
+        raise ValueError("fixed STRU must release all atomic coordinates")
+    cell = np.array(lattice, dtype=float) * float(lines[7]) * Bohr
+    scaled = np.array([row[:3] for row in coordinates], dtype=float)
+    if not np.isfinite(cell).all() or not np.isfinite(scaled).all() or np.linalg.det(cell) <= 0:
+        raise ValueError("finite positive-volume fixed STRU required")
+    return Atoms(["Hf"]*4+["O"]*8, cell=cell, scaled_positions=scaled, pbc=True)
 
 
 class FixedHfo2Calculator(Calculator):
@@ -81,6 +110,45 @@ def make_factory(*, parameters, command):
         raise ValueError("only source_directory accepted; physical parameter overrides prohibited")
     def factory(image_index, atoms, directory):
         return FixedHfo2Calculator(source=parameters["source_directory"], command=command, directory=directory)
+    return factory
+
+
+def make_endpoint_cached_factory(*, parameters, command):
+    """Continue one audited endpoint geometry, not a free-cell/nearest cache.
+
+    Source bytes and parent raw log/STRU are pinned. Movement invalidates ASE's
+    cache normally and the same byte-preserving adapter performs the next SCF.
+    This restarts BFGS's Hessian; it does not restore optimizer history.
+    """
+    if set(parameters) != {"source_directory", "seed_static_directory", "seed_input_sha256",
+                            "seed_raw_log_sha256"}:
+        raise ValueError("endpoint cache requires exact parent hashes; physical overrides prohibited")
+    source = Path(parameters["seed_static_directory"])
+    expected = parameters["seed_input_sha256"]
+    if set(expected) != {*CONTRACT, "STRU"} or any(expected[n] != h for n, h in CONTRACT.items()):
+        raise ValueError("endpoint seed physical contract changed")
+
+    def factory(image_index, atoms, directory):
+        if type(image_index) is not int or image_index != 0:
+            raise ValueError("exactly one endpoint cache, index0, is allowed")
+        calc = FixedHfo2Calculator(source=parameters["source_directory"], command=command, directory=directory)
+        if ({n: sha256(source/n) for n in expected} != expected
+                or sha256(source/"OUT.ABACUS/running_scf.log") != parameters["seed_raw_log_sha256"]):
+            raise ValueError("endpoint cached input/raw log changed")
+        if not same_ordered_geometry(atoms, read_fixed_hfo2_stru(source/"STRU")):
+            raise ValueError("endpoint cache ordered geometry differs")
+        raw = audited_results(source)
+        calc.atoms = atoms.copy()
+        calc.results = {k: v.copy() if isinstance(v, np.ndarray) else v for k, v in raw.items()}
+        target = Path(directory)
+        if target.exists() and any(p.name != "structure.start.vasp" for p in target.iterdir()):
+            raise ValueError("fresh endpoint calculator directory required")
+        target.mkdir(parents=True, exist_ok=True)
+        record = {"policy": "identical_ordered_clamped_seed_only_no_optimizer_history",
+                  "raw_source": str(source), "input_sha256": expected,
+                  "raw_log_sha256": parameters["seed_raw_log_sha256"], "new_DFT_calls": 0}
+        (target/"seed_cache_audit.json").write_text(json.dumps(record, indent=2)+"\n", encoding="utf-8", newline="\n")
+        return calc
     return factory
 
 

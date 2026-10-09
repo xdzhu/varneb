@@ -11,9 +11,8 @@ from pathlib import Path
 
 import numpy as np
 from ase.calculators.singlepoint import SinglePointCalculator
-from ase.io import read
 
-from examples.hfo2_fixed_input_factory import CONTRACT
+from examples.hfo2_fixed_input_factory import CONTRACT, read_fixed_hfo2_stru
 from scripts.analyze_hfo2_network_update import structure_audit
 from scripts.audit_hfo2_static_replica import audited_results, sha256
 from scripts.hfo2_switching_path_polarization import save
@@ -46,16 +45,10 @@ def validate_summary(summary, manifest, count):
         raise ValueError("physical atomic/open-traction convergence assertion inconsistent")
 
 
-def audit(root, seed_manifest, *, full_physical_bytes=True):
-    _, boundary, manifest = load_seed(seed_manifest)
-    summary_path = root/"endpoint_relax_summary.json"
-    summary = json.loads(summary_path.read_text())
-    calls = sorted((root/"calculator/image_0000").glob("scf_*"))
-    validate_summary(summary, manifest, len(calls))
-    if summary["seed_manifest_sha256"] != sha256(seed_manifest):
-        raise ValueError("summary seed changed")
+def replay_directories(calls, boundary, *, full_physical_bytes=True, first_index=0):
+    """Replay only observed contiguous raw SCFs; never evaluate a calculator."""
     rows = []
-    for i, directory in enumerate(calls):
+    for i, directory in enumerate(calls, start=first_index):
         if directory.name != f"scf_{i:06d}":
             raise ValueError("fresh contiguous call sequence required")
         call = json.loads((directory/"call_audit.json").read_text())
@@ -66,7 +59,7 @@ def audit(root, seed_manifest, *, full_physical_bytes=True):
                 or sha256(directory/"STRU") != call["input_sha256"]["STRU"]
                 or sha256(directory/"OUT.ABACUS/running_scf.log") != call["raw_log_sha256"]):
             raise ValueError("raw input/log record changed")
-        atoms = read(directory/"STRU", format="abacus")
+        atoms = read_fixed_hfo2_stru(directory/"STRU")
         boundary.validate_images([atoms])
         raw = audited_results(directory)
         if any(not np.allclose(raw[k], call["results"][k], atol=1e-12, rtol=0) for k in raw):
@@ -81,6 +74,18 @@ def audit(root, seed_manifest, *, full_physical_bytes=True):
                      "elapsed_seconds": elapsed, "raw_log_sha256": call["raw_log_sha256"],
                      "input_sha256": call["input_sha256"], "structure_audit": structure_audit(atoms),
                      **stress_report(atoms, boundary)})
+    return rows
+
+
+def audit(root, seed_manifest, *, full_physical_bytes=True):
+    _, boundary, manifest = load_seed(seed_manifest)
+    summary_path = root/"endpoint_relax_summary.json"
+    summary = json.loads(summary_path.read_text())
+    calls = sorted((root/"calculator/image_0000").glob("scf_*"))
+    validate_summary(summary, manifest, len(calls))
+    if summary["seed_manifest_sha256"] != sha256(seed_manifest):
+        raise ValueError("summary seed changed")
+    rows = replay_directories(calls, boundary, full_physical_bytes=full_physical_bytes)
     final = rows[-1]
     for key, value in (("potential_energy_eV", final["energy_eV_cell"]),
                        ("max_atomic_force_eV_per_A", final["max_atomic_force_eV_A"]),

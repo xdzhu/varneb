@@ -1318,3 +1318,45 @@ resolved them without changing production code. Source remains immutable.
 Evidence:`G1_review_clamped_canary_20261009/validation_delivery.json` and
 `submission.json`; goalactive. The next decision is actual boundary/phase/SCF
 health review, then only an explicitly bounded endpoint continuation if justified.
+
+## E045 completion / E046 exact-cache continuation / E047 T endpoint / E048 pair
+
+E04528446324 COMPLETED0:0,5SCFs/4steps,32trueMPI,original six physical bytes.
+Terminal force.037333755/open6.948494kbar: healthy capped canary, not convergence.
+All5 raw records exported; original HF audit retained. Local stock ASE lacks
+general ABACUS STRU I/O; a strict case-writer Direct/Hf4O8 reader enables the
+portable replay. No DFT repeated or original source overwritten.
+
+Clean runtime tree2a5ca85c/archivea9e23aff passed1330full/2skip/0fail275.30s,
+71focused1.81s before E046. Full HF raw/byte/geometry/log checks and prohibited
+external-call preflight confirm zero-DFT cached initial E/F/stress. E04628453655
+COMPLETED0:0; fresh BFGS Hessian,2steps/2newSCFs,force.022284634/open1.928434990,
+Pca2_1at3tols.236.308852SCFs/2.100523coreh vs244s/2.168889allocationcoreh.
+Cached initial SCF cost belongs to E045; not an acceleration benchmark.
+
+E04728454923 uses the same immutable source and registered epsilon0T seed,
+COMPLETED0:0.1SCF/0steps,force.000499915/open.009594677,P4_2/nmcat3tols;
+125.001048SCFs/1.111120coreh vs130s/1.155556allocationcoreh. Same substrate
+and six physical files. E(T)-E(PO+)=12.359975meVfu vs81.321193freecell.
+This is a boundary-dependent well separation, not a barrier or H1/H2 test.
+
+E04828456312M/28456313POminus-preserving submitted23:00:09CST,each1node32MPI,
+20BFGSsteps/max21freshSCFs/2h,unchanged.03/2/.02/P0/E0/electroniccontract.
+23:14bothRUNNING,5/2steps; no rebound stop/live repeat or unbounded restart.
+Max2study allocations, unrelated user jobs untouched. No reversing-minus/+1%
+matrix, G2bands/G3/holdout/CI/release/parameter tuning automatically submitted.
+
+49+26+17observablefiles exported without pseudo/orb/charge/binaries. Actual-data
+replay and common-substrate numerical tests added; first focused20pass5.00s.
+ManuscriptSection3.6 added with endpoint screens and limitations, not fabricated
+abstract/conclusion predictive gains. Final clean delivery and reading-build
+checks are recorded separately; original runtime remains immutable. Goalactive.
+
+Actual delivery tree7f5520e5/archive9b6bd7f9 passes1336full/2skip/0fail272.29s.
+Only four metadata/portable-analysis reports added afterward: final tested
+tree5cb82bfd/archive93c2ee35 passes33focused1.40s and all92exported observable
+files are byte-exact. This final receipt/ledger update changes no production
+code, Slurm script, geometry, physical input, raw result or manuscript.
+Reading PDF12pages/23Markdown local targets/20PDF local-file actions all valid;
+changed pages11/12 actually rendered and visually checked, no overfull/fatal.
+Missing G2 barriers/G3/holdout results remain explicitly missing, not certified.

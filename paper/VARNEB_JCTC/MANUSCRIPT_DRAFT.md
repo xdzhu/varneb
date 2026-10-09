@@ -2,8 +2,9 @@
 
 Working manuscript, 2026-10-09. This is a connected main-text draft, not a
 submission-ready article. The numerical Results below use explicitly dated
-pilot observations. Matched-boundary G2 results, local conditional branches
-and independent material predictions are still missing. An abstract and a
+pilot observations. Two matched-substrate endpoints have now passed their
+physical screens; G2 channel barriers, local conditional branches and
+independent material predictions are still missing. An abstract and a
 conclusion asserting those unmeasured results are deliberately withheld.
 The [methods working record](METHODS_DRAFT.md),
 [dated pilot record](PILOT_RESULTS_2026-10-08.md) and
@@ -568,6 +569,55 @@ assumed. This failed coverage test identifies what the local model cannot
 yet predict, rather than being concealed by a smooth contour.
 ([Same-centre data and limits](../../benchmarks/hfo2_channels/20261008/restricted_quadratic/README.md))
 
+### 3.6. A common substrate narrows the T-to-PO well separation
+
+The qualified G1 candidate-connectivity review permits the registered
+mechanical comparison without declaring the pilot maxima certified saddles.
+The first G2 endpoint calculations fix the two substrate vectors to the
+relaxed T reference at nominal biaxial strain zero and release atomic
+coordinates and the third lattice vector, including tilt, at zero applied
+pressure. Zero strain therefore describes the T-referenced substrate, not
+free-cell conditions or zero strain relative to each phase's own lattice.
+Both endpoints use the original ABACUS/PBE electronic contract.
+
+The PO+ four-step canary retains Pca2_1 but reaches its step cap before
+the physical convergence screen. An exact-geometry continuation reuses only
+its terminal E/F/stress, with a fresh BFGS Hessian, and converges after two
+new SCFs. The registered T seed passes after its initial SCF, without an
+optimization step. Raw outputs reproduce both endpoint energies, forces
+and stress; the substrate vectors match. Symmetry labels agree at all three
+registered tolerances, without imposing symmetry on either calculation.
+
+| Endpoint | Maximum atomic force | Open traction norm | Relative energy |
+|---|---:|---:|---:|
+| PO+ | 0.022285 | 1.928435 | 0.000000 |
+| T | 0.000500 | 0.009595 | 12.359975 |
+
+Table 3. Screened endpoints at the common T-referenced, partially clamped
+zero-strain substrate. Forces are eV/Angstrom, open traction is kbar and
+energy is meV/HfO2 relative to the PO+ endpoint in this same ensemble.
+The endpoint targets are 0.03 eV/Angstrom and 2 kbar on open components;
+reaction stress in clamped components is not a failed convergence criterion.
+Neither the screen nor the phase label certifies a Hessian minimum.
+([Actual PO+ continuation](../../benchmarks/hfo2_channels/20261008/clamped_PO_continuation_E046_20261009/README.md);
+[actual T endpoint and finite matrix](../../benchmarks/hfo2_channels/20261008/clamped_endpoint_matrix_20261009/README.md))
+
+The T-minus-PO+ well separation decreases from 81.321193 meV/HfO2 in the
+free-cell ensemble to 12.359975 meV/HfO2 under this substrate. The PO+
+clamping energy cost is 68.961218 meV/HfO2, while the screened T reference
+is unchanged. This is an observed boundary-dependent well separation,
+not a smooth strain derivative between two points in one ensemble.
+In particular it determines neither the switching barrier nor the escape
+barrier: their maxima and possible intermediate branches still need matched
+path calculations. The M and registered opposite-polarity seeds are being
+relaxed without phase-restoring constraints before those bands are formed.
+
+The two fresh PO+ continuation evaluations use 236.309 seconds, and the
+single T evaluation uses 125.001 seconds, together 3.211644 SCF core-hours
+at 32 ranks. The preceding five-SCF canary cost is recorded separately.
+Initial cached-result reuse avoids an identical SCF; it is not a benchmark
+of optimizer acceleration or evidence of the proposed predictive gain.
+
 ## 4. Discussion and remaining material tests
 
 The present data establish that a compact local projection, an apparently
@@ -576,7 +626,7 @@ None alone determines the competition between homogeneous switching and
 phase escape. The core proposed result remains the channel-selective
 response to one matched mechanical intervention, not a phase-label survey.
 
-The next Results section must contain the registered fixed-plane responses
+The next material result must contain the registered fixed-plane responses
 of absolute switching and escape barriers, endpoint energies and branch
 identities. A favorable selectivity change without preserved escape resistance
 will be reported as the weaker outcome. If an endpoint disappears under
