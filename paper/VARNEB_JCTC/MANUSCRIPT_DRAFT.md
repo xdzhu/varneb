@@ -189,49 +189,76 @@ endpoints have no NEB residual. Complete captions, CSV and reproduction
 instructions are in the [figure bundle](figures/hfo2_T_PO_ordinary_20261008/README.md).
 
 All four candidate observations share the ordered PO+ energy
--9783.249675811956 eV/cell. The dated network snapshot is:
+-9783.249675811956 eV/cell. The following table uses the complete frozen
+morning frames, not later rounded values from the live optimization logs:
 
 | Candidate from PO+ | Source job/step | Residual | Maximum | Pass |
 |---|---|---:|---:|---|
 | PO-to-T, reverse view | 28300425/6 | 0.059882 | 115.210 | Yes |
-| PO-to-M | 28298794/20 | 0.156521 | 82.136 | No |
-| T-pattern-preserving flip | 28319570/14 | 0.243948 | 65.279 | No |
-| T-pattern-reversing flip | 28288063/10 | 0.700279 | 410.744 | No |
+| PO-to-M | 28298794/39 | 0.097904 | 71.582 | Yes |
+| T-pattern-preserving flip | 28319570/48 | 0.204909 | 39.069 | No |
+| T-pattern-reversing flip | 28319571/12 | 0.455054 | 397.429 | No |
 
 Table 1. Provisional observations, not a converged ranking. Snapshot steps
-and times differ, three sources remain unconverged, and numerical/sampling
+and times differ, two switching sources remain unconverged, and numerical/sampling
 barrier bounds have not been measured. Residuals are in eV/Angstrom and
 sampled maxima in meV/f.u.; maxima include the endpoints and use four formula
 units per cell. The two flip labels denote registered geometric
 operations, not certified distinct MEPs or assignments to published irreps.
-The [37-record audit](../../benchmarks/hfo2_channels/20261008/network_update_20261009/README.md)
+The [morning 37-record audit](../../benchmarks/hfo2_channels/20261008/morning_update_20261009_0850/README.md)
 includes cached endpoints and reused records, not 37 new or independent SCFs.
+
+PO-to-M terminated normally at the unchanged force threshold. Its ordered
+M endpoint is P2_1/c at all three declared symmetry tolerances. The sampled
+forward/reverse maxima are 71.582/142.967 meV/f.u., with reaction energy
+-71.385 meV/f.u.; their difference follows from the common endpoint energies.
+The sampled peak at image 3 still has a nonzero physical tangential
+generalized force, -0.383495 eV/Angstrom. Thus this second ordinary-converged
+edge does not establish a stationary bottleneck or its sampling error.
 
 ### 3.2. Nonpolar snapshots do not uniquely identify a switching mechanism
 
-The preserving snapshot has a Pbcn central sampled maximum across the declared
-0.001/0.01/0.05 Angstrom symmetry tolerances. Its scaled-cell residual remains
-0.243948 eV/Angstrom, so neither a saddle nor a stable intermediate is
-established. The reversing centre is Pbca at the same tolerances despite
-essentially zero amplitude in the selected rotated-T pattern triplet.
-Vanishing coordinates in a truncated representation therefore do not
-identify a cubic structure. The PO-to-M peak retains its P1/P2_1 tolerance
-dependence rather than being standardized to a preferred label.
+The earlier preserving snapshot at step 14 had a Pbcn central sampled
+maximum across the declared 0.001/0.01/0.05 Angstrom symmetry tolerances.
+The complete step-48 profile has instead split into two sampled local peaks,
+images 3 and 5, at 39.069477 and 39.069483 meV/f.u. Both are Pca2_1 at those
+tolerances. The central image remains Pbcn but is lower, 17.440944 meV/f.u.,
+with a scaled-cell residual of 0.204909 eV/Angstrom. It is neither the current
+highest image nor a certified stable intermediate. A phase label or an
+earlier central peak cannot therefore fix the eventual bottleneck location.
+
+The reversing centre is Pbca at the same tolerances despite essentially zero
+amplitude in the selected rotated-T pattern triplet. Vanishing coordinates
+in a truncated representation do not identify a cubic structure. Its group
+label in this twelve-atom cell also does not identify a twenty-four-atom
+literature variant or a domain-wall motif. The PO-to-M peak retains its
+P1/P2_1 tolerance dependence rather than being standardized to a preferred
+label.
 
 ![Dated common-PO candidate mechanisms](figures/hfo2_G1_provisional_20261009/hfo2_G1_provisional_mechanisms.png)
 
-Figure 2. Discrete energies, residuals, registered shuffle and strain in the
-dated common-initial-state observations. The high reversing profile is
-outside the explicitly disclosed low-energy panel(a) range, but all its
-values are in Table 1 and the CSV. No final energetic hierarchy follows
-from this figure. The [figure contract](figures/hfo2_G1_provisional_20261009/README.md)
-retains phase checks, original lifts and complete provenance.
+Figure 2. Earlier dated common-initial-state observations: steps 6/20/14/10,
+not the later morning frames in Table 1. Discrete energies, residuals,
+registered shuffle and strain are retained without substituting newer
+values into this historical figure. The high reversing profile lies outside
+the explicitly disclosed low-energy panel(a) range; all original values
+remain in its CSV. No final energetic hierarchy follows from this figure.
+The [figure contract](figures/hfo2_G1_provisional_20261009/README.md) retains
+phase checks, original lifts and complete provenance.
 
 These are mechanism candidates for further relaxation, not discoveries of
 Pbcn-mediated switching or of an antipolar wall. A group symbol at one
 uniform snapshot does not map it onto the motif, boundary or energy of a
 published interface. Fixed and released lattice results must also remain
 separate rather than being pooled under a common phase label.
+
+The preserving band's dominant residual changes from cell rows at step 14
+to atoms at steps 25/27, then back to cell rows at step 48. Its decreasing
+sampled maximum and rebound of the global force norm are compatible with
+a changing coupled configuration, not proof of a persistent single-block
+cause or of a particular optimizer's benefit. The two switching candidates
+must still be relaxed before this evolving profile supports a channel
+ranking or fixes the locations used for local mode-strain analysis.
 
 ### 3.3. Reference choice changes the apparent compactness of the path
 

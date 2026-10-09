@@ -896,3 +896,27 @@ See submission_handles_r13.json; no switching results or G2 DFT claimed yet.
  still Running. Later rounded logs do not replace the frozenstep48/12SCF data.
  No further DFT call, scheduler mutation, parameter change or production source
  overwrite is needed for this evidence delivery.
+
+## E030 - Audited morning evidence integrated into the main manuscript
+
+- The main four-channel table now uses E029 complete steps6/39/48/12 and
+ their actual jobs, rather than leaving the second ordinary pass only in
+ the pilot appendix. All four rows, rounding, pass labels and local links
+ are checked against the frozen report. M's nonzero physical peak tangent,
+ preserving double peaks and residual-block changes retain their limits.
+- Both figure files and the earlier figure generator remain unchanged.
+ Figure2 explicitly states its earlierstep6/20/14/10 source stage and is
+ not represented as the latest table or a converged mechanism ranking.
+- Existing LuaHBTeX/TeXLive compiles the single-source manuscript to8pages.
+ All8Poppler renders actually reviewed; PDF retains10 checked numerical
+ tokens and25URI links/12local targets, none missing. No problematic TeX
+ log messages, install or new test-performance claim. Current and historical
+ receipts are distinct; the old7page checksum is not the current PDF's hash.
+- This is measured evidence integration, not G2 response or held-out prediction
+ completion. No new DFT/job/parameter/source mutation, CI or broader matrix.
+ Receipt: `paper/VARNEB_JCTC/MANUSCRIPT_DRAFT.morning-update.validation.json`.
+-09:22:11CST authoritative Slurm check confirms both existing switching jobs
+ Running onhfacnormal01:preserving51/.197762,node11;reversing14/.415792,node26.
+ These later rounded logs are not replaced into the frozenpaper table. M's
+ terminal0:0is unchanged. Continue the same two handles, not a duplicate
+ submission or a new matrix; remaining material gates are still incomplete.

@@ -20,23 +20,24 @@ compact projection nor a visually smooth landscape establishes this claim.
   [dated v2 addendum](../../docs/HFO2_PREDICTION_PROTOCOL_V2_2026-10-09.md).
 
 The manuscript's numerical table is a dated snapshot, not a live job dashboard.
-One T-PO band has passed the ordinary residual criterion; three other pilot
-observations in that table have not. G2 matched-boundary comparisons, G3
+The T-PO and PO-to-M bands have passed the ordinary residual criterion; both
+switching observations in that table have not. G2 matched-boundary comparisons, G3
 conditional-branch validation and independent material predictions remain
 missing. An ordinary residual pass is not a certified saddle or a barrier
 uncertainty bound. No abstract or conclusion asserting these missing results
 is supplied.
 
 The [later complete-frame residual audit](../../benchmarks/hfo2_channels/20261008/residual_update_20261009_0450/README.md)
-tracks the preserving flip's atomic/cell residual crossover without replacing
-the draft's dated table or claiming final channel energies. It is additional
+tracks the preserving flip's atomic/cell residual crossover without claiming
+final channel energies. It is additional
 source-verified pilot evidence, not a new stationary-TS or prediction result.
 
 The [2026-10-09 morning update](../../benchmarks/hfo2_channels/20261008/morning_update_20261009_0850/README.md)
 adds the second ordinary-converged source, PO to M, and the preserving flip's
 developing split-peak profile. Both switching chains remain unconverged.
-These later results are recorded in the pilot text; the compiled main text's
-earlier dated numerical table and figures are not silently overwritten.
+The main table and Results now cite these complete morning frames and their
+actual source jobs. Figure2 explicitly remains the earlier step6/20/14/10
+observation; its data and original figure contract are not overwritten.
 
 ## Compile the reading PDF
 
@@ -63,11 +64,16 @@ verification receipt are committed instead. PDF bytes may change with engine
 versions, timestamps or fonts; the receipt identifies the actual local build,
 not a promise of byte-identical PDFs on all machines.
 
-The 2026-10-09 build was compiled with existing TeX Live 2023/LuaHBTeX 1.16.0,
-then all seven pages were rendered and visually reviewed with existing Poppler.
-Three display equations, four table rows and two embedded figure assets were
-checked. See [the compile/visual receipt](MANUSCRIPT_DRAFT.compile.validation.json).
-That is a reading-layout check, not scientific completion or journal approval.
+The current morning-update build was compiled with existing TeX Live
+2023/LuaHBTeX1.16.0. All eight pages were rendered and visually reviewed with
+existing Poppler; the current table's jobs, steps, numbers and pass labels
+were checked against the frozen E029 data. Both unchanged figure assets and
+local evidence-link targets were verified. See
+[the current compile/scientific-check receipt](MANUSCRIPT_DRAFT.morning-update.validation.json).
+That is a reading-layout and source-data consistency check, not scientific
+completion or journal approval. The earlier seven-page
+[compile receipt](MANUSCRIPT_DRAFT.compile.validation.json) is retained as
+historical evidence, not the hash or page count of this updated draft.
 
 The earlier [main-text validation receipt](MANUSCRIPT_DRAFT.validation.json)
 is preserved as a **historical milestone** for commit `456d376`. Its manuscript
