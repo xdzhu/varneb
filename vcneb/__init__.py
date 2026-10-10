@@ -101,6 +101,11 @@ from .stationary_gap import (
     restricted_stationary_gap_response,
 )
 from .reference_cell import ReferenceCellCoordinates
+from .nested_response import (
+    MeasuredStationaryCentre, NestedControlResult, NestedGapResult,
+    nested_stationary_controls, nested_stationary_gap_responses,
+)
+from .response_cost import ResponseEvaluationCost, recorded_response_dataset_cost
 from .mode_evaluator import CalculatorModeEvaluator
 from .mode_subspace import (
     StrictModeSubspace, strict_mode_subspace_for_vcneb,
@@ -121,6 +126,13 @@ from .optimizer_registry import (
 )
 
 __all__ = [
+    "ResponseEvaluationCost",
+    "recorded_response_dataset_cost",
+    "MeasuredStationaryCentre",
+    "NestedControlResult",
+    "NestedGapResult",
+    "nested_stationary_controls",
+    "nested_stationary_gap_responses",
     "StationaryResponseContract",
     "ControlledStationaryModel",
     "StationaryGapResponse",

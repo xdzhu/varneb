@@ -133,3 +133,11 @@ The [paired stationary-gap step](STATIONARY_GAP_RESPONSE.md) computes the
 initial-versus-bottleneck response with explicit reference corrections and
 per-centre scale factors. It preserves frozen-space residuals and does not
 replace actual G2 training, B2--B5 selection/freezing or independent labels.
+
+The [nested measured-column controls](NESTED_RESPONSE_CONTROLS.md) now
+construct the local frozen/atomic/joint/promotion ablations from one dataset.
+Missing curvature is unknown, not a stable zero block. This remains a
+prerequisite: B5 is only the local instability-promotion arm, not complete
+anharmonic branch discovery or the registered material forecast freeze.
+Recorded dataset costs include shared, unused and failed preparations;
+unknown resources do not become free calls.
