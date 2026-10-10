@@ -1658,3 +1658,45 @@ cases in3.26s, zero failure/error/skip.20case files and script/test/paper source
 bytes match. This is not an additional full-project or HFpytest claim.
 Only result receipts/documentation are added after testing; user dirty files
 stay un-staged and physical inputs/running source are unchanged.
+
+## E058 - Second zero-strain G2 wave with execution-success dependencies
+
+Advance two remaining registered starts without new concurrency: PO_to_T
+28692775 and PO_flip_T_pattern_reversing28692776 accepted22:38:42/43;
+both actuallyPENDING/Dependency at22:41. Both wait for successful completion
+of28661019and28661020. Each unchanged ten-step/four-hour pilot is one32CPU
+allocation, seven fresh serial32MPI images and two exact cached endpoints.
+Only two study allocations run. This is a bounded independent channel wave,
+not a monitor, retry, duplicated parent or new trial outside the eight G2 starts.
+
+Actual HF preflight rechecks338immutable source files, original archive/pilot/
+binary/preparation pins, all18geometries and four native32MPI/rawEFS endpoint
+caches with no newDFT launch. The+1% four starts remain unsubmitted; the+.005
+holdout is neither generated nor read. No CI, cutoff/input change, extra
+Hessian/mode/material, publication or running-source overwrite.
+
+Initial offline Windows checks exposed path-rendering/mock issues before any
+remote execution; retained11pass/3fail, fixed14pass local and independent
+two-file extracted source. The first checksum command's PowerShell quoting
+failed without starting preflight; root absence and actual checksum reconciled
+before corrected invocation. Existing chain/material tests plus14guards
+pass43cases locally. Actual accepted handles and queued scheduler proof are
+added as two separate offline fixture checks. No HFpytest installation/claim.
+
+Parent observation22:37flip step7/.467214, Mstep10/.355683, bothRUNNING32CPU,
+no actual failure report. Fresh SCF means177.17/117.95s give approximately
+4.48/2.29h remaining to segment caps (Oct11~03:06/00:55), not .10 promises.
+afterok is success, not convergence; timeout/real failure requires dependency
+reconciliation, not automatic replacement. Journal exclusive creation and
+per-attempt/accepted-handle flush protect partial/ambiguous submissions.
+
+PROGRESS: real finite material jobs queued, goalactive/incomplete. Next matched
+G2 training paths, then explicitly budgeted G3 and frozen independent forecast.
+No material barrier/response advantage or TS/JCTC-ready claim from acceptance.
+
+Final actual archive-cwd delivery passes45selected cases/0failure/error/skip
+in45.82s, treece16b41102e9644ef075ef18287fc4564910c112. All19then-present
+tracked case files and test bytes match. Initial comparison included ignored
+bytecode and stopped before tests; correctedgit-ls-files comparison used the
+same fresh archive. Later additions onlyreports/docs, not source/data. Existing
+five user dirty files remain un-staged and retain their original numstat.

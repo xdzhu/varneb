@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="14" time="0.196" timestamp="2026-10-10T22:33:50.365114" hostname="Aero"><testcase classname="tests.test_hfo2_G2_dependency_wave" name="test_dependency_waits_for_both_parents_and_only_remaining_zero_strain_starts" time="0.001"><failure message="AssertionError: assert (('strain_0000/' + 'PO_to_T') in '--export=ALL,RUN_DFT=1,SOURCE_ROOT=\\public\\home\\iai806\\abacus\\agent-runs\\20261010-varneb-nested-controls-E055-r...in_0000\\PO_to_T,WORKDIR=\\public\\home\\iai806\\abacus\\agent-runs\\20261010-varneb-clamped-G2-E058-r1\\PO_to_T\\band')">def test_dependency_waits_for_both_parents_and_only_remaining_zero_strain_starts():
+        for channel in wave.CHANNELS:
+            argv = wave.sbatch_argv(channel)
+            assert '--dependency=afterok:28661019:28661020' in argv
+            exports = next(a for a in argv if a.startswith('--export='))
+&gt;           assert 'strain_0000/'+channel in exports and 'RUN_DFT=1' in exports
+E           AssertionError: assert (('strain_0000/' + 'PO_to_T') in '--export=ALL,RUN_DFT=1,SOURCE_ROOT=\\public\\home\\iai806\\abacus\\agent-runs\\20261010-varneb-nested-controls-E055-r...in_0000\\PO_to_T,WORKDIR=\\public\\home\\iai806\\abacus\\agent-runs\\20261010-varneb-clamped-G2-E058-r1\\PO_to_T\\band')
+
+tests\test_hfo2_G2_dependency_wave.py:24: AssertionError</failure></testcase><testcase classname="tests.test_hfo2_G2_dependency_wave" name="test_healthy_parents_can_be_live_or_healthy_completed_and_unrelated_jobs_are_untouched" time="0.000" /><testcase classname="tests.test_hfo2_G2_dependency_wave" name="test_unknown_failed_or_wrong_resource_parents_prevent_submission[28661019|TIMEOUT|0:0|32|hfacnormal01|iai806\n28661020|TIMEOUT|0:0|32|hfacnormal01|iai806]" time="0.000" /><testcase classname="tests.test_hfo2_G2_dependency_wave" name="test_unknown_failed_or_wrong_resource_parents_prevent_submission[28661019|FAILED|0:0|32|hfacnormal01|iai806\n28661020|FAILED|0:0|32|hfacnormal01|iai806]" time="0.000" /><testcase classname="tests.test_hfo2_G2_dependency_wave" name="test_unknown_failed_or_wrong_resource_parents_prevent_submission[28661019|RUNNING|1:0|32|hfacnormal01|iai806\n28661020|RUNNING|1:0|32|hfacnormal01|iai806]" time="0.000" /><testcase classname="tests.test_hfo2_G2_dependency_wave" name="test_unknown_failed_or_wrong_resource_parents_prevent_submission[28661019|RUNNING|0:0|64|hfacnormal01|iai806\n28661020|RUNNING|0:0|64|hfacnormal01|iai806]" time="0.000" /><testcase classname="tests.test_hfo2_G2_dependency_wave" name="test_unknown_failed_or_wrong_resource_parents_prevent_submission[28661019|RUNNING|0:0|32|other|iai806\n28661020|RUNNING|0:0|32|other|iai806]" time="0.000" /><testcase classname="tests.test_hfo2_G2_dependency_wave" name="test_unknown_failed_or_wrong_resource_parents_prevent_submission[28661019|RUNNING|0:0|32|hfacnormal01|someone\n28661020|RUNNING|0:0|32|hfacnormal01|someone]" time="0.000" /><testcase classname="tests.test_hfo2_G2_dependency_wave" name="test_unknown_failed_or_wrong_resource_parents_prevent_submission[28661019|RUNNING|0:0|32|hfacnormal01|iai806]" time="0.000" /><testcase classname="tests.test_hfo2_G2_dependency_wave" name="test_unknown_failed_or_wrong_resource_parents_prevent_submission[28661019|RUNNING|0:0|32|hfacnormal01|iai806\n28661020|RUNNING|0:0|32|hfacnormal01|iai806\n28661019|RUNNING|0:0|32|hfacnormal01|iai806]" time="0.000" /><testcase classname="tests.test_hfo2_G2_dependency_wave" name="test_unknown_failed_or_wrong_resource_parents_prevent_submission[1234|RUNNING|0:0|32|hfacnormal01|iai806\n28661020|RUNNING|0:0|32|hfacnormal01|iai806]" time="0.000" /><testcase classname="tests.test_hfo2_G2_dependency_wave" name="test_existing_other_study_job_even_pending_prevents_duplicate_wave" time="0.000" /><testcase classname="tests.test_hfo2_G2_dependency_wave" name="test_partial_accepted_handle_survives_ambiguous_next_reply_and_replay_is_refused" time="0.008"><failure message="AssertionError: Regex pattern 'ambiguous' does not match 'reviewed submission source/evidence changed'.">monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x0000016CF553EC80&gt;
+tmp_path = WindowsPath('E:/TEMP/pytest-of-zhu/pytest-3804/test_partial_accepted_handle_s0')
+
+    def test_partial_accepted_handle_survives_ambiguous_next_reply_and_replay_is_refused(monkeypatch,tmp_path):
+        setup_submission(monkeypatch,tmp_path)
+        replies=iter(['12345','unclear scheduler response'])
+        calls=[]
+        def fake_run(argv): calls.append(argv);return next(replies)
+        monkeypatch.setattr(wave,'run',fake_run)
+&gt;       with pytest.raises(ValueError,match='ambiguous'): wave.submit_once()
+
+tests\test_hfo2_G2_dependency_wave.py:75: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def submit_once():
+        receipt = load(ROOT/'preflight.json')
+        if (receipt['status'] != 'preflight_passed_NOT_submitted' or sha(__file__) != receipt['queue_helper_sha256']
+                or sha(SOURCE/PILOT) != PILOT_SHA or receipt['registered_channels'] != list(CHANNELS)):
+&gt;           raise ValueError('reviewed submission source/evidence changed')
+E           ValueError: reviewed submission source/evidence changed
+
+benchmarks\hfo2_channels\20261008\clamped_G2_queue_E058_20261010\queue_next_pair.py:173: ValueError
+
+During handling of the above exception, another exception occurred:
+
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x0000016CF553EC80&gt;
+tmp_path = WindowsPath('E:/TEMP/pytest-of-zhu/pytest-3804/test_partial_accepted_handle_s0')
+
+    def test_partial_accepted_handle_survives_ambiguous_next_reply_and_replay_is_refused(monkeypatch,tmp_path):
+        setup_submission(monkeypatch,tmp_path)
+        replies=iter(['12345','unclear scheduler response'])
+        calls=[]
+        def fake_run(argv): calls.append(argv);return next(replies)
+        monkeypatch.setattr(wave,'run',fake_run)
+&gt;       with pytest.raises(ValueError,match='ambiguous'): wave.submit_once()
+E       AssertionError: Regex pattern 'ambiguous' does not match 'reviewed submission source/evidence changed'.
+
+tests\test_hfo2_G2_dependency_wave.py:75: AssertionError</failure></testcase><testcase classname="tests.test_hfo2_G2_dependency_wave" name="test_submission_is_single_use_and_records_both_accepted_jobs" time="0.004"><failure message="ValueError: reviewed submission source/evidence changed">monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x0000016CF557FA00&gt;
+tmp_path = WindowsPath('E:/TEMP/pytest-of-zhu/pytest-3804/test_submission_is_single_use_0')
+
+    def test_submission_is_single_use_and_records_both_accepted_jobs(monkeypatch,tmp_path):
+        setup_submission(monkeypatch,tmp_path)
+        replies=iter(['12345','12346'])
+        monkeypatch.setattr(wave,'run',lambda argv:next(replies))
+&gt;       r=wave.submit_once()
+
+tests\test_hfo2_G2_dependency_wave.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def submit_once():
+        receipt = load(ROOT/'preflight.json')
+        if (receipt['status'] != 'preflight_passed_NOT_submitted' or sha(__file__) != receipt['queue_helper_sha256']
+                or sha(SOURCE/PILOT) != PILOT_SHA or receipt['registered_channels'] != list(CHANNELS)):
+&gt;           raise ValueError('reviewed submission source/evidence changed')
+E           ValueError: reviewed submission source/evidence changed
+
+benchmarks\hfo2_channels\20261008\clamped_G2_queue_E058_20261010\queue_next_pair.py:173: ValueError</failure></testcase></testsuite></testsuites>
