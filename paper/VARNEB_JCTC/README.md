@@ -23,9 +23,17 @@ The manuscript's numerical tables are dated snapshots, not a live job dashboard.
 All four final G1 candidate bands have passed the ordinary residual criterion
 and the whole-candidate evidence gate has passed. The gate permits the
 registered G2 experiment; it does not certify stationary saddles, exhaustive
-escape coverage or distinct winding sectors. Four common-substrate endpoints
-(T, PO+, M and the preserving PO- seed) now pass the declared atomic-force/
-open-traction screens; the opposite-polarity/variant gate is separate.
+escape coverage or distinct winding sectors. All five common-substrate ordered
+endpoint representations now pass the declared atomic-force/open-traction
+screens. The two minus endpoints are related by a parent-declared translation
+and same-species permutation, but are not identical at ordered path indices.
+Their phase equivalence does not merge their paths or establish electronic
+polarity/whole-path topology. The +1% T-derived/PO+/M training endpoints
+28469832/28469833/28472493 have all completed and passed their original
+raw E/F/stress and input-byte reviews. The T-derived structure is Ccce already
+in the strained input, not forcibly assigned the free-T group. Eight of ten
+registered endpoint representations are screened; the two +1% minus seeds
+remain unsubmitted. The reserved+.005holdout remains ungenerated/unread.
 G2 matched-boundary channel barriers, G3
 conditional-branch validation and independent material predictions remain
 missing. An ordinary residual pass is not a certified saddle or a barrier
@@ -128,6 +136,12 @@ That receipt refers to the first two-endpoint build. The subsequent four-well
 table and its actual reading-build checks are identified by
 `MANUSCRIPT_DRAFT.zero-strain-wells.validation.json`; the earlier receipt is
 retained as historical evidence, not the hash of the latest PDF.
+
+The eight-endpoint stage now includes the declared endpoint correspondence and
+the three completed +1% training endpoints. Its current13page reading-build,
+raw numerical/link and rendered-page checks are recorded in
+[the dated receipt](MANUSCRIPT_DRAFT.eight-endpoints.validation.json).
+This is a reviewed working manuscript, not a submission-ready JCTC result.
 
 ## Computation boundaries
 

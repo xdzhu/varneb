@@ -1396,3 +1396,78 @@ actual-data tests. Four-well PDF12pages,23Markdown/20PDF local targets valid,
 changed pages11/12 rendered/reviewed. Three space-group math labels corrected
 after the test snapshot, no numeric/DFT/code change; updated compile receipt
 preserves earlier two-endpoint history. Goal still lacks G2/G3/independent gain.
+
+## E049 terminal and E050 registered training endpoints, 2026-10-10
+
+E04928464144 completed00:11:23CST,7BFGS steps/8fresh SCFs, original six
+physical bytes/native32MPI/full EFS/Pca2_1 three tolerances checked on HF.
+Force.014888416801/open1.692852094521 pass. Cost11.061641SCF coreh and
+11.102222allocation coreh;72observable files exported, no licensed basis,
+charge or binary. First read-only audit passed then trailing PowerShell CR
+caused shell exit1; trimmed retry exit0, no DFT repeated. First export stopped
+before writing an archive on a mismatched filename; exact six endpoint filenames
+were inspected and72explicit observable files exported, no broad scan/source edits.
+
+New read-only ordered-gauge audit confirms parent-declared translation(.5,.5,0)
+with permutation[2,3,0,1,9,8,11,10,5,4,7,6] relates the two minus seeds and
+endpoints. Actual relaxed geometric residual1.85e-11A, E difference7.28e-12eV,
+force covariance3e-10eV/A, stress covariance2.38e-12eV/A3. Same ordered
+indices differ1.3615A: strict ordered cache remains ineligible; no production
+remap/whole-path equivalence/topological distinction claimed. Dominant T-pattern
+signs-.924790/+.924790 are fixed-reference geometric observations, not
+origin-independent phase labels or electronic polarization. Five endpoint
+representations are not five independent physical phases. Kept the mapping
+review/tests because it prevents an incorrect scientific or cache identity claim.
+
+After all earlier study allocations were verified COMPLETED in sacct, two
+existing +1%training seeds T/PO+ passed original seedSHA/boundary/P0/E0/six
+physical-byte preflight. E05028469832/28469833 submitted once and started
+00:25:50CST, node6/node28,20steps/≤21SCFs/2h/1node32MPI/thread1/.03/2/.02.
+Only two study calculations, unrelated pc jobs untouched. Immutable source
+2a5ca85c/preDFT1330pass reused, not overwritten by new offline analysis.
+Terminal squeue IDs were absent; sacct reconciled COMPLETED before submission,
+not a new failure/restart. +1%M/two minus still unsubmitted;+.005holdout
+uncreated/unread, no new material, G2band, G3, CI or physical parameter changes.
+
+47focused actual-data/transport/variant checks pass1.51s in the working tree;
+clean full delivery/build recorded separately, not inferred from this result.
+Manuscript adds endpoint correspondence/cost37SCFs54.408286coreh excluding
+canary, keeps G2/G3/independent predictions missing and goalactive.
+
+## E050/E051 terminal review, 2026-10-10 10:16 CST
+
+Both E050 jobs completed0:0: +1% PO+/T-derived each6BFGSsteps/7SCFs,
+native32MPI and all original six physical bytes/raw EFS reviewed. Their
+SCF costs6.358583/7.935382coreh are training evidence, not optimizer or
+prediction benchmarks. T-derived is already Ccce before DFT because the
+declared partial clamp breaks the two original short-axis equivalence;
+all seven evaluated geometries retain the original single geometric T pattern.
+An incorrect new replay assertion expected free-T P4_2/nmc: corrected the
+assertion and added a before-DFT metric/pattern test, without modifying any
+input, structure or production source. Actual well gap14.145883meVfu is
+not a switching or escape maximum. Each64observable files exported.
+
+E05128472493 +1%M completed0:0 at01:18:38,16steps/17SCFs, force.007755026/
+open1.452557036 pass; all17native32MPI/raw full EFS/six physical bytes
+and boundary replayed without new DFT. P2_1/c at all three tolerances,
+M-minus-PO+ well gap-114.746973meVfu, not escape barrier. SCF19.369124
+coreh vs19.466667allocation coreh,144observables exported without licensed
+pseudo/basis/charge or binary. Eight of ten registered endpoint representations
+screened, not eight distinct physical phases. Working-tree focused replay
+51passed1.96s; this does not yet name a new clean full archive.
+
+10:16:42squeue empty. Two+1%minus seeds unsubmitted; no surviving job,
+live repeat, new material, CI or parameter change. G2barriers/G3/strong-control
+independent predictions still missing;+.005holdout remains uncreated/unread.
+Goal tool currently reports blocked, not an SCF failure. This status request
+does not change the goal state or append new submissions; finish the tested
+delivery of completed work, then obtain user direction to resume computation.
+
+Clean staged tree4bd9e808/archivef8389c76 completed the full regression:
+1354passed/2skipped/0failures/0errors,314compatibility warnings,298.55s.
+All660owned observable files exact-byte matched with the archive. Current
+13page PDF compiled exit0,25Markdown/23PDF local targets present,37link
+actions, no overfull/fatal log entries; actual changed pages11-13 rendered
+and visually checked. The delivery/build receipts preserve earlier history
+and distinguish the verified executable/data tree from later editorial records.
+Five unrelated user-owned tracked changes remain excluded from staging.

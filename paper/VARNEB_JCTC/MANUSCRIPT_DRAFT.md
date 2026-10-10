@@ -2,7 +2,7 @@
 
 Working manuscript, 2026-10-09. This is a connected main-text draft, not a
 submission-ready article. The numerical Results below use explicitly dated
-pilot observations. Four matched-substrate endpoints have now passed their
+pilot observations. Five ordered matched-substrate endpoint representations have passed their
 physical screens; G2 channel barriers, local conditional branches and
 independent material predictions are still missing. An abstract and a
 conclusion asserting those unmeasured results are deliberately withheld.
@@ -622,16 +622,59 @@ seed converges after seven BFGS steps and retains $Pca2_1$. Its observed
 -0.035259 meV/HfO2 offset is displayed without enforcing energy equality or
 interpreting it as an intrinsic polar bias or a numerical uncertainty bound.
 Electronic-polarity and ordered-pattern checks remain separate requirements
-before assigning the matched switching channels. The reversing seed is still
-being relaxed as the remaining endpoint of the registered zero-strain set.
+before assigning the matched switching channels. The five registered
+zero-strain endpoint representations have now completed their physical screens.
+
+The remaining reversing-minus endpoint independently passes the same screen
+after seven BFGS steps and eight SCFs. It does not introduce another physical
+phase. Composing the previously registered parent operations fixes a fractional
+translation (0.5,0.5,0) in the research frame and a species-preserving atom
+permutation. The two relaxed minus endpoints agree under this declared
+operation to $1.85\times10^{-11}$ Angstrom, but differ by up to 1.36150
+Angstrom at the original ordered indices under periodic boundaries. Their
+raw energies differ by $7.28\times10^{-12}$ eV/cell; permuted forces and
+stresses covary to $3.0\times10^{-10}$ eV/Angstrom and
+$2.38\times10^{-12}$ eV/Angstrom$^3$, respectively. These are observed
+pair residuals, not a universal numerical precision estimate.
+The dominant geometric pattern has opposite signs in the fixed parent chart
+(-0.924790 and +0.924790 Angstrom). That sign is reference-origin dependent,
+not an intrinsic phase or electronic-polarization identifier. Endpoint
+translation equivalence does not establish whole-path equivalence: the
+original ordered correspondences and periodic lifts must be retained.
+The strict ordered cache correctly does not identify the two endpoints as
+the same input geometry. No production image is remapped by this
+[read-only audit](../../benchmarks/hfo2_channels/20261008/clamped_endpoint_matrix_20261009/zero_strain_variant_audit.json).
 
 The two fresh PO+ continuation evaluations use 236.309 seconds, and the
 single T evaluation uses 125.001 seconds. The eight preserving-seed and
 eighteen M evaluations use 1960.598 and 2554.590 seconds, respectively.
-Together these twenty-nine fresh evaluations cost 43.346645 SCF core-hours
+The eight reversing-seed evaluations use a further 1244.435 seconds.
+Together these thirty-seven fresh evaluations cost 54.408286 SCF core-hours
 at 32 ranks. The preceding five-SCF canary cost is recorded separately.
 Initial cached-result reuse avoids an identical SCF; it is not a benchmark
 of optimizer acceleration or evidence of the proposed predictive gain.
+
+The first two registered +1% training endpoints also pass the same screens,
+each after six BFGS steps and seven fresh SCFs. PO+ retains $Pca2_1$;
+the T-derived endpoint instead has Ccce symmetry in the analyzed setting.
+This label is already present in its affinely strained seed before DFT:
+the substrate includes the original long axis and one short axis, so this
+partially clamped strain breaks the equivalence of the two original short
+axes. All seven evaluated geometries retain Ccce, and the atomic distortion
+remains in the original single geometric T-pattern direction, with amplitude
+0.831575 to 0.885753 Angstrom and off-pattern residual below
+$1.33\times10^{-14}$ Angstrom. It is therefore recorded as a strained-T
+descendant, without enforcing tetragonal symmetry or certifying a bulk phase
+minimum. Its well-energy separation from the same-substrate PO+ is
+14.145883 meV/HfO2. These are seen training observations, not independent
+barrier predictions. The registered +1% M endpoint also passes after sixteen
+BFGS steps and seventeen SCFs, retaining $P2_1/c$; its force is 0.007755
+eV/Angstrom and open traction is 1.452557 kbar. Its energy lies 114.746973
+meV/HfO2 below PO+ in this same ensemble. This deeper well does not specify
+the escape barrier: the absolute path maxima, not endpoint depths alone,
+determine the proposed selectivity test. The two remaining +1% minus
+endpoints and matched paths are still needed. The [finite matrix and raw records](../../benchmarks/hfo2_channels/20261008/clamped_endpoint_matrix_20261009/README.md)
+retain this distinction.
 
 ## 4. Discussion and remaining material tests
 

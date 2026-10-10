@@ -1,0 +1,186 @@
+                                                                                     
+                              ABACUS v3.10.0
+
+               Atomic-orbital Based Ab-initio Computation at UStc                    
+
+                     Website: http://abacus.ustc.edu.cn/                             
+               Documentation: https://abacus.deepmodeling.com/                       
+                  Repository: https://github.com/abacusmodeling/abacus-develop       
+                              https://github.com/deepmodeling/abacus-develop         
+                      Commit: f7cb1d3 (Mon May 12 16:53:30 2025 +0800)
+
+ Fri Oct  9 23:50:41 2026
+ MAKE THE DIR         : OUT.ABACUS/
+ RUNNING WITH DEVICE  : CPU / AMD EPYC 7702 64-Core Processor
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ Warning: the number of valence electrons in pseudopotential > 4 for Hf: [Xe] 4f14 5d2 6s2
+ Pseudopotentials with additional electrons can yield (more) accurate outcomes, but may be less efficient.
+ If you're confident that your chosen pseudopotential is appropriate, you can safely ignore this warning.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ UNIFORM GRID DIM        : 64 * 64 * 64
+ UNIFORM GRID DIM(BIG)   : 32 * 32 * 32
+ DONE(11.3121    SEC) : SETUP UNITCELL
+ DONE(11.3473    SEC) : SYMMETRY
+ DONE(12.1735    SEC) : INIT K-POINTS
+ ---------------------------------------------------------
+ Self-consistent calculations for electrons
+ ---------------------------------------------------------
+ SPIN    KPOINTS         PROCESSORS  THREADS     NBASE       
+ 1       8               32          32          212         
+ ---------------------------------------------------------
+ Use Systematically Improvable Atomic bases
+ ---------------------------------------------------------
+ ELEMENT ORBITALS        NBASE       NATOM       XC          
+ Hf      4s2p2d1f-10au   27          4           
+ O       2s2p1d-10au     13          8           
+ ---------------------------------------------------------
+ Initial plane wave basis and FFT box
+ ---------------------------------------------------------
+ DONE(12.3433    SEC) : INIT PLANEWAVE
+ DONE(14.0304    SEC) : LOCAL POTENTIAL
+ -------------------------------------------
+ SELF-CONSISTENT : 
+ -------------------------------------------
+ START CHARGE      : atomic
+ DONE(15.5596    SEC) : INIT SCF
+ ITER       ETOT/eV          EDIFF/eV         DRHO     TIME/s
+ GE1     -9.77837855e+03   0.00000000e+00   1.5779e-01  36.03
+ GE2     -9.78253665e+03  -4.15810284e+00   6.4291e-02   5.64
+ GE3     -9.78295834e+03  -4.21688990e-01   3.8063e-02   5.81
+ GE4     -9.78292913e+03   2.92116410e-02   7.7619e-03   6.31
+ GE5     -9.78295210e+03  -2.29740081e-02   1.5599e-03   6.83
+ GE6     -9.78295219e+03  -9.04205807e-05   7.3943e-04  18.73
+ GE7     -9.78295235e+03  -1.55280758e-04   2.0274e-04   5.43
+ GE8     -9.78295236e+03  -1.09325608e-05   2.9294e-05   6.45
+ GE9     -9.78295236e+03  -1.67104232e-07   2.6453e-05   5.54
+ GE10    -9.78295236e+03  -2.52521002e-07   2.5391e-06   5.50
+ GE11    -9.78295236e+03  -2.03248046e-09   3.1847e-07   6.04
+ GE12    -9.78295236e+03  -3.71229307e-11   2.2858e-07   6.07
+ GE13    -9.78295236e+03  -1.70146766e-11   2.6562e-08   5.58
+ GE14    -9.78295236e+03   3.09357756e-12   1.7317e-08   5.48
+ GE15    -9.78295236e+03  -1.54678878e-12   7.4989e-09   5.64
+----------------------------------------------------------------
+ TOTAL-STRESS (KBAR)                                            
+----------------------------------------------------------------
+       -84.9039294090         0.0072698482         0.0000281958 
+         0.0072698482       123.2225633223         0.0002608621 
+         0.0000281958         0.0002608621        16.4990062194 
+----------------------------------------------------------------
+ TOTAL-PRESSURE: 18.272547 KBAR
+
+TIME STATISTICS
+------------------------------------------------------------------------------------
+    CLASS_NAME                    NAME                TIME/s  CALLS   AVG/s  PER/%  
+------------------------------------------------------------------------------------
+                   total                              154.10 13       11.85  100.00 
+ Driver            reading                            4.47   1        4.47   2.90   
+ Input_Conv        Convert                            0.00   1        0.00   0.00   
+ Driver            driver_line                        149.63 1        149.63 97.10  
+ UnitCell          check_tau                          0.00   1        0.00   0.00   
+ ESolver_KS_LCAO   before_all_runners                 4.28   1        4.28   2.78   
+ PW_Basis_Sup      setuptransform                     0.15   1        0.15   0.10   
+ PW_Basis_Sup      distributeg                        0.14   1        0.14   0.09   
+ mymath            heapsort                           0.00   303      0.00   0.00   
+ Charge_Mixing     init_mixing                        0.00   1        0.00   0.00   
+ Symmetry          analy_sys                          0.04   1        0.04   0.02   
+ PW_Basis_K        setuptransform                     0.15   1        0.15   0.10   
+ PW_Basis_K        distributeg                        0.15   1        0.15   0.10   
+ PW_Basis          setup_struc_factor                 0.02   1        0.02   0.01   
+ NOrbital_Lm       extra_uniform                      0.19   14       0.01   0.12   
+ Mathzone_Add1     SplineD2                           0.00   14       0.00   0.00   
+ Mathzone_Add1     Cubic_Spline_Interpolation         0.01   14       0.00   0.00   
+ Mathzone_Add1     Uni_Deriv_Phi                      0.18   14       0.01   0.11   
+ ppcell_vl         init_vloc                          0.11   1        0.11   0.07   
+ Ions              opt_ions                           140.06 1        140.06 90.89  
+ ESolver_KS_LCAO   runner                             132.78 1        132.78 86.16  
+ ESolver_KS_LCAO   before_scf                         1.53   1        1.53   0.99   
+ atom_arrange      search                             0.00   1        0.00   0.00   
+ atom_arrange      grid_d.init                        0.00   1        0.00   0.00   
+ Grid              Construct_Adjacent_expand          0.00   1        0.00   0.00   
+ Grid              Construct_Adjacent_expand_periodic 0.00   12       0.00   0.00   
+ Grid_Technique    init                               0.44   1        0.44   0.28   
+ Grid_BigCell      grid_expansion_index               0.05   2        0.02   0.03   
+ Grid_Driver       Find_atom                          0.00   120      0.00   0.00   
+ Record_adj        for_2d                             0.04   1        0.04   0.02   
+ LCAO_domain       grid_prepare                       0.00   1        0.00   0.00   
+ Veff              initialize_HR                      0.00   1        0.00   0.00   
+ OverlapNew        initialize_SR                      0.00   1        0.00   0.00   
+ EkineticNew       initialize_HR                      0.00   1        0.00   0.00   
+ NonlocalNew       initialize_HR                      0.02   1        0.02   0.01   
+ Charge            set_rho_core                       0.25   1        0.25   0.16   
+ PW_Basis_Sup      recip2real                         0.39   125      0.00   0.25   
+ PW_Basis_Sup      gathers_scatterp                   0.34   125      0.00   0.22   
+ Charge            atomic_rho                         0.39   2        0.20   0.25   
+ Potential         init_pot                           0.25   1        0.25   0.16   
+ Potential         update_from_charge                 0.54   16       0.03   0.35   
+ Potential         cal_fixed_v                        0.01   1        0.01   0.01   
+ PotLocal          cal_fixed_v                        0.01   1        0.01   0.01   
+ Potential         cal_v_eff                          0.53   16       0.03   0.34   
+ H_Hartree_pw      v_hartree                          0.13   16       0.01   0.08   
+ PW_Basis_Sup      real2recip                         0.32   145      0.00   0.21   
+ PW_Basis_Sup      gatherp_scatters                   0.27   145      0.00   0.18   
+ PotXC             cal_v_eff                          0.39   16       0.02   0.26   
+ XC_Functional     v_xc                               0.40   18       0.02   0.26   
+ Potential         interpolate_vrs                    0.00   16       0.00   0.00   
+ Symmetry          rhog_symmetry                      0.64   16       0.04   0.42   
+ Symmetry          group fft grids                    0.26   16       0.02   0.17   
+ H_Ewald_pw        compute_ewald                      0.01   1        0.01   0.01   
+ HSolverLCAO       solve                              129.61 15       8.64   84.11  
+ HamiltLCAO        updateHk                           47.51  120      0.40   30.83  
+ OperatorLCAO      init                               47.35  360      0.13   30.73  
+ Veff              contributeHR                       46.85  15       3.12   30.40  
+ Gint_interface    cal_gint                           76.53  31       2.47   49.66  
+ Gint_interface    cal_gint_vlocal                    40.37  15       2.69   26.20  
+ Gint_Tools        cal_psir_ylm                       2.08   30720    0.00   1.35   
+ Gint_k            transfer_pvpR                      6.48   15       0.43   4.20   
+ OverlapNew        calculate_SR                       0.12   1        0.12   0.08   
+ OverlapNew        contributeHk                       0.03   120      0.00   0.02   
+ EkineticNew       contributeHR                       0.12   15       0.01   0.08   
+ EkineticNew       calculate_HR                       0.12   1        0.12   0.08   
+ NonlocalNew       contributeHR                       0.34   15       0.02   0.22   
+ NonlocalNew       calculate_HR                       0.32   1        0.32   0.21   
+ OperatorLCAO      contributeHk                       0.04   120      0.00   0.02   
+ HSolverLCAO       hamiltSolvePsiK                    45.70  120      0.38   29.65  
+ DiagoElpa         elpa_solve                         44.03  120      0.37   28.57  
+ elecstate         cal_dm                             0.16   16       0.01   0.10   
+ psiMulPsiMpi      pdgemm                             0.15   128      0.00   0.10   
+ DensityMatrix     cal_DMR                            0.04   16       0.00   0.03   
+ ElecStateLCAO     psiToRho                           36.21  15       2.41   23.50  
+ Gint              transfer_DMR                       1.62   15       0.11   1.05   
+ Gint_interface    cal_gint_rho                       31.64  15       2.11   20.53  
+ Charge_Mixing     get_drho                           0.03   15       0.00   0.02   
+ Charge            mix_rho                            0.21   14       0.02   0.14   
+ Charge            Broyden_mixing                     0.17   14       0.01   0.11   
+ ModuleIO          write_rhog                         0.03   1        0.03   0.02   
+ ESolver_KS_LCAO   after_scf                          0.13   1        0.13   0.08   
+ ESolver_KS_LCAO   cal_force                          7.28   1        7.28   4.72   
+ Force_Stress_LCAO getForceStress                     7.28   1        7.28   4.72   
+ Forces            cal_force_loc                      0.00   1        0.00   0.00   
+ Forces            cal_force_ew                       0.00   1        0.00   0.00   
+ Forces            cal_force_cc                       0.13   1        0.13   0.09   
+ Forces            cal_force_scc                      0.12   1        0.12   0.08   
+ Stress_Func       stress_loc                         0.35   1        0.35   0.23   
+ Stress_Func       stress_har                         0.00   1        0.00   0.00   
+ Stress_Func       stress_ewa                         0.00   1        0.00   0.00   
+ Stress_Func       stress_cc                          0.47   1        0.47   0.30   
+ Stress_Func       stress_gga                         0.00   1        0.00   0.00   
+ Force_LCAO        ftable                             5.22   1        5.22   3.39   
+ Force_LCAO        allocate                           0.35   1        0.35   0.22   
+ LCAO_domain       build_ST_new                       0.34   2        0.17   0.22   
+ Force_LCAO        cal_pulay_fs_center2               0.01   2        0.00   0.01   
+ Gint_interface    cal_gint_force                     4.52   1        4.52   2.93   
+ Gint_Tools        cal_dpsir_ylm                      0.25   1024     0.00   0.16   
+ Gint_Tools        cal_dpsirr_ylm                     0.04   1024     0.00   0.03   
+ NonlocalNew       cal_force_stress                   0.97   1        0.97   0.63   
+ ESolver_KS_LCAO   cal_stress                         0.00   1        0.00   0.00   
+ ESolver_KS_LCAO   after_all_runners                  0.00   1        0.00   0.00   
+ ModuleIO          write_istate_info                  0.00   1        0.00   0.00   
+------------------------------------------------------------------------------------
+
+
+ START  Time  : Fri Oct  9 23:50:41 2026
+ FINISH Time  : Fri Oct  9 23:53:15 2026
+ TOTAL  Time  : 154
+ SEE INFORMATION IN : OUT.ABACUS/

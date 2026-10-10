@@ -195,12 +195,17 @@ def test_actual_common_substrate_well_gap_is_not_a_barrier():
     assert gap == pytest.approx(12.35997511412279, abs=1e-9, rel=0)
 
 
-@pytest.mark.parametrize("phase,count,symbol", [("PO_minus_T_preserving",8,"Pca2_1"),
-                                                ("M",18,"P2_1/c")])
-def test_actual_uncached_registered_endpoints_replay_HF(phase,count,symbol):
-    case = CASE/"clamped_endpoint_matrix_20261009/strain_0000"/phase
+@pytest.mark.parametrize("condition,phase,count,symbol", [
+    ("strain_0000","PO_minus_T_preserving",8,"Pca2_1"),
+    ("strain_0000","PO_minus_T_reversing",8,"Pca2_1"),
+    ("strain_0000","M",18,"P2_1/c"),
+    ("strain_p0100","PO_plus",7,"Pca2_1"),
+    ("strain_p0100","T",7,"Ccce"),
+    ("strain_p0100","M",17,"P2_1/c")])
+def test_actual_uncached_registered_endpoints_replay_HF(condition,phase,count,symbol):
+    case = CASE/"clamped_endpoint_matrix_20261009"/condition/phase
     endpoint = case/"completed_HF/endpoint"
-    seed = CASE/"clamped_endpoint_seeds/strain_0000"/phase/"endpoint_seed.json"
+    seed = CASE/"clamped_endpoint_seeds"/condition/phase/"endpoint_seed.json"
     initial, boundary, _ = load_seed(seed)
     original = json.loads((case/"raw_audit_HF.json").read_text())
     summary = json.loads((endpoint/"endpoint_relax_summary.json").read_text())
