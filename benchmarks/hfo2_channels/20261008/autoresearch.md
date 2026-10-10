@@ -1499,3 +1499,44 @@ not an SCF failure and remains the same chain for any later reviewed
 continuation. Four channels × two training conditions remains the <=8chain
 cap. +0.5%holdout/G3 surfaces are ungenerated. G2/G3/strong controls and
 independent predictions remain missing, so no JCTC-ready claim is made.
+
+## E054 — same-boundary G2 review and exact-cache continuation, 2026-10-10
+
+Both E053first segments completed0:0 at14:12:02/13:45:24CST, healthy10step
+caps, not convergence. Preserving flip fmax3.541469→1.466699; PO→M
+.994612→.615276. Exact same-clamped-subspace replay confirms both logs;
+the free-cell exporter cannot stand in for this mechanical ensemble.
+All154fresh internal SCFs retain six original physical bytes, nativeDSIZE32
+and complete E/F/stress; no new endpoint or analysis SCF. SCF transport
+cost154.451016coreh, scheduler allocation155.822222coreh. These unfinished
+discrete peaks287.182317/114.427812meV/f.u. cannot rank channels or label H1.
+Worst residuals are real transverse forces: flip image4 has1.466700 versus
+spring.000085eV/A; M image7 has.619056 versus spring.020765. No evidence
+for changing cutoff, spring or symmetry, and no stop for an isolated rebound.
+
+New narrow exporter requires the pinned production script, runtime metric,
+substrate reference and exact ordered raw SCF cache. Fresh geometry
+continuation prepares nine caches, reuses the complete current frame and
+keeps endpoints fixed. Interior caches invalidate after motion. New FIRE
+state is explicit, not falsely described as velocity/time-step recovery.
+Continue at most20steps/12h per segment, same two independent G2chains.
+
+Two zero-DFT delivery failures are retained, not hidden: final PowerShell
+CRLF makes the here-doc delimiter a trailing Python`PY`token *after* full
+receipts were written; separate18-cache verification passed without
+re-export/overwrite. First clean regression1392passed/7failed/2skipped
+correctly caught Git archive's LF→CRLF drift of unprotected E053substrate
+(984→1004bytes). Protect both G2artifact namespaces bytewise; fixed clean
+archive's26new audit tests pass, no relaxed gate or physical change.
+Portable4snapshot/36image numeric replay needs no licensed assets and
+matches HFfmax to≤1.12e-16. Full regression and actual continuation handles
+are separate receipts; submit only after the clean full suite passes.
+
+Fixed clean archive2b03239full regression passed1401/2skipped/0failed/errors
+(666.41s), JUnit9bae00ea…. Independent HF verification exited0; identical
+executable files compared between old analysis and fresh fixed archive.
+Actual continuations28661019/28661020started20:07:55/56CST, bothRUNNING
+at20:09:08, node6/node25, hfacnormal01/32CPU. New step0exactly reproduces
+old step10cached force/energy; first new interior logs showDSIZE32.
+Expected20update segment duration~4.79/3.99h from actual preceding SCFs,
+roughOct11midnight–02:00, not a promise to reach.10. No other jobs changed.
