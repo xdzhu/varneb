@@ -1751,3 +1751,47 @@ only. Parent12hlimits end08:07Oct11, not an unrecorded4hdeadline. 23:30
 four-handle snapshot remains twoRUNNING/twoDependency, no new job mutation.
 README/manual expose the new physical work API and distinguish partials,
 periodic lifts, endpoint wells and actual bottlenecks. Goalnotcomplete.
+
+## E060 - Queue the remaining registered +1% matrix, no scope expansion
+
+Previous goal turnE059 isPROGRESS: tested strain work/material well controls/
+14-page paper sources pushedb8fd08b. Current evidence confirms healthy
+four existing handles, preserving five user dirty files. The hypothesis gate
+cannot advance from endpoint wells to barrier mechanisms without the full
+matched eight-path training set; queue only the four already prepared starts.
+
+HF00:04:13preflight verifies338immutable runtime code files, original pilot/
+binary,36geometries and8raw/native32MPI/full-EFS/six-physical-file endpoint
+caches;28interiors remain fresh. No new endpoint SCF, electronic setting,
+condition, Hessian or+.005holdout is created/read. Ongoing parent calls
+are not zero-cost. The exact helper and actual scheduler/source graph are
+checked before the single-use submission, not inferred from manifests alone.
+
+Actual00:05:58accepted+1%T/M28709788/89dependsafterok28692775:28692776;
+flips28709790/91dependsafterok28709788:28709789. Independent00:08:31Slurm
+proof shows2RUNNING+6Dependency and1node/32CPU/1controller/4h/10steps each.
+All8registered uniqueG2chains now have handles, only2currentlyrun; submission
+is not convergence, H1/H2, TS, material advantage or independent prediction.
+Old jobs/sources untouched, original100Ry/full10auDZP/.10/noCI retained.
+
+Initial70selected cases pass; after causal dependency/resource guards77pass
+locally42.31s and in actual independent archive cwd47.40s (tree1409207c7bdcac5a044acd66828b13a18645da03,
+archive7e4e65ba7832ae2b6708c3245206e5d95722134d772be0153af20e1879a5ee67).
+Actual-delivery fixtures then79pass locally43.25s. No fresh full-project or
+HFpytest claim; runtime86d2637previousfull1459pass/2skip remains historical.
+Exclusive flushed journal preserves partial acceptance; failed/ambiguous
+reply, unexpected handle/dependency or existing namespace blocks blind retry.
+
+Restricted13-file export includes only receipt/source/cache JSON, no licensed
+PP/orbital/charge/wavefunction. Evidence:clamped_G2_training_queue_E060_20261010.
+PROGRESS: full authorized training matrix queued; goalactive/incomplete.
+Next actions remain complete-chain convergence/input/mechanism audit, finite
+two-bottleneck G3, registered strong controls, freeze and unopened holdout.
+
+Final actual-delivery clean archive cwd79pass/0failure/error/skip49.464s;
+local79pass43.247s. All21then-present tracked case/test bytes match,
+tree5410b33ead6a3be1722e107f2fd5cb4abb94fa26 and archive
+4adca7418798ebe27960aeb681a6ea3abb015b2e316846c9f8b16a0e77fb0cee.
+Later records/docs only, executed helper unchanged. 00:20actual eight-handle
+accounting remains2RUNNING+6PENDING, not failed or converged. Five user dirty
+files retain original numstat and are not staged. Goalactive/incomplete.
