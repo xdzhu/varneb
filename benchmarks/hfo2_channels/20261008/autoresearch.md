@@ -1851,3 +1851,23 @@ archive8c2d64dc4ec2d0271d0581b0f745ab8f11150fabc3087d6476ffb3814b040624.
 EvolvingJUnitoutputsnotbyteproof; laterdocs/recordsonly. No freshfull/HFpytest,
 G3/TS/forecast/newmechanism claim. PROGRESS: realterminalrawaudit, verified
 samechainexecution and completeportableevidence. Overallgoalactive/incomplete.
+
+## E063 — zero-DFT diagnosis excludes spring dominance of a short plateau
+
+Actual 01:48:31 HF export of complete flip steps13/14/15, original six inputs,
+native E/F/stress and DSIZE32, unchanged clamped metric. All334 archived
+runtime Python files byte-checked. The limiting image5/O index8 remains
+.221736→.220818; spring-only fmax .005341→.005117, whereas fixed-geometry
+perpendicular-only fmax .220034→.219289. Open-cell-block max grows
+.101105→.204300: atomic plateau plus significant evolving cell residual,
+not a proven Hessian stiffness mechanism or a validated acceleration gain.
+
+Decision: do not tune k/electronic inputs, stop on these three frames, or
+add a duplicate trial. Keep the registered live segment, inspect its
+complete terminal chain. No DFT/submission/source/job/holdout/G3 mutation.
+Local and independent Git-archive related suites each59pass/0fail/0skip;
+181 new source/material files byte-equal. Initial byte check included
+normalized root Git metadata, then corrected its scope; no material loss.
+01:53 two32CPU RUNNING/six PENDING, M step2/.150404. PROGRESS: measured
+residual diagnosis and portable replay tool/evidence, not new barrier/TS
+labels. Overall goal remains active/incomplete.
