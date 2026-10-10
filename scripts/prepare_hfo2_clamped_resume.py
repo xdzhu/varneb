@@ -7,7 +7,7 @@ import shutil
 from ase.io import read
 
 from scripts.audit_hfo2_static_replica import sha256
-from scripts.export_hfo2_clamped_observation import CELL_SCALE, PILOT_SCRIPT_SHA256
+from scripts.export_hfo2_clamped_observation import CELL_SCALE, REGISTERED_FACTORIES
 from vcneb import clamped_plane_vcneb_boundary, validate_periodic_path_lift
 
 
@@ -19,7 +19,7 @@ def prepare(observation, output):
     if (r["status"] != "complete_observation_not_final_result"
             or r["n_total_images"] != 9 or r["ordinary_residual_pass"]
             or r["pressure_GPa"] != 0 or r["climb"] or r["cell_scale_A"] != CELL_SCALE
-            or r["production_script_sha256"] != PILOT_SCRIPT_SHA256
+            or r["production_script_sha256"] not in REGISTERED_FACTORIES
             or sha256(observation/"evaluated_chain.traj") != r["evaluated_chain_sha256"]):
         raise ValueError("an audited incomplete ordinary clamped G2 pilot required")
     preflight = observation/"runtime_preflight.json"

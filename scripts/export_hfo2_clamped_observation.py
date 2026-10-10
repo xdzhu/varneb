@@ -26,14 +26,22 @@ from vcneb import validate_path_geometry, validate_periodic_path_lift
 
 CELL_SCALE = 5.12968067458423
 PILOT_SCRIPT_SHA256 = "7bf764238c4cc857ca2b7e3e94642f0517e1f3b84f4e4c5b17833379ac1101ed"
+RESUME_SCRIPT_SHA256 = "79d9990b42a8da90fe915550332d8060761d0ec108551035e284b69f7768ef02"
+M_CONTINUE_SCRIPT_SHA256 = "2fa864368bc4e55f06e43e1bc0786e80d07f6d8113b82d485ab00d30751201d9"
+REGISTERED_FACTORIES = {
+    PILOT_SCRIPT_SHA256: "examples.hfo2_fixed_input_factory:make_clamped_seed_cached_factory",
+    RESUME_SCRIPT_SHA256: "examples.hfo2_fixed_input_factory:make_clamped_resume_cached_factory",
+    M_CONTINUE_SCRIPT_SHA256: "examples.hfo2_fixed_input_factory:make_clamped_resume_cached_factory",
+}
 
 
-def audited_source(image, directory, *, endpoint_record=None):
+def audited_source(image, directory, *, endpoint_record=None,
+                   cache_policy="identical_ordered_clamped_endpoint_hash_pinned"):
     """Require pinned raw data; never accept a nearby or permuted geometry."""
     if endpoint_record is not None:
         audit_path = directory / "seed_cache_audit.json"
         audit = json.loads(audit_path.read_text(encoding="utf-8"))
-        if (audit.get("policy") != "identical_ordered_clamped_endpoint_hash_pinned"
+        if (audit.get("policy") != cache_policy
                 or audit.get("raw_source") != endpoint_record["directory"]
                 or audit.get("input_sha256") != endpoint_record["input_sha256"]
                 or audit.get("raw_log_sha256") != endpoint_record["raw_log_sha256"]):
@@ -69,8 +77,9 @@ def audited_source(image, directory, *, endpoint_record=None):
 
 
 def load_boundary(workdir, images, production_script):
-    """This bounded exporter accepts only the registered first G2 pilot."""
-    if sha256(production_script) != PILOT_SCRIPT_SHA256:
+    """Accept only byte-registered G2 pilots/geometry continuations."""
+    factory = REGISTERED_FACTORIES.get(sha256(production_script))
+    if factory is None:
         raise ValueError("unregistered production script: spring/driver contract not established")
     path = workdir/"vcneb_preflight.json"
     record = json.loads(path.read_text(encoding="utf-8"))
@@ -79,7 +88,7 @@ def load_boundary(workdir, images, production_script):
                 "fmax_target_eV_per_A": .10, "climbing_image_requested": False,
                 "climb_after_steps": None, "align_cells": False,
                 "cell_interpolation": "linear", "mode_subspace": None,
-                "factory": "examples.hfo2_fixed_input_factory:make_clamped_seed_cached_factory",
+                "factory": factory,
                 "calculator_validation": "runtime_instantiated"}
     if any(record.get(k) != v for k, v in expected.items()):
         raise ValueError("registered clamped G2 runtime contract differs")
@@ -100,9 +109,11 @@ def load_boundary(workdir, images, production_script):
     if set(params) != {"source_directory", "seed_cache_records"}:
         raise ValueError("physical input overrides prohibited")
     caches = params["seed_cache_records"]
+    resume = factory.endswith(":make_clamped_resume_cached_factory")
     if (len(caches) != 9 or caches[0] is None or caches[-1] is None
-            or any(r is not None for r in caches[1:-1])):
-        raise ValueError("two fixed clamped caches and seven active images required")
+            or (resume and any(r is None for r in caches))
+            or (not resume and any(r is not None for r in caches[1:-1]))):
+        raise ValueError("seed requires two endpoint caches; resume requires nine exact caches")
     return boundary, record, caches, {"runtime_preflight_sha256": sha256(path),
                                      "production_script_sha256": sha256(production_script)}
 
@@ -125,8 +136,15 @@ def export(workdir, step, output, source_job_id, *, production_script):
     geometry = validate_path_geometry(images, cell_scale=CELL_SCALE,
                                      minimum_distance=1.6, maximum_deformation=.25)
     evaluations = []
+    resume = metadata["factory"].endswith(":make_clamped_resume_cached_factory")
+    cache_policy = ("identical_ordered_clamped_resume_hash_pinned" if resume
+                    else "identical_ordered_clamped_endpoint_hash_pinned")
     for i, image in enumerate(images):
-        source, raw, pinned = audited_source(image, workdir/f"image_{i:04d}", endpoint_record=caches[i])
+        # Resume's interior seed caches are valid only at step zero; after
+        # movement audit the fresh SCF, never reuse an old nearby geometry.
+        cached = caches[i] if i in (0, 8) or step == 0 else None
+        source, raw, pinned = audited_source(image, workdir/f"image_{i:04d}",
+                                           endpoint_record=cached, cache_policy=cache_policy)
         image.calc = SinglePointCalculator(image, **raw)
         evaluations.append({"image_index": i, "raw_source": str(source), **pinned,
                             "snapshot_POSCAR_sha256": before[paths[i].name],

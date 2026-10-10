@@ -185,3 +185,60 @@ def test_prepare_continuation_rejects_altered_or_converged_observation(evaluated
     with pytest.raises(ValueError):
         prepare(root,tmp_path/"bad")
     assert not (tmp_path/"bad").exists()
+
+
+@pytest.mark.parametrize("step", [0, 20])
+def test_registered_resume_audits_initial_caches_then_fresh_interiors(evaluated, tmp_path, step):
+    work, _ = evaluated
+    metadata_path = work/"vcneb_preflight.json"
+    metadata = json.loads(metadata_path.read_text())
+    metadata["factory"] = "examples.hfo2_fixed_input_factory:make_clamped_resume_cached_factory"
+    for i in range(9):
+        directory = work/f"image_{i:04d}"
+        if i not in (0, 8):
+            pinned = json.loads((directory/"scf_000000/call_audit.json").read_text())
+            metadata["calculator_parameters"]["seed_cache_records"][i] = {
+                "directory": str(directory/"scf_000000"),
+                "input_sha256": pinned["input_sha256"],
+                "raw_log_sha256": pinned["raw_log_sha256"],
+            }
+        record = metadata["calculator_parameters"]["seed_cache_records"][i]
+        audit = {"policy": "identical_ordered_clamped_resume_hash_pinned",
+                 "raw_source": record["directory"], "input_sha256": record["input_sha256"],
+                 "raw_log_sha256": record["raw_log_sha256"]}
+        (directory/"seed_cache_audit.json").write_text(json.dumps(audit))
+        if i not in (0, 8):
+            # A poisoned seed audit must be irrelevant after movement, whereas
+            # absent fresh call audits at step zero must use the exact seed.
+            if step:
+                (directory/"seed_cache_audit.json").write_text("obsolete interior seed")
+            else:
+                (directory/"scf_000000/call_audit.json").unlink()
+    metadata_path.write_text(json.dumps(metadata))
+    (work/"snapshots/step_0010").rename(work/"snapshots"/f"step_{step:04d}")
+    log = work/"vcneb.opt.log"
+    log.write_text(log.read_text().replace(" 10 ", f" {step} "))
+    report = observer.export(work, step, tmp_path/"observed", "synthetic-not-DFT",
+        production_script=ROOT/"cluster/hf_hfo2_clamped_chain_resume_20261010.slurm")
+    assert report["new_DFT_calls"] == 0 and len(report["raw_image_evaluations"]) == 9
+    from scripts.prepare_hfo2_clamped_resume import prepare
+    result = prepare(tmp_path/"observed", tmp_path/"next")
+    assert result["source_step"] == step and result["current_frame_exact_caches"] == 9
+
+
+def test_resume_script_cannot_be_used_with_pilot_cache_contract(evaluated, tmp_path):
+    work, _ = evaluated
+    with pytest.raises(ValueError, match="contract differs"):
+        observer.export(work, 10, tmp_path/"bad", "synthetic",
+            production_script=ROOT/"cluster/hf_hfo2_clamped_chain_resume_20261010.slurm")
+    assert not (tmp_path/"bad").exists()
+
+
+def test_finite_M_continuation_keeps_original_parameters_and_runtime():
+    script = ROOT/"cluster/hf_hfo2_clamped_M_continue_E062_20261011.slurm"
+    assert observer.sha256(script) == observer.M_CONTINUE_SCRIPT_SHA256
+    body = script.read_text()
+    for pinned in ("source-fixed", "--steps 20", "--fmax .10", "--no-climb", "--maxstep .02",
+                   "mpirun -np 32", "--time=06:00:00", 'm["source_step"]==20'):
+        assert pinned in body
+    assert "sbatch" not in body and "scontrol" not in body and "srun" not in body

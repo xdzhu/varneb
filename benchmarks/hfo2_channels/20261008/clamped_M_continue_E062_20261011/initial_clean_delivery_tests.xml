@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="77" time="54.035" timestamp="2026-10-11T01:04:45.261409" hostname="Aero"><testcase classname="tests.test_hfo2_G2_M_handoff" name="test_exact_afterok_dependency_handoff" time="0.001" /><testcase classname="tests.test_hfo2_G2_M_handoff" name="test_changed_or_missing_dependency_stops_before_mutation[afterany:28661019]" time="0.001" /><testcase classname="tests.test_hfo2_G2_M_handoff" name="test_changed_or_missing_dependency_stops_before_mutation[afterok:28661019?afterok:999]" time="0.000" /><testcase classname="tests.test_hfo2_G2_M_handoff" name="test_changed_or_missing_dependency_stops_before_mutation[afterok:28661019,afterok:999]" time="0.000" /><testcase classname="tests.test_hfo2_G2_M_handoff" name="test_changed_or_missing_dependency_stops_before_mutation[(null)]" time="0.000" /><testcase classname="tests.test_hfo2_G2_M_handoff" name="test_changed_or_missing_dependency_stops_before_mutation[afterok:123]" time="0.000" /><testcase classname="tests.test_hfo2_G2_M_handoff" name="test_running_successor_cannot_be_rewired" time="0.000" /><testcase classname="tests.test_hfo2_G2_M_handoff" name="test_spare_slot_check_ignores_other_project_but_rejects_duplicate_study" time="0.000" /><testcase classname="tests.test_hfo2_G2_M_handoff" name="test_single_use_journal_hold_verify_then_release_and_no_retry" time="0.002" /><testcase classname="tests.test_hfo2_G2_M_handoff" name="test_actual_HF_nine_image_raw_EFS_replays_same_boundary_locally[0]" time="0.002"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'E:\\TEMP\\varneb-E062-final-93ed65adbdff439694c5d102c945e256\\benchmarks\\hfo2_channels\\20261008\\clamped_M_continue_E062_20261011\\observations\\step_0000\\evaluated_chain.traj'">step = 0
+
+    @pytest.mark.parametrize('step', [0, 20])
+    def test_actual_HF_nine_image_raw_EFS_replays_same_boundary_locally(step):
+        case = Path(handoff.__file__).parent
+        observation = case/'observations'/f'step_{step:04d}'
+        report = json.loads((observation/'observation.json').read_text())
+&gt;       images = read(observation/'evaluated_chain.traj', index=':')
+
+tests\test_hfo2_G2_M_handoff.py:68: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\zhu\AppData\Roaming\Python\Python310\site-packages\ase\io\formats.py:780: in read
+    format = format or filetype(filename, read=isinstance(filename, str))
+C:\Users\zhu\AppData\Roaming\Python\Python310\site-packages\ase\io\formats.py:955: in filetype
+    fd = open_with_compression(filename, 'rb')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+filename = 'E:\\TEMP\\varneb-E062-final-93ed65adbdff439694c5d102c945e256\\benchmarks\\hfo2_channels\\20261008\\clamped_M_continue_E062_20261011\\observations\\step_0000\\evaluated_chain.traj'
+mode = 'rb'
+
+    def open_with_compression(filename: str, mode: str = 'r') -&gt; IO:
+        """
+        Wrapper around builtin `open` that will guess compression of a file
+        from the filename and open it for reading or writing as if it were
+        a standard file.
+    
+        Implemented for ``gz``(gzip), ``bz2``(bzip2) and ``xz``(lzma).
+    
+        Supported modes are:
+           * 'r', 'rt', 'w', 'wt' for text mode read and write.
+           * 'rb, 'wb' for binary read and write.
+    
+        Parameters
+        ==========
+        filename: str
+            Path to the file to open, including any extensions that indicate
+            the compression used.
+        mode: str
+            Mode to open the file, same as for builtin ``open``, e.g 'r', 'w'.
+    
+        Returns
+        =======
+        fd: file
+            File-like object open with the specified mode.
+        """
+    
+        # Compressed formats sometimes default to binary, so force text mode.
+        if mode == 'r':
+            mode = 'rt'
+        elif mode == 'w':
+            mode = 'wt'
+        elif mode == 'a':
+            mode = 'at'
+    
+        _root, compression = get_compression(filename)
+    
+        if compression == 'gz':
+            import gzip
+            return gzip.open(filename, mode=mode)  # type: ignore[return-value]
+        elif compression == 'bz2':
+            import bz2
+            return bz2.open(filename, mode=mode)
+        elif compression == 'xz':
+            import lzma
+            return lzma.open(filename, mode)
+        else:
+            # Either None or unknown string
+&gt;           return open(filename, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: 'E:\\TEMP\\varneb-E062-final-93ed65adbdff439694c5d102c945e256\\benchmarks\\hfo2_channels\\20261008\\clamped_M_continue_E062_20261011\\observations\\step_0000\\evaluated_chain.traj'
+
+C:\Users\zhu\AppData\Roaming\Python\Python310\site-packages\ase\io\formats.py:584: FileNotFoundError</failure></testcase><testcase classname="tests.test_hfo2_G2_M_handoff" name="test_actual_HF_nine_image_raw_EFS_replays_same_boundary_locally[20]" time="0.002"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'E:\\TEMP\\varneb-E062-final-93ed65adbdff439694c5d102c945e256\\benchmarks\\hfo2_channels\\20261008\\clamped_M_continue_E062_20261011\\observations\\step_0020\\evaluated_chain.traj'">step = 20
+
+    @pytest.mark.parametrize('step', [0, 20])
+    def test_actual_HF_nine_image_raw_EFS_replays_same_boundary_locally(step):
+        case = Path(handoff.__file__).parent
+        observation = case/'observations'/f'step_{step:04d}'
+        report = json.loads((observation/'observation.json').read_text())
+&gt;       images = read(observation/'evaluated_chain.traj', index=':')
+
+tests\test_hfo2_G2_M_handoff.py:68: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\zhu\AppData\Roaming\Python\Python310\site-packages\ase\io\formats.py:780: in read
+    format = format or filetype(filename, read=isinstance(filename, str))
+C:\Users\zhu\AppData\Roaming\Python\Python310\site-packages\ase\io\formats.py:955: in filetype
+    fd = open_with_compression(filename, 'rb')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+filename = 'E:\\TEMP\\varneb-E062-final-93ed65adbdff439694c5d102c945e256\\benchmarks\\hfo2_channels\\20261008\\clamped_M_continue_E062_20261011\\observations\\step_0020\\evaluated_chain.traj'
+mode = 'rb'
+
+    def open_with_compression(filename: str, mode: str = 'r') -&gt; IO:
+        """
+        Wrapper around builtin `open` that will guess compression of a file
+        from the filename and open it for reading or writing as if it were
+        a standard file.
+    
+        Implemented for ``gz``(gzip), ``bz2``(bzip2) and ``xz``(lzma).
+    
+        Supported modes are:
+           * 'r', 'rt', 'w', 'wt' for text mode read and write.
+           * 'rb, 'wb' for binary read and write.
+    
+        Parameters
+        ==========
+        filename: str
+            Path to the file to open, including any extensions that indicate
+            the compression used.
+        mode: str
+            Mode to open the file, same as for builtin ``open``, e.g 'r', 'w'.
+    
+        Returns
+        =======
+        fd: file
+            File-like object open with the specified mode.
+        """
+    
+        # Compressed formats sometimes default to binary, so force text mode.
+        if mode == 'r':
+            mode = 'rt'
+        elif mode == 'w':
+            mode = 'wt'
+        elif mode == 'a':
+            mode = 'at'
+    
+        _root, compression = get_compression(filename)
+    
+        if compression == 'gz':
+            import gzip
+            return gzip.open(filename, mode=mode)  # type: ignore[return-value]
+        elif compression == 'bz2':
+            import bz2
+            return bz2.open(filename, mode=mode)
+        elif compression == 'xz':
+            import lzma
+            return lzma.open(filename, mode)
+        else:
+            # Either None or unknown string
+&gt;           return open(filename, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: 'E:\\TEMP\\varneb-E062-final-93ed65adbdff439694c5d102c945e256\\benchmarks\\hfo2_channels\\20261008\\clamped_M_continue_E062_20261011\\observations\\step_0020\\evaluated_chain.traj'
+
+C:\Users\zhu\AppData\Roaming\Python\Python310\site-packages\ase\io\formats.py:584: FileNotFoundError</failure></testcase><testcase classname="tests.test_hfo2_clamped_observation" name="test_archived_prepared_G2_artifacts_preserve_registered_raw_bytes[PO_to_M]" time="0.002" /><testcase classname="tests.test_hfo2_clamped_observation" name="test_archived_prepared_G2_artifacts_preserve_registered_raw_bytes[PO_flip_T_pattern_preserving]" time="0.002" /><testcase classname="tests.test_hfo2_clamped_observation" name="test_clamped_replay_excludes_reaction_stress_and_preserves_source" time="0.620" /><testcase classname="tests.test_hfo2_clamped_observation" name="test_clamped_observation_rejects_incomplete_or_mixed_evidence[metric]" time="0.074" /><testcase classname="tests.test_hfo2_clamped_observation" name="test_clamped_observation_rejects_incomplete_or_mixed_evidence[free_cell]" time="0.072" /><testcase classname="tests.test_hfo2_clamped_observation" name="test_clamped_observation_rejects_incomplete_or_mixed_evidence[reference]" time="0.076" /><testcase classname="tests.test_hfo2_clamped_observation" name="test_clamped_observation_rejects_incomplete_or_mixed_evidence[cache_pin]" time="0.534" /><testcase classname="tests.test_hfo2_clamped_observation" name="test_clamped_observation_rejects_incomplete_or_mixed_evidence[raw_log]" time="0.442" /><testcase classname="tests.test_hfo2_clamped_observation" name="test_clamped_observation_rejects_incomplete_or_mixed_evidence[STRU]" time="0.445" /><testcase classname="tests.test_hfo2_clamped_observation" name="test_clamped_observation_rejects_incomplete_or_mixed_evidence[missing_snapshot]" time="0.101" /><testcase classname="tests.test_hfo2_clamped_observation" name="test_clamped_observation_rejects_incomplete_or_mixed_evidence[wrong_force]" time="0.448" /><testcase classname="tests.test_hfo2_clamped_observation" name="test_clamped_observation_rejects_incomplete_or_mixed_evidence[wrong_energy]" time="0.465" /><testcase classname="tests.test_hfo2_clamped_observation" name="test_clamped_observation_rejects_incomplete_or_mixed_evidence[duplicate_row]" time="0.075" /><testcase classname="tests.test_hfo2_clamped_observation" name="test_clamped_observation_rejects_incomplete_or_mixed_evidence[incompatible_cell]" time="0.074" /><testcase classname="tests.test_hfo2_clamped_observation" name="test_clamped_observation_rejects_incomplete_or_mixed_evidence[broken_lift]" time="0.343" /><testcase classname="tests.test_hfo2_clamped_observation" name="test_clamped_observation_rejects_incomplete_or_mixed_evidence[unregistered_script]" time="0.085" /><testcase classname="tests.test_hfo2_clamped_observation" name="test_clamped_observation_rejects_incomplete_or_mixed_evidence[geometry_cache]" time="0.485" /><testcase classname="tests.test_hfo2_clamped_observation" name="test_clamped_export_rejects_invalid_step[-1]" time="0.003" /><testcase classname="tests.test_hfo2_clamped_observation" name="test_clamped_export_rejects_invalid_step[True]" time="0.004" /><testcase classname="tests.test_hfo2_clamped_observation" name="test_clamped_export_rejects_invalid_step[1.5]" time="0.003" /><testcase classname="tests.test_hfo2_clamped_observation" name="test_prepare_continuation_has_nine_pins_without_new_independent_chain" time="0.832" /><testcase classname="tests.test_hfo2_clamped_observation" name="test_prepare_continuation_rejects_altered_or_converged_observation[trajectory]" time="0.557" /><testcase classname="tests.test_hfo2_clamped_observation" name="test_prepare_continuation_rejects_altered_or_converged_observation[snapshot]" time="0.795" /><testcase classname="tests.test_hfo2_clamped_observation" name="test_prepare_continuation_rejects_altered_or_converged_observation[audit]" time="0.832" /><testcase classname="tests.test_hfo2_clamped_observation" name="test_prepare_continuation_rejects_altered_or_converged_observation[preflight]" time="0.569" /><testcase classname="tests.test_hfo2_clamped_observation" name="test_prepare_continuation_rejects_altered_or_converged_observation[converged]" time="0.566" /><testcase classname="tests.test_hfo2_clamped_observation" name="test_registered_resume_audits_initial_caches_then_fresh_interiors[0]" time="0.820" /><testcase classname="tests.test_hfo2_clamped_observation" name="test_registered_resume_audits_initial_caches_then_fresh_interiors[20]" time="0.810" /><testcase classname="tests.test_hfo2_clamped_observation" name="test_resume_script_cannot_be_used_with_pilot_cache_contract" time="0.071" /><testcase classname="tests.test_hfo2_clamped_observation" name="test_finite_M_continuation_keeps_original_parameters_and_runtime" time="0.001" /><testcase classname="tests.test_hfo2_clamped_chains" name="test_actual_audited_chain_preparation_has_two_exact_clamped_wells_and_no_free_EFS[strain_0000-PO_to_T]" time="2.216" /><testcase classname="tests.test_hfo2_clamped_chains" name="test_actual_audited_chain_preparation_has_two_exact_clamped_wells_and_no_free_EFS[strain_0000-PO_to_M]" time="4.382" /><testcase classname="tests.test_hfo2_clamped_chains" name="test_actual_audited_chain_preparation_has_two_exact_clamped_wells_and_no_free_EFS[strain_0000-PO_flip_T_pattern_preserving]" time="3.037" /><testcase classname="tests.test_hfo2_clamped_chains" name="test_actual_audited_chain_preparation_has_two_exact_clamped_wells_and_no_free_EFS[strain_0000-PO_flip_T_pattern_reversing]" time="3.251" /><testcase classname="tests.test_hfo2_clamped_chains" name="test_actual_audited_chain_preparation_has_two_exact_clamped_wells_and_no_free_EFS[strain_p0100-PO_to_T]" time="2.921" /><testcase classname="tests.test_hfo2_clamped_chains" name="test_actual_audited_chain_preparation_has_two_exact_clamped_wells_and_no_free_EFS[strain_p0100-PO_to_M]" time="4.556" /><testcase classname="tests.test_hfo2_clamped_chains" name="test_actual_audited_chain_preparation_has_two_exact_clamped_wells_and_no_free_EFS[strain_p0100-PO_flip_T_pattern_preserving]" time="3.098" /><testcase classname="tests.test_hfo2_clamped_chains" name="test_actual_audited_chain_preparation_has_two_exact_clamped_wells_and_no_free_EFS[strain_p0100-PO_flip_T_pattern_reversing]" time="2.898" /><testcase classname="tests.test_hfo2_clamped_chains" name="test_unregistered_holdout_or_channel_is_not_generated" time="0.003" /><testcase classname="tests.test_hfo2_clamped_chains" name="test_preparation_refuses_ordered_endpoint_remapping" time="0.467" /><testcase classname="tests.test_hfo2_clamped_chains" name="test_new_clamped_cache_uses_narrow_reader_and_only_two_wells" time="0.981" /><testcase classname="tests.test_hfo2_clamped_chains" name="test_clamped_cache_rejects_mutations[log]" time="0.983" /><testcase classname="tests.test_hfo2_clamped_chains" name="test_clamped_cache_rejects_mutations[STRU]" time="0.954" /><testcase classname="tests.test_hfo2_clamped_chains" name="test_clamped_cache_rejects_mutations[geometry]" time="0.982" /><testcase classname="tests.test_hfo2_clamped_chains" name="test_clamped_cache_rejects_mutations[interior]" time="0.968" /><testcase classname="tests.test_hfo2_clamped_chains" name="test_clamped_cache_rejects_mutations[index]" time="0.959" /><testcase classname="tests.test_hfo2_clamped_chains" name="test_clamped_cache_rejects_mutations[existing]" time="0.953" /><testcase classname="tests.test_hfo2_clamped_chains" name="test_clamped_cache_rejects_mutations[override]" time="0.956" /><testcase classname="tests.test_hfo2_clamped_chains" name="test_bounded_clamped_template_does_not_use_free_cell_or_old_cache_contract" time="0.001" /><testcase classname="tests.test_hfo2_clamped_chains" name="test_clamped_resume_reuses_all_nine_exact_SCFS_then_invalidates_moved_interior" time="1.020" /><testcase classname="tests.test_hfo2_clamped_chains" name="test_clamped_resume_requires_every_geometry_pinned" time="0.969" /><testcase classname="tests.test_hfo2_fixed_input_factory" name="test_transport_keeps_each_call_and_ase_cache" time="0.030" /><testcase classname="tests.test_hfo2_fixed_input_factory" name="test_factory_rejects_hidden_physics_or_mpi_override" time="0.001" /><testcase classname="tests.test_hfo2_fixed_input_factory" name="test_seed_cache_never_silently_relabels_geometry" time="0.017" /><testcase classname="tests.test_hfo2_fixed_input_factory" name="test_periodic_geometry_cache_is_ordered_not_permutation_invariant" time="0.003" /><testcase classname="tests.test_hfo2_endpoint_strain_work" name="test_actual_pairs_are_same_boundary_original_contract_and_not_forecasts" time="5.002" /><testcase classname="tests.test_hfo2_endpoint_strain_work" name="test_B1_training_nulls_keep_initial_shift_and_distinguish_final_wells" time="0.001" /><testcase classname="tests.test_hfo2_endpoint_strain_work" name="test_delivered_HF_replay_checks_original_ten_terminal_assets_without_new_DFT" time="0.020" /><testcase classname="tests.test_hfo2_endpoint_strain_work" name="test_editable_manuscript_changes_do_not_invalidate_historical_source_evidence" time="0.003" /><testcase classname="tests.test_hfo2_endpoint_strain_work" name="test_full_material_replay_rejects_changed_work_or_well_terms[partial]" time="0.020" /><testcase classname="tests.test_hfo2_endpoint_strain_work" name="test_full_material_replay_rejects_changed_work_or_well_terms[atomic]" time="0.016" /><testcase classname="tests.test_hfo2_endpoint_strain_work" name="test_full_material_replay_rejects_changed_work_or_well_terms[released_cell]" time="0.016" /><testcase classname="tests.test_hfo2_endpoint_strain_work" name="test_full_material_replay_rejects_changed_work_or_well_terms[chord]" time="0.016" /><testcase classname="tests.test_hfo2_endpoint_strain_work" name="test_full_material_replay_rejects_changed_work_or_well_terms[well]" time="0.015" /><testcase classname="tests.test_hfo2_endpoint_strain_work" name="test_full_material_replay_rejects_changed_work_or_well_terms[B1]" time="0.016" /><testcase classname="tests.test_hfo2_endpoint_strain_work" name="test_forged_bundle_digest_does_not_hide_changed_historical_source" time="0.003" /></testsuite></testsuites>

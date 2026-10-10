@@ -1826,3 +1826,28 @@ Later record/docs additions only. 00:43actual eight-handle accounting remains
 2RUNNING/6PENDING, not terminal; no new job or payload revision is performed.
 PROGRESS: remove a false future drafting failure and broaden actual-material
 numeric oracle, not a new physics result. Five user dirty files preserved.
+
+## E062 — completed PO→M segment audited; same-chain continuation actually running
+
+E061 milestone pushed as3b209a5. Parent28661020 COMPLETED0:0 at00:49:09,
+max-step exit not0.10 convergence. Actual01:01HF audit replays both complete
+9-image frames and all140new interior nativeSCFs with original6physicalbytes,
+DSIZE32/fullEFS. fmax.615276→.161869; discrete forward104.109701meV/FU is
+an unfinished observation, not H1 label/channel rank. Exact9caches seed the
+same chain, new FIRE state explicitly disclosed, no extra independent chain.
+
+Only28722320 submitted, initiallyheld. Scheduler read-after-write visibility
+errors failclosed; actualacceptedhandle/partialwrites corroborated separately,
+both existing waiters updated once, originaljob released01:17:31 and RUNNING
+32CPU start01:17:32. No resubmit or duplicatedependencyupdate, no oldsource or
+DFTparameter mutation.01:20step0matchesaudited.161869; firstfreshnativeDSIZE32;
+otherflipstep14/.220938.2active6pending; fixedfinitebudget/holdoutunchanged.
+
+Registered-resume audit now separates exactinitialcaches from freshmoving
+interiorSCFs. Actualguard/comment and Gitignoredframe/log packaging defects
+recorded and repaired, not gates weakened. Final82local/82independentarchive
+passes;149source/material/receipt files byte-match treebdf47db73ac2d3e094747403efc32d1319eae83b,
+archive8c2d64dc4ec2d0271d0581b0f745ab8f11150fabc3087d6476ffb3814b040624.
+EvolvingJUnitoutputsnotbyteproof; laterdocs/recordsonly. No freshfull/HFpytest,
+G3/TS/forecast/newmechanism claim. PROGRESS: realterminalrawaudit, verified
+samechainexecution and completeportableevidence. Overallgoalactive/incomplete.
