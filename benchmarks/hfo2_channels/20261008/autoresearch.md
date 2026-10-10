@@ -1910,3 +1910,20 @@ Five pre-existing user tracked edits and unrelated untracked files preserved.
 PROGRESS: whole-repository software scope actually validated after E063/E064,
 not another narrow green check or material/JCTC completeness. Full goal
 active; G2/G3/strong models/frozen forecasts/independent labels still missing.
+
+## E066 — protect pending wave before terminal material audit
+
+afterok also releases on a successful step-cap exit; it is not physical
+convergence.22mock/local and22independent-archive guard tests passed before
+one actual HF hold of each registered pending28692775/76 at02:54.02:55
+separate read-only snapshot confirms both JobHeldUser/Priority0, exact original
+ANDdependencies unchanged, two parents RUNNING32CPU/hfacnormal01. Four+1%
+successors/other projects untouched.0new jobs/DFT/chains/input/source changes.
+Release only after actual terminal audit and verified same-chain handoff, or
+proof no continuation needed; ambiguous writes leave journal and no repeats.
+
+Related82local/82independent-archive pass,0fail/skip;11new source/receipt files
+byte-match testedtree05f35938. Evidence/clamped_terminal_guard_E066_20261011.
+02:57latest complete Mstep7/.120235 and flipstep18/.272906. PROGRESS is a
+real safe queue-state change/verified guard, not new material barriers,
+strong-model forecasts or G3/holdout success. Full goal remains active.
