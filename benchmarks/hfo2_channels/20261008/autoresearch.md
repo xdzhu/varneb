@@ -1892,3 +1892,21 @@ evidence files byte-matched. All actual materials/holdout/DFT untouched.
 PROGRESS: missing prospective comparison interface implemented and verified,
 not a physics/new-theory result. Full goal active; real G2/G3/models and
 independent material forecasts remain required.
+
+## E065 — full clean-checkout software regression, declared skips retained
+
+Unfiltered complete tests on independent archive of pushed753c122, not user
+dirty worktree. OMP/MKL/OpenBLAS1 and unrelated pytest autoload disabled;
+actual library/scoring imports verified inside archive.1627collected,
+1625pass/2skip/0fail/0error in326.04s;314warnings retained, not repaired.
+Skip optional ASEabacusreader absent and licensed VASPPOTCAR not distributed:
+these exact two tests remain unverified, not silently counted as passes.
+Complete individual JUnit outcomes, environment/source/archive proof saved;
+no claim of full raw console, new HF full pytest or every dependency version.
+
+No code/driver/test/physical input/job changes, no DFT/submission/holdout.
+Five pre-existing user tracked edits and unrelated untracked files preserved.
+02:32twoRUNNING32CPU/sixPENDING; Mstep5/.129359, flipstep17/.260776.
+PROGRESS: whole-repository software scope actually validated after E063/E064,
+not another narrow green check or material/JCTC completeness. Full goal
+active; G2/G3/strong models/frozen forecasts/independent labels still missing.
