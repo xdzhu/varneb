@@ -253,6 +253,17 @@ joint release is already valid, promotion changes no physical stationary
 response and cannot establish an accuracy advantage. Measured coverage,
 strong reference registration and material validation remain separate gates.
 
+For the same complete quadratic and admissible internal space, valid joint
+stationarity is also invariant under changes of the retained subspace and its
+dimension. Direct full-space solves verify this null across five partitions,
+including a correctly refused unstable-release case restored by promotion.
+This prevents a coordinate-partition gain from being claimed as physical
+prediction improvement. Independent nonharmonic, branch or equal-accuracy
+cost evidence is needed to establish an actual increment; a surface at fixed
+retained coordinates is a different object. The
+[partition check](../../benchmarks/hfo2_channels/20261008/partition_null_E057_20261010/README.md)
+is not a hafnia material forecast.
+
 ### 2.4. Fixed material contract and prospective comparisons
 
 The production model is periodic Hf4O8, twelve atoms and four formula units,

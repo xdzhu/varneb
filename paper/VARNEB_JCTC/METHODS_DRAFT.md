@@ -618,3 +618,28 @@ continuation costs explicitly. Analytic48-point agreement validates only the
 implementation, not DFT uncertainty, TS certification or prospective accuracy.
 See the [nested control contract](../../docs/NESTED_RESPONSE_CONTROLS.md)
 and [actual E055 evidence](../../benchmarks/hfo2_channels/20261008/nested_response_E055_20261010/README.md).
+
+An additional full-joint harmonic null compares different retained subspaces,
+not only rotations of a fixed subspace. With the same complete H, g, B and c,
+all valid Q/R partitions give y*(t)=B u*(t)+c t, where
+u*(t)=-(B^T H B)^(-1) B^T(g+Hct). Promotion changes the admissible partition,
+not this complete stationary solution. The independent reference uses the
+original full B directly;114stationary points and54paired gaps agree under
+five partitions and two gauges. The frozen control is demonstrably different.
+The direct full-B stationary solve remains an equal-information harmonic
+reference when a particular stable-release partition is invalid; promotion
+cannot claim a numerical advantage by excluding that computable reference.
+Therefore a gain from changing reference or promoting directions cannot be
+claimed merely from an exact complete quadratic response. Actual advantages
+must arise from independently verified finite-data, nonharmonic, branch or
+cost behavior. A conditional surface at prescribed Q is not this null.
+
+The ten actual registered clamped geometry starters have36translation-free
+internal directions (33atomic and3open-cell), plus one prescribed control.
+One complete central-paired stencil would have37columns and75uncached
+evaluations including the centre; two step lengths would have149. These are
+prospective design counts for that stencil, not actual HfO2 Hessians, a
+universal minimum, or an added allowance. Surface nodes and curvature/cost
+preparation must be accounted separately; neither a smooth frozen plane nor
+the81surface-node cap supplies unmeasured full curvature. Exact overlap and
+the actual finite probe budget must be declared before DFT submission.

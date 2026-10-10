@@ -1618,3 +1618,43 @@ tested tree2487220b4a696bbdcdf0022588229f9e793a5141, tarSHAfa98b50d....
 All76then-present case files and both paper source bytes match;28local
 paper targets exist. Both worktree and actual clean JUnit reports remain.
 Post-test additions are documentation/receipts, not executable/data changes.
+
+## E057 - Full-joint harmonic partition null and real-chart design counts
+
+Hypothesis: an exact fully measured harmonic stationary response is invariant
+to the Q/R retained subspace and dimension, not merely its coordinate gauge.
+Five partitions, two gauges and index0/index1 centres give114stationary and
+54paired checks against independent original-full-B solves. Two invalid
+Schur releases correctly abstain; promotion restores the same full solution.
+Frozen and joint energies differ. Keep the direct full-B solve as an
+equal-information harmonic reference even when a chosen R block fails.
+Pure partition/promotion equivalence cannot supply material accuracy novelty.
+
+Ten actual registered starter charts count33atomic/3open-cell/1controlDOFs.
+Full central actions require37columns,75uncached evaluations at one step or
+149at two, centre included. This explicit-stencil count is neither a universal
+algorithm minimum nor a new allowance. Reuse same-centre data across gauges;
+do not silently charge Hessian preparation to81surface nodes or omit it.
+
+Working/independent clean80tests pass(2.29/3.01s); HF original environment
+replays the168analytic points and10chart counts with exact eight source bytes,
+no pytest install/claim and zeroDFT/external executable calls. Preserve the
+first checksum rejection of a still-live90MB upload (namespace absent), wait
+for that actualSCP handle, then execute only after matching archiveSHA.
+No production/source/input or held-out condition is changed. Manuscript
+records the null and keeps material claims pending;13page PDF passes visual
+checks on pages4/5 and all29local links resolve. New fixture checks expand
+the delivery suite to82, separate from original80source tests.
+
+22:10actual continuations remain RUNNING/32CPU, no true failure report:
+flip step5/.725003, Mstep8/.403503. New means176.643/116.739s imply remaining
+5.15/2.72h to segment cap, Oct11~03:20/~00:55, not convergence or TS proof.
+PROGRESS: a verified falsification boundary changes the method comparison
+and prevents duplicate curvature jobs/unsupported claims. Goal remainsactive;
+next finite G2 labels, then explicitly budgeted G3 and independent prediction.
+
+Final delivery archive21283742d8b6fd9f82fc4bdf944ac5bfb8ee8e18passes82related
+cases in3.26s, zero failure/error/skip.20case files and script/test/paper source
+bytes match. This is not an additional full-project or HFpytest claim.
+Only result receipts/documentation are added after testing; user dirty files
+stay un-staged and physical inputs/running source are unchanged.
