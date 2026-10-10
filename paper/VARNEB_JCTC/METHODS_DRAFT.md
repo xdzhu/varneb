@@ -643,3 +643,43 @@ universal minimum, or an added allowance. Surface nodes and curvature/cost
 preparation must be accounted separately; neither a smooth frozen plane nor
 the81surface-node cap supplies unmeasured full curvature. Exact overlap and
 the actual finite probe budget must be declared before DFT submission.
+
+## 18. Seen endpoint strain-work diagnostic and well-only null increments
+
+For ASE row cells H and fractional coordinates s, r=sH. At fixed external
+pressure P, the physical directional work for a control t is
+
+```text
+d(E+PV)/dt = V (sigma+P I) : [(dH/dt)^T H^-T]
+            - sum_i F_i dot [(ds_i/dt)H].
+```
+
+The stress is tensile-positive in eV/Angstrom^3; forces are eV/Angstrom.
+Neither a mass metric, a shear factor two nor the numerical VCNEB cell-scale
+parameter belongs in this scalar work. The atomic term represents internal
+fractional-coordinate motion only, so affine cell motion is not counted twice.
+Independent scalar-energy finite differences cover mixed cell/atom changes,
+fixed pressure, oblique rotations and shear. The API is calculator-free.
+
+The actual ten screened training endpoint representations at epsilon0/.01
+retain the common substrate, P=0 and original100Ry/full10auDZP inputs.
+For the imposed-plane partial, set dH[:2]/d epsilon=H[:2]/(1+epsilon) and
+dH[2]=0. Nonzero force/open traction is explicitly retained: only at exact
+stationarity could the partial become a stationary-branch envelope derivative.
+A separate diagnostic uses dH=(H1-H0)/.01 and ds=(s1-s0)/.01 in the original
+registered ordered endpoint/history lifts. It is a configuration chord, not
+a relaxed intermediate branch or a new optimized path. No remapping or new
+DFT is performed. The trapezoids use only endpoint derivatives; their signed
+energy defects are observations, never independent curvature/noise bounds.
+
+The original B1 assumptions are evaluated only as seen-training increments:
+fixed absolute bottleneck gives -delta E_PO+, and final-following bottleneck
+gives delta E_FS-delta E_PO+. Absolute anchor barriers, training-network
+selection, actual bottleneck response, B0/B2--B5 forecasts and complete
+freeze remain unavailable at this stage. Endpoint data are seen features,
+not held-out labels. Full asset bytes remain on HF; offline output states
+which original raw hashes and historical HF physical-byte checks it uses.
+Source, raw-audit and log hashes and all four null increments are retained
+in the [E059 analysis](../../benchmarks/hfo2_channels/20261008/endpoint_strain_work_E059_20261010/README.md)
+and [work API](../../docs/STRAIN_WORK.md). Neither sub-meV trapezoid defects
+nor phase labels certify a barrier, TS, full Hessian or material prediction gain.

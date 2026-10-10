@@ -711,6 +711,44 @@ ten endpoint representations, not ten distinct phases or certified local
 minima. Agreement between symmetry-related endpoint energies is not a
 numerical error bar for an intervening barrier.
 
+The seen training endpoints already quantify a necessary well-response
+control. From zero to 1% substrate strain, PO+ rises by 6.806502 meV/HfO2,
+whereas the screened M representation falls by 15.399977 meV/HfO2.
+The M-minus-PO+ well separation therefore changes by -22.206479 meV/HfO2.
+This is not a measured change in the M escape barrier. The two preregistered
+B1 assumptions make this distinction explicit: fixing the absolute
+bottleneck energy gives the same -6.806502 meV/HfO2 barrier-response
+increment for every channel; allowing it to follow the final well gives
+the channel-dependent increments in Table 4. No anchor barrier, unseen
+condition or new mechanism is inferred from these increments.
+
+Table 4. Observed final-well shifts and endpoint-following B1 null
+increments across the two seen training strains. Each quantity is in
+meV/HfO2; the switching correspondences remain separately registered paths.
+
+| Final endpoint representation | Observed well-energy shift | B1 final-following barrier increment |
+|---|---:|---:|
+| T descendant | +8.592411 | +1.785908 |
+| M | -15.399977 | -22.206479 |
+| PO-, T pattern preserving | +6.841761 | +0.035259 |
+| PO-, T pattern reversing | +6.841761 | +0.035259 |
+
+A calculator-independent work contraction evaluates the local imposed-plane
+partial as $V\sigma:[H_\varepsilon^T H^{-T}]$, with ASE row cells, tensile
+stress and $H_\varepsilon^{0:2}=H^{0:2}/(1+\varepsilon)$ while the open
+third vector is held fixed for this partial. It is not an exact relaxed-branch
+envelope derivative at the nonzero screened force and open-traction residuals.
+Endpoint stress-work trapezoids differ from the observed well-energy changes
+by 0.019--0.347 meV/HfO2. Including atomic and released-cell residual work
+along the ordered endpoint configuration chord gives defects of
+-0.001--0.204 meV/HfO2. These two-endpoint diagnostics mix unmeasured
+curvature and finite-relaxation/numerical effects; they are not independent
+sampling-error bounds or proof of a smooth stationary branch. The
+[raw-work analysis](../../benchmarks/hfo2_channels/20261008/endpoint_strain_work_E059_20261010/README.md)
+retains the signed defects, exact sources and all null increments. Actual
+path-maxima response must be compared with these well-only controls before
+attributing an improvement to a new mode mechanism or prediction method.
+
 The first [matched G2 pair](../../benchmarks/hfo2_channels/20261008/clamped_G2_E053_20261010/README.md)
 uses the zero-strain preserving candidate and PO-to-M escape candidate.
 Their starting polygons retain the ordered G1 correspondence and explicitly

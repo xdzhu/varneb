@@ -1700,3 +1700,54 @@ tracked case files and test bytes match. Initial comparison included ignored
 bytecode and stopped before tests; correctedgit-ls-files comparison used the
 same fresh archive. Later additions onlyreports/docs, not source/data. Existing
 five user dirty files remain un-staged and retain their original numstat.
+
+## E059 - Actual well response and explicit endpoint-only B1 nulls
+
+Hypothesis/decision: a measured strain effect on shared well energies must
+be separated from a material bottleneck response before claiming a new mode
+mechanism. Use ten existing0/+1% screened endpoint representations, no extra
+DFT, strain, mode matrix, path selection or+.005holdout access. Add the
+calculator-free physical row-cell directional work and separate imposed-plane
+partials from residual atomic/open-cell work on the ordered endpoint chord.
+
+PO+ shifts+6.806502meV/fu, M-15.399977, hence relative well change-22.206479.
+Registered B1_fixed training increments are all-6.806502; B1_follow gives
+T+1.785908/M-22.206479/both flips+.035259. These are seen training null
+implications without absolute anchor barriers, not H1/H2 or forecasts.
+Signed trapezoid defects0.019--0.347meV/fu and chord defects-.001--.204
+combine unmeasured curvature/numerical/residual effects, never error bounds.
+
+Local17new tests pass; related75pass10.82s and actual archive-cwd75pass9.13s,
+tree76dd34f6812bb6cb4dda8cef3f323837b4fade4b. Eleven scientific/source/case
+files byte-match. HF original Python/ASE/NumPy replays all points at23:15,
+max numericdifference2.84e-14, exact eight runtime/archive bytes and all
+ten original terminal PP/orbital/INPUT/KPT/STRU/log/native32MPI/fullEFS checks.
+No environment install or HFpytest/DFT/source/job mutation is claimed.
+
+First actual-HF fixture wrongly compares checkout raw bytes to Git archive;
+75pass/1fail retained. Second LF-only fix still wrongly assumes archiveLF;
+75pass/1fail retained. All three legacy files have identical line contents,
+and all eight executed HF bytes already match the tested archive. Export
+raw and LF-canonical checks separately for both representations; require
+new science/paper bytes exact, allow only legacy newline normalization.
+No calculator/input normalization or physical change follows these harness issues.
+
+PaperTable4 avoids collision with earlier Tables1--3. Existing LuaLaTeX
+compiles14pages, updated12--14visually checked; text/API/evidence links
+resolve. The work function itself is not claimed as new theory or a predictor.
+23:16parentsRUNNING/noactualfailure, flip8/.363645 andM13/.289108; current
+segment cap estimates Oct11~03:28/00:53, not convergence deadlines. Existing
+two dependency starts remain unchanged. PROGRESS: material null controls,
+useful backend-independent gradient interface, raw HF replay and paper
+integration. Goalactive/incomplete; matchedG2/G3/independent forecasts stillneeded.
+
+Final corrected fixture passes76/0fail/error/skip locally10.510s and actual
+clean archive cwd7.305s. Full clean-project regression1515pass/2skip/0fail/
+0error in383.231s. Optional ase.io.abacus and licensed VASP POTCAR are the
+two explicit skips. Tested tree88b9214d8185dba6ae92d761132459ebf2be5e73,
+archive1b1b7c35b4a9dee19eb309a64f5985b2ed97a03cf79f653eca13f21d5625065a.
+Science and manuscript exact bytes unchanged after tests; later reports/docs
+only. Parent12hlimits end08:07Oct11, not an unrecorded4hdeadline. 23:30
+four-handle snapshot remains twoRUNNING/twoDependency, no new job mutation.
+README/manual expose the new physical work API and distinguish partials,
+periodic lifts, endpoint wells and actual bottlenecks. Goalnotcomplete.

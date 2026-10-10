@@ -83,6 +83,12 @@ and NEB share the same open cell subspace. This is different from the
 in-plane-variable slab/vacuum boundary and is not selected automatically by
 the CLI.
 
+For calculator-independent post-processing of stress and forces along an
+explicit atomic/cell direction, see the [local strain-work API](docs/STRAIN_WORK.md).
+It reports physical energy or fixed-pressure enthalpy derivatives without
+launching a calculator. A local work derivative or endpoint energy shift is
+not by itself a transition-state certificate or a barrier prediction.
+
 The old `README_VCNEB.md`, `run_NEB/`, and `run_VCNEB/` names remain as
 compatibility entry points for existing research scripts.  New work should use
 the public CLI, `vcneb` API, and the layout documented in

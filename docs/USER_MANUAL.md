@@ -443,6 +443,13 @@ production job before the first DFT evaluation.
 
 ## 6. Auditing and promotion
 
+The [local strain-work API](STRAIN_WORK.md) contracts ASE tensile stress and
+forces with an explicit, continuously lifted configuration direction, using
+physical units rather than the NEB metric. It launches no calculator. Keep
+imposed-cell partials, released-coordinate residual work, well-energy shifts
+and actual barrier response separate; the audited HfO2 example demonstrates
+this distinction without adding DFT calls or opening a holdout condition.
+
 The minimum acceptance record contains complete per-image energy, forces,
 stress, SCF status, endpoint identity/atom count, input and code hashes, path
 mechanism, units, and the threshold used for convergence. Only after these
