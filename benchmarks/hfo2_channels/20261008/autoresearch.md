@@ -1540,3 +1540,42 @@ at20:09:08, node6/node25, hfacnormal01/32CPU. New step0exactly reproduces
 old step10cached force/energy; first new interior logs showDSIZE32.
 Expected20update segment duration~4.79/3.99h from actual preceding SCFs,
 roughOct11midnight–02:00, not a promise to reach.10. No other jobs changed.
+
+## E055 — Same-data nested response controls and full visible-call cost
+
+Hypothesis: measured physical Hessian actions can support explicit frozen,
+atomic, joint and training-instability-promotion controls without inventing
+missing stable blocks, silently discarding affine gradients or charging
+shared/failed/unused preparation as free. No material labels are added.
+
+New calculator-independent interfaces preserve measured action coverage,
+internal index, prescribed-control scale/domain, well and bottleneck response,
+signed gap and omission diagnostics. B5 is only local training promotion,
+not an anharmonic branch search. Stable B4=B5 must agree; equivalence is not
+an accuracy improvement or a novel Schur theorem. Strong T/Cmma/gauge matched
+references and complete future forecast freeze remain required.
+
+175focused tests pass; immutable86d2637clean full suite1459pass/2skip/0fail
+in318.96s.48independent paired analytic points replay on HF1.26.4NumPy;
+local/HF response residuals~1e-17eV/fu are implementation checks, not DFT
+error estimates. HF has no pytest: retain that zero-DFT harness failure,
+separate no-install numeric/cost check, do not claim a remote pytest pass.
+The actual completed E053154interior calls independently re-audited retain
+all original six input bytes, full native EFS and DSIZE32. Cost recomputes
+154.451016coreh versus155.822222scheduler allocation; endpoint/preparation/
+ongoing continuations are explicitly outside this partial cost scope.
+
+Actual unfinished clamped observations are refused as complete training;
+no predictions emitted, no+.005structure/label read, no new DFT/independent
+chain/allocation, CI, parameter change, release or automation. Retain the
+delivery's import/cwd/incorrect failure-filename checks and LF-versus-executed
+CRLF source-hash failure. Exact execution-source bytes are archived instead
+of pretending a later checkout is the measured runtime. Six delivery replay
+tests pass with unchanged physical gates. See nested_response_E055_20261010.
+
+20:59:23CST actual two E054 jobs remainRUNNING, no actualvcneb_failure.json:
+flip step2/logfmax1.148299, Mstep3/.538259. These live log forces are not new
+raw-snapshot/TS certificates. Mean fresh SCFs151.29/109.40s indicate another
+~5.30/~3.62h to this20step cap (~Oct11 02:20/00:40); no convergence promise.
+Goal active: PROGRESS (new tested code, independently checked cost and gates),
+not a blocked wait. No further unchanged-state polling in this delivery.
