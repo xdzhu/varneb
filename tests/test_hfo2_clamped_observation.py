@@ -15,6 +15,15 @@ ROOT = Path(__file__).resolve().parents[1]
 SEED = ROOT/"benchmarks/hfo2_channels/20261008/clamped_G2_E053_20261010/strain_0000/PO_to_M"
 
 
+@pytest.mark.parametrize("channel",["PO_to_M","PO_flip_T_pattern_preserving"])
+def test_archived_prepared_G2_artifacts_preserve_registered_raw_bytes(channel):
+    seed = SEED.parent/channel
+    manifest = json.loads((seed/"manifest.json").read_text())
+    assert all(observer.sha256(seed/n)==h for n,h in manifest["files_sha256"].items())
+    preflight = json.loads((seed/"vcneb_preflight_HF.json").read_text())
+    assert observer.sha256(seed/"substrate.vasp")==preflight["mechanical_boundary"]["reference_file_sha256"]
+
+
 @pytest.fixture
 def evaluated(tmp_path, monkeypatch):
     work = tmp_path/"live"
