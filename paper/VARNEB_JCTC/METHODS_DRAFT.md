@@ -572,3 +572,49 @@ and [E032](../../benchmarks/hfo2_channels/20261008/stationary_gap/README.md)
 receipts document analytic solves, finite derivatives, clean full tests and
 same-source HF replays only. Matched-boundary material training, complete
 B2--B5 model freezing and independent accuracy/coverage remain incomplete.
+
+## 17. Same-measurement response ablations and explicit coverage
+
+The nested response interface receives a full physical gradient and measured
+Hessian actions D=HM at one centre. M is an orthonormal real basis in the
+declared atomic--cell chart; these are not derivatives of NEB or spring forces.
+The admissible internal space, retained coordinates, atomic-only subspace
+and prescribed-control direction are declared separately and checked.
+Measured reciprocity must satisfy a caller-recorded numerical tolerance.
+
+Writing K=sym(M^T D) and D_c=D+M(K-M^T D), the computational extension is
+H_ext=D_c M^T+M D_c^T-M K M^T. Its unmeasured orthogonal block is unknown;
+the zero completion is never used as evidence of stability. Each control
+requires all of its retained, released and external directions inside M.
+Full-gradient rows outside M remain available for omission diagnostics.
+The dimension of missing internal coverage uses the span intersection, not
+the rank of a nonzero projection onto M.
+
+B2 freezes the complement of Q. B3 releases only the complement within the
+atomic subspace and abstains when Q itself contains cell motion. B4 releases
+the complete admissible complement only when it is measured and resolved
+positive. The local B5 arm promotes all eigendirections at/below the
+registered release floor before eliminating the remaining stable block.
+The resulting combined internal block must still be nonsingular and have
+the declared index. True zero curvature or an additional unstable direction
+cannot be repaired by a pseudoinverse. External-control curvature is not
+counted in that index. This implements local training-only promotion, not
+selection among anharmonic branches; stable B4 and B5 are equivalent.
+
+Both centres keep their individual control scales, nonstationary-anchor
+corrections and measured source identities when responses are paired.
+The API does not invent HfO2 curvature, certify an unmeasured complement,
+freeze the material forecast batch or enlarge the two-bottleneck budget.
+Where required information is unavailable within the registered budget,
+the corresponding control remains unavailable rather than weakening the
+strong reference or charging an unreported full Hessian as free.
+
+Cost records count exact shared evaluations once while retaining every
+supplied failed/unused preparation. Missing timings or allocations give
+unknown totals and explicit partial sums, not zero-cost calls. Transport
+wall time times assigned cores is a resource proxy, not CPU utilization.
+The independent154-call pilot replay excludes previous endpoint and ongoing
+continuation costs explicitly. Analytic48-point agreement validates only the
+implementation, not DFT uncertainty, TS certification or prospective accuracy.
+See the [nested control contract](../../docs/NESTED_RESPONSE_CONTROLS.md)
+and [actual E055 evidence](../../benchmarks/hfo2_channels/20261008/nested_response_E055_20261010/README.md).

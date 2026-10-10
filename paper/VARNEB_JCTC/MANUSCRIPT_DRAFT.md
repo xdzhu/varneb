@@ -238,6 +238,21 @@ Hessian to the finite two-bottleneck probe budget. The exact input choice,
 basis, domain and calibration must be frozen before complete target path
 labels are read; the present module tests alone do not freeze that batch.
 
+The local ablations now share one dataset of measured physical Hessian
+actions $D=HM$, where the columns of M are orthonormal in the declared joint
+coordinate metric. A control is unavailable unless its retained, released
+and prescribed-control directions lie in this measured span; an unmeasured
+complement is unknown, not a stable zero block. Frozen, atomic-only and
+joint-release controls retain the same affine gradient. Atomic-only release
+is unavailable if the retained coordinates already contain cell motion.
+The local stability-aware arm promotes the complete released eigensubspace
+at or below the registered resolution floor, then requires a resolved
+combined internal block of the specified index. This is training-only
+increment-dimension continuation, not an anharmonic branch search. When
+joint release is already valid, promotion changes no physical stationary
+response and cannot establish an accuracy advantage. Measured coverage,
+strong reference registration and material validation remain separate gates.
+
 ### 2.4. Fixed material contract and prospective comparisons
 
 The production model is periodic Hf4O8, twelve atoms and four formula units,
@@ -695,6 +710,26 @@ The free-cell source energies are not transferred to this new ensemble.
 Starting-path construction and endpoint convergence still do not establish
 the optimized competing barriers, their sampling errors or the proposed
 selectivity response.
+
+The first ten-step segments lower the ordinary residual from 3.541469 to
+1.466699 eV/Angstrom for the preserving candidate and from 0.994612 to
+0.615276 eV/Angstrom for the M candidate. Neither satisfies the 0.10 target.
+All 154 fresh interior SCFs have complete audited E/F/stress under the
+original input bytes and genuine 32-rank execution. Their transport-time
+cost is 154.451016 allocation-core-hours, compared with 155.822222 actual
+scheduler allocation-core-hours. This is a partial pilot cost, excluding
+earlier endpoint preparation and subsequent continuation, not the full
+cost of a predictor. These unfinished observations cannot supply channel
+rankings or test the proposed selective response.
+
+All eight registered training starts now have same-ensemble endpoints and
+continuous ordered geometry; the remaining six seeds pass zero-DFT geometry
+and exact endpoint-cache preflights. Preparation reuses the screened wells
+and transfers only G1 geometry, never its free-cell energies. The additional
+starts are not optimized bands or successful material forecasts. The
+[pilot audit](../../benchmarks/hfo2_channels/20261008/clamped_G2_E054_20261010/README.md)
+and [remaining-start audit](../../benchmarks/hfo2_channels/20261008/clamped_G2_remaining_E056_20261010/README.md)
+retain these distinctions before the held-out condition is accessed.
 
 ## 4. Discussion and remaining material tests
 

@@ -1579,3 +1579,42 @@ raw-snapshot/TS certificates. Mean fresh SCFs151.29/109.40s indicate another
 ~5.30/~3.62h to this20step cap (~Oct11 02:20/00:40); no convergence promise.
 Goal active: PROGRESS (new tested code, independently checked cost and gates),
 not a blocked wait. No further unchanged-state polling in this delivery.
+
+## E056 - Remaining finite training starts and manuscript integration
+
+The six unstarted registered G2 channels were actually prepared and
+preflighted on HF at21:18:05CST: the other two zero-strain starts and all
+four +1% starts. All54geometries and12fixed raw-EFS caches pass.338runtime
+Python files match the immutable86d2637tested archive bytewise. G1 supplies
+only ordered geometry; no free-cell labels contaminate clamped endpoints.
+No DFT/endpoint rerun, job submission, source replacement or environment
+installation occurred. The existing two continuations are not duplicated.
+
+Eight registered training starts are ready, **not eight optimized barriers**.
+Eight new material-delivery test cases plus21existing chain tests give
+29passed/0fail/0errors/0skip in104.664s; HFpytest is not claimed.
+The manuscript now records measured-column coverage/strong-control scope
+and partial actual SCF cost. The detailed methods explain symmetric action
+extension and local instability promotion, including required abstentions.
+Existing LuaLaTeX builds the13page preview; changed pages4/12/13were
+rendered and visually checked. No new material accuracy claim is made.
+
+PROGRESS: reproducible remaining starts and evidence-bound paper methods,
+not a blocked wait. The next gate stays finite G2 matched paths and errors,
+then original-budget G3 and a complete prospective prediction freeze.
+No+.005holdout structure/label, extra material, CI, release or new monitor.
+Evidence: clamped_G2_remaining_E056_20261010 and the manuscript's separate
+training-matrix validation receipt; historical receipts remain unchanged.
+
+21:38:01CST actual E054 jobs remain RUNNING/32CPU, no true failure report:
+flip step4/log force0.863395 and M step6/0.455959. Mean fresh SCFs163.825/
+114.497seconds suggest segment caps Oct11~02:45/~00:45, not guaranteed
+ordinary convergence. The first additional94-case run used working-tree
+cwd despite preparing an archive; preserve its report and do not label it
+clean. Delivery testing must use the explicit independent archive cwd.
+
+Independent archive-cwd replay then passed94/0fail/0errors/0skip in107.75s,
+tested tree2487220b4a696bbdcdf0022588229f9e793a5141, tarSHAfa98b50d....
+All76then-present case files and both paper source bytes match;28local
+paper targets exist. Both worktree and actual clean JUnit reports remain.
+Post-test additions are documentation/receipts, not executable/data changes.
