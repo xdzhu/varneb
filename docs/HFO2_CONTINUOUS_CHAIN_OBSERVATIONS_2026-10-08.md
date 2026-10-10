@@ -91,3 +91,32 @@ python -m pytest -q tests/test_continuous_projection.py tests/test_hfo2_chain_ob
 `hf_replay_check.json`。记录并修复了遗漏忽略轨迹和跨平台目录排序两处交付问题，
 没有放松审计门禁或改材料参数。19:10时gap最新step9为0.233694，
 预计约19:25结束10步健康段；全链收敛仍待实际证明。
+
+## 6. 夹持 G2 链的独立重放入口（2026-10-10）
+
+本页第1–5节为历史**自由胞**G1观察，不能直接用其默认重放器审核夹持G2。
+新入口明确读取生产 `vcneb_preflight.json`、固定基底文件及其SHA，使用同一个
+`clamped_plane_vcneb_boundary`、3个开放晶胞方向与登记尺度5.12968067458423Å。
+原子和晶胞的NEB力都在此子空间内重放，非零夹持反力不当作自由胞残差。
+首版只接受已登记首段Slurm脚本的精确SHA，不能把任意运行套进固定弹簧/度量。
+
+```bash
+python -m scripts.export_hfo2_clamped_observation \
+  --workdir /path/to/completed/G2/band --step 10 \
+  --source-job-id ACTUAL_SLURM_ID --output /path/to/fresh/observation \
+  --production-script /path/to/immutable/source/cluster/hf_hfo2_clamped_chain_pilot_20261010.slurm
+python -m scripts.prepare_hfo2_clamped_resume \
+  --observation /path/to/fresh/observation --output /path/to/fresh/resume-seed
+```
+
+每像须匹配同原子序的精确周期几何、原六份物理文件与STRU、原始SCF日志SHA；
+端点缓存另与生产预检中登记的原端点记录相核对。内部像只接受完成的
+`call_audit.json`，完整E/F/stress重新从32-MPI原日志解析。拒绝缺像、缺日志、
+哈希变化、陈旧几何、断裂lift及重放与优化日志不一致；不修改生产目录或调用DFT。
+离散垒、普通残差和完整物理梯度分别留档，未收敛链不称MEP或认证TS。
+
+几何续算使用独立 `make_clamped_resume_cached_factory`：九个像均需精确缓存，
+当前完整帧不重算，内部像移动后正常失效再计算，固定端点仍只读取原缓存。
+它不是FIRE动力学状态恢复；新段从同一几何初始化新的FIRE速度/时间步，记录此限制。
+新段用新目录和经测试的独立源码归档，绝不覆盖原运行源码、轨迹或SCF。
+健康步数上限允许审核后续算，计为原独立链，不追加+0.5%留出条件或新通道。

@@ -116,3 +116,26 @@ def test_bounded_clamped_template_does_not_use_free_cell_or_old_cache_contract()
                      '#SBATCH --time=04:00:00','mpirun -np 32','--require-continuous-periodic-lift'):
         assert required in text
     assert 'sbatch' not in text and 'srun' not in text and 'make_seed_cached_factory' not in text
+
+
+def test_clamped_resume_reuses_all_nine_exact_SCFS_then_invalidates_moved_interior(tmp_path,monkeypatch):
+    p,atoms = cache_fixture(tmp_path,monkeypatch)
+    p["seed_cache_records"] = [p["seed_cache_records"][0]]*9
+    factory = transport.make_clamped_resume_cached_factory(parameters=p,command="mpirun -np 32 abacus")
+    for i in range(9):
+        a = atoms.copy()
+        a.calc = factory(i,a,tmp_path/f"resume{i}")
+        assert np.isfinite(a.get_potential_energy()) and a.get_forces().shape==(12,3)
+        assert a.calc.next_call==0
+        receipt = json.loads((tmp_path/f"resume{i}/seed_cache_audit.json").read_text())
+        assert receipt["policy"]=="identical_ordered_clamped_resume_hash_pinned"
+        assert receipt["new_DFT_calls"]==0
+        if i==4:
+            a.positions[0,0] += .001
+            assert a.calc.check_state(a)==["positions"]
+
+
+def test_clamped_resume_requires_every_geometry_pinned(tmp_path,monkeypatch):
+    p,_ = cache_fixture(tmp_path,monkeypatch)
+    with pytest.raises(ValueError,match="nine exact caches"):
+        transport.make_clamped_resume_cached_factory(parameters=p,command="mpirun -np 32 abacus")

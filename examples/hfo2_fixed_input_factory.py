@@ -205,13 +205,28 @@ def make_clamped_seed_cached_factory(*, parameters, command):
     This uses the exact case STRU reader, not optional ASE ABACUS I/O. It is
     deliberately separate from the historical free-cell seed-cache contract.
     """
+    return _make_clamped_cached_factory(parameters=parameters, command=command, resume=False)
+
+
+def make_clamped_resume_cached_factory(*, parameters, command):
+    """Resume an audited clamped chain without recomputing its current frame.
+
+    All nine cached geometries are required; after an interior moves ASE
+    invalidates its cache normally. Fixed endpoints remain cached. This is a
+    geometry continuation, not restoration of FIRE velocities or time step.
+    """
+    return _make_clamped_cached_factory(parameters=parameters, command=command, resume=True)
+
+
+def _make_clamped_cached_factory(*, parameters, command, resume):
     if set(parameters) != {"source_directory", "seed_cache_records"}:
         raise ValueError("clamped seed cache prohibits physical overrides")
     records = parameters["seed_cache_records"]
     if (not isinstance(records, list) or len(records) != 9 or records[0] is None
-            or records[-1] is None or any(r is not None for r in records[1:-1])):
-        raise ValueError("exactly two fixed endpoint caches and seven fresh interiors required")
-    for record in (records[0], records[-1]):
+            or records[-1] is None or (resume and any(r is None for r in records))
+            or (not resume and any(r is not None for r in records[1:-1]))):
+        raise ValueError("nine exact caches required for resume; seed needs only two endpoint caches")
+    for record in (r for r in records if r is not None):
         if (set(record) != {"directory", "input_sha256", "raw_log_sha256"}
                 or set(record["input_sha256"]) != {*CONTRACT, "STRU"}
                 or any(record["input_sha256"][n] != h for n,h in CONTRACT.items())):
@@ -237,7 +252,9 @@ def make_clamped_seed_cached_factory(*, parameters, command):
         calc.atoms = atoms.copy()
         calc.results = {k:v.copy() if isinstance(v,np.ndarray) else v for k,v in raw.items()}
         target.mkdir(parents=True, exist_ok=True)
-        audit = {"policy":"identical_ordered_clamped_endpoint_hash_pinned",
+        policy = ("identical_ordered_clamped_resume_hash_pinned" if resume
+                  else "identical_ordered_clamped_endpoint_hash_pinned")
+        audit = {"policy":policy,
                  "raw_source":str(source), "input_sha256":record["input_sha256"],
                  "raw_log_sha256":record["raw_log_sha256"], "new_DFT_calls":0}
         (target/"seed_cache_audit.json").write_text(json.dumps(audit,indent=2)+"\n",encoding="utf-8",newline="\n")
