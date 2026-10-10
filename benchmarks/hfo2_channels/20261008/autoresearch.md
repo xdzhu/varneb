@@ -1927,3 +1927,27 @@ byte-match testedtree05f35938. Evidence/clamped_terminal_guard_E066_20261011.
 02:57latest complete Mstep7/.120235 and flipstep18/.272906. PROGRESS is a
 real safe queue-state change/verified guard, not new material barriers,
 strong-model forecasts or G3/holdout success. Full goal remains active.
+
+## E067 — terminal flip material audit and actual same-chain continuation
+
+28661019completed20updates at cap, fmax.270056 notordinary-converged.
+Actual03:21HF audits140fresh SCFs original6physical bytes/DSIZE32/nativeEFS,
+334immutable runtimePython files, complete0/15/20nine-frame observations,
+and9exact latest caches with0newDFT. Discrete peaks287.182→224.982→216.508
+meV/fu remain unfinished, not H1labels. Residual bottleneck shifts atomimage5
+to open-cellimage4; spring-only.004511 is notdominant but no Hessian cure or
+acceleration efficacy is inferred. Continue latest20, not minimum-force15.
+
+One heldjob28722810; two dependency writes onceeach. Second readackstale>15s
+failsclosed, separate reads provebothwrites, existingjob releasedwithout
+resubmission/rewrite. Actual03:28:19start32CPU, seed.270056 and nativeDSIZE32
+confirmed03:30; firstnewSCF completionnotclaimed. Successors remainheldfor
+materialaudit; at most2allocations. No source/input/holdout/budget changes.
+
+Fixture failures/partialjournals/execution sources retained. Corrected105
+preparation tests pass locally/cleanarchive; final actual material/receipt
+scope110local/110cleanarchive pass,0fail/skip,219new source/material/receipt
+files byte-match treea320001b. Evidence/clamped_flip_continue_E067_20261011.
+03:36two32CPU RUNNING; Mstep10/.107920,newflip0/.270056. PROGRESS: actual
+terminal native evidence and safe same-chain resumed production, not full
+G2/G3/strong-model/independent prediction or JCTC completeness. Goal active.
