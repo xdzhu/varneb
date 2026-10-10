@@ -107,3 +107,11 @@ both registered childrenPENDING/Dependency. A separate actual `scontrol` read
 confirms each parent has12hwalltime ending08:07Oct11, later than the estimated
 current segment caps. No submission, cancellation, dependency or runtime
 source is changed. This milestone does not complete the overall research goal.
+
+E061later corrects the historical-source fixture's working-copy coupling:
+[immutable source bundle and full numeric replay](../replay_delivery_E061_20261011/README.md).
+All eight actual executed bytes remain exactly archived, including legacy
+CRLF. Future paper prose need not retain the historical snapshot's bytes.
+Current analysis now checks all3869numeric entries against the actual HF
+report, not just B1 energy increments. This change does not modify any old
+receipt, scientific result, physical input or running source/job.

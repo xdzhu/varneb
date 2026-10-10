@@ -1795,3 +1795,34 @@ tree5410b33ead6a3be1722e107f2fd5cb4abb94fa26 and archive
 Later records/docs only, executed helper unchanged. 00:20actual eight-handle
 accounting remains2RUNNING+6PENDING, not failed or converged. Five user dirty
 files retain original numstat and are not staged. Goalactive/incomplete.
+
+## E061 - Exact historical sources without locking future paper prose
+
+PreviousE060isPROGRESS, pushed84b88f8; actual00:27eight handles2RUNNING/
+6Dependency, not terminal or restarted. Review the finiteG3/gates instead
+of generating more material/condition/Hessian tasks. Identify a real E059
+fixture defect: mutable current paper/library byte checks falsely reject
+prose-only changes despite unchanged science. Preserve the exact historical
+eight sources separately and strengthen current numerical replay coverage.
+
+Actual00:34HFsource-only export rechecks original E059 receipt and eight
+raw executed source hashes, including legacyCRLF;147582bytes become55195
+byte zip5178718515dfdfae3a03b98b67d82b7c30270f587f1dea1c8de284619b8f24c5.
+NoDFT/input/holdout read, job/source/parameter mutation, installation or new
+HF numerical replay/pytest. Existing receipts/raw outputs stay immutable.
+
+All3869current material numeric entries/key sets now match historical HF,
+maxdelta2.84e-14;1e-9is computational tolerance, not aDFTerror bound. Six
+work/well mutations and re-signed corrupted source fail as intended; simulated
+prose changes pass without editing actual paper. Local84related tests pass
+6.82s. Scientific runtime/input unchanged, source/archive check stays exact.
+Evidence:replay_delivery_E061_20261011. Not a new barrier/G3/TS/forecast;
+goalactive/incomplete and original finite matrix/+.005unopened retained.
+
+Actual clean archive cwd84pass/0fail/error/skip8.146s; six tracked case/test
+files byte-match. Tested treef5209fde9ae8626ecc3aceb8f6b0dc509c86e5cc,
+archive7c9a427401be4fb599dcf3425332e4760e039f15b61d31cfa32c358023bcbfe8.
+Later record/docs additions only. 00:43actual eight-handle accounting remains
+2RUNNING/6PENDING, not terminal; no new job or payload revision is performed.
+PROGRESS: remove a false future drafting failure and broaden actual-material
+numeric oracle, not a new physics result. Five user dirty files preserved.
