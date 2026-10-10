@@ -1471,3 +1471,31 @@ actions, no overfull/fatal log entries; actual changed pages11-13 rendered
 and visually checked. The delivery/build receipts preserve earlier history
 and distinguish the verified executable/data tree from later editorial records.
 Five unrelated user-owned tracked changes remain excluded from staging.
+
+## E052/E053 — resumed bounded G2 research, 2026-10-10
+
+The user requested continued research; the existing goal is active. E052
+submitted only the two existing +1% minus endpoints. Both completed0:0
+after6BFGSsteps/7freshSCFs; full raw original-six-byte/DSIZE32/EFS reviews
+passed, Pca2_1 at all three tolerances, .013274962eV/A/.99580664kbar.
+Total14freshSCFs14.250463coreh;140observable exports without licensed assets.
+All ten training endpoint representations now pass, not ten distinct phases.
+No forced symmetry, CI, parameter changes or unknown/live repeats.
+
+E053 prepares zero-strain preserving flip and PO→M as the first matched
+G2 comparison. Nine total images = seven fresh internal images plus two
+fixed, hash-pinned *clamped* wells. Frozen G1 geometry contributes the
+starting mechanism only, never free-cell E/F/stress. The ABACUS STRU writer
+wraps Direct positions: record an explicit short-step lift of the complete
+raw endpoint history (including the PO canary before its restart), anchor
+the original G1 endpoint lift to the registered unrelaxed seed, and smoothly
+apply the BFGS endpoint corrections. No atom reordering/nearest endpoint
+fitting or claim of distinct winding is made. The continuous lift and full
+geometry/boundary preflight must pass before any DFT.
+
+Each first G2 segment is limited to10FIREsteps/4h/oneHFnode/32MPI/thread1;
+no more than two study allocations concurrently. A healthy step-limit is
+not an SCF failure and remains the same chain for any later reviewed
+continuation. Four channels × two training conditions remains the <=8chain
+cap. +0.5%holdout/G3 surfaces are ungenerated. G2/G3/strong controls and
+independent predictions remain missing, so no JCTC-ready claim is made.

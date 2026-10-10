@@ -1,9 +1,10 @@
 # Competing switching and phase-escape channels in hafnia: a mode-strain pathway analysis
 
-Working manuscript, 2026-10-09. This is a connected main-text draft, not a
+Working manuscript, 2026-10-10. This is a connected main-text draft, not a
 submission-ready article. The numerical Results below use explicitly dated
-pilot observations. Five ordered matched-substrate endpoint representations have passed their
-physical screens; G2 channel barriers, local conditional branches and
+pilot observations. All ten registered endpoint representations across the
+two matched-substrate training conditions have passed their physical screens;
+G2 channel barriers, local conditional branches and
 independent material predictions are still missing. An abstract and a
 conclusion asserting those unmeasured results are deliberately withheld.
 The [methods working record](METHODS_DRAFT.md),
@@ -672,9 +673,28 @@ BFGS steps and seventeen SCFs, retaining $P2_1/c$; its force is 0.007755
 eV/Angstrom and open traction is 1.452557 kbar. Its energy lies 114.746973
 meV/HfO2 below PO+ in this same ensemble. This deeper well does not specify
 the escape barrier: the absolute path maxima, not endpoint depths alone,
-determine the proposed selectivity test. The two remaining +1% minus
-endpoints and matched paths are still needed. The [finite matrix and raw records](../../benchmarks/hfo2_channels/20261008/clamped_endpoint_matrix_20261009/README.md)
+determine the proposed selectivity test. The [finite matrix and raw records](../../benchmarks/hfo2_channels/20261008/clamped_endpoint_matrix_20261009/README.md)
 retain this distinction.
+
+The two registered +1% minus endpoints have now independently passed the
+same screens, each after six BFGS steps and seven fresh SCFs. Both retain
+$Pca2_1$ at all three tolerances, with maximum atomic force 0.013275
+eV/Angstrom and open traction 0.995807 kbar. Their fourteen evaluations
+cost a combined 14.250463 SCF core-hours at 32 ranks. These complete the
+ten endpoint representations, not ten distinct phases or certified local
+minima. Agreement between symmetry-related endpoint energies is not a
+numerical error bar for an intervening barrier.
+
+The first [matched G2 pair](../../benchmarks/hfo2_channels/20261008/clamped_G2_E053_20261010/README.md)
+uses the zero-strain preserving candidate and PO-to-M escape candidate.
+Their starting polygons retain the ordered G1 correspondence and explicitly
+recorded periodic lift, but release the same permitted atomic and cell
+variables at the common substrate. Only the two unchanged clamped wells
+reuse hash-pinned raw results; seven internal images require fresh DFT.
+The free-cell source energies are not transferred to this new ensemble.
+Starting-path construction and endpoint convergence still do not establish
+the optimized competing barriers, their sampling errors or the proposed
+selectivity response.
 
 ## 4. Discussion and remaining material tests
 

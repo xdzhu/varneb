@@ -164,3 +164,22 @@ the exact clean staged source tree:1354passed/2skipped/0failed, plus660actual
 observable files byte-matched. The current13page working manuscript was
 compiled and changed pages11-13 reviewed; it remains scientifically incomplete.
 The earlier validation_delivery.json is retained as a historical milestone.
+
+## E052 — all ten training endpoint representations screened
+
+User resumed the research goal on 2026-10-10. The two remaining +1% PO−
+seeds ran as jobs28568571/28568573, each one hfacnormal01 allocation/32real
+MPI ranks/direct mpirun, BFGS20step/21SCF/2h caps, unchanged .03eV/A,
+2kbar open traction and .02step gates. Both completed0:0 at11:09CST,
+6BFGSsteps/7SCFs, Pca2_1 at all three registered tolerances. Atomic forces
+.013274962eV/A and open traction .99580664kbar pass. Costs7.150527/7.099936
+SCFcoreh are distinct from7.662222/7.608889 allocated coreh. A force rebound
+at step4 was retained, not used to stop either endpoint.
+
+All14SCFs were replayed on HF with the original six physical bytes, raw E/F/
+stress and DSIZE32; [invocation](audit_E052_invocation.sh) and per-phase
+raw audits/receipts are preserved. Two70-file observable exports exclude
+licensed pseudo/orbital/charge/binary files. The ten representations are
+not ten distinct phases or a Hessian/polarization certificate. The +0.5%
+holdout remains ungenerated/unread. Next: registered G2 clamped barriers,
+not new material/parameter/symmetry tuning.

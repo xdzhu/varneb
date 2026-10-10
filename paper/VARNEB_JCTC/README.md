@@ -31,9 +31,12 @@ Their phase equivalence does not merge their paths or establish electronic
 polarity/whole-path topology. The +1% T-derived/PO+/M training endpoints
 28469832/28469833/28472493 have all completed and passed their original
 raw E/F/stress and input-byte reviews. The T-derived structure is Ccce already
-in the strained input, not forcibly assigned the free-T group. Eight of ten
-registered endpoint representations are screened; the two +1% minus seeds
-remain unsubmitted. The reserved+.005holdout remains ungenerated/unread.
+in the strained input, not forcibly assigned the free-T group. The two +1%
+minus endpoints28568571/28568573 also completed and passed all raw screens,
+each6BFGSsteps/7SCFs. All ten registered endpoint representations are now
+screened. The first matched zero-strain preserving-flip/PO-to-M chains are
+jobs28574708/28574709, each32MPI/10step/4h first segment, not yet converged
+barrier results. The reserved+.005holdout remains ungenerated/unread.
 G2 matched-boundary channel barriers, G3
 conditional-branch validation and independent material predictions remain
 missing. An ordinary residual pass is not a certified saddle or a barrier

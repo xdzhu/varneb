@@ -197,3 +197,49 @@ def make_seed_cached_factory(*, parameters, command):
         (target / "seed_cache_audit.json").write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
         return calc
     return factory
+
+
+def make_clamped_seed_cached_factory(*, parameters, command):
+    """Nine-image G2 case: two hash-pinned clamped wells, seven fresh interiors.
+
+    This uses the exact case STRU reader, not optional ASE ABACUS I/O. It is
+    deliberately separate from the historical free-cell seed-cache contract.
+    """
+    if set(parameters) != {"source_directory", "seed_cache_records"}:
+        raise ValueError("clamped seed cache prohibits physical overrides")
+    records = parameters["seed_cache_records"]
+    if (not isinstance(records, list) or len(records) != 9 or records[0] is None
+            or records[-1] is None or any(r is not None for r in records[1:-1])):
+        raise ValueError("exactly two fixed endpoint caches and seven fresh interiors required")
+    for record in (records[0], records[-1]):
+        if (set(record) != {"directory", "input_sha256", "raw_log_sha256"}
+                or set(record["input_sha256"]) != {*CONTRACT, "STRU"}
+                or any(record["input_sha256"][n] != h for n,h in CONTRACT.items())):
+            raise ValueError("clamped endpoint cache must pin the unchanged physical contract")
+
+    def factory(image_index, atoms, directory):
+        if type(image_index) is not int or not 0 <= image_index < 9:
+            raise ValueError("registered G2 image index outside the nine-image chain")
+        calc = FixedHfo2Calculator(source=parameters["source_directory"], command=command, directory=directory)
+        record = records[image_index]
+        if record is None:
+            return calc
+        source = Path(record["directory"])
+        if ({n:sha256(source/n) for n in record["input_sha256"]} != record["input_sha256"]
+                or sha256(source/"OUT.ABACUS/running_scf.log") != record["raw_log_sha256"]):
+            raise ValueError("clamped endpoint cached input/raw log changed")
+        if not same_ordered_geometry(atoms, read_fixed_hfo2_stru(source/"STRU")):
+            raise ValueError("clamped endpoint cache ordered geometry differs")
+        target = Path(directory)
+        if target.exists() and any(p.name != "structure.start.vasp" for p in target.iterdir()):
+            raise ValueError("fresh clamped chain calculator directory required")
+        raw = audited_results(source)
+        calc.atoms = atoms.copy()
+        calc.results = {k:v.copy() if isinstance(v,np.ndarray) else v for k,v in raw.items()}
+        target.mkdir(parents=True, exist_ok=True)
+        audit = {"policy":"identical_ordered_clamped_endpoint_hash_pinned",
+                 "raw_source":str(source), "input_sha256":record["input_sha256"],
+                 "raw_log_sha256":record["raw_log_sha256"], "new_DFT_calls":0}
+        (target/"seed_cache_audit.json").write_text(json.dumps(audit,indent=2)+"\n",encoding="utf-8",newline="\n")
+        return calc
+    return factory
