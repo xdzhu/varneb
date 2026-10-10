@@ -1871,3 +1871,24 @@ normalized root Git metadata, then corrected its scope; no material loss.
 01:53 two32CPU RUNNING/six PENDING, M step2/.150404. PROGRESS: measured
 residual diagnosis and portable replay tool/evidence, not new barrier/TS
 labels. Overall goal remains active/incomplete.
+
+## E064 — complete forecast panel and correlated-reference scoring implemented
+
+Bounded zero-DFT arithmetic experiment, not actual HfO2 forecast evidence.
+Require every registered model/case, explicit abstention, one frozen model
+artifact and shared comparison contract. Report coverage/maximum errors,
+pairwise gain and strongest-available baseline envelope under the SAME
+reference interval. Missing strong references are unavailable, not bad
+accuracy. Identical B4/B5 and already-accurate B0 reject manufactured gain.
+This does not fit/select/freeze B2--B5 or prove chronological label blinding.
+
+48random intervals versus10001-point independent grids plus an adversarial
+off-grid cusp verified; cusp distance7.4e-6 is grid discretization, not DFT
+uncertainty. Actual02:10HF isolated NumPy kernel verified only; historical
+source bytes and current full numeric replay are independent contracts.
+Local122/independent-Git-archive122pass,0fail/0skip;14new source/synthetic
+evidence files byte-matched. All actual materials/holdout/DFT untouched.
+02:13twoRUNNING32CPU/sixPENDING; Mstep4/.134093, flipstep16/.238148.
+PROGRESS: missing prospective comparison interface implemented and verified,
+not a physics/new-theory result. Full goal active; real G2/G3/models and
+independent material forecasts remain required.
