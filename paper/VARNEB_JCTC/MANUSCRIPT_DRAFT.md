@@ -806,6 +806,37 @@ strain. Energies are meV/HfO2 under the unchanged P=0 electronic contract.
 |---|---:|---:|---:|
 | PO-to-M, common T-plane clamping | 98.458122 | 190.998616 | -92.540494 |
 
+The same terminal chain also permits a zero-DFT reference-space audit.
+The prescribed G2 cyclic axis change is inverted on geometry-only copies
+before projection onto the original T chart; ordered atoms and continuous
+periodic lifts are unchanged. Native E/F/stress and the ordinary residual
+are replayed in the production frame, not attached unrotated to these copies.
+All four previously registered Cmma frames remain, without selecting an
+orientation by the observed coverage. Table 6 separates atomic displacement
+coverage from the separately recorded finite cell strain.
+
+Table 6. Squared atomic-displacement fractions (%) for the zero-strain
+clamped PO-to-M chain, after mass-weighted rigid-translation removal in the
+original T chart. The peak is sampled image3; the Cmma range spans retained
+registrations and is not a numerical uncertainty interval.
+
+| Atomic reference space | Rank | Sampled peak | M endpoint |
+|---|---:|---:|---:|
+| T geometric triplet | 3 | 57.9237 | 24.4400 |
+| Two complete lowest T optical doublets | 4 | 12.0962 | 24.2409 |
+| Full registered Cmma four-direction span | 4 | 36.4746–36.4865 | 56.3537–56.3667 |
+
+Coverage evolves differently across these representations along one real
+escape candidate. A favourable projection at one image does not establish
+full-path completeness, energetic accuracy or independent predictive gain;
+the rank-three triplet is not a same-dimension comparison with either
+rank-four space. In particular, the Cmma result is not a test of a nonlinear
+relaxed model or of its full mode inventory. The [analysis and rejected
+untransported trial](../../benchmarks/hfo2_channels/20261008/clamped_reference_E071_20261011/README.md)
+preserve the coordinate convention and source-level correction. This
+descriptive training result does not select the G3 bottlenecks or alter
+the prospective model and holdout rules.
+
 ## 4. Discussion and remaining material tests
 
 The present data establish that a compact local projection, an apparently

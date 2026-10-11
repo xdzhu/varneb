@@ -2018,3 +2018,27 @@ two32CPU live bands, latest complete PO-to-T1/.323053 and flip1/.197669.
 No DFT/job mutation, input/source/budget change, model freeze or holdout read.
 PROGRESS is a primary-evidence-backed manuscript correction; full finite
 G2/G3/strong-control/prospective-material goal remains active and incomplete.
+
+## E071 — real clamped-chain reference transport, not extra DFT
+
+Reparse9portable native terminal frames and replay the original clamped
+residual. An initial trial omitted the prescribed G2 cyclic Cartesian/cell
+frame; its misleading coverage is rejected and retained with executed bytes.
+The corrected geometry-only inverse uses the original seed provenance,
+identity atom order and all4E023 reference registrations. No production
+geometry/EFS/input/optimizer or reference selection changes.
+
+Actual Mchain image3 versus FS fractions: Ttriplet57.9237→24.4400%, Cmma
+rank4span36.4746–36.4865→56.3537–56.3667%. These are atomic squared-displacement
+fractions, not energy partitions or predictive gains; cell strains separate.
+No G3 bottleneck chosen, new curvature/Γ/chain budget or holdout access.
+
+Preparation97local/97clean-archive pass and actual independent material replay
+match all parsed values except the explicit CRLF/LF source-SHA metadata.
+Final99local/99clean complete JUnit pass,0fail/error/skip. Finalclean exec
+session ID was not retained; no direct exit-code claim/restart. Executed source
+capsules preserve raw bytes. Manuscript Table6,15-page compile and newpages14/15
+visual check complete.11:15two32CPU bands alive, Tstep2/.211448,flip3/.197376.
+Evidence/clamped_reference_E071_20261011. PROGRESS is an actual material
+analysis and tested source-level frame contract, not G2/G3/H1/H2/forecast
+completion. Full scientific goal active; five user edits preserved.
