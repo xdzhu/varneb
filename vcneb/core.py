@@ -1600,6 +1600,10 @@ class VCNEB:
         a Hessian calculation. Legacy ``tangential_force_eV_per_A`` refers to
         the *NEB residual*, whose ordinary-NEB tangent is only a spring term.
         Use ``true_tangential_force_eV_per_A`` to assess physical stationarity.
+        Legacy ``true_*`` fields below contain active raw forces before a
+        mode/subspace projection. Under clamping, use the explicit
+        ``allowed_true_*`` fields for stationarity and report the excluded
+        ``constraint_reaction_*`` separately. Neither proves a Hessian index.
         """
 
         if self.n_images <= 2:
@@ -1618,6 +1622,12 @@ class VCNEB:
                 "true_tangential_force_eV_per_A": 0.0,
                 "true_perpendicular_force_eV_per_A": 0.0,
                 "true_generalized_force_max_vector_eV_per_A": 0.0,
+                "allowed_true_tangential_force_eV_per_A": 0.0,
+                "allowed_true_perpendicular_force_eV_per_A": 0.0,
+                "allowed_true_generalized_force_norm_eV_per_A": 0.0,
+                "allowed_true_generalized_force_max_vector_eV_per_A": 0.0,
+                "constraint_reaction_force_norm_eV_per_A": 0.0,
+                "constraint_reaction_force_max_vector_eV_per_A": 0.0,
                 "tangent_curvature_eV_per_A2": None,
             }
 
@@ -1647,6 +1657,10 @@ class VCNEB:
         physical_force = self._last_true_forces_x[image_index] * active_mask
         physical_tangential = float(np.dot(physical_force, tangent))
         physical_perpendicular = physical_force - physical_tangential * tangent
+        allowed_force = self._project_constraint_force(physical_force) * active_mask
+        allowed_tangential = float(np.dot(allowed_force, tangent))
+        allowed_perpendicular = allowed_force - allowed_tangential * tangent
+        constraint_reaction = physical_force - allowed_force
 
         d_minus = float(np.linalg.norm(image_x_active[image_index] - image_x_active[image_index - 1]))
         d_plus = float(np.linalg.norm(image_x_active[image_index + 1] - image_x_active[image_index]))
@@ -1677,6 +1691,16 @@ class VCNEB:
             "true_generalized_force_max_vector_eV_per_A": float(
                 np.linalg.norm(physical_force.reshape(-1, 3), axis=1).max()
             ),
+            "allowed_true_tangential_force_eV_per_A": allowed_tangential,
+            "allowed_true_perpendicular_force_eV_per_A": float(np.linalg.norm(allowed_perpendicular)),
+            "allowed_true_generalized_force_norm_eV_per_A": float(np.linalg.norm(allowed_force)),
+            "allowed_true_generalized_force_max_vector_eV_per_A": float(
+                np.linalg.norm(allowed_force.reshape(-1, 3), axis=1).max()
+            ),
+            "constraint_reaction_force_norm_eV_per_A": float(np.linalg.norm(constraint_reaction)),
+            "constraint_reaction_force_max_vector_eV_per_A": float(
+                np.linalg.norm(constraint_reaction.reshape(-1, 3), axis=1).max()
+            ),
             "tangent_curvature_eV_per_A2": curvature,
         }
 
@@ -1689,6 +1713,10 @@ class VCNEB:
         and a large residual can be caused by the cell block rather than atoms.
         In parallel mode, image-local arrays are reduced so every rank receives
         the same JSON-serializable result.
+        Explicit ``allowed_true_*`` fields use the implemented active-space
+        projector; ``constraint_reaction_*`` is the excluded active force.
+        These are metric-dependent generalized forces, not raw Cartesian
+        stress and not an estimate of energy or curvature error.
         """
 
         self._compute_forces()
@@ -1748,6 +1776,14 @@ class VCNEB:
                 "max_cell_force_eV": float(np.max(np.abs(force_state.deform))),
                 "max_true_generalized_force_eV_per_A": true_force_norm,
                 "cell_generalized_force_norm_eV_per_A": float(np.linalg.norm(cell_force_x)),
+                "allowed_true_generalized_force_norm_eV_per_A": float(np.linalg.norm(constrained_true_force_x)),
+                "allowed_true_generalized_force_max_vector_eV_per_A": float(
+                    np.linalg.norm(constrained_true_force_x.reshape(-1, 3), axis=1).max()
+                ),
+                "constraint_reaction_force_norm_eV_per_A": float(np.linalg.norm(released_force_x)),
+                "constraint_reaction_force_max_vector_eV_per_A": float(
+                    np.linalg.norm(released_force_x.reshape(-1, 3), axis=1).max()
+                ),
             }
             if self.mode_basis is not None:
                 record.update({

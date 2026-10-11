@@ -991,3 +991,30 @@ SVG/PDF可编辑，CSV全部9行在独立Git archive中逐字节复现。
 11:32:54仅两32CPU仍RUNNING：PO→Tstep4/.127622、保留翻转step4/.197105；
 反转任务保持held，四+1%starter依赖未变。有限完整G2/G3、强基线和独立预测
 科学目标继续active，未将展示进展或一条收敛链冒称该目标完成。
+
+### 10月11日E073：允许空间驻定诊断与基底反力分离
+
+原saddle汇总的true_*范数含mode/subspace投影前的active raw力，而path逐像
+切向/垂向已正确投影。这会把夹持反力混入峰像梯度判断，不是生产NEB力错误。
+新allowed_true_*与constraint_reaction_*字段两入口均显式提供，旧字段数值
+保留；core仅36行诊断/说明新增，真实普通力在诊断前后逐字节相同。
+
+九组native可分发缓存重新解析；M链image3 raw最大2.0651、投影排除反力
+2.0631、允许最大.0900eV/A，允许Euclidean.2317、实际切向-.1243。不同范数
+不等价，不换算kbar/能垒误差，不认证连续TS/index或改普通.10。反力虽不作为
+内部驻定失败，外加基底应变功导数仍须使用原stress与实际cell Jacobian。
+不能将模型省略但物理可动的模式也当反力删掉。
+
+本机39项与真正archive39项直接exit0，真实材料报告逐字节相同；全tests
+1842通过/1可选ASE ABACUS reader缺失跳过/312弃用warnings/0失败，363.45s。
+额外check_vcneb_forces的力/胞/压强共轭、约束、缓存与executor模拟通过；其中
+toy CI不是物理案例开启CI。没有新DFT、额外Hessian或HF pytest。
+正文方法与真实峰像讨论已补入，16页LuaLaTeX成功，新/相邻2/14/15/16页检查，
+不是最终投稿版面认证。证据在clamped_stationarity_E073_20261011。
+
+11:47:31两32CPU仍RUNNING，Tstep5/.103118尚未达到.10，flip6/.196321。
+另readback发现四+1%starter仍priority1165、旧afterok依赖未包含新flip续算号；
+释放held反转28692776前必须单独增加native held-slot容量护栏，防止旧父段
+退出后同时启动两starter而第三条续算仍运行。当前反转保持held，没有超并发。
+本诊断阶段0调度写入；资源护栏的真实变更另留独立里程碑，不混作诊断结果。
+完整有限G2/G3/强对照/独立预测目标仍active，未缩减或宣称JCTC完成。

@@ -2062,3 +2062,24 @@ paper figure bundle; no new DFT/scheduler writes/physical or budget change.
 11:32:54two32CPU running: Tstep4/.127622,flip4/.197105; held/dependencies
 unchanged. PROGRESS is visualization, tested delivery and manuscript
 integration, not full G2/G3/H1/H2/forecast or JCTC readiness. Goal active.
+
+## E073 — permitted physical gradient versus prescribed-coordinate reaction
+
+Add explicit allowed/reaction force diagnostics while keeping the legacy
+saddle raw-active fields and all force/optimizer equations. Reparse9native
+terminal frames: Mpeak rawmax2.0651,excluded2.0631,allowedmax.0900,physical
+tangent-.1243; ordinary residual.099214 unchanged byte-for-byte by diagnostics.
+No Hessian/index/energy-error claim or stricter NEB target. Support reactions
+are excluded from internal stationarity, not from external strain work.
+
+39local/39actualarchive tests pass, native analysis byte-identical. Full local
+suite1842pass/1optional ase.io.abacus unavailable skip/312deprecation warnings,
+0failure,363.45s. Standalone force/conjugacy checks exit0 on synthetic models;
+no material CI/DFT/HFpytest.16-page paper compile and2/14/15/16numeric/layout
+inspection. Evidence/clamped_stationarity_E073_20261011. Runtime edits are
+local; immutable live HFsource/physical contract/G3 budget/holdout unchanged.
+11:47two32CPU alive:T5/.103118,flip6/.196321. Read-only native priority/dependency
+audit identifies downstream capacity risk after replacement jobs: four+1%
+starters need a separate held-slot guard before releasing held reversing job.
+No scheduler write belongs to this diagnostic milestone. PROGRESS is tested
+core interpretation and actual cached gradient evidence, not completion.

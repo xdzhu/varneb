@@ -135,6 +135,13 @@ is not an open-coordinate convergence failure. Zero applied stress and
 zero nominal substrate strain are distinct ensembles, and are not adjacent
 points of a single strain derivative.
 
+In the registered generalized-coordinate metric, a prescribed active-space
+projector separates the allowed physical gradient from support reactions.
+Ordinary NEB residuals, allowed physical gradients and excluded reactions
+are reported separately. Only enforced mechanical constraints enter this
+projection; an unmeasured but physically movable mode is not relabelled as
+a support reaction merely because a reduced model omits it.
+
 A retained coordinate $q$ can specify one mode or a declared combination of
 modes. A frozen slice keeps the remaining coordinates $r$ fixed. A conditional
 surface instead follows a particular local minimum in the permitted r
@@ -836,6 +843,18 @@ untransported trial](../../benchmarks/hfo2_channels/20261008/clamped_reference_E
 preserve the coordinate convention and source-level correction. This
 descriptive training result does not select the G3 bottlenecks or alter
 the prospective model and holdout rules.
+
+A native-cache gradient replay makes the mechanical distinction explicit.
+At sampled image 3 the active raw maximum generalized-force vector is
+2.0651 eV/Angstrom, dominated by the projector-excluded reaction (2.0631),
+whereas the allowed maximum vector is 0.0900. Its allowed Euclidean norm is
+0.2317 and signed physical path-parallel force is -0.1243 eV/Angstrom;
+these are different diagnostics, not equivalent tolerances. The ordinary
+residual remains 0.099214088. Thus large support reactions are not evidence
+of failure in the clamped active space. Neither these numbers nor the
+discrete path curvature certifies a stationary index-one bottleneck.
+The [native replay and explicit diagnostic fields](../../benchmarks/hfo2_channels/20261008/clamped_stationarity_E073_20261011/README.md)
+preserve legacy output meanings without changing the optimizer force.
 
 ![Discrete clamped escape path, atomic reference coverage and finite cell strain](figures/hfo2_clamped_M_E072_20261011/hfo2_clamped_M.pdf)
 
