@@ -2645,3 +2645,36 @@ dirty tracked files and manuscript remain untouched. Goalactive/incomplete.
 PROGRESS here is bounded, actually verified audit engineering needed for
 forthcoming material results, not a new scientific prediction or JCTC completion.
 Evidence:clamped_child_audit_E093_20261011/validation.json.
+
+## E094 — existing four-band work evidence written into the main manuscript
+
+Sections2.5/3.8 andTable7 connect physical-covector trapezoids to the actual
+four completed training bands. Endpoint closure .115373 at the reversing
+flip can conceal peak discrepancy35.275323meV/HfO2. Retain all signed
+retained/omitted/translation/cell work and every originalT/Cmma representation.
+No state-function mode energies, physical error bound or forecast winner is
+inferred. No extra sampling/Hessian budget is opened by this diagnostic.
+
+The initial combined patch context failure is verified before writes using
+the unchanged original manuscript hash, then reapplied separately. A manual
+hyphen/linebreak artifact is corrected before the final build/test archive.
+Duplicate3.6 headings become3.6/3.7. Actual final compileexit0,22pages/
+1049375bytes. All22pages rendered/reviewed at contact-sheet scale; changed
+pages5/21/22 inspected separately130dpi. All16Table7 values occur in actual
+PDF text, with no final overfull/underfull/missing-glyph/LaTeX/package warnings.
+
+11newtests; actuallocal46pass/0fail/0skip,2.174JUnitseconds. IndependentGit
+archive46pass/0fail/0skip/direct0,2.225seconds. Main source/newtest/firstJUnit
+byte-equal; README decoded-content equal before validation-link-only update.
+No material report, figure or runtime source change, no new full-suite/native
+pytest result invented. Existing strong-reference ranks and frames stayfixed.
+
+20:47:49CST jobs28727368/28727382 RUNNING32CPU/stderr0/no failure, newsteps5/6
+and forces.441986/.129644. Both original+1%flipstarters remainJobHeldUser.
+G2still4/8; conditional/strong-control and frozen independent prediction
+evidence remain missing. 0schedulerwrites/replays/newDFT/chains/Hessians,
+G3selection or+.005holdoutaccess; productionworkers continue normalDFT.
+NoCI/release/install/automation/submission. Original5userdirtytrackedfiles
+preserved. Goalactive;PROGRESS is verified substantive main-text delivery,
+not final JCTC scientific completion.
+Evidence:paper/VARNEB_JCTC/MANUSCRIPT_DRAFT.path-work-E094.validation.json.

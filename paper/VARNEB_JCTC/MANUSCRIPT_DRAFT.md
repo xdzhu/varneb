@@ -326,6 +326,35 @@ cost; faster optimization to a different mechanism is not same-path
 acceleration. The [detailed methods](METHODS_DRAFT.md) retain unit, gauge,
 stability, selection and uncertainty definitions.
 
+### 2.5. Signed path work as an energy-consistency diagnostic
+
+Displacement and instantaneous gradient coverage do not measure the energy
+change accumulated along a path. We therefore retain a separate, signed
+physical-work check on the sampled coordinate polygon. For successive
+coordinates $x_i$ and their conjugate physical energy gradients $g_i$, define
+
+$$
+W_i=\frac{g_i+g_{i+1}}{2}\cdot(x_{i+1}-x_i),\qquad
+R_i=E_{i+1}-E_i-W_i.
+$$
+
+Within each declared coordinate block, orthogonal retained, omitted and
+translation projectors partition this trapezoidal work exactly. Atomic
+mass coordinates and the original permitted open-cell coordinates retain
+their own dual gradients and units; no basis mixes these blocks. The cell
+contribution completes the physical contraction. Rotating a basis inside
+one span changes no result, but choosing another span changes its work.
+Neither spring nor projected NEB forces replace the physical gradient.
+
+These contributions are path-dependent signed work, not state-function
+energies assigned to phonon modes. Negative work is retained. The cumulative
+residual $\sum_i R_i$ diagnoses sampled energy-gradient consistency, but
+does not separate unsampled nonlinearity from force/stress error or bound
+the activation-barrier error. In particular, cancellation can make final
+endpoint closure small while the bottleneck-region discrepancy is large.
+The [implementation and finite-data checks](../../docs/SAMPLED_PATH_WORK.md)
+introduce no new calculator evaluations or reduction-model accuracy claim.
+
 ## 3. Present results: audited pilot evidence
 
 ### 3.1. The formation band and the shared polar starting well
@@ -1026,7 +1055,7 @@ forecast. The [nine-frame external-work record](../../benchmarks/hfo2_channels/2
 preserves both Jacobians, units and this distinction; finite-strain G2 and
 stationary-branch comparisons remain necessary.
 
-### 3.6. A seen strain contrast in unchanged reference spaces
+### 3.7. A seen strain contrast in unchanged reference spaces
 
 The completed $+1\%$ PO-to-T training band permits a first matched-strain
 comparison without selecting a new representation. Figure 6 keeps the
@@ -1074,6 +1103,70 @@ conditional-branch stability, G3 selection, the full competing-channel response
 or an independent prediction. Those tests still require the remaining
 registered G2 chains and prospectively frozen strong-control comparison.
 
+### 3.8. Endpoint closure can conceal a bottleneck-region discrepancy
+
+The signed-work diagnostic uses the four completed clamped training bands,
+not the unfinished candidates or reserved strain condition. All nine raw
+E/F/stress frames per band are reparsed, with the same ordered continuous
+lift, original T mass chart, permitted open-cell space and electronic
+contract. These 36 frame records contain 34 distinct raw-log/geometry
+identities: three zero-strain paths share the initial PO+ cache. They are
+neither new SCFs nor independent statistical replicates. Every energy
+change is relative to that band's own matched PO+ well.
+
+Table 7 compares raw sampled peak energies with the full endpoint-gradient
+trapezoid accumulated to the same image. Peak and endpoint residuals use
+the same sign, raw energy change minus accumulated work. Units are
+meV/HfO2 throughout; the Hf4O8-cell values are multiplied by 250.
+
+| Training band | Raw peak | Work to peak | Residual at peak | Residual at endpoint |
+|---|---:|---:|---:|---:|
+| PO-to-M, zero strain | 98.458122 | 77.560379 | 20.897743 | 3.006016 |
+| PO-to-T, zero strain | 84.416624 | 75.955937 | 8.460687 | 0.728018 |
+| Reversing flip, zero strain | 338.968965 | 303.693643 | 35.275323 | 0.115373 |
+| PO-to-T, +1% strain | 96.763650 | 87.345393 | 9.418257 | 1.997185 |
+
+The reversing candidate illustrates the distinction most clearly. Its
+endpoint closure is only 0.115373 meV/HfO2, whereas the discrepancy at the
+highest sample is 35.275323. Small final closure therefore does not certify
+energy-resolved consistency through the transition region. Conversely,
+the present nine-sample trapezoid cannot determine whether this discrepancy
+comes from coarse quadrature, physical force/stress error or both. It is
+not a measured barrier uncertainty and does not justify retuning the
+electronic inputs or declaring an ordinary-converged band failed.
+
+The coordinate pullback itself passes a distinct implementation check:
+direct native Cartesian-force/ASE-stress contractions agree with the
+dual atomic/open-cell work within $1.12\times10^{-16}$ eV per cell. This
+algebraic agreement does not test DFT accuracy. Under the T geometric
+triplet, signed retained work to the respective peaks is -0.111271,
+2.666921, 195.447066 and 1.367408 meV/HfO2, in Table 7 order. Omitted
+atomic work is 68.756917, 72.789643, 105.539695 and 85.773095; open-cell
+work is 8.914733, 0.499373, 2.706882 and 0.204891. The explicit rigid
+translation terms are also retained, at most $3.90\times10^{-9}$ in these
+units at the displayed peaks, rather than removed by a source ASR repair.
+These signed terms sum to the full sampled work, not to a unique energetic
+allocation among modes.
+
+Strong references remain in the comparison. The two complete T optical
+doublets yield retained work 12.359091, 11.900861, 0.782574 and 11.007299
+in the same order. Across all four registered Cmma frames, retained-work
+ranges are 55.618955--55.619265, 62.066996--62.068212,
+63.846564--63.846572 and 67.984207--67.985028. Each representation includes
+its full omitted atomic contribution and the same open-cell work; ranks
+three and four are not treated as identical-dimensional models. This
+reference dependence is not a conditional-energy or forecast-accuracy
+ranking. In particular, the reversing triplet's integrated work and its
+small instantaneous peak-gradient fraction (Table 6) answer different
+questions and need not track one another.
+
+The [complete scalar reports and raw-frame replay checks](../../benchmarks/hfo2_channels/20261008/clamped_path_work_E092_20261011/README.md)
+thus add an energy-gradient consistency test to geometric coverage, without
+selecting G3 bottlenecks, a reference winner or unseen labels. Measured
+conditional response, stability and the prospectively frozen strong-control
+comparison remain necessary for a predictive claim. This diagnostic uses
+existing data only and does not open an additional sampling or Hessian budget.
+
 ## 4. Discussion and remaining material tests
 
 The present data establish that a compact local projection, an apparently
@@ -1081,6 +1174,10 @@ nonpolar midpoint and an ordinary residual pass answer different questions.
 None alone determines the competition between homogeneous switching and
 phase escape. The core proposed result remains the channel-selective
 response to one matched mechanical intervention, not a phase-label survey.
+Signed-work closure adds another distinct check: even a small endpoint
+residual can conceal a substantial interior discrepancy. Neither coverage
+fractions nor this discrete consistency diagnostic can substitute for the
+declared measured conditional response and independent predictive test.
 
 The next material result must contain the registered fixed-plane responses
 of absolute switching and escape barriers, endpoint energies and branch

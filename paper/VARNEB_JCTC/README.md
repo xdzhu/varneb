@@ -223,10 +223,22 @@ layout. G2 remains3/8; five training bands, conditional branches, strong
 controls and frozen independent predictions remain necessary.
 
 The [E089 same-reference strain contrast](../../benchmarks/hfo2_channels/20261008/clamped_T_strain_reference_E089_20261011/README.md)
-adds Figure6 and Section3.6 using the actual completed +1% PO-to-T band
+adds Figure6 and the seen-strain section (now3.7; originally3.6 in E089)
+using the actual completed +1% PO-to-T band
 and unchanged original zero-strain reports. Similar peak displacement
 coverage does not imply similar atomic-gradient coverage or model accuracy.
 Different physical PO+ endpoint energies, absolute gradient norms, all four
 Cmma frames and undefined unstrained-T coverage remain explicit. Four of
 eight G2 candidates are ordinary-converged; remaining paths, conditional
 branches, strong controls and prospectively frozen predictions are unfinished.
+
+The [E092 signed-work evidence](../../benchmarks/hfo2_channels/20261008/clamped_path_work_E092_20261011/README.md)
+is now integrated into Sections2.5/3.8 and Table7. The four completed training
+bands illustrate why endpoint closure need not resolve the bottleneck region.
+Signed retained/omitted/translation/open-cell work is not a mode-energy
+allocation; all four Cmma registrations and both T rank-four optical doublets
+remain. No new material labels, reference selection, physical error bound,
+G3 choice or prediction-accuracy claim is introduced. The two formerly
+duplicate3.6 headings are now numbered3.6/3.7. The
+[dated E094 reading-build receipt](MANUSCRIPT_DRAFT.path-work-E094.validation.json)
+records actual numeric and layout checks, not submission readiness.
