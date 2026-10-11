@@ -1951,3 +1951,28 @@ files byte-match treea320001b. Evidence/clamped_flip_continue_E067_20261011.
 03:36two32CPU RUNNING; Mstep10/.107920,newflip0/.270056. PROGRESS: actual
 terminal native evidence and safe same-chain resumed production, not full
 G2/G3/strong-model/independent prediction or JCTC completeness. Goal active.
+
+## E068 — actual ordinary M convergence and one rolling-slot admission
+
+Native accounting proves28722320 COMPLETED0:0/step13/.099214088, cumulative43.
+91fresh SCFs/334immutable runtime files/nine clamped frames audited on HF;
+zero newDFT in audit. Forward98.458122/reverse190.998616/FS-IS-92.540494
+meV/HfO2 are discrete-chain results, not TS/error/H1 labels. Final-segment
+90.730841coreh excludes earlier preparation/segments. Manuscript Table5 and
+discussion updated;14-pageLuaLaTeX compile passes, newpages13/14 visually
+checked. Complete scientific goal remains active/incomplete.
+
+Flip28722810 capped20/.197683, not converged. Both old successors' native
+dependencies expired, holds retained. Persistent sacct source tuple handles
+expired scontrol records without weakening scientific identity. Revised
+source-r2 tested separately; never-executed source-r1 preserved. Actual
+10:17:57 one release of existing28692775,0sbatch/0dependency writes; actual
+10:17:58start32CPU and nativeDSIZE32.28692776held/four+1%pending unchanged;
+next spare slot reserved for latest complete flip20 same-chain continuation.
+
+117local/117independent-archive actual material and refusal tests pass;
+74source/material/receipt files byte-match testedtree44752edd. Earlier106/115
+preparation scopes are not actual convergence evidence. No new independent
+chain/physical input/running source/holdout/G3/phonon budget changes. PROGRESS
+is one actual material ordinary pass and existing-channel startup, not a
+replacement software-only goal or method-advantage assertion.

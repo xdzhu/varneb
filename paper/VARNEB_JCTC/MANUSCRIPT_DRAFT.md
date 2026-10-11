@@ -780,6 +780,27 @@ starts are not optimized bands or successful material forecasts. The
 and [remaining-start audit](../../benchmarks/hfo2_channels/20261008/clamped_G2_remaining_E056_20261010/README.md)
 retain these distinctions before the held-out condition is accessed.
 
+The zero-strain, common-substrate PO-to-M candidate subsequently reaches
+the ordinary target after 43 updates across its registered segments.
+The final segment terminates at step 13 with a same-boundary replayed
+residual of 0.099214088 eV/Angstrom. Table 5 reports its endpoint-inclusive
+discrete image peaks, not a continuous saddle-point certification or a
+sampling-converged barrier. All 91 fresh SCFs of this final segment pass
+the original six-file, native 32-rank and complete E/F/stress audit; their
+recorded transport time corresponds to 90.730841 allocation-core-hours.
+This cost excludes the earlier pilot, 20-update segment and endpoint
+preparation. The [terminal evidence](../../benchmarks/hfo2_channels/20261008/clamped_M_terminal_E068_20261011/README.md)
+preserves the nine-image replay and those distinctions. One converged
+escape candidate does not establish the full G2 network, its strain response,
+the selected bottlenecks, H1 or the independently tested H2 forecasts.
+
+Table 5. First ordinary-converged G2 candidate at zero imposed substrate
+strain. Energies are meV/HfO2 under the unchanged P=0 electronic contract.
+
+| Candidate | Forward discrete peak | Reverse discrete peak | Final-minus-initial well energy |
+|---|---:|---:|---:|
+| PO-to-M, common T-plane clamping | 98.458122 | 190.998616 | -92.540494 |
+
 ## 4. Discussion and remaining material tests
 
 The present data establish that a compact local projection, an apparently
