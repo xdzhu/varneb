@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="4" time="1.371" timestamp="2026-10-12T03:08:15.796952" hostname="Aero"><testcase classname="tests.test_mode_surface" name="test_fully_prescribed_guard_rejects_before_any_energy_call[False]" time="0.002"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">freeze_remaining_direction = False
+
+    @pytest.mark.parametrize("freeze_remaining_direction", [False, True])
+    def test_fully_prescribed_guard_rejects_before_any_energy_call(
+        freeze_remaining_direction: bool,
+    ) -&gt; None:
+        if freeze_remaining_direction:
+            plane = _identity_plane()
+            frozen = (np.array([1.0, -1.0, 0.0]) / np.sqrt(2.0))[:, None]
+        else:
+            plane = ModePlane(
+                reference=np.zeros(2), basis=np.eye(2), metric_weights=np.ones(2),
+                axis_weights=np.eye(2), axis_labels=("Q1", "Q2"),
+                amplitude_unit="toy length", reference_id="toy/fully-prescribed",
+            )
+            frozen = None
+        evaluated: list[np.ndarray] = []
+        checked: list[np.ndarray] = []
+    
+        def energy_gradient(x: np.ndarray) -&gt; tuple[float, np.ndarray]:
+            evaluated.append(x.copy())
+            return float(x @ x), 2.0 * x
+    
+        def guard(x: np.ndarray) -&gt; bool:
+            checked.append(x.copy())
+            return False
+    
+&gt;       with pytest.raises(ValueError, match="geometry/bound guard"):
+E       Failed: DID NOT RAISE &lt;class 'ValueError'&gt;
+
+tests\test_mode_surface.py:407: Failed</failure></testcase><testcase classname="tests.test_mode_surface" name="test_fully_prescribed_guard_rejects_before_any_energy_call[True]" time="0.001"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">freeze_remaining_direction = True
+
+    @pytest.mark.parametrize("freeze_remaining_direction", [False, True])
+    def test_fully_prescribed_guard_rejects_before_any_energy_call(
+        freeze_remaining_direction: bool,
+    ) -&gt; None:
+        if freeze_remaining_direction:
+            plane = _identity_plane()
+            frozen = (np.array([1.0, -1.0, 0.0]) / np.sqrt(2.0))[:, None]
+        else:
+            plane = ModePlane(
+                reference=np.zeros(2), basis=np.eye(2), metric_weights=np.ones(2),
+                axis_weights=np.eye(2), axis_labels=("Q1", "Q2"),
+                amplitude_unit="toy length", reference_id="toy/fully-prescribed",
+            )
+            frozen = None
+        evaluated: list[np.ndarray] = []
+        checked: list[np.ndarray] = []
+    
+        def energy_gradient(x: np.ndarray) -&gt; tuple[float, np.ndarray]:
+            evaluated.append(x.copy())
+            return float(x @ x), 2.0 * x
+    
+        def guard(x: np.ndarray) -&gt; bool:
+            checked.append(x.copy())
+            return False
+    
+&gt;       with pytest.raises(ValueError, match="geometry/bound guard"):
+E       Failed: DID NOT RAISE &lt;class 'ValueError'&gt;
+
+tests\test_mode_surface.py:407: Failed</failure></testcase><testcase classname="tests.test_mode_surface" name="test_fully_prescribed_guard_accepts_exactly_one_static_evaluation[False]" time="0.002"><failure message="AssertionError: assert ['energy'] == ['guard', 'energy']&#10;  At index 0 diff: 'energy' != 'guard'&#10;  Right contains one more item: 'energy'&#10;  Use -v to get more diff">freeze_remaining_direction = False
+
+    @pytest.mark.parametrize("freeze_remaining_direction", [False, True])
+    def test_fully_prescribed_guard_accepts_exactly_one_static_evaluation(
+        freeze_remaining_direction: bool,
+    ) -&gt; None:
+        if freeze_remaining_direction:
+            plane = _identity_plane()
+            frozen = (np.array([1.0, -1.0, 0.0]) / np.sqrt(2.0))[:, None]
+        else:
+            plane = ModePlane(
+                reference=np.zeros(2), basis=np.eye(2), metric_weights=np.ones(2),
+                axis_weights=np.eye(2), axis_labels=("Q1", "Q2"),
+                amplitude_unit="toy length", reference_id="toy/fully-prescribed",
+            )
+            frozen = None
+        events: list[tuple[str, np.ndarray]] = []
+    
+        def guard(x: np.ndarray) -&gt; bool:
+            events.append(("guard", x.copy()))
+            return True
+    
+        def energy_gradient(x: np.ndarray) -&gt; tuple[float, np.ndarray]:
+            events.append(("energy", x.copy()))
+            return float(x @ x), 2.0 * x
+    
+        q = np.array([0.3, -0.1])
+        result = relax_orthogonal_at_q(
+            plane, q, energy_gradient, frozen_directions=frozen,
+            optimizer="safeguarded_bfgs", trial_validator=guard,
+        )
+&gt;       assert [name for name, _ in events] == ["guard", "energy"]
+E       AssertionError: assert ['energy'] == ['guard', 'energy']
+E         At index 0 diff: 'energy' != 'guard'
+E         Right contains one more item: 'energy'
+E         Use -v to get more diff
+
+tests\test_mode_surface.py:447: AssertionError</failure></testcase><testcase classname="tests.test_mode_surface" name="test_fully_prescribed_guard_accepts_exactly_one_static_evaluation[True]" time="0.001"><failure message="AssertionError: assert ['energy'] == ['guard', 'energy']&#10;  At index 0 diff: 'energy' != 'guard'&#10;  Right contains one more item: 'energy'&#10;  Use -v to get more diff">freeze_remaining_direction = True
+
+    @pytest.mark.parametrize("freeze_remaining_direction", [False, True])
+    def test_fully_prescribed_guard_accepts_exactly_one_static_evaluation(
+        freeze_remaining_direction: bool,
+    ) -&gt; None:
+        if freeze_remaining_direction:
+            plane = _identity_plane()
+            frozen = (np.array([1.0, -1.0, 0.0]) / np.sqrt(2.0))[:, None]
+        else:
+            plane = ModePlane(
+                reference=np.zeros(2), basis=np.eye(2), metric_weights=np.ones(2),
+                axis_weights=np.eye(2), axis_labels=("Q1", "Q2"),
+                amplitude_unit="toy length", reference_id="toy/fully-prescribed",
+            )
+            frozen = None
+        events: list[tuple[str, np.ndarray]] = []
+    
+        def guard(x: np.ndarray) -&gt; bool:
+            events.append(("guard", x.copy()))
+            return True
+    
+        def energy_gradient(x: np.ndarray) -&gt; tuple[float, np.ndarray]:
+            events.append(("energy", x.copy()))
+            return float(x @ x), 2.0 * x
+    
+        q = np.array([0.3, -0.1])
+        result = relax_orthogonal_at_q(
+            plane, q, energy_gradient, frozen_directions=frozen,
+            optimizer="safeguarded_bfgs", trial_validator=guard,
+        )
+&gt;       assert [name for name, _ in events] == ["guard", "energy"]
+E       AssertionError: assert ['energy'] == ['guard', 'energy']
+E         At index 0 diff: 'energy' != 'guard'
+E         Right contains one more item: 'energy'
+E         Use -v to get more diff
+
+tests\test_mode_surface.py:447: AssertionError</failure></testcase></testsuite></testsuites>

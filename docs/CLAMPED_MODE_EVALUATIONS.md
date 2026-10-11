@@ -72,6 +72,12 @@ runs before any calculator call. Orthogonal-gradient convergence is not a
 positive-curvature, competing-branch or global-minimum certificate; all
 `branch_outcomes` must be retained.
 
+The safeguarded check also applies if the two Q coordinates and explicit
+frozen directions span the full chart. There is then no orthogonal
+optimization: an invalid geometry is rejected before any energy call, and
+an accepted point is evaluated exactly once. An empty projected gradient
+is not evidence that an unmeasured physical direction is stable.
+
 ## Recovery does not change the physical experiment
 
 The evaluator records the substrate, tilt policy, deformation basis, L,

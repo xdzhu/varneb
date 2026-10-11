@@ -379,6 +379,80 @@ def test_safeguarded_bfgs_backtracks_before_invalid_geometry_evaluation() -> Non
     assert result.energy == pytest.approx(0.0, abs=1e-10)
 
 
+@pytest.mark.parametrize("freeze_remaining_direction", [False, True])
+def test_fully_prescribed_guard_rejects_before_any_energy_call(
+    freeze_remaining_direction: bool,
+) -> None:
+    if freeze_remaining_direction:
+        plane = _identity_plane()
+        frozen = (np.array([1.0, -1.0, 0.0]) / np.sqrt(2.0))[:, None]
+    else:
+        plane = ModePlane(
+            reference=np.zeros(2), basis=np.eye(2), metric_weights=np.ones(2),
+            axis_weights=np.eye(2), axis_labels=("Q1", "Q2"),
+            amplitude_unit="toy length", reference_id="toy/fully-prescribed",
+        )
+        frozen = None
+    evaluated: list[np.ndarray] = []
+    checked: list[np.ndarray] = []
+
+    def energy_gradient(x: np.ndarray) -> tuple[float, np.ndarray]:
+        evaluated.append(x.copy())
+        return float(x @ x), 2.0 * x
+
+    def guard(x: np.ndarray) -> bool:
+        checked.append(x.copy())
+        return False
+
+    with pytest.raises(ValueError, match="geometry/bound guard"):
+        relax_orthogonal_at_q(
+            plane, [0.3, -0.1], energy_gradient,
+            frozen_directions=frozen, optimizer="safeguarded_bfgs",
+            trial_validator=guard,
+        )
+    assert not evaluated
+    assert len(checked) == 1
+    assert np.allclose(checked[0], plane.frozen_coordinates([0.3, -0.1]))
+
+
+@pytest.mark.parametrize("freeze_remaining_direction", [False, True])
+def test_fully_prescribed_guard_accepts_exactly_one_static_evaluation(
+    freeze_remaining_direction: bool,
+) -> None:
+    if freeze_remaining_direction:
+        plane = _identity_plane()
+        frozen = (np.array([1.0, -1.0, 0.0]) / np.sqrt(2.0))[:, None]
+    else:
+        plane = ModePlane(
+            reference=np.zeros(2), basis=np.eye(2), metric_weights=np.ones(2),
+            axis_weights=np.eye(2), axis_labels=("Q1", "Q2"),
+            amplitude_unit="toy length", reference_id="toy/fully-prescribed",
+        )
+        frozen = None
+    events: list[tuple[str, np.ndarray]] = []
+
+    def guard(x: np.ndarray) -> bool:
+        events.append(("guard", x.copy()))
+        return True
+
+    def energy_gradient(x: np.ndarray) -> tuple[float, np.ndarray]:
+        events.append(("energy", x.copy()))
+        return float(x @ x), 2.0 * x
+
+    q = np.array([0.3, -0.1])
+    result = relax_orthogonal_at_q(
+        plane, q, energy_gradient, frozen_directions=frozen,
+        optimizer="safeguarded_bfgs", trial_validator=guard,
+    )
+    assert [name for name, _ in events] == ["guard", "energy"]
+    assert result.n_evaluations == 1
+    assert result.branch_outcomes[0].n_evaluations == 1
+    assert result.orthogonal_gradient_norm == 0.0
+    assert np.allclose(result.coordinates, plane.frozen_coordinates(q))
+    assert np.allclose(plane.project(result.coordinates), q)
+    assert result.energy == pytest.approx(0.1)
+
+
 def test_conditional_surface_continuity_screens_off_plane_branch_jump() -> None:
     plane = ModePlane(
         reference=np.zeros(3), basis=np.eye(3), metric_weights=np.ones(3),

@@ -3121,3 +3121,39 @@ Five original user tracked edits and olduntracked files preserved/unstaged.
 The meaningful source/manuscript milestone, not E106/E107 waiting alone,
 is prepared for ordinary explicit-stage commit/push. Goalactive/incomplete.
 Evidence:[manuscript receipt](../../../paper/VARNEB_JCTC/MANUSCRIPT_DRAFT.Lee-SI-visual-E108.validation.json).
+
+## E110 — Fully prescribed conditional points obey the geometry guard
+
+Previous turn:E109 is VERIFIED_WAIT. E110 is PROGRESS: a reproduced local
+software defect allowed `safeguarded_bfgs` to bypass the supplied geometry
+guard when no orthogonal optimization direction remained. Four new
+parametrized cases fail before the correction, then pass. The existing
+validator now runs before the static call in that closed-subspace branch.
+Default L-BFGS-B and nonempty orthogonal optimization remain unchanged;
+this is a safety correction, not a material prediction or acceleration win.
+An empty projected gradient is not an unmeasured-stability certificate.
+
+Corrected focused tests pass69, expanded tests pass116. A prematurely
+started full-suite attempt is stopped by verified own Python PID66200,
+because archive extraction completion had not been observed before launch;
+it contributes no validation claim. Once extraction has ended and all5766
+tracked files are present, a distinct final retry imports from the exact
+clean archive and passes2440/skips2/failures0/errors0 in466.907JUnit seconds
+(466.92console seconds),312warnings. Skips are the optional ASE ABACUS
+reader and nonredistributed licensed VASP POTCAR. Tested tree386b47f17abe9a45d55e65aed2d319b82c5cfa97;
+archiveSHAe90a923ccc0824035a1f92e8a1c223ca0fdd18601d54a88221f14fe27bb39d30.
+The three changed code/test/doc files match the archive after text-only LF
+normalization; delivery metadata is outside that tested tree. Failed and
+passing JUnit records and raw hashes are retained in the bounded evidence
+bundle. No source archive, pseudopotential or orbital is redistributed.
+
+Native03:24:24CST still shows28737465/28709791 RUNNING32/hfacnormal01,
+complete13/.178737 and6/.112694, stderr0. Preserving's previous complete
+step12/.164542 has one rebound; this is not a stop condition. G2 stays6/8.
+The local correction is not deployed over the immutable live E055 runtime.
+No new DFT initiation, scheduler mutation, changed physical parameters,
+G3 selection or physical+.005 holdout access. Authorized existing DFT
+continues. Original five tracked user edits and olduntracked files remain
+untouched/unstaged; the actual tested code milestone, not waiting alone,
+is prepared for ordinary explicit-stage commit/push. Goalactive/incomplete.
+Evidence:[receipt](closed_conditional_guard_E110_20261012/validation.json).

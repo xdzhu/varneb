@@ -839,7 +839,9 @@ def relax_orthogonal_at_q(
     backtracks within an initial metric trust radius. A rejected trial is
     neither a DFT point nor a changed physical Hamiltonian. The default
     remains L-BFGS-B for compatibility; neither optimizer certifies a local
-    minimum without an independent curvature check.
+    minimum without an independent curvature check. When every orthogonal
+    direction is frozen, the safeguarded geometry check still precedes the
+    single static evaluation; absence of optimization is not an exemption.
     """
 
     try:
@@ -919,6 +921,10 @@ def relax_orthogonal_at_q(
             n_evaluations = int(result.nfev) + 1  # final independent verification
         else:
             z = z0
+            # A fully prescribed slice has no optimization step, but its
+            # only static evaluation must obey the same geometry contract.
+            if optimizer == "safeguarded_bfgs" and not valid(z):
+                raise ValueError("supplied fully prescribed point violates the geometry/bound guard")
             n_evaluations = 1
         value, projected_gradient = evaluate(z)
         residual = float(np.linalg.norm(projected_gradient))
