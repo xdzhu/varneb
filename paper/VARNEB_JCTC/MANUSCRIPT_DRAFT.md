@@ -1026,6 +1026,54 @@ forecast. The [nine-frame external-work record](../../benchmarks/hfo2_channels/2
 preserves both Jacobians, units and this distinction; finite-strain G2 and
 stationary-branch comparisons remain necessary.
 
+### 3.6. A seen strain contrast in unchanged reference spaces
+
+The completed $+1\%$ PO-to-T training band permits a first matched-strain
+comparison without selecting a new representation. Figure 6 keeps the
+original unstrained-T mass metric, production optical doublets, all four
+registered Cmma frames and continuous ordered lifts. Its two columns have
+individual normalized generalized arcs; equal abscissae do not identify
+equal atomic configurations. Each energy profile is relative to its own
+relaxed PO+ endpoint under the prescribed substrate strain, not an identical
+cached PO energy. The original six electronic-input hashes remain unchanged.
+
+The sampled forward peak increases from 84.416624 to 96.763650 meV/HfO2,
+while the endpoint separation changes from 12.359975 to 14.145883. At the
+respective highest images, T-triplet squared displacement coverage remains
+99.0957% and 99.0045%, yet its squared atomic-gradient coverage changes
+from 14.3013% to 69.7245%. Cmma's gradient coverage changes from 54.0718--54.0765%
+to 10.5750--10.5766%; the two complete optical doublets change from 20.3963%
+to 2.0694%. These use different denominators from displacement fractions.
+The internal atomic-gradient norms are 0.010196606 and 0.038221369
+eV/(sqrt(amu) Angstrom), respectively. Reporting these absolute norms matters:
+a large change in a small-gradient percentage is not by itself an improvement
+or failure of a reduced energy model, and neither sampled peak is a certified
+stationary TS. At the strained T endpoint the displacement from unstrained
+T is nonzero, so its fraction is defined; the zero-strain T fraction remains
+undefined and is omitted rather than set to zero.
+
+![Same-reference PO-to-T profiles at the two registered training strains](figures/hfo2_clamped_T_strain_E089_20261011/hfo2_clamped_T_strain.pdf)
+
+Figure 6. Zero (left) and +1% (right) substrate-strain training bands.
+(a,b) Energies relative to each matched PO+ endpoint. (c,d) Squared
+displacement coverage in the same unstrained-T chart. (e,f) Squared dual
+atomic-gradient coverage. All four Cmma registrations are retained, not
+an uncertainty band. Guides mark highest sampled images; connectors
+are not a fitted MEP or pointwise inter-strain correspondence.
+
+The raw-work diagnostic at the strained highest image is 1366.129830
+meV/HfO2 per unit strain relative to its PO+ endpoint when fractional atoms
+and the open row are fixed. This local partial is not the measured relaxed
+barrier slope, nor should it be fitted to the two visible energy values to
+claim a curvature. The original-T fixed-plane Green strains are both 1.005%,
+while the released $E_{yy}$ at that image is -0.7962%. Atomic representations
+and cell response remain separate. The
+[nine-frame analysis and source data](../../benchmarks/hfo2_channels/20261008/clamped_T_strain_reference_E089_20261011/README.md)
+therefore establish a descriptive training contrast, not reference superiority,
+conditional-branch stability, G3 selection, the full competing-channel response
+or an independent prediction. Those tests still require the remaining
+registered G2 chains and prospectively frozen strong-control comparison.
+
 ## 4. Discussion and remaining material tests
 
 The present data establish that a compact local projection, an apparently

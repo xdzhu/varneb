@@ -17,9 +17,12 @@ def test_actual_T_is_admitted_and_its_native_work_replays():
     reversing_sha = "632e0e9b2b821b3bfc7d66b361c44c7db734988fb5d018ea2f31441fab14ed41"
     reversing_receipt = ROOT / "benchmarks/hfo2_channels/20261008/clamped_reversing_terminal_E083_20261011/audit_receipt.json"
     assert hashlib.sha256(reversing_receipt.read_bytes()).hexdigest() == reversing_sha
-    # E085 admitted the third completed zero-strain band. Keep an exact,
-    # byte-pinned set: this is not permission for arbitrary or holdout audits.
-    assert ADMITTED_TRAINING_AUDITS == {plot.AUDIT_SHA, plot.T_AUDIT_SHA, reversing_sha}
+    strained_sha = "32a6e49a618e6e62632ae71a5e0ed093095254f6858221be2ade3d83cc194a28"
+    strained_receipt = ROOT / "benchmarks/hfo2_channels/20261008/clamped_plus1_T_terminal_E087_20261011/audit_receipt.json"
+    assert hashlib.sha256(strained_receipt.read_bytes()).hexdigest() == strained_sha
+    # E089 admits the fourth actual completed training band, reviewed in E087.
+    # Keep an exact byte-pinned set, not arbitrary or holdout permission.
+    assert ADMITTED_TRAINING_AUDITS == {plot.AUDIT_SHA, plot.T_AUDIT_SHA, reversing_sha, strained_sha}
     result = analyze(ROOT / plot.T_AUDIT.parent, plot.T_AUDIT_SHA)
     assert result["source_job_id"] == "28692775"
     assert result["sampled_peak_image"] == 4

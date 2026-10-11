@@ -2460,3 +2460,40 @@ and18:55--19:15 from actual recent timings, not convergence guarantees.
 normalDFT;0schedulerwrites/admissionretry/extraHessian/G3choice/+.005access.
 Material MD/PDF and five user-dirty tracked changes preserved. Full goalactive.
 Evidence:shared_initial_response_E088_20261011/validation.json.
+
+## E089 — unchanged reference spaces under seen +1% T strain
+
+Nine actual +1% T terminalSCFs reparse/direct0 in original displacement,
+dual-gradient and raw-stress analyzers. Original T/Cmma masses/chart/ranks,
+all four registrations, integer gauge and electronic input hashes remain.
+Peak triplet displacement99.0957->99.0045%, gradient14.3013->69.7245%; Cmma
+gradient54.0718--54.0765->10.5750--10.5766%. Absolute internal norms.010196606
+and.038221369 remain explicit; percentages are not energetic accuracy or TS
+certificates. No choice based on partialG2; different relaxed PO caches under
+the two strains are not falsely made identical. Each profile has its own
+PO zero and individual normalized arc. Seen peak increment12.347027meV/HfO2
+is not an independent forecast, relaxed-barrier derivative or H1/H2 gain.
+
+Figure6 contract predates code; all frames, undefined zero-T fraction and
+defined strained-T endpoint retained. SourceCSV18records, no replicates/
+confidence band/fitting. Actual21-page PDF/direct0/contact+19/20/21reviewed,
+39oldtable lines/fivefigures and38local links retained, new main-text section.
+Compiled build stays ignored by existing policy; editable figure/source stored.
+
+Local60 and actual final archive60related tests eachpass/direct0. Actual first
+clean full2114pass/2existing skips/314warnings/direct0,342.778s. Six changed
+code/test sources exactly equal between archives. Final16case/figure files
+byte-match archive; every export andCSVhash matches after scoped raw-byte
+attributes. Three independent clean analyzers preserve all numerical fields;
+gradient/CSVbyte-identical, two existing CRLF/LF source hashes explicitly differ
+with normalized text equal. Initial strict comparison, missing filename,
+unit-normal exact comparison, metadata and PDF/runtime/encoding corrections
+are retained in receipt; none is a physical DFT failure or input adjustment.
+
+18:11:43native preserving36/.153532, +1%M6/.725166 remainRUNNING32CPU/stderr0;
+two +1%flipsheld. Finite segmentETA18:50--19:05 not convergence promise. G2still
+4/8. No scheduler writes/admission replay/new chains/extraDFT/G3choice/+.005
+access. Registered production continues normalDFT. Original five user-dirty
+tracked changes untouched; full scientific goalactive. PROGRESS is descriptive
+material strain evidence and its audited figure, not prospective superiority.
+Evidence:clamped_T_strain_reference_E089_20261011/validation.json.

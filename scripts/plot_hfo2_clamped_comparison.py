@@ -126,7 +126,7 @@ def make_figure(data):
         peak = band["highest_image_index"]
         axes[0, col].plot(x, [r["energy_relative_PO_meV_fu"] for r in rows],
             color="#256B91", marker="o", markersize=4, lw=1.5,
-            label=rf"$\mathrm{{PO^+}}\rightarrow\mathrm{{{band['channel']}}}$")
+            label=band.get("plot_label", rf"$\mathrm{{PO^+}}\rightarrow\mathrm{{{band['channel']}}}$"))
         axes[0, col].axhline(0, lw=.6, color="#CDD3D8", zorder=0)
         axes[0, col].set_ylim(-115, 125)
         axes[0, col].set_yticks([-100, -50, 0, 50, 100])
@@ -168,7 +168,9 @@ def make_figure(data):
     return fig
 
 
-def export(data, output):
+def export(data, output, *, stem_name="hfo2_clamped_TM"):
+    if Path(stem_name).name != stem_name or Path(stem_name).suffix:
+        raise ValueError("a plain extension-free figure stem is required")
     if output.exists():
         raise FileExistsError("fresh dated comparison figure directory required")
     fig = make_figure(data)
@@ -178,7 +180,7 @@ def export(data, output):
     with source.open("x", encoding="utf-8", newline="") as stream:
         writer = csv.DictWriter(stream, fieldnames=list(rows[0]))
         writer.writeheader(); writer.writerows(rows)
-    stem = output / "hfo2_clamped_TM"
+    stem = output / stem_name
     for ext in ("pdf", "svg", "png", "tiff"):
         extra = {"pil_kwargs": {"compression": "tiff_lzw"}} if ext == "tiff" else {}
         fig.savefig(stem.with_suffix("." + ext), dpi=600 if ext == "tiff" else 300,

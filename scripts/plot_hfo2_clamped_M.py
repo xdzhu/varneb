@@ -36,8 +36,11 @@ def build_data(repository):
 
 
 def build_band_data(repository, mode_report, observation, audit, *,
-                    mode_digest, observation_digest, audit_digest, job, step):
-    """One explicitly pinned zero-strain band, without a calculator launch."""
+                    mode_digest, observation_digest, audit_digest, job, step,
+                    expected_strain=0.):
+    """One pinned registered training band, without a calculator launch."""
+    if expected_strain not in (0., .01):
+        raise ValueError("only registered zero/+0.01 training conditions are drawable")
     mode_path, obs_path, audit_path = (repository / p for p in (mode_report, observation, audit))
     mode, obs = (json.loads(p.read_text(encoding="utf-8")) for p in (mode_path, obs_path))
     if (canonical_sha(mode) != mode_digest or sha256(obs_path) != observation_digest
@@ -46,11 +49,11 @@ def build_band_data(repository, mode_report, observation, audit, *,
     if (mode["source_job_id"] != job or mode["snapshot_step"] != step
             or mode["terminal_audit_sha256"] != audit_digest
             or mode["trajectory_sha256"] != obs["evaluated_chain_sha256"]
-            or mode["strain_training_condition"] != 0 or mode["pressure_GPa"] != 0
+            or mode["strain_training_condition"] != expected_strain or mode["pressure_GPa"] != 0
             or not obs["ordinary_residual_pass"] or obs["climb"]
             or mode["replayed_fmax_eV_A"] > .10
             or [f["frame_id"] for f in mode["Cmma_reference_frames"]] != FRAME_IDS):
-        raise ValueError("original zero-strain ordinary training chain required")
+        raise ValueError("original registered ordinary training chain required")
     energy = np.asarray(mode["relative_energy_meV_fu"], float)
     arc = np.asarray(obs["extended_reaction_coordinate_A"], float)
     green = np.asarray(mode["green_strains_from_original_T"], float)
@@ -63,7 +66,9 @@ def build_band_data(repository, mode_report, observation, audit, *,
             or not np.allclose(energy, obs["relative_enthalpy_meV_fu"], atol=1e-9, rtol=0)
             or arc[0] != 0 or np.any(np.diff(arc) <= 0)
             or not np.allclose(green, green.transpose(0, 2, 1), atol=1e-12, rtol=0)
-            or not np.allclose(green[:, [0, 2, 0], [0, 2, 2]], 0, atol=1e-12, rtol=0)
+            or not np.allclose(green[:, [0, 2, 0], [0, 2, 2]],
+                               [expected_strain + .5*expected_strain**2]*2 + [0.],
+                               atol=1e-12, rtol=0)
             or any(np.any((a < 0) | (a > 1)) for a in (triplet, optical, cmma))
             or int(np.argmax(energy)) != mode["highest_image_index"]):
         raise ValueError("frozen path coordinates, fractions or boundary differ")

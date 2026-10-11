@@ -221,3 +221,12 @@ are retained, not repaired. The [current reading-build receipt](../../benchmarks
 identifies the19-page PDF, actual61-test local/archive runs and inspected
 layout. G2 remains3/8; five training bands, conditional branches, strong
 controls and frozen independent predictions remain necessary.
+
+The [E089 same-reference strain contrast](../../benchmarks/hfo2_channels/20261008/clamped_T_strain_reference_E089_20261011/README.md)
+adds Figure6 and Section3.6 using the actual completed +1% PO-to-T band
+and unchanged original zero-strain reports. Similar peak displacement
+coverage does not imply similar atomic-gradient coverage or model accuracy.
+Different physical PO+ endpoint energies, absolute gradient norms, all four
+Cmma frames and undefined unstrained-T coverage remain explicit. Four of
+eight G2 candidates are ordinary-converged; remaining paths, conditional
+branches, strong controls and prospectively frozen predictions are unfinished.

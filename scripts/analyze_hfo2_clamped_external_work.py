@@ -21,11 +21,12 @@ ROOT = Path(__file__).resolve().parents[1]
 SEEDS = ROOT / "benchmarks/hfo2_channels/20261008/clamped_endpoint_seeds/clamped_seed_manifest.json"
 SEEDS_SHA = "46c19e628b71e0a44a595be5f0ec9a2518e0719db0d1b286b294f5160f4af9a4"
 ADMITTED_TRAINING_AUDITS = {
-    # Actual completed zero-strain M, T and reversing receipts; never arbitrary caller
-    # digests or the reserved +0.005 prediction condition.
+    # Actual completed zero-strain M, T, reversing and +0.01 T receipts;
+    # never arbitrary caller digests or the reserved +0.005 prediction condition.
     "56b92e8b15195d6f619a8402c7eee83a774b2e364e012478faa3fdc5d2da431c",
     "c5653b4759b202199cb75739f99038aaa52b3ccc220ef226efbacc980e5d716e",
     "632e0e9b2b821b3bfc7d66b361c44c7db734988fb5d018ea2f31441fab14ed41",
+    "32a6e49a618e6e62632ae71a5e0ed093095254f6858221be2ade3d83cc194a28",
 }
 
 
