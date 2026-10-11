@@ -2302,3 +2302,9 @@ and late14--18 contact reviewed. Shortened prose keepsTable6 caption/data
 together, original34rows/5figures unchanged except one added material row.
 0physical/production-source/optimizer/G3/holdout changes; full scientific
 goal remainsactive. Evidence:clamped_reversing_terminal_E083_20261011.
+
+Archive hygiene correction: force-adding the otherwise ignored native logs/
+trajectory also included one generated local pyc. Its tracked entry is removed
+in a normal follow-up commit, with local cache retained. All71 final portable
+case files byte-match the actual evidence; tested code, physical data, native
+journal/handles and scientific conclusions are unchanged. No history rewrite.

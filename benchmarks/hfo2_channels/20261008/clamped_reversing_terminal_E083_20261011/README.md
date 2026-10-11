@@ -68,10 +68,13 @@ The first archive byte-equality check failed on line endings, not test behavior;
 the separate portable-frame and force replays exit0. See validation.json for
 actual exits, build hashes and inspection scope.
 
-All72 staged portable case files byte-match the actual working evidence.
+All71 final portable case files byte-match the actual working evidence.
 The nine raw SCF logs and evaluated trajectory are explicitly included despite
 generic output-ignore rules. Original native spacing and input bytes remain
 unchanged; case Git attributes prevent newline/whitespace normalization.
+One local bytecode cache inadvertently included with the force-added raw
+outputs was removed from tracking in a follow-up commit, without deleting
+the local cache or changing tested source, material data or native tasks.
 
 No G3 bottleneck is selected, no new Hessian/Gamma/full conditional plane is
 claimed, and+0.005holdout remains ungenerated/unread. Electronic parameters,
