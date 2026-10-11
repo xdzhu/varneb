@@ -2930,3 +2930,46 @@ Paper's25-page scientific text/figures unchanged; only honest status pointers.
 Goalactive/incomplete. PROGRESS is verified production audit/cache handoff,
 guarded actual continuation and tested delivery, not status-only bookkeeping.
 Evidence:clamped_flip_continue_E103_20261012/validation.json.
+
+## E104 — Actual +1% M completion, last original training start released
+
+Previous turn:E103 is PROGRESS. Finite question: can actual M ordinary
+completion free one committed slot for the ORIGINAL reversing starter,
+without weakening the old input/seed guards or resetting release intent?
+
+M28727368 finishes01:14:54CST, step22/.09858846968401362. Original pinned
+E093 audits154fresh SCFs/338runtime files/six physical inputs/nativeDSIZE32/
+full EFS and all9terminal images. Portable62files/1,075,312bytes preserve
+native raw evidence; nine terminal raw SCFs and the same boundary force are
+reparsed locally. Native full154audit is not called a154local re-audit.
+Sampled forward/reverse97.2277185374/211.9746919066meV/HfO2, four formula
+units/highest image3, are ordinary training labels. Neither stationary TS,
+barrier error nor significant~1.23meV strain trend is established. G2now6/8.
+
+New E104 adapter imports exact unchanged E100/E103 helper bytes, recognizes
+only the actual accepted preserving child via receipt/journal/native source
+and explicitly substitutes only the in-process slot counter. It requires
+actual M ordinary audit and keeps old seed/input/338source/binary guards,
+original exclusive journal/shared lock and all zero-strain terminal gates.
+Two live allocations/runnable pending still reserve the same ceiling;
+ambiguous reply leaves intent and prohibits re-release. Initial158local/
+cleanarchive tests and actual HF read-only preflight pass before release.
+
+Exactly one release of original28709791 is accepted/corroborated01:27:25,
+zero new sbatch/dependency/independent chain. It starts01:27:26/node6/32CPU,
+original4h/10-update cap/2cached endpoints/7fresh interiors. At01:29:51,
+one fresh SCF125.5713876s/nativeDSIZE32, stderr0/no failure/no terminal
+summary; no full initial chain/fmax claim. Preserving28737465 stillRUNNING,
+step3/.867654. Admission/audit/capture zeroDFT is not entire-turn zero
+productionDFT. Both original source/seed/helper bytes and live code unchanged.
+
+Final163focused tests local/independent Git archive pass,0fail/error/skip,
+15.499/15.641s.70case code/native data/README/test files byte-equal to that
+archive;3new post-archive delivery metadata files excluded. No freshfullsuite
+or HFpytest claim. Large temps onE, five original user changes preserved.
+No CI, G3/reference/bottleneck/curvature or physical+.005holdout, new monitor,
+software install or publication. Scientific figures/tables/25-page PDF are
+unchanged, with honest current readiness pointers; no unconverged flip peak.
+Goalactive/incomplete. PROGRESS is actual completed material and guarded
+production start, not status-only bookkeeping or a new acceleration claim.
+Evidence:clamped_reversing_release_E104_20261012/validation.json.

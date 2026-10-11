@@ -286,3 +286,16 @@ labels; G2 remains5/8. No figure/table/barrier/forecast claim is updated from
 these unconverged records. Original figures and the25-page reading draft
 remain; complete ordinary training, G3/stability, strong controls and the
 prospectively frozen independent predictions are still required.
+
+The [E104 audited +1% M completion and reversing release](../../benchmarks/hfo2_channels/20261008/clamped_reversing_release_E104_20261012/README.md)
+advances ordinary training to6/8. M28727368 finishes step22/.0985884697;
+all154fresh SCFs/338original runtime files and the nine terminal images
+pass the original same-input native audit. Its sampled forward/reverse
+peaks are97.2277185/211.9746919meV/HfO2. The~1.23meV forward difference
+from the zero-strain M training label is not an established significant
+response. Original reversing28709791 is released once and starts01:27:26,
+with2cached endpoints and native32MPI; preserving28737465 remains live.
+No unconverged flip label, G3 selection, curvature, physical holdout or
+prediction claim is inserted. Scientific figures/tables/the25-page PDF
+remain unchanged pending the complete matched-boundary matrix and later
+registered gates. Older dated delivery records keep their historical counts.
