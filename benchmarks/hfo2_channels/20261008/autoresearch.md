@@ -2762,3 +2762,48 @@ user files and all old material/figure sources preserved. Goalactive and
 incomplete. PROGRESS is an actually tested figure/manuscript delivery using
 already admitted physical evidence, not a novel-method or prediction win.
 Evidence:clamped_three_band_figure_E099_20261011/validation.json.
+
+## E100 — ordinary preserving result and one existing +1% rolling handoff
+
+Zero-strain preserving child28727382 finishes22:39:34CST/COMPLETED0:0/32CPU.
+Actual pinned E093 native audit checks15newupdates/105fresh SCFs, exact seed,
+334originalruntime files and sixphysicalbytes/fullEFS/nativeDSIZE32. Ordinary
+same-boundary residual0.0988168085874911eV/Angstrom passes0.10. Nine portable
+terminal raw frames and complete receipt are exported without licensed PP/
+orbital or author vector arrays. Forward/reverse sampled peaks atimage4 are
+96.828183003/96.863441806meV/HfO2, not a continuous TS/error certificate.
+Segment transportcost11800.945525seconds/104.89729432rankcorehourproxy does
+not include earlier continuations/endpoints or prove an optimizer speedup.
+
+Ordinary G2 becomes5/8. The1.63meV/HfO2 sampled difference from M is not a
+robust continuous-barrier ranking; all prior strong references/gates stay.
+The original held+1%flip inputs are rechecked using pinned E068 seed logic,
+E060preflight/338-file runtime and original pilot/binary. Each has9checked
+geometries and2nativeendpoint caches; zero preflightDFT, not newreplicates.
+
+New helper admits only28709790/28709791, never sbatch/dependency changes.
+Exclusive per-target intent journals, one shared lock, committed-slot counting
+including runnablepending, and native post-ack corroboration prevent duplicate
+or racing releases. Both0strainflips must actually auditordinaryconverged;
+live/capped/failed results and changed source/seed stop. Original read-onlyr1
+helper is preserved; finalr2 is uploaded separately. No active source rewrite.
+One existing28709790 release succeeds and separately starts22:44:35/node1/
+32CPU. At22:45:55 its first SCF hasoneDSIZE32 header but is not complete.
+Other28709791 staysheld; +1%M retains its firstslot. Noextra independentchain.
+
+Firstlocal63pass/4fail finds Windows fixture quoting, corrected without a
+native guard weakening. Expanded75pass, post-ack76pass, then actualmaterial/
+admission80pass locally and in independentarchive/direct0/JUnit3.112seconds.
+All74initial casefiles and testsource byte-equal; attributes LF-normalized
+content equal. All9portableSCFs are locally reparsed. No freshfullsuite or
+HFpytest claim; E0952264pass/2skip remains historical. Testedhelper/test/raw
+material do not change afterarchive; only reports/status/README/ledger follow.
+
+22:51:52CST two32CPU live handles28727368/28709790, stderr0/no reportedfailure;
+Mstep13/.234106 and starter3completedcallaudits/notcomplete0step. One observer
+stderrpath typo fails before snapshot and is corrected, without calculation
+or scheduler mutation. Ordinary5/8, G3/bottleneckchoice/extraHessians/physical
+holdout remain closed. Manuscript/figures and five original dirtyuserfiles
+stayunchanged. Goalactive/incomplete. PROGRESS is a new actually audited
+training candidate plus a tested existing-handle handoff, not a forecastwin.
+Evidence:clamped_held_flips_E100_20261011/validation.json.
