@@ -31,6 +31,8 @@ def test_unknown_training_receipt_rejected_before_any_paths_are_opened():
      "632e0e9b2b821b3bfc7d66b361c44c7db734988fb5d018ea2f31441fab14ed41", .09218242631012838),
     ("clamped_held_flips_E100_20261011/zero_strain_preserving",
      "46145da14f24b2b8bd46aa4656f0982650d6b2dc661282f58d809aab8a6d3202", .0988168085874911),
+    ("clamped_reversing_release_E104_20261012/plus1_M_terminal",
+     "b86cdb72eab9e3d8ff2125e16e6fbb2d0954b34d54c0f05099a581c066108389", .09858846968401362),
 ])
 def test_native_covector_transport_matches_direct_production_frame(case, audit, fmax):
     images, _, residual, _ = terminal_images(CASE/case, audit)

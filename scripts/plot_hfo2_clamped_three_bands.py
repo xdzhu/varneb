@@ -14,7 +14,9 @@ from scripts.plot_hfo2_clamped_comparison import (
 )
 
 DEPENDENCY_SHA256 = {
-    "scripts/plot_hfo2_clamped_comparison.py": "ae3209122d8b70c894335a0280cd200c0caf3038e882b72542e04d5298c9f884",
+    # E105 adds opt-in M strain limits; the legacy renderer default is unchanged.
+    # Re-pin this reviewed code upgrade, not the historical figure/data bytes.
+    "scripts/plot_hfo2_clamped_comparison.py": "01f9842bd1cd860909dd6847330d732a0bd6bb0c3f4641daa42b83f77a38d664",
     "scripts/plot_hfo2_clamped_M.py": "3aadfdda38c0974acf16908015ad802010823ea06c43bf66f0e34bfff3a86612",
 }
 R_REPORT = BASE / "clamped_reversing_reference_E085_20261011/displacement.json"

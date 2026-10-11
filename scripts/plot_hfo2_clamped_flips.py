@@ -14,7 +14,8 @@ from scripts.plot_hfo2_clamped_M import BASE, build_band_data, canonical_sha, sh
 
 DEPENDENCIES = {
     **historical.DEPENDENCY_SHA256,
-    "scripts/plot_hfo2_clamped_three_bands.py": "1bad21a1315baea2835d42ad62325f2ba4b45a29cd706299f78e19c215c19df3",
+    # E105 reviewed the shared renderer's opt-in limits; old scalar pins stay.
+    "scripts/plot_hfo2_clamped_three_bands.py": "5f7ce08afda51e6ada9edda437c819192b20cca5787c155d71faaa3479b79e8f",
 }
 CASE = BASE / "clamped_preserving_reference_E101_20261011"
 TERMINAL = BASE / "clamped_held_flips_E100_20261011/zero_strain_preserving"

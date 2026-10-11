@@ -2973,3 +2973,66 @@ unchanged, with honest current readiness pointers; no unconverged flip peak.
 Goalactive/incomplete. PROGRESS is actual completed material and guarded
 production start, not status-only bookkeeping or a new acceleration claim.
 Evidence:clamped_reversing_release_E104_20261012/validation.json.
+
+## E105 — Actual paired M strain response and strong-reference controls
+
+Previous turn:E104 is PROGRESS. Finite question: does the sampled M escape
+maximum follow its final-well change, and do the unchanged T/Cmma spaces
+represent the new strained band's atomic gradient? This uses only the actual
+audited +1% M terminal28727368 and unchanged zero-M28722320, not a new DFT
+trial, G3 bottleneck choice or physical+.005holdout.
+
+Four original scalar analyzers independently reparse the same nine portable
+terminal SCFs. The historical E104/E093 full154SCF/338runtime/six-input/
+nativeDSIZE32 audit remains; it is not repeated locally. The strained sampled
+forward/reverse peaks97.2277185374/211.9746919066meV/HfO2 enter Tables5--7.
+The forward peak change-1.230403416 contrasts with final-well change
+-22.206478717 and the B1 fixed-peak/final-following nulls. It is descriptive
+training evidence, not independent prediction or significant small-barrier
+response. Both escape pairs are retained; unfinished switching prevents
+the complete selectivity conclusion.
+
+At strained highest image3, T triplet displacement/gradient coverage is
+54.9251%/3.9008%, versus91.5873--91.5896% gradient coverage in ALL four
+original Cmma frames. The original T doublets/ranks/mass chart/integer lift
+stay fixed. Strong controls cannot be replaced by a weak geometric control
+to manufacture an innovation. Fractions exclude cell response and are not
+mode-energy allocations, curvature or transverse stability certificates.
+Native/dual signed work agrees to5.55e-17eV/cell; peak/endpoint coarse
+energy-minus-work21.305139/2.658882meV/HfO2 are not physical error bounds.
+
+The existing guarded pair builder and renderer are reused. A thin M entry
+provides adequate negative-energy margin; legacy T defaults are unchanged.
+Figure9/Section3.11 preserve both matched PO+ references and individual arcs,
+all four strong registrations and absolute-gradient context. The figure
+contract precedes code. Actual PNG and all27reading-PDF page contacts are
+inspected; detail pages15/16/25/26/27 and same-page Figure9caption are clear.
+Actual LuaLaTeX compile exits0, no TeX warnings/missing glyphs/overflow,
+52local manuscript links resolve. Reading draft is not submission-ready.
+
+Initial full dirty-tree run2436passed/19failed/1skip identifies exact old
+receipt expectations, deliberately pinned renderer dependencies and an old
+analyzer metadata hash, not bad SCFs. Strict known code upgrades are reviewed
+and re-pinned; original data/figures/report bytes and material/holdout guards
+stay unchanged. Failed JUnit retained. Initial README percentage transcription
+is corrected from the actual CSV before delivery. Corrected focused local
+93tests pass; final93pass/0fail/error/skip in10.291s after all guard changes.
+
+Final clean Git tree53bf3c2/archive1d2c3209 passes2436fulltests/2skips/0fail/
+error in470.924s. Skips are absent optional local ASE-ABACUS reader and
+nonredistributed licensed VASP POTCAR, not HF validation passes.314existing
+deprecation warnings remain. Independent four scalar replays preserve every
+scientific field; only two checked LF/CRLF code metadata fields differ. New
+figure CSV/PNG/TIFF are byte-identical.29owned scientific/README files match
+the tested archive:25byteequal, four exact normalized text; six later delivery
+metadata files excluded. Native DFT bytes are never normalized.
+
+02:12:33native slots remain28737465/28709791 RUNNING32/hfacnormal01, latest
+complete steps7/.337210 and2/.150233; both stderr0. No stop for a rebound,
+source overwrite, submission/release/dependency change or physical parameter
+drift. G2still6/8, no G3/reference/curvature/holdout access. Finish/audit both
+training flips, then follow original registered gates. No new matrix,
+install/monitor/CI/release/PyPI/submission. Original five user changes remain
+unstaged/untouched. Goalactive/incomplete. PROGRESS is actual material
+analysis, tested figure/reproducibility and scientific manuscript integration.
+Evidence:clamped_M_strain_reference_E105_20261012/validation.json.

@@ -299,3 +299,17 @@ No unconverged flip label, G3 selection, curvature, physical holdout or
 prediction claim is inserted. Scientific figures/tables/the25-page PDF
 remain unchanged pending the complete matched-boundary matrix and later
 registered gates. Older dated delivery records keep their historical counts.
+
+The [E105 M seen-strain analysis](../../benchmarks/hfo2_channels/20261008/clamped_M_strain_reference_E105_20261012/README.md)
+now adds the audited +1% M result to Tables5--7, Section3.11 and Figure9.
+Its sampled peak changes-1.230403meV/HfO2 rather than following the
+final-well change-22.206479. At the strained peak, geometric T displacement/
+gradient coverage is54.9251%/3.9008%, compared with91.5873--91.5896%
+gradient coverage for the unchanged strong Cmma controls. All four frames,
+omitted atoms and open-cell work remain. These are descriptive training
+observations; neither a significant small-barrier strain trend nor a new
+method's predictive superiority is established. Ordinary G2 completion is
+still6/8; the two +1%flips, later conditional/stability tests and frozen
+independent predictions remain. The final E105 validation identifies the
+actual27-page reading PDF and source/test/visual checks; older reading
+builds keep their historical page counts and production snapshots.

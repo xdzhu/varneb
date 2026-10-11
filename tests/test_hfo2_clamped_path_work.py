@@ -18,6 +18,7 @@ CASES=[
     ('clamped_T_terminal_E079_20261011','c5653b4759b202199cb75739f99038aaa52b3ccc220ef226efbacc980e5d716e'),
     ('clamped_reversing_terminal_E083_20261011','632e0e9b2b821b3bfc7d66b361c44c7db734988fb5d018ea2f31441fab14ed41'),
     ('clamped_plus1_T_terminal_E087_20261011','32a6e49a618e6e62632ae71a5e0ed093095254f6858221be2ade3d83cc194a28'),
+    ('clamped_reversing_release_E104_20261012/plus1_M_terminal','b86cdb72eab9e3d8ff2125e16e6fbb2d0954b34d54c0f05099a581c066108389'),
 ]
 
 

@@ -1,8 +1,8 @@
 # Competing switching and phase-escape channels in hafnia: a mode-strain pathway analysis
 
-Working manuscript, 2026-10-11. This is a connected main-text draft, not a
+Working manuscript, 2026-10-12. This is a connected main-text draft, not a
 submission-ready article. The numerical Results below use explicitly dated
-pilot observations and four ordinary-converged clamped candidates. All ten
+pilot observations and six ordinary-converged clamped training bands. All ten
 registered endpoint representations across the two matched-substrate training
 conditions have passed their physical screens. The complete G2 barrier-response
 comparison, local conditional branches and
@@ -907,6 +907,7 @@ marked +1%. Energies are meV/HfO2 under the unchanged P=0 electronic contract.
 | Candidate | Forward discrete peak | Reverse discrete peak | Final-minus-initial well energy |
 |---|---:|---:|---:|
 | PO-to-M, common T-plane clamping | 98.458122 | 190.998616 | -92.540494 |
+| PO-to-M, +1% substrate strain | 97.227719 | 211.974692 | -114.746973 |
 | PO-to-T, common T-plane clamping | 84.416624 | 72.056649 | 12.359975 |
 | Reversing-pattern switching, same clamping | 338.968965 | 339.004224 | -0.035259 |
 | PO-to-T, +1% substrate strain | 96.763650 | 82.617767 | 14.145883 |
@@ -936,6 +937,9 @@ the sampled peaks in the original T chart.
 | PO-to-M | T geometric triplet | 3 | 57.9237 | 9.0282 |
 | PO-to-M | Two lowest complete T optical doublets | 4 | 12.0962 | 32.7096 |
 | PO-to-M | Registered Cmma span | 4 | 36.4746–36.4865 | 93.5085–93.5087 |
+| PO-to-M, +1% | T geometric triplet | 3 | 54.9251 | 3.9008 |
+| PO-to-M, +1% | Two lowest complete T optical doublets | 4 | 12.9756 | 31.7793 |
+| PO-to-M, +1% | Registered Cmma span | 4 | 38.4024–38.4141 | 91.5873–91.5896 |
 | Reversing-pattern switching | T geometric triplet | 3 | 26.2915 | 0.0320 |
 | Reversing-pattern switching | Two lowest complete T optical doublets | 4 | 16.2196 | 10.0215 |
 | Reversing-pattern switching | Registered Cmma span | 4 | 46.5637–46.5639 | 65.1046 |
@@ -1135,6 +1139,7 @@ meV/HfO2 throughout; the Hf4O8-cell values are multiplied by 250.
 | Reversing flip, zero strain | 338.968965 | 303.693643 | 35.275323 | 0.115373 |
 | PO-to-T, +1% strain | 96.763650 | 87.345393 | 9.418257 | 1.997185 |
 | Preserving flip, zero strain | 96.828183 | 82.304235 | 14.523948 | 0.032398 |
+| PO-to-M, +1% strain | 97.227719 | 75.922579 | 21.305139 | 2.658882 |
 
 The reversing candidate illustrates the distinction most clearly. Its
 endpoint closure is only 0.115373 meV/HfO2, whereas the discrepancy at the
@@ -1231,8 +1236,8 @@ coexists with a 14.523948 residual at its sampled peak (Table 7). The
 [new same-reference analysis and figure data](../../benchmarks/hfo2_channels/20261008/clamped_preserving_reference_E101_20261011/README.md)
 retain signed omitted work, support reactions, permitted strain, absolute
 gradient norms and all source pins. No additional DFT or curvature probes
-are used. Five of eight registered G2 training bands are ordinary-converged;
-the three remaining +1% candidates, conditional response/stability tests
+are used. Six of eight registered G2 training bands are ordinary-converged;
+the two remaining +1% switching candidates, conditional response/stability tests
 and prospectively frozen independent comparisons remain necessary before
 the proposed predictive result can be assessed.
 
@@ -1284,6 +1289,66 @@ intervention, not carrying a phase symbol or a geometric projection across
 boundaries. It supports testing that question, not a demonstrated advantage
 of the proposed response model. Conditional branch stability, certified
 bottlenecks and independent error-bounded forecasts remain unmeasured.
+
+### 3.11. The M escape maximum does not follow its final-well shift
+
+The +1% substrate-strain PO-to-M band completes the second matched
+escape-path pair. Its nine terminal images pass the original same-boundary
+ordinary residual at 0.098588470 eV/Angstrom; all 154 new interior SCFs of
+the final continuation pass the unchanged six-input, native 32-rank E/F/stress
+audit. The independently reparsed terminal frames give the forward and
+reverse discrete peaks in Table 5. Earlier segments, endpoint preparation
+and the later conditional-response work are not included in that SCF count.
+
+From zero to +1% strain, the observed sampled M escape peak changes by
+-1.230403 meV/HfO2, whereas its final-minus-initial well separation changes
+by -22.206479 meV/HfO2. Thus the measured discrete maximum does not simply
+follow the final well. The two endpoint-only B1 null assumptions in Section
+3.6 give -6.806502 and -22.206479 meV/HfO2, respectively. This is an observed
+training comparison, not an independent prediction test. In contrast, the
+matched T escape pair increases its sampled peak by 12.347027 meV/HfO2.
+Both escape routes remain in the comparison; the unfinished switching pair
+still prevents a complete statement about switching/escape selectivity.
+The small M peak difference is not claimed to exceed a measured barrier
+uncertainty, and ordinary convergence does not locate a continuous saddle.
+
+![Paired M escape bands in unchanged reference spaces](figures/hfo2_clamped_M_strain_E105_20261012/hfo2_clamped_M_strain.png)
+
+Figure 9. M escape training bands at zero (left) and +1% (right) substrate
+strain. (a,b) Native energies relative to each matched PO+ well. (c,d)
+Squared translation-free atomic-displacement coverage in the same original
+T mass chart. (e,f) Squared atomic-gradient coverage in the corresponding
+dual chart. Blue circles denote the rank-three geometric T triplet, grey
+squares the two complete rank-four T optical doublets, and green dotted
+curves all four preregistered rank-four Cmma frames. Vertical dashed lines
+mark discrete highest images, not certified TS locations. Each band has its
+own normalized generalized arc; equal abscissae do not match configurations.
+The eighteen rows include shared cached endpoints and are not independent
+replicates. Cmma-frame spread is not a statistical interval. No smoothing,
+fitting, new mode selection or physical input change is applied. Scalar
+source data and editable vector exports accompany the
+[figure contract](../../benchmarks/hfo2_channels/20261008/clamped_M_strain_reference_E105_20261012/figure_contract.md).
+
+At the strained M band's highest image, the geometric T triplet covers
+54.9251% of squared atomic displacement but only 3.9008% of squared internal
+atomic gradient. The unchanged Cmma spaces cover 91.5873--91.5896% of the
+gradient, compared with 93.5085--93.5087% at the zero-strain M peak. The
+strained internal atomic-gradient norm is 0.035561531
+eV/(sqrt(amu) Angstrom). These values support retaining the stronger fixed
+reference control rather than presenting poor geometric-T gradient coverage
+as evidence for a new method's superiority. Atomic fractions still omit
+open-cell response and do not certify curvature, energetic accuracy or
+transverse stability.
+
+The independent native/dual work contractions agree to
+$5.6\times10^{-17}$ eV/cell on this sampled chain. Nevertheless the
+coarse signed work accumulated to image 3 is 75.922579 meV/HfO2, leaving a
+21.305139 meV/HfO2 energy-minus-work discrepancy there and only 2.658882
+meV/HfO2 at the endpoint (Table 7). This is neither a DFT error estimate
+nor a measured barrier uncertainty. It shows why endpoint closure and
+well-response controls cannot replace the registered bottleneck/branch
+and prospective predictive tests. The [dated analysis](../../benchmarks/hfo2_channels/20261008/clamped_M_strain_reference_E105_20261012/README.md)
+preserves all omitted-atomic, rigid-translation and open-cell work terms.
 
 ## 4. Discussion and remaining material tests
 

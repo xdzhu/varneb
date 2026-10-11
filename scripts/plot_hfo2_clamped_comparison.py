@@ -128,7 +128,7 @@ def make_figure(data):
             color="#256B91", marker="o", markersize=4, lw=1.5,
             label=band.get("plot_label", rf"$\mathrm{{PO^+}}\rightarrow\mathrm{{{band['channel']}}}$"))
         axes[0, col].axhline(0, lw=.6, color="#CDD3D8", zorder=0)
-        axes[0, col].set_ylim(-115, 125)
+        axes[0, col].set_ylim(*data.get("energy_limits_meV_fu", (-115, 125)))
         axes[0, col].set_yticks([-100, -50, 0, 50, 100])
         axes[0, col].legend(loc="lower center", bbox_to_anchor=(.5, 1.04),
             framealpha=.85, facecolor="white", edgecolor="#9CA3AA", borderpad=.3)

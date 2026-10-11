@@ -28,6 +28,13 @@ def build_data(repository):
         (.01, REPORT, GRADIENT, OBSERVATION, AUDIT, REPORT_SHA, GRADIENT_SHA,
          OBSERVATION_SHA, AUDIT_SHA, "28709788", 5),
     ]
+    return build_strain_data(repository, specs, channel="T")
+
+
+def build_strain_data(repository, specs, *, channel):
+    """A pinned zero/+1% pair; reference and native-contract guards are shared."""
+    if channel not in ("T", "M") or [spec[0] for spec in specs] != [0., .01]:
+        raise ValueError("registered T/M zero/+0.01 pair required before label access")
     bands, observations, references = [], [], []
     for strain, mode_path, grad_path, obs_path, audit_path, mode_pin, grad_pin, obs_pin, audit_pin, job, step in specs:
         band = build_band_data(repository, mode_path, obs_path, audit_path,
@@ -63,8 +70,8 @@ def build_data(repository):
                             "retained_gradient_norm", "omitted_gradient_norm",
                             "rigid_translation_gradient_norm", "zero_internal_gradient"):
                     row[f"{span}_{key}"] = r[key]
-        band.update(channel="T", strain_training_condition=strain,
-            plot_label=rf"$\mathrm{{PO^+}}\rightarrow\mathrm{{T}},\ \epsilon={100*strain:g}\%$",
+        band.update(channel=channel, strain_training_condition=strain,
+            plot_label=rf"$\mathrm{{PO^+}}\rightarrow\mathrm{{{channel}}},\ \epsilon={100*strain:g}\%$",
             gradient_canonical_sha256=grad_pin)
         band["source_file_sha256"][str(grad_path)] = sha256(repository / grad_path)
         bands.append(band)
