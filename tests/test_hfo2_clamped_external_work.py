@@ -90,3 +90,18 @@ def test_unadmitted_receipt_is_rejected_before_any_label_read(monkeypatch):
     monkeypatch.setattr(module, "terminal_images", forbidden_read)
     with pytest.raises(ValueError):
         module.analyze(CASE, "0"*64)
+
+
+def test_actual_reversing_work_remains_frozen_chart_not_stationary_barrier_slope():
+    case = ROOT/"benchmarks/hfo2_channels/20261008/clamped_reversing_terminal_E083_20261011"
+    result = analyze(case, "632e0e9b2b821b3bfc7d66b361c44c7db734988fb5d018ea2f31441fab14ed41")
+    assert result["status"] == "native_training_band_frozen_external_work_not_stationary_barrier_response"
+    assert result["new_DFT_calls"] == result["scheduler_mutations"] == 0
+    assert result["G3_selection_or_holdout_access"] is False
+    assert result["source_job_id"] == "28692776" and result["sampled_peak_image"] == 4
+    peak = result["sampled_peak"]
+    assert peak["fixed_open_row_relative_PO_partial_meV_fu_per_unit_strain"] == pytest.approx(201.23094619250415, abs=1e-9)
+    assert peak["fixed_open_row_partial_meV_fu_per_unit_strain"] == pytest.approx(-27.183577479466106, abs=1e-9)
+    # Almost untilted geometry explains tiny reparameterization work; this
+    # does not certify that the sampled peak is a stationary TS branch.
+    assert abs(peak["affine_minus_fixed_open_row_eV_cell_per_strain"]) < 2e-11

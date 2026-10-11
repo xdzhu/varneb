@@ -27,6 +27,8 @@ def test_unknown_training_receipt_rejected_before_any_paths_are_opened():
     ("clamped_M_terminal_E068_20261011", AUDIT, .09921408814764762),
     ("clamped_T_terminal_E079_20261011",
      "c5653b4759b202199cb75739f99038aaa52b3ccc220ef226efbacc980e5d716e", .09358976572425506),
+    ("clamped_reversing_terminal_E083_20261011",
+     "632e0e9b2b821b3bfc7d66b361c44c7db734988fb5d018ea2f31441fab14ed41", .09218242631012838),
 ])
 def test_native_covector_transport_matches_direct_production_frame(case, audit, fmax):
     images, _, residual, _ = terminal_images(CASE/case, audit)
@@ -70,3 +72,54 @@ def test_actual_native_report_preserves_all_references_and_claim_limits():
             assert abs(span["norm_identity_defect"]) < 1e-12
             assert span["source_modes_or_forces_ASR_corrected"] is False
             assert span["translation_free_chart_restriction_applied"] is True
+
+
+def test_reversing_report_keeps_native_gradient_norms_all_frames_and_claim_limits():
+    result = json.loads((CASE/"clamped_reversing_reference_E085_20261011/gradient.json").read_text())
+    assert result["source_job_id"] == "28692776" and result["sampled_peak_image"] == 4
+    assert result["terminal_audit_sha256"] == "632e0e9b2b821b3bfc7d66b361c44c7db734988fb5d018ea2f31441fab14ed41"
+    assert result["new_DFT_calls"] == result["scheduler_mutations"] == 0
+    assert result["G3_selection_or_holdout_access"] is False
+    expected = ["T_geometric_triplet", "T_two_lowest_complete_optical_doublets",
+                "Cmma_frame_103", "Cmma_frame_106", "Cmma_frame_114", "Cmma_frame_127"]
+    peak = result["sampled_peak"]["representations"]
+    assert list(peak) == expected
+    assert peak[expected[0]]["retained_squared_gradient_fraction"] == pytest.approx(.0003202752104576197, abs=1e-12)
+    assert peak[expected[1]]["retained_squared_gradient_fraction"] == pytest.approx(.10021543366533354, abs=1e-12)
+    assert peak[expected[2]]["retained_squared_gradient_fraction"] == pytest.approx(.6510457870533253, abs=1e-12)
+    assert peak[expected[0]]["internal_gradient_norm"] == pytest.approx(.06109916898305917, abs=1e-12)
+    for row in result["images"]:
+        assert list(row["representations"]) == expected
+        for span in row["representations"].values():
+            assert span["source_modes_or_forces_ASR_corrected"] is False
+            assert span["gradient_unit"] == "eV/(sqrt(amu)*Angstrom)"
+            assert abs(span["norm_identity_defect"]) < 1e-12
+
+
+def test_three_bands_share_exact_cached_initial_SCF_and_ordered_geometry():
+    cases = [
+        ("clamped_M_terminal_E068_20261011", AUDIT),
+        ("clamped_T_terminal_E079_20261011", "c5653b4759b202199cb75739f99038aaa52b3ccc220ef226efbacc980e5d716e"),
+        ("clamped_reversing_terminal_E083_20261011", "632e0e9b2b821b3bfc7d66b361c44c7db734988fb5d018ea2f31441fab14ed41"),
+    ]
+    first = None
+    for case, audit in cases:
+        images, observation, _, _ = terminal_images(CASE/case, audit)
+        raw = observation["raw_image_evaluations"][0]
+        row = dict(input_sha256=raw["input_sha256"], raw_log_sha256=raw["raw_log_sha256"],
+                   energy=images[0].get_potential_energy(), forces=images[0].get_forces(),
+                   stress=images[0].get_stress(), positions=images[0].positions,
+                   cell=images[0].cell.array, species=images[0].get_chemical_symbols())
+        if first is None:
+            first = row
+        else:
+            assert row["input_sha256"] == first["input_sha256"]
+            assert row["raw_log_sha256"] == first["raw_log_sha256"]
+            assert row["energy"] == first["energy"] and row["species"] == first["species"]
+            for name in ("forces", "stress"):
+                np.testing.assert_array_equal(row[name], first[name])
+            # Native INPUT/KPT/STRU/log and EFS are byte/value identical.
+            # Existing trajectory/POSCAR serialization differs at the last
+            # floating digit; record that, do not repair/recompute structures.
+            for name in ("positions", "cell"):
+                np.testing.assert_allclose(row[name], first[name], atol=1e-14, rtol=0)

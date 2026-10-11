@@ -205,7 +205,19 @@ The [E083 reversing terminal case](../../benchmarks/hfo2_channels/20261008/clamp
 adds the third ordinary-converged G2 band to the main text and Table5.
 Its42 fresh native SCFs and nine portable terminal frames pass distinct
 checks; the338.968965meV/HfO2 forward discrete peak is not a continuous-TS
-or sampling-error certificate. The current build is identified by this
+or sampling-error certificate. That dated build is identified by this
 case's validation receipt, not the historical E082 PDF hash. One existing
 +1% PO-to-T job is admitted into a spare slot without new submissions or
 input changes; the other three training starters remain held.
+
+The [E085 fixed-reference analysis](../../benchmarks/hfo2_channels/20261008/clamped_reversing_reference_E085_20261011/README.md)
+adds the reversing band's three descriptive Table6 rows using the unchanged
+T/Cmma references. Its T-triplet displacement/gradient fractions are26.2915%/
+0.0320%; all four Cmma frames retain65.1046% of the squared atomic gradient
+at displayed precision. These are different denominators, not energetic
+accuracy or stationary-saddle claims. The three completed bands share the
+same native cached PO inputs/logs and EFS; geometric serialization differences
+are retained, not repaired. The [current reading-build receipt](../../benchmarks/hfo2_channels/20261008/clamped_reversing_reference_E085_20261011/validation.json)
+identifies the19-page PDF, actual61-test local/archive runs and inspected
+layout. G2 remains3/8; five training bands, conditional branches, strong
+controls and frozen independent predictions remain necessary.

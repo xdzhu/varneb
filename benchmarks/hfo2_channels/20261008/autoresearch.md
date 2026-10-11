@@ -2335,3 +2335,33 @@ G2 remains3/8; noG3 selection/DFT/Hessian/+.005 labels or paper/PDF changes.
 PROGRESS is a required finite-budget reporting implementation, not H1/H2
 material validation or an innovation claim. Full scientific goal staysactive.
 Evidence:conditional_probe_coverage_E084_20261011/validation.json.
+
+## E085 — completed reversing band's unchanged reference and frozen-work traces
+
+Existing native terminal data supply the third channel's common-reference
+description, without selecting or rotating a reference from its result.
+At peak4, Ttriplet squared displacement/gradient fractions26.2915%/.0320%
+contrast with Cmma46.5637--46.5639%/65.1046%. Absolute/omitted dual-gradient
+norms and all four registrations remain. Fixed-open-row external work is
+-27.18358meV/HfO2/unitstrain, not a relaxed-barrier derivative or TS test.
+Three completed bands' cached initial native inputs/logs/EFS are identical;
+4.44e-16A ordered geometry serialization difference is retained, not repaired.
+
+61 related tests local/actual Git archive each pass/direct0. Initial exact
+floating geometry assertion1fail/60pass is retained with corrected explicit
+serialization bound/exact SCF checks. Eight reviewed Python sources have
+equal normalized text; two original sources differ CRLF/LF, so two report
+source-hash fields differ, while all numerical fields and gradient report agree.
+Actual final compile0,19pages; final contact sheet and16/17/18 individually
+reviewed. Original35table lines/fivefigures retained, three actual Table6 rows
+added. Table caption/no-break hook and shortened Figure5 caption preserve
+scientific interpretation without orphaned captions. Initial table guard had
+an overbroad regex, corrected and verified; no physical calculation failure.
+
+16:10:01both native32CPU allocations remainRUNNING: preserving27/.172483,
++1%PO-to-T2/.156615; three other training startersheld. Wrong guessed stderr
+paths were rejected and resolved against actual read-only Slurm job fields.
+No scheduler writes/newDFT/production physical or optimizer changes/G3 choice/
+holdout access. G2 remains3/8, full scientific goalactive. PROGRESS is new
+material description and reproducibility, not an independent-prediction gain.
+Evidence:clamped_reversing_reference_E085_20261011/validation.json.
