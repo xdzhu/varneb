@@ -6,12 +6,49 @@ import tarfile
 import pytest
 
 from scripts.audit_hfo2_clamped_terminal import completed_step, validate_terminal, verify_runtime, validate_job_source, validate_accounting_source
+from scripts.audit_hfo2_clamped_terminal import fresh_interior_call_count
+from scripts.export_hfo2_clamped_observation import PILOT_SCRIPT_SHA256, M_CONTINUE_SCRIPT_SHA256
 from scripts.audit_hfo2_static_replica import sha256
 
 
 def summary():
     return dict(status="converged", converged=True, termination="force_threshold",
                 final_max_generalized_force_eV_per_A=.09, climbing_image_active_final=False)
+
+
+def seed_preflight(resume=False):
+    return dict(factory="examples.hfo2_fixed_input_factory:"+(
+        "make_clamped_resume_cached_factory" if resume else "make_clamped_seed_cached_factory"),
+        calculator_parameters=dict(source_directory="pinned/source",
+            seed_cache_records=[{"pinned": True} if resume or i in (0, 8) else None for i in range(9)]))
+
+
+@pytest.mark.parametrize("step", [0, 1, 6, 10])
+@pytest.mark.parametrize("resume", [False, True])
+def test_registered_initial_fresh_calls_are_not_lost(step, resume):
+    initial, total = fresh_interior_call_count(step, seed_preflight(resume),
+        M_CONTINUE_SCRIPT_SHA256 if resume else PILOT_SCRIPT_SHA256)
+    assert initial == (0 if resume else 7)
+    assert total == 7*step+initial
+
+
+@pytest.mark.parametrize("case", ["unknown_recipe", "wrong_factory", "no_endpoint",
+    "extra_cache", "partial_resume", "physical_override", "negative_step", "boolean_step"])
+def test_fresh_count_refuses_inferred_or_changed_cache_policy(case):
+    resume = case == "partial_resume"
+    preflight = seed_preflight(resume)
+    digest = M_CONTINUE_SCRIPT_SHA256 if resume else PILOT_SCRIPT_SHA256
+    step = 6
+    if case == "unknown_recipe": digest = "a"*64
+    if case == "wrong_factory": preflight["factory"] = "other:calculator"
+    if case == "no_endpoint": preflight["calculator_parameters"]["seed_cache_records"][0] = None
+    if case == "extra_cache": preflight["calculator_parameters"]["seed_cache_records"][1] = {"pinned": True}
+    if case == "partial_resume": preflight["calculator_parameters"]["seed_cache_records"][1] = None
+    if case == "physical_override": preflight["calculator_parameters"]["ecutwfc"] = 120
+    if case == "negative_step": step = -1
+    if case == "boolean_step": step = True
+    with pytest.raises(ValueError):
+        fresh_interior_call_count(step, preflight, digest)
 
 
 def test_numeric_convergence_not_scheduler_success():

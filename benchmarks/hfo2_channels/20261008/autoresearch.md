@@ -2096,3 +2096,18 @@ releasing one registered waiter, never all four. No cap breach occurred.
 Offline safety and separate real native-receipt tests distinguish preparation
 from execution. Evidence/clamped_capacity_E074_20261011; goal remains full
 HfO2G2/G3/strong-model/independent-forecast active, not scheduler-only.
+
+## E075 — correct new-starter step-zero cost before a future admission
+
+Audit now requires the registered recipe/runtime/cache policy to distinguish
+7fresh interior SCFs at a starter's step0 from0for an exact nine-cache resume.
+Old M91calls and receipts unchanged; extra/missing calls still reject. Real
+native Tpreflight validates this policy.144local/144actual full-archive related
+tests directexit0;4fresh deployed analysis/admission source hashes plus native
+preflight match. No production/input modification, DFT, terminal audit,
+submission/release/dependency write/G3selection/holdout. Prepared one-slot
+existing reversing admission remains explicitly unexecuted.
+12:06:46native bothT28692775/flip28723655RUNNING;Tstep6rebound.143524after
+.103118does not stop the chain. All5waiters held. PROGRESS is corrected actual
+workflow cost/safety, not another completed material label or scope reduction.
+Full finite HfO2G2/G3/strong-controls/independent-prediction goal remains active.

@@ -1033,3 +1033,22 @@ afterok释放条件当作现有容量证明；发现时仍只有两活分配，�
 前后完整原生输出与不可重放journal见clamped_capacity_E074_20261011。
 完整HfO2有限G2/G3、强对照、冻结后的独立预测与JCTC目标继续active；
 容量修复本身不是新的科学证据、驻点认证或目标完成。
+
+### 10月11日E075：新起点链的SCF成本审计补齐，反转接力只作准备
+
+终态auditor此前验证的是九像step0全缓存续算，`7*step`不适用于仅缓存端点
+的新起点链。现在以字节登记recipe+runtime factory+实际cache政策共同判定，
+新链计`7*(step+1)`，续算仍`7*step`，不放过额外/缺失SCF或隐含输入override。
+PO→T真实runtime preflight副本证明其七个中间像step0必须新算；既有M的91次
+成本和旧收据均不改。分析源码是独立namespace，不替换任何生产源。
+
+12:06:46T28692775与flip28723655均native RUNNING；T完整step6从.103118
+回弹到.143524，不以一次回弹停算。原10更新/4h窗口继续，反转28692776与
+四+1%任务仍held。单槽反转admission已针对真实未启动seed/source命名空间
+实现，须先实际终态六文件/EFS/32MPI/普通.10审计和空槽核验才可执行；
+当前没有终态审计或release、sbatch、dependency写入，不能算第二条收敛G2。
+
+144项本机/真实完整Git archive测试direct exit0，四分析/接力源码与原生
+preflight的HF/local哈希匹配；不是HF pytest或新DFT。准备/未收敛观测
+证据见clamped_T_terminal_E075_20261011。完整G2/G3、强基线、前瞻冻结与
+独立预测目标保持active，没有借软件修正缩减科学验收要求。
