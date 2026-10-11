@@ -313,3 +313,12 @@ still6/8; the two +1%flips, later conditional/stability tests and frozen
 independent predictions remain. The final E105 validation identifies the
 actual27-page reading PDF and source/test/visual checks; older reading
 builds keep their historical page counts and production snapshots.
+
+The [E108 publisher-SI visual audit](../../outputs/HFO2_LEE_SI_VISUAL_AUDIT_2026-10-12.md)
+closes the earlier Lee binary/figure-access gap: all four pages, S1--S3 and
+TableS1 were inspected. The introduction now separates the plotted coupled
+interpolation, cell/formula-unit labels and each initial energy reference.
+This is source-grounded methodological positioning, not a new material
+result or proof of predictive advantage. Historical E082 failures and the
+older reference-PDF version gap remain recorded; no coefficients, vectors
+or publisher figures are imported. The same G2/G3/holdout gates remain.

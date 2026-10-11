@@ -3036,3 +3036,88 @@ install/monitor/CI/release/PyPI/submission. Original five user changes remain
 unstaged/untouched. Goalactive/incomplete. PROGRESS is actual material
 analysis, tested figure/reproducibility and scientific manuscript integration.
 Evidence:clamped_M_strain_reference_E105_20261012/validation.json.
+
+## E106 — Verified wait and existing terminal-audit readiness
+
+Previous turn:E105 is PROGRESS. This turn is VERIFIED_WAIT, not a new
+material result, method implementation or failed experiment. At actual
+2026-10-12T02:33:10+08:00, native squeue and sacct corroborate two RUNNING
+hfacnormal01 allocations, 32 CPUs each: preserving child28737465/node25
+and original reversing28709791/node6. Latest complete updates remain
+8/.278775 at02:22:56 and3/.130212 at02:25:47 eV/Angstrom. Both stderr
+files have zero bytes. Recent cadence is approximately12/15 minutes per
+update, not a guaranteed convergence time. G2 remains6/8; neither current
+force nor a live accounting ExitCode0:0 is a successful terminal result.
+
+Inspection confirms the E103 continuation helper already implements
+audit-child --parent28709790 and audit-parent --parent28709791. No second
+adapter is needed. Actual HF read-only readiness probe completes
+02:28:07.497112CST: exact helper SHA6c64c0155800082e28cbbb280511ac761929bdb6ccc5757fa8d68d156b32eac7,
+accepted child28737465 from the existing receipt/journal, exact E103 wrapper,
+all338 original runtime files and four pinned E093 support hashes match.
+Both live jobs are rejected at the native successful-terminal identity
+gate with 'exact native successful terminal identity required'. Zero
+terminal outputs are created. This is an audit dependency/live-rejection
+check, not a full fresh-SCF terminal audit or new HF test-suite run.
+
+No new DFT calls are initiated by this turn, scheduler writes, production
+source changes, new Gamma/Hessian work, G3 selection or physical+.005
+holdout access. Existing production DFT continues in the two live jobs.
+After actual native terminal status, reuse the existing helper to audit
+SCFs, raw EFS, source/input hashes and ordinary convergence versus a step
+cap. Do not repeat a live audit-refusal probe near termination or confuse
+walltime/cap with convergence. No duplicate job, stop for one rebound,
+new monitor, installation, CI, release or publication.
+
+Five original tracked user edits and old untracked files remain untouched
+and unstaged. HEAD/origin main milestone is c6a7cff9a6ca195b5005c224ce6468db52fab641.
+Only the research ledger is updated; no status-only commit or push. Goal
+stays active/incomplete. The verified wait is not a blocker and does not
+constitute completion of the scientific objective.
+
+## E107 — Verified wait; registered next-gate scope rechecked
+
+Previous turn:E106 is VERIFIED_WAIT. Native02:36:24CST corroborates the same
+two live32CPU hfacnormal01 jobs. Preserving28737465 now has complete update
+9/.250953 at02:35:06; reversing28709791 remains3/.130212 at02:25:47. Both
+stderr files are empty. This is VERIFIED_WAIT, G2 remains6/8. Re-read the
+original v1/v2 prediction protocols and main-plan scientific/gate sections:
+complete both training flips before G3 selection; retain B0/B1 and all four
+strong Cmma registrations, two-bottleneck/two-face limits, prospective
+prediction freeze and only two physical+.005 holdout paths. No new model,
+DFT/scheduler write, source change, extra probe or holdout access. Original
+five user edits remain unstaged; only existing ledgers are dirty fromE106.
+No status-only commit, push, pause or completion claim.
+
+## E108 — New publisher SI visual evidence and manuscript qualification
+
+Previous turn:E107 is VERIFIED_WAIT. E108 is PROGRESS: an actual normal
+publisher download succeedsHTTP200/7471830bytes/four pages/rawSHA
+c4f05b4b3da81f9cc6eb4d31f159cd6822750b73ab1fed1d154209daa1515f09.
+All four pages are extracted/rendered/read, including S1--S3 andTableS1.
+This closes E082's binary/visual access gap; its previous failures remain.
+The new source receipt distinguishes interpolation/amplitude normalization,
+per-cell/per-formula-unit labels and each initial energy reference. Restricted
+relaxation is prior work, not our prediction/TS innovation. The current
+publisher April8 Version of record label also qualifies E035's too-broad
+'only deposit' statement; historical reference-PDF identity is not inferred.
+No publisher raster, coefficient, curve or vector enters the repository.
+
+Original six electronic assets/optimizer/live source/registered references
+and B0--B5/G3/holdout policy remain unchanged. The manuscript gains only the
+source-grounded comparison. Original55 numeric table lines and9 figure
+references match c6a7cff exactly;105 local links resolve. Existing
+TeXLive2023/latexmk/LuaLaTeX compiles27pages/1374783bytes/exit0, actual TeX
+warnings/overflow/missing glyphs0. All27 page contacts and2/3/26 full-size
+pages inspected; Figure9/fullcaption stillpage26. No code change, new full
+suite/cleanarchive claim or new material result. Reading draft remains
+unready for submission until complete scientific/independent evidence.
+
+Actual02:45:07CST native jobs28737465/28709791 bothRUNNING32/hfacnormal01,
+complete9/.250953 and4/.120019. G2 remains6/8. No new submission/scheduler
+write, stop for a rebound, new DFT initiated by this turn, G3 selection or
+physical+.005 label access; authorized original production DFT continues.
+Five original user tracked edits and olduntracked files preserved/unstaged.
+The meaningful source/manuscript milestone, not E106/E107 waiting alone,
+is prepared for ordinary explicit-stage commit/push. Goalactive/incomplete.
+Evidence:[manuscript receipt](../../../paper/VARNEB_JCTC/MANUSCRIPT_DRAFT.Lee-SI-visual-E108.validation.json).

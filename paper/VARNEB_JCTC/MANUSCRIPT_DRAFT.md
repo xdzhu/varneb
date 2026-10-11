@@ -82,7 +82,12 @@ actual mechanical freedoms and strong controls kept explicit.
 Their supplementary Part 2 also contrasts a coupled three-mode interpolation
 with restricted relaxation. Relaxation-induced lowering of such a profile
 is therefore not presented here as a methodological innovation.
-([Lee et al., Supplementary Part 2](https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fs41535-025-00841-9/MediaObjects/41535_2025_841_MOESM1_ESM.pdf#page=2))
+Figure S3 uses a coupled interpolation parameter and cell energies, whereas
+Table S1 labels its coefficients per formula unit. Amplitude normalization,
+energy units and each starting-state reference must consequently remain
+explicit; profile lowering alone does not certify our partially clamped
+bottleneck or predict its barrier response.
+([Lee et al., Supplementary Part 2 and Figure S3](https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fs41535-025-00841-9/MediaObjects/41535_2025_841_MOESM1_ESM.pdf#page=3))
 
 We therefore formulate a narrower test than discovery of a new coupled mode
 or a low-energy intermediate. First, we compare switching and phase escape

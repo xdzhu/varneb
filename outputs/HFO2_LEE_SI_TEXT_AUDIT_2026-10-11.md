@@ -6,6 +6,10 @@ Reading date: 2026-10-11. Source: the publisher-linked supplement to
 This is a new text reading, not a completed PDF/figure/version audit.
 Exact access limitations are in the [provenance record](HFO2_LEE_SI_TEXT_AUDIT_2026-10-11.provenance.md).
 
+Later evidence, 2026-10-12: [E108](HFO2_LEE_SI_VISUAL_AUDIT_2026-10-12.md)
+obtains and visually checks the four-page publisher PDF. The historical
+limitations below remain the actual E082 record, not current access claims.
+
 ## What the newly accessible text establishes
 
 - Part 1 relates cubic/tetragonal mode descriptions in different primitive
