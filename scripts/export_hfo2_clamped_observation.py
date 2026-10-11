@@ -30,12 +30,14 @@ RESUME_SCRIPT_SHA256 = "79d9990b42a8da90fe915550332d8060761d0ec108551035e284b69f
 M_CONTINUE_SCRIPT_SHA256 = "2fa864368bc4e55f06e43e1bc0786e80d07f6d8113b82d485ab00d30751201d9"
 FLIP_CONTINUE_SCRIPT_SHA256 = "91ee0f57dadbeb811d620f1287f346fae065ef496cead4b63e388d5110b92a09"
 FLIP_E069_SCRIPT_SHA256 = "61199684c543a016a546f02cbfe1eb7ee659c6310db4f7ad0c0340e714647379"
+ROLLING_E090_SCRIPT_SHA256 = "bf8529bd7f4b182c90f5038aed13059eab157d7cdfc94a2e275abd58d4a45bb5"
 REGISTERED_FACTORIES = {
     PILOT_SCRIPT_SHA256: "examples.hfo2_fixed_input_factory:make_clamped_seed_cached_factory",
     RESUME_SCRIPT_SHA256: "examples.hfo2_fixed_input_factory:make_clamped_resume_cached_factory",
     M_CONTINUE_SCRIPT_SHA256: "examples.hfo2_fixed_input_factory:make_clamped_resume_cached_factory",
     FLIP_CONTINUE_SCRIPT_SHA256: "examples.hfo2_fixed_input_factory:make_clamped_resume_cached_factory",
     FLIP_E069_SCRIPT_SHA256: "examples.hfo2_fixed_input_factory:make_clamped_resume_cached_factory",
+    ROLLING_E090_SCRIPT_SHA256: "examples.hfo2_fixed_input_factory:make_clamped_resume_cached_factory",
 }
 
 

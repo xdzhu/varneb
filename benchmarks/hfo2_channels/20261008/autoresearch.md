@@ -2497,3 +2497,33 @@ access. Registered production continues normalDFT. Original five user-dirty
 tracked changes untouched; full scientific goalactive. PROGRESS is descriptive
 material strain evidence and its audited figure, not prospective superiority.
 Evidence:clamped_T_strain_reference_E089_20261011/validation.json.
+
+## E090 — bounded latest-chain continuation prepared, not admitted
+
+One inert 40-update/12-hour/32-MPI wrapper accepts only the two registered
+parents after an actual successful unconverged cap audit. Original E054/E055
+runtimes, physical inputs, clamped boundary, spring/geometry guards and .10
+remain unchanged. Full 280/77 parent SCFs, nine exact current caches, native
+terminal identity and every original runtime file must pass; failed/live/
+converged or different-parent evidence rejects. FIRE history resets explicitly,
+not a full checkpoint or acceleration result. Future channel-named logs and
+zero-initial-SCF/280-update-call policy are tested against the existing auditor.
+
+23 new synthetic tests; local related 134 pass. Initial 18 fixture failures
+come from monkeypatching generic Path's platform dispatch, not production.
+Concrete platform Path fixes the fixture while leaving every production gate;
+the original failed JUnit and corrected intermediate 132 pass are retained.
+Actual clean Git full suite 2137 pass/2 existing skips/314 warnings/direct0,
+352.014 seconds. Three changed source bytes exactly equal the full archive.
+Actual HF bash -n/direct0 is syntax only; no new native pytest or DFT/admission
+success is invented. A first SSH quoting probe fails before diagnostic execution;
+the stdin repeat records native scheduler/log state and syntax correctly.
+
+18:35:03 two allocations still RUNNING32CPU/stderr0: preserving38/.148593,
++1% M8/.645983. Median last-five updates793/641s imply finite-cap ETA18:54:50/
+18:52:59, not convergence estimates. Two original +1% flips remain held; G2still
+4/8. Preparation contributes no material result, new independent chain, deploy,
+scheduler write, accepted-journal replay, extra DFT/Gamma/Hessian/G3 choice or
++.005 access. Registered production continues normal DFT. MD/PDF and five
+user-dirty tracked files remain untouched. Full scientific goal remains active.
+Evidence:clamped_rolling_continue_E090_20261011/validation.json.
