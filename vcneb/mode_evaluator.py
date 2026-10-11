@@ -18,6 +18,7 @@ from ase import Atoms
 from ase.io import write
 
 from .reference_cell import ReferenceCellCoordinates
+from .clamped_mode_coordinates import ClampedModeCoordinates
 
 
 Array = np.ndarray
@@ -48,7 +49,7 @@ class CalculatorModeEvaluator:
 
     def __init__(
         self,
-        chart: ReferenceCellCoordinates,
+        chart: ReferenceCellCoordinates | ClampedModeCoordinates,
         calculator_factory: CalculatorFactory,
         *,
         workdir: str | Path,
@@ -59,7 +60,7 @@ class CalculatorModeEvaluator:
         validation_id: str | None = None,
         resume: bool = False,
     ) -> None:
-        if not isinstance(chart, ReferenceCellCoordinates) or not callable(calculator_factory):
+        if not isinstance(chart, (ReferenceCellCoordinates, ClampedModeCoordinates)) or not callable(calculator_factory):
             raise TypeError("chart and calculator_factory are required")
         if not calculator_id.strip():
             raise ValueError("calculator_id must identify the fixed physical settings")
@@ -86,6 +87,11 @@ class CalculatorModeEvaluator:
             "pressure_eV_per_A3": pressure,
             "minimum_distance_A": minimum_distance,
         }
+        if isinstance(chart, ClampedModeCoordinates):
+            # Preserve the existing symmetric-chart resume contract exactly.
+            # A clamped run instead freezes its actual active cell subspace.
+            contract["coordinate_convention"] = chart.coordinate_convention
+            contract["mechanical_boundary"] = chart.mechanical_contract
         contract["contract_sha256"] = _fingerprint(contract)
         self.chart = chart
         self.factory = calculator_factory

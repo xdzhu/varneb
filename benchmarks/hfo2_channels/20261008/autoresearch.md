@@ -2221,3 +2221,31 @@ four+1%startersheld.0schedulerwrites/newDFT/physical/runtime/optimizer/G3/
 holdoutchange. PROGRESS is actual paired evidence, tested reusable plot,
 case and main-text integration. Full finite HfO2scientific goal staysactive.
 Evidence:clamped_T_reference_E080_20261011/validation.json.
+
+## E081 — use the exact clamped chart in conditional calculator evaluations
+
+The historical six-symmetric-strain evaluator cannot impose the actual G2
+two-vector substrate/open-row boundary. New public ClampedModeCoordinates
+reuses the unchanged active geometry/physical gradient and existing ASE
+factory/raw validator, with explicit Angstrom-scaled cell coordinates and
+unwrapped common-reference registration. It does not release substrate strain,
+select modes or replace the old chart/resume contract. Raw stress is checked
+before ASE can average an asymmetric tensor into Voigt form.
+
+232 independent EMT work evaluations and 18 actual portable T/M frames verify
+geometry, units, cache recovery and native-gradient replay. No new native DFT
+finite differences, material surface/Hessian/TS or prediction is claimed.
+70 related local/70 actual clean-archive tests pass; full local regression is
+1951 pass/1 optional ase.io.abacus skip, direct exit0. Five changed Python
+sources are byte-identical in the tested archive. Clean verifier values match;
+only existing active_curvature CRLF/LF source-hash metadata differs, with
+normalized source text identical. Static units audit0findings is heuristic.
+The existing whole-grid interpolation gate is not loosened for the eight-point
+G3 validation budget. User changes and untracked work remain untouched.
+
+14:13:17 native32CPU jobs still RUNNING: preserving18/.185892 and reversing
+2/.171046 latest complete rounded-log residuals; exact stderr files0bytes.
+Four+1%startersheld, 0scheduler writes/newDFT/production/G3/holdout changes.
+G2 remains2/8 ordinary-converged candidates. PROGRESS is a necessary tested
+calculation interface, not material G3 or complete H1/H2/JCTC readiness.
+Full scientific goal staysactive; evidence:clamped_mode_flow_E081_20261011.

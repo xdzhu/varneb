@@ -368,6 +368,15 @@ Gamma phonon amplitude.
   normalization throughout; the plotted 2D values are not finite-temperature
   free energies.
 
+For an explicitly prescribed substrate, use `ClampedModeCoordinates` with
+`CalculatorModeEvaluator` to retain exactly the same fixed two cell vectors
+and permitted open-row deformation as the endpoint/path calculation.
+An unconstrained six-symmetric-strain chart is a different mechanical
+experiment, not a substitute. The [clamped mode-evaluation guide](CLAMPED_MODE_EVALUATIONS.md)
+defines the common reference, unwrapped atom registration, scaled-cell units,
+calculator/SCF validation and exact resume contract. This implementation is
+tested but does not itself establish a material conditional surface or TS.
+
 For BTO, cubic C has three independent unstable Gamma directions. Fixing only
 `(Q_z,Q_x)` while freely minimizing the omitted `Q_y` therefore cannot yield
 a two-dimensional lower envelope that passes through C at its cubic reference
