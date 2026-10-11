@@ -1008,25 +1008,30 @@ discrete path curvature certifies a stationary index-one bottleneck.
 The [native replay and explicit diagnostic fields](../../benchmarks/hfo2_channels/20261008/clamped_stationarity_E073_20261011/README.md)
 preserve legacy output meanings without changing the optimizer force.
 
-The paired profiles in Figure 5 use each chain's own normalized original
+The three profiles in Figure 5 use each chain's own normalized original
 generalized arc, not a common absolute coordinate. The T endpoint has zero
 T-referenced displacement and its undefined coverage fraction is not plotted.
 Absolute gradient norms and separate Green strains are retained in the
-[scalar figure data](figures/hfo2_clamped_TM_E080_20261011/source_data.csv).
+[scalar figure data](figures/hfo2_clamped_TMR_E099_20261011/source_data.csv).
 All four Cmma registrations are drawn; their spread is not statistical
 uncertainty, and different ranks are not a model-accuracy benchmark.
-The eighteen records include cached endpoints, not eighteen independent
+The twenty-seven records include cached endpoints, not twenty-seven independent
 replicates or new SCFs. This comparison does not select G3 bottlenecks,
 release unseen data or measure a prediction error.
 
-![Paired clamped escape profiles and distinct displacement/gradient coverage](figures/hfo2_clamped_TM_E080_20261011/hfo2_clamped_TM.pdf)
+![Matched-substrate escape and switching profiles with distinct displacement/gradient coverage](figures/hfo2_clamped_TMR_E099_20261011/hfo2_clamped_TMR.pdf)
 
-Figure 5. Ordinary-converged zero-strain PO-to-T (left) and PO-to-M (right).
-(a,b) Nine P=0 energy samples per chain relative to common PO+.
-(c,d) Squared translation-free displacement coverage in the common T chart.
-(e,f) Squared dual atomic-gradient coverage, with different denominators
-from (c,d). Dashed guides mark sampled peaks, not certified TSs; connectors
-do not imply continuous MEP interpolation.
+Figure 5. Three ordinary-converged zero-strain training candidates: PO-to-T
+(left), PO-to-M (middle) and reversing-pattern switching (right).
+(a--c) Nine P=0 energy samples per chain on one energy scale, relative to
+the same cached PO+ state. (d--f) Squared translation-free displacement
+coverage in the common T chart. (g--i) Squared dual atomic-gradient coverage,
+with different denominators from (d--f). Blue, grey and teal denote the T
+geometric triplet (rank3), two complete T optical doublets (rank4) and all
+four Cmma registrations (each rank4), respectively. Orange dashed guides
+mark sampled peaks, not certified TSs; connectors do not imply continuous
+MEP interpolation. The 27 records are descriptive samples, not independent
+replicates; registration spread is not a statistical uncertainty interval.
 
 At sampled image 3, $E_{yy}$ is 0.4111% and $E_{xy}$ is -2.2989%; at the
 M endpoint they are 1.5509% and -7.5209%, respectively. Zero imposed

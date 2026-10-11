@@ -242,3 +242,13 @@ G3 choice or prediction-accuracy claim is introduced. The two formerly
 duplicate3.6 headings are now numbered3.6/3.7. The
 [dated E094 reading-build receipt](MANUSCRIPT_DRAFT.path-work-E094.validation.json)
 records actual numeric and layout checks, not submission readiness.
+
+The [E099 three-band figure](../../benchmarks/hfo2_channels/20261008/clamped_three_band_figure_E099_20261011/README.md)
+extends Figure5 with the already audited zero-strain reversing candidate.
+All three profiles use the same PO+ native energy reference and one energy
+axis scale; each retains its own normalized generalized arc. Nine aligned
+panels preserve both T ranks and all four Cmma registrations, separating
+displacement from atomic-gradient coverage. Twenty-seven records include
+shared caches and are not independent replicates or new SCFs. The older
+T/M-only figure remains in its dated folder. This is descriptive training
+evidence, not a released-model comparison or prospective prediction result.

@@ -2718,3 +2718,47 @@ initial curvature preparation if the optional feature is preregistered.
 Material response columns, all strong references and complete prospective
 forecast freeze are still missing; no independent path is released.
 Evidence:nested_shared_initial_E095_20261011/validation.json.
+
+## E099 — three existing matched-substrate candidates in the main figure
+
+E096/E097/E098 are verified waits on the same live native children, with
+no empty code/ledger updates. Current Figure5 still lacks the already audited
+clamped reversing profile. Extend it using the original scalar records and
+unchanged pinned T/M plotting adapters; preserve the older dated figure.
+One PO+ native zero and one energy scale compare T/M/reversing peaks
+84.416624/98.458122/338.968965meV/HfO2. All original T ranks3/4 and four Cmma
+rank4 registrations remain; displacement and gradient coverage are distinct.
+Individual normalized arcs are not common absolute coordinates. Nine discrete
+points/chain with straight connectors are not a validated smooth MEP orTS.
+
+27records include25distinct manifestlog/STRU identities and a reused PO+
+cache; none is claimed new or independently reaudited. No source eigenvector
+array is redistributed. New183x207mm PDF/SVG/PNG/600dpi TIFF and scalar CSV
+have source hashes and layout tests. Nonbold labels(a)--(i), all four spines,
+aligned grids, outside semi-transparent framed legends and missing undefined
+fractions honor user styling. Updated Figure5/caption stay descriptive.
+
+11newtests; firstlocal27pass, expandedlocal50pass. Actual independent Git
+archive50pass/0fail/0skip/direct0,4.475JUnitseconds; standalone plot CLIexit0
+and complete scalar CSVbyte-identical. All14initialcase/figure/sourcefiles
+compare byte-equal. Root attributes/paperREADME decode identically despite
+Git newline normalization. After archive testing only verification metadata,
+ledger and copied JUnit change, not tested source, maintext or plotteddata.
+No new full-suite or HFpytest claim; E0952264pass remains historical.
+
+Actual manuscriptcompileexit0,22pages/1054618bytes. All22pages rendered and
+contact-reviewed; new figure/captionpage18 separately inspected130dpi.
+No final overfull/underfull/missing-glyph/LaTeX/package warnings. Optional
+fitz probe fails before graphics; existing Python PDFium performs QA, with
+no dependency install or backend switch. Figure PNG also actually inspected.
+Compile/layout checks do not prove the remaining material/prediction claims.
+
+22:01:39CST children28727368/28727382 remainRUNNING32CPU/stderr0/no failure:
+newsteps10/11 and forces.306576/.113740eV/Angstrom. Originaltwo+1%flipstarters
+remainJobHeldUser. G2ordinary still4/8;0schedulerwrites/replays/plotDFT/
+newchains/Hessians. Existingworkers continue normalDFT unchanged. NoG3choice,
+physicalholdout,CI/install/release/automation/submission. Five original dirty
+user files and all old material/figure sources preserved. Goalactive and
+incomplete. PROGRESS is an actually tested figure/manuscript delivery using
+already admitted physical evidence, not a novel-method or prediction win.
+Evidence:clamped_three_band_figure_E099_20261011/validation.json.
