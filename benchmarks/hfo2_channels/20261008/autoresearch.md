@@ -2174,3 +2174,23 @@ all-page submission audit. Own preliminary outputs retained in E:/TEMP.
 five waiters held and untouched. PROGRESS is tested reusable dual projection,
 actual strong-reference evidence and main-text discussion, not completion
 of G2/G3/H1/H2/independent forecasting. Full scientific goal remains active.
+
+## E079 — actual PO-to-T convergence and one existing reversing admission
+
+Native28692775 COMPLETED0:0at13:11:49, step10/.0935897657 ordinary residual.
+The complete77-call audit includes seven initial fresh interiors, original
+six physical bytes/native32rank/fullEFS and338immutable runtime files.
+Nine portable terminal native frames replay the same clamped ensemble.
+Forward/reverse peaks84.416624/72.056649, well difference12.359975meV/fu;
+the14.041498difference below the M discrete peak is not certified continuous
+escape ordering. Ordinary convergence is not a TS/error certificate. G2
+now has2/8 ordinary-converged training bands, not a completed network.
+
+One accepted release of existing28692776 at13:21:40, no sbatch/dependency
+write/new independent chain. Separate native proof:RUNNING32CPU/node6from
+13:21:41 and first fresh SCF DSIZE32; two allocations, four+1% user holds.
+0physical/source/optimizer/G3/holdout changes. A mistaken archive path in
+the first read-only audit invocation exited1 before output creation; the
+corrected native audit exited0. Admission exits0 and must never be replayed.
+Evidence, tests and manuscript checks are in clamped_T_terminal_E079_20261011.
+This is material PROGRESS, not a wait-only commit or full goal completion.

@@ -184,3 +184,10 @@ calculations. At the sampled clamped M peak, Cmma's93.51% squared atomic-gradien
 coverage contrasts with36.48% squared displacement coverage. Neither is an
 energy-accuracy measure. This preserves Cmma as a strong comparison and does
 not preselect G3 or claim completed prospective predictions.
+
+The [E079 PO-to-T terminal record](../../benchmarks/hfo2_channels/20261008/clamped_T_terminal_E079_20261011/README.md)
+adds the second same-substrate ordinary-converged training band to Table5.
+Its77 fresh SCFs and nine portable terminal frames pass their distinct native
+and local checks. Its84.416624meV/HfO2 discrete peak is not a continuous TS
+certificate or proof of escape ordering relative to the M candidate. Six G2
+training bands, conditional branches and prospective independent tests remain.

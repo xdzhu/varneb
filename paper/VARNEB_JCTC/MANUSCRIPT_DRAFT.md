@@ -2,7 +2,7 @@
 
 Working manuscript, 2026-10-11. This is a connected main-text draft, not a
 submission-ready article. The numerical Results below use explicitly dated
-pilot observations and one ordinary-converged clamped candidate. All ten
+pilot observations and two ordinary-converged clamped candidates. All ten
 registered endpoint representations across the two matched-substrate training
 conditions have passed their physical screens. The complete G2 barrier-response
 comparison, local conditional branches and
@@ -813,14 +813,31 @@ preserves the nine-image replay and those distinctions. One converged
 escape candidate does not establish the full G2 network, its strain response,
 the selected bottlenecks, H1 or the independently tested H2 forecasts.
 
-Table 5. First ordinary-converged G2 candidate at zero imposed substrate
+The common-substrate PO-to-T candidate also reaches the ordinary target,
+at step 10 with residual 0.093589766 eV/Angstrom. Its native audit includes
+all 77 fresh SCFs, including the seven step-zero interiors, and 338 original
+runtime Python files. It uses the same initial PO+ well, fixed substrate
+rows, allowed cell variables and electronic contract as the M candidate.
+The T chain was continued through a force rebound before converging; no
+single-rebound stopping rule was imposed. Its SCF transport time corresponds
+to 92.211809 allocation-core-hours, excluding the separately cached endpoints.
+The [T terminal record](../../benchmarks/hfo2_channels/20261008/clamped_T_terminal_E079_20261011/README.md)
+retains both the native full-call audit and nine portable terminal frames.
+Its discrete forward peak is 14.041498 meV/HfO2 below the present M peak.
+This difference alone does not settle continuous escape-channel ordering:
+image-resolution error and local saddle/branch tests remain unmeasured.
+Neither a clamped electronic barrier nor a well separation is a
+finite-temperature lifetime, phase population or domain-mediated switching rate.
+
+Table 5. Ordinary-converged G2 candidates at zero imposed substrate
 strain. Energies are meV/HfO2 under the unchanged P=0 electronic contract.
 
 | Candidate | Forward discrete peak | Reverse discrete peak | Final-minus-initial well energy |
 |---|---:|---:|---:|
 | PO-to-M, common T-plane clamping | 98.458122 | 190.998616 | -92.540494 |
+| PO-to-T, common T-plane clamping | 84.416624 | 72.056649 | 12.359975 |
 
-The same terminal chain also permits a zero-DFT reference-space audit.
+The M terminal chain also permits a zero-DFT reference-space audit.
 The prescribed G2 cyclic axis change is inverted on geometry-only copies
 before projection onto the original T chart; ordered atoms and continuous
 periodic lifts are unchanged. Native E/F/stress and the ordinary residual
