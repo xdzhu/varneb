@@ -11,18 +11,19 @@ PAPER = ROOT/'paper/VARNEB_JCTC/MANUSCRIPT_DRAFT.md'
 SOURCE = ROOT/'benchmarks/hfo2_channels/20261008/clamped_path_work_E092_20261011'
 NAMES = ['zero_M','zero_T','zero_reversing','plus1_T']
 LABELS = ['PO-to-M, zero strain','PO-to-T, zero strain',
-          'Reversing flip, zero strain','PO-to-T, +1% strain']
+          'Reversing flip, zero strain','PO-to-T, +1% strain','Preserving flip, zero strain']
 
 
 def reports():
-    return [json.loads((SOURCE/(name+'.json')).read_text()) for name in NAMES]
+    old = [json.loads((SOURCE/(name+'.json')).read_text()) for name in NAMES]
+    return old + [json.loads((ROOT/'benchmarks/hfo2_channels/20261008/clamped_preserving_reference_E101_20261011/path_work.json').read_text())]
 
 
 def section():
-    return PAPER.read_text(encoding='utf-8').split('### 3.8. ',1)[1].split('## 4.',1)[0]
+    return PAPER.read_text(encoding='utf-8').split('### 3.8. ',1)[1].split('### 3.9.',1)[0]
 
 
-@pytest.mark.parametrize('index',range(4))
+@pytest.mark.parametrize('index',range(5))
 def test_table7_peak_and_endpoint_values_keep_sign_order_and_formula_unit(index):
     data = reports()[index]
     text = section()
@@ -72,16 +73,16 @@ def test_all_four_Cmma_registrations_are_kept_as_ranges_not_selected_winners():
 
 def test_native_chart_agreement_is_only_an_algebraic_check_and_reused_frames_not_replicates():
     rows = reports()
-    assert sum(row['portable_native_frames_reparsed'] for row in rows) == 36
+    assert sum(row['portable_native_frames_reparsed'] for row in rows) == 45
     maximum = max(span['independent_native_work_max_defect_eV_cell']
                   for row in rows for span in row['representations'].values())
     assert maximum <= 1.12e-16
     translation_peak_max = max(abs(250*span['cumulative_partition_work']['rigid_translation'][row['sampled_peak_image']])
                   for row in rows for span in row['representations'].values())
-    assert translation_peak_max <= 3.90e-9
+    assert translation_peak_max <= 3.96e-9
     assert all(span['physical_error_bound_measured'] is False
                for row in rows for span in row['representations'].values())
-    assert '34 distinct raw-log/geometry' in section()
+    assert '42 distinct raw-log/geometry' in section()
     assert 'algebraic agreement does not test DFT accuracy' in section()
 
 

@@ -29,6 +29,8 @@ def test_unknown_training_receipt_rejected_before_any_paths_are_opened():
      "c5653b4759b202199cb75739f99038aaa52b3ccc220ef226efbacc980e5d716e", .09358976572425506),
     ("clamped_reversing_terminal_E083_20261011",
      "632e0e9b2b821b3bfc7d66b361c44c7db734988fb5d018ea2f31441fab14ed41", .09218242631012838),
+    ("clamped_held_flips_E100_20261011/zero_strain_preserving",
+     "46145da14f24b2b8bd46aa4656f0982650d6b2dc661282f58d809aab8a6d3202", .0988168085874911),
 ])
 def test_native_covector_transport_matches_direct_production_frame(case, audit, fmax):
     images, _, residual, _ = terminal_images(CASE/case, audit)
@@ -96,11 +98,12 @@ def test_reversing_report_keeps_native_gradient_norms_all_frames_and_claim_limit
             assert abs(span["norm_identity_defect"]) < 1e-12
 
 
-def test_three_bands_share_exact_cached_initial_SCF_and_ordered_geometry():
+def test_four_bands_share_exact_cached_initial_SCF_and_ordered_geometry():
     cases = [
         ("clamped_M_terminal_E068_20261011", AUDIT),
         ("clamped_T_terminal_E079_20261011", "c5653b4759b202199cb75739f99038aaa52b3ccc220ef226efbacc980e5d716e"),
         ("clamped_reversing_terminal_E083_20261011", "632e0e9b2b821b3bfc7d66b361c44c7db734988fb5d018ea2f31441fab14ed41"),
+        ("clamped_held_flips_E100_20261011/zero_strain_preserving", "46145da14f24b2b8bd46aa4656f0982650d6b2dc661282f58d809aab8a6d3202"),
     ]
     first = None
     for case, audit in cases:

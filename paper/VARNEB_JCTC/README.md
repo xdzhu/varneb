@@ -38,7 +38,8 @@ screened. Jobs28574708/28574709 were the historical first segments of the
 matched zero-strain preserving-flip/PO-to-M chains, not current live handles.
 The later PO-to-M segment28722320 has passed an actual ordinary terminal
 audit; Tables5–6 and Figure5 document that first clamped candidate and its
-mode/strain trace. The other necessary G2 candidates remain incomplete.
+mode/strain trace. This first-candidate description is historical: by E101,
+five of eight necessary G2 candidates have ordinary terminal audits.
 The reserved+.005holdout remains ungenerated/unread.
 The complete G2 matched-boundary comparison, G3
 conditional-branch validation and independent material predictions remain
@@ -252,3 +253,18 @@ displacement from atomic-gradient coverage. Twenty-seven records include
 shared caches and are not independent replicates or new SCFs. The older
 T/M-only figure remains in its dated folder. This is descriptive training
 evidence, not a released-model comparison or prospective prediction result.
+
+The [E101 preserving/reversing comparison](../../benchmarks/hfo2_channels/20261008/clamped_preserving_reference_E101_20261011/README.md)
+adds the completed preserving zero-strain flip and Figure7. Tables5--7
+include its96.828183meV/HfO2 sampled peak,82.6301%/12.9583% T-triplet
+displacement/gradient fractions and signed work. Five of eight G2 training
+bands are ordinary-converged. The zero-strain four-channel set is complete
+at that criterion, not at a stationary-TS or barrier-error standard.
+Three +1% candidates, conditional response/stability, strong controls and
+prospective independent material predictions remain. Original figures and
+build receipts retain their historical meanings.
+The [E101 validation](../../benchmarks/hfo2_channels/20261008/clamped_preserving_reference_E101_20261011/validation.json)
+identifies the actual24-page PDF, all-page contact review and detail pages
+15/16/21--24, plus109-test local/independent archive verification. Figure7
+and the new table entries are descriptive training evidence, not successful
+independent predictions or a completed JCTC study.

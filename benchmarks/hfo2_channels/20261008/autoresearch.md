@@ -2807,3 +2807,47 @@ holdout remain closed. Manuscript/figures and five original dirtyuserfiles
 stayunchanged. Goalactive/incomplete. PROGRESS is a new actually audited
 training candidate plus a tested existing-handle handoff, not a forecastwin.
 Evidence:clamped_held_flips_E100_20261011/validation.json.
+
+## E101 — admitted preserving reference and ordered flip comparison (PROGRESS)
+
+Continue E100's actual terminal result, without a new DFT or scheduler write.
+One fifth completed receipt is admitted to the strict training whitelist;
+unknown/reserved labels still reject before access. Existing four analyzers
+produce the zero-strain preserving displacement/dualgradient/pathwork/
+externalwork reports. T ranks3/4 and all four rank4Cmma frames are unchanged.
+At peak4, T3displacement82.6301% contrasts with gradient12.9583%; Cmma
+gradient52.7203%. Internal/omitted T3norms.070196452/.065490597 have units
+eV/(sqrt(amu)Angstrom), not mode energy. No ASR repair or reference winner.
+
+Figure7 compares actual preserving96.828183/reversing338.968965meV/HfO2
+profiles on common PO+ zero/energy scale.18records/17nativeidentities, not
+replicates. All45workrecords have42identities. Preserving peak/endpoint
+energy-minus-work14.523948/.032398 illustrates local discrepancy despite
+endpoint closure, not a physical error bound. Tables5--7 and new3.9 add this
+evidence;1.629939meV sampled separation from M is not a robust ranking.
+
+Actual six-panel PNG and final24-page PDF contacts are inspected; changed
+pages15/16/21--24 reviewed at130dpi. Number-range paragraph overflow is fixed
+without changing values; finalTeX diagnosticcount0. Reading page22 has large
+space before unbreakablefigure23, not final journal typesetting. PDF/source
+pins and visual/figure CSV receipts are retained; no new curvature/G3/holdout.
+
+Initial plot7pass/4fail is a canonical-vs-raw observation pin mistake,
+corrected to committed raw bytes. Related93pass/1fail is the stale4receipt
+test, updated to actual5receipt membership. First independent108pass/1fail
+is only oldcurvatureLF/CRLF source metadata; exact numerical fields agree.
+An intermediate reversed LFpin fails locally108/1 and is corrected with
+both normalized-byte comparisons. Original reports/data/archives are kept.
+Final109pass locally and independentr2/direct0/JUnit8.170s,1existingfontTools
+warning each.27initialscience/figure/test/evidence files are byte-equal;
+later changes are receipts/status/README/ledger only. No new fullsuite or
+HFpytest claim; production/physical data byte hashes are not normalized.
+
+At23:40:25CST M28727368step16/.168904 and preserving28709790step4/2.467425
+are live on two32CPUhfacnormal01allocations; stderr0. Reversing28709791 stays
+held/AllocCPUs0. G2ordinary5/8; no scheduler mutation, new DFT, CI, publication,
+new phase, Hessian, conditional-face selection or physicalholdout. Five
+original dirtyuserfiles are not staged or edited. Goalactive/incomplete.
+PROGRESS is actual completed material analysis plus validated/main-text
+evidence, not a status-only ledger commit or a prospective prediction claim.
+Evidence:clamped_preserving_reference_E101_20261011/validation.json.
