@@ -2249,3 +2249,27 @@ Four+1%startersheld, 0scheduler writes/newDFT/production/G3/holdout changes.
 G2 remains2/8 ordinary-converged candidates. PROGRESS is a necessary tested
 calculation interface, not material G3 or complete H1/H2/JCTC readiness.
 Full scientific goal staysactive; evidence:clamped_mode_flow_E081_20261011.
+
+## E082 — partial Lee SI text clarifies the novelty and response units
+
+Publisher extraction supplies four-page Parts1--3 and caption text, but no
+successful source PDF binary or graphics inspection. The short attributed
+reading and explicit access failures are retained; coefficients, vectors and
+plots are not imported. Restricted release lowering a coupled interpolation
+is prior work, not our method innovation. Internal length-valued mixed response
+and elastic stiffness have different dimensions; the registered formula and
+same-boundary material tests, not the acoustic argument, must supply evidence.
+
+No code or numerical tables/figures changed. Related127tests pass without
+failure/error/skip; static two-file unit scan0findings is only heuristic.
+The enclosing initial check failed on GBK decoding after successful pytest;
+corrected explicitUTF8/final PDF checks exit0. Actual final compile exits0,
+18-page contact layout plus changed pages2/3 reviewed. Existing34table rows
+and5figure references equal HEAD. This is not an external-figure/full-source
+version audit, fresh full regression, material surface or submission-ready claim.
+
+14:49:31native two32CPU jobsRUNNING; subsequently read actual complete logs:
+preserving21/.182030,reversing4/.113133. Four+1%starters JobHeldUser;
+0schedulerwrites/newsubmissions/physical or production-source changes.
+Full finite G2/G3/strong-controls/frozen-independent-test goal remainsactive.
+Evidence:lee_SI_text_E082_20261011/validation.json.

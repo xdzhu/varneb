@@ -191,3 +191,12 @@ Its77 fresh SCFs and nine portable terminal frames pass their distinct native
 and local checks. Its84.416624meV/HfO2 discrete peak is not a continuous TS
 certificate or proof of escape ordering relative to the M candidate. Six G2
 training bands, conditional branches and prospective independent tests remain.
+
+The [E082 source-reading receipt](../../benchmarks/hfo2_channels/20261008/lee_SI_text_E082_20261011/validation.json)
+records the current18-page build after a partial Lee supplementary-text reading.
+The introduction excludes restricted-release profile lowering as novelty;
+Section2.3 distinguishes internal-response coordinates and elastic stiffness.
+The existing34 table rows and5 figure references are unchanged. All18 pages
+were inspected at contact-sheet scale, with changed pages2/3 reviewed separately.
+This is neither a full external-SI graphic/version audit nor a new material
+surface, Hessian, prospective prediction or submission-readiness claim.

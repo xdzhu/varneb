@@ -79,6 +79,10 @@ Predicting a strain-induced distortion is therefore not, on its own, the
 methodological distinction sought here. The test concerns the competing
 barrier responses after subtraction of the same initial well, with their
 actual mechanical freedoms and strong controls kept explicit.
+Their supplementary Part 2 also contrasts a coupled three-mode interpolation
+with restricted relaxation. Relaxation-induced lowering of such a profile
+is therefore not presented here as a methodological innovation.
+([Lee et al., Supplementary Part 2](https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fs41535-025-00841-9/MediaObjects/41535_2025_841_MOESM1_ESM.pdf#page=2))
 
 We therefore formulate a narrower test than discovery of a new coupled mode
 or a low-energy intermediate. First, we compare switching and phase escape
@@ -193,6 +197,16 @@ $$
 q^*(t)=-A^{-1}(\widetilde g_q+b t),\qquad
 C=d-b^TA^{-1}b.
 $$
+
+In the length-valued response chart, both $q$ and $t$ have Angstrom units and
+$A$, $b$ and $d$ have units of $\mathrm{eV}\,\text{\AA}^{-2}$ at the cell-energy level.
+Thus $dq^*/d\epsilon=-L A^{-1}b$ has Angstrom per unit strain, not the
+energy-density units of an elastic stiffness. These coordinates are not
+the mass-weighted amplitudes used for path projections. An acoustic
+continuum relation or a fitted optical-mode slope from a different
+reference/boundary does not independently validate this internal mixed
+response. Same-contract probes and prospective material tests must do so;
+the latter remain outstanding here.
 
 For an internal minimum, A is positive definite and C cannot exceed d.
 For an index-one saddle, A is indefinite and this curvature correction is
