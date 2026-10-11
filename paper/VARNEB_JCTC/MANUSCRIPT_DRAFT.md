@@ -2,7 +2,7 @@
 
 Working manuscript, 2026-10-11. This is a connected main-text draft, not a
 submission-ready article. The numerical Results below use explicitly dated
-pilot observations and two ordinary-converged clamped candidates. All ten
+pilot observations and three ordinary-converged clamped candidates. All ten
 registered endpoint representations across the two matched-substrate training
 conditions have passed their physical screens. The complete G2 barrier-response
 comparison, local conditional branches and
@@ -843,6 +843,18 @@ image-resolution error and local saddle/branch tests remain unmeasured.
 Neither a clamped electronic barrier nor a well separation is a
 finite-temperature lifetime, phase population or domain-mediated switching rate.
 
+The reversing-pattern switching candidate meets the ordinary target at
+step 5 with residual 0.092182426 eV/Angstrom. All 42 fresh SCFs pass the
+original six-input, native 32-rank and complete E/F/stress audit; 338 runtime
+files are unchanged. The [terminal record](../../benchmarks/hfo2_channels/20261008/clamped_reversing_terminal_E083_20261011/README.md)
+also retains nine separately verified portable frames. Table 5 reports its
+discrete image-4 peak, not a continuous TS or sampling-error certificate.
+Its SCF transport cost is 47.667216 allocation-core-hours, excluding endpoint
+preparation. Three of the eight training candidates now meet the ordinary
+target. The remaining matched paths, conditional response and frozen
+independent tests are required before claiming a strain-selectivity response
+or prospective model advantage.
+
 Table 5. Ordinary-converged G2 candidates at zero imposed substrate
 strain. Energies are meV/HfO2 under the unchanged P=0 electronic contract.
 
@@ -850,6 +862,7 @@ strain. Energies are meV/HfO2 under the unchanged P=0 electronic contract.
 |---|---:|---:|---:|
 | PO-to-M, common T-plane clamping | 98.458122 | 190.998616 | -92.540494 |
 | PO-to-T, common T-plane clamping | 84.416624 | 72.056649 | 12.359975 |
+| Reversing-pattern switching, same clamping | 338.968965 | 339.004224 | -0.035259 |
 
 The M terminal chain also permits a zero-DFT reference-space audit.
 The prescribed G2 cyclic axis change is inverted on geometry-only copies

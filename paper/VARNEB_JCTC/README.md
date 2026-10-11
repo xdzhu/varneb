@@ -193,10 +193,19 @@ certificate or proof of escape ordering relative to the M candidate. Six G2
 training bands, conditional branches and prospective independent tests remain.
 
 The [E082 source-reading receipt](../../benchmarks/hfo2_channels/20261008/lee_SI_text_E082_20261011/validation.json)
-records the current18-page build after a partial Lee supplementary-text reading.
+records the18-page build after a partial Lee supplementary-text reading.
 The introduction excludes restricted-release profile lowering as novelty;
 Section2.3 distinguishes internal-response coordinates and elastic stiffness.
 The existing34 table rows and5 figure references are unchanged. All18 pages
 were inspected at contact-sheet scale, with changed pages2/3 reviewed separately.
 This is neither a full external-SI graphic/version audit nor a new material
 surface, Hessian, prospective prediction or submission-readiness claim.
+
+The [E083 reversing terminal case](../../benchmarks/hfo2_channels/20261008/clamped_reversing_terminal_E083_20261011/README.md)
+adds the third ordinary-converged G2 band to the main text and Table5.
+Its42 fresh native SCFs and nine portable terminal frames pass distinct
+checks; the338.968965meV/HfO2 forward discrete peak is not a continuous-TS
+or sampling-error certificate. The current build is identified by this
+case's validation receipt, not the historical E082 PDF hash. One existing
++1% PO-to-T job is admitted into a spare slot without new submissions or
+input changes; the other three training starters remain held.

@@ -2273,3 +2273,32 @@ preserving21/.182030,reversing4/.113133. Four+1%starters JobHeldUser;
 0schedulerwrites/newsubmissions/physical or production-source changes.
 Full finite G2/G3/strong-controls/frozen-independent-test goal remainsactive.
 Evidence:lee_SI_text_E082_20261011/validation.json.
+
+## E083 — third matched-substrate ordinary band and actual +1% startup
+
+Reversing28692776 COMPLETED0:0 at14:51:28CST, step5/.09218242631.
+Native audit checks42fresh SCFs including seven step0 calls, original six
+physical hashes, DSIZE32/fullEFS and338 immutable runtime files. Nine portable
+terminal frames separately match native input/log hashes, ordered geometry,
+EFS and ordinary replay. Forward/reverse/well discrete energies338.968965/
+339.004224/-.035259meV/HfO2; image4 highest. SCF transport47.667216corehours
+excludes endpoint preparation. This is3/8 G2 ordinary candidates, not a
+continuousTS, sampling-error certificate, complete network or forecast gain.
+
+117related local/actual independent full-archive tests direct0, nofailures/
+errors/skips. Two new source files differ only CRLF/LF in the initial archive,
+normalized code equal; native helper byte-matches local tested source.
+Initial source import diagnostic selected an old exporter through cwd;
+corrected explicit import proves three registeredE075 modules before the
+successful native audit. Initial archive byte-equality diagnostic fails on
+line endings, not behavior; later raw-material/replay checks exit0.
+
+Actual one-release journal admits existing+1%PO-to-T28709788, no sbatch or
+dependency rewrite, no new independent chain. Native RUNNING32CPU/node6 from
+15:06:04;15:08:11 first SCF header DSIZE32/stderr0. Three others remainheld,
+28723655 occupies the other slot. Never replay accepted/ambiguous intent.
+Main text/Table5 updated, final18-page compile0, pages1/15/16 individually
+and late14--18 contact reviewed. Shortened prose keepsTable6 caption/data
+together, original34rows/5figures unchanged except one added material row.
+0physical/production-source/optimizer/G3/holdout changes; full scientific
+goal remainsactive. Evidence:clamped_reversing_terminal_E083_20261011.
