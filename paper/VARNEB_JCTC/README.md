@@ -277,3 +277,12 @@ wells. Free-cell F_xx=1.122022 contrasts with the clamp's fixed F_xx=1.
 This is not the same-boundary strain derivative or a certificate that every
 clamped Pbcn branch is absent. No new DFT or G3/reference/holdout choice is
 used; the original free-cell sampling supplement remains distinct.
+
+The [E103 finite +1% production handoff](../../benchmarks/hfo2_channels/20261008/clamped_flip_continue_E103_20261012/README.md)
+audits the completed10-update preserving starter and resumes its exact latest
+chain as28737465 under the unchanged physical/optimizer recipe. Its1.325704
+eV/Angstrom cap and the live M band's.106688 residual are not final material
+labels; G2 remains5/8. No figure/table/barrier/forecast claim is updated from
+these unconverged records. Original figures and the25-page reading draft
+remain; complete ordinary training, G3/stability, strong controls and the
+prospectively frozen independent predictions are still required.
