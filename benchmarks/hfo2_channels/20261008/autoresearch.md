@@ -3199,3 +3199,41 @@ untouched/unstaged. This actual tested software milestone, not waiting alone,
 is prepared for ordinary explicit-stage commit/push. Goalactive/incomplete;
 no material accuracy, novel theory, TS or JCTC readiness claim.
 Evidence:[receipt](forecast_panel_freeze_E112_20261012/validation.json).
+
+## E113 — Audit the original reversing cap and continue the same chain
+
+Previous turn E112 is PROGRESS; E113 is PROGRESS. Original28709791 ends
+COMPLETED/0:0 at04:19:38CST, but latest10/0.12692249290222424 is an
+unconverged cap, not an ordinary label or a failed job. All77fresh SCFs,
+338original runtime files, six physical bytes, genuine DSIZE32 and9latest
+caches pass the pinned native audit. Local portable replay reparses nine
+retained raw terminal SCFs only; the full77-call audit remains native HF
+evidence. No historical-best frame substitutes for the latest chain.
+
+After156pre-admission tests, the unchanged E103 helper journals one held
+submission and one release of28764704; only28737465/28764704 commit slots.
+The new segment starts04:27:20 onnode6,32MPI/12h/40updates, nine exact
+initial caches/zero fresh initial SCFs. At04:29:28 its complete step0
+reproduces the parent force and first native log declares DSIZE32, but no
+fresh call audit has completed. This is startup evidence, not fresh SCF
+completion or convergence. FIRE history resets explicitly; physical inputs,
+optimizer arguments and frozen production source remain byte-unchanged.
+
+Ten pre-capture material/synthetic checks pass. Final related regression
+passes164 locally/164 independently with no failures/errors/skips; not a
+fresh full-suite or HFpytest run. Before independent tests, all5874tracked
+files are extracted and88case files have identical bytes in the archive.
+Archive preparation catches thirteen logs/trajectories omitted by generic
+ignore rules before any independent run; a finite case-local exception fixes
+delivery. The superseded first snapshot is kept and not counted as tested.
+Only README/validation/JUnit delivery records and research ledgers change
+after the tested source/data snapshot. No production source is redeployed.
+
+Native04:36:03CST both jobs remain RUNNING32/hfacnormal01/stderr0:
+preserving18/.244708, reversing initial0/.126922. G2 remains6/8. No G3
+selection/curvature or physical+.005holdout access; no manuscript-result
+change, new independent chain, periodic monitor, CI/release/install or
+submission. The original five user edits remain untouched/unstaged. This
+is a real material computation handoff, not a status-only commit. Goal stays
+active and the full scientific objective remains incomplete.
+Evidence:[receipt](clamped_reversing_continue_E113_20261012/validation.json).
