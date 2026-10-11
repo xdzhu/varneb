@@ -2527,3 +2527,42 @@ scheduler write, accepted-journal replay, extra DFT/Gamma/Hessian/G3 choice or
 +.005 access. Registered production continues normal DFT. MD/PDF and five
 user-dirty tracked files remain untouched. Full scientific goal remains active.
 Evidence:clamped_rolling_continue_E090_20261011/validation.json.
+
+## E091 — actual terminal audits and two admitted same-chain continuations
+
+Both registered parents finish successfully at caps, not ordinary convergence:
+preserving28723655 step40/cumulative90/.1434371761; +1%M28709789 step10/.5701098698.
+All280/77freshSCFs, unchanged six physical bytes, actualDSIZE32, completeE/F/stress,
+SCF convergence, original334/338runtimefiles and9latestexactcaches pass onHF.
+Portable18rawframes and both same-boundary residuals replay locally. Latest
+sampledpeaks remain provisional; G2ordinary4/8, no complete channelranking,
+TS certification, model advantage or frozen independent forecast is claimed.
+
+Actual first preserving audit fails because frozenE054 seed preparation admits
+only the pilot script, not registeredE069. Original code/partial namespace and
+actual rejection preserved. Existing tested continuation-aware preparation is
+pinned in audit-only resume_support, not the worker source. Full native checks
+rerun in fresh terminal-r2 before continuation. M audit used retained v1 driver.
+Two exclusive once-only journals admit then release28727368/28727382: 2held
+submissions+2releases,0dependency/old-waiterwrites,0newindependentchains. Same
+latest geometry/caches, original electronic and clamped boundaries,40updates/
+12hours/32MPI each. FIRE history resets explicitly, not a checkpoint/gain claim.
+
+15newtests; preparation clean v1/v2 each95pass; local material suite75pass.
+Final actual independent archive98pass/0fail/0skip/direct0,11.009seconds.
+161case artifacts and2newtests+5existing support/wrapper files byte-identical.
+Two real delivery attempts97pass/1fail each reject line-ending-converted old
+source bytes. Exact snapshot -text/-eol plus scoped index renormalization fix
+delivery; original digest and test unchanged, both failedJUnit retained.
+No new full-suite/nativepytest result is invented; E0902137pass is historical.
+
+19:40:32CST bothchildrenRUNNING32CPU/stderr0/no failure. Eachnewstep1:
+M.552680 and preserving.142522. Actual first updates861/820s plusparenttimings
+give bounded40-updatecapETAOctober12about03--06CST, not convergenceETA; wallends
+07:15:33/07:21:30. Original +1%flips28709790/91remainJobHeldUser/nullDependency.
+No replay/extraHessian/G3choice/+.005holdoutaccess,CI/release/installation or new
+independentchain. Audits/tests add0DFT, admitted production runs normalDFT.
+MD/PDF and original5userdirtytrackedfiles unchanged. Scientificgoalactive.
+PROGRESS is actual validated cap material and same-chain production admission,
+not final convergence or JCTC completion.
+Evidence:clamped_rolling_native_E091_20261011/validation.json.

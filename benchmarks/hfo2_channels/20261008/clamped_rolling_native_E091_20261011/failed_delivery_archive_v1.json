@@ -1,0 +1,23 @@
+{
+  "scope": "independent Git delivery archive, not production runtime",
+  "tree": "bb5c46b242ada13195e0278fdc9479538bd37608",
+  "archive_sha256": "36a6f3a03c5db58b3997866f76e1a17365a0afa62548ea306bbca9d812d0fc04",
+  "actual_test_exit": 1,
+  "pass_fail_skip": [97, 1, 0],
+  "failed_test": "test_actual_old_prepare_rejects_registered_continuation_before_writes",
+  "original_native_source_sha256": "2dc91260be19a6bc9ee44fcc39d319199bbf634dd4f1d90396427b735d72b7b8",
+  "converted_archive_source_sha256": "3e85bcc95fbdaad08fd15e9a6b987bd7e8ebeed7fd4f3de8d75337060fec1a25",
+  "cause": "Git text eol=lf changed the preserved historical source snapshot bytes. Local material tests passed on original bytes; the independent archive correctly rejected the changed digest.",
+  "repair": "Keep only the two historical executed .py snapshots as -text -eol. Keep current executable helpers LF. Re-stage original bytes, retain failed JUnit, rerun into a new independent archive without weakening digest checks.",
+  "scheduler_writes_DFT_or_physical_parameter_changes": 0,
+  "retained_failed_junit": "tests_delivery_archive_v1_failed.xml",
+  "first_attribute_only_retry": {
+    "tree": "a989a402a866ff6bbcaa371da5fbf0a5d2bdbef2",
+    "archive_sha256": "dd73b55157a45d50cdada8996ec1e5be9a2b6fb2d7de379ca4ec8c417f1e7bc9",
+    "test_exit": 1,
+    "pass_fail_skip": [97, 1, 0],
+    "retained_junit": "tests_delivery_archive_v2_failed.xml",
+    "cause": "Changing attributes then ordinary git add did not refresh the already staged unchanged historical file. Effective -text -eol was correct, but index retained its prior normalized blob.",
+    "repair": "Explicit scoped git add --renormalize for the two historical snapshots, then verify working no-filter blob equals indexed blob before another fresh archive test. No test or source digest is weakened."
+  }
+}
