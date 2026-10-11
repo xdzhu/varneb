@@ -2606,3 +2606,42 @@ Scientificgoalactive. PROGRESS is tested execution plus actual36frame work
 diagnostic; incomplete G2, conditional branches and frozen independent tests
 still prevent a final JCTC claim.
 Evidence:clamped_path_work_E092_20261011/validation.json.
+
+## E093 — pinned compatible child audit support, not a new physical result
+
+The E075 exporter predates the accepted E090 continuation wrapper. Bind the
+current auditor/exporter/preparer/residual together in a new audit-only HF
+namespace; preserve both original E055/E054 production runtimes. Only actual
+children28727368/28727382 are admitted, with their exact native submitted
+parent receipt, seed, source, work/log namespace and wrapper. No native RUNNING
+row is relabeled COMPLETED. Preflight and terminal claims remain separate.
+
+Actual native compatibility checks both pass, importing all4 pinned support
+modules and checking338/334 original runtime files against their archives.
+Actual terminal attempts on the two live jobs intentionally exit1 before
+material reads/imports or terminal output creation. These are negative guard
+tests, not production failures. Terminal mode still delegates all SCF/EFS/six
+physical bytes, cache/geometry and ordinary-force checks to the existing auditor.
+Only a successful finite cap may prepare a seed; this never submits a new job.
+
+39new tests; first local135pass, final137pass. Actual independent Git archive
+137pass/0fail/0skip/direct0,13.998JUnitseconds. Driver/test/README/two priorJUnit
+files equal archived bytes. Initial root.gitattributes byte comparison rejects
+LF/CRLF normalization; actual decoded content is identical and all five code/
+case/test files subsequently compare byte-equal. No scientific digest or test
+is weakened. No new full-suite/HFpytest result is inferred; E0922187pass remains
+historical. Only reports/validation/ledger are added after archive tests.
+
+20:29:50CST bothjobsRUNNING32CPU/stderr0/no failure, eachnewstep4:
++1%M.470113 and zero-strain preserving.135313. Measured recent update times
+M861--1127s, preserving803--820s imply nominal40-update caps around04:18--04:28
+for preserving and04:58--07:38 forM onOctober12. M's wall limit07:15:33 can
+arrive first; this is not a convergence ETA. Held+1%flipstarters remain
+JobHeldUser/nullDependency. G2still4/8; noG3selection/extraHessian/+.005holdout.
+
+0schedulerwrites/admissionreplays/newchains/auditDFT; registered workers
+continue normalDFT. NoCI/release/install/automation/submission. Original5user
+dirty tracked files and manuscript remain untouched. Goalactive/incomplete.
+PROGRESS here is bounded, actually verified audit engineering needed for
+forthcoming material results, not a new scientific prediction or JCTC completion.
+Evidence:clamped_child_audit_E093_20261011/validation.json.
