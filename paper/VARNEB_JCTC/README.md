@@ -268,3 +268,12 @@ identifies the actual24-page PDF, all-page contact review and detail pages
 15/16/21--24, plus109-test local/independent archive verification. Figure7
 and the new table entries are descriptive training evidence, not successful
 independent predictions or a completed JCTC study.
+
+The [E102 boundary-role comparison](../../benchmarks/hfo2_channels/20261008/preserving_boundary_role_E102_20261012/README.md)
+adds Figure8 and Section3.10. The original free-cell and zero-strain clamped
+preserving centres both retain Pbcn across the unchanged tolerance sweep,
+but are respectively sampled trough/high point relative to their OWN initial
+wells. Free-cell F_xx=1.122022 contrasts with the clamp's fixed F_xx=1.
+This is not the same-boundary strain derivative or a certificate that every
+clamped Pbcn branch is absent. No new DFT or G3/reference/holdout choice is
+used; the original free-cell sampling supplement remains distinct.

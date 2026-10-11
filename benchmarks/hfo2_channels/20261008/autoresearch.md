@@ -2851,3 +2851,39 @@ original dirtyuserfiles are not staged or edited. Goalactive/incomplete.
 PROGRESS is actual completed material analysis plus validated/main-text
 evidence, not a status-only ledger commit or a prospective prediction claim.
 Evidence:clamped_preserving_reference_E101_20261011/validation.json.
+
+## E102 — same group, different sampled boundary role (PROGRESS)
+
+Bounded zero-DFT comparison reuses actual ordinary free-cell preserving69
+and clamped preserving15 observations, original exact readers, six physical
+hashes, source/terminal receipts and fixed symmetry sweep. Both image4 centres
+arePbcn at.001/.01/.05Angstrom/1degree. Own-well energies-14.838201/+96.828183
+meV/HfO2 and centre-minus-adjacent-mean-47.644192/+11.480619 distinguish
+sampled trough/high point. T-chartFxx1.122022/1.0 provides boundary geometry
+evidence. No stable-intermediate/TS/all-clamped-branches-absent assertion.
+Different mechanical boundaries, initial wells and original numeric cell
+metrics are explicit; this is not the matched-boundary strain derivative.
+Free38.508448sampling-union maximum remains distinct from nine-point32.806023.
+
+New2panelFigure8/Section3.10 adds actual material mechanism evidence, not a
+prediction-model win. Existing structure audit validates12orderedHf4O8,
+finite/right-handed periodic cells/distances before symmetry, no standardize/
+wrap/reorder/oxidation guess.18records, no independent replicate/newSCF.
+First render wrongly assumes common cellscale and rejects; corrected by
+retaining bothoriginalmetrics. One patch context rejects before writes.
+Initial PDF caption split/plain underscore formatting corrected. Final25page
+PDF compiles0, TeXdiagnosticcount0, allpagecontacts/final24/25detail inspected.
+External Perl localewarnings remain. Figurecaption complete on24; old22blank
+region remains readinglayoutlimitation, not journalready. Ddisk fills at r2
+PNG creation; only own regenerable r1/r2 reviews move recoverably toE, finalr3
+review runs onE. No unrelated source/science/user data deleted or moved.
+
+Actual117focused tests locally/independentarchive pass,0fail/skip,1existing
+fontTools warningeach.8science files byteequal to tested archive. No freshfull
+suite/HFpytest claimed. G2still5/8; latest liveM28727368step18/.129055 and
+preserving28709790step8/1.680009, reversing28709791held. No schedulerwrite,
+DFT, G3/reference selection, curvature, physicalholdout, CI/publication or
+physical/running-source change. Five original dirtyuserfiles remainunstaged.
+Goalactive/incomplete. PROGRESS is measured material comparison plus tested
+scientific code/maintext, not another status-only ledger commit.
+Evidence:preserving_boundary_role_E102_20261012/validation.json.

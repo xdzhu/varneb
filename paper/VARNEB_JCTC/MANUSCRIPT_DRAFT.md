@@ -1236,6 +1236,55 @@ the three remaining +1% candidates, conditional response/stability tests
 and prospectively frozen independent comparisons remain necessary before
 the proposed predictive result can be assessed.
 
+### 3.10. Clamping changes the sampled energetic role without changing the group label
+
+The preserving paths offer a direct check of the earlier low-energy-centre
+caveat (Section 3.2). Reanalysis of the original free-cell step-69 band and
+the zero-strain clamped terminal band identifies both central samples as
+Pbcn at each fixed 0.001/0.01/0.05 Angstrom tolerance and 1-degree angular
+tolerance. No structure is standardized, remapped or relaxed in this analysis.
+Nevertheless, their sampled energetic roles differ (Figure 8). The free-cell
+centre is -14.838201 meV/HfO2 relative to its own PO+ well and lies below
+both adjacent samples. The clamped centre is +96.828183 meV/HfO2 relative
+to its different, boundary-relaxed PO+ well and lies above both adjacent
+samples. The low central region is therefore not present on this clamped
+band, even though the same group label remains. This does not establish
+that every possible clamped Pbcn branch has disappeared or that either
+centre is a stationary minimum or index-one saddle.
+
+![Same Pbcn label but different sampled energetic role](figures/hfo2_preserving_boundary_role_E102_20261012/hfo2_preserving_boundary_role.pdf)
+
+Figure 8. Preserving-pattern candidates with free cell (blue solid) and
+zero-strain clamp (orange dashed), using the unchanged electronic contract.
+(a) Native energies relative to each band's own PO+ initial well, not one
+common initial configuration. (b) Stretch $F_{xx}$ in the common original T
+chart. Hollow squares identify the two Pbcn central samples; they are not
+certified TSs or stable intermediates. Nine existing samples per path are
+shown with straight connectors, with no smooth-MEP fit, statistical error
+band or independent replicate interpretation. The original free-cell
+nine-point sampled peak is 32.806023 meV/HfO2; the already measured sampling
+supplement raises its union maximum to 38.508448, which is not plotted as
+an additional optimized chain. Source CSV, the full tolerance sweeps and
+native-audit provenance are provided in the dated analysis case.
+
+The geometries provide an associated boundary diagnostic. In the original
+T chart, the free-cell centre has $F_{xx}=1.122022$; clamping fixes $F_{xx}$ and $F_{zz}$
+to unity throughout the zero-strain band while allowing the original y
+direction and two corresponding tilts to respond. The atomic arrangement
+and allowed-cell response are both optimized along each band. Thus this
+comparison is neither a frozen-geometry energy difference nor an isolated
+strain derivative at one state. The six electronic input hashes are the
+same, but the mechanical boundaries, initial wells and original generalized
+metrics differ. Each band keeps its native normalized arc; equal abscissae
+are not a structural matching operation.
+
+This comparison sharpens the material question: predicting competition
+requires tracking a branch's energetic role under a defined mechanical
+intervention, not carrying a phase symbol or a geometric projection across
+boundaries. It supports testing that question, not a demonstrated advantage
+of the proposed response model. Conditional branch stability, certified
+bottlenecks and independent error-bounded forecasts remain unmeasured.
+
 ## 4. Discussion and remaining material tests
 
 The present data establish that a compact local projection, an apparently
