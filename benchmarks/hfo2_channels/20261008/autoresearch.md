@@ -2365,3 +2365,31 @@ No scheduler writes/newDFT/production physical or optimizer changes/G3 choice/
 holdout access. G2 remains3/8, full scientific goalactive. PROGRESS is new
 material description and reproducibility, not an independent-prediction gain.
 Evidence:clamped_reversing_reference_E085_20261011/validation.json.
+
+## E086 — tested next +1% rolling handoff, no premature admission
+
+The E083 one-use release assumes four original held starters; after its
+accepted T release the real queue has three. A separate private M handoff
+now reuses the pinned read-only seed/runtime checks but requires an actual
+ordinary-converged +1% T terminal receipt and native spare slot before one
+M release. Both flipping starters stay held with their original M dependency.
+Exclusive durable intent blocks accepted/ambiguous replay; no sbatch or
+dependency updates. Pending-input preflight is separate from admission and
+does not infer convergence while T is live.
+
+172related local/actual Git-archive tests each pass/direct0, including46new
+mock transaction tests. Two new sources differ CRLF/LF only, normalized
+text matches; deployed helper byte-matches locally tested source. Actual HF
+read-only preflight0 checks9images/two native cached endpoint SCFs, original
+six bytes/DSIZE32/fullEFS,338 runtime files/binary/pilot and three held jobs.
+Local receipt byte-matches native. No native failure injection or whole-project
+regression claimed. No admission journal, DFT, release or dependency write.
+
+16:31:39native T28709788 remainsRUNNING step4/.111567, preserving28723655
+step28/.170654; both32CPU/stderr0. G2 remains3/8, with three+1%startersheld.
+Finite segment ETAs18:10--18:40 and around19:10, not convergence promises.
+PROGRESS is required operational preparation, not new material/innovation/
+prediction evidence. No source/physical changes, G3 selection or+.005 access;
+paper/PDF unchanged and full scientific goalactive. Actual terminal audit
+must precede any reviewed once-only M admission.
+Evidence:clamped_plus1_T_handoff_E086_20261011/validation.json.
