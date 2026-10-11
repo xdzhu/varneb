@@ -34,14 +34,27 @@ raw E/F/stress and input-byte reviews. The T-derived structure is Ccce already
 in the strained input, not forcibly assigned the free-T group. The two +1%
 minus endpoints28568571/28568573 also completed and passed all raw screens,
 each6BFGSsteps/7SCFs. All ten registered endpoint representations are now
-screened. The first matched zero-strain preserving-flip/PO-to-M chains are
-jobs28574708/28574709, each32MPI/10step/4h first segment, not yet converged
-barrier results. The reserved+.005holdout remains ungenerated/unread.
-G2 matched-boundary channel barriers, G3
+screened. Jobs28574708/28574709 were the historical first segments of the
+matched zero-strain preserving-flip/PO-to-M chains, not current live handles.
+The later PO-to-M segment28722320 has passed an actual ordinary terminal
+audit; Tables5–6 and Figure5 document that first clamped candidate and its
+mode/strain trace. The other necessary G2 candidates remain incomplete.
+The reserved+.005holdout remains ungenerated/unread.
+The complete G2 matched-boundary comparison, G3
 conditional-branch validation and independent material predictions remain
 missing. An ordinary residual pass is not a certified saddle or a barrier
 uncertainty bound. No abstract or conclusion asserting these missing results
 is supplied.
+
+The [public Ma-Liu v3 supplement audit](../../outputs/HFO2_MA_V3_MAPPING_AUDIT_2026-10-11.md)
+adds mapping-coverage evidence to the introduction, without equating our
+candidate to a literature path, changing the finite matrix or claiming a
+publisher-SI/full-preprint audit.
+
+Its [dated reading-build receipt](MANUSCRIPT_DRAFT.Ma-mapping.validation.json)
+identifies the17-page PDF, the selected actually inspected pages and the
+unchanged M numbers. It is not an all-page final submission audit or a new
+material result; older compile receipts retain their historical meanings.
 
 The [later complete-frame residual audit](../../benchmarks/hfo2_channels/20261008/residual_update_20261009_0450/README.md)
 tracks the preserving flip's atomic/cell residual crossover without claiming

@@ -41,6 +41,13 @@ the accompanying nonpolar distortions or the switching route.
 [Qi et al., 2025](https://doi.org/10.1103/PhysRevB.111.134106))
 Neither mode enumeration nor a strain-induced pathway change is consequently
 a new result to be established by repeating these calculations.
+Ma and Liu also examine competing M-to-PO mappings involving oxygen and
+mixed hafnium-oxygen shuffles. Their supplemental Figure S2 makes clear that
+a phase-pair name or one conserved shuffle does not uniquely identify the
+path. Our clamped M candidate is therefore not assigned to a literature
+mapping by barrier-height agreement; candidate coverage, ordered mapping
+and cell-frame transport must remain explicit.
+([Ma and Liu, 2023, publicly archived v3 supplement](https://arxiv.org/pdf/2204.09374v3#page=24))
 Constrained-mode landscapes have also predicted switching mechanisms that
 were subsequently checked by NEB; independent DFT validation alone is not
 our novelty criterion.

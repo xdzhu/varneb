@@ -2111,3 +2111,21 @@ existing reversing admission remains explicitly unexecuted.
 .103118does not stop the chain. All5waiters held. PROGRESS is corrected actual
 workflow cost/safety, not another completed material label or scope reduction.
 Full finite HfO2G2/G3/strong-controls/independent-prediction goal remains active.
+
+## E076 — resolve exact public Ma-v3 mapping evidence, not new DFT
+
+Anonymous public v3 PDF actually downloaded/hash-identified. Selected main/SI
+sections and renderedS2/S12 clarify competing pure M-PO mappings, a prose/figure
+ordering conflict and the vacancy-only SCAN comparison. Not a full48page read
+or publisher-SI identity claim. Introduction now separates prior mapping work
+from our candidate identity/coverage, without adding a second M chain, changing
+fixed inputs or G3 selection. Strong T/Cmma controls and prospective prediction
+remain required.17-page existing LuaLaTeX compile directexit0; actual pages
+1/2/3/16/17 inspected and retained M numbers checked in Markdown/PDF. Initial
+preview clipping is not a source-PDF layout defect; wrapper unchanged.
+
+12:23:32two native32CPU jobs live:Tstep6/.143524,flipstep9/.194546; five waiters
+remainheld.0scheduler writes/newDFT/holdout/model freeze. Evidence is the
+public-source report/provenance and manuscript Ma-mapping validation receipt.
+PROGRESS is a resolved primary-source gap and manuscript boundary, not a
+completed material response or reduced scientific objective. Goal active.
