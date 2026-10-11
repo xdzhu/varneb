@@ -78,6 +78,37 @@ optimization: an invalid geometry is rejected before any energy call, and
 an accepted point is evaluated exactly once. An empty projected gradient
 is not evidence that an unmeasured physical direction is stable.
 
+The whole-grid `sample_conditional_mode_surface` now forwards the same
+`optimizer`, `trial_validator`, `initial_trust_radius` and
+`include_frozen_start` options. Thus an explicitly guarded clamped calculation
+does not lose its pre-evaluation geometry screen when moved from one point
+to a grid. The default remains L-BFGS-B for compatibility; use safeguarded
+BFGS with the registered geometry validator for geometry-limited DFT trials.
+This does not alter the calculator's electronic inputs or select material
+modes, branches or tolerances.
+
+```python
+surface = sample_conditional_mode_surface(
+    plane, registered_q1, registered_q2, evaluator,
+    energy_unit="eV", potential_kind="E", boundary_condition=boundary_id,
+    frozen_directions=chart.rigid_translation_directions(),
+    starts=registered_starts, include_frozen_start=True,
+    optimizer="safeguarded_bfgs", trial_validator=registered_geometry_validator,
+    initial_trust_radius=registered_metric_radius,
+)
+```
+
+Grid `n_evaluations` now includes callbacks from **every** supplied start,
+including unconverged candidates, not just the selected candidate. The
+single-point legacy `n_evaluations` still describes its selected start;
+`total_n_evaluations` sums complete branch outcomes. Older multi-start records
+without those outcomes have an unknown total, not a selected-only estimate.
+Callback counts include exact-cache hits and final verification calls; they
+are not unique new SCFs or core-hours. Audit the evaluator's source IDs,
+failed attempts and actual preparation resources separately. To retain all
+branch outcomes rather than only the grid's chosen coordinates, keep the
+single-point records as well; the grid is not a global-minimum certificate.
+
 ## Recovery does not change the physical experiment
 
 The evaluator records the substrate, tilt policy, deformation basis, L,

@@ -3291,3 +3291,68 @@ new agent/monitor/install/CI/release or submission. Five user edits remain
 untouched/unstaged. A tested manuscript correction, not status-only delivery.
 Goal active and full scientific objective incomplete.
 Evidence:[case](manuscript_work_cohort_E115_20261012/validation.json).
+
+## E116 — Verified wait on the accepted live training handles
+
+Previous turn E115 is PROGRESS. E116 is VERIFIED_WAIT: native05:16:24
+confirms28737465/28764704 RUNNING32/hfacnormal01; an actual50.0116second
+bounded wait and native05:18:00 recheck corroborate both remain live.
+Complete latest steps are22/.164352 and2/.125607, stderr0. No next complete
+iteration appears in that observation window; expiry is not job termination.
+No restart, cancellation or repeated submission occurs. G2 remains6/8.
+
+Recent preserving updates take about12minutes; reversing's first two take
+15m34s/16m52s. Remaining18/38updates estimate segment40caps near08:50/15:20,
+not ordinary convergence or completion of the scientific goal. Original
+native wall limits remain12:45:12/16:27:20. Full v1/v2 gates are reread and
+unchanged: complete G2 before training bottleneck selection, retain all strong
+controls, freeze real predictions before physical holdout access, no false
+error/TS certificate from an ordinary residual. No new DFT initiation,
+scheduler/source/input/model/paper write, G3/holdout access, new monitor or
+status-only commit/push. Only this local wait ledger changes. Original user
+edits stay untouched/unstaged; goal active and scientifically incomplete.
+
+## E117 — Verified wait and inspection of the existing training gate
+
+Previous E116 and current E117 are VERIFIED_WAIT. Native05:19:42 confirms
+both accepted handles RUNNING32/hfacnormal01; actual50.012second wait and
+native05:21:43 recheck corroborate them live, stderr0. Latest preserving
+step22/.164352 and reversing3/.126334; the slight reversing rebound does
+not trigger stopping or restart. G2 stays6/8. Read the existing E055 actual
+incomplete-pilot gate, offline terminal-guard tests and control API docs;
+no redundant gate is created and no new test/performance result is claimed.
+Complete training, measured error and frozen full comparisons remain required.
+No new physical/scheduler/source/model/paper writes, G3/holdout access,
+agent/monitor or status-only commit/push. Only local wait ledger changes;
+original user edits preserved, full objective active and incomplete.
+
+## E118 — Guarded grid integration and all-start callback costs
+
+Previous E117 is VERIFIED_WAIT. E118 is PROGRESS: two actual wrapper defects
+are reproduced by failing tests. Existing guarded single-point options cannot
+reach the grid; a4point/3start prescribed grid makes12callbacks but reports4.
+The grid now forwards optimizer/validator/trust/start policy unchanged and
+counts every start, including unconverged ones. Selected single-point counts
+remain compatible; missing legacy multi-start outcomes give unknown totals.
+Exact-cache callbacks are not new SCFs/core-hours. This is integration/cost
+accounting, not a new physical method or HfO2 prediction advantage.
+
+62focused tests pass, including nonlinear signed starts, rejection before
+static evaluation, invalid options, unsuccessful-start costs and the exact
+clamped ASE/EMT evaluator/cache flow. The independent full suite passes2518,
+2skips,0failures/errors,314warnings, JUnit486.829s. Skips are optional
+ase.io.abacus unavailable and licensed VASP POTCAR not redistributed. No
+install or false pass. All5892archive files are present and three changed
+code/test/doc sources compare normalized-equal before full tests. Only delivery
+evidence/ledgers change afterward; no fresh local full-suite or HFpytest claim.
+Two rejected patch contexts make no file changes before successful editing.
+
+Native05:40:19CST both accepted production handles RUNNING32/hfacnormal01,
+stderr0: preserving24/.159496, reversing4/.127876. The reversing rebound
+does not trigger cancellation. G2 stays6/8. No new physical DFT, scheduler
+mutation, running-source deployment, parameter change, G3/reference selection
+or physical holdout access. Manuscript results/figures and five user edits
+remain unchanged; no new agent/monitor/CI/release/install/submission. This
+tested software milestone is eligible for a normal Git push, not status-only
+delivery. Goal remains active and full scientific objective incomplete.
+Evidence:[case](conditional_grid_E118_20261012/validation.json).

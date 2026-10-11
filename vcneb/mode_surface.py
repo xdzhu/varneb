@@ -390,6 +390,22 @@ class ConditionalModePoint:
     selected_start: int
     branch_outcomes: tuple[ConditionalBranchOutcome, ...] = ()
 
+    @property
+    def total_n_evaluations(self) -> int | None:
+        """All starts' callback calls, including unconverged candidates.
+
+        ``n_evaluations`` retains its legacy selected-start meaning. A legacy
+        multi-start record without complete outcomes has an unknown total,
+        not a fictitious total equal to its selected branch. These are callback
+        counts, not unique backend SCFs, wall time or a dataset-cost ledger.
+        """
+        if (len(self.branch_outcomes) == self.n_starts and self.n_starts > 0
+                and {row.start_index for row in self.branch_outcomes} == set(range(self.n_starts))):
+            return sum(row.n_evaluations for row in self.branch_outcomes)
+        if self.n_starts == 1 and not self.branch_outcomes:
+            return self.n_evaluations
+        return None
+
 
 @dataclass(frozen=True)
 class OrthogonalCurvatureAudit:
@@ -1009,10 +1025,14 @@ def sample_conditional_mode_surface(
     potential_kind: str,
     boundary_condition: str,
     starts: Sequence[Array] = (),
+    include_frozen_start: bool = True,
     frozen_directions: Array | None = None,
     orthogonal_amplitude_bound: float | None = None,
     gradient_tolerance: float = 1e-6,
     max_iterations: int = 200,
+    optimizer: str = "L-BFGS-B",
+    trial_validator: Callable[[Array], bool] | None = None,
+    initial_trust_radius: float = 0.25,
 ) -> ConditionalModeSurface:
     """Evaluate independent fixed-``Q1,Q2`` orthogonal relaxations on a grid.
 
@@ -1020,6 +1040,13 @@ def sample_conditional_mode_surface(
     fails rather than silently filling a nonconverged point. The caller must
     verify positive orthogonal curvature, competing branches and the physical
     identity of every material structure before calling the result a PES.
+
+    Optimizer/guard/start options are forwarded unchanged to the single-point
+    solver. Use ``safeguarded_bfgs`` and a declared geometry validator to screen
+    trials before backend calls. Defaults retain the legacy L-BFGS-B flow.
+    The returned grid's ``n_evaluations`` counts callbacks over *all* starts,
+    including unconverged ones, not just the selected branch. Exact-cache hits
+    may make this larger than actual new SCFs; audit backend costs separately.
     """
 
     # Validate both axes and physical labels before the first evaluation.
@@ -1041,14 +1068,20 @@ def sample_conditional_mode_surface(
         for i, first in enumerate(axes[0]):
             result = relax_orthogonal_at_q(
                 plane, np.array([first, second]), energy_and_gradient,
-                starts=starts, frozen_directions=frozen_directions,
+                starts=starts, include_frozen_start=include_frozen_start,
+                frozen_directions=frozen_directions,
                 orthogonal_amplitude_bound=orthogonal_amplitude_bound,
                 gradient_tolerance=gradient_tolerance,
                 max_iterations=max_iterations,
+                optimizer=optimizer, trial_validator=trial_validator,
+                initial_trust_radius=initial_trust_radius,
             )
             energies[j, i] = result.energy
             norms[j, i] = result.orthogonal_gradient_norm
-            evaluations[j, i] = result.n_evaluations
+            total_calls = result.total_n_evaluations
+            if total_calls is None:
+                raise RuntimeError("conditional grid requires complete per-start evaluation counts")
+            evaluations[j, i] = total_calls
             selected[j, i] = result.selected_start
             coordinates[j, i] = result.coordinates
     return ConditionalModeSurface(

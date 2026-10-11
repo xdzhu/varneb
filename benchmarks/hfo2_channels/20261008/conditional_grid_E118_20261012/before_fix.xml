@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="2" time="1.367" timestamp="2026-10-12T05:27:15.686955" hostname="Aero"><testcase classname="tests.test_conditional_grid_guards_and_cost" name="test_grid_counts_every_supplied_start_not_only_the_selected_one" time="0.003"><failure message="assert 4 == 12&#10; +  where 4 = int(4)&#10; +    where 4 = &lt;built-in method sum of numpy.ndarray object at 0x0000025F4E4453B0&gt;()&#10; +      where &lt;built-in method sum of numpy.ndarray object at 0x0000025F4E4453B0&gt; = array([[1, 1],\n       [1, 1]]).sum&#10; +        where array([[1, 1],\n       [1, 1]]) = ConditionalModeSurface(q1=array([-0.1,  0.1]), q2=array([-0.1,  0.1]), energies=array([[0.02, 0.02],\n       [0.02, 0.0...     [0, 0]]), coordinates=array([[[-0.1, -0.1],\n        [ 0.1, -0.1]],\n\n       [[-0.1,  0.1],\n        [ 0.1,  0.1]]])).n_evaluations&#10; +  and   12 = len([array([-0.1, -0.1]), array([-0.1, -0.1]), array([-0.1, -0.1]), array([ 0.1, -0.1]), array([ 0.1, -0.1]), array([ 0.1, -0.1]), ...])">def test_grid_counts_every_supplied_start_not_only_the_selected_one():
+        chart = plane(2)
+        calls = []
+        def evaluate(x):
+            calls.append(x.copy())
+            return float(x @ x), 2*x
+        result = sample_conditional_mode_surface(chart, [-.1, .1], [-.1, .1], evaluate,
+            starts=[np.zeros(2), np.ones(2)], **LABELS)
+        assert len(calls) == 12
+&gt;       assert int(result.n_evaluations.sum()) == len(calls)
+E       assert 4 == 12
+E        +  where 4 = int(4)
+E        +    where 4 = &lt;built-in method sum of numpy.ndarray object at 0x0000025F4E4453B0&gt;()
+E        +      where &lt;built-in method sum of numpy.ndarray object at 0x0000025F4E4453B0&gt; = array([[1, 1],\n       [1, 1]]).sum
+E        +        where array([[1, 1],\n       [1, 1]]) = ConditionalModeSurface(q1=array([-0.1,  0.1]), q2=array([-0.1,  0.1]), energies=array([[0.02, 0.02],\n       [0.02, 0.0...     [0, 0]]), coordinates=array([[[-0.1, -0.1],\n        [ 0.1, -0.1]],\n\n       [[-0.1,  0.1],\n        [ 0.1,  0.1]]])).n_evaluations
+E        +  and   12 = len([array([-0.1, -0.1]), array([-0.1, -0.1]), array([-0.1, -0.1]), array([ 0.1, -0.1]), array([ 0.1, -0.1]), array([ 0.1, -0.1]), ...])
+
+tests\test_conditional_grid_guards_and_cost.py:29: AssertionError</failure></testcase><testcase classname="tests.test_conditional_grid_guards_and_cost" name="test_grid_can_forward_guard_before_any_prescribed_static_call" time="0.001"><failure message="TypeError: sample_conditional_mode_surface() got an unexpected keyword argument 'optimizer'">def test_grid_can_forward_guard_before_any_prescribed_static_call():
+        called = []
+        with pytest.raises(ValueError, match="geometry/bound guard"):
+&gt;           sample_conditional_mode_surface(plane(2), [-.1, .1], [-.1, .1],
+                lambda x: called.append(x), optimizer="safeguarded_bfgs",
+                trial_validator=lambda x: False, initial_trust_radius=.03, **LABELS)
+E           TypeError: sample_conditional_mode_surface() got an unexpected keyword argument 'optimizer'
+
+tests\test_conditional_grid_guards_and_cost.py:36: TypeError</failure></testcase></testsuite></testsuites>
