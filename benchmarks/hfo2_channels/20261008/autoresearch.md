@@ -2566,3 +2566,43 @@ MD/PDF and original5userdirtytrackedfiles unchanged. Scientificgoalactive.
 PROGRESS is actual validated cap material and same-chain production admission,
 not final convergence or JCTC completion.
 Evidence:clamped_rolling_native_E091_20261011/validation.json.
+
+## E092 — actual signed path-work check, not mode energy partition
+
+Reusable calculator-independent physical-covector trapezoids and a strict
+four-completed-G2-band adapter preserve the declared atomic mass chart,
+dual pullback, explicit translation gauge and original permitted open-cell
+space. Keep rank3T triplet, rank4completeT doublets and all4Cmma registrations.
+Signed retained/omitted/translation/cell work adds to the full contraction;
+raw native force/stress contraction independently agrees within1.12e-16eV/cell.
+No source-mode/forceASR, fitted frame, geometry/input change, reference selection
+or spring-force integration. Author vectors remain external and byte-pinned.
+
+Actual36portableframe records from0M/T/reversing and+1%T contain34distinct
+rawlog/STRU identities; common initial caches are not new independent calls.
+Energy-minus-work at highest samples is20.897743/8.460687/35.275323/9.418257
+meV/HfO2, while endpoint closure is3.006016/.728018/.115373/1.997185. Coarse
+endpoint closure can hide interior discrepancy. All strong-reference signed
+work and omitted contributions remain; no model winner, separate mode energy,
+physical/barrier error bound, conditional branch or certifiedTS is inferred.
+Coarse nonlinearity and native force/stress error are not separated. This is
+real training-data consistency evidence for the required conditional/strong
+control validation, not a new harmonic theorem or prospective advantage.
+
+35newtests; initiallocal63pass, finallocal67pass. Actual clean full2187pass/
+2existing skips/314warnings/direct0,361.051JUnitseconds. Four material analyses
+execute independently from that archive and each scalar report is byte-identical.
+Eight initialcasefiles+fournewcode/testsources equal the full archive. A later
+combined metadata patch fails context before writes; actual absence checked,
+then corrected. No DFT or scientific-data failure, no weakened tests. Source/
+rawmaterial/test logic remains unchanged after full regression.
+
+20:02:30CST jobs28727368/28727382 remainRUNNING32CPU/stderr0/no failure; newstep2
+forces.525706/.140697. Originaltwo+1%flipstartersheld/nullDependencies;G2still4/8.
+0schedulerwrites,admissionreplays,newchains or analysisDFT. Liveworkers continue
+normalDFT. NoG3choice/extraHessian/+.005physicalholdoutaccess,CI/release/install/
+automation/submission. MD/PDF andoriginal5userdirtytrackedfiles untouched.
+Scientificgoalactive. PROGRESS is tested execution plus actual36frame work
+diagnostic; incomplete G2, conditional branches and frozen independent tests
+still prevent a final JCTC claim.
+Evidence:clamped_path_work_E092_20261011/validation.json.
