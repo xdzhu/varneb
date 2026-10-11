@@ -844,18 +844,22 @@ periodic lifts are unchanged. Native E/F/stress and the ordinary residual
 are replayed in the production frame, not attached unrotated to these copies.
 All four previously registered Cmma frames remain, without selecting an
 orientation by the observed coverage. Table 6 separates atomic displacement
-coverage from the separately recorded finite cell strain.
+and atomic-gradient coverage for both escape candidates; finite cell strain
+remains a separate observable.
 
-Table 6. Squared atomic-displacement fractions (%) for the zero-strain
-clamped PO-to-M chain, after mass-weighted rigid-translation removal in the
-original T chart. The peak is sampled image3; the Cmma range spans retained
-registrations and is not a numerical uncertainty interval.
+Table 6. Squared atomic-displacement and atomic-gradient fractions (%) for
+the zero-strain clamped candidates in the original T chart. Their denominators
+are different. Peaks are sampled images4 (T) and3 (M), not certified saddles.
+Cmma ranges span all four retained registrations, not uncertainty intervals.
 
-| Atomic reference space | Rank | Sampled peak | M endpoint |
-|---|---:|---:|---:|
-| T geometric triplet | 3 | 57.9237 | 24.4400 |
-| Two complete lowest T optical doublets | 4 | 12.0962 | 24.2409 |
-| Full registered Cmma four-direction span | 4 | 36.4746–36.4865 | 56.3537–56.3667 |
+| Candidate | Atomic reference space | Rank | Peak displacement | Peak gradient |
+|---|---|---:|---:|---:|
+| PO-to-T | T geometric triplet | 3 | 99.0957 | 14.3013 |
+| PO-to-T | Two lowest complete T optical doublets | 4 | 0.2411 | 20.3963 |
+| PO-to-T | Registered Cmma span | 4 | 16.6635–16.6636 | 54.0718–54.0765 |
+| PO-to-M | T geometric triplet | 3 | 57.9237 | 9.0282 |
+| PO-to-M | Two lowest complete T optical doublets | 4 | 12.0962 | 32.7096 |
+| PO-to-M | Registered Cmma span | 4 | 36.4746–36.4865 | 93.5085–93.5087 |
 
 The native atomic gradients provide a different, complementary test of
 these fixed references. In the original-T coordinate
@@ -877,8 +881,22 @@ is not a clamped support reaction. The [dual-gradient analysis](../../benchmarks
 retains all nine native samples and unchanged registrations; it does not
 select G3 directions or certify a stationary branch or saddle.
 
-Coverage evolves differently across these representations along one real
-escape candidate. A favourable projection at one image does not establish
+The T candidate supplies the complementary counterexample. At its sampled
+peak4 the geometric triplet captures 99.0957% of the displacement but only
+14.3013% of the atomic-gradient squared norm. The Cmma gradient fraction is
+54.0718--54.0765%, rather than the M candidate's 93.5085--93.5087%.
+Its common internal gradient norm is 0.0101966 eV/(sqrt(amu) Angstrom),
+with Cmma omitted norm 0.0069099--0.0069103. High geometrical coverage is
+therefore not sufficient for local gradient coverage, while a reference
+that represents one escape gradient well is not automatically transferable
+to another. Conversely, neither a small nor a large fraction establishes
+energetic model failure or success. These are descriptive training gradients,
+not finite-strain predictions. The [paired replay](../../benchmarks/hfo2_channels/20261008/clamped_T_reference_E080_20261011/README.md)
+uses the same ordered cached PO+ native SCF, substrate and electronic inputs;
+no additional DFT, reference selection or held-out labels are involved.
+
+Coverage evolves differently across these representations and escape
+candidates. A favourable projection at one image does not establish
 full-path completeness, energetic accuracy or independent predictive gain;
 the rank-three triplet is not a same-dimension comparison with either
 rank-four space. In particular, the Cmma result is not a test of a nonlinear
@@ -900,19 +918,23 @@ discrete path curvature certifies a stationary index-one bottleneck.
 The [native replay and explicit diagnostic fields](../../benchmarks/hfo2_channels/20261008/clamped_stationarity_E073_20261011/README.md)
 preserve legacy output meanings without changing the optimizer force.
 
-![Discrete clamped escape path, atomic reference coverage and finite cell strain](figures/hfo2_clamped_M_E072_20261011/hfo2_clamped_M.pdf)
+![Paired clamped escape profiles and distinct displacement/gradient coverage](figures/hfo2_clamped_TM_E080_20261011/hfo2_clamped_TM.pdf)
 
-Figure 5. Ordinary-converged G2 PO-to-M candidate at zero imposed substrate
-strain; all panels share its original generalized arc. (a) Nine P=0 energy
-samples relative to PO+. (b) Squared translation-free atomic coverage in the
-common T mass metric. All four Cmma registrations are drawn; their narrow
-envelope is not an uncertainty interval. Different ranks are not a
-model-accuracy comparison. (c) Green tensor entries in the original-T axes,
-in percent without an engineering-shear factor. The x/z plane is fixed;
-the y vector and its tilts are released. The dashed guide marks sampled
-image 3, not a certified TS. Connectors imply no MEP interpolation. These
-nine images, including cached endpoints, are not independent replicates.
-The figure reuses frozen E068/E071 numeric reports without new DFT.
+Figure 5. Ordinary-converged zero-strain G2 PO-to-T (left) and PO-to-M
+(right) candidates. (a,b) Nine P=0 energy samples per chain relative to the
+common cached PO+. (c,d) Squared common-T translation-free atomic-displacement
+coverage. (e,f) Squared atomic-gradient coverage in the dual reference chart,
+with different denominators from (c,d). All four Cmma registrations are
+drawn; their spread is not statistical uncertainty. Different ranks are not
+a model-accuracy benchmark. Each column uses its own normalized original
+generalized arc, not a common absolute coordinate. The T endpoint has zero
+T-referenced displacement and its undefined coverage fraction is not plotted.
+Absolute gradient norms and separate Green strains are retained in the
+[scalar figure data](figures/hfo2_clamped_TM_E080_20261011/source_data.csv).
+Dashed guides mark sampled peaks, not certified TSs; connectors imply no
+continuous MEP interpolation. The eighteen records include cached endpoints,
+not eighteen independent replicates or new SCFs. The figure does not select
+G3 bottlenecks, release unseen data or measure a prediction error.
 
 At sampled image 3, $E_{yy}$ is 0.4111% and $E_{xy}$ is -2.2989%; at the
 M endpoint they are 1.5509% and -7.5209%, respectively. Zero imposed
@@ -921,6 +943,10 @@ released cell coordinates. These geometric observations show what the
 atomic coverage fractions omit; they do not measure the energetic benefit
 of shear release. A comparison of frozen and conditionally released
 energies under the same boundary is still needed for that inference.
+For comparison, the T peak has $E_{yy}=-0.3916\%$ and
+$E_{xy}=-0.00135\%$ in the same chart; its T endpoint has zero Green strain
+by definition. None of these strain entries is included in an atomic-mode
+coverage numerator or denominator.
 
 The raw stress also provides a controlled-coordinate work diagnostic. Holding
 fractional atoms and the released cell row fixed, the substrate-strain partial

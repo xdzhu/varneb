@@ -30,13 +30,21 @@ def canonical_sha(value):
 
 
 def build_data(repository):
-    mode_path, obs_path, audit_path = (repository / p for p in (MODE_REPORT, OBSERVATION, AUDIT))
+    return build_band_data(repository, MODE_REPORT, OBSERVATION, AUDIT,
+        mode_digest=MODE_CANONICAL_SHA, observation_digest=OBSERVATION_SHA,
+        audit_digest=AUDIT_SHA, job="28722320", step=13)
+
+
+def build_band_data(repository, mode_report, observation, audit, *,
+                    mode_digest, observation_digest, audit_digest, job, step):
+    """One explicitly pinned zero-strain band, without a calculator launch."""
+    mode_path, obs_path, audit_path = (repository / p for p in (mode_report, observation, audit))
     mode, obs = (json.loads(p.read_text(encoding="utf-8")) for p in (mode_path, obs_path))
-    if (canonical_sha(mode) != MODE_CANONICAL_SHA or sha256(obs_path) != OBSERVATION_SHA
-            or sha256(audit_path) != AUDIT_SHA):
+    if (canonical_sha(mode) != mode_digest or sha256(obs_path) != observation_digest
+            or sha256(audit_path) != audit_digest):
         raise ValueError("frozen material sources differ")
-    if (mode["source_job_id"] != "28722320" or mode["snapshot_step"] != 13
-            or mode["terminal_audit_sha256"] != AUDIT_SHA
+    if (mode["source_job_id"] != job or mode["snapshot_step"] != step
+            or mode["terminal_audit_sha256"] != audit_digest
             or mode["trajectory_sha256"] != obs["evaluated_chain_sha256"]
             or mode["strain_training_condition"] != 0 or mode["pressure_GPa"] != 0
             or not obs["ordinary_residual_pass"] or obs["climb"]
@@ -70,9 +78,11 @@ def build_data(repository):
             **{f"Green_E_{a}{b}_original_T": float(green[i, a, b])
                for a, b in ((0, 0), (1, 1), (2, 2), (0, 1), (0, 2), (1, 2))}))
     return dict(rows=rows, highest_image_index=mode["highest_image_index"],
-        source_job_id="28722320", snapshot_step=13, source_paths=[str(p) for p in (MODE_REPORT, OBSERVATION, AUDIT)],
-        mode_report_canonical_sha256=MODE_CANONICAL_SHA,
-        source_file_sha256={str(p): sha256(repository / p) for p in (MODE_REPORT, OBSERVATION, AUDIT)},
+        source_job_id=job, snapshot_step=step, source_paths=[str(p) for p in (mode_report, observation, audit)],
+        mode_report_canonical_sha256=mode_digest,
+        source_file_sha256={str(p): sha256(repository / p) for p in (mode_report, observation, audit)},
+        zero_displacement=mode["T_origin_zero_displacement"],
+        mechanical_boundary=mode["mechanical_boundary"],
         new_DFT_calls=0, native_data_reaudit_claimed=False,
         ordinary_fmax_eV_A=mode["replayed_fmax_eV_A"], smooth_MEP_interpolation_used=False,
         TS_certified=False, G3_selection_or_holdout_access=False)

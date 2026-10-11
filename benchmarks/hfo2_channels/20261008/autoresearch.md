@@ -2194,3 +2194,30 @@ the first read-only audit invocation exited1 before output creation; the
 corrected native audit exited0. Admission exits0 and must never be replayed.
 Evidence, tests and manuscript checks are in clamped_T_terminal_E079_20261011.
 This is material PROGRESS, not a wait-only commit or full goal completion.
+
+## E080 — paired escape channels separate geometry and energy-gradient coverage
+
+Replay9actual T native frames with the unchanged E023 references, original
+G2 frame/dual pullback and all4Cmma registrations; reuse M scalar reports.
+At T sampledpeak4 geometrictriplet displacement99.0957% versus gradient14.3013%;
+Cmma gradient54.0718--54.0765%, versus M93.5085--93.5087%. This is descriptive
+channel dependence, not energy partition/model accuracy, TS certification,
+G3selection or independent predictive advantage. Same cached PO+ native
+inputs/log/EFS and ordered initial geometry; last-digit POSCAR serialization
+and boundary-source provenance differences recorded without repair.
+
+63local/63actual clean-archive related tests direct0/noerrors/failures/skips;
+actual clean gradient report byte-identical. Displacement differs only in
+existing reference-script CRLF/LF byte hash; all other fields/normalized code
+identical. Tested sources/data byte-identical. Static units0findings heuristic.
+Six-panel PDF/SVG/PNG/TIFF+CSV, undefined T-displacement endpoint omitted,
+normal labels/aligned axes/framed external legends tested and visuallychecked.
+Main-text paired table/discussion/Figure5 integrated,18-page compile0 and
+actual15--18pages inspected. Preliminary own overlapping figure retained
+recoverably outsideGit. No final all-page/submission-ready claim.
+
+13:48:16native both32CPU live:preserving16/.188172,reversing0/.221799;
+four+1%startersheld.0schedulerwrites/newDFT/physical/runtime/optimizer/G3/
+holdoutchange. PROGRESS is actual paired evidence, tested reusable plot,
+case and main-text integration. Full finite HfO2scientific goal staysactive.
+Evidence:clamped_T_reference_E080_20261011/validation.json.

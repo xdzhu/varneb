@@ -23,8 +23,13 @@ def test_unknown_training_receipt_rejected_before_any_paths_are_opened():
                 clamped_seed_manifest=None, clamped_seed_manifest_sha256=None)
 
 
-def test_native_covector_transport_matches_direct_production_frame():
-    images, _, residual, _ = terminal_images(CASE/"clamped_M_terminal_E068_20261011", AUDIT)
+@pytest.mark.parametrize("case,audit,fmax", [
+    ("clamped_M_terminal_E068_20261011", AUDIT, .09921408814764762),
+    ("clamped_T_terminal_E079_20261011",
+     "c5653b4759b202199cb75739f99038aaa52b3ccc220ef226efbacc980e5d716e", .09358976572425506),
+])
+def test_native_covector_transport_matches_direct_production_frame(case, audit, fmax):
+    images, _, residual, _ = terminal_images(CASE/case, audit)
     seeds = pinned_json(SEEDS, SEEDS_SHA)
     t = read(CASE/"reference_variants/T.vasp")
     original = original_chart_images(images, seeds["orientation"], t)
@@ -39,7 +44,7 @@ def test_native_covector_transport_matches_direct_production_frame():
         for key in ("internal_gradient_norm", "retained_gradient_norm", "omitted_gradient_norm", "retained_squared_gradient_fraction"):
             assert a[key] == pytest.approx(b[key], abs=1e-13, rel=0)
         assert old.calc is None
-    assert residual["fmax_eV_A"] == pytest.approx(.09921408814764762, abs=1e-12)
+    assert residual["fmax_eV_A"] == pytest.approx(fmax, abs=1e-12)
 
 
 def test_actual_native_report_preserves_all_references_and_claim_limits():
