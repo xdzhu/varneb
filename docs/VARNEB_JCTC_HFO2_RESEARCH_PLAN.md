@@ -1018,3 +1018,18 @@ toy CI不是物理案例开启CI。没有新DFT、额外Hessian或HF pytest。
 退出后同时启动两starter而第三条续算仍运行。当前反转保持held，没有超并发。
 本诊断阶段0调度写入；资源护栏的真实变更另留独立里程碑，不混作诊断结果。
 完整有限G2/G3/强对照/独立预测目标仍active，未缩减或宣称JCTC完成。
+
+### 10月11日E074：旧依赖DAG与续算句柄的两槽容量护栏
+
+11:54–11:55单次事务核验四个+1% E060任务的owner/name/32CPU/partition/
+原生产源码与输出命名空间/原afterok依赖，再分别hold一次；native readback
+均为PENDING/JobHeldUser/Priority0，全部旧依赖保留。运行中的T与保留翻转、
+既有held反转28692776和无关任务均不动，0sbatch/0release/0dependency写入/
+0新DFT/0物理输入变化。缺口在旧父段ID未涵盖新的翻转续算ID，不能把旧
+afterok释放条件当作现有容量证明；发现时仍只有两活分配，没有发生超并发。
+
+后续严格按“材料终态审计→实际空槽核验→仅放行一个登记候选”的方式接力；
+四starter不整体release，不覆盖source或重提相同独立链。单次事务源码、
+前后完整原生输出与不可重放journal见clamped_capacity_E074_20261011。
+完整HfO2有限G2/G3、强对照、冻结后的独立预测与JCTC目标继续active；
+容量修复本身不是新的科学证据、驻点认证或目标完成。

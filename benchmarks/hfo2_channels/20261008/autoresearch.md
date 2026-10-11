@@ -2083,3 +2083,16 @@ audit identifies downstream capacity risk after replacement jobs: four+1%
 starters need a separate held-slot guard before releasing held reversing job.
 No scheduler write belongs to this diagnostic milestone. PROGRESS is tested
 core interpretation and actual cached gradient evidence, not completion.
+
+## E074 — replacement-segment capacity guard before next admission
+
+The old E060 afterok DAG does not count preserving continuation28723655.
+Actual exclusive11:54–11:55transaction holds exactly four pending+1%starters,
+one native write/readback each, preserving all original dependencies/32CPU/
+source/inputs. Two running study allocations and held zero-strain reversing
+job are untouched;0new submissions/releases/DFT/dependency changes/holdout.
+Next admission must verify terminal material and an actual spare slot before
+releasing one registered waiter, never all four. No cap breach occurred.
+Offline safety and separate real native-receipt tests distinguish preparation
+from execution. Evidence/clamped_capacity_E074_20261011; goal remains full
+HfO2G2/G3/strong-model/independent-forecast active, not scheduler-only.
