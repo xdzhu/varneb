@@ -1976,3 +1976,27 @@ preparation scopes are not actual convergence evidence. No new independent
 chain/physical input/running source/holdout/G3/phonon budget changes. PROGRESS
 is one actual material ordinary pass and existing-channel startup, not a
 replacement software-only goal or method-advantage assertion.
+
+## E069 — real latest-complete flip continuation with finite longer segment
+
+Native10:40:53audit proves28722810successfulcap20/.197683006, not ordinary
+convergence.140fresh SCFs/334immutable runtime files/nine exact caches audited;
+0DFT audit/preflight, original six bytes/native32/full EFS. Unfinished
+180.008887/180.044146meV/HfO2peaks are not converged switching/competition
+labels. Latest20/cumulative50 geometry retained, not historical force minimum.
+
+One heldsubmission+verifiedrelease28723655,0dependency writes; other28692776
+staysheld. Actual10:41:39startup32CPU/node25; step0replays.197683;10:43:25
+fresh nativeDSIZE32/stderr0. Two allocations with28692775, no unrelated-job
+change. Extend finite new segment20→40updates/unchanged12h, all physical,
+boundary, metric, spring, FIREstep, guards and.10/noCI unchanged. Reset FIRE
+history explicitly recorded; no acceleration-efficiency claim. Previous
+3:30:45/20updates suggests roughly7h/40if speed persists, not convergenceETA.
+
+139local/archive preparation then141local/archive actual native replay and
+single-use mutation tests pass,0fail/skip;91source/material/receipt files
+byte-match testedtree4bed5496. Portable108entries/source capsules retained;
+no new independent chain/G3/Hessian/Γ/holdout budget. PROGRESS actual material
+audit and resumed production, not H1/H2/method gain/full G2/G3/forecast or
+goal completion. Continue original finite scientific goal, not a software-only
+replacement; five pre-existing user modifications remain preserved.
