@@ -837,6 +837,28 @@ preserve the coordinate convention and source-level correction. This
 descriptive training result does not select the G3 bottlenecks or alter
 the prospective model and holdout rules.
 
+![Discrete clamped escape path, atomic reference coverage and finite cell strain](figures/hfo2_clamped_M_E072_20261011/hfo2_clamped_M.pdf)
+
+Figure 5. Ordinary-converged G2 PO-to-M candidate at zero imposed substrate
+strain; all panels share its original generalized arc. (a) Nine P=0 energy
+samples relative to PO+. (b) Squared translation-free atomic coverage in the
+common T mass metric. All four Cmma registrations are drawn; their narrow
+envelope is not an uncertainty interval. Different ranks are not a
+model-accuracy comparison. (c) Green tensor entries in the original-T axes,
+in percent without an engineering-shear factor. The x/z plane is fixed;
+the y vector and its tilts are released. The dashed guide marks sampled
+image 3, not a certified TS. Connectors imply no MEP interpolation. These
+nine images, including cached endpoints, are not independent replicates.
+The figure reuses frozen E068/E071 numeric reports without new DFT.
+
+At sampled image 3, $E_{yy}$ is 0.4111% and $E_{xy}$ is -2.2989%; at the
+M endpoint they are 1.5509% and -7.5209%, respectively. Zero imposed
+substrate strain therefore does not imply zero finite strain in the
+released cell coordinates. These geometric observations show what the
+atomic coverage fractions omit; they do not measure the energetic benefit
+of shear release. A comparison of frozen and conditionally released
+energies under the same boundary is still needed for that inference.
+
 ## 4. Discussion and remaining material tests
 
 The present data establish that a compact local projection, an apparently

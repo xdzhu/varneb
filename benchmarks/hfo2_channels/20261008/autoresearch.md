@@ -2042,3 +2042,23 @@ visual check complete.11:15two32CPU bands alive, Tstep2/.211448,flip3/.197376.
 Evidence/clamped_reference_E071_20261011. PROGRESS is an actual material
 analysis and tested source-level frame contract, not G2/G3/H1/H2/forecast
 completion. Full scientific goal active; five user edits preserved.
+
+## E072 — joint clamped escape-path figure, not new material labels
+
+Build the manuscript's Figure5 from frozen E068/E071 scalar reports. Nine
+discrete energies, atomic squared-norm coverage and original-T finite Green
+strain share the unmodified generalized arc. All four Cmma frames retained;
+no smoothing, energy partition, local phonon, TS certificate, G3 selection
+or holdout access. Open-vector Exy reaches -7.5209% at M, despite zero imposed
+substrate strain; this is geometry, not a measured shear energy benefit.
+
+New figure source and same-report/frame checks pass28 locally and28 from the
+actual independent archive root, direct exit0. A preliminary mislocated
+"clean" command is excluded. Source CSV byte-reproduces all9rows; same-host
+libraries, not a cross-environment rendering guarantee. Standalone PNG and
+final manuscript15/16 visually checked; embedded PDF fonts, editable SVG,
+16-page LuaLaTeX success without layout warnings. Evidence is the dated
+paper figure bundle; no new DFT/scheduler writes/physical or budget change.
+11:32:54two32CPU running: Tstep4/.127622,flip4/.197105; held/dependencies
+unchanged. PROGRESS is visualization, tested delivery and manuscript
+integration, not full G2/G3/H1/H2/forecast or JCTC readiness. Goal active.
