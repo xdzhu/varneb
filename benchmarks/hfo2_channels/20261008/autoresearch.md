@@ -2000,3 +2000,21 @@ no new independent chain/G3/Hessian/Γ/holdout budget. PROGRESS actual material
 audit and resumed production, not H1/H2/method gain/full G2/G3/forecast or
 goal completion. Continue original finite scientific goal, not a software-only
 replacement; five pre-existing user modifications remain preserved.
+
+## E070 — primary phase-proxy applicability and manuscript validation
+
+Targeted primary-source reading separates a phase-resolved proxy from the
+initial/final-well response null. Manuscript introduction and stale G2 heading
+corrected; no new baseline, predictor, material label or superiority claim.
+Missing applicable evidence is not a poor model result. Access/version limits,
+failed PDF screenshots and incomplete SI review are explicit in the report's
+sidecar, not silently treated as evidence of novelty.
+
+Existing LuaLaTeX compilation succeeds:14pages, final pages1/2/14 visually
+checked, ordinary M Table5 values preserved. Editorial validation/source
+digests are in phase_proxy_audit_E070_20261011/validation.json; no new software
+test or material convergence is claimed.11:00:40HF read-only snapshot shows
+two32CPU live bands, latest complete PO-to-T1/.323053 and flip1/.197669.
+No DFT/job mutation, input/source/budget change, model freeze or holdout read.
+PROGRESS is a primary-evidence-backed manuscript correction; full finite
+G2/G3/strong-control/prospective-material goal remains active and incomplete.

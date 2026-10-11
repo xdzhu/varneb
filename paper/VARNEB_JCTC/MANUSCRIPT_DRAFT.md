@@ -1,10 +1,11 @@
 # Competing switching and phase-escape channels in hafnia: a mode-strain pathway analysis
 
-Working manuscript, 2026-10-10. This is a connected main-text draft, not a
+Working manuscript, 2026-10-11. This is a connected main-text draft, not a
 submission-ready article. The numerical Results below use explicitly dated
-pilot observations. All ten registered endpoint representations across the
-two matched-substrate training conditions have passed their physical screens;
-G2 channel barriers, local conditional branches and
+pilot observations and one ordinary-converged clamped candidate. All ten
+registered endpoint representations across the two matched-substrate training
+conditions have passed their physical screens. The complete G2 barrier-response
+comparison, local conditional branches and
 independent material predictions are still missing. An abstract and a
 conclusion asserting those unmeasured results are deliberately withheld.
 The [methods working record](METHODS_DRAFT.md),
@@ -58,6 +59,10 @@ Fan, Zhu and Liu show that Pbcn energetics depend on the functional and
 boundary, including strain-dependent switching under a fully prescribed
 PO-referenced lattice. The present partially clamped T-referenced ensemble
 is different; matching its electronic settings does not erase that distinction.
+Their phase-resolved energy-gap approximation also agrees with NEB for the
+switching routes examined there. Such a proxy and an initial/final-well response
+null are distinct controls; neither is assumed valid for an unverified escape
+bottleneck.
 ([Fan et al., 2025](https://doi.org/10.1038/s41524-025-01647-w))
 
 Strain-dependent mode-amplitude models have also been compared with DFT under
