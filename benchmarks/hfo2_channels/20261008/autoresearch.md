@@ -2308,3 +2308,30 @@ trajectory also included one generated local pyc. Its tracked entry is removed
 in a normal follow-up commit, with local cache retained. All71 final portable
 case files byte-match the actual evidence; tested code, physical data, native
 journal/handles and scientific conclusions are unchanged. No history rewrite.
+
+## E084 — finite independent-probe coverage without loosening whole-grid gates
+
+The E081 finite-reporting gap is closed: registration binds training-only
+geometry/metric/basis/grid/evidence, probe positions, declared starts/rule,
+evaluation IDs and thresholds. It reports signed energy/metric coordinate
+errors, failed calculations and pending points, with unchanged per-patch
+and whole-grid screens.8 passing points in8 of64cells never become a whole
+surface or continuous-region bound. Refits, declared reuse and unregistered
+observations are rejected. Declarations/hashes do not prove source independence
+or prospective blinding; publish the exact manifest before real labels.
+
+Synthetic verifier0calculator calls. Related local/actual Git-archive90tests
+each, adjacent88, full local2021passes/one optionalase.io.abacus skip, all
+direct0 and final full process exit observed. Five reviewed Python sources
+have equal normalized text; fourCRLF/LF raw hashes differ, not a code mismatch.
+Registration/both numerical reports byte-identical; verifier receipt differs
+only source hashes. Two-file static unit audit0findings is heuristic.
+
+15:44:11native28723655 step25/.175897 and28709788 step1/.224071, bothRUNNING
+32CPU/stderr0; three+1%startersheld.0scheduler writes/newDFT/production changes.
+Own+1%firstupdate16:54 suggests10update segment18:10--18:40,wall19:06;
+preserving40update segmentaround19:00,neither a convergence guarantee.
+G2 remains3/8; noG3 selection/DFT/Hessian/+.005 labels or paper/PDF changes.
+PROGRESS is a required finite-budget reporting implementation, not H1/H2
+material validation or an innovation claim. Full scientific goal staysactive.
+Evidence:conditional_probe_coverage_E084_20261011/validation.json.

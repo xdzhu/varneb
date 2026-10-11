@@ -107,5 +107,7 @@ G2 still must finish before G3 bottleneck/mode selection. The original
 unchanged. This bridge creates no new chain, surface, local Hessian or holdout.
 The existing whole-grid interpolation screen still requires every cell's
 independent validation; eight independent G3 samples cannot be misreported
-as 64 validated cells. Finite holdout coverage/region reporting remains a
-separate future implementation requirement, not a loosened gate here.
+as 64 validated cells. [Finite probe reporting](CONDITIONAL_PROBE_COVERAGE.md)
+now records registered point errors, failed/pending tests and the limited
+observed-cell coverage without weakening that gate. Continuous-region error
+bounds and material G3 validation remain separate, uncompleted requirements.

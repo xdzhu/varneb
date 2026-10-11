@@ -87,6 +87,11 @@ from .conditional_evidence import (
     ConditionalPointEvidence, ConditionalHoldout, ConditionalInterpolationScreen,
     screen_conditional_interpolation,
 )
+from .conditional_coverage import (
+    ConditionalProbeSpec, ConditionalProbePlan, ConditionalProbeRecord,
+    ConditionalProbeResult, ConditionalProbeCoverage,
+    register_conditional_probe_plan, audit_conditional_probe_coverage,
+)
 from .slab_boundary import symmetric_inplane_vcneb_boundary
 from .epitaxial_boundary import (
     ClampedPlaneBoundary, ClampedPlaneFilter, clamped_plane_vcneb_boundary, cell_work_derivative,
@@ -215,6 +220,13 @@ __all__ = [
     "ConditionalHoldout",
     "ConditionalInterpolationScreen",
     "screen_conditional_interpolation",
+    "ConditionalProbeSpec",
+    "ConditionalProbePlan",
+    "ConditionalProbeRecord",
+    "ConditionalProbeResult",
+    "ConditionalProbeCoverage",
+    "register_conditional_probe_plan",
+    "audit_conditional_probe_coverage",
     "symmetric_inplane_vcneb_boundary",
     "ClampedPlaneBoundary",
     "ClampedPlaneFilter",
