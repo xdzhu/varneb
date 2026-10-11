@@ -2393,3 +2393,37 @@ prediction evidence. No source/physical changes, G3 selection or+.005 access;
 paper/PDF unchanged and full scientific goalactive. Actual terminal audit
 must precede any reviewed once-only M admission.
 Evidence:clamped_plus1_T_handoff_E086_20261011/validation.json.
+
+## E087 — fourth actual G2 terminal, first matched-strain T peak response
+
+28709788ends16:43:06COMPLETED0:0; lateststep5replays.0949479822ordinary residual.
+Actual HF audit42freshSCFs/338runtime files/originalsix bytes/nativeDSIZE32/EFS
+passes/direct0. Nine portable terminal frames reparse independently; not every
+earlier raw SCF or licensed orbital is redistributed/re-audited locally.
+Forward/reverse/well96.763650/82.617767/14.145883meV/HfO2, samplepeak4.
+Relative to zero-strain T, discrete peak grows12.347027 while well separation
+grows1.785908. This seen training contrast is not an independent prediction,
+continuous TS/error certificate or full competing-network H1 conclusion.
+
+Existing M28709789released once after actual audit/capacity/originalseed checks,
+exclusive intent and second native recheck.0sbatch/0dependency writes/0new chains.
+Do not replay accepted journal7cca3198. Separate startup16:52:43RUNNING32CPU/node3
+from16:50:44, rawDSIZE32/stderr0. Registered production DFT now runs; audit/
+analysis/admission itself made0extraSCFs, not a claim of zero DFT for the turn.
+
+185related local/actual Git archive tests each pass/direct0;13actual-case tests.
+First184pass/1fail local replay used Windows backslashes for native Linux path;
+retained failed JUnit, corrected test uses original PurePosixPath semantics,
+native receipt/executed source unchanged. Initial inline SSH command was
+rejected by PowerShell parser before remote execution; file invocation passed.
+71initial case files byte-match archive; force reports byte-identical. New test
+normalized text matches, rawCRLF/LF differs. No full-project/HF pytest claim.
+
+19-page manuscript compiled/direct0 and contact+1/15/16/17/18 individually
+inspected. All38oldtable lines/fivefigures retained; one actualTable5row added.
+At17:05:23preserving31/.164759 andM0/.983175 stillRUNNING32CPU/stderr0;
+two+1%flipsheld. G2now4/8. SegmentETAs18:35--19:10 and19:00--19:40 are not
+convergence guarantees. No G3 selection/extraGamma/Hessian/+.005access or
+physical/production changes. Full scientific goalactive; PROGRESS is real
+same-boundary training response and authorized operational handoff, not H2gain.
+Evidence:clamped_plus1_T_terminal_E087_20261011/validation.json.

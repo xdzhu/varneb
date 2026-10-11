@@ -2,7 +2,7 @@
 
 Working manuscript, 2026-10-11. This is a connected main-text draft, not a
 submission-ready article. The numerical Results below use explicitly dated
-pilot observations and three ordinary-converged clamped candidates. All ten
+pilot observations and four ordinary-converged clamped candidates. All ten
 registered endpoint representations across the two matched-substrate training
 conditions have passed their physical screens. The complete G2 barrier-response
 comparison, local conditional branches and
@@ -850,19 +850,37 @@ files are unchanged. The [terminal record](../../benchmarks/hfo2_channels/202610
 also retains nine separately verified portable frames. Table 5 reports its
 discrete image-4 peak, not a continuous TS or sampling-error certificate.
 Its SCF transport cost is 47.667216 allocation-core-hours, excluding endpoint
-preparation. Three of the eight training candidates now meet the ordinary
-target. The remaining matched paths, conditional response and frozen
-independent tests are required before claiming a strain-selectivity response
-or prospective model advantage.
+preparation. Together with the zero-strain escape candidates this gives three
+completed training paths. The +1% PO-to-T candidate subsequently converges
+at step 5 with replayed residual 0.094947982 eV/Angstrom, bringing the count
+to four of eight. Its native audit verifies all 42 fresh SCFs, the original
+six physical files and 338 runtime files; nine portable terminal frames are
+separately reparsed. The SCF transport-cost proxy is 51.689291
+allocation-core-hours, excluding endpoint preparation. The
+[+1% terminal record](../../benchmarks/hfo2_channels/20261008/clamped_plus1_T_terminal_E087_20261011/README.md)
+retains these distinctions.
 
-Table 5. Ordinary-converged G2 candidates at zero imposed substrate
-strain. Energies are meV/HfO2 under the unchanged P=0 electronic contract.
+The sampled T escape peak increases by 12.347027 meV/HfO2 between the two
+matched-substrate strain conditions, whereas the final-well separation
+increases by only 1.785908 meV/HfO2. Thus the endpoint-following B1 null's
+increment differs from the observed discrete peak increment by
+10.561118 meV/HfO2. This is a seen training contrast, not an independent
+forecast test or an error-certified rejection of that null: continuous-saddle
+and sampling-error bounds remain unavailable. It suggests that final-well
+motion alone does not reproduce this sampled path response, without
+establishing the full competing-channel strain response. The remaining
+matched paths, conditional branches and frozen independent tests are still
+required before claiming selectivity or prospective model advantage.
+
+Table 5. Ordinary-converged G2 candidates; substrate strain is zero unless
+marked +1%. Energies are meV/HfO2 under the unchanged P=0 electronic contract.
 
 | Candidate | Forward discrete peak | Reverse discrete peak | Final-minus-initial well energy |
 |---|---:|---:|---:|
 | PO-to-M, common T-plane clamping | 98.458122 | 190.998616 | -92.540494 |
 | PO-to-T, common T-plane clamping | 84.416624 | 72.056649 | 12.359975 |
 | Reversing-pattern switching, same clamping | 338.968965 | 339.004224 | -0.035259 |
+| PO-to-T, +1% substrate strain | 96.763650 | 82.617767 | 14.145883 |
 
 The M terminal chain also permits a zero-DFT reference-space audit.
 The prescribed G2 cyclic axis change is inverted on geometry-only copies
