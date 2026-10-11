@@ -885,6 +885,21 @@ atomic coverage fractions omit; they do not measure the energetic benefit
 of shear release. A comparison of frozen and conditionally released
 energies under the same boundary is still needed for that inference.
 
+The raw stress also provides a controlled-coordinate work diagnostic. Holding
+fractional atoms and the released cell row fixed, the substrate-strain partial
+derivative is -228.41 meV/HfO2 per unit strain at PO+, -599.34 at sampled image 3
+and -2337.16 at M. The actual cell Jacobian and volume are used, including
+substrate reactions. At image 3, a homogeneous in-plane affine convention that
+also carries the open-row tilt gives -594.02: the 5.32 difference is precisely
+the raw work of the extra open-row movement, not an uncertainty estimate.
+These frozen conventions coincide on a stationary released branch, but that
+condition is not certified by the ordinary band residual. Accordingly, the
+relative-PO partial at the sampled peak (-370.93 in the same units) is not
+reported as a derivative of a relaxed barrier or used as an independent
+forecast. The [nine-frame external-work record](../../benchmarks/hfo2_channels/20261008/clamped_external_work_E077_20261011/README.md)
+preserves both Jacobians, units and this distinction; finite-strain G2 and
+stationary-branch comparisons remain necessary.
+
 ## 4. Discussion and remaining material tests
 
 The present data establish that a compact local projection, an apparently

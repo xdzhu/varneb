@@ -56,6 +56,12 @@ identifies the17-page PDF, the selected actually inspected pages and the
 unchanged M numbers. It is not an all-page final submission audit or a new
 material result; older compile receipts retain their historical meanings.
 
+The [native external-work trace](../../benchmarks/hfo2_channels/20261008/clamped_external_work_E077_20261011/README.md)
+adds a raw-stress controlled-coordinate diagnostic to the clamped M discussion.
+Its two frozen charts are not relaxed-barrier predictions or new G2 labels.
+The [dated validation](../../benchmarks/hfo2_channels/20261008/clamped_external_work_E077_20261011/validation.json)
+identifies the actual17-page build and selected reading-layout checks.
+
 The [later complete-frame residual audit](../../benchmarks/hfo2_channels/20261008/residual_update_20261009_0450/README.md)
 tracks the preserving flip's atomic/cell residual crossover without claiming
 final channel energies. It is additional

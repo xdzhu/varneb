@@ -2129,3 +2129,25 @@ remainheld.0scheduler writes/newDFT/holdout/model freeze. Evidence is the
 public-source report/provenance and manuscript Ma-mapping validation receipt.
 PROGRESS is a resolved primary-source gap and manuscript boundary, not a
 completed material response or reduced scientific objective. Goal active.
+
+## E077 — native substrate work and the held-internal-coordinate distinction
+
+Reparse9portable native M frames, reuse existing biaxial chart/raw stress and
+actual cell Jacobian. Peak fixed-open-row partial-599.3443meV/fu/unit strain,
+affine-carried-row-594.0228; difference is measured open-row work, not an
+uncertainty or new mechanical ensemble. Relative-PO-370.9297 is not a relaxed
+barrier slope or blind forecast. Stationary released-branch agreement and
+full finite-strain G2/strong-controls remain unproved.0DFT/scheduler writes,
+physical/core/optimizer or G3/holdout changes. Current M receipt admitted
+before label access; unknown receipts reject first.
+
+40final local/40actual archive tests directexit0, nine-frame material fields
+exactly match. Sole source-hash metadata difference is existing biaxial
+CRLF/LF; normalized text identical. Static units skill audit0findings is
+heuristic, not native DFT energy/stress consistency or an uncertainty bound.
+17-page manuscript directcompile0, final16/17 body/layout and PDF header
+coordinates checked. No all-page final submission audit. Four own preliminary
+outputs moved recoverably to E:/TEMP, final bundle kept compact.12:37:01both
+32CPU live:T7/.174570,flip10/.193797; five waiters held. PROGRESS is actual
+raw-stress evidence, tested reusable diagnostic and main-text integration,
+not complete G2/G3/H1/H2/prediction/JCTC readiness. Full goal remains active.
