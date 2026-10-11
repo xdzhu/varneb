@@ -840,6 +840,26 @@ registrations and is not a numerical uncertainty interval.
 | Two complete lowest T optical doublets | 4 | 12.0962 | 24.2409 |
 | Full registered Cmma four-direction span | 4 | 36.4746–36.4865 | 56.3537–56.3667 |
 
+The native atomic gradients provide a different, complementary test of
+these fixed references. In the original-T coordinate
+$q=\sqrt{m}u$, dual transport gives
+$g_q=-F[H_T^{-1}H]^T/\sqrt{m}$ for row cells. Both the gradient and each
+reference span are restricted to the same translation-free coordinate gauge;
+all declared ranks survive. This is not an ASR correction to source modes
+or forces: the Cmma source translation-overlap norm 0.0036854 and the raw
+gradient's translation term remain recorded. At sampled image3, retained
+squared atomic-gradient fractions are 9.0282% for the T triplet, 32.7096% for
+the T optical rank-four span and 93.5085--93.5087% across all Cmma frames.
+The Cmma omitted-gradient norm is 0.0123224--0.0123226
+eV/(sqrt(amu) Angstrom), from a common internal norm 0.0483647 in that chart.
+In particular, low displacement coverage does not imply a poor local-gradient
+representation; Cmma must remain a serious strong control. These fractions
+neither partition energy nor measure conditional-model or barrier accuracy.
+Cell gradients remain separate, and a mechanically movable mode complement
+is not a clamped support reaction. The [dual-gradient analysis](../../benchmarks/hfo2_channels/20261008/clamped_mode_gradient_E078_20261011/README.md)
+retains all nine native samples and unchanged registrations; it does not
+select G3 directions or certify a stationary branch or saddle.
+
 Coverage evolves differently across these representations along one real
 escape candidate. A favourable projection at one image does not establish
 full-path completeness, energetic accuracy or independent predictive gain;

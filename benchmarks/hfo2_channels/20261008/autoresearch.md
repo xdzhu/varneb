@@ -2151,3 +2151,26 @@ outputs moved recoverably to E:/TEMP, final bundle kept compact.12:37:01both
 32CPU live:T7/.174570,flip10/.193797; five waiters held. PROGRESS is actual
 raw-stress evidence, tested reusable diagnostic and main-text integration,
 not complete G2/G3/H1/H2/prediction/JCTC readiness. Full goal remains active.
+
+## E078 — actual dual-gradient representation keeps Cmma a serious control
+
+Reparse the same9native clamped M frames and reuse all E023 reference choices.
+Correct virtual-work pullback, original ordered G2 frame and explicit
+translation-free coordinate restriction preserve ranks3/4, all four Cmma
+frames and raw translation diagnostics without source ASR/force repair.
+At sampled peak3, retained atomic-gradient squared fractions are9.0282%/
+32.7096%/93.5085--93.5087% for T-triplet/T-optical/Cmma. Low Cmma displacement
+coverage36.48% is not local-gradient failure or a predictive-accuracy result.
+Omitted movable modes are not support reactions; open-cell work stays separate.
+No energy partition, Hessian, conditional branch, G3 selection or blind gain
+is claimed. No new DFT/physical parameter/production/optimizer/holdout change.
+
+68local/68actual full-Git-archive related tests directexit0; both actual native
+analysis reports byte-identical. Static units audit0findings is heuristic;
+finite differences use an analytic pair energy, not extra native DFT.
+17-page manuscript compile direct0, rendered15/16/17 inspected; no final
+all-page submission audit. Own preliminary outputs retained in E:/TEMP.
+13:01:37native two32CPU jobs live:T9/.144511, preservingflip13/.191214,
+five waiters held and untouched. PROGRESS is tested reusable dual projection,
+actual strong-reference evidence and main-text discussion, not completion
+of G2/G3/H1/H2/independent forecasting. Full scientific goal remains active.

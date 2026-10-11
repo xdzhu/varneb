@@ -177,3 +177,10 @@ reading held-out labels. An unstable or unsupported branch is an abstention,
 not an implicit successful prediction. No new functional, cutoff, phase,
 domain-wall or MPB matrix is opened to fill waiting time. The execution plan
 contains the finite budgets and stop/acceptance gates.
+
+The [E078 native-gradient audit](../../benchmarks/hfo2_channels/20261008/clamped_mode_gradient_E078_20261011/README.md)
+complements displacement coverage without modifying references or production
+calculations. At the sampled clamped M peak, Cmma's93.51% squared atomic-gradient
+coverage contrasts with36.48% squared displacement coverage. Neither is an
+energy-accuracy measure. This preserves Cmma as a strong comparison and does
+not preselect G3 or claim completed prospective predictions.
