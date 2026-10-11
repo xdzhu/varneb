@@ -113,6 +113,7 @@ from .reference_cell import ReferenceCellCoordinates
 from .nested_response import (
     MeasuredStationaryCentre, NestedControlResult, NestedGapResult,
     nested_stationary_controls, nested_stationary_gap_responses,
+    NestedSharedInitialGapResult, nested_stationary_gaps_with_shared_initial_energy,
 )
 from .response_cost import ResponseEvaluationCost, recorded_response_dataset_cost
 from .mode_evaluator import CalculatorModeEvaluator
@@ -143,6 +144,8 @@ __all__ = [
     "NestedGapResult",
     "nested_stationary_controls",
     "nested_stationary_gap_responses",
+    "NestedSharedInitialGapResult",
+    "nested_stationary_gaps_with_shared_initial_energy",
     "StationaryResponseContract",
     "ControlledStationaryModel",
     "StationaryGapResponse",

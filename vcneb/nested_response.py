@@ -17,6 +17,10 @@ from .stationary_gap import (
     ControlledStationaryModel, StationaryResponseContract, StationaryGapResponse,
     restricted_stationary_gap_response,
 )
+from .shared_initial_response import (
+    SharedInitialEnergyResponse, SharedInitialGapResponse,
+    stationary_gap_with_shared_initial_energy,
+)
 
 
 def _array(value, name, *, ndim):
@@ -218,6 +222,22 @@ class NestedGapResult:
     available_measurement_ids: tuple[str,...]
 
 
+def _validate_control_domain(domain, contract):
+    """Check domain declarations even when every model subsequently abstains."""
+    fields={'scale_A_per_parameter_unit','parameter_interval','maximum_full_displacement_A'}
+    if not isinstance(domain,dict) or set(domain)!=fields:
+        raise ValueError("only explicit control scale, parameter bounds and displacement radius accepted")
+    if (_real(domain['scale_A_per_parameter_unit'],'control scale')<=0
+            or _real(domain['maximum_full_displacement_A'],'displacement radius')<=0):
+        raise ValueError("positive control scale and displacement radius required")
+    interval=domain['parameter_interval']
+    if not isinstance(interval,(list,tuple)) or len(interval)!=2:
+        raise ValueError("two explicit parameter bounds required")
+    lo,hi=(_real(v,'domain bound') for v in interval)
+    if not lo<hi or not lo<=contract.anchor_parameter<=hi:
+        raise ValueError("ordered domain bounds must include the stationary anchor")
+
+
 def nested_stationary_gap_responses(
     initial: MeasuredStationaryCentre, bottleneck: MeasuredStationaryCentre,
     parameter: float, *, contract: StationaryResponseContract,
@@ -239,19 +259,8 @@ def nested_stationary_gap_responses(
         raise TypeError("shared physical/energy/boundary response contract required")
     if initial.expected_index!=0 or bottleneck.expected_index!=1:
         raise ValueError("initial index0 and bottleneck index1 required")
-    fields={'scale_A_per_parameter_unit','parameter_interval','maximum_full_displacement_A'}
-    if any(not isinstance(d,dict) or set(d)!=fields for d in (initial_domain,bottleneck_domain)):
-        raise ValueError("only explicit control scale, parameter bounds and displacement radius accepted")
     for d in (initial_domain,bottleneck_domain):
-        if (_real(d['scale_A_per_parameter_unit'],'control scale')<=0
-                or _real(d['maximum_full_displacement_A'],'displacement radius')<=0):
-            raise ValueError("positive control scale and displacement radius required")
-        interval=d['parameter_interval']
-        if not isinstance(interval,(list,tuple)) or len(interval)!=2:
-            raise ValueError("two explicit parameter bounds required")
-        lo,hi=(_real(v,'domain bound') for v in interval)
-        if not lo<hi or not lo<=contract.anchor_parameter<=hi:
-            raise ValueError("ordered domain bounds must include the stationary anchor")
+        _validate_control_domain(d,contract)
     # Validate global scalar declarations even if every control later abstains.
     x=_real(parameter,'parameter')
     gap=_real(reference_gap_eV_cell,'reference gap')
@@ -279,4 +288,73 @@ def nested_stationary_gap_responses(
                 status='unavailable_local_domain'
                 reason=str(error)
         results.append(NestedGapResult(pi.control,status,reason,pi,ps,response,ids))
+    return tuple(results)
+
+
+@dataclass(frozen=True)
+class NestedSharedInitialGapResult:
+    """One bottleneck arm; the same visible well feature survives abstention.
+
+    Measurement IDs are only the bottleneck dataset, not invented well Hessian
+    calls. Endpoint preparation is referenced by the shared feature, not added
+    anew for each arm. Full audited dataset cost remains an external record.
+    """
+
+    control: str
+    status: str
+    reason: str | None
+    bottleneck: NestedControlResult
+    response: SharedInitialGapResponse | None
+    shared_initial_feature: SharedInitialEnergyResponse
+    available_measurement_ids: tuple[str,...]
+
+
+def nested_stationary_gaps_with_shared_initial_energy(
+    initial: SharedInitialEnergyResponse, bottleneck: MeasuredStationaryCentre,
+    *, bottleneck_domain: dict, reference_gap_eV_cell: float,
+    reference_gap_identity_tolerance_eV_cell: float,
+) -> tuple[NestedSharedInitialGapResult,...]:
+    """Apply B2--B5 to one measured bottleneck and one shared well increment.
+
+    No initial Hessian, derivative, branch index or second quadratic offset is
+    supplied or inferred. Every arm gets exactly the same visible feature,
+    source columns and declared local domain, even if it abstains. Bounds,
+    stationarity assumptions, signed gaps and omission/reaction diagnostics
+    follow the existing kernels. This is feature-conditioned P=0 response,
+    not a freeze, independent material forecast or new physical-job allowance.
+
+    The feature contract must be externally verified against the bottleneck
+    dataset. Neither hashes nor this function do that physical audit. B0/B1
+    must independently receive the same allowed feature and preparation cost;
+    the complete strong-reference batch and cost ledger are still required.
+    """
+    if not isinstance(initial,SharedInitialEnergyResponse) or not isinstance(bottleneck,MeasuredStationaryCentre):
+        raise TypeError("shared initial-energy feature and measured bottleneck required")
+    if bottleneck.expected_index!=1:
+        raise ValueError("bottleneck centre must be index1")
+    _validate_control_domain(bottleneck_domain,initial.contract)
+    gap=_real(reference_gap_eV_cell,'reference gap')
+    tolerance=_real(reference_gap_identity_tolerance_eV_cell,'reference gap identity tolerance')
+    if tolerance<0:
+        raise ValueError("reference gap identity tolerance must be nonnegative")
+    raw_gap=bottleneck.reference_potential_eV_cell-initial.anchor_energy_eV_cell
+    if not np.isfinite(raw_gap) or abs(raw_gap-gap)>tolerance:
+        raise ValueError("recorded gap contradicts the bottleneck and initial anchor energies")
+    results=[]
+    for arm in nested_stationary_controls(bottleneck):
+        response=None
+        reason=arm.reason
+        status='unavailable_control_assumption_or_measurement'
+        if arm.branch is not None:
+            model=ControlledStationaryModel(branch=arm.branch,contract=initial.contract,
+                source_audit_sha256=bottleneck.source_audit_sha256,**bottleneck_domain)
+            try:
+                response=stationary_gap_with_shared_initial_energy(initial,model,
+                    reference_gap_eV_cell=gap,reference_gap_identity_tolerance_eV_cell=tolerance)
+                status='available_shared_initial_restricted_quadratic_gap_only'
+            except ValueError as error:
+                status='unavailable_local_domain'
+                reason=str(error)
+        results.append(NestedSharedInitialGapResult(arm.control,status,reason,arm,response,
+            initial,bottleneck.measurement_ids))
     return tuple(results)

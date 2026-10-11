@@ -146,6 +146,13 @@ blind to the endpoint. Fix input availability/calibration before complete
 holdout path labels, and retain the existing G2/G3/freezing/holdout gates.
 This interface does not generate/read any holdout or add a Hessian centre.
 
+For the four nested controls at once, use
+[`nested_stationary_gaps_with_shared_initial_energy`](NESTED_RESPONSE_CONTROLS.md#apply-all-four-arms-with-one-shared-initial-well-energy-feature).
+It keeps the one visible feature and its cost reference even in unavailable
+arms, without fabricating an initial Hessian or omitting failed controls.
+This connects existing kernels; it does not freeze material predictions or
+establish an accuracy advantage.
+
 Run the implementation checks together with the old paired route:
 
 ```sh

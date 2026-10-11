@@ -79,6 +79,60 @@ basis selection, complete B0--B5 forecast freeze, independent errors and
 unseen labels remain external requirements. No held-out structure is
 generated or read by this module.
 
+## Apply all four arms with one shared initial-well energy feature
+
+`nested_stationary_gaps_with_shared_initial_energy` connects the same B2--B5
+controls to the already supported
+[shared initial-energy route](STATIONARY_GAP_RESPONSE.md#alternative-shared-visible-initial-well-energies-no-initial-hessian).
+It accepts one `SharedInitialEnergyResponse`, one measured **index1 bottleneck**,
+its explicitly declared domain and the raw bottleneck-minus-measured-initial
+anchor gap. It requires no initial-well Hessian or invented minimum index.
+Use this alternative only if visible endpoint energies are prospectively
+allowed, equally supplied to **all B0--B5** and included in preparation cost.
+
+```python
+results = nested_stationary_gaps_with_shared_initial_energy(
+    shared_initial_feature, measured_bottleneck,
+    bottleneck_domain={
+        "scale_A_per_parameter_unit": registered_scale,
+        "parameter_interval": registered_interval,
+        "maximum_full_displacement_A": registered_radius,
+    },
+    reference_gap_eV_cell=recorded_raw_gap,
+    reference_gap_identity_tolerance_eV_cell=registered_identity_tolerance,
+)
+```
+
+The four results retain the **same feature object**, source measurement IDs
+and domain. An unavailable arm remains in the output with its original
+curvature/index/atomic-ablation reason and `response=None`; it is not assigned
+a zero barrier or removed from coverage. The feature and its preparation-call
+count also remain visible for unavailable arms. Bottleneck measurement IDs
+do not fabricate initial Hessian calls; the dataset ledger must separately
+deduplicate actual endpoint and curvature evaluations by their source IDs.
+Summing the shared feature's call count once for each returned arm is wrong.
+
+Available responses preserve the bottleneck's stationary-anchor offset,
+signed gap, full displacement, omitted movable gradients and clamped reactions
+at both conditions. They do not double-count an initial quadratic correction
+on the measured initial energy. Two endpoint energies still provide no initial
+derivative or curvature. The initial feature's physical contract must be
+externally verified against the bottleneck dataset: assigning its declaration
+to each arm does not perform that audit. This route remains P=0/raw E only.
+Both domain declarations and the raw-gap identity are checked even when all
+arms subsequently abstain.
+
+The integration calls no calculator and does not authorize an extra Hessian,
+surface node or held-out chain. Synthetic block solves test implementation,
+not HfO2 response accuracy. It is not a complete forecast freezer: measured
+material columns, strong T/Cmma controls, complete B0--B5 freezing, independent
+error bounds and unseen path labels remain required. B4/B5 equivalence on a
+valid quadratic is still the existing harmonic null, not a scientific gain.
+
+```sh
+python -m pytest -q tests/test_nested_shared_initial_response.py tests/test_nested_response.py tests/test_shared_initial_response.py
+```
+
 ## Record cost without giving missing or failed calls a free pass
 
 `ResponseEvaluationCost` and `recorded_response_dataset_cost` accept actual

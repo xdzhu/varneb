@@ -2678,3 +2678,43 @@ NoCI/release/install/automation/submission. Original5userdirtytrackedfiles
 preserved. Goalactive;PROGRESS is verified substantive main-text delivery,
 not final JCTC scientific completion.
 Evidence:paper/VARNEB_JCTC/MANUSCRIPT_DRAFT.path-work-E094.validation.json.
+
+## E095 — nested controls reuse one visible initial-well feature
+
+The existing nested gap route required both well and bottleneck Hessians,
+whereas the existing visible-initial-energy route accepted only one control
+at a time. Connect these actual kernels: all B2--B5 arms receive the same
+immutable measured well increment, bottleneck columns and declared domain.
+No initial Hessian, minimum index, derivative or additional anchor correction
+is fabricated. Unavailable arms retain their original assumption/measurement
+reason, feature and cost reference. Full source-ID cost deduplication remains
+external; one shared endpoint record is not incurred anew for four models.
+This is standard-kernel integration, not a material accuracy/novelty claim.
+
+27newtests use separately solved original physical blocks, not the returned
+partition. First local178pass/1fail is a wording assertion about the inherited
+missing-curvature reason, corrected to exact reason and existing status.
+Expandedlocal215pass; independentarchive215pass/0fail/0skip. Actual full
+archive2264pass/0fail/2existing skips/314warnings/direct0,355.117JUnitseconds.
+Core sources, nested docs and firstJUnit are byte-equal; test, shared docs,
+initialREADME and snapshot undergo Git LF/CRLF normalization with equal
+decoded content and both hashes recorded. No scientific hash is weakened.
+One PowerShell comparison parser rejection occurs before execution; corrected
+comparison succeeds. An initial append guard incorrectly assumes Tail3
+returns one JSON record; actual E094 last record is then verified and kept.
+After archive tests only delivery/verification metadata and generated JUnit
+records change, not model/test logic or physical data.
+
+21:24:54CST both children remainRUNNING32CPU/stderr0/no failure/summary:
++1%Mnewstep7/.386236 and zero-strain preservingnewstep9/.120476eV/Angstrom.
+Two original+1%flipstarters remainJobHeldUser;G2ordinary still4/8. Runtime
+parameters stay fixed. 0schedulerwrites/replays/implementationDFT/newchains/
+Hessians; registeredworkers continue normalDFT. NoG3choice/physicalholdout,
+CI/install/release/automation/submission. Maintext/materialreports and the
+original5userdirtytrackedfiles remain unchanged. Goalactive/incomplete.
+
+PROGRESS is the actually tested integration needed to avoid unnecessary
+initial curvature preparation if the optional feature is preregistered.
+Material response columns, all strong references and complete prospective
+forecast freeze are still missing; no independent path is released.
+Evidence:nested_shared_initial_E095_20261011/validation.json.
