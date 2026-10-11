@@ -1,4 +1,5 @@
 """Real pinned paired observations, no author-mode redistribution or new DFT."""
+import hashlib
 import json
 from pathlib import Path
 import shutil
@@ -13,7 +14,12 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_actual_T_is_admitted_and_its_native_work_replays():
-    assert ADMITTED_TRAINING_AUDITS == {plot.AUDIT_SHA, plot.T_AUDIT_SHA}
+    reversing_sha = "632e0e9b2b821b3bfc7d66b361c44c7db734988fb5d018ea2f31441fab14ed41"
+    reversing_receipt = ROOT / "benchmarks/hfo2_channels/20261008/clamped_reversing_terminal_E083_20261011/audit_receipt.json"
+    assert hashlib.sha256(reversing_receipt.read_bytes()).hexdigest() == reversing_sha
+    # E085 admitted the third completed zero-strain band. Keep an exact,
+    # byte-pinned set: this is not permission for arbitrary or holdout audits.
+    assert ADMITTED_TRAINING_AUDITS == {plot.AUDIT_SHA, plot.T_AUDIT_SHA, reversing_sha}
     result = analyze(ROOT / plot.T_AUDIT.parent, plot.T_AUDIT_SHA)
     assert result["source_job_id"] == "28692775"
     assert result["sampled_peak_image"] == 4

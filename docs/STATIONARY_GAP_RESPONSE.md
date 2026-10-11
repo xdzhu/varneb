@@ -101,3 +101,53 @@ G2 training, training-only basis/branch choice, complete B2--B5 freezing and
 independent holdouts remain required. This module does not authorize those
 jobs or claim a favorable HfO2 selectivity window, quantitative model advantage
 or JCTC-ready manuscript. It is the paired-response step, not the end state.
+
+## Alternative: shared visible initial-well energies, no initial Hessian
+
+`stationary_gap_with_shared_initial_energy` accepts one immutable
+`SharedInitialEnergyResponse` and a `ControlledStationaryModel` for a
+bottleneck. This implements the protocol's existing optional visible endpoint
+input, **not** a decision to use it in the material forecast. The input binds
+the same physical/boundary/normalization contract, exact target parameter,
+anchor and target endpoint audit hashes, raw energies, a separately recorded
+small increment and positive preparation-call count. Raw energies must agree
+with the increment within an explicit identity tolerance. This tolerance is
+not a changed SCF threshold, uncertainty or unseen error guarantee.
+
+For measured initial energies I(x0), I(x) and raw bottleneck centre S_ref:
+
+```text
+G = S_ref - I(x0)                         # recorded and identity-checked
+D(x0) = [G + e_S(0)] / n_formula_units
+delta_D(x) = [d_S(x) - (I(x)-I(x0))] / n_formula_units
+D(x) = D(x0) + delta_D(x)
+```
+
+The measured initial anchor already includes its actual relaxation; applying
+another initial quadratic offset would double-count it. The bottleneck's
+stationary-anchor correction, own control scale/domain and both anchor/target
+gradient diagnostics remain explicit. Small increments are used directly,
+not recovered by subtracting shifted large totals. Negative gaps remain signed.
+Two endpoint energies do **not** supply an initial branch derivative or
+curvature, so this result has no gap-derivative/curvature fields. It also does
+not have an initial Hessian, synthetic minimum index or TS/barrier certificate.
+
+This raw-E input route is **P=0 only**, matching the present endpoint-feature
+schema; finite pressure requires a separately audited enthalpy/volume route.
+Actual endpoint geometry, phase, forces/open traction and shared reference
+must be externally checked. The class's hashes cannot do that audit.
+
+The same feature object and preparation cost must be available to B0--B5.
+Its recorded calls are shared dataset preparation, not fresh calls once per
+model. Include all provided features, unused records and failed preparation
+in full dataset cost accounting. The calculation itself calls no calculator;
+that does not make the eventual feature-conditioned prediction zero-DFT or
+blind to the endpoint. Fix input availability/calibration before complete
+holdout path labels, and retain the existing G2/G3/freezing/holdout gates.
+This interface does not generate/read any holdout or add a Hessian centre.
+
+Run the implementation checks together with the old paired route:
+
+```sh
+python -m pytest -q tests/test_shared_initial_response.py tests/test_stationary_gap.py tests/test_stationary_branch.py
+```

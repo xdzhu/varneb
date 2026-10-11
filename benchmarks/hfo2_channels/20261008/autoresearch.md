@@ -2427,3 +2427,36 @@ convergence guarantees. No G3 selection/extraGamma/Hessian/+.005access or
 physical/production changes. Full scientific goalactive; PROGRESS is real
 same-boundary training response and authorized operational handoff, not H2gain.
 Evidence:clamped_plus1_T_terminal_E087_20261011/validation.json.
+
+## E088 — shared visible initial response, no extra initial Hessian
+
+Implements the existing optional-feature route: one immutable, matched
+P=0 initial energy increment and recorded preparation cost with any controlled
+bottleneck arm. Keep anchor correction, separate scales/domains, signed gap
+and omission/reaction diagnostics. No repeated correction of measured initial
+energy or derivatives/curvature inferred from two endpoint energies. No
+material feature-choice/forecast freeze or physical initial Hessian request.
+
+39new tests; local198 then203related pass. First actual clean full run2102pass/
+1fail/2skip; previous HEAD4d6e05d archive reproduces the same old T/M registry
+assertion. E085 admitted the third pinned reversing receipt but the old test
+still required only two. Exact three-hash equality plus actual receipt byte
+check fixes the test, not production policy. Final independent Git archive
+2103pass/2skip/314existingwarnings/direct0. Retain both failures, all source
+raw/normalized comparisons and final JUnit. The two skips are optional ABACUS
+reader and intentionally absent licensed POTCAR, not backend passes.
+
+NumPy-only12point direct replay completes locally/HF/direct0, max identity and
+cross-environment energy difference2.78e-17; seven source/checker byte hashes
+match. HF has no pytest; no installation/native-pytest success claim. Known
+synthetic initial Hessian supplies independent truth only. Numeric output
+protection actually rejects existing file/exit1 with original bytes preserved.
+These are implementation residuals, not material accuracy or independent H2gain.
+
+17:41:17two study allocations stillRUNNING32CPU/stderr0: preserving34/.158213,
+plus1M3/.849185. Two flipping starters held; G2remains4/8. SegmentETAs18:50--19:05
+and18:55--19:15 from actual recent timings, not convergence guarantees.
+0newphysicalDFT in validation/analysis, while registered production continues
+normalDFT;0schedulerwrites/admissionretry/extraHessian/G3choice/+.005access.
+Material MD/PDF and five user-dirty tracked changes preserved. Full goalactive.
+Evidence:shared_initial_response_E088_20261011/validation.json.

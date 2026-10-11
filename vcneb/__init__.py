@@ -105,6 +105,10 @@ from .stationary_gap import (
     StationaryResponseContract, ControlledStationaryModel, StationaryGapResponse,
     restricted_stationary_gap_response,
 )
+from .shared_initial_response import (
+    SharedInitialEnergyResponse, SharedInitialGapResponse,
+    stationary_gap_with_shared_initial_energy,
+)
 from .reference_cell import ReferenceCellCoordinates
 from .nested_response import (
     MeasuredStationaryCentre, NestedControlResult, NestedGapResult,
@@ -143,6 +147,9 @@ __all__ = [
     "ControlledStationaryModel",
     "StationaryGapResponse",
     "restricted_stationary_gap_response",
+    "SharedInitialEnergyResponse",
+    "SharedInitialGapResponse",
+    "stationary_gap_with_shared_initial_energy",
     "StationaryQuadraticPoint",
     "StationaryQuadraticBranch",
     "stationary_quadratic_branch",
