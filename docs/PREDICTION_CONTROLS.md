@@ -115,6 +115,13 @@ holdout production/reading. The complete registered forecast batch remains
 required. No target error, model advantage, H1 window, TS or JCTC readiness
 is evaluated by this entry point.
 
+The calculator-free [complete-panel artifact freezer](FORECAST_PANEL_FREEZE.md)
+can now snapshot already computed, fully declared model artifacts and verify
+them against an externally pinned manifest before scoring. It preserves all
+registered failures and strong-reference records without requiring test labels.
+It does not construct the unfinished HfO2 B2--B5 models, certify their material
+gates or authorize holdouts; the same scientific protocol remains required.
+
 The dated E025 [G1 evidence](../benchmarks/hfo2_channels/20261008/network_update_20261009/README.md)
 is deliberately rejected: it is free-cell and lacks three ordinary passes
 and measured sampling/barrier-error evidence. The

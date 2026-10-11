@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="2.693" timestamp="2026-10-12T03:53:48.279106" hostname="Aero"><testcase classname="tests.test_forecast_freeze" name="test_git_cross_platform_archive_preserves_frozen_raw_bytes" time="0.744"><failure message="AssertionError: inputs/0003&#10;assert '0ce0eb27815b...f87719a2e5715' == '5e3263238e2c...7c373b00b4e85'&#10;  - 5e3263238e2c7f01edd6005e0951d8bab452a193daa9f10bcf27c373b00b4e85&#10;  + 0ce0eb27815b520ee3ba7ffeb9613074d542e9e987f5e519740f87719a2e5715">inputs = {'artifacts': {'preparation_cost': {'kind': 'preparation_cost', 'path': WindowsPath('E:/TEMP/pytest-of-zhu/pytest-4293...5.json'), ...}, 'output': WindowsPath('E:/TEMP/pytest-of-zhu/pytest-4293/test_git_cross_platform_archiv0/frozen'), ...}
+tmp_path = WindowsPath('E:/TEMP/pytest-of-zhu/pytest-4293/test_git_cross_platform_archiv0')
+
+    def test_git_cross_platform_archive_preserves_frozen_raw_bytes(inputs, tmp_path):
+        git = shutil.which("git")
+        if git is None:
+            pytest.skip("Git is required only for the raw-byte transport regression")
+        training = inputs["artifacts"]["training"]["path"]
+        training.write_bytes(b"synthetic training row1\r\nsynthetic row2\r\n")
+        for path in inputs["models"].values():
+            edit(path, lambda model: model["input_artifact_sha256"].update(training=sha(training)))
+        receipt = freeze(inputs)
+        manifest = json.loads((inputs["output"] / "manifest.json").read_text(encoding="utf-8"))
+        empty_config = tmp_path / "empty-git-config"
+        empty_config.write_bytes(b"")
+        env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+        env.update(GIT_CONFIG_NOSYSTEM="1", GIT_CONFIG_GLOBAL=str(empty_config))
+        command = [git, "-C", str(inputs["output"]), "-c", "core.autocrlf=true",
+                   "-c", "core.safecrlf=false", "-c", "core.attributesFile=" + str(empty_config)]
+        def run(*args):
+            return subprocess.run([*command, *args], env=env, check=True,
+                                  capture_output=True, text=True).stdout.strip()
+        run("init", "--quiet")
+        run("add", ".")
+        tree = run("write-tree")
+        archive = tmp_path / "raw-byte-transport.tar"
+        # Stage under Windows-like CRLF conversion, export with Linux-like LF
+        # settings. A same-platform smudge can hide normalization in the index.
+        run("-c", "core.autocrlf=false", "archive", "--format=tar", "--output=" + str(archive), tree)
+        with tarfile.open(archive) as stream:
+            with stream.extractfile("manifest.json") as manifest_member:
+                assert hashlib.sha256(manifest_member.read()).hexdigest() == receipt["manifest_sha256"]
+            for relative, expected in manifest["file_sha256"].items():
+                member = stream.extractfile(relative)
+                assert member is not None
+                with member:
+&gt;                   assert hashlib.sha256(member.read()).hexdigest() == expected, relative
+E                   AssertionError: inputs/0003
+E                   assert '0ce0eb27815b...f87719a2e5715' == '5e3263238e2c...7c373b00b4e85'
+E                     - 5e3263238e2c7f01edd6005e0951d8bab452a193daa9f10bcf27c373b00b4e85
+E                     + 0ce0eb27815b520ee3ba7ffeb9613074d542e9e987f5e519740f87719a2e5715
+
+tests\test_forecast_freeze.py:307: AssertionError</failure></testcase></testsuite></testsuites>

@@ -3157,3 +3157,45 @@ continues. Original five tracked user edits and olduntracked files remain
 untouched/unstaged; the actual tested code milestone, not waiting alone,
 is prepared for ordinary explicit-stage commit/push. Goalactive/incomplete.
 Evidence:[receipt](closed_conditional_guard_E110_20261012/validation.json).
+
+## E112 — Byte-bound complete-panel forecast storage, no material freeze yet
+
+Previous turn:E111 is VERIFIED_WAIT. E112 is PROGRESS: the calculator-free
+generic freezer closes a missing artifact boundary between the implemented
+local B2--B5 response kernels and full-panel scorer. It snapshots registered
+models/cases, signed abstentions and the same visible input bytes for every
+model; loading requires an externally pinned manifest and complete hash graph.
+It neither computes/certifies material models nor authorizes holdouts. Smaller
+generic panels do not satisfy the HfO2 v1/v2 protocol. All four strong Cmma
+registrations and original scientific gates remain necessary for the real batch.
+
+Focused checks first pass102, then231. The initial same-platform Git transport
+exercise passes1but masks index normalization. The strengthened CRLF-staging/
+LF-export experiment actually fails1atinputs/0003; both raw receipts remain.
+The freezer now emits and hashes its own fixed namespace-local byte-preserving
+Git rule, with no global configuration change. Final focused tests pass234,
+including actual temporary-repository transport and an externally pinned
+manifest check. The simulated symlink tests are not native Windows experiments.
+Equal synthetic predictions have exactly zero shared-reference gain.
+
+The earlier full regression is stopped by verified own Python PID46228 after
+the real transport failure; no complete JUnit/full-suite claim is made for it.
+Final tested tree71608b7f94608598e79892c7bcd066559c14a2b3, archiveSHA
+769086cc9551dd4f4aa7117fdd7bb22041e74cbd3920c11974319742054e501f.
+All5776tracked files are present before final launch; imports come from that
+exact archive. Full regression passes2488/skips2/failures0/errors0 in460.100
+JUnit seconds(460.12console),314warnings. Skips are the optional ASE ABACUS
+reader and undistributed licensed VASP POTCAR. Four source/test/docs files
+match after text-only LF normalization; delivery metadata is outside that
+tested tree. All six raw JUnit artifacts and their hashes are retained.
+
+Native04:07:34CST jobs28737465/28709791 remainRUNNING32/hfacnormal01,
+complete16/.255895 and9/.124033, stderr0. G2 stays6/8. Rebounds do not stop
+the registered finite windows or trigger parameter/optimizer changes.
+No new DFT initiation, scheduler mutation, live source/input overwrite,
+G3 bottleneck/reference choice, physical+.005 holdout access or paper-result
+change. Existing authorized DFT continues. Original five user edits remain
+untouched/unstaged. This actual tested software milestone, not waiting alone,
+is prepared for ordinary explicit-stage commit/push. Goalactive/incomplete;
+no material accuracy, novel theory, TS or JCTC readiness claim.
+Evidence:[receipt](forecast_panel_freeze_E112_20261012/validation.json).
