@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="2.329" timestamp="2026-10-12T05:06:53.339971" hostname="Aero"><testcase classname="tests.test_hfo2_manuscript_work_cohort" name="test_actual_manuscript_has_every_table_and_component_row" time="0.458"><failure message="ValueError: manuscript cohort coverage is stale">cohort = {'bands': 6, 'distinct_raw_log_STRU_identities': 50, 'frame_records': 54, 'full_native_runtime_or_assets_reaudited_locally': False, ...}
+
+    def test_actual_manuscript_has_every_table_and_component_row(cohort):
+&gt;       assert audit_manuscript(manuscript(), cohort)
+
+tests\test_hfo2_manuscript_work_cohort.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+text = '# Competing switching and phase-escape channels in hafnia: a mode-strain pathway analysis\n\nWorking manuscript, 2026...een achieved. Details belong in main-text\nappendices rather than a separate supplementary manuscript, as requested.\n'
+result = {'bands': 6, 'distinct_raw_log_STRU_identities': 50, 'frame_records': 54, 'full_native_runtime_or_assets_reaudited_locally': False, ...}
+
+    def audit_manuscript(text, result):
+        section = text.split("### 3.8.", 1)[1].split("### 3.9.", 1)[0]
+        required = ("six completed clamped training bands", "54 frame records", "50 distinct raw-log/geometry")
+        if (result["bands"], result["frame_records"], result["distinct_raw_log_STRU_identities"]) != (6, 54, 50):
+            raise ValueError("actual cohort no longer matches the declared manuscript snapshot")
+        if any(phrase not in section for phrase in required):
+&gt;           raise ValueError("manuscript cohort coverage is stale")
+E           ValueError: manuscript cohort coverage is stale
+
+scripts\audit_hfo2_manuscript_work_cohort.py:129: ValueError</failure></testcase></testsuite></testsuites>

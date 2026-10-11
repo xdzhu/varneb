@@ -1,4 +1,4 @@
-"""Actual 36 portable training frames and independent native work contractions."""
+"""Five selected native bands and independent work contractions (45 frames)."""
 from pathlib import Path
 import numpy as np
 import pytest

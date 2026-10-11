@@ -11,19 +11,22 @@ PAPER = ROOT/'paper/VARNEB_JCTC/MANUSCRIPT_DRAFT.md'
 SOURCE = ROOT/'benchmarks/hfo2_channels/20261008/clamped_path_work_E092_20261011'
 NAMES = ['zero_M','zero_T','zero_reversing','plus1_T']
 LABELS = ['PO-to-M, zero strain','PO-to-T, zero strain',
-          'Reversing flip, zero strain','PO-to-T, +1% strain','Preserving flip, zero strain']
+          'Reversing flip, zero strain','PO-to-T, +1% strain','Preserving flip, zero strain',
+          'PO-to-M, +1% strain']
 
 
 def reports():
     old = [json.loads((SOURCE/(name+'.json')).read_text()) for name in NAMES]
-    return old + [json.loads((ROOT/'benchmarks/hfo2_channels/20261008/clamped_preserving_reference_E101_20261011/path_work.json').read_text())]
+    return old + [json.loads((ROOT/'benchmarks/hfo2_channels/20261008'/path).read_text()) for path in
+        ('clamped_preserving_reference_E101_20261011/path_work.json',
+         'clamped_M_strain_reference_E105_20261012/path_work.json')]
 
 
 def section():
     return PAPER.read_text(encoding='utf-8').split('### 3.8. ',1)[1].split('### 3.9.',1)[0]
 
 
-@pytest.mark.parametrize('index',range(5))
+@pytest.mark.parametrize('index',range(6))
 def test_table7_peak_and_endpoint_values_keep_sign_order_and_formula_unit(index):
     data = reports()[index]
     text = section()
@@ -43,8 +46,8 @@ def test_table7_peak_and_endpoint_values_keep_sign_order_and_formula_unit(index)
 
 @pytest.mark.parametrize('marker,end,space,part', [
     ('signed retained work to the respective peaks is','meV/HfO2','T_geometric_triplet','retained_atomic'),
-    ('Omitted\natomic work is','; open-cell','T_geometric_triplet','omitted_atomic'),
-    ('open-cell\nwork is','The explicit','T_geometric_triplet','open_cell'),
+    ('Omitted atomic work is','; open-cell','T_geometric_triplet','omitted_atomic'),
+    ('open-cell work is','The explicit','T_geometric_triplet','open_cell'),
     ('doublets yield retained work','in the same order','T_two_lowest_complete_optical_doublets','retained_atomic'),
 ])
 def test_signed_work_prose_matches_complete_declared_span(marker,end,space,part):
@@ -73,7 +76,7 @@ def test_all_four_Cmma_registrations_are_kept_as_ranges_not_selected_winners():
 
 def test_native_chart_agreement_is_only_an_algebraic_check_and_reused_frames_not_replicates():
     rows = reports()
-    assert sum(row['portable_native_frames_reparsed'] for row in rows) == 45
+    assert sum(row['portable_native_frames_reparsed'] for row in rows) == 54
     maximum = max(span['independent_native_work_max_defect_eV_cell']
                   for row in rows for span in row['representations'].values())
     assert maximum <= 1.12e-16
@@ -82,7 +85,7 @@ def test_native_chart_agreement_is_only_an_algebraic_check_and_reused_frames_not
     assert translation_peak_max <= 3.96e-9
     assert all(span['physical_error_bound_measured'] is False
                for row in rows for span in row['representations'].values())
-    assert '42 distinct raw-log/geometry' in section()
+    assert '50 distinct raw-log/geometry' in section()
     assert 'algebraic agreement does not test DFT accuracy' in section()
 
 

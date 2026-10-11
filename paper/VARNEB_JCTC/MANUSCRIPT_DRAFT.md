@@ -1123,12 +1123,13 @@ registered G2 chains and prospectively frozen strong-control comparison.
 
 ### 3.8. Endpoint closure can conceal a bottleneck-region discrepancy
 
-The signed-work diagnostic uses the five completed clamped training bands,
+The signed-work diagnostic uses the six completed clamped training bands,
 not the unfinished candidates or reserved strain condition. All nine raw
 E/F/stress frames per band are reparsed, with the same ordered continuous
 lift, original T mass chart, permitted open-cell space and electronic
-contract. These 45 frame records contain 42 distinct raw-log/geometry
-identities: four zero-strain paths share the initial PO+ cache. They are
+contract. These 54 frame records contain 50 distinct raw-log/geometry
+identities: four zero-strain paths share one initial PO+ cache, and the
+two +1% paths share another. They are
 neither new SCFs nor independent statistical replicates. Every energy
 change is relative to that band's own matched PO+ well.
 
@@ -1160,22 +1161,25 @@ direct native Cartesian-force/ASE-stress contractions agree with the
 dual atomic/open-cell work within $1.12\times10^{-16}$ eV per cell. This
 algebraic agreement does not test DFT accuracy. Under the T geometric
 triplet, signed retained work to the respective peaks is -0.111271,
-2.666921, 195.447066, 1.367408 and -0.165926 meV/HfO2, in Table 7 order. Omitted
-atomic work is 68.756917, 72.789643, 105.539695, 85.773095 and 82.500795; open-cell
-work is 8.914733, 0.499373, 2.706882, 0.204891 and -0.030633. The explicit rigid
+2.666921, 195.447066, 1.367408, -0.165926 and 0.011623 meV/HfO2, in Table 7 order.
+Omitted atomic work is 68.756917, 72.789643, 105.539695, 85.773095, 82.500795 and
+67.611606; open-cell work is 8.914733, 0.499373, 2.706882, 0.204891, -0.030633 and
+8.299349. The explicit rigid
 translation terms are also retained, at most $3.96\times10^{-9}$ in these
 units at the displayed peaks, rather than removed by a source ASR repair.
 These signed terms sum to the full sampled work, not to a unique energetic
 allocation among modes.
 
 Strong references remain in the comparison. The two complete T optical
-doublets yield retained work 12.359091, 11.900861, 0.782574, 11.007299 and 18.977823
+doublets yield retained work 12.359091, 11.900861, 0.782574, 11.007299, 18.977823 and
+11.650637
 in the same order. Across all four registered Cmma frames, retained-work
 ranges are 55.618955 to 55.619265 for zero-strain M;
 62.066996 to 62.068212 for zero-strain T;
 63.846564 to 63.846572 for reversing;
-67.984207 to 67.985028 for +1% T; and
-47.684643 to 47.684652 for preserving. Each representation includes
+67.984207 to 67.985028 for +1% T;
+47.684643 to 47.684652 for preserving; and
+55.402398 to 55.403003 for +1% M. Each representation includes
 its full omitted atomic contribution and the same open-cell work; ranks
 three and four are not treated as identical-dimensional models. This
 reference dependence is not a conditional-energy or forecast-accuracy
@@ -1183,7 +1187,10 @@ ranking. In particular, the reversing triplet's integrated work and its
 small instantaneous peak-gradient fraction (Table 6) answer different
 questions and need not track one another.
 
-The [complete scalar reports and raw-frame replay checks](../../benchmarks/hfo2_channels/20261008/clamped_path_work_E092_20261011/README.md)
+The [four original scalar reports](../../benchmarks/hfo2_channels/20261008/clamped_path_work_E092_20261011/README.md),
+[preserving report](../../benchmarks/hfo2_channels/20261008/clamped_preserving_reference_E101_20261011/README.md),
+[+1% M report](../../benchmarks/hfo2_channels/20261008/clamped_M_strain_reference_E105_20261012/README.md)
+and [six-band raw-frame replay and cohort check](../../benchmarks/hfo2_channels/20261008/manuscript_work_cohort_E115_20261012/README.md)
 thus add an energy-gradient consistency test to geometric coverage, without
 selecting G3 bottlenecks, a reference winner or unseen labels. Measured
 conditional response, stability and the prospectively frozen strong-control

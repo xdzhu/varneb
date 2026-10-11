@@ -3237,3 +3237,57 @@ submission. The original five user edits remain untouched/unstaged. This
 is a real material computation handoff, not a status-only commit. Goal stays
 active and the full scientific objective remains incomplete.
 Evidence:[receipt](clamped_reversing_continue_E113_20261012/validation.json).
+
+## E114 — Verified wait for the two accepted training continuations
+
+Previous turn E113 is PROGRESS. E114 is VERIFIED_WAIT: native04:42:57
+corroborates both exact accepted handles RUNNING32/hfacnormal01, followed
+by a bounded50.0179second wait and native04:45:12 recheck. Preserving
+28737465 completes19/.225112 at04:36:32; reversing28764704 completes its
+first new update1/.125715 at04:43:44. Both stderr files remain zero bytes.
+An observation expiry is not terminal; neither handle is restarted.
+
+At the measured roughly12minute preserving cadence, the remaining21
+updates imply an08:40--09:15CST cap window. Reversing's first new update
+takes15m34s; allowing the original chain's recent cadence, remaining39
+updates imply14:30--16:20CST, bounded by its16:27:20 native wall limit.
+These estimate segment caps, not ordinary convergence or goal completion.
+G2 stays6/8; v1/v2 selection, strong controls, error and holdout rules are
+rechecked without changing them. No new DFT initiation, scheduler mutation,
+source/input/model/paper change, G3 selection or physical holdout access.
+Only this local wait ledger changes; no status-only commit/push or new
+monitor. Goal remains active/incomplete and the five user edits are preserved.
+
+## E115 — Reconcile the actual six-band signed-work manuscript cohort
+
+Previous turn E114 is VERIFIED_WAIT. E115 is PROGRESS: a real manuscript/data
+consistency error is reproduced by one failed pre-fix regression. Table7
+already had six bands, but section3.8 still said five/45records/42identities
+and listed only five signed-work groups. Replay of54portable native EFS
+records from six pinned completed cases establishes50raw-log/STRU identities.
+Four zero-strain paths share one initial cache; two +1% paths share another.
+Counts and the sixth work contributions are corrected; all55numerical table
+lines and9figure references stay unchanged. No new DFT or model labels.
+
+Every retained reference's full/open-cell work matches direct native physical
+contractions within1.1102230246251565e-16eV/cell. This is algebraic consistency,
+not physical uncertainty or saddle certification. All four Cmma registrations
+and signed omitted/translation terms remain. Full remote runtime/assets are
+not reaudited locally and original author arrays are not regenerated.
+
+Final scoped regressions pass56 locally/56 independently, no failures/errors/
+skips; no full-suite/HFpytest claim. All5885tracked archive files are present
+and five changed science/code/test sources compare normalized-equal before
+the verified run. Authentic XML/JSON bytes use finite case-local attributes.
+The initial invalid-directory process launch executes no command; an earlier
+archive run before completion verification is not the final test receipt.
+Only delivery metadata/ledgers change after the tested snapshot.
+
+Existing LuaLaTeX compiles27pages, no TeX warning/box/glyph problem. All-page
+contacts and changed page21 are actually inspected. Native05:12:44CST both
+accepted jobs RUNNING32/hfacnormal01/stderr0: preserving22/.164352,
+reversing2/.125607. G2 stays6/8; no G3/holdout access, parameter/source change,
+new agent/monitor/install/CI/release or submission. Five user edits remain
+untouched/unstaged. A tested manuscript correction, not status-only delivery.
+Goal active and full scientific objective incomplete.
+Evidence:[case](manuscript_work_cohort_E115_20261012/validation.json).
