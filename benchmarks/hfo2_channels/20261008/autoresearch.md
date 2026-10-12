@@ -3686,3 +3686,45 @@ Full scientific objective stays active/incomplete. Next actual terminal
 uses unchanged E103 audit-child --parent 28709791. Later R admission
 must recognize the accepted E141 child explicitly, never loosen unknown-job
 guards. Protected five tracked changes/old untracked work remain unstaged.
+
+## E142 — Distinguish ideal nested-path ordering from relaxed-well barriers
+
+Previous E141 is PROGRESS_ACTUAL_BOUNDED_PRODUCTION_HANDOFF. Native10:52:35CST:
+28812952 RUNNING32/node75 step5/.115421,28764704 RUNNING32/node6 step25/.142540;
+both hfacnormal01/stderr0. No failure or convergence claim from live Exit0:0,
+and no stopping for the preserving rebound. G2 remains6/8.
+
+The known Behara subscription-SI gap is boundedly rechecked, not closed.
+The existing public accepted PDF SHA5f12ceb8... is rendered with existing
+Poppler and visually read at printed pp.2/7/8: cubic-axis strain coordinates,
+fully fixed orthorhombic switching routes and a separate planar-boundary
+thermodynamic construction cannot be silently substituted for our registered
+homogeneous T-substrate ensemble. No author coordinates/barriers imported.
+
+Manuscript2.2 now states ideal minimax ordering only for identical endpoints
+and potential with nested continuous path sets. Local finite-image candidate
+bands do not inherit a guaranteed ordering. Appendix B's dimensionless
+elementary potential shows higher absolute bottleneck energy with a smaller
+barrier when newly relaxed wells rise more. This is standard interpretation,
+not hafnia evidence, an independent predictor or theoretical novelty. Existing
+B0/B1/H1 and the finite scientific matrix remain unchanged; no G3 or holdout.
+
+Ten analytic checks plus the actual six-band manuscript regressions give30
+local and30real independent-archive passes,0fail/error/skip. Tested tree
+8ea0f78d3744b81b56015f102d0762566172b5ad, all6119tracked files exist before
+tests,5new source texts newline-normalized equal and1retained JUnit byte-equal.
+All55numeric-table lines and9figure-reference lines retain their old hashes.
+Existing LuaLaTeX/latexmk -norc builds the actual28-page reading PDF with
+no warning/overfull/underfull/missing glyph. All pages are rendered/contact
+reviewed and changed pages3/28 inspected at full reading size; ten prior
+numeric sentinels and Figure9 caption remain present. PDF SHA19de0a18...
+under E:/TEMP/varneb-E142-manuscript-build; not submission-ready.
+
+No physical inputs, production code, optimizer, material records, scheduler
+state or live allocation source changes. No new DFT initiated by this
+clarification; already authorized running production still performs DFT.
+Only metadata/copied independent JUnit/ledger follow the tested snapshot.
+Protected five user hashes and older untracked files remain unchanged and
+unstaged. This is PROGRESS_MANUSCRIPT_BOUNDARY_CLARIFICATION, not a G2/G3 gate
+advance or complete goal. Keep the full goal active without extra allocations,
+CI, install, monitor, release or unsupported scientific labels.

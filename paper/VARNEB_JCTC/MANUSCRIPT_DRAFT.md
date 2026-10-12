@@ -151,6 +151,28 @@ is not an open-coordinate convergence failure. Zero applied stress and
 zero nominal substrate strain are distinct ensembles, and are not adjacent
 points of a single strain derivative.
 
+Adding a constraint orders ideal minimax barriers only when the endpoints
+and thermodynamic potential are held common. For allowed continuous paths
+$\mathcal G_U(I,F)$ and $\mathcal G_C(I,F)\subseteq\mathcal G_U(I,F)$,
+
+$$
+B_U^*(I,F)=\inf_{\gamma\in\mathcal G_U(I,F)}
+ \max_{s\in[0,1]}E(\gamma(s))-E(I)\le B_C^*(I,F).
+$$
+
+The star denotes the ideal minimax value, not a finite-image NEB estimate.
+Neither a local optimizer nor discrete sampling establishes that ordering
+for two computed candidate bands. More importantly, newly relaxed endpoints
+under a different substrate do not satisfy the common-endpoint premise.
+Our free-cell and T-substrate-clamped results therefore are not interpreted
+as a nested-path inequality, and the matched 0/+1% clamped comparison still
+requires each condition's own initial-well subtraction. A higher absolute
+bottleneck energy can accompany a lower activation barrier if the well rises
+more. Appendix B gives an elementary counterexample, not hafnia evidence or
+a new theoretical contribution. This is why the endpoint-response controls
+and the separate absolute escape-barrier test cannot be replaced by a generic
+statement that clamping raises barriers.
+
 In the registered generalized-coordinate metric, a prescribed active-space
 projector separates the allowed physical gradient from support reactions.
 Ordinary NEB residuals, allowed physical gradients and excluded reactions
@@ -1407,3 +1429,30 @@ cost accounting; final numeric captions and an openly reproducible release
 of the results permitted for redistribution. These are requirements, not
 claims that those outcomes have been achieved. Details belong in main-text
 appendices rather than a separate supplementary manuscript, as requested.
+
+## Appendix B. Why a constraint need not increase a relaxed-endpoint barrier
+
+Consider the dimensionless illustrative potential
+
+$$
+\mathcal V(x,y)=(x^2-1)^2+(1+x^2)y^2 .
+$$
+
+The coordinates and energy scale are arbitrary; this is not a fitted hafnia
+potential, phonon-coordinate model, new DFT point or independent prediction.
+The unrestricted minima are $(x,y)=(\pm1,0)$ with energy zero. Every continuous
+path connecting them crosses $x=0$, where $\mathcal V=1+y^2\ge1$, and the path
+$y=0$ attains this bound. The ideal unrestricted barrier is therefore one.
+
+With the prescribed constraint $y=1$, the relaxed endpoints instead become
+$x=\pm1/\sqrt2$, with energy $7/4$. Their constrained bottleneck at $x=0$
+has energy two and negative curvature in the allowed x direction. The
+activation barrier is consequently $2-7/4=1/4$, despite the higher absolute
+bottleneck energy. The nonzero y gradient is a prescribed-coordinate reaction,
+not failure of allowed-coordinate stationarity. The unrestricted endpoints
+are absent from the constrained path space, so the common-endpoint inequality
+has not been violated. This elementary distinction motivates reporting both
+well and bottleneck responses; it supplies no favorable hafnia window or
+methodological novelty. The analytic derivatives, stationary-point curvatures
+and a continuous family of fixed-y examples are checked in the
+[analytic checks](../../tests/test_barrier_constraint_interpretation.py).
