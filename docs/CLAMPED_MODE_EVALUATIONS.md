@@ -135,6 +135,42 @@ Native 6-component ASE stress is accepted; raw 3x3 stress must be symmetric.
 It is checked before ASE's conversion can average a nonsymmetric tensor.
 Geometry mutation or invalid E/F/stress never becomes a valid cached result.
 
+## Optional cumulative evaluation-attempt budget
+
+`CalculatorModeEvaluator(..., max_evaluation_attempts=registered_limit)`
+limits fresh reserved evaluation attempts across the entire workdir, including
+failed/partial output and process restarts. The default `None` retains the
+legacy uncapped flow and its exact physical cache contract. A capped namespace
+stores a separate immutable operational policy; no electronic setting,
+geometry chart or physical cache identity changes. Choose/publish the limit
+with the experimental plan, not after viewing held-out labels.
+
+Geometry validation and exact completed cache reuse precede admission. A
+fresh attempt reserves an exclusive indexed marker before the factory is
+invoked. Failure/interruption does not refund the slot, even if the factory
+never starts. Exhaustion raises before any new calculator call. Resume must
+keep the same policy and complete reservation history; missing, corrupted,
+inconsistent or over-budget records are rejected, not regenerated. The cap
+cannot be retroactively attached to an old uncapped workdir, removed or raised
+through ordinary resume. Any reviewed continuation requires a separately
+audited operational decision; this API does not make it automatically.
+
+`n_evaluation_attempts` reports cumulative conservative reservations (legacy
+uncapped workdirs count preserved eval directories). `n_new_evaluations` keeps
+its old meaning of completed new evaluations in the current process. Cache
+hits consume no attempt; an interrupted reservation can consume one without
+spending DFT time. Neither count is a backend SCF count, electronic iteration
+count, core-hours, full preparation cost or successful material prediction.
+Continue to audit native outputs and actual resource use separately.
+
+Use one writer per workdir. Exclusive markers refuse a stale writer rather
+than silently sharing slots. They are not a cross-workdir/distributed budget
+allocator or proof against external deletion/tampering or storage power loss.
+The caller still owns job/resource limits, preservation of original records
+and raw physical audits. Budget refusal never changes optimization/electronic
+parameters or fills a failed grid point with a fabricated energy. For this
+HfO2 study, no material limit or G3 mode/centre is chosen before complete G2.
+
 ## Validation and HfO2 study boundary
 
 ```text

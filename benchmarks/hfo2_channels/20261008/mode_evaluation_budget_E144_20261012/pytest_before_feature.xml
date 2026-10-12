@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.827" timestamp="2026-10-12T11:45:58.218719" hostname="Aero"><testcase classname="tests.test_mode_evaluation_budget" name="test_completed_and_cached_trials_obey_cumulative_attempt_budget" time="0.008"><failure message="TypeError: CalculatorModeEvaluator.__init__() got an unexpected keyword argument 'max_evaluation_attempts'">tmp_path = WindowsPath('E:/TEMP/pytest-of-zhu/pytest-4354/test_completed_and_cached_tria0')
+
+    def test_completed_and_cached_trials_obey_cumulative_attempt_budget(tmp_path):
+        calls = []
+&gt;       e = evaluator(tmp_path, 2, calls)
+
+tests\test_mode_evaluation_budget.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+tmp_path = WindowsPath('E:/TEMP/pytest-of-zhu/pytest-4354/test_completed_and_cached_tria0')
+limit = 2, calls = []
+
+    def evaluator(tmp_path, limit, calls, *, resume=False, factory=None, minimum=0.):
+        chart = HELPERS["_chart"]()
+&gt;       return CalculatorModeEvaluator(
+            chart, HELPERS["_factory"](calls) if factory is None else factory,
+            workdir=tmp_path/"run", calculator_id="analytic:test:v1",
+            max_evaluation_attempts=limit, resume=resume, minimum_distance_A=minimum,
+        )
+E       TypeError: CalculatorModeEvaluator.__init__() got an unexpected keyword argument 'max_evaluation_attempts'
+
+tests\test_mode_evaluation_budget.py:17: TypeError</failure></testcase></testsuite></testsuites>

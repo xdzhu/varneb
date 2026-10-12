@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from pathlib import Path
 from typing import Callable
 
@@ -45,6 +46,9 @@ class CalculatorModeEvaluator:
     independently prove that user-supplied identity. Existing workdirs are
     refused unless ``resume=True`` with an exact contract match. Incomplete
     evaluation directories are preserved and retried in *new* directories.
+    Optional ``max_evaluation_attempts`` bounds cumulative reserved attempts,
+    including failures, independently of the physical cache contract. It is
+    not a raw-SCF count or a distributed scheduler/resource budget.
     """
 
     def __init__(
@@ -59,11 +63,18 @@ class CalculatorModeEvaluator:
         result_validator: ResultValidator | None = None,
         validation_id: str | None = None,
         resume: bool = False,
+        max_evaluation_attempts: int | None = None,
     ) -> None:
         if not isinstance(chart, (ReferenceCellCoordinates, ClampedModeCoordinates)) or not callable(calculator_factory):
             raise TypeError("chart and calculator_factory are required")
         if not calculator_id.strip():
             raise ValueError("calculator_id must identify the fixed physical settings")
+        if max_evaluation_attempts is not None and (
+            isinstance(max_evaluation_attempts, (bool, np.bool_))
+            or not isinstance(max_evaluation_attempts, (int, np.integer))
+            or max_evaluation_attempts < 0
+        ):
+            raise ValueError("max_evaluation_attempts must be a nonnegative integer or None")
         if (result_validator is None) != (validation_id is None):
             raise ValueError("result_validator and a nonempty validation_id must be supplied together")
         if result_validator is not None and (not callable(result_validator) or not validation_id.strip()):
@@ -103,12 +114,20 @@ class CalculatorModeEvaluator:
         self._cache: dict[str, tuple[float, Array]] = {}
         self._next_index = 0
         self.n_new_evaluations = 0
+        self._attempts = 0
+        self._budget = (None if max_evaluation_attempts is None else {
+            "schema_version": 1,
+            "max_evaluation_attempts": int(max_evaluation_attempts),
+            "physical_contract_sha256": contract["contract_sha256"],
+        })
+        self._reservation_digests: dict[int, str] = {}
         if self.workdir.exists():
             if not resume:
                 raise FileExistsError(f"mode evaluation workdir already exists: {self.workdir}")
             recorded = json.loads((self.workdir / "contract.json").read_text(encoding="utf-8"))
             if recorded != contract:
                 raise ValueError("mode evaluation resume contract changed")
+            self._load_attempt_reservations()
             for directory in sorted(self.workdir.glob("eval-*-*")):
                 if not directory.is_dir():
                     continue
@@ -116,6 +135,12 @@ class CalculatorModeEvaluator:
                     index = int(directory.name.split("-", 2)[1])
                 except (IndexError, ValueError) as exc:
                     raise ValueError(f"malformed mode evaluation directory: {directory}") from exc
+                if self._budget is not None:
+                    digest = self._reservation_digests.get(index)
+                    if digest is None or directory.name != f"eval-{index:06d}-{digest[:12]}":
+                        raise ValueError("mode evaluation directory lacks its budget reservation")
+                else:
+                    self._attempts += 1
                 self._next_index = max(self._next_index, index + 1)
                 result_path = directory / "result.json"
                 if not result_path.is_file():
@@ -126,6 +151,7 @@ class CalculatorModeEvaluator:
                 gradient = np.asarray(result["gradient"], dtype=float)
                 if (result.get("contract_sha256") != contract["contract_sha256"]
                         or result.get("coordinate_sha256") != digest
+                        or (self._budget is not None and digest != self._reservation_digests[index])
                         or coordinate.shape != (chart.coordinate_count,)
                         or gradient.shape != coordinate.shape
                         or (validation_id is not None and not isinstance(result.get("validation"), dict))
@@ -136,9 +162,73 @@ class CalculatorModeEvaluator:
                 if digest in self._cache:
                     raise ValueError(f"duplicate completed mode evaluation for coordinate hash {digest}")
                 self._cache[digest] = float(result["enthalpy_eV"]), gradient
+            self._next_index = max(self._next_index, self._attempts)
         else:
             self.workdir.mkdir(parents=True)
             _write_json(self.workdir / "contract.json", contract)
+            if self._budget is not None:
+                _write_json(self.workdir / "evaluation-budget.json", self._budget)
+
+    @property
+    def n_evaluation_attempts(self) -> int:
+        """Cumulative reservations, including failures; not raw SCF calls.
+
+        In capped namespaces a reservation interrupted before the factory is
+        conservatively consumed. Legacy uncapped namespaces count preserved
+        evaluation directories. Completed cache hits consume no reservation.
+        """
+        return self._attempts
+
+    def _load_attempt_reservations(self) -> None:
+        path = self.workdir / "evaluation-budget.json"
+        markers = tuple(self.workdir.glob("attempt-*.json"))
+        if self._budget is None:
+            if path.exists() or markers:
+                raise ValueError("mode evaluation attempt budget changed or removed")
+            return
+        if (not path.is_file()
+                or _fingerprint(json.loads(path.read_text(encoding="utf-8"))) != _fingerprint(self._budget)):
+            raise ValueError("mode evaluation attempt budget changed or missing")
+        for marker in markers:
+            data = json.loads(marker.read_text(encoding="utf-8"))
+            if not isinstance(data, dict):
+                raise ValueError("corrupt mode evaluation attempt reservation")
+            index = data.get("evaluation_index")
+            values = np.asarray(data.get("coordinates"), dtype=float)
+            digest = hashlib.sha256(values.tobytes()).hexdigest()
+            if (isinstance(index, bool) or not isinstance(index, int) or index < 0
+                    or marker.name != f"attempt-{index:06d}.json"
+                    or type(data.get("schema_version")) is not int or data["schema_version"] != 1
+                    or data.get("budget_sha256") != _fingerprint(self._budget)
+                    or data.get("coordinate_sha256") != digest
+                    or values.shape != (self.chart.coordinate_count,)
+                    or not np.all(np.isfinite(values))):
+                raise ValueError("corrupt mode evaluation attempt reservation")
+            self._reservation_digests[index] = digest
+        count = len(self._reservation_digests)
+        if (set(self._reservation_digests) != set(range(count))
+                or count > self._budget["max_evaluation_attempts"]):
+            raise ValueError("mode evaluation attempt reservations exceed or omit budget slots")
+        self._attempts = count
+
+    def _reserve_attempt(self, index: int, values: Array, digest: str) -> None:
+        if self._budget is None:
+            return
+        if self._attempts >= self._budget["max_evaluation_attempts"]:
+            raise RuntimeError("mode evaluation attempt budget exhausted; calculator was not called")
+        record = {
+            "schema_version": 1, "evaluation_index": index,
+            "coordinate_sha256": digest, "coordinates": values.tolist(),
+            "budget_sha256": _fingerprint(self._budget),
+        }
+        # Exclusive indexed slots refuse stale/concurrent writers. Never
+        # remove/refund interrupted reservations or rewrite a prior slot.
+        with (self.workdir / f"attempt-{index:06d}.json").open("x", encoding="utf-8") as stream:
+            json.dump(record, stream, allow_nan=False)
+            stream.flush()
+            os.fsync(stream.fileno())
+        self._reservation_digests[index] = digest
+        self._attempts += 1
 
     def __call__(self, coordinates: Array) -> tuple[float, Array]:
         values = np.asarray(coordinates, dtype=float).reshape(-1)
@@ -156,9 +246,12 @@ class CalculatorModeEvaluator:
             energy, gradient = self._cache[digest]
             return energy, gradient.copy()
         index = self._next_index
+        self._reserve_attempt(index, values, digest)
         self._next_index += 1
         directory = self.workdir / f"eval-{index:06d}-{digest[:12]}"
         directory.mkdir()
+        if self._budget is None:
+            self._attempts += 1
         write(directory / "geometry.extxyz", atoms, format="extxyz")
         try:
             atoms.calc = self.factory(index, atoms, directory)

@@ -3765,3 +3765,41 @@ G3 bottleneck/mode/Hessian/physical+.005holdout, CI/install/monitor/release or
 paper/PDF change. Already authorized production continues normally. Protected
 five user hashes and old untracked work are preserved unstaged. Outcome is
 PROGRESS_IMPLEMENTED_BRANCH_PROVENANCE, not completion of G2/G3/full goal.
+
+## E144 — Cumulative attempts are finite without changing physical inputs
+
+Previous E143 is PROGRESS_IMPLEMENTED_BRANCH_PROVENANCE. The evaluator's
+completed-call counter resets after restart and cannot bound failed/retried
+fresh attempts. Its optional admission API is first reproduced missing1case.
+A separate immutable operational policy now reserves exclusive indexed slots
+before factory invocation, consumes failures/interruption conservatively and
+allows exact cache hits without new reservations. Uncapping/enlarging ordinary
+resume, missing/corrupt history and stale writers are refused, not repaired.
+Legacy physical cache contract1308f346... stays identical; no electronic,
+optimizer or geometry tolerance is retuned. These are attempts, not raw SCFs,
+electronic steps or core-hours; native resource audits remain mandatory.
+
+37new checks;172local/172actual independent related pass,0f/e/s. Full tested
+archive2637pass/2skip/0fail/error,314warnings,413.513s JUnit. Actual skips are
+optional ase.io.abacus and nonredistributed licensed VASP POTCAR; no installs.
+All6140tracked files exist before independent tests,6source texts normalized
+equal/6original receipt bytes equal. Tree b43c1ce0d76c6dbc1291fc8ae096e944a07f7f51,
+archive97a7db1d...; only delivery metadata/README/copied reports/ledger follow.
+
+Local, actual-archive and actualHF analytic replay agree on15fields except
+host path:2factory invocations/1intentional failure/2reservations, exact cache
+resume creates0new completions and two policy changes are refused. All three
+are0DFT/0scheduler writes, not material/G3 or prediction/acceleration evidence.
+HF isolated test namespace receives57Python source files only, tar f8beafda...,
+core B1bf5c28... and script6f527d... byte-matched to the actual tested archive.
+Working script's28e643... newline difference is explicitly retained; normalized
+equality was proved before tests. No fullHFpytest or 338-file production update.
+
+12:19:07 both study handles RUNNING32/hfacnormal01/stderr0:28812952 step13/
+.105734,28764704 step31/.134434. G2 remains6/8; no terminal label promotion,
+new allocation/material DFT initiated, selected production budget, G3 mode/
+centre/Hessian or physical+.005holdout. No CI/install/monitor/release or paper/
+PDF/optimizer/physical-input changes. Original five protected user hashes and
+old untracked work stay unchanged unstaged. Already authorized production
+continues. Outcome is PROGRESS_IMPLEMENTED_FINITE_ATTEMPT_ADMISSION, not full
+goal completion or a narrower substitute for the independent material evidence.
