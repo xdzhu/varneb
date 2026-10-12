@@ -27,11 +27,23 @@ def _digest(data: dict) -> str:
 
 
 def _snapshot(plane, surface, evidence) -> str:
-    def arrays(record):
-        return {key: value.tolist() if isinstance(value, np.ndarray) else value
-                for key, value in asdict(record).items()}
+    def arrays(value):
+        if isinstance(value, np.ndarray):
+            return value.tolist()
+        if isinstance(value, dict):
+            return {key: arrays(item) for key, item in value.items()}
+        if isinstance(value, (list, tuple)):
+            return [arrays(item) for item in value]
+        if isinstance(value, np.generic):
+            return value.item()
+        return value
 
-    return _digest({"plane": arrays(plane), "surface": arrays(surface),
+    surface_data = asdict(surface)
+    # Preserve already published legacy signatures exactly. New complete
+    # records, when present, bind even unselected/unconverged outcomes.
+    if not surface.point_records:
+        surface_data.pop("point_records")
+    return _digest({"plane": arrays(asdict(plane)), "surface": arrays(surface_data),
                     "point_evidence": [[asdict(item) for item in row] for row in evidence],
                     "predictor": "four-corner-bilinear-v1"})
 
@@ -283,6 +295,8 @@ def audit_conditional_probe_coverage(
             name: getattr(surface, name)[j:j + 2, i:i + 2]
             for name in ("energies", "orthogonal_gradient_norms", "n_evaluations", "selected_starts", "coordinates")
         }
+        if surface.point_records:
+            patch_fields["point_records"] = tuple(row[i:i + 2] for row in surface.point_records[j:j + 2])
         patch = replace(surface, q1=surface.q1[i:i + 2], q2=surface.q2[j:j + 2], **patch_fields)
         evidence = [row[i:i + 2] for row in point_evidence[j:j + 2]]
         check = screen_conditional_interpolation(

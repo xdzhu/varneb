@@ -3728,3 +3728,40 @@ Protected five user hashes and older untracked files remain unchanged and
 unstaged. This is PROGRESS_MANUSCRIPT_BOUNDARY_CLARIFICATION, not a G2/G3 gate
 advance or complete goal. Keep the full goal active without extra allocations,
 CI, install, monitor, release or unsupported scientific labels.
+
+## E143 — Keep all starts in the returned conditional grid and its registration
+
+Previous E142 is PROGRESS_MANUSCRIPT_BOUNDARY_CLARIFICATION. Code inspection
+finds a real dataflow gap: the grid correctly totals all-start costs but drops
+the point objects holding alternative/unconverged final outcomes. A before-
+feature regression actually fails1case. The bounded remedy adds complete owned
+read-only point_records to sampled grids, with selected-node/count/shape/type
+consistency gates. Optimizer, energy/gradient calls and winner selection do not
+change; an all-failed node still raises, and legacy missing records stay unknown.
+
+Prospective snapshots recursively serialize the complete new records and bind
+even unselected/unconverged outcomes. Removing/changing them fails registration.
+Patch screens preserve the corresponding record slice. Old empty-record
+snapshot/registration signatures remain exactly0c1c8d.../20fa5e..., measured
+before the change and checked afterwards. Curvature/whole-grid/TS gates are
+not relaxed. Final outcomes are not initial seeds/trajectories or raw audits.
+
+28new tests;132local and132actual independent related passes,0f/e/s. Full
+tracked-source archive regression finishes2600pass/2skip/0fail/0error,
+314warnings,646.275s JUnit. Actual skips are optional ase.io.abacus and a
+licensed nonredistributed VASP POTCAR; no package or environment installation.
+All6126tracked files exist before tests,7sources newline-normalized equal and
+2original JUnit bytes equal. Tested tree dbc9e92d59b3abb5dae164a238050411812655b4,
+archive SHAaa42b04e...; only delivery metadata/README/copied JUnits/ledger follow.
+Toy evidence retains4nodes/4points/12starts;24actual/all-start callbacks versus
+8selected-only. Not an acceleration or material H2 benchmark. The initial
+analytic seed fixture is refined to exact wells, not a timing comparison; one
+doc patch rejects its context before any write and actual state is checked.
+
+11:26:23 both original handles RUNNING32/hfacnormal01/stderr0:28812952 step8/
+.113387,28764704 step28/.139222. G2 remains6/8. No scheduler writes/new material
+DFT initiated by this milestone, source deployment, optimizer/physical changes,
+G3 bottleneck/mode/Hessian/physical+.005holdout, CI/install/monitor/release or
+paper/PDF change. Already authorized production continues normally. Protected
+five user hashes and old untracked work are preserved unstaged. Outcome is
+PROGRESS_IMPLEMENTED_BRANCH_PROVENANCE, not completion of G2/G3/full goal.

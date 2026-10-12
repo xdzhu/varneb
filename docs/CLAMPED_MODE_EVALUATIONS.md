@@ -105,9 +105,20 @@ single-point legacy `n_evaluations` still describes its selected start;
 without those outcomes have an unknown total, not a selected-only estimate.
 Callback counts include exact-cache hits and final verification calls; they
 are not unique new SCFs or core-hours. Audit the evaluator's source IDs,
-failed attempts and actual preparation resources separately. To retain all
-branch outcomes rather than only the grid's chosen coordinates, keep the
-single-point records as well; the grid is not a global-minimum certificate.
+failed attempts and actual preparation resources separately.
+
+The grid also retains `surface.point_records[j_q2][i_q1]`: complete defensive,
+read-only copies of each `ConditionalModePoint` and its `branch_outcomes`,
+including unselected or gradient-unconverged starts. The legacy selected-start
+count and total grid count remain distinct. No extra evaluator calls are made
+to retain this evidence. Manually imported older grids default to an empty
+record tuple, meaning unavailable provenance, not zero attempted starts.
+Every recorded node must agree with its grid Q, selected coordinates/energy/
+residual/start and all-start count; incomplete or inconsistent records fail.
+A node where no start converges still raises the original error instead of
+inventing a point. Raw backend failures and preparation costs must be kept in
+the calculator's separate audit ledger. These records are not curvature,
+global-minimum or branch-continuity certificates.
 
 ## Recovery does not change the physical experiment
 

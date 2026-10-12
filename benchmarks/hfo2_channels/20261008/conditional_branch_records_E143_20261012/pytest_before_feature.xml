@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.874" timestamp="2026-10-12T11:07:28.892108" hostname="Aero"><testcase classname="tests.test_conditional_surface_records" name="test_sampler_keeps_all_point_records_and_signed_competing_starts" time="0.021"><failure message="AssertionError: assert 0 == 2&#10; +  where 0 = len(())&#10; +    where () = getattr(ConditionalModeSurface(q1=array([0., 1.]), q2=array([0., 1.]), energies=array([[1.13312769e-23, 1.00000000e+00],\n     ...     [0, 0]]), coordinates=array([[[0., 0., 1.],\n        [1., 0., 1.]],\n\n       [[0., 1., 0.],\n        [1., 1., 0.]]])), 'point_records', ())">def test_sampler_keeps_all_point_records_and_signed_competing_starts():
+        plane, surface, calls = fixture(starts=(np.array([0., 0., .8]), np.array([0., 0., -.8])))
+&gt;       assert len(getattr(surface, "point_records", ())) == 2
+E       AssertionError: assert 0 == 2
+E        +  where 0 = len(())
+E        +    where () = getattr(ConditionalModeSurface(q1=array([0., 1.]), q2=array([0., 1.]), energies=array([[1.13312769e-23, 1.00000000e+00],\n     ...     [0, 0]]), coordinates=array([[[0., 0., 1.],\n        [1., 0., 1.]],\n\n       [[0., 1., 0.],\n        [1., 1., 0.]]])), 'point_records', ())
+
+tests\test_conditional_surface_records.py:40: AssertionError</failure></testcase></testsuite></testsuites>

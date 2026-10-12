@@ -52,6 +52,15 @@ upstream, and retain real source audits. IDs catch declared calculation
 reuse but cannot authenticate independently computed raw results. A shared
 batch-audit hash may legitimately describe several distinct calculations.
 
+For newly sampled grids, the snapshot also binds the complete per-node
+`point_records`, including unselected/unconverged starts. Changing or removing
+those records after registration fails the same training-snapshot guard.
+Internal four-corner patch screens retain their corresponding point records.
+Previously registered grids lacking these optional records keep their exact
+legacy snapshot semantics/hash; no old branch provenance is fabricated.
+Neither diagnostic retention nor serialization grants a curvature/TS or
+whole-grid interpolation certificate.
+
 ## Measurements, failures and missing points
 
 Each observation is `ConditionalProbeRecord(evaluation_id, point=holdout)`.

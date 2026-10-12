@@ -268,6 +268,7 @@ class ConditionalModeSurface(ModeEnergyGrid):
     n_evaluations: Array
     selected_starts: Array
     coordinates: Array
+    point_records: tuple[tuple[ConditionalModePoint, ...], ...] = ()
 
     def __post_init__(self) -> None:
         super().__post_init__()
@@ -293,6 +294,25 @@ class ConditionalModeSurface(ModeEnergyGrid):
             frozen = value.copy()
             frozen.flags.writeable = False
             object.__setattr__(self, name, frozen)
+        if self.point_records:
+            rows = tuple(tuple(row) for row in self.point_records)
+            if len(rows) != grid_shape[0] or any(len(row) != grid_shape[1] for row in rows):
+                raise ValueError("conditional point records must match the grid shape")
+            records = []
+            for j, row in enumerate(rows):
+                frozen_row = []
+                for i, point in enumerate(row):
+                    point = _frozen_conditional_point(point, self.coordinates.shape[-1])
+                    if (not np.array_equal(point.q, [self.q1[i], self.q2[j]])
+                            or not np.array_equal(point.coordinates, self.coordinates[j, i])
+                            or point.energy != self.energies[j, i]
+                            or point.orthogonal_gradient_norm != self.orthogonal_gradient_norms[j, i]
+                            or point.selected_start != self.selected_starts[j, i]
+                            or point.total_n_evaluations != self.n_evaluations[j, i]):
+                        raise ValueError("conditional point record differs from its grid node")
+                    frozen_row.append(point)
+                records.append(tuple(frozen_row))
+            object.__setattr__(self, "point_records", tuple(records))
 
 
 @dataclass(frozen=True)
@@ -405,6 +425,62 @@ class ConditionalModePoint:
         if self.n_starts == 1 and not self.branch_outcomes:
             return self.n_evaluations
         return None
+
+
+def _frozen_conditional_point(point: ConditionalModePoint, size: int) -> ConditionalModePoint:
+    """Own complete grid diagnostics; never reconstruct missing old outcomes."""
+    if not isinstance(point, ConditionalModePoint):
+        raise ValueError("conditional point records require ConditionalModePoint values")
+
+    def integer(value, minimum):
+        if (isinstance(value, (bool, np.bool_))
+                or not isinstance(value, (int, np.integer)) or value < minimum):
+            raise ValueError("conditional point record contains an invalid count or index")
+        return int(value)
+
+    def array(value, shape):
+        result = np.asarray(value, dtype=float)
+        if result.shape != shape or not np.all(np.isfinite(result)):
+            raise ValueError("conditional point record contains invalid coordinates")
+        result = result.copy()
+        result.flags.writeable = False
+        return result
+
+    def scalars(energy, norm):
+        if not np.isfinite(energy) or not np.isfinite(norm) or norm < 0:
+            raise ValueError("conditional point record contains invalid energy or residual")
+        return float(energy), float(norm)
+
+    n_starts = integer(point.n_starts, 1)
+    selected_index = integer(point.selected_start, 0)
+    count = integer(point.n_evaluations, 1)
+    if len(point.branch_outcomes) != n_starts:
+        raise ValueError("conditional point record requires every start outcome")
+    outcomes = []
+    for row in point.branch_outcomes:
+        if not isinstance(row, ConditionalBranchOutcome) or not isinstance(row.converged, (bool, np.bool_)):
+            raise ValueError("conditional point record requires valid branch outcomes")
+        energy, norm = scalars(row.energy, row.orthogonal_gradient_norm)
+        outcomes.append(ConditionalBranchOutcome(
+            start_index=integer(row.start_index, 0), coordinates=array(row.coordinates, (size,)),
+            energy=energy, orthogonal_gradient_norm=norm,
+            n_evaluations=integer(row.n_evaluations, 1), converged=bool(row.converged),
+        ))
+    if {row.start_index for row in outcomes} != set(range(n_starts)) or selected_index >= n_starts:
+        raise ValueError("conditional point record requires unique complete start indices")
+    energy, norm = scalars(point.energy, point.orthogonal_gradient_norm)
+    coordinates = array(point.coordinates, (size,))
+    selected = next(row for row in outcomes if row.start_index == selected_index)
+    if (not selected.converged or selected.energy != energy
+            or selected.orthogonal_gradient_norm != norm or selected.n_evaluations != count
+            or not np.array_equal(selected.coordinates, coordinates)
+            or energy != min(row.energy for row in outcomes if row.converged)):
+        raise ValueError("conditional point record differs from its selected outcome")
+    return ConditionalModePoint(
+        q=array(point.q, (2,)), coordinates=coordinates, energy=energy,
+        orthogonal_gradient_norm=norm, n_evaluations=count, n_starts=n_starts,
+        selected_start=selected_index, branch_outcomes=tuple(outcomes),
+    )
 
 
 @dataclass(frozen=True)
@@ -1047,6 +1123,9 @@ def sample_conditional_mode_surface(
     The returned grid's ``n_evaluations`` counts callbacks over *all* starts,
     including unconverged ones, not just the selected branch. Exact-cache hits
     may make this larger than actual new SCFs; audit backend costs separately.
+    ``point_records[j_q2][i_q1]`` retains complete immutable snapshots of every
+    start's outcome at each completed point. Legacy manually imported surfaces
+    may have no records; that absence is unknown provenance, not zero starts.
     """
 
     # Validate both axes and physical labels before the first evaluation.
@@ -1064,7 +1143,9 @@ def sample_conditional_mode_surface(
     evaluations = np.empty(shape, dtype=int)
     selected = np.empty(shape, dtype=int)
     coordinates = np.empty((*shape, plane.reference.size))
+    records = []
     for j, second in enumerate(axes[1]):
+        row = []
         for i, first in enumerate(axes[0]):
             result = relax_orthogonal_at_q(
                 plane, np.array([first, second]), energy_and_gradient,
@@ -1084,13 +1165,15 @@ def sample_conditional_mode_surface(
             evaluations[j, i] = total_calls
             selected[j, i] = result.selected_start
             coordinates[j, i] = result.coordinates
+            row.append(result)
+        records.append(tuple(row))
     return ConditionalModeSurface(
         q1=axes[0], q2=axes[1], energies=energies,
         axis_labels=plane.axis_labels, amplitude_unit=plane.amplitude_unit,
         reference_id=plane.reference_id, energy_unit=energy_unit,
         potential_kind=potential_kind, boundary_condition=boundary_condition,
         orthogonal_gradient_norms=norms, n_evaluations=evaluations,
-        selected_starts=selected, coordinates=coordinates,
+        selected_starts=selected, coordinates=coordinates, point_records=tuple(records),
     )
 
 
