@@ -3643,3 +3643,46 @@ audit, physical/optimizer/source/paper changes, G3 selection or holdout access.
 Protected five user files/old untracked work remain intact and unstaged. One
 metadata patch rejects its MD context before any write; actual unchanged
 files are checked before the corrected patch, not silently assumed written.
+
+## E141 — Execute the reviewed child40 continuation, not an extra trial
+
+Previous E140 is PROGRESS_NATIVE_TERMINAL_AUDIT. Actual parent28737465 remains
+COMPLETED0 with unchanged df3457...receipt and1a222c...latest seed. Only
+reversing28764704 occupies one study slot. New explicit child40 ancestry
+wrapper/helper are developed in a fresh namespace; original code, audits,
+journals and physical settings unchanged. Runtime command after module purge
+is byte-identical to E103;100Ry/full10auDZP/Gamma2^3/P0/E0/.10/noCI/32MPI.
+Two development string escapes are fixed before first tests/deployment;
+only new code LF-formatted. Initial138tests precede8new parent-verifier
+checks. Final pre-admission146local/146clean archive,0fail/error/skip,
+all6106files present/4live-code-JUnit byte-equal/3source-metadata normalized.
+
+HF exact-byte delivery and zero-DFT actual parent/startup preflight pass.
+One held submission/one release admit28812952 with five fsynced journal
+events and independently corroborated two slots28764704/28812952. No new
+independent chain/dependency write; old intent is not reset or replayed.
+09:49:29 starts node75/32CPU.09:52:20 startup: step0/.114147 reproduces parent,
+9exact caches/9cache audits/0missing, first logDSIZE32, one fresh-call audit
+then completed, stderr0/no final summary/failure. Fresh first raw SCF separately
+passes original six bytes/DSIZE32/EFS replay at97.363037s. Readers initiate0DFT/
+scheduler writes; newly authorized production does DFT, not an all-zeroDFT turn.
+FIRE history resets explicitly; no optimizer settings or physical parameters
+change.40updates/12h finite cap, no automatic rolling dispatch.
+
+Three real admission/start/first-SCF checks raise final regression to149pass
+locally and149in independently extracted material Git snapshot,0f/e/s.
+All6112tracked files present before tests,10live-code/evidence byte-equal,
+3source-metadata normalized. Final treebf5ff40ad266ad6dfa638d09c7185277cf4ad5cd;
+case clamped_preserving_continue_E141_20261012 retains all actual receipts.
+No full-suite/HFpytest/install claimed. Only delivery metadata/independent
+JUnit/ledger added after final tested snapshot; admitted live code unchanged.
+
+10:09:21 both RUNNING32/hfacnormal01/stderr0: preserving28812952 step1/.114339,
+reversing28764704 step22/.144428. Small preserving rebound is not a stopping
+rule. G2 remains6/8; no G3/curvature/reference selection, physical+.005holdout,
+paper numerical label, CI/release/monitor or original user-file change.
+Full scientific objective stays active/incomplete. Next actual terminal
+28812952 uses E141 helper audit-child; the reversing handle28764704 still
+uses unchanged E103 audit-child --parent 28709791. Later R admission
+must recognize the accepted E141 child explicitly, never loosen unknown-job
+guards. Protected five tracked changes/old untracked work remain unstaged.
