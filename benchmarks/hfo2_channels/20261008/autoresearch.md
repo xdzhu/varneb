@@ -3356,3 +3356,252 @@ remain unchanged; no new agent/monitor/CI/release/install/submission. This
 tested software milestone is eligible for a normal Git push, not status-only
 delivery. Goal remains active and full scientific objective incomplete.
 Evidence:[case](conditional_grid_E118_20261012/validation.json).
+
+## E119 — Verified wait for the unchanged two production continuations
+
+Previous E118 is PROGRESS; E119 is VERIFIED_WAIT. Native05:43:46 confirms
+both accepted jobs RUNNING32/hfacnormal01, actual50.0114second bounded wait
+and native05:45:36 recheck corroborate them live, stderr0. Latest complete
+steps24/.159496 and4/.127876 are unchanged within that window. Mild reversing
+rebound does not stop/restart a live job. G2 remains6/8. Recent preserving
+cadence about11.5minutes implies remaining16updates reach the40cap near08:40;
+recent reversing cadence about17.5minutes implies remaining36near15:45--16:15,
+bounded by original16:27:20wall limit. These are cap estimates, not ordinary
+convergence or goal completion. No new DFT initiation, scheduler/source/input/
+model/paper change, G3/holdout access, new agent/monitor or status-only push.
+Only local wait ledger changes; original user files preserved unstaged and
+full objective remains active/incomplete.
+
+## E120 — Verified wait, preserving continuation reaches step25
+
+Previous E119/current E120 are VERIFIED_WAIT. Native05:49:16 confirms both
+accepted handles RUNNING32/hfacnormal01, then actual50.0054second bounded
+wait and native05:50:53 recheck corroborate them live, stderr0. Preserving
+completes25/.156340; reversing latest complete4/.127876 with its next round
+still running. An expired observation is not terminal, and rebound is not a
+stop rule. G2 stays6/8; no material bottleneck/reference or holdout selection.
+No new physical/scheduler/source/input/model/paper writes, agent/monitor or
+status-only commit/push. Only local wait ledger changes; original user edits
+remain untouched/unstaged and full scientific objective active/incomplete.
+
+## E121 — Verified wait; optional pause preference requested, not assumed
+
+Previous E120/current E121 are VERIFIED_WAIT. Native05:53:30 confirms both
+accepted jobs RUNNING32/hfacnormal01, actual50.0128second bounded wait and
+native05:55:28 recheck corroborate them live, stderr0. Preserving latest25/
+.156340; reversing completes5/.129821 and continues, not stopped for rebound.
+G2 remains6/8. An optional async question asks whether the user wants to pause
+automatic goal turns while HF jobs continue, to avoid repeated waiting cost.
+No explicit answer is received and no pause/status change is executed; a
+preselected UI option is not authorization. This is not a material blocker.
+No new physical/scheduler/source/input/model/paper writes, G3/holdout access,
+agent/monitor or status-only commit/push. Only local wait ledger changes;
+original user edits remain preserved unstaged and full objective active.
+
+## E122 — Verified wait, no terminal or source change
+
+Previous E121/current E122 are VERIFIED_WAIT. Native05:58:25 confirms both
+accepted handles RUNNING32/hfacnormal01; actual50.0078second bounded wait
+and native05:59:44 recheck corroborate them live, stderr0, latest25/.156340
+and5/.129821 unchanged. G2 remains6/8. No explicit pause confirmation is
+received and no goal-state change occurs. No timeout-based restart, rebound
+stop, new physical/scheduler/source/input/model/paper write, G3/holdout access,
+new monitor or status-only push. Only local wait ledger changes; original
+user edits remain untouched/unstaged and full scientific objective active.
+
+## E123 — Verified wait, preserving step26
+
+Previous E122/current E123 are VERIFIED_WAIT. Native06:03:19 confirms both
+accepted handles RUNNING32/hfacnormal01, actual50.008second wait and native
+06:05:46 recheck corroborate them live, stderr0. Latest26/.152847 and5/
+.129821; neither is an ordinary pass or terminal. G2 remains6/8. No explicit
+pause confirmation, status change, new physical/scheduler/source/input/model/
+paper write, G3/holdout access, monitor or status-only push. Only local wait
+ledger changes; original user edits preserved unstaged, full objective active.
+
+## E124 — Verified wait, preserving27/reversing6
+
+Previous E123/current E124 are VERIFIED_WAIT. Native06:10:00 confirms both
+accepted handles RUNNING32/hfacnormal01; actual50.0123second bounded wait and
+native06:12:24 recheck corroborate them live, stderr0. Latest27/.149167 and
+6/.131919; neither meets ordinary.10 or is terminal. Reversing's recent rise
+does not trigger a premature stop. G2 remains6/8. No explicit pause approval,
+goal-state change, physical/scheduler/source/input/model/paper write, G3/
+holdout access, monitor or status-only push. Local wait ledger only; original
+user edits preserved unstaged and full scientific objective remains active.
+
+## E125 — Verified wait, no terminal or mutation
+
+Previous E124/current E125 are VERIFIED_WAIT. Native06:17:37 confirms both
+accepted handles RUNNING32/hfacnormal01; actual50.0113second wait and native
+06:19:09 recheck corroborate them live, stderr0, latest27/.149167 and6/
+.131919 unchanged in that window. G2 remains6/8; observation expiry is not
+terminal. No explicit pause confirmation, goal-state change, new physical/
+scheduler/source/input/model/paper write, G3/holdout access, monitor or
+status-only push. Local wait ledger only; user edits preserved unstaged,
+full scientific objective active/incomplete.
+
+## E126 — Verified wait, preserving28/reversing7
+
+Previous E125/current E126 are VERIFIED_WAIT. Native06:26:34 confirms both
+accepted handles RUNNING32/hfacnormal01; actual50.0167second wait and native
+06:30:53 recheck corroborate them live, stderr0, latest28/.145328 and7/
+.133973. Both remain above ordinary.10; G2 stays6/8. Neither a timeout nor
+rebound causes a restart/stop. No explicit pause confirmation, goal-state
+change, physical/scheduler/source/input/model/paper write, G3/holdout access,
+monitor or status-only push. Local wait ledger only; original user edits
+remain preserved unstaged and full scientific objective active/incomplete.
+
+## E127 — Verified wait on both live handles
+
+Previous E126/current E127 are VERIFIED_WAIT. Native06:33:32 confirms both
+accepted handles RUNNING32/hfacnormal01; actual50.0158second wait and native
+06:35:38 recheck corroborate them live, stderr0, latest28/.145328 and7/
+.133973 unchanged in that observation window. G2 remains6/8. No explicit
+pause confirmation, goal-state change, new physical/scheduler/source/input/
+model/paper write, G3/holdout access, monitor or status-only push. Local wait
+ledger only; original user edits preserved unstaged, full objective active.
+
+## E128 — Verified wait, preserving29/reversing8
+
+Previous E127/current E128 are VERIFIED_WAIT. Native06:40:32 confirms both
+accepted handles RUNNING32/hfacnormal01; actual50.0114second wait and native
+06:43:32 recheck corroborate them live, stderr0, latest29/.141436 and8/
+.135846. G2 remains6/8. No explicit pause confirmation, goal-state change,
+new physical/scheduler/source/input/model/paper write, G3/holdout access,
+monitor or status-only push. Local wait ledger only; original user edits
+preserved unstaged and full scientific objective remains active/incomplete.
+
+## E129 — Verified wait, unchanged live handles
+
+Previous E128/current E129 are VERIFIED_WAIT. Native06:45:50 confirms both
+accepted handles RUNNING32/hfacnormal01; actual50.018second wait and native
+06:47:13 recheck corroborate them live, stderr0, latest29/.141436 and8/
+.135846 unchanged. G2 stays6/8; no terminal assumption or timeout restart.
+No explicit pause confirmation, goal-state change, new physical/scheduler/
+source/input/model/paper write, G3/holdout access, monitor or status-only push.
+Local wait ledger only; original user edits preserved unstaged, goal active.
+
+## E130 — Verified segmented wait; fewer native scheduler polls
+
+Previous E129/current E130 are VERIFIED_WAIT. Native06:51:04 confirms both
+accepted handles RUNNING32/hfacnormal01. Five interruptible50second sleeps
+actually total250.0559s; no single blocked wait exceeds60s. Native07:00:42
+recheck corroborates both live, stderr0, latest30/.137561 and9/.137528. The
+observed native window is578s including intervening work, not just sleep.
+Only two native scheduler observations occur in that window; no new monitor
+or unattended process is created. G2 remains6/8. No explicit pause approval,
+goal-state change, new physical/scheduler/source/input/model/paper write,
+G3/holdout access or status-only push. Local wait ledger only; original user
+edits preserved unstaged and full scientific objective active/incomplete.
+
+## E131 — Verified wait; authoritative goal status remains active
+
+Previous E130/current E131 are VERIFIED_WAIT. get_goal confirms active with
+the full unchanged objective. Native07:10:38 confirms both accepted handles
+RUNNING32/hfacnormal01; actual50.0055second wait and native07:14:52 recheck
+corroborate them live, stderr0, latest32/.130113 and10/.138981. G2 remains
+6/8. No explicit pause approval, goal-state change, new physical/scheduler/
+source/input/model/paper write, G3/holdout access, monitor or status-only push.
+Only local wait ledger changes; original user edits preserved unstaged.
+
+## E132 — Verified wait, preserving33/reversing11
+
+Previous E131/current E132 are VERIFIED_WAIT. Native07:25:00 confirms both
+accepted handles RUNNING32/hfacnormal01; actual50.0205second wait and native
+07:26:30 recheck corroborate them live, stderr0, latest33/.126614 and11/
+.140244. G2 remains6/8. No pause confirmation, goal-state change, physical/
+scheduler/source/input/model/paper write, G3/holdout access, monitor or
+status-only push. Local wait ledger only; original user edits preserved.
+
+## E133 — Verified wait, preserving34/reversing12
+
+Previous E132/current E133 are VERIFIED_WAIT. Native07:37:28 confirms both
+accepted handles RUNNING32/hfacnormal01; actual50.0159second wait and native
+07:39:31 recheck corroborate them live, stderr0, latest34/.123646 and12/
+.141321. G2 remains6/8. No pause confirmation, goal-state change, physical/
+scheduler/source/input/model/paper write, G3/holdout access, monitor or
+status-only push. Local wait ledger only; original user edits preserved.
+
+## E134 — Verified wait, unchanged live handles
+
+Previous E133/current E134 are VERIFIED_WAIT. Native07:48:52 confirms both
+accepted handles RUNNING32/hfacnormal01; actual50.0123second wait and native
+07:50:15 recheck corroborate them live, stderr0, latest34/.123646 and12/
+.141321 unchanged. G2 remains6/8. No pause confirmation, goal-state change,
+physical/scheduler/source/input/model/paper write, G3/holdout access, monitor
+or status-only push. Local wait ledger only; original user edits preserved.
+
+## E135 — Verified wait, preserving35/reversing13
+
+Previous E134/current E135 are VERIFIED_WAIT. Native07:53:58 confirms both
+accepted handles RUNNING32/hfacnormal01; actual50.0061second wait and native
+07:55:34 recheck corroborate them live, stderr0, latest35/.121285 and13/
+.142231. G2 remains6/8. No pause confirmation, goal-state change, physical/
+scheduler/source/input/model/paper write, G3/holdout access, monitor or
+status-only push. Local wait ledger only; original user edits preserved.
+
+## E136 — Verified wait; correct ordering of local wait notes
+
+Previous E135/current E136 are VERIFIED_WAIT. Native07:59:29 confirms both
+accepted handles RUNNING32/hfacnormal01; actual50.0146second wait and native
+08:01:03 recheck corroborate them live, stderr0, latest35/.121285 and13/
+.142231. G2 stays6/8. Own E133--E135 MD notes are reordered chronologically;
+their contents and prior JSONL records are unchanged. No scientific/source/
+input/model/paper/scheduler change, G3/holdout access or status-only push.
+No explicit pause confirmation or goal-state change; original user edits
+preserved unstaged. Only local wait/evidence metadata changes.
+
+## E137 — Verified wait, preserving36/reversing14
+
+Previous E136/current E137 are VERIFIED_WAIT. Native08:05:02 confirms both
+accepted handles RUNNING32/hfacnormal01; actual50.0093second wait and native
+08:07:02 recheck corroborate them live, stderr0, latest36/.119267 and14/
+.143033. G2 remains6/8. No pause confirmation, goal-state change, physical/
+scheduler/source/input/model/paper write, G3/holdout access, monitor or
+status-only push. Local wait ledger only; original user edits preserved.
+
+## E138 — Verified wait; resume yielded read sessions, no restart
+
+Previous E137/current E138 are VERIFIED_WAIT. Local read sessions34231/62049
+yield and then complete exit0 when resumed, not restarted. Native08:13:18
+confirms both accepted handles RUNNING32/hfacnormal01; actual50.0205second
+wait and native08:16:56 recheck corroborate them live, stderr0, latest37/
+.117605 and14/.143033. G2 remains6/8. No pause confirmation, goal-state
+change, physical/scheduler/source/input/model/paper write, G3/holdout access,
+monitor or status-only push. Local wait ledger only; user edits preserved.
+
+## E139 — Native-cache diagnosis, not another status-only milestone
+
+User explicitly resumes research. Both original accepted children remain
+RUNNING32/hfacnormal01 at08:28:37: latest38/.116223 and15/.143674. G2 remains
+6/8, full goal active. No pause or completion inferred from automatic turns.
+
+Existing pinned E103/E093 analysis support verifies338original runtime files
+and exports preserving37/reversing15 in a separate new analysis namespace.
+All nine exact raw SCFs per snapshot pass six physical hashes/DSIZE32/EFS/
+ordered geometry and same-boundary residual replay. No new DFT is initiated
+by analysis; the two already-authorized production jobs continue normal DFT.
+No scheduler/production/input/optimizer/geometry/endpoint changes.
+
+Both are limited by central image4's generalized atomic block. fmax values
+.117604576798/.143674141082; same-vector spring projections2.8811661e-7/
+3.6067163e-12. No spring dominance at these geometries. This does not prove
+the cause of the force rise, an optimizer defect, faster alternatives, TS/
+barrier accuracy, final mechanism or G3/holdout admission. No paper labels
+updated. Segments run to their existing finite limits without stopping on
+rebound, relaxing.10 or changing100Ry/full10auDZP/Gamma2^3/P0/E0/noCI.
+
+Portable114files/1,423,411bytes retain18raw SCF records, not the undistributed
+physical assets or all historical calls. Six new case checks and relevant
+replay/admission regression total123pass locally and123in actual Git archive,
+0failure/error/skip. Before independent tests all6013tracked files exist,
+115raw files byte-equal and4source/metadata texts newline-normalized equal.
+Initial comparison rejects metadata CRLF/LF before tests; no physical bytes
+changed. Not a new full-suite/HFpytest run or physical prediction evidence.
+
+Evidence is in clamped_flip_residual_E139_20261012; protected five user files
+and older untracked artifacts remain unmodified/unstaged. One inline tooling
+script initially rejects a duplicate JS variable declaration before execution
+or any writes; corrected command runs once. The scientific milestone is this
+native diagnostic/replay package, not the preceding repeated wait records.
