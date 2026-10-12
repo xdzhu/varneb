@@ -3605,3 +3605,41 @@ and older untracked artifacts remain unmodified/unstaged. One inline tooling
 script initially rejects a duplicate JS variable declaration before execution
 or any writes; corrected command runs once. The scientific milestone is this
 native diagnostic/replay package, not the preceding repeated wait records.
+
+## E140 — Successful child40 cap audited; ordinary G2 remains6/8
+
+Previous E139 is PROGRESS, not an unexecuted plan or status-only turn. Five
+actual bounded50s waits total250.0408s between native polls; no new monitoring
+automation.28737465 ends nativelyCOMPLETED0:0 at08:50:08, final40/.114146631939.
+This is not failure or ordinary convergence. The pinned existing E103 child
+audit runs once only after actual terminal state, auditing280fresh native
+SCFs/338original runtime files/six physical bytes/DSIZE32/fullEFS;9latest
+cache evaluations initiate0SCFs. Receiptdf34573384f76650e123691dbb508a52d7d8ee529e6e50dca0fce5e4e6835c02,
+seed1a222cc63b89344816f0829bbf079793fa06306d3d4d13f5cc3c2b401f5fbf3f.
+
+Local77files/1,250,797bytes retain9raw terminal SCFs and the exact seed, not
+the undistributed physical assets/all280calls/HF runtime. Four new real-case
+checks and related regression total127pass locally and127in actual clean
+archive,0fail/error/skip. Before independent tests all6097tracked files are
+present;78raw files byte-equal/4source-metadata texts newline-normalized equal.
+No physical evidence bytes changed. Not a new full-suite/HFpytest run.
+
+Healthy segment declines1.325704→.114147, including .137561→.114147 over last
+10updates; no SCF/geometry fault, E139 excludes instantaneous spring dominance.
+Review supports one more finite40-update12h same-chain segment under unchanged
+physics/optimizer/threshold/noCI, at most2study slots; not an automatic rolling
+dispatch or new independent chain. Original E103 admission only knows starter
+parents: accepted journal must not be reset or re-used to masquerade this
+child40 as a ten-step starter. Next action is tested explicit child40 ancestry
+and real spare-slot admission, then one held submission/release if all pass.
+No such new submission in E140.280calls/29,003.679s≈257.810477call-time proxy
+core-hours versus actual29,096s/258.631111allocated CPU-hours; future40updates
+roughly8.1h at measured rate,12hwall ceiling, not a convergence promise.
+
+09:06:33 only reversing28764704 RUNNING32/hfacnormal01, complete17/.144601,
+stderr0. OrdinaryG2 remains6/8. Current turn is PROGRESS_NATIVE_TERMINAL_AUDIT,
+not a blocked or completed goal. No scheduler writes, new DFT initiated by
+audit, physical/optimizer/source/paper changes, G3 selection or holdout access.
+Protected five user files/old untracked work remain intact and unstaged. One
+metadata patch rejects its MD context before any write; actual unchanged
+files are checked before the corrected patch, not silently assumed written.
