@@ -748,6 +748,28 @@ def _orthogonal_directions(
     return left[:, weighted_constraints.shape[1]:] / np.sqrt(plane.metric_weights)[:, None]
 
 
+def _require_fixed_controls(evaluator, directions: Array) -> None:
+    """A retained vector is not generally a fixed physical covector.
+
+    Check the actual release space, before evaluation, rather than guessing
+    from an axis label or implicitly changing the supplied mode plane.
+    Transparent evaluator wrappers must forward this metadata.
+    """
+    controls = getattr(evaluator, "fixed_coordinate_covectors", None)
+    if controls is None:
+        return
+    controls = np.asarray(controls, dtype=float)
+    if (controls.ndim != 2 or controls.shape[0] != directions.shape[0]
+            or not np.isfinite(controls).all()):
+        raise ValueError("fixed_coordinate_covectors must be finite physical columns")
+    lengths = np.linalg.norm(controls, axis=0)
+    if np.any(lengths <= 0.):
+        raise ValueError("fixed_coordinate_covectors cannot contain zero columns")
+    defect = (controls/lengths).T @ directions
+    if defect.size and np.max(np.abs(defect)) > 1e-10:
+        raise ValueError("conditional complement would release a prescribed control coordinate")
+
+
 def audit_orthogonal_curvature(
     plane: ModePlane,
     coordinates: Array,
@@ -772,6 +794,7 @@ def audit_orthogonal_curvature(
     if not np.isfinite(step) or step <= 0.0:
         raise ValueError("step_amplitude must be finite and positive")
     directions = _orthogonal_directions(plane, frozen_directions)
+    _require_fixed_controls(energy_and_gradient, directions)
     n_orthogonal = directions.shape[1]
     hessian = np.empty((n_orthogonal, n_orthogonal), dtype=float)
     for index in range(n_orthogonal):
@@ -963,6 +986,7 @@ def relax_orthogonal_at_q(
         raise ValueError("include_frozen_start=False requires at least one supplied start")
     base = plane.frozen_coordinates(point)
     orthogonal = _orthogonal_directions(plane, frozen_directions)
+    _require_fixed_controls(energy_and_gradient, orthogonal)
     supplied = ([base] if include_frozen_start else []) + list(starts)
     candidates: list[ConditionalModePoint] = []
     branch_outcomes: list[ConditionalBranchOutcome] = []

@@ -20,6 +20,7 @@ from ase.io import write
 
 from .reference_cell import ReferenceCellCoordinates
 from .clamped_mode_coordinates import ClampedModeCoordinates
+from .biaxial_mode_coordinates import BiaxialClampedModeCoordinates
 
 
 Array = np.ndarray
@@ -53,7 +54,7 @@ class CalculatorModeEvaluator:
 
     def __init__(
         self,
-        chart: ReferenceCellCoordinates | ClampedModeCoordinates,
+        chart: ReferenceCellCoordinates | ClampedModeCoordinates | BiaxialClampedModeCoordinates,
         calculator_factory: CalculatorFactory,
         *,
         workdir: str | Path,
@@ -65,7 +66,7 @@ class CalculatorModeEvaluator:
         resume: bool = False,
         max_evaluation_attempts: int | None = None,
     ) -> None:
-        if not isinstance(chart, (ReferenceCellCoordinates, ClampedModeCoordinates)) or not callable(calculator_factory):
+        if not isinstance(chart, (ReferenceCellCoordinates, ClampedModeCoordinates, BiaxialClampedModeCoordinates)) or not callable(calculator_factory):
             raise TypeError("chart and calculator_factory are required")
         if not calculator_id.strip():
             raise ValueError("calculator_id must identify the fixed physical settings")
@@ -98,7 +99,7 @@ class CalculatorModeEvaluator:
             "pressure_eV_per_A3": pressure,
             "minimum_distance_A": minimum_distance,
         }
-        if isinstance(chart, ClampedModeCoordinates):
+        if isinstance(chart, (ClampedModeCoordinates, BiaxialClampedModeCoordinates)):
             # Preserve the existing symmetric-chart resume contract exactly.
             # A clamped run instead freezes its actual active cell subspace.
             contract["coordinate_convention"] = chart.coordinate_convention
@@ -168,6 +169,13 @@ class CalculatorModeEvaluator:
             _write_json(self.workdir / "contract.json", contract)
             if self._budget is not None:
                 _write_json(self.workdir / "evaluation-budget.json", self._budget)
+
+    @property
+    def fixed_coordinate_covectors(self) -> np.ndarray:
+        """Prescribed controls; conditional release must annihilate these columns."""
+        if isinstance(self.chart, BiaxialClampedModeCoordinates):
+            return self.chart.fixed_coordinate_covectors
+        return np.empty((self.chart.coordinate_count, 0))
 
     @property
     def n_evaluation_attempts(self) -> int:

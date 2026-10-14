@@ -3908,3 +3908,27 @@ monitor or physical/optimizer/source changes. Not submission-ready/TS-certified
 or independently predictive success. Full goal active; next is the explicit
 controlled-strain conditional bridge, not a substitute easier fixed-cell face.
 See clamped_plus1_reversing_terminal_E148_20261014.
+
+## E149 — Prescribed strain survives the conditional calculator interface
+
+New explicit biaxial mode chart reuses original geometry/physical gradients,
+with mechanical cache identity including anchor/scale/control map. A covector
+guard on the actual released complement refuses substrate drift before any
+calculator call; it covers both conditional optimization and orthogonal
+curvature. Existing reference/fixed-substrate cache contracts remain unchanged.
+
+200local/200actual independent related pass,0failure/error/skip. Includes
+independent EMT finite energy gradients, both conditional optimizers, recovery/
+attempt budgets/invalid input and18native HfO2zero/+1% common-chart replays.
+No new HfO2DFT or numerical-error/TS/model-success claim. Tree6884cf4ca3152e19b3da5be32fc6b90ddf1284b8,
+archive5526ab7b335544ccf6be16d50b5d47129356ca4685782911c6f7fb42b9e29b1f,
+all6412files present and6source texts normalized-equal before tests. Physical
+evidence not normalized. At18:09:36 the independent full suite remainsRUNNING
+in exec17076; no final result is claimed or substituted from E148.
+
+No G3 mode/centre/face/Hessian/holdout selection or calculation, production
+source/electronic/optimizer change, CI/install/release/monitor. HF18:03:10
+shows no remaining iai806hfacnormal01 jobs; final reversing isCOMPLETED0:0.
+Implementation prerequisite delivered, not full material validation. Full goal
+active; next remains the original finite G3 branch/response experiment.
+See controlled_strain_bridge_E149_20261014.

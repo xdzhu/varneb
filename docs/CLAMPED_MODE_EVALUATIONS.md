@@ -215,8 +215,60 @@ bounds and material G3 validation remain separate, uncompleted requirements.
 The [2026-10-14 eight-path G2 audit](../benchmarks/hfo2_channels/20261008/clamped_plus1_reversing_terminal_E148_20261014/README.md)
 now completes the ordinary training-path matrix. This is not G3 validation:
 physical barrier-error bounds, stable conditional branches and independent
-predictions are still absent. `BiaxialClampedCurvatureCoordinates` currently
-provides directional sampling/physical gradients, not the mode evaluator's
+predictions are still absent. At that audit checkpoint, `BiaxialClampedCurvatureCoordinates`
+provided directional sampling/physical gradients, not the mode evaluator's
 `to_atoms`/`energy_and_gradient` interface. A controlled-strain conditional
 surface must bridge that interface and keep the prescribed substrate parameter
 out of the released complement; passing a same-size array is not sufficient.
+
+## Explicit prescribed-strain conditional coordinates
+
+`BiaxialClampedModeCoordinates` now supplies that interface while reusing
+`BiaxialClampedCurvatureCoordinates` for physical geometry and gradients.
+It does not replace the fixed-substrate chart or change its cache contract.
+For an anchor strain epsilon0 and a declared scale L_strain in Angstrom,
+the extra coordinate is `t = L_strain*(epsilon-epsilon0)`. The substrate
+rows are `H0[:2]*(1+epsilon)/(1+epsilon0)`; open-row directions and ordered
+atomic coordinates retain the original chart. There is no automatic metric,
+strain range, mode selection or material surface construction.
+
+```python
+from vcneb import BiaxialClampedModeCoordinates, CalculatorModeEvaluator
+
+chart = BiaxialClampedModeCoordinates(
+    reference_atoms, boundary=boundary, cell_scale_A=registered_cell_scale,
+    anchor_strain=registered_anchor_strain, strain_scale_A=registered_strain_scale,
+)
+evaluator = CalculatorModeEvaluator(
+    chart, existing_fixed_ASE_factory, workdir=fresh_directory,
+    calculator_id=registered_physical_contract_id,
+    result_validator=existing_raw_SCF_validator, validation_id=registered_validator_id,
+    max_evaluation_attempts=registered_limit,
+)
+```
+
+The strain scale, anchor, controlled row map and active-cell basis are part
+of the immutable physical cache identity. Changed definitions reject resume.
+`from_atoms` requires the same ordered continuous lift and one common positive
+biaxial row factor; it never fits a rotation or wraps atoms.
+Raw calculation geometry must agree with the declared unwrapped point.
+Stress retains substrate reactions: `L_strain*gradient[-1]` is the frozen
+partial d(E+PV)/d epsilon, not an equilibrium response until internal stationarity
+is independently established. The controlled gradient need not vanish.
+
+The evaluator exposes `fixed_coordinate_covectors`. Before relaxation or
+orthogonal-curvature sampling, the solver checks `C.T @ Z = 0` for every
+released column Z and prescribed covector C. Merely mixing a strain direction
+into a Q axis is insufficient and is rejected before any calculator call.
+Retain t as a pure axis, include it in the full constrained covector span, or
+explicitly freeze its direction with a compatible metric/plane. The three
+rigid translations should still be treated as a declared gauge. A transparent
+callable wrapper must forward this metadata; a bare lambda cannot carry an
+undeclared mechanical contract. No control is silently frozen or a supplied
+mode plane silently changed. Whole-grid calls use the same point-level guard.
+
+This is implementation validation, not a new HfO2 G3 surface, stationary
+branch/TS or prediction certificate. EMT numerical derivatives/conditional
+relaxations check the full physical interface; retained native zero/+1%
+frames test common-reference replay without new DFT or physical+.005access.
+The original ABACUS100Ry/full10auDZP and finite study budgets stay unchanged.

@@ -118,6 +118,7 @@ from .nested_response import (
 from .response_cost import ResponseEvaluationCost, recorded_response_dataset_cost
 from .mode_evaluator import CalculatorModeEvaluator
 from .clamped_mode_coordinates import ClampedModeCoordinates
+from .biaxial_mode_coordinates import BiaxialClampedModeCoordinates
 from .mode_subspace import (
     StrictModeSubspace, strict_mode_subspace_for_vcneb,
     EndpointCompletedModeSubspace, endpoint_completed_mode_subspace_for_vcneb,
@@ -264,6 +265,7 @@ __all__ = [
     "ReferenceCellCoordinates",
     "CalculatorModeEvaluator",
     "ClampedModeCoordinates",
+    "BiaxialClampedModeCoordinates",
     "StrictModeSubspace",
     "strict_mode_subspace_for_vcneb",
     "EndpointCompletedModeSubspace",
