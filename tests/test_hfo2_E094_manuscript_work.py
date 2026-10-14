@@ -25,7 +25,7 @@ def reports():
 
 
 def section():
-    return PAPER.read_text(encoding='utf-8').split('### 3.8. ',1)[1].split('### 3.9.',1)[0]
+    return PAPER.read_text(encoding='utf-8').split('### 3.4. ',1)[1].split('### 3.5.',1)[0]
 
 
 @pytest.mark.parametrize('index',range(8))
@@ -95,7 +95,7 @@ def test_section_numbers_and_new_evidence_links_are_unambiguous():
     text = PAPER.read_text(encoding='utf-8')
     numbers = re.findall(r'^### (\d+\.\d+)\.',text,re.M)
     assert len(numbers) == len(set(numbers))
-    assert '2.5' in numbers and '3.7' in numbers and '3.8' in numbers
+    assert all(n in numbers for n in ('2.5', '2.6', '3.4', '3.5'))
     method = text.split('### 2.5. ',1)[1].split('## 3.',1)[0]
     for target in re.findall(r'\]\(([^)]+)\)',method+section()):
         assert not target.startswith(('http','file:'))

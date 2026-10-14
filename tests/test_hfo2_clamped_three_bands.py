@@ -131,6 +131,6 @@ def test_main_text_describes_training_records_and_all_nine_panels_without_TS_cla
     text = (ROOT/'paper/VARNEB_JCTC/MANUSCRIPT_DRAFT.md').read_text(encoding='utf-8')
     assert 'hfo2_clamped_TMR_E099_20261011/hfo2_clamped_TMR.pdf' in text
     assert 'The twenty-seven records include cached endpoints' in text
-    assert 'Figure 5. Three ordinary-converged zero-strain training candidates' in text
+    assert 'Figure 2. Three ordinary-converged zero-strain training candidates' in text
     assert '(a--c)' in text and '(d--f)' in text and '(g--i)' in text
     assert 'sampled peaks, not certified TSs' in text

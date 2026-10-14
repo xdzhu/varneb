@@ -126,11 +126,12 @@ def test_manuscript_M_rows_replay_actual_data_without_future_labels():
     values = [forward, work['cumulative_full_work'][3]*250,
               work['cumulative_energy_minus_work'][3]*250, work['cumulative_energy_minus_work'][-1]*250]
     assert '| PO-to-M, +1% strain | ' + ' | '.join(f'{v:.6f}' for v in values) + ' |' in text
-    section = text.split('### 3.11.', 1)[1].split('## 4.', 1)[0]
-    assert 'not an independent prediction test' in section
-    assert 'not claimed to exceed a measured barrier' in section
-    assert 'completes the observed four-candidate matrix' in text
-    assert 'neither a DFT error estimate' in section
+    section = text.split('### 3.1.', 1)[1].split('### 3.2.', 1)[0]
+    assert 'not independent predictive wins' in section
+    assert 'ordinary residuals do not bound sampled-barrier error' in section
+    assert 'same four registered correspondences' in section
+    work_section = text.split('### 3.4.', 1)[1].split('### 3.5.', 1)[0]
+    assert 'not a measured barrier uncertainty' in work_section
     assert 'Eight of eight registered G2 training bands' in text
 
 

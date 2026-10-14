@@ -81,8 +81,8 @@ def test_fresh_output_only(tmp_path):
 
 def test_manuscript_does_not_certify_the_two_centres():
     text = (ROOT/"paper/VARNEB_JCTC/MANUSCRIPT_DRAFT.md").read_text(encoding="utf-8")
-    section = text.split("### 3.10.")[1].split("## 4.")[0]
-    for value in ("-14.838201", "+96.828183", "1.122022", "38.508448", "Figure 8."):
+    section = text.split("### 3.2.")[1].split("### 3.3.")[0]
+    for value in ("-14.838201", "+96.828183", "1.122022", "38.508448", "Figure 1."):
         assert value in section
     for limit in ("different, boundary-relaxed PO+ well", "not present on this clamped",
                   "stationary minimum or index-one saddle", "not a structural matching",

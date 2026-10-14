@@ -1,324 +1,117 @@
 # Hafnia JCTC study: evidence-bound working manuscript
 
-This is a research manuscript in development, **not a submission-ready paper**.
-The software paper in `../VARNEB_CPC` remains a separate artifact.
+This is a research manuscript in development, **not submission-ready**.
+The [CPC software paper](../VARNEB_CPC/README.md) is a separate artifact.
+One editable source, [MANUSCRIPT_DRAFT.md](MANUSCRIPT_DRAFT.md), supplies the
+reading PDF through [the thin TeX wrapper](varneb_JCTC_draft.tex).
 
-The scientific question is whether the same mechanical intervention can lower
-homogeneous switching barriers without lowering the easiest examined escape
-barrier from the same PO+ well, and whether a branch-aware mode-strain model
-can predict that response better than strong declared controls. Neither a
-compact projection nor a visually smooth landscape establishes this claim.
+The [E153 structural and numerical checks](../../benchmarks/hfo2_channels/20261008/manuscript_narrative_E153_20261014/README.md)
+record the evidence-first revision; older dated receipts remain historical.
 
-## Read the study
+## Scientific question and current evidence
 
-- [Main-text draft](MANUSCRIPT_DRAFT.md): connected introduction, theory,
-  computational definitions, dated pilot results and their limits.
-- [Detailed methods](METHODS_DRAFT.md) and [pilot evidence](PILOT_RESULTS_2026-10-08.md).
-- [Research design](RESEARCH_DESIGN.md) and
-  [finite execution plan](../../docs/VARNEB_JCTC_HFO2_RESEARCH_PLAN.md).
-- [Prospective protocol](../../docs/HFO2_PREDICTION_PROTOCOL.md) and
-  [dated v2 addendum](../../docs/HFO2_PREDICTION_PROTOCOL_V2_2026-10-09.md).
+Can one prescribed mechanical intervention reduce homogeneous switching
+without reducing the easiest examined escape barrier from the same PO+ well?
+Can a branch-aware mode-strain model predict that response better than the
+registered strong references and simpler controls?
 
-The manuscript's numerical tables are dated snapshots, not a live job dashboard.
-All four final G1 candidate bands have passed the ordinary residual criterion
-and the whole-candidate evidence gate has passed. The gate permits the
-registered G2 experiment; it does not certify stationary saddles, exhaustive
-escape coverage or distinct winding sectors. All five common-substrate ordered
-endpoint representations now pass the declared atomic-force/open-traction
-screens. The two minus endpoints are related by a parent-declared translation
-and same-species permutation, but are not identical at ordered path indices.
-Their phase equivalence does not merge their paths or establish electronic
-polarity/whole-path topology. The +1% T-derived/PO+/M training endpoints
-28469832/28469833/28472493 have all completed and passed their original
-raw E/F/stress and input-byte reviews. The T-derived structure is Ccce already
-in the strained input, not forcibly assigned the free-T group. The two +1%
-minus endpoints28568571/28568573 also completed and passed all raw screens,
-each6BFGSsteps/7SCFs. All ten registered endpoint representations are now
-screened. Jobs28574708/28574709 were the historical first segments of the
-matched zero-strain preserving-flip/PO-to-M chains, not current live handles.
-The later PO-to-M segment28722320 has passed an actual ordinary terminal
-audit; Tables5–6 and Figure5 document that first clamped candidate and its
-mode/strain trace. This first-candidate description is historical: by E101,
-five of eight necessary G2 candidates have ordinary terminal audits.
-The reserved+.005holdout remains ungenerated/unread.
-The complete G2 matched-boundary comparison, G3
-conditional-branch validation and independent material predictions remain
-missing. An ordinary residual pass is not a certified saddle or a barrier
-uncertainty bound. No abstract or conclusion asserting these missing results
-is supplied.
+All eight ordinary clamped training bands and all ten endpoint representations
+are audited. At zero/+1% substrate strain the sampled preserving switching peak
+increases by 28.596248 meV/HfO2, while the higher reversing peak decreases by
+44.024331. The lower sampled escape peak increases by 12.347027. The raw
+candidate-set selectivity proxy therefore worsens by 16.249222, not the desired
+favorable signature. This is not an error-certified physical ordering: the
+strained T/M escape peaks differ by only 0.464068 meV/HfO2 and their continuous
+bottleneck errors are unmeasured.
 
-The [public Ma-Liu v3 supplement audit](../../outputs/HFO2_MA_V3_MAPPING_AUDIT_2026-10-11.md)
-adds mapping-coverage evidence to the introduction, without equating our
-candidate to a literature path, changing the finite matrix or claiming a
-publisher-SI/full-preprint audit.
+The current paper is organized by evidence, not job chronology:
 
-Its [dated reading-build receipt](MANUSCRIPT_DRAFT.Ma-mapping.validation.json)
-identifies the17-page PDF, the selected actually inspected pages and the
-unchanged M numbers. It is not an all-page final submission audit or a new
-material result; older compile receipts retain their historical meanings.
+1. Complete channel-response matrix and endpoint-only controls.
+2. Mechanical boundary and the changed energetic role of the Pbcn snapshot.
+3. Displacement, physical-gradient and cell-response diagnostics.
+4. Signed path-work consistency, retaining the eight-band cohort.
+5. Cross-strain work separating prescribed control and configuration changes.
 
-The [native external-work trace](../../benchmarks/hfo2_channels/20261008/clamped_external_work_E077_20261011/README.md)
-adds a raw-stress controlled-coordinate diagnostic to the clamped M discussion.
-Its two frozen charts are not relaxed-barrier predictions or new G2 labels.
-The [dated validation](../../benchmarks/hfo2_channels/20261008/clamped_external_work_E077_20261011/validation.json)
-identifies the actual17-page build and selected reading-layout checks.
+Free-cell candidates, finite sampling checks, endpoint screens and complete
+reference tables remain **inside the paper's appendices**. No separate
+supplementary manuscript is introduced. All nine original figure assets and
+every published numerical table row are retained; figure/table numbers have
+changed. Dated validation files retain their historical hashes and page counts,
+not the current article numbering.
 
-The [later complete-frame residual audit](../../benchmarks/hfo2_channels/20261008/residual_update_20261009_0450/README.md)
-tracks the preserving flip's atomic/cell residual crossover without claiming
-final channel energies. It is additional
-source-verified pilot evidence, not a new stationary-TS or prediction result.
+## Terminology
 
-## Historical milestones
+| Term | Meaning and boundary |
+|---|---|
+| Sampled peak, hat B | Maximum among the retained images, not a certified stationary barrier |
+| Ordinary NEB residual | Default 0.10 eV/Angstrom max-vector target, not a barrier-error bound |
+| Physical gradient g | Raw energy derivative, not spring or perpendicular NEB force |
+| Conditional surface | One identified branch relaxed in its stable permitted complement, not a frozen slice |
+| Signed work W | Coordinate/connection-dependent contraction, not a unique phonon energy |
+| Prescribed strain epsilon | External control, excluded from the internal instability count |
+| Strong T/Cmma references | Complete declared ranks; all four tied Cmma frames remain, not a selected winner |
 
-The following dated records retain the knowledge and figures available at
-their own timestamps. Statements of nonconvergence there are historical,
-not the current job state.
+The two lengths in the response chart are not mass-weighted phonon amplitudes.
+Geometry coverage, gradient coverage, integrated work and prediction accuracy
+are different measurements.
 
-The [2026-10-09 morning update](../../benchmarks/hfo2_channels/20261008/morning_update_20261009_0850/README.md)
-adds the second ordinary-converged source, PO to M, and the preserving flip's
-developing split-peak profile. Both switching chains remain unconverged.
-Those morning frames and the earlier step6/20/14/10 figure remain historical
-evidence and are not overwritten by later values.
+## What remains before the intended JCTC claim
 
-The [12:55 update](../../benchmarks/hfo2_channels/20261008/switching_converged_update_20261009_1255/README.md)
-adds preserving step69 ordinary convergence. Table1 and the new Figure2 now
-use complete step6/39/69/32 records. The central Pbcn image is lower than
-PO+, but not certified stable; physical tangential forces of about
-0.24 eV/Angstrom at the sampled side peaks prevent a stationary-TS label.
-This is new material evidence, not a completed G1 gate or a prediction result.
+- Full same-contract local curvatures, measured numerical sensitivity and
+  appropriate fixed-strain internal index; highest images are not automatically TSs.
+- Stable, connected conditional branches and covered sampling domains.
+- Training-only model/representative selection and frozen predictions before
+  any physical +0.5% geometry or path labels are read.
+- Independent comparisons against B0--B5, including strong fixed-reference,
+  endpoint-information and interpolation controls, with actual preparation,
+  SCF and allocation costs. An unavailable model abstains.
+- A demonstrated nonlinear/finite-representation/branch or equal-accuracy-cost
+  gain: changing a complete harmonic basis alone cannot improve its exact
+  stationary response.
+- Final numerical/figure/layout/citation audit and permitted reproducibility
+  package. This structural revision is not scientific completion.
 
-## Compile the reading PDF
+The first bounded native local-curvature batches are
+[registered in E150](../../benchmarks/hfo2_channels/20261008/G3_curvature_E150_20261014/README.md).
+The [E152 read-only replay](../../benchmarks/hfo2_channels/20261008/G3_curvature_audit_E152_20261014/README.md)
+checks actual completed raw probe prefixes without filling missing columns,
+new DFT or a live-source change. Neither is a completed conditional-face or
+prediction result. Job progress belongs to those dated records, not the paper.
 
-The scientific text has **one source**, `MANUSCRIPT_DRAFT.md`. The small
-[LaTeX wrapper](varneb_JCTC_draft.tex) reads it directly with the TeX `markdown`
-package; there is no second, manually synchronized scientific text.
+## Sources and reproduction
 
-With an existing TeX Live installation providing LuaLaTeX, latexmk, the
-`markdown` package and the packages named in the wrapper, run from this folder:
+- [Detailed methods](METHODS_DRAFT.md), [research design](RESEARCH_DESIGN.md),
+  [finite plan](../../docs/VARNEB_JCTC_HFO2_RESEARCH_PLAN.md).
+- [Prospective protocol](../../docs/HFO2_PREDICTION_PROTOCOL.md) and its
+  [v2 addendum](../../docs/HFO2_PREDICTION_PROTOCOL_V2_2026-10-09.md).
+- [Complete eight-band source audit](../../benchmarks/hfo2_channels/20261008/clamped_plus1_reversing_terminal_E148_20261014/README.md).
+- [Cross-strain numerical source](../../benchmarks/hfo2_channels/20261008/cross_strain_work_E151_20261014/README.md).
+- [Historical pilot record](PILOT_RESULTS_2026-10-08.md) and dated validation
+  files in this folder. Earlier nonconvergence statements refer to their own
+  timestamps; they are not current job status.
 
-```sh
+From this directory, with the existing TeX Live/LuaLaTeX/markdown packages:
+
+~~~sh
 latexmk -norc -lualatex -interaction=nonstopmode -halt-on-error -synctex=1 -outdir=build varneb_JCTC_draft.tex
-```
+~~~
 
-The output is `build/varneb_JCTC_draft.pdf`. The `-norc` flag avoids loading
-latexmk configuration files; shell escape is not required. This is a
-multi-file project (Markdown and figure assets), not a standalone TeX document.
-No software installation is performed by this recipe. Keep the generated PDF
-in `build/`: its relative evidence links resolve against that location and
-require a reader that permits local links. DOI links are ordinary web links.
+The reading output is build/varneb_JCTC_draft.pdf. No installation, shell
+escape or latexmk rc loading is required. This is a multi-file project,
+not a standalone TeX file. Source and figure dependencies are read directly;
+no manually synchronized scientific TeX body exists. Keep a portable local
+reading copy in build so its relative evidence links resolve with a reader
+that permits local links. External review-build paths recorded in receipts
+are layout snapshots, not portable source-data bundles.
 
-Build products are ignored by Git. The source, reproduction command and
-verification receipt are committed instead. PDF bytes may change with engine
-versions, timestamps or fonts; the receipt identifies the actual local build,
-not a promise of byte-identical PDFs on all machines.
+Build products are ignored by Git. Receipts identify the actual compiler,
+PDF bytes and inspected pages, not byte-identical PDFs across environments.
+Existing published assets and raw outputs are not overwritten by a new build.
 
-The historical morning-update build was compiled with existing TeX Live
-2023/LuaHBTeX1.16.0. All eight pages were rendered and visually reviewed with
-existing Poppler; the current table's jobs, steps, numbers and pass labels
-were checked against the frozen E029 data. Both unchanged figure assets and
-local evidence-link targets were verified. See
-[its compile/scientific-check receipt](MANUSCRIPT_DRAFT.morning-update.validation.json).
-That is a reading-layout and source-data consistency check, not scientific
-completion or journal approval. The earlier seven-page
-[compile receipt](MANUSCRIPT_DRAFT.compile.validation.json) is retained as
-historical evidence, not the hash or page count of this updated draft.
+## Fixed computation scope
 
-The earlier [main-text validation receipt](MANUSCRIPT_DRAFT.validation.json)
-is preserved as a **historical milestone** for commit `456d376`. Its manuscript
-hash predates the current math/table formatting changes and must not be used
-as the hash of the current draft.
-
-The current preserving-pass build and its actual rendered-page/numeric checks
-are identified by [the dated receipt](MANUSCRIPT_DRAFT.preserving-pass.validation.json).
-It includes the new Figure2 without claiming the missing material predictions.
-
-The subsequent six-point sampling audit adds Figure3 and Section3.3:
-the preserving reconstruction's highest observed sample is38.508448meV/f.u.,
-not the original nine-image32.806023 value. It retains the ordinary0.10
-residual target but does not certify a stationary saddle or a relaxed
-continuous MEP. The [new build receipt](MANUSCRIPT_DRAFT.sampling-audit.validation.json)
-identifies the corresponding PDF;
-earlier receipts/figures keep their historical meanings.
-
-The subsequent five-point audit adds Table2: T-to-PO sampling changes by only
-0.011360meV/HfO2, while PO-to-M changes by11.164864. The inserted M residual
-0.123408 does **not** pass ordinary0.10, so it requires bounded refinement;
-these static peaks are not final continuous-MEP or TS barriers. The
-[current reading-build receipt](MANUSCRIPT_DRAFT.peak-sampling.validation.json)
-identifies the ten-page PDF and all-page/numeric/layout checks. Earlier build
-receipts remain historical. Missing G2 and independent predictions are not
-filled with placeholder success claims.
-
-The latest source adds the [qualified G1 review and canary](../../benchmarks/hfo2_channels/20261008/G1_review_clamped_canary_20261009/README.md),
-[two-SCF PO+ continuation](../../benchmarks/hfo2_channels/20261008/clamped_PO_continuation_E046_20261009/README.md)
-and [single-SCF T endpoint](../../benchmarks/hfo2_channels/20261008/clamped_endpoint_matrix_20261009/README.md).
-Section3.6 reports a12.359975meV/HfO2 common-substrate well separation,
-not a switching or escape barrier. Source checks and the corresponding
-new reading build are recorded in `MANUSCRIPT_DRAFT.clamped-endpoints.validation.json`.
-That receipt refers to the first two-endpoint build. The subsequent four-well
-table and its actual reading-build checks are identified by
-`MANUSCRIPT_DRAFT.zero-strain-wells.validation.json`; the earlier receipt is
-retained as historical evidence, not the hash of the latest PDF.
-
-The eight-endpoint stage now includes the declared endpoint correspondence and
-the three completed +1% training endpoints. Its current13page reading-build,
-raw numerical/link and rendered-page checks are recorded in
-[the dated receipt](MANUSCRIPT_DRAFT.eight-endpoints.validation.json).
-This is a reviewed working manuscript, not a submission-ready JCTC result.
-
-## Computation boundaries
-
-Hafnia uses the registered ABACUS/PBE contract: 100 Ry, full 10-au DZP orbitals,
-original input/KPT/UPF/orbital hashes, Gamma-centred 2x2x2, P=0 and E=0.
-Ordinary NEB is 0.10 eV/Angstrom, without climbing images. Mechanical active
-spaces must match across every image and endpoint of a comparison.
-
-Finish and audit G1 candidate channels before G2; freeze predictions before
-reading held-out labels. An unstable or unsupported branch is an abstention,
-not an implicit successful prediction. No new functional, cutoff, phase,
-domain-wall or MPB matrix is opened to fill waiting time. The execution plan
-contains the finite budgets and stop/acceptance gates.
-
-The [E078 native-gradient audit](../../benchmarks/hfo2_channels/20261008/clamped_mode_gradient_E078_20261011/README.md)
-complements displacement coverage without modifying references or production
-calculations. At the sampled clamped M peak, Cmma's93.51% squared atomic-gradient
-coverage contrasts with36.48% squared displacement coverage. Neither is an
-energy-accuracy measure. This preserves Cmma as a strong comparison and does
-not preselect G3 or claim completed prospective predictions.
-
-The [E079 PO-to-T terminal record](../../benchmarks/hfo2_channels/20261008/clamped_T_terminal_E079_20261011/README.md)
-adds the second same-substrate ordinary-converged training band to Table5.
-Its77 fresh SCFs and nine portable terminal frames pass their distinct native
-and local checks. Its84.416624meV/HfO2 discrete peak is not a continuous TS
-certificate or proof of escape ordering relative to the M candidate. Six G2
-training bands, conditional branches and prospective independent tests remain.
-
-The [E082 source-reading receipt](../../benchmarks/hfo2_channels/20261008/lee_SI_text_E082_20261011/validation.json)
-records the18-page build after a partial Lee supplementary-text reading.
-The introduction excludes restricted-release profile lowering as novelty;
-Section2.3 distinguishes internal-response coordinates and elastic stiffness.
-The existing34 table rows and5 figure references are unchanged. All18 pages
-were inspected at contact-sheet scale, with changed pages2/3 reviewed separately.
-This is neither a full external-SI graphic/version audit nor a new material
-surface, Hessian, prospective prediction or submission-readiness claim.
-
-The [E083 reversing terminal case](../../benchmarks/hfo2_channels/20261008/clamped_reversing_terminal_E083_20261011/README.md)
-adds the third ordinary-converged G2 band to the main text and Table5.
-Its42 fresh native SCFs and nine portable terminal frames pass distinct
-checks; the338.968965meV/HfO2 forward discrete peak is not a continuous-TS
-or sampling-error certificate. That dated build is identified by this
-case's validation receipt, not the historical E082 PDF hash. One existing
-+1% PO-to-T job is admitted into a spare slot without new submissions or
-input changes; the other three training starters remain held.
-
-The [E085 fixed-reference analysis](../../benchmarks/hfo2_channels/20261008/clamped_reversing_reference_E085_20261011/README.md)
-adds the reversing band's three descriptive Table6 rows using the unchanged
-T/Cmma references. Its T-triplet displacement/gradient fractions are26.2915%/
-0.0320%; all four Cmma frames retain65.1046% of the squared atomic gradient
-at displayed precision. These are different denominators, not energetic
-accuracy or stationary-saddle claims. The three completed bands share the
-same native cached PO inputs/logs and EFS; geometric serialization differences
-are retained, not repaired. The [current reading-build receipt](../../benchmarks/hfo2_channels/20261008/clamped_reversing_reference_E085_20261011/validation.json)
-identifies the19-page PDF, actual61-test local/archive runs and inspected
-layout. G2 remains3/8; five training bands, conditional branches, strong
-controls and frozen independent predictions remain necessary.
-
-The [E089 same-reference strain contrast](../../benchmarks/hfo2_channels/20261008/clamped_T_strain_reference_E089_20261011/README.md)
-adds Figure6 and the seen-strain section (now3.7; originally3.6 in E089)
-using the actual completed +1% PO-to-T band
-and unchanged original zero-strain reports. Similar peak displacement
-coverage does not imply similar atomic-gradient coverage or model accuracy.
-Different physical PO+ endpoint energies, absolute gradient norms, all four
-Cmma frames and undefined unstrained-T coverage remain explicit. Four of
-eight G2 candidates are ordinary-converged; remaining paths, conditional
-branches, strong controls and prospectively frozen predictions are unfinished.
-
-The [E092 signed-work evidence](../../benchmarks/hfo2_channels/20261008/clamped_path_work_E092_20261011/README.md)
-is now integrated into Sections2.5/3.8 and Table7. The four completed training
-bands illustrate why endpoint closure need not resolve the bottleneck region.
-Signed retained/omitted/translation/open-cell work is not a mode-energy
-allocation; all four Cmma registrations and both T rank-four optical doublets
-remain. No new material labels, reference selection, physical error bound,
-G3 choice or prediction-accuracy claim is introduced. The two formerly
-duplicate3.6 headings are now numbered3.6/3.7. The
-[dated E094 reading-build receipt](MANUSCRIPT_DRAFT.path-work-E094.validation.json)
-records actual numeric and layout checks, not submission readiness.
-
-The [E099 three-band figure](../../benchmarks/hfo2_channels/20261008/clamped_three_band_figure_E099_20261011/README.md)
-extends Figure5 with the already audited zero-strain reversing candidate.
-All three profiles use the same PO+ native energy reference and one energy
-axis scale; each retains its own normalized generalized arc. Nine aligned
-panels preserve both T ranks and all four Cmma registrations, separating
-displacement from atomic-gradient coverage. Twenty-seven records include
-shared caches and are not independent replicates or new SCFs. The older
-T/M-only figure remains in its dated folder. This is descriptive training
-evidence, not a released-model comparison or prospective prediction result.
-
-The [E101 preserving/reversing comparison](../../benchmarks/hfo2_channels/20261008/clamped_preserving_reference_E101_20261011/README.md)
-adds the completed preserving zero-strain flip and Figure7. Tables5--7
-include its96.828183meV/HfO2 sampled peak,82.6301%/12.9583% T-triplet
-displacement/gradient fractions and signed work. Five of eight G2 training
-bands are ordinary-converged. The zero-strain four-channel set is complete
-at that criterion, not at a stationary-TS or barrier-error standard.
-Three +1% candidates, conditional response/stability, strong controls and
-prospective independent material predictions remain. Original figures and
-build receipts retain their historical meanings.
-The [E101 validation](../../benchmarks/hfo2_channels/20261008/clamped_preserving_reference_E101_20261011/validation.json)
-identifies the actual24-page PDF, all-page contact review and detail pages
-15/16/21--24, plus109-test local/independent archive verification. Figure7
-and the new table entries are descriptive training evidence, not successful
-independent predictions or a completed JCTC study.
-
-The [E102 boundary-role comparison](../../benchmarks/hfo2_channels/20261008/preserving_boundary_role_E102_20261012/README.md)
-adds Figure8 and Section3.10. The original free-cell and zero-strain clamped
-preserving centres both retain Pbcn across the unchanged tolerance sweep,
-but are respectively sampled trough/high point relative to their OWN initial
-wells. Free-cell F_xx=1.122022 contrasts with the clamp's fixed F_xx=1.
-This is not the same-boundary strain derivative or a certificate that every
-clamped Pbcn branch is absent. No new DFT or G3/reference/holdout choice is
-used; the original free-cell sampling supplement remains distinct.
-
-The [E103 finite +1% production handoff](../../benchmarks/hfo2_channels/20261008/clamped_flip_continue_E103_20261012/README.md)
-audits the completed10-update preserving starter and resumes its exact latest
-chain as28737465 under the unchanged physical/optimizer recipe. Its1.325704
-eV/Angstrom cap and the live M band's.106688 residual are not final material
-labels; G2 remains5/8. No figure/table/barrier/forecast claim is updated from
-these unconverged records. Original figures and the25-page reading draft
-remain; complete ordinary training, G3/stability, strong controls and the
-prospectively frozen independent predictions are still required.
-
-The [E104 audited +1% M completion and reversing release](../../benchmarks/hfo2_channels/20261008/clamped_reversing_release_E104_20261012/README.md)
-advances ordinary training to6/8. M28727368 finishes step22/.0985884697;
-all154fresh SCFs/338original runtime files and the nine terminal images
-pass the original same-input native audit. Its sampled forward/reverse
-peaks are97.2277185/211.9746919meV/HfO2. The~1.23meV forward difference
-from the zero-strain M training label is not an established significant
-response. Original reversing28709791 is released once and starts01:27:26,
-with2cached endpoints and native32MPI; preserving28737465 remains live.
-No unconverged flip label, G3 selection, curvature, physical holdout or
-prediction claim is inserted. Scientific figures/tables/the25-page PDF
-remain unchanged pending the complete matched-boundary matrix and later
-registered gates. Older dated delivery records keep their historical counts.
-
-The [E105 M seen-strain analysis](../../benchmarks/hfo2_channels/20261008/clamped_M_strain_reference_E105_20261012/README.md)
-now adds the audited +1% M result to Tables5--7, Section3.11 and Figure9.
-Its sampled peak changes-1.230403meV/HfO2 rather than following the
-final-well change-22.206479. At the strained peak, geometric T displacement/
-gradient coverage is54.9251%/3.9008%, compared with91.5873--91.5896%
-gradient coverage for the unchanged strong Cmma controls. All four frames,
-omitted atoms and open-cell work remain. These are descriptive training
-observations; neither a significant small-barrier strain trend nor a new
-method's predictive superiority is established. Ordinary G2 completion is
-still6/8; the two +1%flips, later conditional/stability tests and frozen
-independent predictions remain. The final E105 validation identifies the
-actual27-page reading PDF and source/test/visual checks; older reading
-builds keep their historical page counts and production snapshots.
-
-The [E108 publisher-SI visual audit](../../outputs/HFO2_LEE_SI_VISUAL_AUDIT_2026-10-12.md)
-closes the earlier Lee binary/figure-access gap: all four pages, S1--S3 and
-TableS1 were inspected. The introduction now separates the plotted coupled
-interpolation, cell/formula-unit labels and each initial energy reference.
-This is source-grounded methodological positioning, not a new material
-result or proof of predictive advantage. Historical E082 failures and the
-older reference-PDF version gap remain recorded; no coefficients, vectors
-or publisher figures are imported. The same G2/G3/holdout gates remain.
+ABACUS/PBE, Hf4O8/four formula units, 100 Ry/full 10 au DZP/original six file
+hashes/Gamma2x2x2/P0/E0. No cutoff, orbital, pseudopotential, SCF, CI or
+unregistered material/functional/orientation matrix change. The same
+mechanical active space applies at every image and endpoint of a comparison.
+The physical +0.005 holdout stays sealed until the predictive freeze.

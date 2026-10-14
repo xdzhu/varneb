@@ -129,7 +129,7 @@ def audit_cohort():
 
 
 def audit_manuscript(text, result):
-    section = text.split("### 3.8.", 1)[1].split("### 3.9.", 1)[0]
+    section = text.split("### 3.4.", 1)[1].split("### 3.5.", 1)[0]
     required = ("eight completed clamped training bands", "72 frame records", "66 distinct raw-log/geometry")
     if (result["bands"], result["frame_records"], result["distinct_raw_log_STRU_identities"]) != (8, 72, 66):
         raise ValueError("actual cohort no longer matches the declared manuscript snapshot")
@@ -138,7 +138,7 @@ def audit_manuscript(text, result):
     for row in result["rows"]:
         line = "| " + row["label"] + " | " + " | ".join(f"{v:.6f}" for v in row["table_meV_fu"]) + " |"
         if line not in section:
-            raise ValueError("manuscript Table 7 differs from frozen native evidence")
+            raise ValueError("manuscript Table 3 differs from frozen native evidence")
         values = [row["peak_triplet_parts_meV_fu"][key] for key in
                   ("retained_atomic", "omitted_atomic", "open_cell")]
         values += [row["peak_optical_retained_meV_fu"], *row["peak_Cmma_retained_range_meV_fu"]]

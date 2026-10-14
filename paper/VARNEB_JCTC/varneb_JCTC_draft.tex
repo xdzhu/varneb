@@ -11,6 +11,7 @@
 \usepackage{xcolor,xurl,xstring}
 \usepackage[colorlinks=true,urlcolor=blue!50!black,linkcolor=blue!50!black]{hyperref}
 \usepackage{fancyhdr}
+\usepackage{placeins}
 \usepackage[pipeTables,texMathDollars]{markdown}
 \setlength{\headheight}{14pt}
 \setlength{\parindent}{0pt}
@@ -31,14 +32,26 @@
 % Keep the preceding short table-caption paragraph with the unbreakable table.
 \BeforeBeginEnvironment{tabular}{\par\nobreak\begin{adjustbox}{max width=\linewidth}}
 \AfterEndEnvironment{tabular}{\end{adjustbox}}
+% An image and its following single-paragraph caption form one block.
+% Markdown emits two interblock separators: image->caption->next block.
+% Keep the original figure size; prevent orphaned caption continuation lines.
+\newcount\varnebFigureBlocks
+\varnebFigureBlocks=0
 \markdownSetup{
   outputDir={build},
   rendererPrototypes={
     headingOne={\begin{center}\Large #1\end{center}\bigskip},
-    headingTwo={\section*{#1}},
+    headingTwo={\FloatBarrier\section*{#1}},
     headingThree={\subsection*{#1}},
     link={\IfBeginWith{#3}{http}{\href{#3}{#1}}{\href{../#3}{#1}}},
-    image={\begin{center}
+    interblockSeparator={\par
+      \ifnum\varnebFigureBlocks>0
+        \global\advance\varnebFigureBlocks by -1
+        \ifnum\varnebFigureBlocks=0\end{minipage}\end{figure}\fi
+      \fi},
+    image={\begin{figure}[!htbp]\begin{minipage}{\linewidth}
+      \global\varnebFigureBlocks=2
+      \begin{center}
       \includegraphics[width=\linewidth,height=.70\textheight,keepaspectratio]{#3}
       \end{center}}
   }

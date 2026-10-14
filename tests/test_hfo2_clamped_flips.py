@@ -156,7 +156,7 @@ def test_new_table5_and6_values_are_real_samples_not_TS_or_energy_accuracy():
     peak = data["bands"][0]["rows"][4]
     assert 100*peak["T_optical_doublets_rank4_squared_fraction"] < .0001
     assert 100*peak["T_two_lowest_complete_optical_doublets_retained_squared_gradient_fraction"] < .0001
-    section = text.split("### 3.9. ", 1)[1].split("## 4.", 1)[0]
+    section = text.split("### 3.3. ", 1)[1].split("### 3.4.", 1)[0]
     assert "not a certified index-one saddle" in section
     assert "the globally easiest homogeneous switching mechanism" in section
     assert "Eight of eight registered G2 training bands" in section

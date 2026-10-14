@@ -4043,3 +4043,36 @@ each/node10,node27. Call-time sums3509.200/3603.502s are existing E150 subset
 cost, not new SCFs or allocation cost. No full E152 regression, complete
 curvature/branch/prediction gate, paper/figure or reserved-geometry change.
 Full goal active/incomplete. See G3_curvature_audit_E152_20261014.
+
+## E153 — evidence-first manuscript and verified reading build (2026-10-14)
+
+Previous E152:PROGRESS. Main Results13->5scientific jobs; E151 cross-strain
+work and its chart/units enter the body. Old74table lines survive with
+multiplicity; all9original figure bytes/13external citation targets remain.
+Free-cell/sampling/details move to article appendicesC/D, no separate SI.
+Public paper README is consolidated rather than retaining conflicting
+historical incomplete counts. Missing physical error/conditional/independent
+prediction evidence stays explicit; no novelty based on harmonic renaming.
+
+96local/96actual fresh-checkout checks pass with0failure/error/skip;
+24.702/26.674JUnit seconds, one existing fontTools warning each. Initial
+95pass/1failure was an old editorial section anchor, corrected with the same
+numeric/scope checks. Treeb17d8d566ea73aa263859a61bf37d112274fbf1d/archive
+38fc8fc84b48fbcdeb7f6fc1fb846ff9517db090629542f9221263299462189d;
+all6467tracked files present and actual import root verified. Nine tested
+scientific/code/test/entry texts unchanged; actual8band/72record/66identity
+CLI replay exports byte-identical in both roots, including manuscript SHA.
+
+Final26page reading PDF5af5c9f64eb009d33704e859053edf05f9e2ebd0e3a544c221a85726bb53b73b
+uses existing TeX Live/LuaLaTeX, no installs/rc/shell escape. All pages
+rendered; four final contacts and details7/10/15/26actually inspected. All9
+whole captions stay on one page; original image size and dependency bytes
+unchanged. First26page split-caption and28page samepage/white-page trials
+retained/rejected. Post-archive TeX-only layout change is separately compiled
+and rendered, not folded into Python archive claims. Not submission-ready.
+
+20:08:16CST originals28855614/28855615RUNNING,32CPU each,node10/node27,
+50/148and49/148complete,stderr0; status receipts only, no fresh raw reparse.
+No DFT/scheduler/live-source/physical-input/reference/holdout change, no H1/H2/
+TS or whole E153 regression claim. Full goal active/incomplete. See
+manuscript_narrative_E153_20261014 for original reports and evidence mapping.
