@@ -19,6 +19,7 @@ Updated 2026-10-15. Scope: HfO2 manuscript and its source-to-table checks.
 | Matched frozen-R control | Same retained Q with R=0 about the original sampled center | Fully fixed cell when Q contains cell motion, or a relaxed conditional minimum |
 | Released endpoint work | Signed endpoint-gradient trapezoid contracted with the released displacement between candidates | Missing energy contribution assigned uniquely to a mode, or an energy-error bound |
 | Closed-loop endpoint circulation | Sum of endpoint-gradient work around a declared sampled grid loop | Nonconservative DFT forces, interpolation error or a branch-jump certificate |
+| Missed release-shape change | Model-minus-DFT Q-dependent release change after each subtracts its own seen origin | A unique microscopic cause, whole-path barrier error or independent predictive advantage |
 
 Notation is not interchangeable: the representation figures use the declared
 mass-weighted atomic T chart; local joint-curvature coordinates have length

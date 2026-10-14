@@ -773,3 +773,44 @@ not assume an exactly stationary envelope, diagnose a branch jump from a
 large step alone, interpolate through holes or certify released stability.
 The complete-sheet output and its input/source hashes are archived in
 [E172](../../benchmarks/hfo2_channels/20261008/G3_sheet_consistency_E172_20261015/README.md).
+
+## 22. Completed matched frozen/released ablation
+
+The eight E166statics have subsequently completed normally as28865656:
+four original axial Q points per center, one SCF/attempt each, cached raw
+and released origins reused. All8native E/F/stress and six-input/32MPI
+records pass the E171admission audit, which also reparses12original point13
+SCFs. This supersedes the preparation-only status in Section20 without
+altering that reservation's historical policy. The current training totals
+remain T29/81andpreserving30/81; each8independent slots remain untouched.
+
+Both original finite-step quadratics retain the affine gradient and fixed
+first-step plane. Frozen shape discrepancies subtract raw frozen origins;
+released shape discrepancies subtract their own already seen released
+origins. The difference is exactly the missed origin-aligned release-shape
+change. The identity is evaluated point by point, preserving all signs;
+column maxima are not subtracted when they occur at different points.
+There is no fit, clipping of positive released-minus-frozen values or
+after-the-fact selection of the better probe step.
+
+Table7reports all four center/step comparisons from16model-point records.
+The controls distinguish frozen and release-response discrepancies under
+one Hamiltonian, but do not certify relaxed stability, unique branches,
+physical uncertainty or held-out accuracy. R=0still permits the Q-induced
+cell motion. They are not the complete B2-B5/fullT/Cmma matrix. Actual costs
+are8.136814completed-call proxy and9.075556allocation core-hours;296prior
+curvature SCFs and all earlier conditional/path preparation remain extra.
+The already reserved E170matched optimizer arm is a separate bounded
+experiment; its launch and first native SCF are not convergence evidence.
+
+That arm subsequently completed normally as28866132, exhausting12new SCFs
+without a gradient candidate. All12new and12old native E/F/stress/six-input/
+32MPI records and both exact optimizer replays pass. Its best new trial
+released-gradient norm was0.045855eV/Angstrom, above0.03; the old12-trial
+minimum was0.033791. These trial minima are not accepted iterates or an
+equal-total-cost success comparison. Seven old cache hits preceded the12new
+SCFs, and the old capped run is censored. New call-proxy/allocation costs
+were12.049803/12.595556core-hours, with all preparation costs additional.
+No speedup, default promotion, extra budget or restart follows from this
+negative bounded test. The [terminal audit](../../benchmarks/hfo2_channels/20261008/G3_release_manuscript_E174_20261015/README.md)
+retains the original-coordinate guard and all observed failure diagnostics.

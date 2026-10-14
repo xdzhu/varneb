@@ -110,7 +110,7 @@ def test_shape_errors_are_signed_snapshot_training_diagnostics_not_independent_a
     for phrase in ('both original probe steps', 'no coefficients',
                    'not a calibration-free or independent prediction',
                    'seen-training diagnostics, not independent errors',
-                   'not completed DFT results', 'not infinitesimal Hessians',
+                   'training-only diagnostics, not independent predictions', 'not infinitesimal Hessians',
                    'eight', 'audited source snapshot'):
         assert phrase.lower() in text.lower()
     assert not models['conditional_stability_full_faces_TS_or_material_prediction_gain_certified']

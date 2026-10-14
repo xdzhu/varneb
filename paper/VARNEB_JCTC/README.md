@@ -31,6 +31,10 @@ The current paper is organized by evidence, not job chronology:
 3. Displacement, physical-gradient and cell-response diagnostics.
 4. Signed path-work consistency, retaining the eight-band cohort.
 5. Cross-strain work separating prescribed control and configuration changes.
+6. Original-center atomic/open-cell curvature restrictions and the matched
+   frozen/released shape ablation. Table 7 retains both probe steps and all
+   four axial coordinates at each center; its discrepancies are training
+   diagnostics, not independent predictions or physical uncertainty bounds.
 
 Free-cell candidates, finite sampling checks, endpoint screens and complete
 reference tables remain **inside the paper's appendices**. No separate
@@ -57,8 +61,9 @@ are different measurements.
 
 ## What remains before the intended JCTC claim
 
-- Full same-contract local curvatures, measured numerical sensitivity and
-  appropriate fixed-strain internal index; highest images are not automatically TSs.
+- The original two-center joint-curvature batches are complete at both probe
+  steps. A measured stability-resolution floor and the appropriate stationary
+  fixed-strain internal index remain separate; highest images are not automatically TSs.
 - Stable, connected conditional branches and covered sampling domains.
 - Training-only model/representative selection and frozen predictions before
   any physical +0.5% geometry or path labels are read.
@@ -71,7 +76,11 @@ are different measurements.
 - Final numerical/figure/layout/citation audit and permitted reproducibility
   package. This structural revision is not scientific completion.
 
-The first bounded native local-curvature batches are
+The completed [matched-ablation analysis](../../benchmarks/hfo2_channels/20261008/G3_frozen_release_E173_20261015/README.md)
+and [connected manuscript validation](../../benchmarks/hfo2_channels/20261008/G3_release_manuscript_E174_20261015/README.md)
+supersede the earlier preparation-only status. They do not close the stable-
+branch or independent strong-control prediction gates.
+The first bounded native local-curvature batches were
 [registered in E150](../../benchmarks/hfo2_channels/20261008/G3_curvature_E150_20261014/README.md).
 The [E152 read-only replay](../../benchmarks/hfo2_channels/20261008/G3_curvature_audit_E152_20261014/README.md)
 checks actual completed raw probe prefixes without filling missing columns,

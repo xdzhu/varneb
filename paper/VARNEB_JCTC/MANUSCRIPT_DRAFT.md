@@ -515,6 +515,25 @@ telescope to zero, whereas finite endpoint-gradient quadrature need not.
 Neither a nonzero circulation nor a large neighboring displacement alone
 establishes nonconservative DFT forces or a branch discontinuity.
 
+The matched frozen-R comparison separates two parts of an origin-aligned
+shape discrepancy without refitting either quadratic. For each original
+center, R=0 at four axial coordinates $q=(-0.1,0)$, $(0,-0.1)$, $(0,0.1)$
+and $(0.1,0)$ Angstrom supplies the frozen DFT counterpart. Both original finite-difference
+models use the same retained plane and affine gradient. Writing $d_F$ and
+$d_R$ for the frozen and released shape discrepancies, respectively, define
+
+$$
+\delta_{\mathrm{rel}}(q)=[E_R(q)-E_F(q)]-[E_R(0)-E_F(0)],\qquad
+d_R(q)=d_F(q)+\delta_{\mathrm{rel}}^{\mathrm{model}}(q)
+                 -\delta_{\mathrm{rel}}^{\mathrm{DFT}}(q).
+$$
+
+Every term remains signed and is evaluated at the same q. The original
+raw and released origins are exactly reused. Because Q includes open-cell
+motion, R=0 is not a fully fixed-cell experiment. Positive released-minus-
+frozen candidate differences would be retained rather than clipped; a
+finite-gradient candidate is not assumed to be a global conditional minimum.
+
 ## 3. Results: competing responses under one mechanical intervention
 
 ### 3.1. Opposite candidate responses do not imply easier switching
@@ -977,10 +996,11 @@ that is updated during optimization, and a fixed finite-domain energy
 model. The former can assist local relaxation even when the latter
 misses the observed shape. A matched frozen-coordinate comparison is
 needed before assigning the discrepancy to the relaxation response.
-Eight such static controls, four per center, have been prepared under
-the unchanged electronic contract; they are not completed DFT results.
-They use the original cached origins and seen released counterparts,
-reserve training slots only, and do not replace the independent tests.
+Eight such static controls, four per center, have now completed under
+the unchanged electronic contract. Native energy, force, stress, input
+and 32-MPI checks passed for all eight. They use the original cached
+origins and seen released counterparts, reserve training slots only,
+and do not replace the independent tests.
 
 The subsequently completed T candidate sheet exposed a separate
 finite-convergence issue. Its 25 points required 118 new SCFs in addition
@@ -1003,6 +1023,43 @@ retains finite released residuals and unsampled quadrature separately.
 The values are not DFT, interpolation or barrier-error bounds and do not
 certify smoothness or stability. They also do not identify the cause of
 the original quadratic's finite-domain disagreement.
+
+The matched controls locate the larger preserving-channel discrepancy
+in the release response, within this four-coordinate training cohort
+(Table 7). Frozen shape discrepancies stayed below 0.12 meV/cell for
+both original probe steps, while released discrepancies reached
+4.67--4.72 meV/cell. The DFT release change relative to its origin
+reached 4.607 meV/cell. At $q=(-0.1,0)$ Angstrom for the first-step model,
+the signed frozen discrepancy -0.064445 and missed release-shape term
+-4.606959 summed to the released discrepancy -4.671404 meV/cell.
+
+Table 7. Matched frozen/released shape discrepancies on four axial
+coordinates per original center. All energy columns are meV per
+twelve-atom cell; probe steps are Angstrom. Separate column maxima may
+occur at different coordinates and are not subtracted to form a
+decomposition. All 16 model-point records are retained in the
+[matched ablation](../../benchmarks/hfo2_channels/20261008/G3_frozen_release_E173_20261015/README.md).
+These are training-only diagnostics, not independent predictions or
+physical uncertainty bounds.
+
+| Center | Probe step | Max. frozen shape | Max. released shape | Max. DFT release change |
+|---|---:|---:|---:|---:|
+| Preserving | 0.01 | 0.075880 | 4.671404 | 4.606959 |
+| Preserving | 0.02 | 0.116535 | 4.720758 | 4.606959 |
+| T | 0.01 | 0.416264 | 1.327177 | 1.168761 |
+| T | 0.02 | 0.403160 | 1.346071 | 1.168761 |
+
+Signed cancellation also matters. At T $q=(0.1,0)$ Angstrom, the
+first-step frozen discrepancy -0.416264 and release-shape term
++0.378430 partly cancelled, leaving -0.037833 meV/cell. This near agreement
+at one coordinate did not establish general model accuracy. The ablation
+distinguishes frozen-shape mismatch from missed release-shape change,
+but does not isolate anharmonicity, finite-step effects, finite released
+residuals or branch changes as a unique microscopic cause. Nor does it
+replace the full T/Cmma strong-control or independent-prediction matrix.
+The eight statics used 8.137 completed-call proxy core-hours and
+9.076 allocation core-hours; curvature and prior candidate preparation
+remain additional.
 
 ## 4. Discussion and remaining material tests
 

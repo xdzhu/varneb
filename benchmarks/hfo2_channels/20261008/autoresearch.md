@@ -4669,3 +4669,49 @@ independent-strong-control prediction goal remains active. Next inspect the
 bounded arm's actual terminal outcome and finish/audit the original preserving
 face; do not promote this launch/first-SCF check to acceleration evidence.
 Evidence:G3_frozen_release_E173_20261015.
+
+## E174 — manuscript ablation and terminal matched-arm negative result (PROGRESS)
+
+E173completed frozen/released ablation now enters connected Methods2.7 and
+Results3.7/Table7. Both centers, both probes, all16model-point records and
+signed pointwise identity retained; no subtraction of unmatched maxima,
+fit, clipping or independent-accuracy/unique-cause claim. All113old table
+lines/9figures/13external citations/wrapper preserved;6table lines added.
+Old preparation-only prose/test superseded by actual completed-native proof.
+32page LuaLaTeX PDF contact-reviewed throughout, newMethods/Table7at higher
+resolution. One long coordinate math-span overflow fixed without data changes;
+final0overfull/underfull/missing-character warnings. Existing5user edits
+unchanged. Nature-writing evidence logic separates frozen and release-response
+discrepancies, rather than treating a favorable cancellation as model accuracy.
+
+28866132COMPLETED0:0,1417s,node6/32CPUs/hfacnormal01. Exactly12new SCFs,
+no backend failure, no gradient candidate before original cap;7old cached
+hits precede new calls. Best new trial norm.04585524above.03, old12-trial
+minimum.03379072. Trial minima are not accepted iterates or an equal-cold-
+cost benchmark. New call-proxy/allocation12.049803/12.595556core-hours;
+all old12/296curvature/other preparation remain additional. Censored old
+baseline cannot supply a speedup denominator. No default promotion,
+extended budget, restart, new allocation or new training reservation.
+
+Reparse12new+12old native E/F/stress/assets/DSIZE32/contract/reservation;
+both original-order cache-only optimizer replays pass. Preserve initial audit
+failures: wrong external helper source path; NumPy bool diagnostic print;
+one strict basis-roundtrip norm.5000000000000001at originalfullnorm.5;
+unset-login-thread exact replay mismatch; absent optional threadpoolctl;
+standalone solver relative-import name. No calculator/result/physics repair.
+Auditor instead requires replayed original internal proposal's unchanged
+strict guard and bitwise full embedding, with no epsilon/inward move. All
+native fields stay exact; roundtrip failure retained, one-ULP/outside-proposal
+regressions reject. Original OMP/MKL/OpenBLAS1 and real package import restore
+both replay sequences. Original380runtime/9bundle files rechecked.
+
+112local/112independent related checks,27new/8modules, no failures/errors/skips;
+not full regression. Archive tree63365093, raw material proof and new-cache
+bytes identical in independent extraction. Final PDF29f008cb/mainc6b33de6.
+RO05:37:54preserving28862441RUNNING,22/25processed,17gradientcandidates,
+holes13/14/19/20/21,139completeSCFs; no final-face/stability claim. Keep
+original job alive. T29/81,P30/81 and8independent slots each unchanged,
+physical+.005sealed. Next complete/audit preserving face, choose training-only
+valid domain/representations and test frozen strong-control predictions;
+no unregistered third center/new material/full path. Full goal active.
+Evidence:G3_release_manuscript_E174_20261015.
