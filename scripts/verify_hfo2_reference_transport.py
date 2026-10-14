@@ -27,7 +27,8 @@ BASE=ROOT/'benchmarks/hfo2_channels/20261008'
 MANIFEST_SHA='5f047f54ca83cb2dceb8cb71687eb9206a85c04205cdf26431565bc8a9b98a5a'
 
 
-def verify(source_root):
+def load_registered_reference_bank(source_root):
+    """Load the same seven pinned spans; keep private arrays in memory only."""
     registered=pinned_json(BASE/'cmma_path_mapping/analysis.json',REGISTRATION_SHA256)
     pins={n:r['sha256'] for n,r in registered['author_source_audit']['sources'].items()}
     pins['Tetragonal.vasp']=registered['additional_T_anchor']['SHA256']
@@ -56,6 +57,12 @@ def verify(source_root):
     for frame in frames:
         _,basis,_=prepare_frame(modes,cmma,t,registered['author_source_audit']['QE_to_published_POSCAR'],frame)
         bases.append((f"Cmma_frame_{frame['id']}",basis))
+    return t, bases, registered, pins
+
+
+def verify(source_root):
+    t,bases,registered,pins=load_registered_reference_bank(source_root)
+    t_path=BASE/'reference_variants/T.vasp';gamma_path=BASE/'gamma_analysis/T_d0.01.npz'
     path=BASE/'G3_curvature_E150_20261014/manifest.json'
     m=pinned_json(path,MANIFEST_SHA);p=np.eye(3)[[2,0,1]]
     rows=[]
