@@ -4326,3 +4326,31 @@ No repeated zero-point SCF or new monitor/CI/release. This is a training
 conditional candidate sheet, not certified stability/global PES/TS/contour,
 full-cost acceleration or frozen prediction. Goal active/incomplete; see
 G3_conditional_faces_E161_20261015 for exact input/source/test/native evidence.
+
+## E162 — completed local evidence enters the manuscript (2026-10-15)
+
+PROGRESS after E161; commit caa159da. Complete E159 curvature, all registered
+reference complements and the bounded E160 release comparison were integrated
+into the connected manuscript, with fifteen source-derived rows and a terminology
+ledger. Original eighty table lines, nine figures and thirteen external citations
+remain. 37 local/37 independent related checks pass; the 29-page reading PDF was
+fully rendered and inspected. No new DFT, source-runtime change or holdout access.
+Stable branches, independent accuracy and the JCTC methodology claim remain open.
+
+## E163 — completed-node native evidence and optimizer replay (2026-10-15)
+
+Previous E162:PROGRESS. Keep the standalone read-only face auditor after
+255 local/255 independent related checks and actual HF verification. Native
+T prefix:9 points including cached origin/29 new SCFs reparsed; preserving:
+6 points including cached origin/19 new SCFs. All thirteen new nonzero-Q
+candidate optimizer traces replay exactly from native E/g caches. Source
+identity, original six assets, DSIZE32, SCF, EFS, full40D gradients, fixed Q,
+substrate rows, nearest-safe parent, reservations and final identities pass.
+Original jobs are still RUNNING at those observations; current unfinished
+nodes are excluded, not promoted or called failures. No new calculator call,
+submission, source modification, held-out label or physical parameter change.
+
+New report hashes and native source are in G3_face_prefix_audit_E163_20261015.
+Runtime380 files are unchanged; deploy tree61c7c2e, final evidence tree46243b2a.
+The two candidate faces are not yet complete, released-stable, unique branches,
+valid smooth contours, TSs or independent predictions. Keep the full goal active.
