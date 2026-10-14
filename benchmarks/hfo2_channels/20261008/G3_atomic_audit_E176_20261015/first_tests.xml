@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="18" time="4.562" timestamp="2026-10-15T06:10:46.379703" hostname="Aero"><testcase classname="tests.test_hfo2_G3_atomic_audit" name="test_signed_three_treatment_identity_and_common_energy_zero[0]" time="0.001" /><testcase classname="tests.test_hfo2_G3_atomic_audit" name="test_signed_three_treatment_identity_and_common_energy_zero[1]" time="0.001" /><testcase classname="tests.test_hfo2_G3_atomic_audit" name="test_signed_three_treatment_identity_and_common_energy_zero[2]" time="0.001" /><testcase classname="tests.test_hfo2_G3_atomic_audit" name="test_signed_three_treatment_identity_and_common_energy_zero[3]" time="0.001" /><testcase classname="tests.test_hfo2_G3_atomic_audit" name="test_signed_three_treatment_identity_and_common_energy_zero[4]" time="0.001" /><testcase classname="tests.test_hfo2_G3_atomic_audit" name="test_signed_three_treatment_identity_and_common_energy_zero[5]" time="0.001" /><testcase classname="tests.test_hfo2_G3_atomic_audit" name="test_positive_release_and_missing_origin_are_preserved_not_hidden_or_clipped" time="0.000" /><testcase classname="tests.test_hfo2_G3_atomic_audit" name="test_all_twenty_unfitted_training_expectations_are_reproducible_and_not_holdout_results" time="1.567" /><testcase classname="tests.test_hfo2_G3_atomic_audit" name="test_partial_json_or_missing_point_is_pending_not_a_false_failure" time="0.017" /><testcase classname="tests.test_hfo2_G3_atomic_audit" name="test_exact_cache_order_and_twelve_attempt_denial_never_call_a_calculator" time="0.001" /><testcase classname="tests.test_hfo2_G3_atomic_audit" name="test_actual_optimizer_replay_on_explicit_synthetic_quadratic" time="1.518"><failure message="ValueError: strict cached replay candidate/counters/source identity differs">synthetic_node = ({'axes': array([[ 0.14742209, -0.12677217],
+       [ 0.03408668, -0.02440887],
+       [ 0.04864014,  0.07991497],
+   ... [ 0.00000000e+00,  0.00000000e+00,  0.00000000e+00, ...,
+         0.00000000e+00,  0.00000000e+00,  0.00000000e+00]]))
+
+    def test_actual_optimizer_replay_on_explicit_synthetic_quadratic(synthetic_node):
+        d,p,row,records,r=synthetic_node
+&gt;       out=a.replay_node(w,d,p,row,records,r,[])
+
+tests\test_hfo2_G3_atomic_audit.py:95: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+w = &lt;module 'original_atomic_release_for_audit_tests' from 'D:\\Work\\Code\\vasp_neb\\benchmarks\\hfo2_channels\\20261008\\G3_atomic_release_E175_20261015\\worker.py'&gt;
+data = {'axes': array([[ 0.14742209, -0.12677217],
+       [ 0.03408668, -0.02440887],
+       [ 0.04864014,  0.07991497],
+    ...,  0.01387839,  0.01985745,  0.01853828,
+        0.0178831 ,  0.        ,  0.        ,  0.        ,  0.        ]), ...}
+point = {'frozen_full_A': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, ...], 'frozen_internal_A': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, ...], 'id': 0, 'q_A': [0.0, 0.0]}
+row = {'all_callbacks': 3, 'cached_callbacks': 1, 'candidate': {'atomic_released_gradient_norm_eV_A': 1.9583612618082868e-17...247732e-18, -1.1267359490528697e-18, 1.814829573753595e-18, -4.994844457675205e-18, -3.721846213034974e-18, ...]}, ...}
+records = [{'coordinates': [-0.00137047361293778, 0.000796131226439935, 0.00020953460659290562, 0.004234680198509481, 0.00089622...30658247732e-18, -1.1267359490528697e-18, 1.814829573753595e-18, -4.994844457675205e-18, -3.721846213034974e-18, ...]}]
+r = array([[-4.12523309e-02, -1.34359679e-01,  2.02991551e-04, ...,
+         2.41190813e-01,  3.30266653e-02, -2.46542954e...  [ 0.00000000e+00,  0.00000000e+00,  0.00000000e+00, ...,
+         0.00000000e+00,  0.00000000e+00,  0.00000000e+00]])
+controls = []
+
+    def replay_node(w,data,point,row,records,r,controls):
+        if (type(row['new_completed_SCFs']) is not int or type(row['reserved_attempts']) is not int
+                or row['new_completed_SCFs']!=len(records) or row['reserved_attempts']!=len(records)
+                or len(records)&gt;12):raise ValueError('completed-node native attempt accounting differs')
+        delegate=CacheOnly(records)
+        evaluate=w.CachedPullback(data,controls,delegate,point)
+        candidate=None;reason=None
+        try:candidate=w.relax_point(data,np.asarray(point['q_A']),r,evaluate,base=point['frozen_internal_A'])
+        except RuntimeError as exc:
+            reason=str(exc)
+            if reason not in ('mode evaluation attempt budget exhausted; calculator was not called',
+                              'atomic released-gradient target not reached'):raise
+        status='atomic_gradient_candidate_stability_unchecked' if candidate else 'optimizer_not_converged'
+        if (candidate!=row['candidate'] or reason!=row['reason'] or row['status']!=status
+                or len(delegate.seen)!=len(records) or evaluate.hits!=row['cached_callbacks']
+                or evaluate.requests!=row['all_callbacks']
+                or row['candidate_native_identity']!=(evaluate.last if candidate else None)):
+&gt;           raise ValueError('strict cached replay candidate/counters/source identity differs')
+E           ValueError: strict cached replay candidate/counters/source identity differs
+
+benchmarks\hfo2_channels\20261008\G3_atomic_audit_E176_20261015\audit.py:69: ValueError</failure></testcase><testcase classname="tests.test_hfo2_G3_atomic_audit" name="test_wrong_candidate_counters_or_fake_final_trial_cannot_pass[status]" time="0.012" /><testcase classname="tests.test_hfo2_G3_atomic_audit" name="test_wrong_candidate_counters_or_fake_final_trial_cannot_pass[candidate]" time="0.015" /><testcase classname="tests.test_hfo2_G3_atomic_audit" name="test_wrong_candidate_counters_or_fake_final_trial_cannot_pass[cached_callbacks]" time="0.006" /><testcase classname="tests.test_hfo2_G3_atomic_audit" name="test_wrong_candidate_counters_or_fake_final_trial_cannot_pass[all_callbacks]" time="0.006" /><testcase classname="tests.test_hfo2_G3_atomic_audit" name="test_wrong_candidate_counters_or_fake_final_trial_cannot_pass[candidate_native_identity]" time="0.006" /><testcase classname="tests.test_hfo2_G3_atomic_audit" name="test_wrong_candidate_counters_or_fake_final_trial_cannot_pass[new_completed_SCFs]" time="0.001" /><testcase classname="tests.test_hfo2_G3_atomic_audit" name="test_wrong_candidate_counters_or_fake_final_trial_cannot_pass[reserved_attempts]" time="0.001" /></testsuite></testsuites>

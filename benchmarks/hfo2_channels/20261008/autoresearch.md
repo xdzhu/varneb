@@ -4769,3 +4769,53 @@ interpolating holes. Stablebranches/finaltraining-onlyrepresentatives,
 strongcontrols/independentpredictions and numericalresolution remain.
 No install/otherhosts/CI/newmonitor/release/PyPI/journal submission.
 Full goal active; evidence:G3_atomic_release_E175_20261015.
+
+## E176 — pre-label B3 expectations and exact read-only audit (PROGRESS)
+
+Previous goal turn PROGRESS_E175_785b93bd. HEAD/tree and exact28862441/
+28867177handles rechecked. Jobs/autoresearch slash commands unavailable;
+use real Slurm and durable artifacts, ABACUS native-audit workflow with
+HF/hfacnormal01only override. No newDFT/submission/restart/reservation.
+
+Freeze original-center B3quadratic expectations before any new atomic-only
+result:2centers×2originalsteps×5existingQ=20model-point rows, no coefficients
+fit, no favorable step, raw affine offsets retained. Formal atomic/joint
+origin releases(meV/12atomcell):T.01−.389345/−.866958,.02−.397438/−.874429;
+P.01−50.387439/−54.521222,.02−50.515678/−54.705828. These are model values,
+not actual newDFT or the protocol's independent validation. Frozen/joint
+labels were already seen; all atomic-treatment labels remain unread.
+HF06:11:35freeze binds code/forecast hashes and confirms0newSCFs/points.
+
+Signed EF→EA→EJ identity preserves positive release and separate origin
+offsets; missing atomic origin abstains only for shape, not known absolute
+differences. No clipping, unique mode-energy or global nested-minimum claim.
+No source author arrays or physical+.005geometry/label accessed.
+
+Read-only B3auditor binds original handle/config/5filebundle. Native branch
+checks EFS/stress/6assets/DSIZE32, exact seed cell/Q/control, contract and
+12attempt reservations; recorded path alias must resolve to the exact
+expected calculation. Cache-only unchanged-worker/optimizer replay requires
+exact request sequence, candidate/counters/source identity. Original affine
+anchor/.5guard/.03atomic norm retained; joint norm separately reported.
+Partial pointJSON is pending, no last-trial promotion or restart. Complete
+mode additionally requires normal original completion/all10points/summary.
+
+Actually exercised HFprefix has0completed nodes/0newSCFs: newjob PENDING
+AssocGrpCpuLimit. Thus native completed-node/replay branches are prepared
+but NOT certified on new material data. Synthetic quadratic replay is
+explicitly synthetic. First18check run17pass/1fail because fixture backend
+double-counted final repeated coordinate unlike real evaluator cache; add
+exact duplicate caching in fixture, no production gate weakened.
+
+75local/75independent related checks across4modules,18new,0fail/errors/skips;
+not full regression. Full original20expectation bytes independently exact
+321ba700. Testedtreeffdaf77d/archive32afa8c7; freeze941412d4, prefixb7027bd8.
+5protected user edits and mainc6b33de6 unchanged; no running source overwrite.
+RO06:16:19PjobRUNNING,23/25processed/17candidates, holes13/14/19/20/21/22;
+newB3PENDINGCPUquota/0newSCFs/0points/no failure, bothrealhandleslive.
+T34/81,P35/81 and8independent each unchanged. Next audit actual B3and
+finish original preserving face, compare all signed treatment differences
+and unchanged expectations with cost/coverage; no new material/Hessian/
+fullpath/CI/install/release/PyPI/submission/monitor. Strong-reference/
+independent advantage, releasedstability and final domain/representatives
+remain missing; full goal active. Evidence:G3_atomic_audit_E176_20261015.
