@@ -4237,3 +4237,34 @@ PowerShell expansion; read-only native Python rechecked actual exit codes,
 no script change/recopy and no DFT. No new allocation or live E150 change,
 no final axes/face/holdout. Goal remains active/incomplete; see
 conditional_canary_worker_E158_20261014 for evidence and scope.
+
+## E159 — completed two-step native data and real DFT canaries (2026-10-14)
+
+Previous E158:PROGRESS. Both original jobs COMPLETED/0:0; the unchanged
+native auditor reparsed296/296SCFs, original binary/six assets/ordered
+geometry/EFS/gradient/SCF/genuine32MPI passed, no failures. Lossless archived
+native reports pin original bytes; earlier prefixes overlap, not extra data.
+Both measured steps have two raw negative internal directions per center;
+the tangent complement still has one. This is not a stationary/TS/error
+certificate. All seven references retained at both steps yield28scalar rows;
+the rank33optical reference's three-cell release remains raw-positive, so
+no claim that all fixed references fail or that unequal ranks are equivalent.
+
+The tested015719b378Python-file runtime is deployed fresh, not over E150.
+Both complete native configs pass zero-DFT preflight; the reviewed canary-only
+two-negative plane leaves a raw-positive complement at both steps. Actual
+same-input DFT jobs28859804preserving/28859983T use1node/32MPI/2h each,
+at most two committed allocations, separate12attempt optimizer caps, Q0only.
+Original intent/accepted/held validation/release receipts retained. Both first
+SCFs independently reparsed:95.46s/115.13s, original EFS/DSIZE32/hashes and
+gradient replay passed; all378runtime files still pinned. No DFT speed,
+equal-branch, stability, TS, completed face or independent-prediction claim.
+
+154local/154independent checks pass, including8new measured-data checks;
+all6538snapshot files present, actual import roots verified. Complete-summary
+CLI byte replay exact; the actual private registered reference-bank replay
+has exact scientific fields, only actual source SHA/line-endings differ.
+No author arrays exported. No new full-suite result, physics/cutoff/NEB.10
+change, CI, release or physical+.005access. Goal active/incomplete; next
+audit actual two-arm results, then proceed in the existing two-face budget.
+See G3_complete_curvature_E159_20261014 for exact data/pins/receipts/tests.
