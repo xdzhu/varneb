@@ -4076,3 +4076,39 @@ and rendered, not folded into Python archive claims. Not submission-ready.
 No DFT/scheduler/live-source/physical-input/reference/holdout change, no H1/H2/
 TS or whole E153 regression claim. Full goal active/incomplete. See
 manuscript_narrative_E153_20261014 for original reports and evidence mapping.
+
+## E154 — actual strong-reference/local-chart adapter (2026-10-14)
+
+Previous E153:PROGRESS. Backend-independent tangent/unit/gauge transport now
+connects registered mass-weighted original-T spans to local length charts,
+with explicit integer basisP and immutable source directions/forces. Rank
+loss is rejected; translations are normalized analysis directions, not an
+ASR repair. Source/local amplitudes and the excluded-work term remain
+explicit. No source frequency/old LDA Hessian becomes a PBE local curvature.
+
+Actual2frozen E150centers x7spaces=14maps preserve ranks3/4/33 and all four
+separate Cmma rank4frames. CompleteT optical33 comes from the existing matrix,
+not new DFT or free preparation. Max reconstruction2.160e-16inverse-sqrt-amu,
+independent atomic-work covector6.939e-18eV/(sqrt(amu)Angstrom), measured-span
+defect2.341e-15. Frozen force records, not fresh raw-SCF audits. Only scalars
+and source hashes exported; private source/transformed arrays not committed.
+
+Initial helper overchecked the open third reference row as fixedT; refusal
+produced no output/DFT. Corrected only to two prescribed rows; full original
+manifest/source remains pinned. Final author-output-directory guard changes
+only source SHA relative to valid v2; all scalar/input fields identical.
+Preliminary exports retained outside Git. A zero excluded-translation norm
+remains valid; no fake positive translation signal is required.
+
+77local/77actual fresh checkout checks pass,0failure/error/skip,3.905/5.966s;
+tree47a1923b9e6c918fe04c97b1d4f4dc6e16383d88/archive
+094f9ab21d03a54157c6cc46a09c911575ad32e33a78de73c4ed6e28a5b0066e,
+all6481tracked files present/import roots checked. Six source/test/manual
+texts normalized-equal. Actual14map scalar CLI replay fields exact; only
+two source SHAs differ by verified code-only LF/CRLF, never physical data.
+
+20:43:41CST same28855614/28855615RUNNING,32CPU/node10,node27,70/148and69/148;
+receipt read, not raw EFS reparse. E153 remote main now natively confirmed.
+No newDFT/scheduler/live-source/input/reference/conditional/holdout change;
+no fullE154suite, Hessian, H1/H2, TS or paper-readiness claim. Full goal active.
+See reference_transport_E154_20261014 for actual source, scalar data and scope.

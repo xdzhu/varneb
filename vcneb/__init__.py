@@ -119,6 +119,7 @@ from .response_cost import ResponseEvaluationCost, recorded_response_dataset_cos
 from .mode_evaluator import CalculatorModeEvaluator
 from .clamped_mode_coordinates import ClampedModeCoordinates
 from .biaxial_mode_coordinates import BiaxialClampedModeCoordinates
+from .reference_transport import TransportedAtomicReference, transport_atomic_reference_span
 from .mode_subspace import (
     StrictModeSubspace, strict_mode_subspace_for_vcneb,
     EndpointCompletedModeSubspace, endpoint_completed_mode_subspace_for_vcneb,
@@ -266,6 +267,8 @@ __all__ = [
     "CalculatorModeEvaluator",
     "ClampedModeCoordinates",
     "BiaxialClampedModeCoordinates",
+    "TransportedAtomicReference",
+    "transport_atomic_reference_span",
     "StrictModeSubspace",
     "strict_mode_subspace_for_vcneb",
     "EndpointCompletedModeSubspace",
