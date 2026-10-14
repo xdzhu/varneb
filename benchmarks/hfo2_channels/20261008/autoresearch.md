@@ -3827,3 +3827,28 @@ equal. Only delivery metadata, copied final reports, plan/ledger follow.
 G2 is7/8; full network response, conditional stability and independent material
 prediction remain incomplete. Original physical/optimizer contracts and five
 protected user files stay unchanged. See clamped_plus1_preserving_terminal_E145_20261012.
+
+## E146 — Audit the reversing cap, then continue the original chain once
+
+28764704 ends successfully at step40/.109959903, not ordinary convergence.
+The original E103 audit checks280fresh SCFs,338runtime files, six physical
+hashes, DSIZE32 and nine exact latest caches. Portable77files/9raw SCFs are
+retained unchanged. Last five residuals decrease; no physical fault or
+single-rebound stop is inferred.
+
+The reviewed continuation changes ancestry/namespace only. All commands
+from module purge onward match E103 exactly.78local/78independent related
+checks pass/0f/e/s, including exact startup, cap/seed replay, unsafe/ambiguous
+admission refusal and actual one-handle receipt/journal. Treeeb710856a0b951afe16b375ad41d7f9750f1ca4b,
+archive53405e98000fb940fdf5ee5f958ba27824b3713adbe3c083651157d78ebc6df7;
+all6308tracked files present before tests,77native and4admission/source files
+byte-equal. No whole-new-suite/HFpytest or new scientific method claim.
+
+After actualHF preflight, one held28852667 is submitted and released once.
+It starts16:16:01CST/node75/32MPI/hfacnormal01. At16:23:52 the initial nine
+caches remain exact, first fresh native SCF reparses six hashes/EFS/DSIZE32,
+108.154542seconds, stderr0. New segment has40updates/12h maximum; FIRE history
+is reset, not restored. Only one committed study slot, no new independent
+chain, source replacement, physics/optimizer-argument drift, CI or monitor.
+G2 remains7/8; no G3 mode/centre/curvature or reserved physical+.005access.
+See clamped_reversing_cap_continue_E146_20261014. Full scientific goal active.
