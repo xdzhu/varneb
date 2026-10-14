@@ -4379,3 +4379,28 @@ for degenerate negative subspaces. Independent CLI reproduces the complete
 analysis bytes. Tested treeaf3de69d; evidence G3_atomic_cell_signature_E164_20261015.
 Updated the stale P4/P5 status board. Continue original faces/stability/independent
 prediction work; do not replace that objective by this descriptive analysis.
+
+## E165 — finite-domain agreement of original local quadratics (2026-10-15)
+
+Previous E164:PROGRESS, e9c1de67. Compare original two-step formal conditioned
+quadratics with all audited T9/preserving6 candidates, including cached Q0.
+The common6 numeric-Q cohort is their complete intersection, not error-selected
+or matched physical configurations. Retained eigenaxes make first-step Q-R
+coupling/Schur curvature correction numerically zero by construction. The
+nonzero gR energy offset is kept, not erased.
+
+At Q=(-.2,0), even seen-origin-aligned shape disagreement is+8.5241meV/cell
+for T and-20.5218for preserving (second step+8.5878/-20.7206). These are
+retrospective candidate-level errors, not independent accuracy, barrier errors
+or physical error bounds. Finite candidate-energy/partial-gradient secants
+are not certified Hessians/envelope derivatives. Do not uniquely attribute
+the disagreement to nonlinearity; branch/step/residual effects remain possible.
+
+Keep the unmodified raw quadratic as a limited comparator, not a whole-face
+predictor by assertion. Next discriminator, not yet generated/submitted:
+four axial frozen-R controls per existing face within remaining56 training
+slots (if admitted:52 left), original Q0 cached, independent8 unchanged.
+Respect the two-allocation gate; no new center/material/strain/full path or
+physics retuning. 307local/307independent related checks pass,14new case
+checks; independent full analysis bytes exact. Tested treefa0fa344. Evidence:
+G3_quadratic_agreement_E165_20261015. Full goal active; no new DFT this turn.
