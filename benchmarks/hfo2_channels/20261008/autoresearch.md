@@ -3803,3 +3803,27 @@ PDF/optimizer/physical-input changes. Original five protected user hashes and
 old untracked work stay unchanged unstaged. Already authorized production
 continues. Outcome is PROGRESS_IMPLEMENTED_FINITE_ATTEMPT_ADMISSION, not full
 goal completion or a narrower substitute for the independent material evidence.
+
+## E145 — Seventh ordinary-converged G2 band, not a favorable-window claim
+
+28812952 completes +1% preserving at step17/.099283376. Original native
+119SCFs/338runtime/sixinputs/DSIZE32 audit passes; nine portable E/F/stress
+frames independently reparse. The sampled peak125.424431meV/fu increases
+28.596248 over zero strain, not the hypothesized favorable switching drop.
+All four original-reference scalar analyses independently replay in a clean
+archive; no new modes, G3 or physical+.005label is selected/read.
+
+The manuscript adds actual Table5--7 rows/section3.12 and reconciles seven
+bands/63records/58different native identities. All42old numeric lines and
+nine figure references remain. Full28-page PDF compiles, all contacts and
+changed details are visually inspected; no compile/layout warning/error.
+55local/55independent related pass; first full run's2stale assertion failures
+are retained, then final actual archive2642pass/2skip/0fail/error,314warnings,
+600.660s JUnit. Skips: optional ASE ABACUS reader and licensed POTCAR.
+Tree6dad7459db95e24dd13d0b554e69ca822c0ec271, archive3010861c5bdd55cf0927a3bbf8a4afa0b3ae62f2c604ae6bced0262c39528e9b;
+all6220files present before tests,62native files byte-equal/9sources normalized
+equal. Only delivery metadata, copied final reports, plan/ledger follow.
+
+G2 is7/8; full network response, conditional stability and independent material
+prediction remain incomplete. Original physical/optimizer contracts and five
+protected user files stay unchanged. See clamped_plus1_preserving_terminal_E145_20261012.

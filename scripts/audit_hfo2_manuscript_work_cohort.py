@@ -1,4 +1,4 @@
-"""Reconcile the six frozen G2 work reports with manuscript section 3.8.
+"""Reconcile the seven frozen G2 work reports with manuscript section 3.8.
 
 Reparse portable native E/F/stress and independently contract segment work.
 This does not recreate unpublished mode arrays, audit undistributed runtime
@@ -45,6 +45,10 @@ CASES = (
      "b86cdb72eab9e3d8ff2125e16e6fbb2d0954b34d54c0f05099a581c066108389",
      "clamped_M_strain_reference_E105_20261012/path_work.json",
      "8765c96c7149061465bd5ccba9d496382ad86fb44c55723212e4d3a70167d2a3"),
+    ("Preserving flip, +1% strain", "clamped_plus1_preserving_terminal_E145_20261012/completed_HF",
+     "0c8d91532bc9051decdfd600eae12ce409fd84a86c677158077948fa352c9d8a",
+     "clamped_plus1_preserving_terminal_E145_20261012/analysis/path_work.json",
+     "135825034f86a6030da44003e413275cbc28c6c4f968e0687178d05e14efff78"),
 )
 REPRESENTATIONS = ("T_geometric_triplet", "T_two_lowest_complete_optical_doublets",
                    "Cmma_frame_103", "Cmma_frame_106", "Cmma_frame_114", "Cmma_frame_127")
@@ -108,7 +112,7 @@ def audit_cohort():
                                        triplet["cumulative_partition_work"].items()},
             peak_optical_retained_meV_fu=spans[REPRESENTATIONS[1]]["cumulative_partition_work"]["retained_atomic"][peak]*250,
             peak_Cmma_retained_range_meV_fu=[min(cmma), max(cmma)]))
-    return dict(status="six_completed_training_bands_native_work_and_manuscript_cohort_audit",
+    return dict(status="seven_completed_training_bands_native_work_and_manuscript_cohort_audit",
         bands=len(rows), frame_records=sum(len(v) for v in identities.values()),
         distinct_raw_log_STRU_identities=len(identities),
         reused_identities=[dict(raw_log_sha256=k[0], STRU_sha256=k[1], occurrences=v)
@@ -122,8 +126,8 @@ def audit_cohort():
 
 def audit_manuscript(text, result):
     section = text.split("### 3.8.", 1)[1].split("### 3.9.", 1)[0]
-    required = ("six completed clamped training bands", "54 frame records", "50 distinct raw-log/geometry")
-    if (result["bands"], result["frame_records"], result["distinct_raw_log_STRU_identities"]) != (6, 54, 50):
+    required = ("seven completed clamped training bands", "63 frame records", "58 distinct raw-log/geometry")
+    if (result["bands"], result["frame_records"], result["distinct_raw_log_STRU_identities"]) != (7, 63, 58):
         raise ValueError("actual cohort no longer matches the declared manuscript snapshot")
     if any(phrase not in section for phrase in required):
         raise ValueError("manuscript cohort coverage is stale")

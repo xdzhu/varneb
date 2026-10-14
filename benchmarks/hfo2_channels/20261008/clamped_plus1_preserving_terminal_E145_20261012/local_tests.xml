@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="42" time="4.044" timestamp="2026-10-14T16:01:48.130198" hostname="Aero"><testcase classname="tests.test_hfo2_E145_preserving_terminal" name="test_native_receipt_covers_all_fresh_calls_and_original_runtime" time="0.004"><failure message="KeyError: 'current_frame_exact_caches_checked'">def test_native_receipt_covers_all_fresh_calls_and_original_runtime():
+        from examples.hfo2_fixed_input_factory import CONTRACT
+        from scripts.audit_hfo2_clamped_terminal import validate_terminal
+    
+        r = receipt()
+        assert r['job_id'] == '28812952' and r['terminal_step'] == 17
+        assert r['ordinary_converged']
+        summary = json.loads((ROOT/'vcneb_summary.json').read_text())
+        assert sha(ROOT/'vcneb_summary.json') == r['terminal_summary_sha256']
+        validate_terminal('28812952', r['scheduler_row'], summary, False)
+        assert r['fresh_interior_SCFs'] == r['expected_fresh_interior_SCFs'] == 119
+        assert r['initial_fresh_interior_SCFs'] == 0
+        assert len(r['calls']) == 119 and len(r['runtime_code_sha256']) == 338
+        assert {(Path(row['path']).parts[-3], Path(row['path']).parts[-2]) for row in r['calls']} == {
+            (f'image_{i:04d}', f'scf_{j:06d}') for i in range(1, 8) for j in range(17)}
+        assert all({n: row['input_sha256'][n] for n in CONTRACT} == CONTRACT for row in r['calls'])
+        assert r['all_calls_original_six_physical_bytes_native_DSIZE32_and_raw_EFS_checked']
+&gt;       assert r['current_frame_exact_caches_checked'] == 9
+E       KeyError: 'current_frame_exact_caches_checked'
+
+tests\test_hfo2_E145_preserving_terminal.py:42: KeyError</failure></testcase><testcase classname="tests.test_hfo2_E145_preserving_terminal" name="test_portable_nine_frames_reparse_exact_geometry_energy_force_stress" time="0.044" /><testcase classname="tests.test_hfo2_E145_preserving_terminal" name="test_actual_segment_cost_and_driver_ancestry_are_not_whole_path_cost" time="0.007" /><testcase classname="tests.test_hfo2_E145_preserving_terminal" name="test_all_scalar_reports_share_training_receipt_and_no_prediction_claim" time="0.002" /><testcase classname="tests.test_hfo2_E094_manuscript_work" name="test_table7_peak_and_endpoint_values_keep_sign_order_and_formula_unit[0]" time="0.005" /><testcase classname="tests.test_hfo2_E094_manuscript_work" name="test_table7_peak_and_endpoint_values_keep_sign_order_and_formula_unit[1]" time="0.004" /><testcase classname="tests.test_hfo2_E094_manuscript_work" name="test_table7_peak_and_endpoint_values_keep_sign_order_and_formula_unit[2]" time="0.004" /><testcase classname="tests.test_hfo2_E094_manuscript_work" name="test_table7_peak_and_endpoint_values_keep_sign_order_and_formula_unit[3]" time="0.004" /><testcase classname="tests.test_hfo2_E094_manuscript_work" name="test_table7_peak_and_endpoint_values_keep_sign_order_and_formula_unit[4]" time="0.004" /><testcase classname="tests.test_hfo2_E094_manuscript_work" name="test_table7_peak_and_endpoint_values_keep_sign_order_and_formula_unit[5]" time="0.004" /><testcase classname="tests.test_hfo2_E094_manuscript_work" name="test_table7_peak_and_endpoint_values_keep_sign_order_and_formula_unit[6]" time="0.004" /><testcase classname="tests.test_hfo2_E094_manuscript_work" name="test_signed_work_prose_matches_complete_declared_span[signed retained work to the respective peaks is-meV/HfO2-T_geometric_triplet-retained_atomic]" time="0.004" /><testcase classname="tests.test_hfo2_E094_manuscript_work" name="test_signed_work_prose_matches_complete_declared_span[Omitted atomic work is-; open-cell-T_geometric_triplet-omitted_atomic]" time="0.004" /><testcase classname="tests.test_hfo2_E094_manuscript_work" name="test_signed_work_prose_matches_complete_declared_span[open-cell work is-The explicit-T_geometric_triplet-open_cell]" time="0.004" /><testcase classname="tests.test_hfo2_E094_manuscript_work" name="test_signed_work_prose_matches_complete_declared_span[doublets yield retained work-in the same order-T_two_lowest_complete_optical_doublets-retained_atomic]" time="0.004" /><testcase classname="tests.test_hfo2_E094_manuscript_work" name="test_all_four_Cmma_registrations_are_kept_as_ranges_not_selected_winners" time="0.004" /><testcase classname="tests.test_hfo2_E094_manuscript_work" name="test_native_chart_agreement_is_only_an_algebraic_check_and_reused_frames_not_replicates" time="0.004" /><testcase classname="tests.test_hfo2_E094_manuscript_work" name="test_section_numbers_and_new_evidence_links_are_unambiguous" time="0.003" /><testcase classname="tests.test_hfo2_manuscript_work_cohort" name="test_actual_native_counts_and_reuse_are_not_statistical_replicates" time="0.339" /><testcase classname="tests.test_hfo2_manuscript_work_cohort" name="test_actual_manuscript_has_every_table_and_component_row" time="0.001" /><testcase classname="tests.test_hfo2_manuscript_work_cohort" name="test_missing_cohort_and_altered_data_fail_closed[seven completed clamped training bands-six completed clamped training bands]" time="0.001" /><testcase classname="tests.test_hfo2_manuscript_work_cohort" name="test_missing_cohort_and_altered_data_fail_closed[63 frame records-54 frame records]" time="0.001" /><testcase classname="tests.test_hfo2_manuscript_work_cohort" name="test_missing_cohort_and_altered_data_fail_closed[58 distinct raw-log/geometry-50 distinct raw-log/geometry]" time="0.001" /><testcase classname="tests.test_hfo2_manuscript_work_cohort" name="test_missing_cohort_and_altered_data_fail_closed[| 97.227719 | 75.922579 |-| 97.227719 | 75.922580 |]" time="0.001" /><testcase classname="tests.test_hfo2_manuscript_work_cohort" name="test_missing_cohort_and_altered_data_fail_closed[107.167048; open-cell-107.167047; open-cell]" time="0.001" /><testcase classname="tests.test_hfo2_clamped_comparison" name="test_actual_T_is_admitted_and_its_native_work_replays" time="0.093" /><testcase classname="tests.test_hfo2_clamped_comparison" name="test_actual_same_reference_bands_have_distinct_displacement_and_gradient_coverage" time="0.014" /><testcase classname="tests.test_hfo2_clamped_comparison" name="test_changed_T_report_rejects_before_plotting" time="0.014" /><testcase classname="tests.test_hfo2_clamped_comparison" name="test_grid_labels_legends_and_undefined_endpoint_are_honest" time="1.391" /><testcase classname="tests.test_hfo2_clamped_comparison" name="test_no_overwrite_export" time="0.019" /><testcase classname="tests.test_hfo2_clamped_M_strain" name="test_actual_seven_completed_training_receipts_only_and_M_raw_stress_replay" time="0.118"><failure message="AssertionError: assert {'G3_selectio...s fixed', ...} == {'G3_selectio...s fixed', ...}&#10;  Omitting 22 identical items, use -vv to show&#10;  Differing items:&#10;  {'script_sha256': '14fe4f636d382dc321581a296ea3675a1f12ca4aee4de2b309e8e2a7da509b36'} != {'script_sha256': 'ad954a7710fa6b169cff7d4027f972e50fbb85daf6620c4a8791b972fee0a508'}&#10;  Use -v to get more diff">def test_actual_seven_completed_training_receipts_only_and_M_raw_stress_replay():
+        assert len(ADMITTED_TRAINING_AUDITS) == 7 and plot.AUDIT_SHA in ADMITTED_TRAINING_AUDITS
+        r = analyze(ROOT/plot.TERMINAL, plot.AUDIT_SHA)
+        saved = json.loads((CASE/'external_work.json').read_text())
+        # Preserve the old production-independent LF/CRLF checkout evidence.
+        # Only this exact source-metadata variant differs in a clean archive;
+        # native inputs, output bytes and every scientific field stay strict.
+        module = 'vcneb/biaxial_curvature.py'
+        source = (ROOT/module).read_bytes()
+        lf = 'd63eb858a07e58b176f21c5f8203b6a116b0a9c7134e204818e0441eb92bc0c7'
+        crlf = 'd3d2d32dd2aa4736ae9ec6b0cf52d56c2d00f56c4af7e2b296fc06e58ee672ce'
+        assert hashlib.sha256(source.replace(b'\r\n', b'\n')).hexdigest() == lf
+        assert saved['core_source_sha256'][module] == lf
+        assert r['core_source_sha256'][module] == hashlib.sha256(source).hexdigest()
+        assert r['core_source_sha256'][module] in {lf, crlf}
+        r['core_source_sha256'][module] = lf
+&gt;       assert r == saved
+E       AssertionError: assert {'G3_selectio...s fixed', ...} == {'G3_selectio...s fixed', ...}
+E         Omitting 22 identical items, use -vv to show
+E         Differing items:
+E         {'script_sha256': '14fe4f636d382dc321581a296ea3675a1f12ca4aee4de2b309e8e2a7da509b36'} != {'script_sha256': 'ad954a7710fa6b169cff7d4027f972e50fbb85daf6620c4a8791b972fee0a508'}
+E         Use -v to get more diff
+
+tests\test_hfo2_clamped_M_strain.py:35: AssertionError</failure></testcase><testcase classname="tests.test_hfo2_clamped_M_strain" name="test_actual_paired_M_training_not_same_initial_cache_or_stationary_response" time="0.057" /><testcase classname="tests.test_hfo2_clamped_M_strain" name="test_generic_pair_builder_rejects_holdout_or_unregistered_pair_before_labels[strains0-M]" time="0.001" /><testcase classname="tests.test_hfo2_clamped_M_strain" name="test_generic_pair_builder_rejects_holdout_or_unregistered_pair_before_labels[strains1-other]" time="0.001" /><testcase classname="tests.test_hfo2_clamped_M_strain" name="test_generic_pair_builder_rejects_holdout_or_unregistered_pair_before_labels[strains2-M]" time="0.001" /><testcase classname="tests.test_hfo2_clamped_M_strain" name="test_changed_plus1_M_material_rejects_before_export[relative0]" time="0.037" /><testcase classname="tests.test_hfo2_clamped_M_strain" name="test_changed_plus1_M_material_rejects_before_export[relative1]" time="0.043" /><testcase classname="tests.test_hfo2_clamped_M_strain" name="test_changed_plus1_M_material_rejects_before_export[relative2]" time="0.035" /><testcase classname="tests.test_hfo2_clamped_M_strain" name="test_changed_plus1_M_material_rejects_before_export[relative3]" time="0.042" /><testcase classname="tests.test_hfo2_clamped_M_strain" name="test_actual_M_signed_work_keeps_omitted_atoms_cell_and_all_strong_frames" time="0.003" /><testcase classname="tests.test_hfo2_clamped_M_strain" name="test_manuscript_M_rows_replay_actual_data_without_future_labels" time="0.021"><failure message="AssertionError: assert 'Six of eight registered G2 training bands' in '# Competing switching and phase-escape channels in hafnia: a mode-strain pathway analysis\n\nWorking manuscript, 2026...ly of fixed-y examples are checked in the\n[analytic checks](../../tests/test_barrier_constraint_interpretation.py).\n'">def test_manuscript_M_rows_replay_actual_data_without_future_labels():
+        text = (ROOT/'paper/VARNEB_JCTC/MANUSCRIPT_DRAFT.md').read_text(encoding='utf-8')
+        d = plot.build_data(ROOT)
+        band = d['bands'][1]
+        peak = band['rows'][band['highest_image_index']]
+        forward = peak['energy_relative_PO_meV_fu']
+        well = band['rows'][-1]['energy_relative_PO_meV_fu']
+        assert f'| PO-to-M, +1% substrate strain | {forward:.6f} | {forward-well:.6f} | {well:.6f} |' in text
+        assert '| PO-to-M, +1% | T geometric triplet | 3 | 54.9251 | 3.9008 |' in text
+        work = json.loads((CASE/'path_work.json').read_text())['representations'][paired.SPANS[0]]
+        values = [forward, work['cumulative_full_work'][3]*250,
+                  work['cumulative_energy_minus_work'][3]*250, work['cumulative_energy_minus_work'][-1]*250]
+        assert '| PO-to-M, +1% strain | ' + ' | '.join(f'{v:.6f}' for v in values) + ' |' in text
+        section = text.split('### 3.11.', 1)[1].split('## 4.', 1)[0]
+        assert 'not an independent prediction test' in section
+        assert 'not claimed to exceed a measured barrier' in section
+        assert 'unfinished switching pair' in section
+        assert 'neither a DFT error estimate' in section
+&gt;       assert 'Six of eight registered G2 training bands' in text
+E       AssertionError: assert 'Six of eight registered G2 training bands' in '# Competing switching and phase-escape channels in hafnia: a mode-strain pathway analysis\n\nWorking manuscript, 2026...ly of fixed-y examples are checked in the\n[analytic checks](../../tests/test_barrier_constraint_interpretation.py).\n'
+
+tests\test_hfo2_clamped_M_strain.py:126: AssertionError</failure></testcase><testcase classname="tests.test_hfo2_clamped_M_strain" name="test_same_grid_style_no_endpoint_clipping_and_legends_do_not_overlap" time="0.336" /></testsuite></testsuites>
