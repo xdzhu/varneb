@@ -30,7 +30,7 @@ def test_cross_strain_table_has_actual_signed_work_and_unit_normalization(candid
 def test_results_lead_with_whole_matrix_and_keep_all_original_nine_figures():
     text=PAPER.read_text(encoding='utf-8')
     main=text.split('## 3.',1)[1].split('## 4.',1)[0]
-    assert re.findall(r'^### (3\.\d+)\.',main,re.M)==['3.1','3.2','3.3','3.4','3.5']
+    assert re.findall(r'^### (3\.\d+)\.',main,re.M)==['3.1','3.2','3.3','3.4','3.5','3.6','3.7']
     assert main.index('Opposite candidate responses')<main.index('Geometry, gradients')
     assert '0.464068' in main and 'not the favorable signature' in main
     assert 'not an error-certified rejection' in main

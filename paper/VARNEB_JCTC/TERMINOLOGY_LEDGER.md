@@ -14,6 +14,9 @@ Updated 2026-10-15. Scope: HfO2 manuscript and its source-to-table checks.
 | Curvature seed | Standard measured-Hessian quasi-Newton initialization | A new optimizer theorem, guaranteed convergence or whole-path speedup |
 | Raw negative count | Negative eigenvalues of a finite-step symmetrized matrix | Physical error bound or certified TS index |
 | Censored cost | Calls spent before a common attempt cap without reaching the target | Completed time-to-target or a denominator for a speedup ratio |
+| Open-cell trace | Tr(P_a P_-) for the entire raw negative subspace at the declared cell length scale | Barrier-energy fraction, phonon amplitude or arbitrary-metric invariance |
+| Origin-aligned shape discrepancy | Model and candidate energy changes after separately subtracting their seen Q=0 values | Calibration-free forecast, independent error or whole-path barrier uncertainty |
+| Matched frozen-R control | Same retained Q with R=0 about the original sampled center | Fully fixed cell when Q contains cell motion, or a relaxed conditional minimum |
 
 Notation is not interchangeable: the representation figures use the declared
 mass-weighted atomic T chart; local joint-curvature coordinates have length

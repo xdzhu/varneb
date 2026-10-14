@@ -6,8 +6,9 @@ by scientific question; dated free-cell and detailed representation checks
 are retained in the appendices. All ten
 registered endpoint representations across the two matched-substrate training
 conditions have passed their physical screens. The sampled G2 network is complete;
-complete local joint-curvature measurements and two fixed-coordinate,
-gradient-converged candidates are now available. An uncertainty-resolved
+complete local joint-curvature measurements, their atomic/open-cell
+restrictions and a finite-coordinate quadratic comparison are available,
+along with two fixed-coordinate, gradient-converged candidates. An uncertainty-resolved
 response interpretation, stable conditional branches and independent
 material predictions are still missing. An abstract and a
 conclusion asserting those unmeasured results are deliberately withheld.
@@ -455,6 +456,43 @@ Their closure residual is not a total DFT or activation-barrier uncertainty
 bound. The two-configuration decomposition tests what a stress-only account
 omits without assigning a causal microscopic coupling.
 
+### 2.7. Atomic/open-cell restrictions and finite-coordinate model checks
+
+The same measured internal matrix is restricted to the 33-dimensional
+translation-free atomic space and the three-dimensional open-cell space
+to distinguish their raw instabilities. The prescribed substrate is not
+part of either internal instability count. Let $P_a$ project onto the
+open-cell space in the fixed length metric and $P_-$ onto the entire
+negative eigenspace of the symmetrized internal matrix. We report
+$W_a=\operatorname{Tr}(P_aP_-)$ rather than assigning individual vectors
+across nearly degenerate eigenvalues. This trace is invariant under
+orthogonal re-expression of these spaces, including negative-space basis
+rotations, but not arbitrary changes of the cell length scale. It is
+neither an energy fraction nor a phonon amplitude. A raw-positive cell
+block permits a formal cell-stationary Schur reduction; its nonzero
+cell gradient and constant energy offset are retained, as in Section 2.2.
+Raw signs do not supply a measured stability-resolution floor.
+
+We separately test whether an unchanged original-center quadratic describes
+finite-coordinate DFT candidates. Both finite-difference models use the
+same retained plane selected from the first-step matrix; no coefficients
+are fitted to the candidate energies. To isolate shape disagreement from
+the origin offset, we evaluate
+
+$$
+d(q)=[E_{\mathrm{model}}(q)-E_{\mathrm{model}}(0)]
+     -[E_{\mathrm{candidate}}(q)-E_{\mathrm{candidate}}(0)].
+$$
+
+Subtracting the already seen candidate origin makes this a retrospective
+shape diagnostic, not a calibration-free or independent prediction. The
+common six-coordinate cohort is $(0,0)$, $(-0.1,0)$, $(0,-0.1)$,
+$(0,0.1)$, $(0.1,0)$ and $(-0.2,0)$ Angstrom. The audited source snapshot
+contains nine T and six preserving candidates, all retained in the analysis.
+Equal numeric coordinates at the two centers do not identify the same
+physical structure. Finite released residuals also preclude treating
+retained partial gradients as exact conditional-envelope derivatives.
+
 ## 3. Results: competing responses under one mechanical intervention
 
 ### 3.1. Opposite candidate responses do not imply easier switching
@@ -831,6 +869,97 @@ reuses the same 72 frame records/66 distinct identities, without new SCFs,
 held-out inputs or reference selection. The next inference requires measured
 local curvatures, stable conditional branches and frozen independent tests.
 
+### 3.6. The extra negative direction is already present in the atomic sector
+
+The additional raw negative direction at each sampled peak is not created
+solely by opening the cell. Both atomic restrictions already had two
+negative eigenvalues at both finite steps, as did the joint matrices;
+their open-cell restrictions had three positive eigenvalues (Table 5).
+For these measured quadratics, coupling changed the negative curvatures
+without adding another negative direction. This observation is specific
+to the two nonstationary centers, not a general rule excluding coupling-induced
+instabilities or an uncertainty-resolved stationary index.
+
+Table 5. Atomic and cell restrictions of the original sampled-peak matrices.
+Steps are in Angstrom and the three curvature columns in eV/Angstrom
+squared. The last column is the dimensionless open-cell trace of the
+two-dimensional negative subspace, not a percentage of a barrier energy.
+The same length scale L=5.12968067458423 Angstrom is used in every row.
+
+| Center | Step | Minimum atomic | Minimum joint | Minimum cell | Cell trace |
+|---|---:|---:|---:|---:|---:|
+| T | 0.01 | -0.240169 | -0.276193 | 2.956214 | 0.0205773 |
+| T | 0.02 | -0.237806 | -0.273596 | 2.956557 | 0.0206105 |
+| Preserving | 0.01 | -1.271818 | -1.271819 | 3.090798 | 1.04022e-06 |
+| Preserving | 0.02 | -1.281815 | -1.281821 | 3.092172 | 3.09248e-06 |
+
+The T negative subspace contained more open-cell admixture than the
+preserving subspace in this metric. However, the complete atomic-cell
+coupling operator norms were approximately 7.72 and 8.10 eV/Angstrom
+squared, respectively, at the smaller step. A large total coupling norm
+therefore did not identify a strongly cell-mixed unstable direction.
+Conversely, small open-cell weight at one sampled configuration cannot
+establish insensitivity of a complete barrier to the prescribed substrate.
+The substrate response and the permitted open-cell fluctuations are
+different quantities. All four restrictions and the nonzero-gradient
+formal reductions are retained in the
+[atomic/open-cell analysis](../../benchmarks/hfo2_channels/20261008/G3_atomic_cell_signature_E164_20261015/README.md).
+
+### 3.7. A useful curvature seed is not a finite-domain energy predictor
+
+The bounded optimizer result in Section 3.3 did not establish the accuracy
+of the original quadratic over finite retained displacements. In the
+first-step eigenplane, the retained/released coupling was numerically
+zero by construction; its Schur curvature correction was of order
+$10^{-28}$ eV/Angstrom squared in norm. Formal release changed the energy
+offset but supplied no appreciable new shape correction in that plane.
+This algebraic null is not a prediction improvement.
+
+After origin alignment, the original quadratics still disagreed with the
+six common-coordinate DFT candidates (Table 6). Both probe steps are
+reported, not selected according to agreement. The maximum absolute
+shape discrepancies were 8.52--8.59 meV/cell for T and 20.52--20.72
+meV/cell for preserving, each at $q=(-0.2,0)$ Angstrom. The corresponding
+signed errors were positive for T and negative for preserving. All nine
+T candidates and all six preserving candidates in the audited source
+snapshot remain in the records; the common cohort is used only to make the table's
+coordinate coverage explicit.
+
+Table 6. Unfitted original quadratic versus released DFT candidates.
+All three energy columns use meV per twelve-atom cell, not meV/HfO2.
+Origin release is relative to each original center; the shape discrepancy
+uses each model's and candidate's own seen origin. Probe steps are in
+Angstrom. These are seen-training diagnostics, not independent errors or
+continuous-path barrier errors.
+
+| Center | Probe step | DFT origin release | Model origin release | Max. shape discrepancy |
+|---|---:|---:|---:|---:|
+| T | 0.01 | -0.652142 | -0.866958 | 8.524106 |
+| T | 0.02 | -0.652142 | -0.874429 | 8.587800 |
+| Preserving | 0.01 | -49.484930 | -54.521222 | 20.521839 |
+| Preserving | 0.02 | -49.484930 | -54.705828 | 20.720640 |
+
+The candidate-energy axial second differences at 0.1 Angstrom were
+(-0.405128, -0.243087) eV/Angstrom squared for T and
+(-0.337763, -0.184576) for preserving. They are finite differences of
+candidate energies, not infinitesimal Hessians of certified conditional
+minima. Nonlinear response, finite-difference effects, branch changes
+and residual relaxation can all contribute to the model disagreement;
+these observations do not distinguish their individual contributions.
+Nor does their size define a physical uncertainty bound. The
+[quadratic comparison](../../benchmarks/hfo2_channels/20261008/G3_quadratic_agreement_E165_20261015/README.md)
+keeps the affine released gradient and both original probe steps.
+
+These results separate two uses of local curvature: an initialization
+that is updated during optimization, and a fixed finite-domain energy
+model. The former can assist local relaxation even when the latter
+misses the observed shape. A matched frozen-coordinate comparison is
+needed before assigning the discrepancy to the relaxation response.
+Eight such static controls, four per center, have been prepared under
+the unchanged electronic contract; they are not completed DFT results.
+They use the original cached origins and seen released counterparts,
+reserve training slots only, and do not replace the independent tests.
+
 ## 4. Discussion and remaining material tests
 
 The completed training comparison demonstrates why a decreasing barrier
@@ -860,6 +989,17 @@ gradient-converged fixed-coordinate candidate is not a conditional minimum
 until the released block has been checked. The local tests narrow the
 next material question to whether a stable, reproducible branch supports
 an independent response prediction; they do not already answer it.
+
+The local atomic/open-cell restrictions and the finite-coordinate test
+further delimit the mechanism claim. In these raw matrices the extra
+negative direction was already atomic, rather than an instability added
+only by releasing the open cell. Yet retaining both negative directions
+did not make the original quadratic an accurate finite-domain energy
+model. Neither a cell-projector trace nor an optimizer call count can
+therefore replace explicit conditional sampling and stability tests.
+The frozen/relaxed comparison is designed to separate two sources of
+disagreement under the same Hamiltonian, not to repair the result by
+changing the cutoff or to fit seen data and relabel them independent.
 
 Reference adaptation alone cannot establish a methodological improvement.
 For the same fully represented quadratic and fixed-control stationary

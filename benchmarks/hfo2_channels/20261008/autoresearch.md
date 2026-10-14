@@ -4431,3 +4431,32 @@ checks and native/config evidence, final treefc2aa5b7, worker unchanged.
 Toy call counts are not material runs. Full goal remains active; completed
 controls, complete stable faces, independent errors and predictions still open.
 Evidence:G3_frozen_R_controls_E166_20261015.
+
+## E167 — completed local matrix/model tests enter the connected paper (2026-10-15)
+
+Previous E166:PROGRESS,2936fcb0. Integrate E164/E165 into Methods2.7,
+Results3.6/3.7, main Tables5/6, Discussion and the terminology ledger.
+Eight rows retain both original centers and probe steps. Raw atomic
+restrictions already have two negative directions; positive cell
+restrictions and metric-dependent negative-space cell traces do not
+certify TSs or substrate responses. Fixed-original-quadratic shape
+disagreement is8.52–8.59/20.52–20.72meV/cell on the historical audited
+six-Q cohort, not independent accuracy or whole-path barrier errors.
+No affine gradient dropped, model fit, new reference or unique causal
+attribution. Optimizer initialization and fixed-model accuracy are separate.
+
+Preserve101 old table lines,9 image targets/bytes,13 external citations
+and TeX wrapper. Final102local/102independent checks pass,13new; retain
+initial single five-section expectation failure and its strict seven-section
+update without deleting the original preservation checks. Tested tree5e3660bc.
+Compile/render30-page internal PDF; all contacts and new-evidence pages
+reviewed, nooverfull/underfull/missing characters. Not submission-ready.
+
+RO03:03 confirmsT28862319/preserving28862441 live. T19/25candidates;
+preserving14processed/13candidates, point13 caps12completeSCFs and
+35/48geometry rejections, no observed SCF crash. Keep hole and continue
+the original batch; no automatic retry or parameter change. Zero new
+DFT/queue mutation/runtime overwrite/physicalholdout access in this turn.
+E166 eight statics remain prepared only. Stable conditional branches,
+native complete-face audits and frozen independent comparisons remain
+required; full goal active. Evidence:manuscript_curvature_validation_E167_20261015.

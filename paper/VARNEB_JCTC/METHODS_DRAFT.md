@@ -715,3 +715,31 @@ Tables A6-A8 of the connected manuscript retain raw spectra, every strong
 reference and native call costs; the original G2 barrier tables remain unchanged.
 Released-block stability, branch reproducibility, completed conditional faces
 and frozen independent predictions remain unfinished material evidence.
+
+## 20. Distinguishing atomic/cell signatures from finite-domain model accuracy
+
+The same complete internal matrices are restricted to the physical atomic
+rank-33 and open-cell rank-3 spaces. Prescribed substrate control is excluded.
+For the raw negative-space projector P_- and open-cell projector P_a, the
+reported trace Tr(P_a P_-) is orthogonal-basis invariant at the fixed declared
+cell scale, not a metric-independent weight or an energy decomposition.
+Nonzero cell gradients are retained in the formal cell-stationary reduction.
+Both centers and both finite steps are reported without selecting a reference.
+
+An independent question is whether the original, unfitted local quadratic
+describes the seen finite-coordinate candidates. The first-step eigenplane
+is fixed for both probe-step models. Six common numeric coordinates define
+the comparison cohort, while all nine T and six preserving points remain
+archived. Origin-aligned shape errors subtract the already seen candidate
+origin and are therefore retrospective diagnostics, not calibration-free
+forecasts. The original affine gradient is retained. Candidate axial energy
+second differences and partial-gradient secants are not certified conditional
+Hessians or envelope derivatives. Tables 5 and 6 of the connected manuscript
+give the original analysis values; no new DFT is needed for this integration.
+
+The matched frozen-R controls reserve four training structures per original
+face, leaving 52 uncommitted of 81 after the existing 25-node batch. Each
+face's eight independent slots remain untouched. R=0 is relative to the
+original center, and Q can include open-cell motion; this is not a fully
+fixed-cell experiment. The eight controls are prepared and native-preflighted,
+not computed. The immutable original batch policies remain historical records.
