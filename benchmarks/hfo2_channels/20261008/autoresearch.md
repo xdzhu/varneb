@@ -4460,3 +4460,29 @@ DFT/queue mutation/runtime overwrite/physicalholdout access in this turn.
 E166 eight statics remain prepared only. Stable conditional branches,
 native complete-face audits and frozen independent comparisons remain
 required; full goal active. Evidence:manuscript_curvature_validation_E167_20261015.
+
+## E168 — native replay identifies the guard, not an unreachable minimum (2026-10-15)
+
+Previous E167:PROGRESS,b39db373. Reuse existing E163 auditor and immutable
+E161 runtime. Audit14preserving nodes/60existing SCFs/13nonzero trajectories,
+including actual point13nonconvergence; original380Python hashes and
+six-input/DSIZE32/EFS/fixed-Q/substrate/budget identities pass.
+
+Observer returns original guard decisions and verifies exact cache-only
+trace/outcome. All35rejections are original total-radius short circuits;
+13guard passes/12completeSCFs, no observed backend crash. Last radius
+.4998853735A, g_Rnorm.0735963713eV/A, radial-.0136123401 and constant-radius
+tangent.0723265516. Minimum observed norm.0337907153still exceeds.03;
+continue through rebound until original12-attempt cap, no last-trial promotion.
+Rejected radius steps were not distance-tested. No boundary-KKT, impossible
+domain, stable-branch or unique-cause claim follows. Specific next hypothesis:
+feasible-direction step handling at identical start/domain/target and measured
+cost, not enlarging the live radius or changing physical settings.
+
+41local/41independent pass before native execution; final50/50 pass with21new
+checks and native/arithmetic/table evidence. Independent full analysis bytes
+exact,a4adb825; native report7c9581eb. Final tree3bef044d. No new DFT, scheduler
+write, source repair, physicalholdout access or extra training reservation;
+paper bytes unchanged. Original faces continue; E166 controls retain resource
+priority. Full stable-face/independent-prediction goal remains active.
+Evidence:G3_bound_diagnostic_E168_20261015.
