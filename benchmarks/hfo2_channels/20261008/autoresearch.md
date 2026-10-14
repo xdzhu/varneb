@@ -4937,3 +4937,55 @@ RO06:59:50CST atomic28867177PENDINGCPUquota/0SCFs/points/failures. Next
 actualatomic treatment evidence, stable training-onlydomain/strongcontrols,
 prospectively frozen independentpredictions; full goal active/incomplete.
 Evidence:G3_preserving_terminal_E179_20261015.
+
+## E180 — complete-reference equality and shared-Q control limits (PROGRESS)
+
+Previous goal turn PROGRESS_E179_4fb42d95. Actual28867177and protected
+worktree rechecked; jobs/autoresearch unavailable as slash commands, use
+real Slurm and bounded shell/benchmark evidence. No new physical task.
+
+Add backend-independent analysis-only affine_quadratic KKT utility:
+minimize rawg.x+x.H.x/2 within orthonormal allowedU, subjectto A.T x=q.
+Nonzero affine gradient and observable scale retained; full constraint
+rank and strictly positive allowed-null block required. No unstable
+pseudoinverse/clipping/fallback, no caller-array alias or default change.
+Generic analytic tests compare independent Schur/KKT solutions, basis
+invariance, gradients, clamped omission, emptyfree and invalid blocks.
+
+Actual posthoc experiment:2oldcenters×2steps×8formulations×25originalQ=
+800scalar model-point records. Reuse full E159H/g, E171/E179complete25/17
+candidate labels and all7registered sourcebanks including Cmma103/106/114/127.
+CompleteT33+3cell spans same36space as adaptive2+34complement, identical
+Qconstraints. FullT/KKT vs adaptive/Schur maxenergy2.6368e-16eVcell,
+coordinates1.5588e-14A. Standard same-problem identity, not new theory or
+prediction gain. Both retain T28.777--28.872/P20.522--20.721meVcell seen-
+origin shape discrepancy on24/16nonorigin candidates; newTmax uses all25
+seenpoints, not earlier6pointcohort. Original biases retained; no fit.
+
+Small-reference control clamps all omitted directions and releases only
+allowed-null combinations; not E159's completeoutside-reference release.
+Allrank4T/Cmma and rank33strongcase kept, no dimension/frame/step truncation.
+Allreference common nonorigin geometryeligible setempty. Raw extrapolated
+values remain diagnostics, not poor material predictions; null common
+statistics, no subset ranking. This is compatibility with earlier coupled
+Qaxes, not universal failure of native Cmma/Tcoordinate models. Complete
+native-chart/independent strong comparison remains, not declared done.
+
+81local/81independent related checks over6modules,29new,0fail/errors/skips;
+notfullsuite. Sameauthorized privateinput CLI reproduces complete800row
+reportbytes39e31d79. Testedtree40bf6241/archiveae30bf74. Authorfiles checked
+before/after, no raw/transformed basis/response arrays or geometries exported.
+296curvature and118/172conditionalSCFs/Gamma/canary/G2/other preparation
+additional, no freepreparation/equalcost/speedupclaim. Exploratory metadata
+key corrected beforefinalreceipt; earlierdevelopmentreports stayC, original
+prospectiveE176expectations unchanged. Main38769b36unchanged/no newPDFclaim.
+
+Fiveuseredits preserved, originalproductionruntime/100Ry/full10auDZP/
+.10ordinaryNEB/.03conditional/.5radius unchanged. T34/81,P35/81,8independent
+each and physical+.005sealed. No newDFT/rawSCFreparse/schedulerwrites/
+reservations/otherhost/Hessiancenter/material/wholepath/CI/install/release/
+PyPI/monitor/submission. RO07:21:40CST atomic28867177PENDINGCPUquota,
+0points/SCFs/failures. Next actualatomic treatment and nonlinearstablebranch/
+strongnativechart controls followedby frozenindependent predictions, not
+another linearbasis advantage claim. Full goal active/incomplete.
+Evidence:G3_shared_Q_controls_E180_20261015.
