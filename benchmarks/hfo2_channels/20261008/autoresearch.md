@@ -4354,3 +4354,28 @@ New report hashes and native source are in G3_face_prefix_audit_E163_20261015.
 Runtime380 files are unchanged; deploy tree61c7c2e, final evidence tree46243b2a.
 The two candidate faces are not yet complete, released-stable, unique branches,
 valid smooth contours, TSs or independent predictions. Keep the full goal active.
+
+## E164 — atomic versus open-cell negative curvature (2026-10-15)
+
+Previous E163:PROGRESS (218c913b). Descriptive analysis of the original complete
+training quadratics, not a new physical experiment or independent forecast.
+In all four center/step blocks, the atomic restriction already has two raw
+negative directions, the open-cell block is raw positive and coupling adds no
+new negative direction. T's negative subspace has cell projector trace about
+.0206, versus1.04e-6/3.09e-6 for preserving. T's lowest raw curvature changes
+more between atomic restriction and joint matrix; small cell weight does not
+imply an entire path is insensitive to prescribed substrate strain. Total
+coupling norms alone do not identify the coupled unstable subspace.
+
+Retain all four rows, the fixed length metric and measured nonzero cell-gradient
+term in formal quadratic stationarity. No phonon identity, ASR/force edit,
+barrier-energy partition, physical sign bound, nonlinear conditional minimum,
+post-relaxation stability, TS or JCTC improvement is certified. No new DFT,
+scheduler action, center, material, surface node, author array or+.005 label.
+
+23 new checks/278 local/278 independent pass, including a counterexample where
+coupling really does create an extra negative direction and invariant traces
+for degenerate negative subspaces. Independent CLI reproduces the complete
+analysis bytes. Tested treeaf3de69d; evidence G3_atomic_cell_signature_E164_20261015.
+Updated the stale P4/P5 status board. Continue original faces/stability/independent
+prediction work; do not replace that objective by this descriptive analysis.
