@@ -1,7 +1,7 @@
 """Pure arithmetic/replay gates; synthetic records below are not DFT evidence."""
 from pathlib import Path
 from copy import deepcopy
-import importlib.util,json
+import hashlib,importlib.util,json
 import numpy as np
 import pytest
 
@@ -13,6 +13,23 @@ def load(name,p):
 f=load('atomic_expectation_tests',CASE/'forecast.py')
 a=load('atomic_auditor_tests',CASE/'audit.py')
 w=load('original_atomic_release_for_audit_tests',OLD/'worker.py')
+
+
+def assert_formal_model_replay(actual, expected):
+    """Only formal-model floating arithmetic; raw inputs and metadata stay exact."""
+    assert type(actual) is type(expected)
+    if isinstance(expected, dict):
+        assert actual.keys() == expected.keys()
+        for key in expected:
+            assert_formal_model_replay(actual[key], expected[key])
+    elif isinstance(expected, list):
+        assert len(actual) == len(expected)
+        for a, e in zip(actual, expected):
+            assert_formal_model_replay(a, e)
+    elif isinstance(expected, float):
+        assert actual == pytest.approx(expected, abs=1e-12, rel=0)
+    else:
+        assert actual == expected
 
 
 @pytest.mark.parametrize('seed',range(6))
@@ -36,7 +53,8 @@ def test_positive_release_and_missing_origin_are_preserved_not_hidden_or_clipped
 
 def test_all_twenty_unfitted_training_expectations_are_reproducible_and_not_holdout_results():
     out=f.forecast();saved=json.loads((CASE/'forecast.json').read_bytes())
-    assert out==saved
+    assert hashlib.sha256((CASE/'forecast.json').read_bytes()).hexdigest() == '321ba7007c7f950166aab4eaa2dbe579773164968f04a94034a8a942bee1318d'
+    assert_formal_model_replay(out, saved)
     assert [(r['channel'],r['probe_step_A']) for r in out['rows']]==[
         ('T',.01),('T',.02),('preserving',.01),('preserving',.02)]
     assert sum(len(r['points']) for r in out['rows'])==20
@@ -46,6 +64,12 @@ def test_all_twenty_unfitted_training_expectations_are_reproducible_and_not_hold
     assert not out['post_relaxation_stability_or_physical_error_or_prediction_advantage_certified']
     assert [r['formal_atomic_origin_release_meV_cell'] for r in out['rows']]==pytest.approx([
         -.3893452356121704,-.3974376947445344,-50.38743850676271,-50.515678344441795])
+
+
+@pytest.mark.parametrize('changed', [dict(energy=1e-9, source='same'), dict(energy=0., source='changed')])
+def test_formal_replay_still_rejects_numeric_or_exact_metadata_change(changed):
+    with pytest.raises(AssertionError):
+        assert_formal_model_replay(changed, dict(energy=0., source='same'))
 
 
 def test_partial_json_or_missing_point_is_pending_not_a_false_failure(tmp_path):

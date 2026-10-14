@@ -4844,3 +4844,47 @@ independent each unchanged. Next actual original-face/B3native audit and
 signed treatment/cost comparison; strong controls, stable branches and
 independent material predictions still needed. Full goal active/incomplete.
 Evidence:outputs/HFO2_FAN_VISUAL_BOUNDARY_AUDIT_2026-10-15.md.
+
+## E178 — executed signed frozen/atomic/joint comparison (PROGRESS)
+
+Previous goal turn PROGRESS_E177_3a345809; original HFhandles and5user
+tracked edits rechecked. Jobs/autoresearch slash commands unavailable;
+use actual Slurm and bounded shell/test workflow. No DFT/scheduler write,
+new training reservation, geometry generation or physical+.005access.
+
+Implement and execute a hash-bound three-treatment postprocessor with
+all2centers×2originalsteps×5registeredQ=20rows, no fitted coefficient or
+winner selection. Reuse sealed E176expectations and native-audited E173
+frozen/joint observations; atomic supplied prefix is explicitly empty.
+Missing A retains known J-F; missing only Aorigin retains absolute A
+changes and J-Fshape. Preserve signed positive differences and separate
+origin bias, enforce pointwise treatment/error identities. Statistics list
+actual axial IDs/denominator4; empty errors null, not perfect0; no partial
+cohort ranking. Atomic norm is separate from joint norm/stability; processed
+hole differs from pending. Source accounting/time and audited-prefix-only
+cost explicit,296curvature and original joint/preparation additional.
+
+Actual output reproduces old four axial F/J training comparisons; no new
+atomic material evidence. For preserving.01, max frozen/joint shape
+discrepancy .075880/4.671404meVcell, missed release term4.606959; not a unique
+mechanism, physical uncertainty or independent accuracy. Bothsteps retained.
+
+First related104checks103pass/1fail; old75alone74pass/1fail. Old E176formal
+replay wrongly required bitwise float equality. Diagnostic124floatdiffs,
+max2.842170943040401e-14; nonfloatmetadata/sourcepins identical; exact
+low-level cause unproved. Sealed original forecastSHA321ba700unchanged.
+Test now pins its bytes and compares only model floats at1e-12abs/0rel,
+exact types/metadata; rejects1e-9andmetadatachanges. This is not physical
+resolution; raw input/native optimizer/cache/gradient gates unchanged.
+Preserve both failed XMLs and diagnostic; no silent golden-file update.
+
+Final106local/106independent related checks over5modules,29newcomparison
+plus2newnegative formal-replay checks,0fail/errors/skips, not full suite.
+Testedtree5b710adf/archive d1d6ac49; all20report rows independently exact
+e467df51. RO06:39:44CST originalP28862441RUNNING/24processed/17candidates,
+no face.json; B3atomic28867177PENDINGCPUquota/0SCFs/points/failures. Main
+manuscript and6physical assets/settings unchanged. T34/81,P35/81,8independent
+each unchanged. Next actual complete original-face/B3native audits, signed
+A-F/J-A comparison and cost/coverage; full strong controls, releasedstability,
+final training-onlyrepresentatives/domain and independent predictions remain.
+Full goal active/incomplete. Evidence:G3_treatment_comparison_E178_20261015.
