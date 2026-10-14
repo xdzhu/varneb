@@ -4888,3 +4888,52 @@ each unchanged. Next actual complete original-face/B3native audits, signed
 A-F/J-A comparison and cost/coverage; full strong controls, releasedstability,
 final training-onlyrepresentatives/domain and independent predictions remain.
 Full goal active/incomplete. Evidence:G3_treatment_comparison_E178_20261015.
+
+## E179 — original preserving batch complete and all-hole diagnosis (PROGRESS)
+
+Previous goal turn PROGRESS_E178_bc185c1d. Exact original handles/worktree
+rechecked. Original28862441normalCOMPLETED0:0,21951s,node321/32CPUs/
+hfacnormal01;25points processed,17gradientcandidates incl cachedorigin,
+8holes13/14/19/20/21/22/23/24. No resubmission or source repair.
+
+Use ABACUS native-audit skill with explicit HF-only override, not its235
+examples. Original E163complete audit verifies380sourcefiles, original
+config/job/cache, all172newSCF E/F/stress/sixassets/genuine32MPI/reservations/
+fixedQ/substrate and24exact original optimizer replays. Cachedorigin not
+recomputed; failure paths empty. Nativeproof982d2657, facecb97225d. Cost
+193.859072782completed-call proxy/195.12allocation core-hours; original
+curvature/canary/G2 additional. Not complete stablePES or TS certification.
+
+Read-only newdriver rechecks exact nativeproof and every used point/result
+hash, then reuses unchanged E168observer on all8holes. No duplicate native
+EFSparse or DFT. Original callbacks/stopreasons/guard outcomes restored and
+unchanged. Sevenholes12calls,point23ten,94trials total,nonebelow.03. All436
+recorded rejects occur at old.5A radius short circuit; rejected proposals
+notdistance-tested. Lasttrial radii.49971--.50000A establish domain contact,
+not nonexistence,KKT or physicalbranch termination. Completeholeproof
+d7c89c51; newdrivera3c277b5. No fillingholes, enlargedradius or capped-arm retry.
+
+Writing skill used for bounded Results/Discussion evidence, existingterms
+retained. Mainpreface/3.7 now report coverage/cost/limit; no successful
+prediction or causalmechanism paragraph.119oldtablelines,9figures,13external
+citations preserved. Existing LuaLaTeX32page build passes0overfull/underfull/
+missingchars; all32contacts and pages1/19detail inspected. Main38769b36,
+PDF12dbe776 in Cscratch; no figurecreation or new publication action.
+
+Initial local63pass/1fail was incorrect newtest assumption allholes12calls;
+correct expectedactualpoint23=10, do not mutate records. Firstindependent
+65pass/1fail from Git CRLFconversion of unchangedTeXwrapper. Exact normalized
+source identical; add one explicitLFattribute, no raw-hash test weakening or
+wrappercontent edit. Both failureXMLs retained. Final66local/66fresharchive
+related checks over3modules,16new,0fail/errors/skips; not fullregression.
+Testedtree88510e04/archive4249b066; both nativeproofs/driver/main/wrapperbytes
+survive exactly. Independentcodecheck is not independentmaterialvalidation.
+
+Fiveusertracked edits remain exact; physical100Ry/full10auDZP/.10ordinary
+NEB, .03conditional target, original two rawHessian centers unchanged.
+T34/81,P35/81,8independent each and physical+.005sealed. No newDFT,
+SCFschedulerwrites/reservations/otherhosts/CI/release/PyPI/monitor/submission.
+RO06:59:50CST atomic28867177PENDINGCPUquota/0SCFs/points/failures. Next
+actualatomic treatment evidence, stable training-onlydomain/strongcontrols,
+prospectively frozen independentpredictions; full goal active/incomplete.
+Evidence:G3_preserving_terminal_E179_20261015.

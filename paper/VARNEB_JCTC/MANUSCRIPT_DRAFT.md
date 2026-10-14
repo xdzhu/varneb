@@ -7,8 +7,10 @@ are retained in the appendices. All ten
 registered endpoint representations across the two matched-substrate training
 conditions have passed their physical screens. The sampled G2 network is complete;
 complete local joint-curvature measurements, their atomic/open-cell
-restrictions and a finite-coordinate quadratic comparison are available,
-along with two fixed-coordinate, gradient-converged candidates. An uncertainty-resolved
+restrictions and a finite-coordinate quadratic comparison are available.
+The first two conditional batches have finished: 25 T and 17 preserving
+coordinates passed the released-gradient target, out of 25 per center;
+eight preserving holes remain. An uncertainty-resolved
 response interpretation, stable conditional branches and independent
 material predictions are still missing. An abstract and a
 conclusion asserting those unmeasured results are deliberately withheld.
@@ -1023,6 +1025,28 @@ retains finite released residuals and unsampled quadrature separately.
 The values are not DFT, interpolation or barrier-error bounds and do not
 certify smoothness or stability. They also do not identify the cause of
 the original quadratic's finite-domain disagreement.
+
+The completed preserving batch did not attain the same coordinate
+coverage. All 25 coordinates were processed, but only 17, including the
+cached origin, reached the common released-gradient target. The eight
+remaining coordinates stayed as holes. All 172 new SCFs passed native
+energy, force, stress, unchanged-input and genuine 32-MPI checks, and all
+24 nonzero-coordinate optimization trajectories replayed exactly. Seven
+holes exhausted twelve evaluations; one stopped after ten without reaching
+the target. They consumed 94 of the 172 SCFs. The batch required 193.859
+completed-call proxy core-hours and 195.120 allocation core-hours, excluding
+the original curvature and cached preparation.
+
+Cache-only replay attributed every recorded geometry rejection in these
+eight trajectories to the original total-displacement radius, not to a
+changed electronic input or a failed SCF. Their last completed trials lay
+at radii 0.49971--0.50000 Angstrom within the registered 0.5-Angstrom domain;
+none of the completed trials met the 0.03 eV/Angstrom released-gradient
+target. This establishes contact with the optimizer's domain boundary,
+not nonexistence of a solution, boundary stationarity or termination of a
+physical branch. The [complete audit and hole replay](../../benchmarks/hfo2_channels/20261008/G3_preserving_terminal_E179_20261015/README.md)
+retain the original decisions and stopping reasons. We do not fill these
+holes by interpolation or equate batch completion with a stable surface.
 
 The matched controls locate the larger preserving-channel discrepancy
 in the release response, within this four-coordinate training cohort
