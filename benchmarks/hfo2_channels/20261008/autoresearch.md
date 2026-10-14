@@ -4141,3 +4141,32 @@ threshold or author-mode array added. Second-step, numerical, branch and
 strong-reference independent-prediction gates remain. No automatic third
 center/3Dface/cutoff change or physical+.005geometry/label. See
 G3_first_amplitude_E155_20261014 for native evidence and actual test/replay scope.
+
+## E156 — strongest references, not a weak-baseline victory (2026-10-14)
+
+Previous E155:PROGRESS. On exactly the same E155 first-step measured internal
+H/g, all seven registered reference spans at both centers now have explicit
+atomic-only and joint-release restrictions. All four separate Cmma frames,
+Ttriplet3, two complete optical doublets4 and fullToptical33 remain. No raw
+or transformed private author arrays exported, no new DFT/SCF/holdout input.
+
+All small-reference atomic/joint complements retain raw negative directions.
+The strongest T33 reference instead leaves three raw-positive open-cell
+directions(minimum2.956213824T/3.090797687preserving eV/Angstrom²), but its
+retained Schur matrix still has two negative directions. Do not conflate
+partition failure with failure of every fixed reference, or a positive R
+with an index1TS/physical certificate. Complete harmonic stationarity remains
+reference-partition invariant; no adaptive accuracy/cost advantage measured.
+
+Behavior-preserving source-bank extraction separately committeda5bd18e:
+22existing tests pass unchanged; actual old14map scalar/source fields exact,
+only source helper SHA changes. New diagnostic:97local/97actual independent
+checks pass; private-input14row CLI replay has exact non-code fields. First
+56check attempt had55pass/1test-fixture alias failure, retained; fixture
+returned a view, so its mutation also changed the measured B. Corrected only
+to a copied test span. No production/input/physical-sign-floor change.
+
+Second amplitudes still incomplete. Ordinary.10,100Ry/full10auDZP, two-center/
+two-face finite scope and sealed physical+.005 unchanged. Final axes/branches,
+domains and B0--B5 forecasts not selected. See
+G3_reference_complements_E156_20261014 for actual evidence and scope.

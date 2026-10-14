@@ -68,3 +68,12 @@ Only scalar checks/source hashes are committed, never private author arrays.
 
 This step neither selects conditional axes nor opens a held-out geometry,
 enlarges the finite material matrix or changes ABACUS100Ry/full10auDZP.
+
+The [E156 follow-up](../benchmarks/hfo2_channels/20261008/G3_reference_complements_E156_20261014/README.md)
+applies all seven references to the same actually measured first-amplitude
+curvature at both centers. Small references leave raw negative release
+directions; complete33T optical directions leave three raw-positive open-cell
+directions, but the retained Schur matrix still has two negative directions.
+Thus neither a weak-partition failure nor the strongest raw-positive release
+certifies model superiority or an index-one TS. Full second-step, branch and
+independent-prediction evidence remain separate. No source array is exported.
