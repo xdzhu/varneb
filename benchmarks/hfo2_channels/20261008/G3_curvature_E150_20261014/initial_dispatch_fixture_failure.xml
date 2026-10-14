@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="5" time="0.412" timestamp="2026-10-14T18:31:26.874932" hostname="Aero"><testcase classname="tests.test_hfo2_G3_dispatch" name="test_two_slots_no_replay_and_native_resources[none]" time="0.029"><failure message="ValueError: native held allocation/script differs; retain handles and inspect">helper = &lt;module 'E150_dispatch' from 'D:\\Work\\Code\\vasp_neb\\benchmarks\\hfo2_channels\\20261008\\G3_curvature_E150_20261014\\dispatch_HF.py'&gt;
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x0000027118B4BBB0&gt;
+fault = 'none'
+
+    @pytest.mark.parametrize('fault',['none','submission_timeout','release_timeout','wrong_resources'])
+    def test_two_slots_no_replay_and_native_resources(helper,monkeypatch,fault):
+        calls=[];handles={}
+        def execute(argv):
+            calls.append(argv)
+            if argv[0]=='squeue':
+                return '\n'.join(f'{job}|{name}|PENDING|32|JobHeldUser' for job,name in handles.items())
+            if argv[0]=='bash':return ''
+            if argv[0]=='sbatch':
+                if fault=='submission_timeout': raise subprocess.TimeoutExpired(argv,45)
+                job=str(101+len(handles));name=next(v.split('=',1)[1] for v in argv if v.startswith('--job-name='))
+                handles[job]=name;return job
+            if argv[:3]==['scontrol','show','job']:
+                job=argv[-1];cpu=16 if fault=='wrong_resources' else 32
+                return f'JobId={job} JobName={handles[job]} Partition=hfacnormal01 NumNodes=1 NumCPUs={cpu} NumTasks=1 CPUs/Task=32 Command={helper.ROOT}/wrapper.slurm '
+            if argv[:2]==['scontrol','release']:
+                if fault=='release_timeout':raise subprocess.TimeoutExpired(argv,45)
+                return ''
+            raise AssertionError(argv)
+        monkeypatch.setattr(helper,'run',execute)
+        if fault=='none':
+&gt;           result=helper.dispatch('c'*64)
+
+tests\test_hfo2_G3_dispatch.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+preflight_sha = 'cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc'
+
+    def dispatch(preflight_sha):
+        journal=ROOT/'dispatch_journal.jsonl'; receipt=ROOT/'dispatch_receipt.json'
+        if journal.exists() or receipt.exists():
+            raise FileExistsError('existing intent/handle: inspect journal+sacct, do not replay')
+        reviewed,source,manifest,wrapper=verify(preflight_sha)
+        queue({})
+        run(['bash','-n',str(wrapper)])
+        accepted={}; handles={}
+        with journal.open('x') as stream:
+            def record(event,**fields):
+                stream.write(json.dumps(dict(event=event,**fields))+'\n');stream.flush();os.fsync(stream.fileno())
+            for channel in CHANNELS:
+                queue(accepted)
+                name='hfo2-G3-E150-'+channel
+                env=dict(RUN_DFT='1',SOURCE_ROOT=str(source),MANIFEST=str(manifest),
+                    MANIFEST_SHA256=reviewed['manifest_sha256'],CHANNEL=channel,
+                    WORKDIR=str(ROOT/channel),RUNTIME_MANIFEST_SHA256=reviewed['runtime_manifest_sha256'])
+                if (ROOT/channel).exists():
+                    raise FileExistsError('fresh output namespace required')
+                argv=['sbatch','--parsable','--hold','--job-name='+name,'--chdir='+str(ROOT),
+                    '--export=ALL,'+','.join(k+'='+v for k,v in env.items()),
+                    '--output='+str(ROOT/(channel+'.slurm.out')),
+                    '--error='+str(ROOT/(channel+'.slurm.err')),str(wrapper)]
+                record('one_submission_intent',channel=channel,argv=argv)
+                job=run(argv).split(';')[0]
+                if not job.isdecimal():
+                    raise ValueError('uncertain sbatch outcome; inspect native accounting, never resubmit')
+                record('one_handle_accepted',channel=channel,job_id=job)
+                accepted[job]=name;handles[channel]=job
+            queue(accepted)
+            native={}
+            for channel,job in handles.items():
+                body=run(['scontrol','show','job','-o',job]);native[channel]=body
+                required=('JobId='+job+' ','JobName='+accepted[job]+' ','Partition=hfacnormal01 ',
+                    'NumNodes=1 ','NumCPUs=32 ','NumTasks=1 ','CPUs/Task=32 ',
+                    'Command='+str(wrapper)+' ')
+                if any(item not in body+' ' for item in required):
+&gt;                   raise ValueError('native held allocation/script differs; retain handles and inspect')
+E                   ValueError: native held allocation/script differs; retain handles and inspect
+
+benchmarks\hfo2_channels\20261008\G3_curvature_E150_20261014\dispatch_HF.py:89: ValueError</failure></testcase><testcase classname="tests.test_hfo2_G3_dispatch" name="test_two_slots_no_replay_and_native_resources[submission_timeout]" time="0.018" /><testcase classname="tests.test_hfo2_G3_dispatch" name="test_two_slots_no_replay_and_native_resources[release_timeout]" time="0.017" /><testcase classname="tests.test_hfo2_G3_dispatch" name="test_two_slots_no_replay_and_native_resources[wrong_resources]" time="0.017" /><testcase classname="tests.test_hfo2_G3_dispatch" name="test_unknown_existing_job_refuses_any_submit" time="0.007" /></testsuite></testsuites>

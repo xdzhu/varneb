@@ -3932,3 +3932,51 @@ shows no remaining iai806hfacnormal01 jobs; final reversing isCOMPLETED0:0.
 Implementation prerequisite delivered, not full material validation. Full goal
 active; next remains the original finite G3 branch/response experiment.
 See controlled_strain_bridge_E149_20261014.
+
+## E150 — First finite native G3 local-curvature batch
+
+Prior goal turn is PROGRESS: actual E148 eight-band matrix and tested E149
+interface pushed. Its still-live independent full run is resumed, not restarted;
+it actually finishes2742pass/2expected skips/0f/e,1171.095JUnit seconds. This
+result is E149, not later E150. The original RUNNING observation is retained.
+
+Current progress is two exploratory raw-minimum zero-strain candidate centres,
+preserving/T atimage4. Full36internal plus1control, paired.01/.02Angstrom,
+148new static attempts each/296total. No invented barrier-error interval or
+certified-lowest/TS/final-predictive selection. Original uncertainty/tie policy
+and two-centre cap remain; a changed representative does not buy a third.
+Physical+.005stays sealed. No conditional face/mode choice/holdout forecast
+is completed; the derivative probe basis itself is explicitly frozen.
+
+99local/99independent related pass and actual independent preparation yields
+identical318476-byte manifest5f047f54ca83cb2dceb8cb71687eb9206a85c04205cdf26431565bc8a9b98a5a.
+Tree0222d4204439ebc450f6c14e97d724e3845ee6bf,
+archive191fea45ead2448abc851655cf68315ec4b543287755b04373c62b81ca20f8b4;
+all6424tracked files present before tests, three source texts/raw manifest
+match. No new whole E150 suite claimed. Analytic mock callbacks are not DFT.
+
+Native3706880-byte payload a4e405d0bcf3be1345ecc5f3a7e91f92acb2f39325c0de64601393835e0255f5
+verifies343Python byte hashes/15critical source texts/original six assets and
+binary/native centres; local/HF mechanical contracts exactly equal. Initial
+two submissions28855614/28855615 are accepted but overly literal NumNodes=1
+guard refuses Slurm's valid pending1-1. Original helper/journal preserved.
+Separate reviewed recovery only releases these exact handles,0new submissions,
+no production source/input/wrapper changes. Final13local/13independent helper
+checks pass on isolated4file treebca7020158e298d92d85194fa33cbc9e65fe67c7,
+archivead2a2355449ce35cea2dfdc5988f044c32aeb18691d0273601c1e6690cad6b2f.
+Original fixture failure is retained, not relabeled as production DFT failure.
+
+Actual starts18:39:04CST/node10,node27,32CPU each/hfacnormal01.18:41:58both
+RUNNING/stderr0, first fresh native DSIZE32 each; no completedSCF claim at
+that snapshot. At most2committed allocations, exactly2submissions/2releases,
+no new NEB/material/orientation, physical/optimizer/old-runtime changes, CI/
+install/release/PyPI/monitor. Derivative SCFs are separately charged from later
+two81-node/eight-test faces. Not material gate/full-goal completion. Goal active.
+See G3_curvature_E150_20261014 for original raw evidence and scope.
+
+18:44:02native follow-up:2/148probe evaluations complete in each job. Both
+first fresh SCFs pass electronic convergence, original six byte hashes,
+uniqueDSIZE32 and full E/F/stress/40-coordinate gradient; call times
+101.678342/104.632985s. Real material data, not whole Hessians or TS/face/
+prediction certification. Same unchanged allocations continue; roughly23:00
+to01:00CST only if later cost is comparable, not a guaranteed completion time.

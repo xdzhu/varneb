@@ -40,3 +40,10 @@ Only evidence metadata/report copies/plan and ledger follow the tested tree;
 the six tested code/test/manual texts remain unchanged. The actual HF read-only
 check at18:03:10 finds no hfacnormal01 jobs for iai806;28852667 is COMPLETED0:0,
 32CPUs. No new material allocation/DFT or G3/holdout action occurred.
+
+Follow-up during E150: the same independent E149 run actually finishes with
+2742passed/2expected skips/0failures/errors,314warnings,1171.095JUnit seconds.
+The original report is retained as independent_full_tests.xml,
+SHA6235178eefde40751bb65c69ccd7c3c95498c503d7b20c390a3f2e073e766bc4.
+The earlier RUNNING record above is historical and not overwritten. This full
+suite covers E149, not the subsequently added E150 material driver.
