@@ -16,8 +16,8 @@ ROOT = Path(__file__).resolve().parents[1]
 CASE = ROOT/plot.REPORT.parent
 
 
-def test_actual_seven_completed_training_receipts_only_and_M_raw_stress_replay():
-    assert len(ADMITTED_TRAINING_AUDITS) == 7 and plot.AUDIT_SHA in ADMITTED_TRAINING_AUDITS
+def test_actual_eight_completed_training_receipts_only_and_M_raw_stress_replay():
+    assert len(ADMITTED_TRAINING_AUDITS) == 8 and plot.AUDIT_SHA in ADMITTED_TRAINING_AUDITS
     r = analyze(ROOT/plot.TERMINAL, plot.AUDIT_SHA)
     saved = json.loads((CASE/'external_work.json').read_text())
     # Preserve the old production-independent LF/CRLF checkout evidence.
@@ -32,11 +32,11 @@ def test_actual_seven_completed_training_receipts_only_and_M_raw_stress_replay()
     assert r['core_source_sha256'][module] == hashlib.sha256(source).hexdigest()
     assert r['core_source_sha256'][module] in {lf, crlf}
     r['core_source_sha256'][module] = lf
-    # E145 appends one native-audited training receipt, without changing any
+    # E148 appends one native-audited training receipt, without changing any
     # computation. Keep the old report's actual executed-source provenance;
     # compare every scientific field strictly, not a rewritten old report.
     script = ROOT/'scripts/analyze_hfo2_clamped_external_work.py'
-    assert hashlib.sha256(script.read_bytes().replace(b'\r\n', b'\n')).hexdigest() == '14fe4f636d382dc321581a296ea3675a1f12ca4aee4de2b309e8e2a7da509b36'
+    assert hashlib.sha256(script.read_bytes().replace(b'\r\n', b'\n')).hexdigest() == '6b5f75cca07ff5baa18a03074d8a5ce0c72d42100998aa0ea3d728d566a6d0e3'
     assert r['script_sha256'] == hashlib.sha256(script.read_bytes()).hexdigest()
     assert saved['script_sha256'] == 'ad954a7710fa6b169cff7d4027f972e50fbb85daf6620c4a8791b972fee0a508'
     r['script_sha256'] = saved['script_sha256']
@@ -129,9 +129,9 @@ def test_manuscript_M_rows_replay_actual_data_without_future_labels():
     section = text.split('### 3.11.', 1)[1].split('## 4.', 1)[0]
     assert 'not an independent prediction test' in section
     assert 'not claimed to exceed a measured barrier' in section
-    assert 'unfinished reversing candidate' in section
+    assert 'completes the observed four-candidate matrix' in text
     assert 'neither a DFT error estimate' in section
-    assert 'Seven of eight registered G2 training bands' in text
+    assert 'Eight of eight registered G2 training bands' in text
 
 
 def test_same_grid_style_no_endpoint_clipping_and_legends_do_not_overlap():

@@ -3878,3 +3878,33 @@ manual distinguishes attempts, callbacks, nativeSCFs and allocation cost.
 At16:48:52:28852667RUNNING32/node75/hfacnormal01, step2/.106872/stderr0.
 G2 remains7/8, no G3/physical+.005access and full goal active.
 See clamped_chain_costs_E147_20261014.
+
+## E148 — Complete eight-band sampled response, retaining the negative result
+
+28852667 ends17:03:53CST,4updates/.099568630/28freshSCFs. Native audit passes
+338original runtime files/sixphysical inputs/DSIZE32;62portable files unchanged.
+The same reversing chain totals385freshSCFs/432.318217SCF-proxy core-hours,
+not just the last28/24.609091. G2 ordinary-audited is8/8. Reversing falls
+44.024331meV/fu but lower preserving rises28.596248; selectivity proxy falls
+16.249222. Favorable raw H1 signature is absent; unknown barrier errors prevent
+error-certified rejection. The+1%T/M escape gap is only.464068. H2 untested.
+
+Actual independent scalar/network/cohort replay,68local/68independent related,
+full2700pass/2expected skip/0failure/error,314warnings/630.333JUnit seconds.
+Tree56429c7d110f67eb13b002d8e988ef2d6556adff,
+archive00601efe797931c1b5ad3da68792ad7848aea82b023cac3483663fe3e324d410;
+all6403files present before tests,62native byte-equal/11sources normalized-equal.
+Exactly three actual executed-source SHA fields differ only by verified source
+LF/CRLF; no physical evidence normalized. Five subsequent prose-only cost-term
+corrections change no numbers/code; final68related pass again and current cohort
+export regenerated. No post-prose full-suite rerun claimed.
+
+Tables5--8/section3.13 include full response and unknown-error boundary. Current
+30-page PDF compiles without found errors/layout warnings; all pages rendered,
+four contacts and16/17/22/29details actually viewed. Existing9figures unchanged;
+page6 whitespace/chronological narrative still need consolidation. No G3
+basis/centre/curvature, physical+.005access, newDFT/scheduler/CI/install/release/
+monitor or physical/optimizer/source changes. Not submission-ready/TS-certified
+or independently predictive success. Full goal active; next is the explicit
+controlled-strain conditional bridge, not a substitute easier fixed-cell face.
+See clamped_plus1_reversing_terminal_E148_20261014.

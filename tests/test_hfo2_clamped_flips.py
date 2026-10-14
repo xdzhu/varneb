@@ -56,11 +56,11 @@ def test_preserving_external_work_replays_actual_nine_native_frames():
     assert actual["core_source_sha256"][curvature] == hashlib.sha256(source).hexdigest()
     assert actual["core_source_sha256"][curvature] in {lf_pin, crlf_pin}
     actual["core_source_sha256"][curvature] = old_raw
-    # E145 reviewed only the addition of a seventh native training receipt.
+    # E148 reviewed only the addition of an eighth native training receipt.
     # Preserve the historical report, pin both analyzer revisions explicitly,
     # and compare EVERY scientific value after this sole code metadata mapping.
     old_analyzer = "a0ee6013969795dedfeedce1ee94fb4adea80ba0f5c3e9f6f7619b8031e5f7e8"
-    new_analyzer = "14fe4f636d382dc321581a296ea3675a1f12ca4aee4de2b309e8e2a7da509b36"
+    new_analyzer = "6b5f75cca07ff5baa18a03074d8a5ce0c72d42100998aa0ea3d728d566a6d0e3"
     assert stored["script_sha256"] == old_analyzer
     assert actual["script_sha256"] == new_analyzer
     assert hashlib.sha256((ROOT/'scripts/analyze_hfo2_clamped_external_work.py').read_bytes()).hexdigest() == new_analyzer
@@ -159,7 +159,7 @@ def test_new_table5_and6_values_are_real_samples_not_TS_or_energy_accuracy():
     section = text.split("### 3.9. ", 1)[1].split("## 4.", 1)[0]
     assert "not a certified index-one saddle" in section
     assert "the globally easiest homogeneous switching mechanism" in section
-    assert "Seven of eight registered G2 training bands" in section
+    assert "Eight of eight registered G2 training bands" in section
     assert "Eighteen frame records share the initial" in section
     for suffix in ("hfo2_clamped_flips.pdf", "hfo2_clamped_flips.png"):
         assert (ROOT/"paper/VARNEB_JCTC/figures/hfo2_clamped_flips_E101_20261011"/suffix).is_file()

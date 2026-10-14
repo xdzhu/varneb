@@ -211,3 +211,12 @@ as 64 validated cells. [Finite probe reporting](CONDITIONAL_PROBE_COVERAGE.md)
 now records registered point errors, failed/pending tests and the limited
 observed-cell coverage without weakening that gate. Continuous-region error
 bounds and material G3 validation remain separate, uncompleted requirements.
+
+The [2026-10-14 eight-path G2 audit](../benchmarks/hfo2_channels/20261008/clamped_plus1_reversing_terminal_E148_20261014/README.md)
+now completes the ordinary training-path matrix. This is not G3 validation:
+physical barrier-error bounds, stable conditional branches and independent
+predictions are still absent. `BiaxialClampedCurvatureCoordinates` currently
+provides directional sampling/physical gradients, not the mode evaluator's
+`to_atoms`/`energy_and_gradient` interface. A controlled-strain conditional
+surface must bridge that interface and keep the prescribed substrate parameter
+out of the released complement; passing a same-size array is not sufficient.

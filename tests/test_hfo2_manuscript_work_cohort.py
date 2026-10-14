@@ -1,4 +1,4 @@
-"""The actual seven-band Table 7 cohort, without author arrays or new DFT."""
+"""The actual eight-band Table 7 cohort, without author arrays or new DFT."""
 from pathlib import Path
 
 import pytest
@@ -16,8 +16,8 @@ def manuscript():
 
 
 def test_actual_native_counts_and_reuse_are_not_statistical_replicates(cohort):
-    assert (cohort["bands"], cohort["frame_records"], cohort["distinct_raw_log_STRU_identities"]) == (7, 63, 58)
-    assert sorted(len(row["occurrences"]) for row in cohort["reused_identities"]) == [3, 4]
+    assert (cohort["bands"], cohort["frame_records"], cohort["distinct_raw_log_STRU_identities"]) == (8, 72, 66)
+    assert sorted(len(row["occurrences"]) for row in cohort["reused_identities"]) == [4, 4]
     assert all(index == 0 for row in cohort["reused_identities"] for _, index in row["occurrences"])
     assert cohort["maximum_native_dual_work_defect_eV_cell"] < 1.2e-16
     assert cohort["new_DFT_calls"] == cohort["scheduler_mutations"] == 0
@@ -31,11 +31,11 @@ def test_actual_manuscript_has_every_table_and_component_row(cohort):
 
 
 @pytest.mark.parametrize("old,new", [
-    ("seven completed clamped training bands", "six completed clamped training bands"),
-    ("63 frame records", "54 frame records"),
-    ("58 distinct raw-log/geometry", "50 distinct raw-log/geometry"),
+    ("eight completed clamped training bands", "seven completed clamped training bands"),
+    ("72 frame records", "63 frame records"),
+    ("66 distinct raw-log/geometry", "58 distinct raw-log/geometry"),
     ("| 97.227719 | 75.922579 |", "| 97.227719 | 75.922580 |"),
-    ("107.167048; open-cell", "107.167047; open-cell"),
+    ("108.609913; open-cell", "108.609912; open-cell"),
 ])
 def test_missing_cohort_and_altered_data_fail_closed(cohort, old, new):
     text = manuscript()
