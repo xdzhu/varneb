@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="19" time="7.659" timestamp="2026-10-14T22:32:58.423044" hostname="Aero"><testcase classname="tests.test_hfo2_G3_conditional_canary" name="test_actual_partial_prefix_refuses_before_selection_or_output" time="0.008" /><testcase classname="tests.test_hfo2_G3_conditional_canary" name="test_mock_preparation_separates_external_control_and_does_not_alias_settings" time="0.143" /><testcase classname="tests.test_hfo2_G3_conditional_canary" name="test_mock_report_faults_do_not_generate_a_canary[missing_pair]" time="0.124" /><testcase classname="tests.test_hfo2_G3_conditional_canary" name="test_mock_report_faults_do_not_generate_a_canary[raw_action]" time="0.161" /><testcase classname="tests.test_hfo2_G3_conditional_canary" name="test_mock_report_faults_do_not_generate_a_canary[wrong_center]" time="0.008" /><testcase classname="tests.test_hfo2_G3_conditional_canary" name="test_mock_report_faults_do_not_generate_a_canary[failure]" time="0.008" /><testcase classname="tests.test_hfo2_G3_conditional_canary" name="test_mock_report_faults_do_not_generate_a_canary[one_negative]" time="0.123" /><testcase classname="tests.test_hfo2_G3_conditional_canary" name="test_mock_report_faults_do_not_generate_a_canary[nonfinite]" time="0.117" /><testcase classname="tests.test_hfo2_G3_conditional_canary" name="test_configuration_drift_is_refused[setting]" time="0.252" /><testcase classname="tests.test_hfo2_G3_conditional_canary" name="test_configuration_drift_is_refused[bool_schema]" time="0.241" /><testcase classname="tests.test_hfo2_G3_conditional_canary" name="test_configuration_drift_is_refused[code]" time="0.269" /><testcase classname="tests.test_hfo2_G3_conditional_canary" name="test_configuration_drift_is_refused[axis_span]" time="0.241" /><testcase classname="tests.test_hfo2_G3_conditional_canary" name="test_configuration_drift_is_refused[raw_minimum]" time="0.265" /><testcase classname="tests.test_hfo2_G3_conditional_canary" name="test_prepared_axis_orientation_is_not_regenerated_by_sign_convention" time="0.341" /><testcase classname="tests.test_hfo2_G3_conditional_canary" name="test_internal_pullback_reuses_only_exact_origin_and_preserves_raw_force_gradient" time="0.013" /><testcase classname="tests.test_hfo2_G3_conditional_canary" name="test_analytic_runtime_integration_preserves_two_fresh_arms_and_center_cost" time="0.573"><failure message="ValueError: fixed_coordinate_covectors cannot contain zero columns">tmp_path = WindowsPath('E:/TEMP/pytest-of-zhu/pytest-4464/test_analytic_runtime_integrat0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000002447C505660&gt;
+data = ({'MPI_ranks_per_allocation': 32, 'allocation_wall_hours': 12, 'anchor_strain': 0.0, 'barrier_error_bounds_measured': ..._at_this_step': True, ...}], 'center_sha256': '8cce8d3b79eeb0305815aa0f556fd842fb22baebde1c8f4d196e5020137d4369', ...})
+
+    def test_analytic_runtime_integration_preserves_two_fresh_arms_and_center_cost(tmp_path,monkeypatch,data):
+        m,r,c,created=runtime(tmp_path,monkeypatch,data)
+&gt;       out=canary.run(c,m,'T',r,'explicit_mock_not_native',tmp_path/'T')
+
+tests\test_hfo2_G3_conditional_canary.py:144: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scripts\hfo2_G3_conditional_canary.py:200: in run
+    point=relax_orthogonal_at_q(plane,[0.,0.],evaluate,optimizer='safeguarded_bfgs',
+vcneb\mode_surface.py:1003: in relax_orthogonal_at_q
+    _require_fixed_controls(energy_and_gradient, orthogonal)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+evaluator = &lt;scripts.hfo2_G3_conditional_canary.InternalEvaluator object at 0x000002447C506560&gt;
+directions = array([[0., 0., 0., ..., 0., 0., 0.],
+       [0., 0., 0., ..., 0., 0., 0.],
+       [1., 0., 0., ..., 0., 0., 0.],
+       ...,
+       [0., 0., 0., ..., 1., 0., 0.],
+       [0., 0., 0., ..., 0., 1., 0.],
+       [0., 0., 0., ..., 0., 0., 1.]])
+
+    def _require_fixed_controls(evaluator, directions: Array) -&gt; None:
+        """A retained vector is not generally a fixed physical covector.
+    
+        Check the actual release space, before evaluation, rather than guessing
+        from an axis label or implicitly changing the supplied mode plane.
+        Transparent evaluator wrappers must forward this metadata.
+        """
+        controls = getattr(evaluator, "fixed_coordinate_covectors", None)
+        if controls is None:
+            return
+        controls = np.asarray(controls, dtype=float)
+        if (controls.ndim != 2 or controls.shape[0] != directions.shape[0]
+                or not np.isfinite(controls).all()):
+            raise ValueError("fixed_coordinate_covectors must be finite physical columns")
+        lengths = np.linalg.norm(controls, axis=0)
+        if np.any(lengths &lt;= 0.):
+&gt;           raise ValueError("fixed_coordinate_covectors cannot contain zero columns")
+E           ValueError: fixed_coordinate_covectors cannot contain zero columns
+
+vcneb\mode_surface.py:767: ValueError</failure></testcase><testcase classname="tests.test_hfo2_G3_conditional_canary" name="test_both_budget_outcomes_are_retained_without_marking_a_surface_complete" time="0.973" /><testcase classname="tests.test_hfo2_G3_conditional_canary" name="test_real_backend_error_category_is_not_treated_as_budget_or_retried" time="0.671"><failure message="ValueError: fixed_coordinate_covectors cannot contain zero columns">tmp_path = WindowsPath('E:/TEMP/pytest-of-zhu/pytest-4464/test_real_backend_error_catego0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000002447C770820&gt;
+data = ({'MPI_ranks_per_allocation': 32, 'allocation_wall_hours': 12, 'anchor_strain': 0.0, 'barrier_error_bounds_measured': ..._at_this_step': True, ...}], 'center_sha256': '8cce8d3b79eeb0305815aa0f556fd842fb22baebde1c8f4d196e5020137d4369', ...})
+
+    def test_real_backend_error_category_is_not_treated_as_budget_or_retried(tmp_path,monkeypatch,data):
+        m,r,c,created=runtime(tmp_path,monkeypatch,data,'native_failure')
+        with pytest.raises(RuntimeError,match='explicit injected backend failure'):
+&gt;           canary.run(c,m,'T',r,'explicit_mock_not_native',tmp_path/'T')
+
+tests\test_hfo2_G3_conditional_canary.py:171: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scripts\hfo2_G3_conditional_canary.py:200: in run
+    point=relax_orthogonal_at_q(plane,[0.,0.],evaluate,optimizer='safeguarded_bfgs',
+vcneb\mode_surface.py:1003: in relax_orthogonal_at_q
+    _require_fixed_controls(energy_and_gradient, orthogonal)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+evaluator = &lt;scripts.hfo2_G3_conditional_canary.InternalEvaluator object at 0x000002447C7735B0&gt;
+directions = array([[0., 0., 0., ..., 0., 0., 0.],
+       [0., 0., 0., ..., 0., 0., 0.],
+       [1., 0., 0., ..., 0., 0., 0.],
+       ...,
+       [0., 0., 0., ..., 1., 0., 0.],
+       [0., 0., 0., ..., 0., 1., 0.],
+       [0., 0., 0., ..., 0., 0., 1.]])
+
+    def _require_fixed_controls(evaluator, directions: Array) -&gt; None:
+        """A retained vector is not generally a fixed physical covector.
+    
+        Check the actual release space, before evaluation, rather than guessing
+        from an axis label or implicitly changing the supplied mode plane.
+        Transparent evaluator wrappers must forward this metadata.
+        """
+        controls = getattr(evaluator, "fixed_coordinate_covectors", None)
+        if controls is None:
+            return
+        controls = np.asarray(controls, dtype=float)
+        if (controls.ndim != 2 or controls.shape[0] != directions.shape[0]
+                or not np.isfinite(controls).all()):
+            raise ValueError("fixed_coordinate_covectors must be finite physical columns")
+        lengths = np.linalg.norm(controls, axis=0)
+        if np.any(lengths &lt;= 0.):
+&gt;           raise ValueError("fixed_coordinate_covectors cannot contain zero columns")
+E           ValueError: fixed_coordinate_covectors cannot contain zero columns
+
+vcneb\mode_surface.py:767: ValueError</failure></testcase><testcase classname="tests.test_hfo2_G3_conditional_canary" name="test_login_never_invokes_native_preflight" time="0.237" /></testsuite></testsuites>

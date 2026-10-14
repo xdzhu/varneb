@@ -4206,3 +4206,34 @@ not byte-identical scalar reports or physical error estimates.
 No newDFT/scheduler/live-source/physical-input/conditional/holdout change.
 100Ry/full10auDZP/ordinary.10 and finite matrix preserved; goal active/incomplete.
 See conditional_preconditioning_E157_20261014 for code, evidence and scope.
+
+## E158 — native bounded conditional-canary worker, not yet submitted (2026-10-14)
+
+Previous E157:PROGRESS. Prepare/preflight/run now links complete native
+two-step audits, the exact original center/cache, the36Dinternal map and
+the original six-input32MPI evaluator to two independently capped optimizer
+arms. One origin modeling node per existing center,12reserved attempts/arm,
+24total, no refund/retry/dispatch. Actual partial E155input is refused before
+configuration output. Synthetic fixtures are explicitly not material data.
+
+The case policy fixes Q0, strain/P0, released-norm target.03, step.05,
+total internal norm bound.5Angstrom/minimum distance1.6Angstrom and2h/one
+node32MPI. This is not a changed ordinary.10NEB criterion, a physical
+stability/TS certificate, full face, forecast or measured DFT speed gain.
+Parent296curvature/source preparation costs remain additional/shared.
+
+First19checks:17pass/2failure from forwarding the identically zero control
+pullback as an active36Dconstraint. Fix only the new adapter: retain40Dcontrol,
+prove its exact exclusion, expose remaining nonzero pullbacks. Generic
+control checks stay strict; missing/mixed/complex controls refuse. Original
+report retained. Final112local/112actual independent checks pass,0f/e/s.
+
+Treec70f94dc1a6ba537350d257e5079338c0e9fc920/archive
+3143bc151627379fb5e3f6052bfe11154b72949262d9be02761e84668d4546a8,
+all6527tracked files present/import roots checked; four code/test/wrapper/
+manual texts normalized-equal. Native copied wrapper has identical SHA,
+bash-nexit0 andRUN_DFT0exit2. First shell status capture failed due to
+PowerShell expansion; read-only native Python rechecked actual exit codes,
+no script change/recopy and no DFT. No new allocation or live E150 change,
+no final axes/face/holdout. Goal remains active/incomplete; see
+conditional_canary_worker_E158_20261014 for evidence and scope.

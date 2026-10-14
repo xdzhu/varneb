@@ -50,3 +50,9 @@ quadratic surrogate**. Identity and exact-curvature seeds reach the same
 analytic conditional solution with different callback counts. This validates
 implementation, not DFT acceleration or the actual conditional surface.
 Real finite conditional branches and same-accuracy total-cost tests remain.
+
+The [E158 HfO2 canary worker](../benchmarks/hfo2_channels/20261008/conditional_canary_worker_E158_20261014/README.md)
+provides a bounded same-input native test route. It refuses incomplete
+two-step data, reuses the audited origin exactly and keeps two independent
+optimizer arms/cost caps. Implementation checks alone do not start DFT or
+complete a conditional face; source/admission and physical audits still apply.
