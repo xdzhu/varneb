@@ -56,3 +56,14 @@ provides a bounded same-input native test route. It refuses incomplete
 two-step data, reuses the audited origin exactly and keeps two independent
 optimizer arms/cost caps. Implementation checks alone do not start DFT or
 complete a conditional face; source/admission and physical audits still apply.
+
+## Experimental ball-feasible steps (opt-in, not material-validated)
+
+The separate [ball-feasible conditional relaxation entry](FEASIBLE_CONDITIONAL_RELAXATION.md)
+tests projected search steps within a declared released-coordinate radius.
+It preserves the original full-gradient target and the independent geometry
+guard; a boundary KKT point is not successful convergence. Existing functions,
+optimizer defaults, frozen production traces and calculator settings are
+unchanged. Current evidence is analytic plus an analytic ASE E/F/stress budget
+test, not demonstrated HfO2 acceleration. Read its total-versus-released-radius
+contract before preparing any bounded material experiment.

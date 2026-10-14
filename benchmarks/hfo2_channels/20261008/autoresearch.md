@@ -4486,3 +4486,28 @@ write, source repair, physicalholdout access or extra training reservation;
 paper bytes unchanged. Original faces continue; E166 controls retain resource
 priority. Full stable-face/independent-prediction goal remains active.
 Evidence:G3_bound_diagnostic_E168_20261015.
+
+## E169 — opt-in ball-feasible conditional solver, analytic controls only (2026-10-15)
+
+Previous E168:PROGRESS,0d65557b. Add a separate backend-independent single-start
+entry using existing coordinates/metric/control checks/result types. Project
+quasi-Newton proposals into the declared released ball; non-descent proposals
+fall back to projected steepest descent, with actual-displacement Armijo and
+the original physical guard. Success still uses full released gradient; no
+boundary-KKT promotion, start repair, negative seed clipping or new default.
+Released radius is explicitly distinct from total original displacement.
+
+Four frozen analytic controls, both arms with common start/seed/.5radius/
+.03target/.05trust/12unique-call cap:4/4 interior,7/6 near-wall,9/9 nonlinear;
+exterior11/8both no candidate. Keep all results/no-gain controls, no speedup
+ratio for failures and no DFT/HfO2/new-theorem claim. Analytic ASE E/F/stress
+budget test verifies no extra factory call after the existing cap.
+
+218local/218independent related checks pass,19new,10modules not full regression.
+Independent full output bytes exact20c5d743; tested tree4b1a61ca. Existing
+mode_surface/default and19E166scientific code pins remain unchanged. Add API
+doc/manual link, not a production promotion. Zero new DFT/native reparse/
+scheduler write/training reservation/physicalholdout access/runtime mutation.
+Actual matched bounded material experiment and final stable-face/independent
+strong-control evidence still required. E166 controls retain resource priority.
+Full goal active. Evidence:feasible_steps_E169_20261015.
