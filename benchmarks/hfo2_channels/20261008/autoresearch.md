@@ -4989,3 +4989,41 @@ PyPI/monitor/submission. RO07:21:40CST atomic28867177PENDINGCPUquota,
 strongnativechart controls followedby frozenindependent predictions, not
 another linearbasis advantage claim. Full goal active/incomplete.
 Evidence:G3_shared_Q_controls_E180_20261015.
+
+### E181 2026-10-15 — PROGRESS: explicitly budgeted released-base stencils admitted
+
+Previous E180 PROGRESS/3dd0f095. Reported the missing actual post-release34D
+curvature gate, rather than treating raw-peak Hessian/optimizer secants as
+its proof. Frozen explicit budget amendment: existing twoE160Q=0anchors,
+136new derivative attempts each272total, both signs/.01/.02steps, original
+296andallpreparation additional. Twoadditionalverificationbases disclosed;
+no thirdchannel/material/referencephonon/wholepath/control condition.
+Not12optimizercalls/point, no newQslots, T34/81 P35/81 and eightindependent
+each unchanged. Literalnative anchors reused; full literal probes/frame
+frozen, no cacheidentity weakening or .5radius/domain repair.
+
+All272safegeometries/nativepreflight with original380runtime and exact
+EFS/sixassets/binary passed,0newSCF. Largestprobe norm.3187221853A,
+minseps2.041856089/2.065504072A.86local/86independent relatedchecks over5modules,
+23new,0fail/errors/skips, notfullsuite. Actualfrozenconfig, twoamplitudes/
+negative signs/guard refusal/resource policy and all272syntheticcalls plus
+firstfailurecharged/no retry tested; mocks notmaterialDFT. Testedtree4db6c165,
+archive62e780c5. Cscratch retains initial83check/devconfig, no failedtest hidden.
+
+Nativepreflight9630d041, config71a2e1b8, immutablebundle2e61cfc1.
+Once-only held/validated/released actualSlurm28868827 at07:43:56CST:
+hf/hfacnormal01,1node32CPUs/genuine mpirun32/threads1/12h. Original28867177
+counts pending, two committed total; no otherjobs cancelled or sourceoverwritten.
+RO07:45:51CST bothPENDING/AssocGrpCpuLimit; no new
+completedDFT.9.5h approximate after allocation only, queue delay unknown.
+Native32rank behavior in newrun still awaits first SCF, not implied by tests.
+
+Both raw34x34and40x34actions, reciprocity/symmetrization/twostepdifference
+required; no clipping/pseudoinverse/ASR/signcertificate. Positivefinite-step
+spectra and .03residual notphysicalerrorbound/globalbranch/TS. OtherQnodes
+and eight preservingholes remain uncertified. Fixed100Ry/full10auDZP/
+Gamma2^3/P0/E0/.10NEB/.03conditional/.5radius unchanged. Fiveuseredits,
+E176forecasts and manuscript38769b36 preserved. No+.005/privateauthorarray
+access, CI/install/release/PyPI/monitor/otherhost/submission. ActualB3,
+strongnativechart/independentmaterialtests and fullgoal remain incomplete.
+Evidence:G3_released_curvature_E181_20261015.
