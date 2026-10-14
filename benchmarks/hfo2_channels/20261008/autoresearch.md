@@ -4819,3 +4819,28 @@ and unchanged expectations with cost/coverage; no new material/Hessian/
 fullpath/CI/install/release/PyPI/submission/monitor. Strong-reference/
 independent advantage, releasedstability and final domain/representatives
 remain missing; full goal active. Evidence:G3_atomic_audit_E176_20261015.
+
+## E177 — close Fan publication visual-access gap (PROGRESS)
+
+Previous goal turn PROGRESS_E176_d5ff34e5. Exact HF handles unchanged:
+RO06:27:00CST original preserving28862441RUNNING/24processed/17candidates,
+no face.json; B3atomic28867177PENDINGCPUquota/0newSCFs/points/failures.
+No scheduler write, new computation, reservation or holdout access.
+
+E070's primary-source visual gap is closed: normal publisher HTML/PDF
+fetch and author-hosted published PDF, exact same PDFbytes/d28d955d,
+11pages rendered; scientific main pp.1–9 read, details pp.4/6/7/8 inspected.
+Explicit comparison matrix distinguishes force-training parity/energy MAE,
+PO-based prescribed lattice/our partial Tclamp, intermediate-phase proxy/
+endpoint null and interface-energy/activation units. Existing E108 Lee SI
+work reused, not counted again. Publisher page lists no verified SI;
+this is not proof of universal SI absence. No private author array export.
+
+Main introduction already covers the pertinent boundaries, so unchanged;
+no code edit, new pytest/compile claim or material-accuracy/TS claim.
+Documentation/source hashes and local evidence links checked. Five user
+edits preserved,100Ry/full10auDZP/.10NEB unchanged. T34/81,P35/81 and8
+independent each unchanged. Next actual original-face/B3native audit and
+signed treatment/cost comparison; strong controls, stable branches and
+independent material predictions still needed. Full goal active/incomplete.
+Evidence:outputs/HFO2_FAN_VISUAL_BOUNDARY_AUDIT_2026-10-15.md.
