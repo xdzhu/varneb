@@ -78,3 +78,12 @@ stress adapter also retains its original conservative factory budget.
 These are implementation/control tests, not HfO2 DFT acceleration, a new
 production default, or independent material prediction. Actual same-input,
 bounded material experiments are still required before making such claims.
+
+The [E170 matched cache/input contract](../benchmarks/hfo2_channels/20261008/G3_feasible_material_E170_20261015/README.md)
+and [E171 bounded execution supplement](../benchmarks/hfo2_channels/20261008/G3_feasible_execution_E171_20261015/README.md)
+now provide a concrete HfO2 training experiment. They reuse the exact old
+start/cache and retain the original physics, target and total-domain guard.
+The native zero-DFT probe passes; the prospective arm has a separate12new-
+attempt cap and must wait for the original eight frozen-R controls. Local
+and independent execution checks are not material acceleration evidence.
+The existing production/default solver and live source remain unchanged.

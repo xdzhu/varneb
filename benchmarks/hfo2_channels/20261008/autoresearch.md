@@ -4541,3 +4541,44 @@ Prototype coordinate-hash label corrected before final freeze; drafts retained,
 physical inputs unchanged. Actual E166 admission observes twoRUNNING originals,
 readyfalse/no third job. RO03:57T24/25,P17processed/15candidates.
 Full stable-face/independent-prediction goal active. Evidence:G3_feasible_material_E170_20261015.
+
+## E171 — original T batch audited; statics admitted and matched-arm execution frozen (2026-10-15)
+
+Previous E170:PROGRESS,a12abd90. T28862319 completes normally:25/25gradient
+candidates including cachedQ0,118newSCFs. Original native audit reparses all118
+and exactly replays24new optimizer traces, preserving original380source bytes,
+six inputs,DSIZE32,EFS,Q/control and per-node budget identities. This remains
+candidate convergence, not released-stability, global surface or TS evidence.
+
+After the real slot opens, the existing8static E166 controls are submitted
+once as28865656, held/resource-validated and released. At04:27CST it is pending
+underAssocGrpCpuLimit; preserving28862441 is live at19processed/17candidates,
+103completeSCFs and no observed backend failure. Preserve the two original
+holes and all original source. No third committed allocation is created.
+
+Add the E171 execution supplement for the already reserved E170 point13arm:
+same original start/seed/Q/target/.5totaldomain/.05trust/sixinputs, fresh12new-
+attempt cap,1node32MPI/1h. E170's reservation is not charged again. Exact first
+callback reuse is checked before any DFT. Separate old hits, new backend hits,
+new SCFs, failed/reserved and denied requests; capped baseline is censored,
+not a speedup denominator. All preparation costs remain additional.
+
+Native external-bundle preflight passes:380oldsource files,12oldpointSCFs,
+strict old replay and7cache hits before novel query; no new optimizer DFT.
+E166 completion/all8native statics remain required before admission and run;
+that true branch has not yet been exercised. Manual admission correctly
+returns not-ready, no intent/job/output and zero scheduler writes. No timer.
+
+250local/250independent checks pass,16new/12related modules, not full regression;
+independent prepared execution bytes exactb80dc015. Retain initial portability/
+synthetic-test failures, incomplete E-drive extraction and raw-JSON archive
+conversion failure. Fail before a mismatched starting SCF, never approximate
+physical cache coordinates. Preserve exact native auditor bytes; case-specific
+Git attributes keep raw JSON/XML hashes. Final independent archive onC passes
+without weakening raw-hash checks. No local file deletion, physical-input
+change, live runtime overwrite, holdout access or manuscript promotion.
+
+Final tested treea22be6ec. Execution preflight1ffb76f6; completeT auditb8e78367.
+Full stable-face/independent-strong-control prediction goal remains active.
+Evidence:G3_feasible_execution_E171_20261015. Next:process the original8statics
+when genuinely complete, audit them, then admit the bounded matched arm.
