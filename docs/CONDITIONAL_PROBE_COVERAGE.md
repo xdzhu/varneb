@@ -121,3 +121,7 @@ eight independent probes. Conditional nodes may require multiple SCFs.
 The reserved +0.005 path holdout remains unopened until the full registered
 models/strong controls/error/cost package is frozen. No matrix, physical
 parameter, NEB threshold, source deployment or allocation changes here.
+
+For optional numerical curvature initialization during the underlying
+relaxations, see [conditional optimization](CONDITIONAL_OPTIMIZATION.md).
+It changes neither these independent-validation gates nor calculator budgets.

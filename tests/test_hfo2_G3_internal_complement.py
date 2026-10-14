@@ -18,6 +18,21 @@ PINS = dict(T='1cc4269a8f1437acddb94c9a7c264f52bae888669db2bcc36521982d280666ea'
             preserving='9bfeb3c8a7eca7533246ffd61e6e43df17262fb8ef274dfa87965c1301a10efa')
 
 
+def assert_derived_arithmetic_same(actual, expected):
+    """BLAS-roundoff policy for derived scalars only, never native file bytes."""
+    assert type(actual) is type(expected)
+    if isinstance(expected, dict):
+        assert actual.keys() == expected.keys()
+        for key in expected: assert_derived_arithmetic_same(actual[key], expected[key])
+    elif isinstance(expected, list):
+        assert len(actual) == len(expected)
+        for a, e in zip(actual, expected): assert_derived_arithmetic_same(a, e)
+    elif isinstance(expected, float):
+        assert actual == pytest.approx(expected, abs=2e-12, rel=0)
+    else:
+        assert actual == expected
+
+
 @pytest.fixture(scope='module')
 def material():
     mp = BASE/'G3_curvature_E150_20261014/manifest.json'
@@ -34,7 +49,7 @@ def test_actual_native_prefix_replay_keeps_incomplete_second_amplitude(material)
     m, reports = material
     result = summary.summarize(m, reports)
     saved = json.loads((CASE/'first_amplitude_summary.json').read_bytes())
-    assert result == {k:v for k,v in saved.items() if k != 'input_sha256'}
+    assert_derived_arithmetic_same(result, {k:v for k,v in saved.items() if k != 'input_sha256'})
     assert [r['audited_prefix_records'] for r in result['rows']] == [76, 77]
     for row in result['rows']:
         assert row['complete_amplitudes'] == [.01]
@@ -124,7 +139,7 @@ def test_report_faults_are_not_repaired(material, fault):
     with pytest.raises(ValueError): summary.summarize(m, changed)
 
 
-def test_actual_CLI_exact_replay_and_no_overwrite_or_wrong_input_bytes(tmp_path):
+def test_actual_CLI_arithmetic_replay_and_no_overwrite_or_wrong_input_bytes(tmp_path):
     output = tmp_path/'summary.json'
     command = [sys.executable, '-m', 'scripts.summarize_hfo2_G3_curvature', '--manifest',
         str(BASE/'G3_curvature_E150_20261014/manifest.json'), '--output', str(output)]
@@ -132,7 +147,8 @@ def test_actual_CLI_exact_replay_and_no_overwrite_or_wrong_input_bytes(tmp_path)
         command += ['--'+channel+'-report', str(CASE/(channel+'_native.json')), '--'+channel+'-sha256', pin]
     first = subprocess.run(command, cwd=ROOT, text=True, capture_output=True)
     assert first.returncode == 0, first.stderr
-    assert output.read_bytes() == (CASE/'first_amplitude_summary.json').read_bytes()
+    assert_derived_arithmetic_same(json.loads(output.read_bytes()),
+                                  json.loads((CASE/'first_amplitude_summary.json').read_bytes()))
     before = output.read_bytes()
     assert subprocess.run(command, cwd=ROOT, capture_output=True).returncode != 0
     assert output.read_bytes() == before

@@ -870,6 +870,7 @@ def _safeguarded_bfgs(
     gradient_tolerance: float,
     max_iterations: int,
     initial_trust_radius: float,
+    initial_inverse_hessian: Array | None = None,
 ) -> tuple[Array, int]:
     """BFGS with geometry-screened Armijo backtracking in open coordinates."""
 
@@ -878,7 +879,9 @@ def _safeguarded_bfgs(
         raise ValueError("supplied safeguarded-BFGS start violates the geometry/bound guard")
     energy, gradient = evaluate(z)
     calls = 1
-    inverse_hessian = np.eye(z.size)
+    seed = (np.eye(z.size) if initial_inverse_hessian is None
+            else np.array(initial_inverse_hessian, dtype=float, copy=True))
+    inverse_hessian = seed.copy()
     radius = initial_trust_radius
     for _ in range(max_iterations):
         if np.linalg.norm(gradient) <= gradient_tolerance:
@@ -886,7 +889,7 @@ def _safeguarded_bfgs(
         direction = -inverse_hessian @ gradient
         if np.dot(direction, gradient) >= -1e-12 * np.linalg.norm(direction) * np.linalg.norm(gradient):
             direction = -gradient
-            inverse_hessian = np.eye(z.size)
+            inverse_hessian = seed.copy()
         norm = np.linalg.norm(direction)
         if norm <= 0.0:
             break
@@ -933,6 +936,7 @@ def relax_orthogonal_at_q(
     optimizer: str = "L-BFGS-B",
     trial_validator: Callable[[Array], bool] | None = None,
     initial_trust_radius: float = 0.25,
+    initial_hessian: Array | None = None,
 ) -> ConditionalModePoint:
     """Minimize all coordinates orthogonal to two fixed order parameters.
 
@@ -957,6 +961,16 @@ def relax_orthogonal_at_q(
     minimum without an independent curvature check. When every orthogonal
     direction is frozen, the safeguarded geometry check still precedes the
     single static evaluation; absence of optimization is not an exemption.
+
+    ``initial_hessian`` optionally seeds safeguarded BFGS using an approximate
+    Hessian in the full *physical coordinate/dual-gradient* convention, not
+    mass-weighted coefficients or an already reduced inverse. Its restriction
+    U.T H U to the metric-orthonormal open directions must be positive definite;
+    retained/frozen curvature may be negative. No eigenvalue clipping is used.
+    This numerical preconditioner does not certify physical release stability,
+    a TS, branch coverage or the accuracy of any measured curvature. Default
+    None preserves identity initialization. Geometry guards, trust radii,
+    physical gradients, convergence tolerance and evaluator budgets still apply.
     """
 
     try:
@@ -987,6 +1001,28 @@ def relax_orthogonal_at_q(
     base = plane.frozen_coordinates(point)
     orthogonal = _orthogonal_directions(plane, frozen_directions)
     _require_fixed_controls(energy_and_gradient, orthogonal)
+    initial_inverse = None
+    if initial_hessian is not None:
+        if optimizer != "safeguarded_bfgs" or not orthogonal.shape[1]:
+            raise ValueError("initial_hessian requires safeguarded_bfgs with open orthogonal directions")
+        if np.iscomplexobj(initial_hessian):
+            raise ValueError("initial_hessian must be real; do not discard imaginary components")
+        hessian = np.asarray(initial_hessian, dtype=float)
+        if (hessian.shape != (base.size, base.size) or not np.isfinite(hessian).all()
+                or not np.allclose(hessian, hessian.T, atol=1e-12, rtol=1e-10)):
+            raise ValueError("initial_hessian must be a finite symmetric full-coordinate matrix")
+        with np.errstate(over="ignore", invalid="ignore"):
+            reduced = orthogonal.T @ hessian @ orthogonal
+        if not np.isfinite(reduced).all():
+            raise ValueError("initial_hessian orthogonal restriction is not numerically representable")
+        try:
+            factor = np.linalg.cholesky(.5 * reduced + .5 * reduced.T)
+        except np.linalg.LinAlgError as exc:
+            raise ValueError("initial_hessian orthogonal restriction must be positive definite; no clipping") from exc
+        with np.errstate(over="ignore", invalid="ignore", divide="ignore"):
+            initial_inverse = np.linalg.solve(factor.T, np.linalg.solve(factor, np.eye(factor.shape[0])))
+        if not np.isfinite(initial_inverse).all():
+            raise ValueError("initial_hessian inverse is not numerically representable")
     supplied = ([base] if include_frozen_start else []) + list(starts)
     candidates: list[ConditionalModePoint] = []
     branch_outcomes: list[ConditionalBranchOutcome] = []
@@ -1019,6 +1055,7 @@ def relax_orthogonal_at_q(
             z, n_evaluations = _safeguarded_bfgs(
                 evaluate, valid, z0, gradient_tolerance=gradient_tolerance,
                 max_iterations=max_iterations, initial_trust_radius=initial_trust_radius,
+                initial_inverse_hessian=initial_inverse,
             )
             n_evaluations += 1  # final independent verification
         elif orthogonal.shape[1]:
@@ -1133,6 +1170,7 @@ def sample_conditional_mode_surface(
     optimizer: str = "L-BFGS-B",
     trial_validator: Callable[[Array], bool] | None = None,
     initial_trust_radius: float = 0.25,
+    initial_hessian: Array | None = None,
 ) -> ConditionalModeSurface:
     """Evaluate independent fixed-``Q1,Q2`` orthogonal relaxations on a grid.
 
@@ -1180,6 +1218,7 @@ def sample_conditional_mode_surface(
                 max_iterations=max_iterations,
                 optimizer=optimizer, trial_validator=trial_validator,
                 initial_trust_radius=initial_trust_radius,
+                initial_hessian=initial_hessian,
             )
             energies[j, i] = result.energy
             norms[j, i] = result.orthogonal_gradient_norm

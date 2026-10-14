@@ -4170,3 +4170,39 @@ Second amplitudes still incomplete. Ordinary.10,100Ry/full10auDZP, two-center/
 two-face finite scope and sealed physical+.005 unchanged. Final axes/branches,
 domains and B0--B5 forecasts not selected. See
 G3_reference_complements_E156_20261014 for actual evidence and scope.
+
+## E157 — optional conditional-curvature seed and clean full regression (2026-10-14)
+
+Previous E156:PROGRESS. Backend-independent safeguarded BFGS can initialize
+from a full physical-coordinate approximate Hessian, restricted by U.T H0 U
+in the actual metric-orthonormal open space. Reject nonpositive/unrepresentable
+seeds before callback; no clipping, input/force changes or physical stability
+certificate. None retains the identity default. Grid forwarding, geometry,
+trust radius, final tolerance and existing conservative evaluator caps remain.
+
+The exact quadratic implementation replay uses the pinned E155 H/g, not new
+DFT. Callback counts129to5T/126to7preserving reach the same analytic solution.
+The quadratic's two spectral axes are not final physical sampling axes.
+This expected exact-H benefit is neither novel nor a measured material speedup.
+Actual conditional branches and fair total-cost DFT tests remain incomplete.
+
+131local/131independent related checks pass. Final clean tracked-code suite:
+2904pass/2expected skip/0failure/error,504.106JUnit seconds,314existing warnings.
+First clean archive:2902pass/2fail/2skip; two E155 assertions demanded bitwise
+derived floats across BLAS threading. Separate19check replay reproduced only
+those2failures; max difference3.907985046680551e-14. Derived arithmetic tests
+now use absolute2e-12/relative0 while exact native bytes, metadata/types and
+overwrite/drift guards remain. Original first report retained; full reports
+losslessly zipped with decompressed-byte verification. Initial untracked-
+workspace run was interrupted/reclassified, never counted as a passed suite.
+
+Final tree8888fe35cf6367406e99043fde8268ea8002d9b7/archive
+387fb2873074349d2cf48d775d95879ab8c285f09f1a0a1d018206acd2c72ebd,
+6514tracked files present/import roots checked. Six code/test/manual texts
+normalized-equal, physical evidence untouched. Independent surrogate integer
+counts/statuses/input pins exact; residual floats differ at most9.2733e-15,
+not byte-identical scalar reports or physical error estimates.
+
+No newDFT/scheduler/live-source/physical-input/conditional/holdout change.
+100Ry/full10auDZP/ordinary.10 and finite matrix preserved; goal active/incomplete.
+See conditional_preconditioning_E157_20261014 for code, evidence and scope.
