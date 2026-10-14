@@ -1,6 +1,9 @@
 # Theory and methods working draft
 
-Status: 2026-10-08; definitions and proposed tests, not an evidence-complete paper.
+Status: updated 2026-10-15; definitions and dated tests, not an evidence-complete paper.
+Historical sections describe their then-current evidence. Section 19 and the
+connected manuscript incorporate the completed local-curvature and bounded
+fixed-coordinate tests; earlier missing-test statements are not current counts.
 The research design fixes pure periodic HfO₂, zero temperature and zero electric
 field. Numerical sections must ultimately name the effective electronic inputs,
 mechanical ensemble, ordered atom correspondence and structural variants.
@@ -683,3 +686,32 @@ Source, raw-audit and log hashes and all four null increments are retained
 in the [E059 analysis](../../benchmarks/hfo2_channels/20261008/endpoint_strain_work_E059_20261010/README.md)
 and [work API](../../docs/STRAIN_WORK.md). Neither sub-meV trapezoid defects
 nor phase labels certify a barrier, TS, full Hessian or material prediction gain.
+
+## 19. Completed joint-curvature and fixed-coordinate tests
+
+At the original zero-strain T and preserving sampled peaks, 148 new SCFs per
+center measure signed 0.01/0.02-Angstrom responses in 36 translation-free
+internal directions plus a separate prescribed control. The internal chart
+contains 33 atomic and three open-cell coordinates, with strain length scale
+5.12968067458423 Angstrom. It is not the mass-weighted atomic phonon chart.
+The external-control probes h/L are not the reserved +0.005 physical condition.
+Raw force responses and asymmetry are retained. All 296 native records were
+audited under the original six input hashes and 32 genuine MPI ranks.
+
+The two first-step negative internal eigendirections define a fixed retained
+plane for the bounded comparison; 34 coordinates are released. Identity and
+measured-Hessian quasi-Newton initializations share cached starting centers,
+0.03-eV/Angstrom released-gradient norm target, 0.05-Angstrom initial trust
+radius, 0.5-Angstrom displacement bound, 1.6-Angstrom minimum separation and
+twelve-attempt caps. The Hessian restriction must pass Cholesky without clipping.
+It is a numerical seed, not a post-relaxation stability certificate.
+
+The seeded arms use two and five new SCFs; each identity arm exhausts twelve
+without a final candidate. These are censored local comparisons, not measured
+whole-path speedup ratios. Preparation costs are additional. All 31 new native
+SCFs and the four cache-only optimizer replays passed the source audits. No
+new DFT is performed to integrate these observations into the manuscript.
+Tables A6-A8 of the connected manuscript retain raw spectra, every strong
+reference and native call costs; the original G2 barrier tables remain unchanged.
+Released-block stability, branch reproducibility, completed conditional faces
+and frozen independent predictions remain unfinished material evidence.

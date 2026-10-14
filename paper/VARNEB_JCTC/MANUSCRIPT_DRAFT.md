@@ -1,13 +1,15 @@
 # Competing switching and phase-escape channels in hafnia: a mode-strain pathway analysis
 
-Working manuscript, 2026-10-14. This is a connected main-text draft, not a
+Working manuscript, 2026-10-15. This is a connected main-text draft, not a
 submission-ready article. The main Results organize eight ordinary-converged clamped training bands
 by scientific question; dated free-cell and detailed representation checks
 are retained in the appendices. All ten
 registered endpoint representations across the two matched-substrate training
 conditions have passed their physical screens. The sampled G2 network is complete;
-an uncertainty-resolved response interpretation, local conditional branches and
-independent material predictions are still missing. An abstract and a
+complete local joint-curvature measurements and two fixed-coordinate,
+gradient-converged candidates are now available. An uncertainty-resolved
+response interpretation, stable conditional branches and independent
+material predictions are still missing. An abstract and a
 conclusion asserting those unmeasured results are deliberately withheld.
 The [methods working record](METHODS_DRAFT.md),
 [dated pilot record](PILOT_RESULTS_2026-10-08.md) and
@@ -333,6 +335,10 @@ original Hf/O pseudopotentials, full 10-au DZP orbitals generated at 100 Ry,
 ecutwfc=100 Ry and the original Gamma-centred 2x2x2 mesh. INPUT, KPT,
 pseudopotentials and orbital bytes are bound to each observation by hashes.
 No electronic setting is retuned between channels or mechanical conditions.
+The unchanged electronic input sets scf_thr=1e-8, scf_nmax=150 and
+mixing_beta=0.3. Byte-exact [INPUT](../../benchmarks/hfo2_channels/20261008/manuscript_local_reduction_E162_20261015/INPUT)
+and [KPT](../../benchmarks/hfo2_channels/20261008/manuscript_local_reduction_E162_20261015/KPT)
+snapshots retain the literal settings rather than inferred defaults.
 Ordinary NEB uses 0.10 eV/Angstrom, without climbing images; cached fixed
 endpoints are not recalculated at every iteration. The repaired T-PO band
 has ten total images, while new channel bands have nine total, seven moving.
@@ -353,6 +359,37 @@ Actual SCF calls and allocation core-hours, including preparation, define
 cost; faster optimization to a different mechanism is not same-path
 acceleration. The [detailed methods](METHODS_DRAFT.md) retain unit, gauge,
 stability, selection and uncertainty definitions.
+
+For the zero-strain T-escape and preserving-switching sampled peaks, the
+local length-metric chart contains 36 translation-free internal coordinates:
+33 atomic coordinates and three components of the open cell row. The
+prescribed substrate control is separate. Its length scale is
+$L=5.12968067458423$ Angstrom; this chart is not the mass-weighted atomic
+projection used in the representation figures. Central differences of
+the physical energy gradient use steps 0.01 and 0.02 Angstrom in each of
+37 internal-plus-control directions, with two signs per step. The cached
+center is reused: each center requires 148 new SCFs, 296 in total. Control
+probes use $\delta\epsilon=h/L$, not the reserved physical +0.5% condition.
+Raw directional responses are retained; spectra below use the symmetrized
+internal block only. Finite-step disagreement and symmetrization changes
+are diagnostics, not physical error bounds or a stationary-index certificate.
+
+For a bounded conditional-relaxation comparison, the two negative
+eigendirections of the first-step internal matrix define fixed retained
+coordinates. The remaining 34 directions are released. Both optimizer
+arms start at the same cached center with the same retained coordinates,
+released-gradient norm target 0.03 eV/Angstrom, initial trust radius
+0.05 Angstrom, internal-displacement bound 0.5 Angstrom and minimum atomic
+separation 1.6 Angstrom. Each arm has a conservative limit of twelve new
+SCF attempts, including unsuccessful calls; cache hits are free. One arm
+uses the default identity initialization. The other uses the measured
+Hessian restricted to a metric-orthonormal released basis, $U^T H U$,
+as a standard quasi-Newton initialization. Cholesky factorization must
+succeed without clipping eigenvalues. This algebraic check does not
+certify stability after relaxation. The conditional norm target is not
+the ordinary NEB residual threshold. Preparation and all trial calls are
+charged separately; a budget-exhausted arm supplies a censored cost, not
+a completed denominator for a speedup factor.
 
 ### 2.5. Signed path work as an energy-consistency diagnostic
 
@@ -633,6 +670,49 @@ Appendix D retains every reference rank, all four tied Cmma frames and
 their nonstatistical registration ranges. The original source modes and
 forces are not modified by ASR; raw translation contributions remain visible.
 
+Direct joint-curvature measurements reveal an additional limitation of a
+one-coordinate description at the two sampled peaks. At both finite steps,
+each internal matrix has two negative eigenvalues; removing the internal
+path tangent still leaves one negative direction (Table A6). For T escape,
+the lowest two values are approximately -0.276 and -0.165 eV/Angstrom squared
+at the smaller step. For preserving switching they are -1.272 and -0.447.
+These are nonstationary, finite-step curvatures in a joint atomic-cell
+length metric, not phonon frequencies or certified saddle indices. For
+these measured matrices, retaining only one internal direction cannot
+leave a positive released complement. This is a property of the measured
+quadratic, not a new reduction theorem.
+
+The registered reference spaces must be tested against this same internal
+problem rather than displacement coverage alone. The rank-three T triplet,
+rank-four optical control and each of the four rank-four Cmma registrations
+leave negative released curvature at both centers and steps (Table A7).
+However, retaining all 33 T optical directions leaves a positive three-cell-
+direction complement, while its retained Schur block still has two negative
+directions. Thus the evidence does not show that all fixed references fail.
+The ranks and released dimensions differ, and a complete quadratic response
+remains invariant under valid basis partitions as described in Section 2.3.
+
+Releasing the remaining coordinates at fixed two-dimensional coordinates
+lowers the T-center energy by 0.00065214 eV per twelve-atom cell and the
+preserving-center energy by 0.04948493 eV per cell. The curvature-seeded
+arms reach released-gradient norms 0.02630 and 0.01959 eV/Angstrom in two
+and five new SCFs, respectively; neither identity arm reaches the common
+target within twelve attempts (Table A8). This is a bounded local result,
+not a whole-NEB acceleration benchmark. The preceding 296 curvature SCFs
+and earlier path costs are additional, so no net cost advantage follows
+from these call counts alone. Post-relaxation released stability remains
+unmeasured.
+
+The two resulting candidate energies differ by only 0.00081345 eV per
+cell, but energy proximity does not establish a common mechanism or branch.
+They retain a 0.19178-Angstrom translation-free distance in the common
+ordered T chart, without atom rematching or rotation. Moreover, each
+retained plane is anchored at its own original center. These local
+fixed-coordinate results therefore do not replace any sampled G2 barrier,
+establish branch merger or certify a transition structure. They motivate
+checking conditional equilibration and branch stability before using a
+low-dimensional surface for prediction.
+
 ### 3.4. Endpoint closure can conceal a bottleneck-region discrepancy
 
 The signed-work diagnostic uses the eight completed clamped training bands,
@@ -769,6 +849,17 @@ can close at the final well but retain a large interior discrepancy.
 Cross-strain pairing additionally shows that a prescribed stress partial
 need not have the sign of the actual peak shift. These are separate
 properties, not interchangeable measures of energy-model accuracy.
+
+The completed local-release test makes this distinction operational:
+an ordinary-converged chain and a compact displacement projection do not
+guarantee equilibration of the coordinates omitted from a proposed surface.
+The substantial preserving-center energy change occurs without changing
+the electronic contract. It warrants a conditional-branch test, not a
+retrospective change of the whole-path barrier table. Conversely, a
+gradient-converged fixed-coordinate candidate is not a conditional minimum
+until the released block has been checked. The local tests narrow the
+next material question to whether a stable, reproducible branch supports
+an independent response prediction; they do not already answer it.
 
 Reference adaptation alone cannot establish a methodological improvement.
 For the same fully represented quadratic and fixed-control stationary
@@ -1352,3 +1443,79 @@ $g_q=-F[H_T^{-1}H]^T/\sqrt m$, with the same translation-free gauge for the
 gradient and each declared reference span. The source translation-overlap
 norm 0.0036854 is retained; no ASR repair is made to modes or raw forces.
 Published LDA Cmma vectors are geometric controls, not our PBE curvature.
+
+### D.4. Complete local joint-curvature measurements
+
+Table A6. Smallest internal eigenvalues of the symmetrized finite-step
+matrices, in eV/Angstrom squared. Steps are in Angstrom. The last column
+counts negative eigenvalues after excluding the internal path tangent.
+Counts are raw signs, not uncertainty-resolved stationary indices. The
+prescribed substrate control and three rigid translations are excluded
+from these internal spectra. T and preserving denote the original
+sampled zero-strain peak centers, not certified TSs.
+
+| Center | Step | First | Second | Third | Internal negative | Tangent-complement negative |
+|---|---:|---:|---:|---:|---:|---:|
+| T | 0.01 | -0.276193 | -0.164648 | 0.053216 | 2 | 1 |
+| T | 0.02 | -0.273596 | -0.161974 | 0.050132 | 2 | 1 |
+| Preserving | 0.01 | -1.271819 | -0.447450 | 0.173653 | 2 | 1 |
+| Preserving | 0.02 | -1.281821 | -0.455584 | 0.172180 | 2 | 1 |
+
+Full native responses, gradients, reciprocity and two-step diagnostics are
+retained in the [complete local-curvature case](../../benchmarks/hfo2_channels/20261008/G3_complete_curvature_E159_20261014/README.md).
+No ASR or source-force adjustment is applied. A positive numerical
+complement at a nonstationary center is not post-relaxation stability.
+
+### D.5. Strong references in the joint released space
+
+Table A7. Minimum released eigenvalue in eV/Angstrom squared, followed by
+its raw negative count in parentheses. Columns distinguish both centers
+and finite steps. All four Cmma registrations are retained, including
+numerically tied rows. Each reference is an atomic span in the common
+36-dimensional internal problem; cell directions remain released. These
+unequal retained ranks are not matched-size competing predictors. The
+complete T optical reference is a strong control, not an excluded failure.
+
+| Atomic reference | Retained rank | Released dimension | T, 0.01 | T, 0.02 | Preserving, 0.01 | Preserving, 0.02 |
+|---|---:|---:|---:|---:|---:|---:|
+| T geometric triplet | 3 | 33 | -0.230562 (2) | -0.227205 (2) | -1.271818 (2) | -1.281820 (2) |
+| T complete optical doublets | 4 | 32 | -0.175388 (1) | -0.173389 (1) | -0.246013 (1) | -0.253469 (1) |
+| All T optical | 33 | 3 | 2.956214 (0) | 2.956557 (0) | 3.090798 (0) | 3.092172 (0) |
+| Cmma 103 | 4 | 32 | -0.153434 (1) | -0.151224 (1) | -0.447452 (2) | -0.455596 (2) |
+| Cmma 106 | 4 | 32 | -0.153437 (1) | -0.151227 (1) | -0.447451 (2) | -0.455594 (2) |
+| Cmma 114 | 4 | 32 | -0.153437 (1) | -0.151227 (1) | -0.447451 (2) | -0.455594 (2) |
+| Cmma 127 | 4 | 32 | -0.153434 (1) | -0.151224 (1) | -0.447452 (2) | -0.455596 (2) |
+
+The [reference-complement records](../../benchmarks/hfo2_channels/20261008/G3_complete_curvature_E159_20261014/reference_complements_complete.json)
+retain separate atomic-only and joint release tests. This table uses the
+joint blocks; published reference frequencies are not substituted for
+PBE curvatures. Raw signs and registration spread do not bound physical
+error. The all-optical retained Schur block has two raw negative directions
+in each case despite its positive released block.
+
+### D.6. Bounded fixed-coordinate relaxation comparison
+
+Table A8. Actual new SCFs, final released-gradient norms (eV/Angstrom)
+and native call seconds at fixed retained coordinates. A dash denotes
+no gradient-converged final candidate.
+
+| Center | Initialization | New SCFs | Final released norm | Native call seconds |
+|---|---|---:|---:|---:|
+| T | Identity, budget exhausted | 12 | - | 1489.02 |
+| T | Curvature seed | 2 | 0.02630 | 244.81 |
+| Preserving | Identity, budget exhausted | 12 | - | 1118.94 |
+| Preserving | Curvature seed | 5 | 0.01959 | 452.40 |
+
+Each arm has the same twelve-attempt limit and 0.03-eV/Angstrom
+released-gradient norm target. The last evaluated trial is not substituted
+for a missing final candidate. Native seconds exclude cached-center
+evaluation and the preceding 296 curvature SCFs; earlier path costs are
+also additional. Identity costs are censored, so ratios of these call
+counts are not measured speedup factors.
+
+The [native canary records](../../benchmarks/hfo2_channels/20261008/G3_conditional_canary_E160_20261014/README.md)
+retain all 31 new SCFs, attempt reservations, allocation times and
+cache-only optimizer replays. Final candidate energies are
+-9782.63681659 eV/cell (T) and -9782.63600314 eV/cell (preserving), using
+four-formula-unit cells. No unseen-strain label, new full path or
+post-relaxation curvature is inferred from this comparison.
