@@ -4112,3 +4112,32 @@ receipt read, not raw EFS reparse. E153 remote main now natively confirmed.
 No newDFT/scheduler/live-source/input/reference/conditional/holdout change;
 no fullE154suite, Hessian, H1/H2, TS or paper-readiness claim. Full goal active.
 See reference_transport_E154_20261014 for actual source, scalar data and scope.
+
+## E155 — complete first amplitude, negative transverse complements (2026-10-14)
+
+Previous E154:PROGRESS. The unchanged E152 native auditor replayed76T/77
+preserving completed probe SCFs from the same E150 allocations. All original
+six-byte hashes, DSIZE32, convergence, geometry and full E/F/stress/gradient
+checks passed; no failure artifacts. Reports are matching native byte copies,
+not normalized data. These153prefix records overlap the earlier audits and
+are not153new calculations. Both have37complete signed pairs at.01Angstrom;
+each has only one complete pair at.02. No full two-step result yet.
+
+New offline arithmetic replay separates36internal directions from prescribed
+control. Raw first two internal eigenvalues: T-.276193429/-.164648089,
+preserving-1.271818849/-.447449785eV/Angstrom². The normalized measured path
+tangent's35-dimensional complement still has one negative direction in each
+case, minima-.176131009/-.447450308. Internal gradients.108189564/.305934312
+are nonzero. This is not a certified index/TS or a change to ordinary.10NEB.
+Two raw negative directions forbid a positive codimension-one complement in
+this matrix; no arbitrary positive Schur elimination. A34Dpositive spectral
+complement is only an algebraic diagnostic, not final axes or a relaxed branch.
+
+Initial analysis guard wrongly demanded zero translation in the native path
+tangent; it refused before any output. Corrected to explicitly report the
+excluded translation norm(.101688097/.007027557) and normalize the measured
+internal tangent. Original forces/path/source/SCF unchanged. No physical
+threshold or author-mode array added. Second-step, numerical, branch and
+strong-reference independent-prediction gates remain. No automatic third
+center/3Dface/cutoff change or physical+.005geometry/label. See
+G3_first_amplitude_E155_20261014 for native evidence and actual test/replay scope.
