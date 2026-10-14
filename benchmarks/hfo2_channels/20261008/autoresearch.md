@@ -4298,3 +4298,31 @@ First16synthetic replay checks had one fixture omission of final verification;
 only expected callback/cache counts1→2changed, original report retained.
 No new full suite, CI/release/PyPI or physical+.005access; goal active/incomplete.
 See G3_conditional_canary_E160_20261014 for complete evidence and boundaries.
+
+## E161 — bounded first5x5conditional-candidate sheets launched (2026-10-15)
+
+Previous E160:PROGRESS. Two existing centers, no new Hessian center/material/
+full band. Prospective axes[-.2,-.1,0,.1,.2]Angstrom,25nodes including reused
+E160origin;24new nodes×12reserved attempts=288maximum/face.56remaining
+training/8independent points untouched. Same physics and ordinaryNEB.10,
+same conditional.03/radius.05/domain.5/minimum distance1.6. No+.005access.
+
+Fixed Manhattan/lexicographic order and nearest-safe-successful-parent warm
+continuation, one branch only. Budget/nonconvergence stays a hole, last trial
+not promoted; actual backend failure stops remaining nodes. Recoverable
+exclusive point JSONs and separate per-node conservative namespaces. A
+temporarily incomplete metadata JSON is not evidence of a native failure.
+
+16new checks,189local/189independent pass; actual import roots checked,
+6565snapshot files present. Both independent prepare CLIs reproduce exact
+frozen configurations. Runtime from testede3811a09bd1835f72fa00549a6fd06a200792e6e,
+380Python files/10inputs exact; shell syntax/zero-run guard and native old
+center/conditional-origin EFS preflight pass without new DFT. No old runtime
+overwrite, pseudo/orbital/ecut/SCF drift or external-control relaxation.
+
+Actual one-shot held admission/release yields28862319T and28862441preserving,
+hfacnormal01/one node32MPI/12h each, at most two committed study allocations.
+No repeated zero-point SCF or new monitor/CI/release. This is a training
+conditional candidate sheet, not certified stability/global PES/TS/contour,
+full-cost acceleration or frozen prediction. Goal active/incomplete; see
+G3_conditional_faces_E161_20261015 for exact input/source/test/native evidence.
