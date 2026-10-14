@@ -4715,3 +4715,57 @@ physical+.005sealed. Next complete/audit preserving face, choose training-only
 valid domain/representations and test frozen strong-control predictions;
 no unregistered third center/new material/full path. Full goal active.
 Evidence:G3_release_manuscript_E174_20261015.
+
+## E175 — actual B3 atomic-only release treatment submitted (PROGRESS)
+
+Prior turn PROGRESS_E174_639b1847. Current tree, finite plan, v1/v2prediction
+protocol and exact28862441handle rechecked before action. No /jobs or
+/autoresearch slash expansion is available; use real Slurm and durable logs.
+ABACUS native audit workflow applied with HF-only restriction, not235defaults.
+
+Within the original two centers/faces, reserve5atomic-release training-node
+treatments per face: origin and the four existing axial .1A Q points. No
+new Hessian center/material/strain/full path/independent label. T29→34/81,
+P30→35/81, remaining47/46;8independent each and physical+.005sealed.
+Same coupled Q/frozen seeds;31released atomic directions have exact zero
+cell rows and are Q-orthogonal. Cell is fixed to each Qseed, not one common
+cell across Q. Original full36D Hessian seed/.05trust/.5totalradius/1.6minsep,
+.03Euclidean atomic-released target; not a fulljoint-gradient or stability
+certificate. Original safeguarded BFGS, not failed E171feasible optimizer.
+Eachnode12new attempts includingfailures,60perface/120total. Cachecenter/
+8frozen seeds exactly; firstcallbackmiss refuses beforeDFT. Unknown/backend
+failures propagate, no lasttrialpromotion, single-rebound stop or signclip.
+
+R1native preflight rejects regenerated frozen embedding bitwise before
+DFT/submission. Preserve it. In fresh r2bundle, native map explicitly uses
+literal original full seed plus B*(u-u_seed). This removes cross-machine
+matrix-product roundoff from cache identity without relaxing cache matching,
+Q arithmetic threshold, geometry domain or changing any old seed/input.
+1ULPbasis-variation regression keeps seed exact. Development configs moved
+to Cscratch for provenance, no raw calculation or live source overwritten.
+
+Corrected native preflight reparses all8original frozen EFS/assets/DSIZE32,
+oldcenters/origins and380runtime files;10inert STRU/input decks pass exact
+fixedcell/control,17digit geometry roundtrip and6physical hashes. One external
+immutable5file bundle; old E161runtime unchanged. Local/independent73related
+checks each across4modules,16new,0failures/errors/skips; not full regression.
+Finaltestedtree79338ebb/archive9c0d6500, material/config/source bytes exact
+in independent extraction. No private author arrays exported.
+
+One-shot job28867177submittedheld/validated/released:1node32CPUs/1task,
+hfacnormal01,mpirun32,OMP/MKL/OpenBLAS1,5hcap, two centers serial. Intent is
+saved before sbatch; ambiguous intent never retried. At most2committed
+allocations includingheld/pending. RO06:00:19confirms PENDING due
+AssocGrpCpuLimit,0newSCFs/points, no backend failure; this is a verified wait,
+not terminal or a reason to duplicate/stop other jobs. Original preserving
+28862441RUNNING,23/25processed/17candidates; full face not yet present.
+No new B3result/convergence/acceleration/independent advantage is claimed.
+
+JCTC mainc6b33de6unchanged, finite plan updates P4/P5 only. This is the
+registered release-treatment factor, not completed T/Cmma/B0--B5 matrix.
+Next audit actual atomic candidates and compare signed EF→EA→EJ at all
+five Qs/centers with costs; complete original preserving face without
+interpolating holes. Stablebranches/finaltraining-onlyrepresentatives,
+strongcontrols/independentpredictions and numericalresolution remain.
+No install/otherhosts/CI/newmonitor/release/PyPI/journal submission.
+Full goal active; evidence:G3_atomic_release_E175_20261015.
