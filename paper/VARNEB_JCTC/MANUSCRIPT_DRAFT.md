@@ -493,6 +493,28 @@ Equal numeric coordinates at the two centers do not identify the same
 physical structure. Finite released residuals also preclude treating
 retained partial gradients as exact conditional-envelope derivatives.
 
+For the separate joint length chart, a fixed orthonormal partition
+$x=x_0+V_q q+V_r r$ permits the work check of Section 2.5 on neighboring
+conditional candidates. With $g_q=V_q^Tg$ and $g_r=V_r^Tg$, the endpoint
+trapezoids obey
+
+$$
+\Delta E-W_q=W_r+\mathcal R,\qquad
+W_\alpha=\tfrac12(g_{\alpha,i}+g_{\alpha,j})^T\Delta\alpha,
+\quad\alpha\in\{q,r\}.
+$$
+
+Here $\mathcal R=\Delta E-W_q-W_r$ is the full endpoint quadrature
+discrepancy, not an energy-error bound. The Cauchy inequality bounds only
+the released endpoint term,
+$|W_r|\leq(\|g_{r,i}\|+\|g_{r,j}\|)\|\Delta r\|/2$; it does not bound
+unsampled energy variation. We retain this term at finite convergence
+rather than setting it to zero by an exact-envelope assumption. Closed
+grid loops provide a complementary diagnostic: their raw energy changes
+telescope to zero, whereas finite endpoint-gradient quadrature need not.
+Neither a nonzero circulation nor a large neighboring displacement alone
+establishes nonconservative DFT forces or a branch discontinuity.
+
 ## 3. Results: competing responses under one mechanical intervention
 
 ### 3.1. Opposite candidate responses do not imply easier switching
@@ -960,6 +982,28 @@ the unchanged electronic contract; they are not completed DFT results.
 They use the original cached origins and seen released counterparts,
 reserve training slots only, and do not replace the independent tests.
 
+The subsequently completed T candidate sheet exposed a separate
+finite-convergence issue. Its 25 points required 118 new SCFs in addition
+to the cached released origin. Final released-gradient norms ranged from
+0.00653 to 0.02978 eV/Angstrom, and the largest total internal displacement
+was 0.46378 Angstrom within the original 0.5-Angstrom domain. Sampled
+energies spanned -38.531 to 0 meV/cell relative to that released origin.
+These are fixed-coordinate candidates, not an end-to-end MEP or certified
+stable conditional minima.
+
+Across the 40 nearest grid edges, the largest absolute discrepancy using
+only retained endpoint work was 1.209 meV/cell. On that edge the signed
+released term was 1.094 meV/cell, leaving a full quadrature discrepancy
+of 0.115 meV/cell. Over all edges the largest absolute full discrepancy
+was 1.039 meV/cell. Across 16 elementary closed loops, the largest absolute
+retained and full endpoint circulations were 2.000 and 0.578 meV/cell,
+respectively; these maxima occurred on different loops. This
+[complete-sheet diagnostic](../../benchmarks/hfo2_channels/20261008/G3_sheet_consistency_E172_20261015/README.md)
+retains finite released residuals and unsampled quadrature separately.
+The values are not DFT, interpolation or barrier-error bounds and do not
+certify smoothness or stability. They also do not identify the cause of
+the original quadratic's finite-domain disagreement.
+
 ## 4. Discussion and remaining material tests
 
 The completed training comparison demonstrates why a decreasing barrier
@@ -1000,6 +1044,13 @@ therefore replace explicit conditional sampling and stability tests.
 The frozen/relaxed comparison is designed to separate two sources of
 disagreement under the same Hamiltonian, not to repair the result by
 changing the cutoff or to fit seen data and relabel them independent.
+
+The completed T sheet adds a practical caution for derivative-based
+surface construction: finite-residual retained partial gradients need not
+form the gradient field of an exactly relaxed conditional energy. The
+signed released-work term must remain visible, while endpoint quadrature
+and branch validity still require separate checks. This diagnostic does
+not substitute for independent surface energies or transverse stability.
 
 Reference adaptation alone cannot establish a methodological improvement.
 For the same fully represented quadratic and fixed-control stationary

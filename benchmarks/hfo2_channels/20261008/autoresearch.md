@@ -4582,3 +4582,44 @@ Final tested treea22be6ec. Execution preflight1ffb76f6; completeT auditb8e78367.
 Full stable-face/independent-strong-control prediction goal remains active.
 Evidence:G3_feasible_execution_E171_20261015. Next:process the original8statics
 when genuinely complete, audit them, then admit the bounded matched arm.
+
+## E172 — completed-sheet consistency analyzed and integrated, no new sampling (2026-10-15)
+
+Previous E171:PROGRESS,6472844b. Reuse the complete T audit, all25candidate
+points/118sourceSCFs and cached released origin. Analyze40nearest edges and
+16elementary loops using the existing sampled_path_work. Direct retained/
+released formulas and independent full40D atomic/open-cell/control work agree;
+fixed-control work is zero. No new physical result, fit, interpolation or point.
+
+Final T radii range.04579–.46378A, inside the old.5A domain; released gradients
+range.006525–.029784eV/A. Energies span-38.530500to0meV/12atomcell relative
+to cached origin. Largest retained-only endpoint energy/work difference1.209125
+meV/cell contains signed released work1.093874, leaving.115251full discrepancy.
+The maximum full discrepancy across40edges is1.039406. Largest absolute retained/
+full loop circulations2.000384/.578259occur on different loops; raw loop energy
+changes telescope to zero. No claim of nonconservative DFT forces, a branch jump,
+or a measured physical/interpolation/barrier error follows.
+
+The endpoint Cauchy inequality bounds only released endpoint work. An explicit
+smooth cubic with zero endpoint derivatives and finite energy change prevents
+it from becoming a false energy-error bound. Finite residuals remain visible;
+the original .03conditional/.10ordinaryNEB targets and all electronic inputs
+are unchanged. No released-stability or exact-envelope derivative certificate.
+
+Add51lines to the main manuscript's existing Methods/Results/Discussion and
+update detailed methods/terminology. Preserve all old nonblank lines in order,
+113table lines,9figure bytes,13external citations and TeX wrapper. No new
+abstract/conclusion, optimizer advantage or independent prediction claim.
+Existing LuaLaTeX compiles31pages; all pages rendered/contact-reviewed, new
+methods/results/discussion pages7/18/19 examined in detail. Nooverfull,
+underfull or missing characters. This remains an internal incomplete draft.
+
+83local/83independent related checks pass,23new/7modules, not full regression;
+full independent analysis bytes exact7696aeade3. Tested tree055ec328. No new
+DFT/nativeSCFreparse/scheduler write/training reservation/holdout access.
+RO04:50confirms preserving28862441live,20processed/17candidates,115SCFs/no
+observed backend failure. The admitted8static controls28865656now RUNNING,
+3/8complete onnode6; no duplicate submission or third allocation. Full stable-
+branch/independent-strong-control prediction goal remains active. Next native
+audit and analyze these controls, then bounded matched-arm admission only.
+Evidence:G3_sheet_consistency_E172_20261015.

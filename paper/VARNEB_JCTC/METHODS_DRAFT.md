@@ -743,3 +743,33 @@ face's eight independent slots remain untouched. R=0 is relative to the
 original center, and Q can include open-cell motion; this is not a fully
 fixed-cell experiment. The eight controls are prepared and native-preflighted,
 not computed. The immutable original batch policies remain historical records.
+
+## 21. Completed candidate-sheet endpoint work check
+
+The original T first5x5batch is now normally complete: 25 gradient candidates,
+one exactly reused released origin and 118newSCFs. The complete native audit
+reparses all118records and replays24new optimizer trajectories. The separate
+matched optimizer arm reserved later in E170 leaves T29/81training slots
+committed and preserving30/81; 52and51remain, respectively. Each face's8
+independent slots remain untouched. No extra structure is calculated for
+the following post-hoc diagnostic.
+
+The original36Djoint length chart is partitioned into the fixed retained
+rank2plane and its orthogonal rank34complement. The existing sampled-work
+implementation evaluates40nearest axial edges and16elementary closed loops.
+Physical gradients are pulled back from all40native components without ASR;
+the prescribed control remains exact and its work vanishes on this fixed-
+strain sheet. A separate contraction in the full chart, partitioned into
+atomic/open-cell/prescribed-control blocks, verifies the internal work sum.
+
+For an edge, the retained-only energy-work difference equals signed released
+endpoint work plus the full endpoint quadrature discrepancy. The Cauchy
+bound uses the two measured released-gradient norms and released displacement;
+it bounds that endpoint trapezoid only, not energy error between samples.
+A synthetic smooth cubic with zero endpoint gradients and a finite energy
+change explicitly tests this distinction. Closed raw energy loops telescope
+exactly; their endpoint-gradient trapezoids need not close. The analyses do
+not assume an exactly stationary envelope, diagnose a branch jump from a
+large step alone, interpolate through holes or certify released stability.
+The complete-sheet output and its input/source hashes are archived in
+[E172](../../benchmarks/hfo2_channels/20261008/G3_sheet_consistency_E172_20261015/README.md).
