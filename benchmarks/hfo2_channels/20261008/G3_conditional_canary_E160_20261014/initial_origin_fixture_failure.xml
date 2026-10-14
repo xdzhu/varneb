@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="16" time="1.544" timestamp="2026-10-14T23:49:34.658634" hostname="Aero"><testcase classname="tests.test_hfo2_G3_canary_audit" name="test_explicit_final_candidate_matches_native_coordinate_not_the_last_trial" time="0.005" /><testcase classname="tests.test_hfo2_G3_canary_audit" name="test_low_gradient_trial_is_not_promoted_after_real_budget_exhaustion" time="0.005" /><testcase classname="tests.test_hfo2_G3_canary_audit" name="test_corrupted_or_misclassified_outcomes_are_refused[false_budget]" time="0.005" /><testcase classname="tests.test_hfo2_G3_canary_audit" name="test_corrupted_or_misclassified_outcomes_are_refused[wrong_count]" time="0.004" /><testcase classname="tests.test_hfo2_G3_canary_audit" name="test_corrupted_or_misclassified_outcomes_are_refused[false_convergence]" time="0.004" /><testcase classname="tests.test_hfo2_G3_canary_audit" name="test_corrupted_or_misclassified_outcomes_are_refused[wrong_final_record]" time="0.003" /><testcase classname="tests.test_hfo2_G3_canary_audit" name="test_corrupted_or_misclassified_outcomes_are_refused[fixed_control]" time="0.004" /><testcase classname="tests.test_hfo2_G3_canary_audit" name="test_corrupted_or_misclassified_outcomes_are_refused[different_Q]" time="0.003" /><testcase classname="tests.test_hfo2_G3_canary_audit" name="test_corrupted_or_misclassified_outcomes_are_refused[wrong_energy]" time="0.003" /><testcase classname="tests.test_hfo2_G3_canary_audit" name="test_corrupted_or_misclassified_outcomes_are_refused[wrong_gradient]" time="0.003" /><testcase classname="tests.test_hfo2_G3_canary_audit" name="test_corrupted_or_misclassified_outcomes_are_refused[negative_time]" time="0.003" /><testcase classname="tests.test_hfo2_G3_canary_audit" name="test_corrupted_or_misclassified_outcomes_are_refused[wrong_cost]" time="0.003" /><testcase classname="tests.test_hfo2_G3_canary_audit" name="test_corrupted_or_misclassified_outcomes_are_refused[boolean_counter]" time="0.003" /><testcase classname="tests.test_hfo2_G3_canary_audit" name="test_existing_output_refuses_before_native_read_or_scheduler_query" time="0.011" /><testcase classname="tests.test_hfo2_G3_canary_audit" name="test_cache_only_oracle_preserves_order_cache_and_hard_attempt_cap" time="0.004" /><testcase classname="tests.test_hfo2_G3_canary_audit" name="test_exact_origin_cache_replay_never_calls_an_oracle_or_changes_geometry" time="0.004"><failure message="ValueError: cache-only replay differs from original optimizer decisions/counters">example = (array([[-0.28867513,  0.        ,  0.        , ...,  0.        ,
+         0.        ,  0.        ],
+       [ 0.      ...02574995e-06, -0.0019710270826769237, -0.000822458093525842, 1.4282425484341983e-05, ...], 'status': 'complete', ...}])
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x0000028A30E301F0&gt;
+
+    def test_exact_origin_cache_replay_never_calls_an_oracle_or_changes_geometry(example,monkeypatch):
+        basis,axes,energy,_,_,_=example
+        config=dict(internal_axes_36_by_2=axes.tolist())
+        outcome=dict(arm='identity',point=dict(coordinates_internal_A=np.zeros(36).tolist(),
+            energy_eV_cell=energy,orthogonal_gradient_norm_eV_A=0.),
+            callback_requests=1,center_cache_hits=1,trial_geometry_and_domain_screens=dict(checks=1,rejected=0))
+        monkeypatch.setattr(audit.worker,'geometry_guard',lambda *a:True)
+&gt;       result=audit.replay_arm(None,basis,config,energy,np.zeros(40),np.eye(36),outcome,[])
+
+tests\test_hfo2_G3_canary_audit.py:112: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+chart = None
+basis = array([[-0.28867513,  0.        ,  0.        , ...,  0.        ,
+         0.        ,  0.        ],
+       [ 0.       ...   ,  1.        ],
+       [ 0.        ,  0.        ,  0.        , ...,  0.        ,
+         0.        ,  0.        ]])
+config = {'internal_axes_36_by_2': [[0.14742209244701898, -0.12677216807839847], [0.03408668042198881, -0.0244088701251039], [0....0975915794942238], [-0.0011054559546577645, -0.009805391255787613], [0.051608074747624536, 0.07030923876629203], ...]}
+energy = -3.0
+gradient = array([0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0.])
+hessian = array([[1., 0., 0., ..., 0., 0., 0.],
+       [0., 1., 0., ..., 0., 0., 0.],
+       [0., 0., 1., ..., 0., 0., 0.],
+       ...,
+       [0., 0., 0., ..., 1., 0., 0.],
+       [0., 0., 0., ..., 0., 1., 0.],
+       [0., 0., 0., ..., 0., 0., 1.]])
+outcome = {'arm': 'identity', 'callback_requests': 1, 'center_cache_hits': 1, 'point': {'coordinates_internal_A': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, ...], 'energy_eV_cell': -3.0, 'orthogonal_gradient_norm_eV_A': 0.0}, ...}
+records = []
+
+    def replay_arm(chart,basis,config,energy,gradient,hessian,outcome,records):
+        """Reexecute the pinned optimizer on cached E/g only, with no file writes."""
+        oracle=CacheOnly(records)
+        evaluate=worker.InternalEvaluator(oracle,basis,energy,gradient)
+        plane=worker.ModePlane(np.zeros(36),np.asarray(config['internal_axes_36_by_2']),np.ones(36),np.eye(2),
+            ('coupled internal1','coupled internal2'),'local length','G3-center-canary-only')
+        screens=dict(checks=0,rejected=0)
+        def guard(x):
+            screens['checks']+=1
+            ok=worker.geometry_guard(chart,basis,x);screens['rejected']+=int(not ok)
+            return ok
+        point=None;reason=None
+        try:
+            point=worker.relax_orthogonal_at_q(plane,[0.,0.],evaluate,optimizer='safeguarded_bfgs',
+                trial_validator=guard,initial_trust_radius=worker.SETTINGS['initial_trust_radius_A'],
+                initial_hessian=hessian if outcome['arm']=='curvature_seed' else None,
+                gradient_tolerance=worker.SETTINGS['gradient_tolerance_eV_A'],
+                max_iterations=worker.SETTINGS['maximum_iterations'])
+        except RuntimeError as exc:
+            reason=str(exc)
+            if reason not in ('mode evaluation attempt budget exhausted; calculator was not called',
+                              'no starting point reached the orthogonal-gradient tolerance'):raise
+        if (len(oracle.seen)!=len(records) or evaluate.callback_requests!=outcome['callback_requests']
+                or evaluate.center_cache_hits!=outcome['center_cache_hits']
+                or screens!=outcome['trial_geometry_and_domain_screens']
+                or (point is None)!=(outcome['point'] is None)):
+&gt;           raise ValueError('cache-only replay differs from original optimizer decisions/counters')
+E           ValueError: cache-only replay differs from original optimizer decisions/counters
+
+scripts\audit_hfo2_G3_conditional_canary.py:75: ValueError</failure></testcase></testsuite></testsuites>

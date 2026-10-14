@@ -4268,3 +4268,33 @@ No author arrays exported. No new full-suite result, physics/cutoff/NEB.10
 change, CI, release or physical+.005access. Goal active/incomplete; next
 audit actual two-arm results, then proceed in the existing two-face budget.
 See G3_complete_curvature_E159_20261014 for exact data/pins/receipts/tests.
+
+## E160 — actual conditional DFT benchmark and native replay (2026-10-15)
+
+Previous E159:PROGRESS. Both original jobs COMPLETED/0:0. Identity exhausted
+12SCFs at each center; curvature initialization reached the common.03target
+in2(T)/5(preserving)SCFs, residuals.02630/.01959.31new native SCFs reparsed:
+original six inputs/SCF/32MPI/EFS/ordered geometry/gradient passed. No new
+submission, source/cutoff change, failure refund or repeated center DFT.
+
+Read-only strict cached replay in the pinned native environment reproduces
+all four original optimizer arms' trial order/cache hits/guards/stop reasons/
+final coordinates; missing/reordered points refuse without a calculator.
+Last completed SCFs are not accepted iterates. Original identity convergence
+costs are censored, so no12/2or12/5speed factor or full-NEB speedup.296curvature
+preparation SCFs and prior G2/centers remain additional, not free.
+
+Preserving Q0release lowers.04948493eV/cell. Its common translation-free
+chart distance to the original T center decreases.36375to.15906Angstrom,
+but remains.19178from the separately relaxed T candidate. Their small
+.00081345eV/cell energy difference has no resolved physical error bound.
+No channel-merging, phase, new barrier, stable release block or TS claim.
+Proceed to the existing two local faces, not another material/Hessian center.
+
+19new checks;173local/173independent pass,0f/e/s. Snapshot6555tracked files,
+actual import roots verified; three edited source texts normalized-equal,
+native files/archives byte-identical, actual structural CLI values exact.
+First16synthetic replay checks had one fixture omission of final verification;
+only expected callback/cache counts1→2changed, original report retained.
+No new full suite, CI/release/PyPI or physical+.005access; goal active/incomplete.
+See G3_conditional_canary_E160_20261014 for complete evidence and boundaries.
