@@ -3980,3 +3980,36 @@ uniqueDSIZE32 and full E/F/stress/40-coordinate gradient; call times
 101.678342/104.632985s. Real material data, not whole Hessians or TS/face/
 prediction certification. Same unchanged allocations continue; roughly23:00
 to01:00CST only if later cost is comparable, not a guaranteed completion time.
+
+## E151 — actual existing-band cross-strain work, no new DFT (2026-10-14)
+
+Outcome: PROGRESS; previous E150 outcome remains partial native launch, not
+material certification. Actual admission/pairing uses8bands,72records,
+66distinct log/STRU identities,36pairs in a single ordered unwrapped chart.
+Two72-record reader passes are not144SCFs. Endpoint trapezoidal work splits
+atomic/explicit translation/open-row/prescribed-control contributions;
+independent physical contractions agree to6.662e-16eV/cell. All actual peak
+indices match at0/+1%. Keep connection dependence and nonzero residuals:
+preserving control-12.859/atomic+36.895/observed+28.596/residual+4.639meV/fu;
+reversing residual-11.495meV/fu. These are neither causal mode energies nor
+an envelope derivative, frozen-slice measurement or physical error interval.
+
+Six analytic complete-harmonic-release checks tie under retained rank1/3/4
+and rotated references, nonzero gradients/internal index1. No reference
+rename alone improves this exact limit; strong baseline and preregistered H2
+are retained, not weakened. Real branch/finite-basis/nonlinear/cost evidence
+is still required. Initial source caches are exact; binary64 serialization
+lift4.441e-16Angstrom/work3.469e-18eV exposed an overly strict equality.
+Explicit1e-12 algebraic guards are not physical accuracy bounds or a repair;
+an integer initial relift still fails. No source E/F/stress/ASR change.
+
+72local/72independent related checks pass with0failure/error/skip; actual
+independent CLI reproduces all scientific fields. Tested tree
+646b7cfdc2e80448ddaa98bd6855d429b6424079/archive
+a0b88df333ea1377c475640978dbc8aea6ce22a0a094452ce2abdf48ac4c9017;
+all6449tracked files present before tests. Verified LF/CRLF code SHA metadata
+only differs in replay. No whole E151 suite or paper/figure change claimed.
+At19:20:33CST both original curvature jobs remain live,23/148complete each,
+stderr0,receipt means102.655/104.513s; raw outputs not reparsed by this
+status check. No DFT/scheduler/live-source/reserved-geometry change. Current
+G3/full goal active and incomplete. See cross_strain_work_E151_20261014.

@@ -272,3 +272,12 @@ branch/TS or prediction certificate. EMT numerical derivatives/conditional
 relaxations check the full physical interface; retained native zero/+1%
 frames test common-reference replay without new DFT or physical+.005access.
 The original ABACUS100Ry/full10auDZP and finite study budgets stay unchanged.
+
+The [observed cross-strain work example](../benchmarks/hfo2_channels/20261008/cross_strain_work_E151_20261014/README.md)
+reuses this controlled chart with the existing0/+1% native structures. Its
+dual endpoint contractions independently match Cartesian force/stress work,
+without intermediate DFT or held-out structures. The reported connection-
+dependent work terms and quadrature residuals are not unique mode energies,
+stationary barrier derivatives or material uncertainty bounds. Complete
+harmonic release is also checked for invariance under retained/reference
+basis changes: coordinate renaming alone cannot establish prediction gain.
