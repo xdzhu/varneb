@@ -4511,3 +4511,33 @@ scheduler write/training reservation/physicalholdout access/runtime mutation.
 Actual matched bounded material experiment and final stable-face/independent
 strong-control evidence still required. E166 controls retain resource priority.
 Full goal active. Evidence:feasible_steps_E169_20261015.
+
+## E170 — real matched arm frozen; native start/cache/novel proposal checked without DFT (2026-10-15)
+
+Previous E169:PROGRESS,f0c9cce1. Fix original preserving point13, exact requested
+start/actual first SCF,parent5,first-step36Dseed,.05trust,.03full-gradient target,
+.5total-radius/1.6distance guard and original six inputs. Released radius
+.4472135954999579 derives from the same fixed Q/metric; no domain expansion.
+Hash-pin13lossless original JSONs,cacheZIP02cf4f9b. Exact physical-cache hits
+only; same-contract delegate keeps separate conservative budget/error handling.
+
+Reserve one preserving training slot:30/81committed,51left;T29/81,52left;
+all8independent slots/face unchanged. Future12new-attempt/1node32MPI/1h arm
+must include old12SCF/cache/curvature/path preparation in net cost. Entry has
+prepare/probe only, not a material runner or submission. Execution/allocation/
+cost manifest still needs freezing; E166 statics keep priority.
+
+Configf937a2e3 independently reproduces exact bytes. Native old380source hashes,
+source/origin EFS and12original pointSCFs reparse; old baseline strict replay
+passes. New solver reuses7old callbacks including exact original start, then
+requests a new coordinate:totalnorm.49999999999999994A,mindistance2.0505811584A,
+fixedQ/control/substrate and actual STRU/sixhashes pass. Inert deck only;
+no invented E/g, no DFT or benefit claim. Native report2c22c66c.
+
+233/233checks pass before native;final234/234pass,16new/11related modules,
+not full regression. First transfer's POSIX/Windows path mismatch failed
+before SCF/queue state; fresh-r2 validates all payload before archive creation.
+Prototype coordinate-hash label corrected before final freeze; drafts retained,
+physical inputs unchanged. Actual E166 admission observes twoRUNNING originals,
+readyfalse/no third job. RO03:57T24/25,P17processed/15candidates.
+Full stable-face/independent-prediction goal active. Evidence:G3_feasible_material_E170_20261015.
