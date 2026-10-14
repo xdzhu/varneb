@@ -4013,3 +4013,33 @@ At19:20:33CST both original curvature jobs remain live,23/148complete each,
 stderr0,receipt means102.655/104.513s; raw outputs not reparsed by this
 status check. No DFT/scheduler/live-source/reserved-geometry change. Current
 G3/full goal active and incomplete. See cross_strain_work_E151_20261014.
+
+## E152 — actual native prefix raw replay, not complete curvature (2026-10-14)
+
+Previous E151 classified PROGRESS. New read-only native auditor reuses the
+unchanged E150 runtime, native result validator and existing curvature/work
+tools. It snapshots only atomic complete prefixes; no calculators, scheduler
+writes or live-source changes. Actual34+34native probe results reparse with
+original six byte hashes, oneDSIZE32/converged SCF, geometry, raw E/F/stress
+and exact full-cache gradient. Two parser reads/log and a cached-center
+reparse are not extra DFT. Each measured block is40x17action/17x17projection,
+not a fabricated full Hessian; no full internal index, plane or TS selection.
+Partial reciprocity1.45486e-4/1.19830e-4; max energy/gradient diagonal mismatch
+.0584274/.1890415eV/Angstrom². Preserve these diagnostics; no invented error
+interval or acceptance threshold. Two-amplitude comparison remains pending.
+
+95local/95actual independent related checks pass,0failure/error/skip;
+29.475/32.278JUnit seconds, tree09f4aa45e3c823f999ecfc31cea4446c402a0acc,
+archive800aef31eed8801869efa1c440ad7f8e23ac28d0fdd8df2b12b34ed0618626e0,
+all6455tracked files present. First53-test attempt1failure was a test-only
+work-field name error, corrected without production/DFT change. Initial
+snapshot shell mistakenly tested original cwd: retain its95pass output as
+repeat local, not independent. Separate actual fresh-cwd imports/test run
+prove the independent result. Raw native report copies SHA-match HF; all
+source text normalization is restricted to code, never physical evidence.
+
+19:42:32CST exact two original jobs28855614/28855615 remain RUNNING,32CPU
+each/node10,node27. Call-time sums3509.200/3603.502s are existing E150 subset
+cost, not new SCFs or allocation cost. No full E152 regression, complete
+curvature/branch/prediction gate, paper/figure or reserved-geometry change.
+Full goal active/incomplete. See G3_curvature_audit_E152_20261014.

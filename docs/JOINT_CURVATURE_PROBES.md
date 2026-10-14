@@ -85,3 +85,15 @@ at two steps in normal/tilt and oblique/rotated cases. Geometric and EMT step
 sizes are implementation checks, not automatically chosen HfO2 SCF amplitudes.
 This validation does not supply a material joint Hessian, independent barrier
 prediction, convergence acceleration or TS certificate.
+
+## Fixed-input HfO2 raw-output replay
+
+The [E152 example](../benchmarks/hfo2_channels/20261008/G3_curvature_audit_E152_20261014/README.md)
+uses `python -m scripts.audit_hfo2_G3_curvature` against the frozen E150
+manifest and original workdir, writing a fresh report outside the live study.
+It reparses completed native E/F/stress, six physical input hashes and the
+ordered gradient cache without invoking DFT. Partial signed-pair projections
+remain partial: missing columns are not filled or assigned a global Morse
+index. Existing curvature/work checks are enabled only as their actual
+signed data become available; a complete stencil still does not certify a
+TS, conditional branch or independent material prediction.
