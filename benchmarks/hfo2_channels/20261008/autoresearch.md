@@ -4623,3 +4623,49 @@ observed backend failure. The admitted8static controls28865656now RUNNING,
 branch/independent-strong-control prediction goal remains active. Next native
 audit and analyze these controls, then bounded matched-arm admission only.
 Evidence:G3_sheet_consistency_E172_20261015.
+
+## E173 — eight frozen statics audited; matched arm truly running (2026-10-15)
+
+Previous E172:PROGRESS,30b7da58. Controls28865656 normally complete8/8onnode6,
+1021allocation seconds/32CPUs. Existing E171 native admission reparses all8
+E/F/stress/sixasset/DSIZE32/one-attempt records plus12old point13cache SCFs,
+retains original380/383source snapshots and strictly replays the old capped
+baseline. No new parameter or training reservation. Static call proxy8.136814
+core-hours; allocation9.075556;296curvature and prior path/candidate costs extra.
+
+After normal completion, the already frozen one-shot driver submits28866132
+once, validates held1node32CPU/1h resource identity, then releases it. At most
+two committed study allocations, original point13start/Q/seed/.5domain/.03full
+released target/.05trust and12new-attempt cap. Old cached data not recomputed.
+This is an actual running material test, not merely an inert input package.
+
+Matched four-axial-point ablation keeps both centers, both raw probe steps and
+all16model-point comparisons. Maximum frozen/released shape errors are
+P:.075880/4.671404and.116535/4.720758meV/12atomcell;T:.416264/1.327177and
+.403160/1.346071. Exact signed pointwise decomposition separates frozen error
+from missed release-shape change. Pvariation4.606959,T1.168761; no coefficients
+fit, sign clipping or independent-accuracy/microscopic-cause claim. Maxima
+are not subtracted across unmatched points. This is not the full strong-
+reference/control matrix or a whole-path barrier error measurement.
+
+First new SCF independently audited. Energy/gradient/stress/Q/domain match,
+but initial read-only audit falsely rejects validation metadata because
+`bundle/../arm` and `arm` spellings differ. A diagnostic also encounters NumPy bool
+JSON serialization. Resolve only the exact expected real native directory
+inside permitted arm before reproducing validation through original spelling;
+all fields still compare exactly. Regression rejects other directories and
+root escapes. No raw result, physical tolerance, live worker or job is repaired,
+stopped or restarted. First geometry matches the E170 novel proposal exactly;
+radius.49999999999999994passes the original guard, no roundoff loosening.
+
+RO05:11shows28866132RUNNING,4complete/5reservednew attempts, no backend failure,
+no final arm summary. First released norm.069855is not convergence; continue
+under original cap, do not stop on a rebound. Preserving28862441also live.
+57local/57independent related checks pass,26new/3modules, not full regression.
+Full independent analysis bytes exact7d886069; tested tree4cf5a3a7.
+No ablation DFT or extra reservation; physical+.005and all8independent slots/
+face untouched. Main manuscript f23742d8unchanged this turn. Full stable-branch/
+independent-strong-control prediction goal remains active. Next inspect the
+bounded arm's actual terminal outcome and finish/audit the original preserving
+face; do not promote this launch/first-SCF check to acceleration evidence.
+Evidence:G3_frozen_release_E173_20261015.
