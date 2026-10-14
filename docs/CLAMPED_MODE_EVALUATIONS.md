@@ -163,6 +163,22 @@ spending DFT time. Neither count is a backend SCF count, electronic iteration
 count, core-hours, full preparation cost or successful material prediction.
 Continue to audit native outputs and actual resource use separately.
 
+For measured performance, distinguish an attempt reservation, a completed
+calculator callback, a fresh native SCF and an allocation's core-hours.
+Charge the full same-chain history, not just its final converged segment;
+count shared exact source calls once, but do not merge different new calls
+merely because their structures or result hashes agree. Endpoint/reference
+preparation, failed starts and local conditional relaxations are separate
+cost categories, not free work.
+
+The [seven-chain HfO2 cost example](../benchmarks/hfo2_channels/20261008/clamped_chain_costs_E147_20261014/README.md)
+reuses the existing `ResponseEvaluationCost` API and byte-pinned native
+receipts to separate 1918 actual production SCFs from cached frames and
+sixteen allocation durations. Run `python -m scripts.audit_hfo2_clamped_chain_costs
+--output NEW_REPORT.json` from repository root to reproduce that declared
+completed-production subset. It explicitly excludes other study costs and
+does not constitute an optimizer speed-up or prediction benchmark.
+
 Use one writer per workdir. Exclusive markers refuse a stale writer rather
 than silently sharing slots. They are not a cross-workdir/distributed budget
 allocator or proof against external deletion/tampering or storage power loss.

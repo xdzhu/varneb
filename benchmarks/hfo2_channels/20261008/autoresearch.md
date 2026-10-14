@@ -3852,3 +3852,29 @@ is reset, not restored. Only one committed study slot, no new independent
 chain, source replacement, physics/optimizer-argument drift, CI or monitor.
 G2 remains7/8; no G3 mode/centre/curvature or reserved physical+.005access.
 See clamped_reversing_cap_continue_E146_20261014. Full scientific goal active.
+
+## E147 — Complete production histories, not just the final segments
+
+The seven completed G2 chains span16successful32CPU/hfacnormal01 allocations,
+1918fresh interior SCFs/1966.956848call-time-proxy core-hours, versus
+1976.364444allocation core-hours. All capped ancestors stay included.
++1% preserving is476calls/415.495917core-hours, not just119/99.555915.
+The original response_cost API is reused unchanged; original receipt pins,
+six-input declarations and exact7-image fresh-call grids are checked.
+Different actual source calls are not merged by common geometry/log hashes.
+
+24new material/fault plus18existing API checks pass42local/42independent,
+0f/e/s. Tree506390df64fb82f51d6094c3acdd9062224833a0,
+archive76404675f3317561b4b97ad658eb43c462ef52961da8adfd42dec76d6b92c27c;
+all6323files exist before tests,16receipt/accounting bytes identical and2source
+texts normalized-equal. Actual independent CLI reproduces every cost/other
+field exactly; first byte comparison refuses only the actual script LF/CRLF
+source metadata difference. Both original exports remain unmodified.
+
+Not complete endpoint/preparation/G1/phonon/failed-exploration/G3 or whole-study
+cost, nor acceleration/prediction advantage. No newDFT/scheduler writes,
+fullsuite/HFpytest, paper/PDF or physical/optimizer/runtime changes. The advanced
+manual distinguishes attempts, callbacks, nativeSCFs and allocation cost.
+At16:48:52:28852667RUNNING32/node75/hfacnormal01, step2/.106872/stderr0.
+G2 remains7/8, no G3/physical+.005access and full goal active.
+See clamped_chain_costs_E147_20261014.
