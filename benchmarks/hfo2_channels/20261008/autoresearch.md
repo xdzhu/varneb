@@ -4404,3 +4404,30 @@ Respect the two-allocation gate; no new center/material/strain/full path or
 physics retuning. 307local/307independent related checks pass,14new case
 checks; independent full analysis bytes exact. Tested treefa0fa344. Evidence:
 G3_quadratic_agreement_E165_20261015. Full goal active; no new DFT this turn.
+
+## E166 — eight matched frozen-R statics prepared and native-preflighted (2026-10-15)
+
+Previous E165:PROGRESS,7d0c8895. Prepare original-axis four axial Q controls
+per face, R=0 about each original center. Q can include cell motion; no
+optimizer or fully fixed-cell relabeling. Reuse original Q0 and audited
+released counterparts. Unique E166 reservation is4 slots/face, total29/81,
+52uncommitted and8independent untouched. Do not rewrite old E161 policy56.
+
+Frozen config5ffb1fe0 reproduces byte-exact in the independent CLI. Deploy
+first tested tree56f11176 to a fresh E166 root,383Python/14inputs exact.
+Eight real inert native decks pass unchanged six hashes and ASE roundtrip;
+shell syntax/zero-run exit2 pass, no calculator directory or new SCF.
+Exact-coordinate cache check rehashes28 registered matched trial JSONs,
+no identical frozen coordinate found; not a global cache claim.
+
+Native admission observes original two RUNNING jobs,ready=false. No third
+allocation is submitted/held/queued. Future single compound job:1node32MPI/
+1h, preserving then T, one attempt/point; existing parent normal completion
+and at-most-two allocation guards precede DFT. Missing handles/non-normal
+parents require review, not auto-resubmit. Negative signed differences kept.
+
+331local/331independent pass before deployment; final333/333 include26new
+checks and native/config evidence, final treefc2aa5b7, worker unchanged.
+Toy call counts are not material runs. Full goal remains active; completed
+controls, complete stable faces, independent errors and predictions still open.
+Evidence:G3_frozen_R_controls_E166_20261015.
