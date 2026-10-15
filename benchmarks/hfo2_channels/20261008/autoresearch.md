@@ -5407,3 +5407,21 @@ RO14:22:54metadataT136/P10/no failure/RUNNINGnode9/32, not10Pnativeaudits.
 No newDFTinitiation/scheduler/Qreservation/independentlabels/+.005/private
 authorarrays/install/CI/release/PyPI/submission/newmonitor. Cscratchonly.
 Fullgoalactive/incomplete. Evidence:G3_T_released_complete_E252_20261015.
+
+### E253 2026-10-15 — PROGRESS: repair stale authoritative overview and distinguish validation cohorts
+
+PreviousE252PROGRESS/3cafc1b6. Existingmainplan section8 stillpresentedE174
+jobs aslive andunqualifiedearly8pointcheck ascurrentindependentvalidation.
+Correctcurrentoverview toE252sources, timestampoldlogs ashistorical, separate
+historicalTfixedcell8/G3reserved16/physical+.005two-path cohorts. Existing
+80scalarforecasts not80DFT andnotfullB0--B5/finalmodel/domainfreeze. Existing
+stableB5=B4 rule retained; no newpredictor invented duringPcurvaturewait.
+Allformal sections1--7/priorhistoricalparagraphs/v1v2/paper/fiveuserhashes
+unchanged. P4/P5nowreportcompleteB3/Tcurvature butmissingP/independentgain.
+
+32existing relatedchecks pass, nofail/error/skip; explicitoverview/source/
+link/historicaltext preservation checks pass. No productionor testcodechange,
+newcasefolder/helper/DFT/schedulerwrite/holdout/parameter/domain/budgetchange.
+RawXMLretainedC scratch, SHA7729c26b5a85ec7a9ceb107eeaf5959e7cfd88d6cb04b34c55d53d1714fe8ccd;
+notfullsuite ornewphysicalresult. RO14:34:34 T136/P16/no failure,
+28868827RUNNINGnode9/32CPU. Fullgoalactive/incomplete.
