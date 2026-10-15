@@ -5129,3 +5129,35 @@ authorarray/+.005/independentpointaccess/parameter/radius/threshold/material/
 wholepath/CI/install/release/PyPI/monitor/otherhost/submission. ActualB3/
 releasedcurvature/stablebranch/resolution/independentforecasts remain,
 fullgoalactive/incomplete. Evidence:G3_coarsening_E184_20261015.
+
+### E185 2026-10-15 — PROGRESS: prospective elementary local-face predictions
+
+PreviousE184PROGRESS/c250e79c. Fixed central9 training nodes at each original
+center; eight novel half-grid targets each, no test labels. Five standard
+arms/80 scalar forecasts, same origin calibration, both H steps retained.
+Single training-only starts all selectQ0 with exact integer-distance ties;
+no test-to-test continuation. .03target/.5radius/1.6distance and physics
+unchanged; max192newattempts, no new allocation. Independent slots now
+reserved8/face/computed0; modeling T34/81,P35/81 unchanged. Full B0--B5,
+strong native-reference/domain and physical+.005 freeze NOT complete.
+
+Engineering reportingtarget1meV/fu=4meV/cell chosen after seen training,
+before labels, not DFTerrorbound. Tensor-H01 disagreements only T.502421,
+P1.465334meV/cell. Could be unresolved, no winner guaranteed or target
+movement to force gain.9trainingtargets historically28/36SCF; fullfaces
+118/172, raw296/Gamma/canary/G2/branch preparation additional. No equal
+budget/DFTsaving/acceleration/new harmonic-theory claim. Original B3 and
+released-Q0 native audits and final candidate predictions precede test.
+
+38local/38independentrelatedchecks3modules11new,0finalfail/errors/skips,
+notfullsuite. CLIbytes aa77cdd7, testedtree04f584c7/archive9ab42037.
+First independent35pass1metadatafailure: WindowsCRLF vs GitLF rawsource
+hashes. Originalforecast283f2b9d and failureXML retained. V2normalizes only
+text-code hashes, all numerical rows/starts/policies checked unchanged;
+nativeDFT/JSON/input/binary pins still exact. Allscratch/snapshots C.
+
+RO08:55:09 both28867177/28868827quotaPENDING,0newSCF/labels. No newDFT,
+schedulerwrite, live-source overwrite, privateauthorarray/physical+.005
+access, parameter/radius/threshold/material/wholepath/CI/install/release/
+PyPI/monitor/otherhost/submission. Fiveuseredits/main92f15239 unchanged.
+Fullgoalactive/incomplete. Evidence:G3_local_forecast_E185_20261015.
