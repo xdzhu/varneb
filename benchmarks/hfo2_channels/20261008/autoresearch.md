@@ -5381,3 +5381,29 @@ PyPI/submission/monitor. Cscratchonly. RO12:28:26curvature28868827RUNNING
 node9/32CPU/82of272/noSCFfailure; mean117.746s scenario18:41notguarantee.
 Releasedstability/finalforecasts/fullB0--B5/physicalholdout/scientificgain
 stillmissing. Fullgoalactive. Evidence:full_regression_E205_20261015.
+
+### E252 2026-10-15 — PROGRESS: first complete released T stencil meets necessary local sign condition
+
+PreviousE251VERIFIED_WAIT. Same28868827 T136done; unchangedE190native reader
+reparses136T+2P EFS/input/MPI, original380runtime/sixassets/binary andold13
+sourceidentities. Actualreport7f2dc871 at14:09 stillprefix/RUNNING, notfull272.
+ProducerT66f7cdc9 retains136fullgradients/both40x34actions/raw34x34blocks.
+Independentcolumn reconstruction/originalcomplete-summary checker pass.
+
+Steps.01/.02 min(sym raw R34)=.164064528478/.157595936408eV/A2, zero
+negativeeach. Keepreciprocity.000168928/.000385319 and explicitsymchange
+.004153229/.010960781; rawstepoperatordifference.054468926notphysicalerror
+bound. Existingreleasedgradient.026299954459notzero. TescapeQ0candidate
+passesnecessarylocalrawsigncondition, notTendpoint/all25stable/globalbranch/
+TS/independentprediction. Pcompleteblock/finalforecasts/admissionstillmissing.
+
+63local/63independent relatedchecks4modules8new,0fail/error/skip, notnewfull
+suite. Actual136data replay/refusebadcount/gradient/block/missingstep.
+Treeb93dd0c4/archive4a56f306; XML560332e1/9e39b687. Source/producer/physics/
+domain/budget/previousforecasts/manuscriptb9e29fca/fiveuserhashesunchanged.
+T136paidSCFs proxy137.839362coreh, no centers rerun; parent140.24running
+allocationnotT-only/finalcost; old296/G2/faces/B3/prepadditional.
+RO14:22:54metadataT136/P10/no failure/RUNNINGnode9/32, not10Pnativeaudits.
+No newDFTinitiation/scheduler/Qreservation/independentlabels/+.005/private
+authorarrays/install/CI/release/PyPI/submission/newmonitor. Cscratchonly.
+Fullgoalactive/incomplete. Evidence:G3_T_released_complete_E252_20261015.
