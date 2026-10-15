@@ -536,6 +536,41 @@ motion, R=0 is not a fully fixed-cell experiment. Positive released-minus-
 frozen candidate differences would be retained rather than clipped; a
 finite-gradient candidate is not assumed to be a global conditional minimum.
 
+Reference comparisons at fixed coordinates must preserve the observables,
+not merely reuse their numerical labels. Let x denote the 36 internal
+coordinates, let $q=C^Tx$ specify the same two retained observables in every
+arm, and let the orthonormal columns of U span the permitted displacement
+space. For $x=Uz$, the affine quadratic $g^Tx+x^THx/2$ is stationary under
+these constraints when
+
+$$
+\begin{pmatrix}U^THU&U^TC\\ C^TU&0\end{pmatrix}
+\begin{pmatrix}z\\\lambda\end{pmatrix}
+=\begin{pmatrix}-U^Tg\\q\end{pmatrix}.
+$$
+
+The constrained minimum requires positive curvature on the null space of
+$C^TU$, not positive curvature on all of U. We retain the nonzero affine
+gradient and reject a nonpositive free block rather than pseudoinverting
+it. If U spans the complete internal space, a different orthonormal
+reference is a re-expression of the same constrained problem. Its energy
+and physical coordinates must agree with an equivalent Schur solve. This
+standard constrained-quadratic identity is a comparator check, not a new
+theorem or a source of prediction gain.
+
+The zero sign threshold used for this raw algebraic comparison is not a
+measured physical stability-resolution floor.
+
+For restricted-reference ablations, U instead contains the transported
+atomic reference span and all three open-cell directions. Directions
+outside U are clamped; this is not the full outside-reference release of
+Appendix D.5. Each resulting geometry is checked against the same original
+0.5-Angstrom radius and distance guard. We report the actual eligible
+coordinate sets and their intersection before comparing errors. Values
+outside the domain remain algebraic diagnostics, not failed physical
+predictions. These shared-observable ablations do not test a model defined
+with different native parent-phase coordinates and a different target.
+
 ## 3. Results: competing responses under one mechanical intervention
 
 ### 3.1. Opposite candidate responses do not imply easier switching
@@ -968,12 +1003,13 @@ T candidates and all six preserving candidates in the audited source
 snapshot remain in the records; the common cohort is used only to make the table's
 coordinate coverage explicit.
 
-Table 6. Unfitted original quadratic versus released DFT candidates.
 All three energy columns use meV per twelve-atom cell, not meV/HfO2.
 Origin release is relative to each original center; the shape discrepancy
 uses each model's and candidate's own seen origin. Probe steps are in
 Angstrom. These are seen-training diagnostics, not independent errors or
 continuous-path barrier errors.
+
+Table 6. Unfitted original quadratic versus released DFT candidates.
 
 | Center | Probe step | DFT origin release | Model origin release | Max. shape discrepancy |
 |---|---:|---:|---:|---:|
@@ -1085,6 +1121,52 @@ The eight statics used 8.137 completed-call proxy core-hours and
 9.076 allocation core-hours; curvature and prior candidate preparation
 remain additional.
 
+### 3.8. A complete reference removes a basis advantage, not a finite-domain error
+
+The complete T optical reference and the coupled-coordinate representation
+gave the same constrained quadratic, not competing accuracy results.
+Using the same measured H, affine g, fixed Q and mechanical space, the
+33 optical directions plus three open-cell directions spanned all 36
+internal coordinates. Across both centers, both probe steps and all 25
+registered Q values, the largest energy difference between the constrained
+reference solve and Schur solve was $2.64\times10^{-16}$ eV/cell; the largest
+coordinate difference was $1.56\times10^{-14}$ Angstrom. These differences
+measure numerical realization of an algebraic identity, not DFT accuracy.
+
+Both representations retained the same finite-domain disagreement with
+the completed DFT candidates (Table 8). The larger T maximum compared with
+Table 6 reflects its expanded seen-coordinate cohort, not a newly observed
+independent error. The preserving holes were excluded as missing labels,
+not replaced with their last optimization trials. No coefficients were
+fitted, and subtracting each seen origin remained a retrospective shape
+diagnostic. Counts exclude the origin and share the denominator of 24
+planned nonzero coordinates. All listed candidates passed the original
+geometry guard for both models; probe steps are in Angstrom.
+
+Table 8. Shared full-space shape discrepancies (meV per twelve-atom cell).
+
+| Center | Probe step | Seen nonzero candidates | Max. shape discrepancy |
+|---|---:|---:|---:|
+| T | 0.01 | 24/24 | 28.776664 |
+| T | 0.02 | 24/24 | 28.872042 |
+| Preserving | 0.01 | 16/24 | 20.521839 |
+| Preserving | 0.02 | 16/24 | 20.720640 |
+
+The restricted references did not provide a common nonzero comparison
+cohort in these fixed observables. Their individual eligible sets differed
+(Appendix D.7), and the all-reference intersection was empty at both probe
+steps. Thus neither extrapolated values nor errors computed on different
+subsets were used to rank them. This is a compatibility limitation of the
+selected spans, observables and finite domain, not evidence that a native
+Cmma-coordinate energy model fails. The
+[shared-observable control](../../benchmarks/hfo2_channels/20261008/G3_shared_Q_controls_E180_20261015/README.md)
+retains all seven registered references, four Cmma frames and the full-space
+control: 800 algebraic model-point records, with zero new DFT calls. The
+original 296 curvature SCFs, 118/172 conditional-sheet SCFs and all other
+preparation remain additional; equal preparation cost or speedup was not
+established. These comparisons delimit the claimed contribution without
+replacing a prospective native-chart or independent material test.
+
 ## 4. Discussion and remaining material tests
 
 The completed training comparison demonstrates why a decreasing barrier
@@ -1140,7 +1222,14 @@ problem, valid retained/released basis changes give the same response
 arise in an explicitly tested finite representation, nonlinear branch,
 validity domain or equal-accuracy cost comparison, rather than in renaming
 coordinates or dropping a strong reference. The existing analytic checks
-enforce this null; they are not independent material forecasts.
+enforce this null. Section 3.8 now verifies its constrained counterpart
+on the measured hafnia matrices: even at fixed retained observables, the
+complete reference and coupled representation agree. Their common
+finite-coordinate discrepancy therefore cannot be removed by relabeling
+the same quadratic. It motivates testing nonlinear release and branch
+validity, rather than attributing accuracy to a coordinate name. Neither
+the algebraic equality nor the observed training discrepancy is an
+independent material forecast.
 
 The decisive unfinished evidence is a same-boundary conditional response
 with measured transverse stability and a frozen comparison at unseen
@@ -1791,3 +1880,31 @@ cache-only optimizer replays. Final candidate energies are
 -9782.63681659 eV/cell (T) and -9782.63600314 eV/cell (preserving), using
 four-formula-unit cells. No unseen-strain label, new full path or
 post-relaxation curvature is inferred from this comparison.
+
+### D.7. Eligibility of restricted references at shared observables
+
+Table A9. Geometry-eligible seen nonzero coordinates under the original
+guard, out of 24 planned nonzero coordinates per center. Counts are the
+same at both probe steps. The atomic reference rank is distinct from the
+allowed dimension, which includes three open-cell directions. The
+coupled full-space arm retains two coordinates and releases 34; it is
+not a nominal atomic reference of rank two. Outside-reference dimensions
+are clamped in the restricted arms, not silently eliminated.
+
+| Reference | Atomic rank | Allowed dimension | T eligible | Preserving eligible |
+|---|---:|---:|---:|---:|
+| T geometric triplet | 3 | 6 | 8/24 | 0/24 |
+| T complete optical doublets | 4 | 7 | 10/24 | 8/24 |
+| All T optical | 33 | 36 | 24/24 | 16/24 |
+| Cmma 103 | 4 | 7 | 6/24 | 4/24 |
+| Cmma 106 | 4 | 7 | 6/24 | 4/24 |
+| Cmma 114 | 4 | 7 | 6/24 | 4/24 |
+| Cmma 127 | 4 | 7 | 6/24 | 4/24 |
+| Coupled full-space | - | 36 | 24/24 | 16/24 |
+
+There is no nonzero coordinate at which all arms have both a candidate
+label and an eligible model geometry. Common-set error statistics are
+therefore absent, not zero. No reference is selected by its own-subset
+error, and the four Cmma frames are not pooled into a larger basis.
+The [complete scalar records](../../benchmarks/hfo2_channels/20261008/G3_shared_Q_controls_E180_20261015/analysis.json)
+retain all point identities, signs, origin biases and eligibility decisions.

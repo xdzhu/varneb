@@ -5027,3 +5027,35 @@ E176forecasts and manuscript38769b36 preserved. No+.005/privateauthorarray
 access, CI/install/release/PyPI/monitor/otherhost/submission. ActualB3,
 strongnativechart/independentmaterialtests and fullgoal remain incomplete.
 Evidence:G3_released_curvature_E181_20261015.
+
+### E182 2026-10-15 — PROGRESS: manuscript fair-reference null and finite-domain evidence
+
+PreviousE181PROGRESS/1f50ddc8. Native-complement checks already existedE159,
+not repeated. Integrated executedE180 same-observable controls into2.7/new3.8/
+discussion/D.7, distinguishing complete-reference KKT/Schur equality from
+prediction gain. Standard constrained quadratic, finite affineg and raw
+null-stability criterion explicit.2.64e-16eVcell/1.56e-14A numerical identity
+notDFTerror. Full-space models share training discrepancies T28.776664/
+28.872042,P20.521839/20.720640meV12atomcell over24/16nonorigin candidates.
+Sevenrefs/fourCmma retained, no common nonorigin eligible cohort, no ranking
+ownsubsets/extrapolation or universal nativeCmma failure. Strong native-chart
+and independent material tests not declared complete.
+
+12new quantitative rows pinned to39e31d79source, original119rows/9figbytes/
+13externalcitations/TeXwrapper preserved.113local/113independent relatedchecks
+over9modules,20new,0fail/errors/skips, notfullsuite. Threeeditorialtests updated
+only for eighthResult/two legitimate tables; source checks not removed.
+FinalsourcecheckCLIexactb3fb3b65. Finaltestedtreeb745699e/archive5dbe91fc.
+Mainraw92f15239. ExistingTeXLive/LuaLaTeX34pagePDF9d52dba9, allpagesrendered/
+inspected, method8/results20–21/appendix34detail. Table6/8caption splits identified/
+repaired withoutnumber/wrapperchanges; firstPDF/metadata/113successfulchecks
+and earlierarchives retainedC. Final22pagePNGidentical, all12changedpages
+re-inspected;0overfull/underfull/missingchars. Not submission-ready.
+
+RO07:59:54CST28867177/28868827bothPENDING/AssocGrpCpuLimit,0newSCFs/labels.
+No duplicate/cancel/sourceoverwrite/DFT/reservation/schedulerwrite/private
+authorarray/physical+.005access/CI/install/release/PyPI/monitor/otherhost/
+submission. Fixedphysicalinputs/.10NEB/.03conditional/.5radius unchanged,
+fiveuseredits preserved. ActualB3/postreleasecurvature/stablebranch/resolution/
+strongcontrols/frozenindependentforecasts remain. Fullgoalactive/incomplete.
+Evidence:manuscript_shared_controls_E182_20261015.

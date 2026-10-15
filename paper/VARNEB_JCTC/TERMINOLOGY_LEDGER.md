@@ -20,6 +20,9 @@ Updated 2026-10-15. Scope: HfO2 manuscript and its source-to-table checks.
 | Released endpoint work | Signed endpoint-gradient trapezoid contracted with the released displacement between candidates | Missing energy contribution assigned uniquely to a mode, or an energy-error bound |
 | Closed-loop endpoint circulation | Sum of endpoint-gradient work around a declared sampled grid loop | Nonconservative DFT forces, interpolation error or a branch-jump certificate |
 | Missed release-shape change | Model-minus-DFT Q-dependent release change after each subtracts its own seen origin | A unique microscopic cause, whole-path barrier error or independent predictive advantage |
+| Shared-observable control | Same physical covectors q=C.T x, H, affine gradient and mechanical boundary for all arms | Equal native parent-phase coordinates or equal preparation cost |
+| Complete-space equivalence | Constrained reference and Schur solves represent the same complete quadratic | Independent accuracy, a new theorem or a basis-induced gain |
+| Geometry-eligible comparison set | Coordinates with an observed candidate and a model geometry passing the original guard | Stable released branch, a global domain or the error of a missing point |
 
 Notation is not interchangeable: the representation figures use the declared
 mass-weighted atomic T chart; local joint-curvature coordinates have length
