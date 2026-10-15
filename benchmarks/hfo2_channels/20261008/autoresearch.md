@@ -5275,3 +5275,28 @@ walllimits14:42/21:44. No additionalDFT/scheduleroperation/sourceoverwrite/
 parameter/threshold/budget/privatebank/+.005/independentpoint/newmaterial/
 CI/install/release/PyPI/monitor/otherhost/submission. Main25738d69/fiveuser
 edits preserved. Goalactive/incomplete. Evidence:G3_released_audit_E190_20261015.
+
+### E192 2026-10-15 — PROGRESS: measured atomic versus joint treatment comparison
+
+PreviousE191VERIFIED_WAIT on the same two live handles. E192native prefix
+audited7finished nodes/20newSCFs/exact original optimizer replay: T0--4,
+preserving0--1, preserving2pending. Immutable E176audit673714cb consumed
+by unchangedE178, all20pre-label model-point rows/two steps retained.
+Reproduction16b9dde6 byte-exact; no coefficients fitted or newDFTinitiated.
+
+PreservingQ0 A-F=-48.348691, J-A=-1.136239meVcell: large release is already
+atomic there, not primarily extra cell release. Candidate-treatment
+difference, not unique mode-energy partition/global nesting/fullpath cause.
+T same4axial shape discrepancies F.416264/.403160, A.501879/.515704,
+J1.327177/1.346071meVcell. Pointwise error identities, not subtraction of
+unmatched maxima. Preservingonly1/4axial A labels; no partial ranking.
+Atomicorigins jointnorm.110430/.194104 remain above.03, notjointstationary.
+
+75local/75independent relatedchecks4modules10new,0fail/error/skip,
+notfullsuite. Native20callproxy22.331631coreh excludes in-flightwork;
+8frozenstatics/296originalcurvature/joint/preparationadditional. Actual
+releasedstability/fullB0--B5/independentpredictivegain stillmissing.
+Main25738d69/fiveuseredits/production/forecast unchanged. No newDFT,
+schedulerwrite/parameter/budget/domain/+005/independentlabel/material/
+CI/install/release/PyPI/monitor/otherhost/submission. Fullgoalactive.
+Evidence:G3_atomic_treatment_E192_20261015.
