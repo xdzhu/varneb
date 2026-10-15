@@ -5300,3 +5300,30 @@ Main25738d69/fiveuseredits/production/forecast unchanged. No newDFT,
 schedulerwrite/parameter/budget/domain/+005/independentlabel/material/
 CI/install/release/PyPI/monitor/otherhost/submission. Fullgoalactive.
 Evidence:G3_atomic_treatment_E192_20261015.
+
+### E194 2026-10-15 — PROGRESS: completed native B3 and full matched treatment cohort
+
+PreviousE193VERIFIED_WAIT, no pending-job restart.28867177normal COMPLETED
+0:0/4577s/node6/32CPU.10/10atomic candidates/36newSCFs. Original E176
+complete reader checks allnativeEFS/input/MPI/order/cachedoptimizer replay
+andterminal summary, proof8a2fdf2a. Unchanged E178complete analysis3cc150ec,
+all20prefrozen predictions/two steps/5Qs each retained, no coefficient fit.
+
+Preservingall5 A-F=-44.06to-48.35,J-A=-.80to-1.14meVcell: large release
+alreadyinatomicstep for this local cohort, not entirepath/uniquemodepartition.
+Its4axialmodelshape errors A4.349824/4.399770,J4.671404/4.720758, so
+omittedcellalonecannotexplain mismatch. Missedatomicrelease shape4.284867/
+4.284892 versusextraJ.332117/.331406, signedpointwiseidentity notsubtract
+differentmaxima. Atomicall10jointnorms>.03, notjointstationary/stable/TS.
+Tsame4axial values retained; old7nodes/20native source identities unchanged.
+
+83local/83independent relatedchecks5modules8new,0fail/error/skip, notfullsuite.
+IndependentCLIbyteexact. Atomic9/27SCFs T/P, callproxy39.749558coreh,
+allocation40.684444, oldfrozen8/curvature296/G2/joint/prepadditional,
+notbudget120versus36speedup. FullB3 prerequisite nowdone, releasedstability/
+finalcandidateforecast/B0--B5/independentprediction remains. RO11:08:05
+28868827RUNNINGnode9/32CPU/41of272/noSCFfailure, mean119s scenario18:45,
+notguarantee. No newscheduler/DFTinitiation/runtime/physics/domain/budget/
+independentpoint/+.005/privatebank/newmaterial/CI/install/release/PyPI/
+monitor/otherhost/submission. Main25738d69/fiveuseredits preserved.
+Fullgoalactive/incomplete. Evidence:G3_atomic_complete_E194_20261015.
