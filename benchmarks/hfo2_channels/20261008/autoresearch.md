@@ -5244,3 +5244,34 @@ write/privatebank/+.005/physics/radius/threshold/material/wholepath/CI/
 install/release/PyPI/monitor/otherhost/submission. Fiveuseredits unchanged.
 TrueB3/releasedcurvature/stablebranch/independentforecasts/tests stillmissing;
 fullgoalactive/incomplete. Evidence:manuscript_nonlinear_controls_E189_20261015.
+
+### E190 2026-10-15 — PROGRESS: real startup and proven provenance replay correction
+
+PreviousE189PROGRESS/04a1ab77. Both committedjobs started09:42node6 and
+09:44node9, genuine32MPI/threads1 confirmed. Original E183 reader falsely
+rejected first real derivative: every physical scalar/gradient/stress
+matches exactly, validation pathspellings differ bundle/../ vs canonical.
+Strict actual resolved directory identity same. Initial direct-replay
+diagnostics used storedparent and thus passed; tracing originalfunction
+localized differingvalidation. No numerical tolerance or SCF problem.
+
+E183/production/nativefiles preserved. NewE190reader only executable-line
+change validator(raw.parent), AFTER unchanged namespace/resolvedidentity
+checks; all physical/input/byte/reservation tolerances stay. Oldfailure
+reproduced; wrongrealpath/physicalfield/MPI mutations stillrefused.
+ActualcorrectedHFprefix13probe records passed b80d7571, nextpending and
+Pnotstarted explicit. RealfirstSCF sevenfiles+manifest zipd7bd98e9,
+resultc35035e2, no pseudo/orbital/binary. NativeEFS/gradient recheckedlocally.
+71local/71independentrelatedchecks4modules13new,zero fail/error/skip,
+notfullsuite. Testedtree74357434/archive10808dee, allscratch C.
+
+Original B3native reader firstTQ0 passed1newSCF/cache-onlyreplay: atomic
+norm.02147688 vs joint.11042982, not jointstationarity/stability. Complete
+batch/pairedaxis errors stillawait. RO10:16:44bothRUNNING: atomic6/10
+candidates15SCF, curvature17/272,0SCFfailure. Remainingatomic47attempt
+cap excludes finishedpointunused budgets, no rollover; mean131s implies
+fullceilingcost~12:00. Hmean108s gives~17:54. Costscenarios, notguarantees;
+walllimits14:42/21:44. No additionalDFT/scheduleroperation/sourceoverwrite/
+parameter/threshold/budget/privatebank/+.005/independentpoint/newmaterial/
+CI/install/release/PyPI/monitor/otherhost/submission. Main25738d69/fiveuser
+edits preserved. Goalactive/incomplete. Evidence:G3_released_audit_E190_20261015.
