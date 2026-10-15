@@ -13,6 +13,8 @@ NAMES = ['zero_M','zero_T','zero_reversing','plus1_T']
 LABELS = ['PO-to-M, zero strain','PO-to-T, zero strain',
           'Reversing flip, zero strain','PO-to-T, +1% strain','Preserving flip, zero strain',
           'PO-to-M, +1% strain', 'Preserving flip, +1% strain', 'Reversing flip, +1% strain']
+WORK_HEADING = '### E.1. Endpoint closure can conceal a bottleneck-region discrepancy'
+NEXT_HEADING = '### E.2. Cross-strain work separates imposed control from configuration change'
 
 
 def reports():
@@ -24,8 +26,18 @@ def reports():
          'clamped_plus1_reversing_terminal_E148_20261014/analysis/path_work.json')]
 
 
-def section():
-    return PAPER.read_text(encoding='utf-8').split('### 3.4. ',1)[1].split('### 3.5.',1)[0]
+def section(text=None):
+    if text is None:
+        text = PAPER.read_text(encoding='utf-8')
+    assert text.count(WORK_HEADING) == text.count(NEXT_HEADING) == 1
+    body = text.split(WORK_HEADING, 1)[1].split(NEXT_HEADING, 1)[0]
+    assert not re.search(r'^#{1,3} ', body, re.M)
+    return body
+
+
+def cmma_ranges(text=None):
+    passage = section(text).split('ranges are ', 1)[1].split('Each representation', 1)[0]
+    return [float(value) for value in re.findall(r'\d+\.\d{6}', passage)]
 
 
 @pytest.mark.parametrize('index',range(8))
@@ -63,8 +75,7 @@ def test_signed_work_prose_matches_complete_declared_span(marker,end,space,part)
 
 
 def test_all_four_Cmma_registrations_are_kept_as_ranges_not_selected_winners():
-    passage = section().split('ranges are ',1)[1].split('Each representation',1)[0]
-    actual = [float(value) for value in re.findall(r'\d+\.\d{6}',passage)]
+    actual = cmma_ranges()
     expected = []
     for data in reports():
         span = data['representations']
@@ -93,10 +104,43 @@ def test_native_chart_agreement_is_only_an_algebraic_check_and_reused_frames_not
 
 def test_section_numbers_and_new_evidence_links_are_unambiguous():
     text = PAPER.read_text(encoding='utf-8')
-    numbers = re.findall(r'^### (\d+\.\d+)\.',text,re.M)
+    numbers = re.findall(r'^### ((?:\d+|[A-Z])\.\d+)\.',text,re.M)
     assert len(numbers) == len(set(numbers))
-    assert all(n in numbers for n in ('2.5', '2.6', '3.4', '3.5'))
+    assert all(n in numbers for n in ('2.5', '2.6', 'E.1', 'E.2'))
+    assert [n for n in numbers if n.startswith('3.')] == ['3.1', '3.2', '3.3', '3.4']
+    assert 'Table A11' in section()
     method = text.split('### 2.5. ',1)[1].split('## 3.',1)[0]
     for target in re.findall(r'\]\(([^)]+)\)',method+section()):
         assert not target.startswith(('http','file:'))
         assert (PAPER.parent/target).resolve().is_file()
+
+
+@pytest.mark.parametrize('heading', [WORK_HEADING, NEXT_HEADING])
+@pytest.mark.parametrize('fault', ['missing', 'duplicate'])
+def test_work_section_requires_unique_current_boundaries(heading, fault):
+    text = PAPER.read_text(encoding='utf-8')
+    broken = text.replace(heading, '') if fault == 'missing' else text+'\n'+heading
+    with pytest.raises(AssertionError):
+        section(broken)
+
+
+def test_work_table_cannot_borrow_a_missing_row_from_another_section():
+    text = PAPER.read_text(encoding='utf-8')
+    body = section(text)
+    row = next(line for line in body.splitlines() if line.startswith('| '+LABELS[0]+' |'))
+    broken = text.replace(body, body.replace(row, ''), 1)+'\n'+row
+    with pytest.raises(StopIteration):
+        next(line for line in section(broken).splitlines()
+             if line.startswith('| '+LABELS[0]+' |'))
+
+
+def test_each_Cmma_bound_still_rejects_mutation_despite_correct_values_elsewhere():
+    text = PAPER.read_text(encoding='utf-8')
+    body = section(text)
+    expected = cmma_ranges(text)
+    assert len(expected) == 16
+    for value in expected:
+        changed = body.replace(f'{value:.6f}', f'{value+1:.6f}', 1)
+        broken = text.replace(body, changed, 1)+'\n'+body
+        with pytest.raises(AssertionError):
+            np.testing.assert_allclose(cmma_ranges(broken), expected, atol=5.0001e-7, rtol=0)

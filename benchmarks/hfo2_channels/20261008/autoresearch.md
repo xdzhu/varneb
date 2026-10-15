@@ -5358,3 +5358,26 @@ domain/budget/privatearrays/+.005/independentlabels/material/CI/install/
 release/PyPI/monitor/otherhost/submission. Fiveusereditsprotected.
 Independentstability/forecasts/fullB0--B5/physicalholdout/scientificgain
 stillmissing, fullgoalactive. Evidence:manuscript_atomic_treatment_E195_20261015.
+
+### E205 2026-10-15 — PROGRESS: full offline regression and bounded manuscript-check repair
+
+PreviousE204VERIFIED_WAIT; E196--E204 only rechecked the original live job.
+Clean4d03befe export:3502passed/2failed/2skipped. OldE094section helper
+still split3.4/3.5; absentending caused read-through to laterappendices,
+potentialfalsepasses and139numbers instead16Cmmabounds. RestrictE.1--E.2,
+uniqueanchors/nointerveningheadings; retainall8signedrows/4prosepartitions/
+4Cmmaframes/16bounds/original5.0001e-7atol/zero-relative tolerance.
+Sixnewchecks refusemissing/duplicateboundaries/rowborrow/all16boundmutations
+despitecorrectvalueselsewhere. Target21passed; no scientificdatachanged.
+
+Independenttestedtree1777a194/archivebb9dca41 fullsuite3510passed/0failed/
+0errors/2skipped; all3506oldtestIDsretained,6new. Same skips:optional
+ase.io.abacus unavailable/licensedVASP POTCARnotredistributed.314warnings
+remain, notwarning-free. First/finalfullXML32a590b0/97083f53andtarget
+e40f202fretained. Onlytest_hfo2_E094_manuscript_work.py executablechanges;
+manuscriptb9e29fca/fiveuserhashes/runtime/physics/domain/budgetunchanged.
+No DFTinitiation/schedulerwrites/independentlabels/install/CI/release/
+PyPI/submission/monitor. Cscratchonly. RO12:28:26curvature28868827RUNNING
+node9/32CPU/82of272/noSCFfailure; mean117.746s scenario18:41notguarantee.
+Releasedstability/finalforecasts/fullB0--B5/physicalholdout/scientificgain
+stillmissing. Fullgoalactive. Evidence:full_regression_E205_20261015.
