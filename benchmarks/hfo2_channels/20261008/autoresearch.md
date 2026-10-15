@@ -5216,3 +5216,31 @@ RO09:20:20both oldhandlesPENDINGquota0SCF, no newschedulerwrite/runtime/
 physics/material/wholepath/CI/install/release/PyPI/monitor/otherhost/submission.
 Fiveuseredits/main92f15239 unchanged. Goalactive/incomplete.
 Evidence:G3_reference_forecast_E188_20261015.
+
+### E189 2026-10-15 — PROGRESS: nonlinear control integrated into the real manuscript
+
+PreviousE188PROGRESS/d3406d26. E184evidence now inMethods2.7/Results3.9/
+Table9/Discussion. All5same16Tfine targets retained: tensor2.003468 vs
+H12.901228/12.975249meVcell, notnewlabels/independentgain. Cohortdiffers
+from Table8, so smallerHmax notmodelimprovement. Rawfitmax6.120672/
+originbias1.546418/P rank5holes/axis-only diagnostic retained. Coarse
+fineparent leakage explicit, historical47/71,58/114SCFs+prep, no saving.
+
+Fivequantrows sourcechecked377f2c3e; all135oldrows/9figbytes/13externallinks/
+Texwrapper retained. Twoledgerterms.126local/126independentrelatedchecks,
+10modules13new,zero finalfail/error/skip, notfullsuite. First124pass2fail
+stale8sections/135rows updatedto9/142, all oldsourcechecks retained;
+rawXML06ea5db4. CLI4500752b byteexact. Testedtree144c799d/archivef70f911c.
+
+ExistingTeXLive2023/LuaLaTeX actualMarkdown9figures compiled35pageworkPDF,
+allworkC. Firstphrase-textlookup linewrap fixed in verifier only. Visual
+reviewall35contacts/detail8/21/22 caught splitA9caption34/35; notesmoved
+toprose, shortcaption+table together, noquantchange. OriginalPDF/reports
+retained. Final1--33pixelidentical, changed34/35detailsrechecked;0overfull/
+underfull/missingchars. MD25738d69/PDF72a105d6, notsubmissionready.
+
+RO09:37:19botholdhandlesPENDINGquota0newSCF. No newDFT/allocation/scheduler
+write/privatebank/+.005/physics/radius/threshold/material/wholepath/CI/
+install/release/PyPI/monitor/otherhost/submission. Fiveuseredits unchanged.
+TrueB3/releasedcurvature/stablebranch/independentforecasts/tests stillmissing;
+fullgoalactive/incomplete. Evidence:manuscript_nonlinear_controls_E189_20261015.

@@ -23,6 +23,8 @@ Updated 2026-10-15. Scope: HfO2 manuscript and its source-to-table checks.
 | Shared-observable control | Same physical covectors q=C.T x, H, affine gradient and mechanical boundary for all arms | Equal native parent-phase coordinates or equal preparation cost |
 | Complete-space equivalence | Constrained reference and Schur solves represent the same complete quadratic | Independent accuracy, a new theorem or a basis-induced gain |
 | Geometry-eligible comparison set | Coordinates with an observed candidate and a model geometry passing the original guard | Stable released branch, a global domain or the error of a missing point |
+| Post-hoc coarsening | Geometric coarse/fine split made after the training labels and relaxation history were seen | A blinded preparation workflow, independent prediction or DFT-call saving |
+| Tensor-quadratic interpolation | Energy interpolation of degree at most two in each retained coordinate, including mixed total-degree-four terms | A harmonic Hessian model, a new algorithm or a validated conditional branch |
 
 Notation is not interchangeable: the representation figures use the declared
 mass-weighted atomic T chart; local joint-curvature coordinates have length

@@ -571,6 +571,20 @@ outside the domain remain algebraic diagnostics, not failed physical
 predictions. These shared-observable ablations do not test a model defined
 with different native parent-phase coordinates and a different target.
 
+To compare the local quadratic with elementary nonlinear energy models,
+we also performed a post-hoc coarsening of each original 5x5 sheet.
+The nine nodes on the 3x3 subgrid with coordinates -0.2, 0 and 0.2 Angstrom
+were designated coarse; the other sixteen nodes were designated fine.
+Energy-only controls were piecewise bilinear interpolation, tensor-quadratic
+interpolation (degree at most two in each coordinate), and a six-parameter
+least-squares polynomial of total degree at most two. The tensor polynomial
+can include mixed terms of total degree four; it is not another harmonic
+model. Both unchanged H/g quadratics were retained. Comparisons used only
+fine-node cohorts supported by all included arms, with the origin-aligned discrepancy
+defined above. This split was chosen after seeing the training labels.
+Moreover, coarse-node relaxation starts had inherited fine-node geometries;
+withholding fine energies from a fit did not blind the preceding workflow.
+
 ## 3. Results: competing responses under one mechanical intervention
 
 ### 3.1. Opposite candidate responses do not imply easier switching
@@ -1167,6 +1181,52 @@ preparation remain additional; equal preparation cost or speedup was not
 established. These comparisons delimit the claimed contribution without
 replacing a prospective native-chart or independent material test.
 
+### 3.9. A nonlinear energy control explains part of the seen discrepancy
+
+A standard energy interpolant described the seen T fine-node energies more
+closely than the unchanged original-center quadratics. All five arms
+supported the same sixteen fine targets (Table 9). The tensor-quadratic
+maximum shape discrepancy was 2.003468 meV/cell, compared with
+12.901228 and 12.975249 meV/cell for the two original H/g models. This
+restricted cohort differs from the twenty-four nonzero targets in Table 8;
+the smaller quadratic maxima do not represent a model improvement.
+
+Table 9. Post-hoc T controls on sixteen common fine targets (meV/cell).
+
+| Model | Max. shape discrepancy | Shape RMSE |
+|---|---:|---:|
+| Bilinear | 6.900894 | 4.219064 |
+| Tensor quadratic | 2.003468 | 1.043743 |
+| Refitted total quadratic | 7.667090 | 4.006016 |
+| Original H/g, 0.01 Angstrom | 12.901228 | 5.177484 |
+| Original H/g, 0.02 Angstrom | 12.975249 | 5.219402 |
+
+Origin calibration matters even for this retrospective comparison. The
+refitted total quadratic had an origin bias of +1.546418 meV/cell; its
+maximum unaligned discrepancy was 6.120672 meV/cell. We retained that
+quantity as well as the origin-aligned values rather than choosing the
+more favorable metric. The interpolants used coarse energy labels, whereas
+the original quadratics were not fitted to those energies. Their different
+information and preparation do not support an equal-budget advantage.
+
+The preserving sheet did not support the same two-dimensional test.
+Only five of its nine coarse labels were available, leaving the six-term
+quadratic design rank five. The fit was therefore refused, without a
+pseudoinverse or invented corner energies. No fine target was common to
+all five arms; the remaining arms shared only four axial targets. That
+axis-only diagnostic did not validate a two-dimensional surface.
+
+This was not an independent forecast or a saving of DFT calls. Every label
+was already seen, and all eight nonzero coarse starts at each center
+inherited fine-node parents. Historical coarse/fine-node SCF counts were
+47/71 for T and 58/114 for preserving; unsuccessful nodes remained charged.
+The original curvature, Gamma, canary and G2 preparation were additional.
+The [complete coarsening record](../../benchmarks/hfo2_channels/20261008/G3_coarsening_E184_20261015/README.md)
+retains raw and aligned errors, missing nodes and branch-start provenance.
+Its implication is a necessary comparator, not a new interpolation method:
+nonlinear reduction must be tested against a competent energy-only model,
+not only against an unrefitted local quadratic.
+
 ## 4. Discussion and remaining material tests
 
 The completed training comparison demonstrates why a decreasing barrier
@@ -1230,6 +1290,15 @@ the same quadratic. It motivates testing nonlinear release and branch
 validity, rather than attributing accuracy to a coordinate name. Neither
 the algebraic equality nor the observed training discrepancy is an
 independent material forecast.
+
+The energy-only coarsening supplies a competing explanation for an apparent
+improvement over a local quadratic: elementary nonlinear interpolation may
+already capture much of the seen energy variation. Section 3.9 does not
+establish that its tensor model generalizes, because both labels and branch
+preparation were retrospective. It instead raises the evidential requirement
+for a proposed reduction. Any independent gain must survive this comparator
+with disclosed information, coverage and preparation costs; interpolation
+agreement on seen labels is not itself a method advance.
 
 The decisive unfinished evidence is a same-boundary conditional response
 with measured transverse stability and a frozen comparison at unseen
@@ -1883,13 +1952,15 @@ post-relaxation curvature is inferred from this comparison.
 
 ### D.7. Eligibility of restricted references at shared observables
 
-Table A9. Geometry-eligible seen nonzero coordinates under the original
-guard, out of 24 planned nonzero coordinates per center. Counts are the
-same at both probe steps. The atomic reference rank is distinct from the
+The geometry-eligible counts use the original guard and a denominator of
+24 planned nonzero coordinates per center. Counts are the same at both
+probe steps. The atomic reference rank is distinct from the
 allowed dimension, which includes three open-cell directions. The
 coupled full-space arm retains two coordinates and releases 34; it is
 not a nominal atomic reference of rank two. Outside-reference dimensions
 are clamped in the restricted arms, not silently eliminated.
+
+Table A9. Geometry-eligible seen nonzero coordinates under the original guard.
 
 | Reference | Atomic rank | Allowed dimension | T eligible | Preserving eligible |
 |---|---:|---:|---:|---:|
