@@ -5161,3 +5161,28 @@ schedulerwrite, live-source overwrite, privateauthorarray/physical+.005
 access, parameter/radius/threshold/material/wholepath/CI/install/release/
 PyPI/monitor/otherhost/submission. Fiveuseredits/main92f15239 unchanged.
 Fullgoalactive/incomplete. Evidence:G3_local_forecast_E185_20261015.
+
+### E186 2026-10-15 — PROGRESS:16 actual inert native initial decks
+
+PreviousE185PROGRESS/7efb2b56. Original16targets/80predictions unchanged.
+Fresh HFnamespace, old380runtime/sixassets/binary checked, two old released
+native origins re-read. All16literal40vector starts written as inert
+INPUT/KPT/STRU and roundtripped; fixed substrate/control/order/Q/radius
+guards pass. Minimum distance2.052545887A; volumes134.568448--134.666503A3.
+No new SCF/allocation/schedulerwrite.192attempt cap/reserved8/computed0each
+are inherited, not additional. TrainingT34/81,P35/81 unchanged.
+
+Helper only prepare/preflight, not a completed production test executor;
+actual B3/released-Q0 native evidence and final pre-label model forecasts
+still precede test execution. Literal anchor policy retained for future
+evaluation. No parameter/template substitution, CI or branch repair.
+Native report5bc192b8 and64file ZIP6015de45 downloaded;48STRU/INPUT/KPT
+hashes and16manifests verified. No pseudo/orbital/binary redistribution.
+
+32local/32independentrelatedchecks3modules9new,zero fail/error/skip,
+notfullsuite; independentCLIconfig27ff592f exact. Testedtreefa9af21d/
+archive8b6930f4. Allscratch C. Read-only09:06:53both original handles
+quotaPENDING, notfailure/restart. Fiveuseredits/main92f15239 andlive source
+unchanged. No privateauthorarrays/+.005/independentlabels/newmaterial/
+wholepath/CI/install/release/PyPI/monitor/otherhost/submission.
+Fullgoalactive/incomplete. Evidence:G3_independent_inputs_E186_20261015.
