@@ -5186,3 +5186,33 @@ quotaPENDING, notfailure/restart. Fiveuseredits/main92f15239 andlive source
 unchanged. No privateauthorarrays/+.005/independentlabels/newmaterial/
 wholepath/CI/install/release/PyPI/monitor/otherhost/submission.
 Fullgoalactive/incomplete. Evidence:G3_independent_inputs_E186_20261015.
+
+### E188 2026-10-15 — PROGRESS: registered strong-reference forecasts on locked targets
+
+Previousgoalturn E187verifiedwait, no artificial status commit. All seven
+original spans/allfourCmmaframes/twoHsteps at E185eighttargets eachcenter:
+224formalrows,140acceptedpredictions/84geometryabstentions,0newDFT.
+Ttriplet/Tdoublets/fullT/eachCmma coverage T6/8/8/6, preserving0/8/8/2,
+bothsteps. FullT andtwo-doublets cover all8includingoff-axis; cannot omit
+them to claim weak-reference failure. Allreference commonT1--4axesonly,
+Pempty. P Cmma1/4only; shared-Q restricted models, not universalnative
+Cmma failure. Omitted modesclamped, not full outside-reference release.
+
+FullTvsE185H max1.6653e-16eV/cell standardidentity, notgain/independent
+algorithm. Two-doublet/fullT disagreementsT474.975/474.958,P542.960/
+542.668meV/cell mathematical only, no new DFTbarrier/accuracy conclusion.
+Private source arrays read-only/in-memory, no raw/mapped/response export;
+LDAfrequencies not PBEcurvature. No framesdeleted/worstorientation picked.
+
+49local/49independentrelatedchecks4modules9new,zero fail/error/skip,
+notfullsuite. All224 formalenergies/norm2 independently checked from old
+E180scalarpolynomials; actualprivate-bank CLIbytes97692cb0. Testedtree
+fd0871fa/archive84b6704b. Allscratch C. Costsoriginal296/118/172/Gamma/
+G2/canary/mapping/branchadditional; no equalprepcost/DFTsaving/newtheory.
+E185targets/starts/scoring/192attemptcap unchanged; trainingT34/P35,
+independentreserved8/computed0each, physical+.005sealed. FullB0--B5/native
+chart/finaldomain/admission/stability/TS/independentgain NOTcomplete.
+RO09:20:20both oldhandlesPENDINGquota0SCF, no newschedulerwrite/runtime/
+physics/material/wholepath/CI/install/release/PyPI/monitor/otherhost/submission.
+Fiveuseredits/main92f15239 unchanged. Goalactive/incomplete.
+Evidence:G3_reference_forecast_E188_20261015.
