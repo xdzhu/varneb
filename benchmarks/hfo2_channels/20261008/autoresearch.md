@@ -5059,3 +5059,36 @@ submission. Fixedphysicalinputs/.10NEB/.03conditional/.5radius unchanged,
 fiveuseredits preserved. ActualB3/postreleasecurvature/stablebranch/resolution/
 strongcontrols/frozenindependentforecasts remain. Fullgoalactive/incomplete.
 Evidence:manuscript_shared_controls_E182_20261015.
+
+### E183 2026-10-15 — PROGRESS: released-stencil native reader and complete-batch refusal
+
+PreviousE182PROGRESS/f9bd3497. Added read-only E181prefix/complete/smoke
+auditor in fresh external HFnamespace, frozen worker untouched. Bind exact
+E181bundle/config/accepted/held/preflight, old380runtime/sixassets/binary.
+Exact ordered literal reservations,136cap, native EFS/gradient/stress/volume/
+distance/force and source hashes. Complete mode requires normal Slurm32CPU/
+one-node completion, both136recordchannels and native-rebuilt two-step
+actions/blocks/spectra/reciprocity/cost summaries. No clipping/ASR/forced
+positive/stability/TS/prediction certificate. Start inventory explicit,
+pending/inflight JSON/failure/completed distinct; never retry/submit.
+
+HFactualprefix08:14:33PENDING0records/reservations/blocks cb1aa8b8.
+ActualoneoldnativeE160T smoke425539d9 re-read7cf9ab9b/log09cd83bd,
+genuine32MPI and allnativechecks passed.0newDFT, not newstencil data.
+Actualcomplete136/272new native branches still awaitdata; syntheticfull
+inventory is not physical validation. AuditorSHA d477fc05 matchesHF/local.
+73local/73independent related checks4modules19new,0finalfail/errors/skips,
+notfullsuite. First68pass/1fail caught missing-directory complete mode
+returningnotstarted. Audithelperfixed and outer136guardadded; no production/
+physicschange. RawfailureXML retainedunchanged, later69/70successfulreports
+remainC. First2tests inheritedEtemp; allsubsequentfixture/archiveworkC,
+no unrelateddeletion. Testedtree8535c272/archive4c0a1ea7.
+
+RO08:19:36both28867177/28868827PENDING/AssocGrpCpuLimit,0newSCFs/labels,
+bundleunchanged. Fiveuseredits/main92f15239 preserved. T34/81,P35/81,
+eightindependentfacepointseach/physical+.005sealed. No newDFT/reservation/
+schedulerwrite/privateauthorarray/sourceoverwrite/parameter/radius/threshold/
+material/wholepath/CI/install/release/PyPI/monitor/otherhost/submission.
+ActualB3/releasedcurvature/stablebranch/resolution/strongcontrols/frozen
+independentmaterialforecasts remain. Fullgoalactive/incomplete.
+Evidence:G3_released_audit_E183_20261015.
