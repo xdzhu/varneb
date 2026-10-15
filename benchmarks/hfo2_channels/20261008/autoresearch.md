@@ -5092,3 +5092,40 @@ material/wholepath/CI/install/release/PyPI/monitor/otherhost/submission.
 ActualB3/releasedcurvature/stablebranch/resolution/strongcontrols/frozen
 independentmaterialforecasts remain. Fullgoalactive/incomplete.
 Evidence:G3_released_audit_E183_20261015.
+
+### E184 2026-10-15 — PROGRESS: actual post-hoc nonlinear energy-control experiment
+
+PreviousE183PROGRESS/28bc8b29. Used original25/17candidate labels and fixed
+grid-parity9coarse/16fine split, no energy/errorselection. All labels already
+seen: exploratory coarsening, not blindvalidation. Bilinear/tensorquadratic/
+refittedtotalquadratic/twooriginalH models all kept. T common16: maxseen-
+originshape errors6.900894/2.003468/7.667090/12.901228/12.975249meV12atomcell,
+RMSE4.219064/1.043743/4.006016/5.177484/5.219402. Refittedquadratic originbias
++1.546418, rawmax6.120672 retained; no beststep/metricselection. Standard
+tensorinterpolation includesmixed totaldegree4, not a new harmonic theory.
+
+Preserving5coarse/12fineobserved,4coarse/4fineholes remain. Quadraticrank5
+refusesglobalfit, allmodelcommonempty/nullnotzero. Otherarms support only
+fouraxispoints1–4; tensor0.470404error is 1Daxisdiagnostic, not2Dsurface
+validation. Negative/nonzero weights retained; missingrequiredlabels abstain.
+No fictional hole values, endpointforce-as-envelope assumption or errorbound.
+
+Crucial leakage/cost: all8nonorigincoarse starts in BOTHcenters inheritfine
+parents. Fineenergywithholding is not wholeworkflowblindness. Historical
+coarse/fineSCFs47/71(T),58/114(P),includingPcoarsehole46/finehole48,not9SCFs.
+Original296/Gamma/canary/G2/seed preparation additional; differentinformation
+for interpolants vs unfittedH, no equalcost/speedup/DFTsaving/B5noveltyclaim.
+Decisionretaintheseelementary controls for future independent comparisons,
+not replace B0/B1barrierstrain or strongT/Cmma. No forecast freeze fromthisfit.
+
+37local/37independentrelatedchecks3modules12new0finalfail/errors/skips,
+notfullsuite. Independentfullreportbytes377f2c3e; testedtree3bbd688b/
+archiveca97e2dc. First36pass1fail testassumed48coarseholecalls; actualsource
+arithmeticalready46becauseonecornerused10calls. Correctedexpectation from
+nativeproof, notdata. Rawfailurepreserved, initialreportC, allscratchC.
+RO08:36:18bothjobsPENDING/AssocGrpCpuLimit0newSCF/labels. Fiveuseredits/main
+92f15239 preserved. No newDFT/reservation/schedulerwrite/rawSCFreparse/private
+authorarray/+.005/independentpointaccess/parameter/radius/threshold/material/
+wholepath/CI/install/release/PyPI/monitor/otherhost/submission. ActualB3/
+releasedcurvature/stablebranch/resolution/independentforecasts remain,
+fullgoalactive/incomplete. Evidence:G3_coarsening_E184_20261015.
