@@ -97,11 +97,9 @@ def test_paper_retains_all_previous_tables_figures_citations_and_wrapper():
     baseline = json.loads((CASE / 'preservation.json').read_bytes())
     paper = ROOT / 'paper/VARNEB_JCTC/MANUSCRIPT_DRAFT.md'
     text = paper.read_text(encoding='utf-8')
-    # New source-checked tables may be added; every previous row must remain
-    # byte-identical and in its original order, not replaced or reordered.
-    current = iter(line for line in text.splitlines() if line.startswith('|'))
-    for previous in baseline['table_lines']:
-        assert any(line == previous for line in current), 'previous table row removed, changed or reordered'
+    # Approved main/appendix movement changes order, not content or multiplicity.
+    current = Counter(line for line in text.splitlines() if line.startswith('|'))
+    assert not Counter(baseline['table_lines'])-current, 'previous table row removed or changed'
     assert len(baseline['table_lines']) == 119
     assert re.findall(r'!\[[^\]]*\]\(([^)]+)\)', text) == baseline['figure_targets']
     assert re.findall(r'\]\((https?://[^)]+)\)', text) == baseline['external_links']

@@ -12,7 +12,7 @@ CASE = ROOT / "benchmarks/hfo2_channels/20261008/G3_sheet_consistency_E172_20261
 
 def result_prose(text):
     return text.split("The subsequently completed T candidate sheet", 1)[1].split(
-        "## 4.", 1
+        "### E.5.", 1
     )[0]
 
 
@@ -74,8 +74,8 @@ def test_old_113_table_lines_nine_figures_citations_and_wrapper_are_retained():
     assert before["baseline_commit"] == "6472844bf4d7689a5106c1e3a5c6d930b03c75d0"
     assert before["original_table_line_count"] == 113
     assert not Counter(before["original_table_hash_counts"])-counts
-    # Original119 rows plus source-checked Table8(6), TableA9(10), Table9(7).
-    assert sum(counts.values())==142
+    # Original119 rows plus shared-reference(16), nonlinear(7), atomic(6).
+    assert sum(counts.values())==148
     figures = re.findall(r"!\[[^\]]*\]\(([^)]+)\)", text)
     assert figures == before["original_figure_targets"] and len(figures) == 9
     assert all(

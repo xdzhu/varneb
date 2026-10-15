@@ -5,8 +5,9 @@ The [CPC software paper](../VARNEB_CPC/README.md) is a separate artifact.
 One editable source, [MANUSCRIPT_DRAFT.md](MANUSCRIPT_DRAFT.md), supplies the
 reading PDF through [the thin TeX wrapper](varneb_JCTC_draft.tex).
 
-The [E153 structural and numerical checks](../../benchmarks/hfo2_channels/20261008/manuscript_narrative_E153_20261014/README.md)
-record the evidence-first revision; older dated receipts remain historical.
+The [current structure and source checks](../../benchmarks/hfo2_channels/20261008/manuscript_atomic_treatment_E195_20261015/README.md)
+record the user-approved four-part Results revision. Older dated receipts,
+including the E153 narrative revision, remain historical.
 
 ## Scientific question and current evidence
 
@@ -28,13 +29,16 @@ The current paper is organized by evidence, not job chronology:
 
 1. Complete channel-response matrix and endpoint-only controls.
 2. Mechanical boundary and the changed energetic role of the Pbcn snapshot.
-3. Displacement, physical-gradient and cell-response diagnostics.
-4. Signed path-work consistency, retaining the eight-band cohort.
-5. Cross-strain work separating prescribed control and configuration changes.
-6. Original-center atomic/open-cell curvature restrictions and the matched
-   frozen/released shape ablation. Table 7 retains both probe steps and all
-   four axial coordinates at each center; its discrepancies are training
-   diagnostics, not independent predictions or physical uncertainty bounds.
+3. What the mode descriptions capture and what atomic/joint relaxation changes.
+4. Prediction controls and the still-unfinished independent test.
+
+Detailed signed-work, cross-strain, curvature and representation checks are
+retained in Appendix E, not treated as six additional main discoveries.
+The complete matched atomic treatment is in Appendix D.8/Table A10.
+All five local preserving coordinates showed 44.06--48.35 meV per twelve-atom
+cell of atomic-release lowering; joint candidates were a further 0.80--1.14
+meV/cell lower. This local treatment contrast is not a unique mode-energy
+partition, whole-path mechanism or stable-surface certificate.
 
 Free-cell candidates, finite sampling checks, endpoint screens and complete
 reference tables remain **inside the paper's appendices**. No separate

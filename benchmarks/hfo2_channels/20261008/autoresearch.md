@@ -5327,3 +5327,34 @@ notguarantee. No newscheduler/DFTinitiation/runtime/physics/domain/budget/
 independentpoint/+.005/privatebank/newmaterial/CI/install/release/PyPI/
 monitor/otherhost/submission. Main25738d69/fiveuseredits preserved.
 Fullgoalactive/incomplete. Evidence:G3_atomic_complete_E194_20261015.
+
+### E195 2026-10-15 — PROGRESS: author-approved four-part manuscript and real treatment integration
+
+PreviousE194PROGRESS/e3c599d0. Author explicitly chose four-part Results.
+Existing9sections→4: channelcompetition/mechanicalboundary/modedescriptors
+andatomicrelease/predictioncontrols. Sixdetailed diagnostics movedAppendixE,
+no data/qualification deleted. Tables1--3/A11--A16referencesupdated.
+E194actual10point/36SCFtreatment nowMethods2.7/Results3.3/Discussion/D.8A10;
+4newquantrows sourcepinned3cc150ec/8a2fdf2a, samecenters/bothsteps/allarms.
+All142oldtablelines/countsmultisetretained+6=148, ninefigureorder/bytes,
+13externalcitations/Texwrapperunchanged. Twoledgerterms, publicreadingguide.
+
+138local/138independentrelatedchecks11modules12new,0finalfail/error/skip,
+notfullsuite. First127pass11fail: rawnewlinephrase, oldorder/count and8
+negativefixtures usingfirstscalar-matchingrow now selectedA10notoldF/J.
+Fixfullsourcerowidentity/approvedorder, do notrelaxphysicalvalues. Rawfailure
+XML2025eef5retained. FinalCLIa6230114byteexact, testedtreee48fddab/archive
+dd93dbc9. No productive physics/runtime/model coefficient changes.
+
+RealLuaLaTeX36pagePDFallrendered/contactreviewed, detailed11/16/30,
+captionQA foundA13/A15crosspage32/33and34/35. Notesmovedtoprose, short
+captionsnow33/35sameastables. Final1--31pixelidentical, changed32--36
+allreinspected, zeroover/underfull/missingchars. MDb9e29fca/PDF6f48c872.
+InitialPDF/metadataretained, notsubmission-ready. Allbuild/snapshotsC.
+
+RO11:36:01curvature28868827RUNNINGnode9/32CPU/54of272/noSCFfailure,
+mean119s scenario18:49notguarantee. No newDFTinitiation/scheduler/physics/
+domain/budget/privatearrays/+.005/independentlabels/material/CI/install/
+release/PyPI/monitor/otherhost/submission. Fiveusereditsprotected.
+Independentstability/forecasts/fullB0--B5/physicalholdout/scientificgain
+stillmissing, fullgoalactive. Evidence:manuscript_atomic_treatment_E195_20261015.

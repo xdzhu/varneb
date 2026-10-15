@@ -10,7 +10,10 @@ complete local joint-curvature measurements, their atomic/open-cell
 restrictions and a finite-coordinate quadratic comparison are available.
 The first two conditional batches have finished: 25 T and 17 preserving
 coordinates passed the released-gradient target, out of 25 per center;
-eight preserving holes remain. An uncertainty-resolved
+eight preserving holes remain. Matched atomic-only release has also completed
+at five coordinates per
+center; these treatment results are distinct from joint stationarity or
+released stability. An uncertainty-resolved
 response interpretation, stable conditional branches and independent
 material predictions are still missing. An abstract and a
 conclusion asserting those unmeasured results are deliberately withheld.
@@ -536,6 +539,16 @@ motion, R=0 is not a fully fixed-cell experiment. Positive released-minus-
 frozen candidate differences would be retained rather than clipped; a
 finite-gradient candidate is not assumed to be a global conditional minimum.
 
+We additionally released the 31 atomic directions orthogonal to the same
+retained observables, while fixing each frozen-Q seed's cell. This atomic-only
+treatment, A, was compared with the frozen treatment F and the joint atomic-
+and-open-cell treatment J at the origin and four axial coordinates per
+center. Both original quadratic models were fixed before the atomic labels
+were read. The signed differences $E_A-E_F$ and $E_J-E_A$ were retained pointwise,
+along with each treatment's own origin. The second difference includes atomic
+readjustment as well as cell motion; it is not a unique strain-energy term.
+Because Q contains cell motion, A does not impose one shared cell across Q.
+
 Reference comparisons at fixed coordinates must preserve the observables,
 not merely reuse their numerical labels. Let x denote the 36 internal
 coordinates, let $q=C^Tx$ specify the same two retained observables in every
@@ -696,7 +709,7 @@ boundaries. It supports testing that question, not a demonstrated advantage
 of the proposed response model. Conditional branch stability, certified
 bottlenecks and independent error-bounded forecasts remain unmeasured.
 
-### 3.3. Geometry, gradients and cell response require different diagnostics
+### 3.3. What the modes capture, and what relaxation changes
 
 A compact displacement projection did not imply a compact physical-gradient
 representation. At the zero-strain T escape peak the geometric T triplet
@@ -800,398 +813,41 @@ Appendix D retains every reference rank, all four tied Cmma frames and
 their nonstatistical registration ranges. The original source modes and
 forces are not modified by ASR; raw translation contributions remain visible.
 
-Direct joint-curvature measurements reveal an additional limitation of a
-one-coordinate description at the two sampled peaks. At both finite steps,
-each internal matrix has two negative eigenvalues; removing the internal
-path tangent still leaves one negative direction (Table A6). For T escape,
-the lowest two values are approximately -0.276 and -0.165 eV/Angstrom squared
-at the smaller step. For preserving switching they are -1.272 and -0.447.
-These are nonstationary, finite-step curvatures in a joint atomic-cell
-length metric, not phonon frequencies or certified saddle indices. For
-these measured matrices, retaining only one internal direction cannot
-leave a positive released complement. This is a property of the measured
-quadratic, not a new reduction theorem.
+For the preserving local cohort, most of the energy lowering was already
+obtained by atomic rearrangement at each frozen-Q seed cell. Across the five
+registered coordinates, atomic-only release lowered the energy by
+44.06--48.35 meV/cell. The joint candidates were a further
+0.80--1.14 meV/cell lower. The origin-aligned atomic-only model discrepancies
+were 4.349824 and 4.399770 meV/cell for the two original probe steps,
+compared with 4.671404 and 4.720758 for joint release on the same four axial
+points (Appendix D.8). Thus the local model mismatch was already largely
+present before the additional joint-release step. Omission of open-cell
+release alone cannot explain it. These observations cover the specified
+local candidates, not the whole switching path or a unique microscopic
+energy partition. All ten atomic-only candidates passed their own gradient
+target but retained joint released-gradient norms above that target;
+neither joint stationarity nor transverse stability followed from this test.
 
-The registered reference spaces must be tested against this same internal
-problem rather than displacement coverage alone. The rank-three T triplet,
-rank-four optical control and each of the four rank-four Cmma registrations
-leave negative released curvature at both centers and steps (Table A7).
-However, retaining all 33 T optical directions leaves a positive three-cell-
-direction complement, while its retained Schur block still has two negative
-directions. Thus the evidence does not show that all fixed references fail.
-The ranks and released dimensions differ, and a complete quadratic response
-remains invariant under valid basis partitions as described in Section 2.3.
+### 3.4. Prediction controls and the unfinished independent test
 
-Releasing the remaining coordinates at fixed two-dimensional coordinates
-lowers the T-center energy by 0.00065214 eV per twelve-atom cell and the
-preserving-center energy by 0.04948493 eV per cell. The curvature-seeded
-arms reach released-gradient norms 0.02630 and 0.01959 eV/Angstrom in two
-and five new SCFs, respectively; neither identity arm reaches the common
-target within twelve attempts (Table A8). This is a bounded local result,
-not a whole-NEB acceleration benchmark. The preceding 296 curvature SCFs
-and earlier path costs are additional, so no net cost advantage follows
-from these call counts alone. Post-relaxation released stability remains
-unmeasured.
-
-The two resulting candidate energies differ by only 0.00081345 eV per
-cell, but energy proximity does not establish a common mechanism or branch.
-They retain a 0.19178-Angstrom translation-free distance in the common
-ordered T chart, without atom rematching or rotation. Moreover, each
-retained plane is anchored at its own original center. These local
-fixed-coordinate results therefore do not replace any sampled G2 barrier,
-establish branch merger or certify a transition structure. They motivate
-checking conditional equilibration and branch stability before using a
-low-dimensional surface for prediction.
-
-### 3.4. Endpoint closure can conceal a bottleneck-region discrepancy
-
-The signed-work diagnostic uses the eight completed clamped training bands,
-not earlier unfinished snapshots or the reserved strain condition. All nine raw
-E/F/stress frames per band are reparsed, with the same ordered continuous
-lift, original T mass chart, permitted open-cell space and electronic
-contract. These 72 frame records contain 66 distinct raw-log/geometry
-identities: four zero-strain paths share one initial PO+ cache, and the
-four +1% paths share another. They are
-neither new SCFs nor independent statistical replicates. Every energy
-change is relative to that band's own matched PO+ well.
-
-Table 3 compares raw sampled peak energies with the full endpoint-gradient
-trapezoid accumulated to the same image. Peak and endpoint residuals use
-the same sign, raw energy change minus accumulated work. Units are
-meV/HfO2 throughout; the Hf4O8-cell values are multiplied by 250.
-
-| Training band | Raw peak | Work to peak | Residual at peak | Residual at endpoint |
-|---|---:|---:|---:|---:|
-| PO-to-M, zero strain | 98.458122 | 77.560379 | 20.897743 | 3.006016 |
-| PO-to-T, zero strain | 84.416624 | 75.955937 | 8.460687 | 0.728018 |
-| Reversing flip, zero strain | 338.968965 | 303.693643 | 35.275323 | 0.115373 |
-| PO-to-T, +1% strain | 96.763650 | 87.345393 | 9.418257 | 1.997185 |
-| Preserving flip, zero strain | 96.828183 | 82.304235 | 14.523948 | 0.032398 |
-| PO-to-M, +1% strain | 97.227719 | 75.922579 | 21.305139 | 2.658882 |
-| Preserving flip, +1% strain | 125.424431 | 111.393911 | 14.030520 | 0.000050 |
-| Reversing flip, +1% strain | 294.944634 | 259.087641 | 35.856993 | -0.000001 |
-
-The reversing candidate illustrates the distinction most clearly. Its
-endpoint closure is only 0.115373 meV/HfO2, whereas the discrepancy at the
-highest sample is 35.275323. Small final closure therefore does not certify
-energy-resolved consistency through the transition region. Conversely,
-the present nine-sample trapezoid cannot determine whether this discrepancy
-comes from coarse quadrature, physical force/stress error or both. It is
-not a measured barrier uncertainty and does not justify retuning the
-electronic inputs or declaring an ordinary-converged band failed.
-
-The coordinate pullback itself passes a distinct implementation check:
-direct native Cartesian-force/ASE-stress contractions agree with the
-dual atomic/open-cell work within $1.12\times10^{-16}$ eV per cell. This
-algebraic agreement does not test DFT accuracy. Under the T geometric
-triplet, signed retained work to the respective peaks is -0.111271,
-2.666921, 195.447066, 1.367408, -0.165926, 0.011623, 3.753494 and 147.404416 meV/HfO2, in Table 3 order.
-Omitted atomic work is 68.756917, 72.789643, 105.539695, 85.773095, 82.500795,
-67.611606, 107.167048 and 108.609913; open-cell work is 8.914733, 0.499373, 2.706882, 0.204891, -0.030633,
-8.299349, 0.473369 and 3.073313. The explicit rigid
-translation terms are also retained, at most $4.63\times10^{-9}$ in these
-units at the displayed peaks, rather than removed by a source ASR repair.
-These signed terms sum to the full sampled work, not to a unique energetic
-allocation among modes.
-
-Strong references remain in the comparison. The two complete T optical
-doublets yield retained work 12.359091, 11.900861, 0.782574, 11.007299, 18.977823,
-11.650637, 26.369936 and 6.179305
-in the same order. Across all four registered Cmma frames, retained-work
-ranges are 55.618955 to 55.619265 for zero-strain M;
-62.066996 to 62.068212 for zero-strain T;
-63.846564 to 63.846572 for reversing;
-67.984207 to 67.985028 for +1% T;
-47.684643 to 47.684652 for preserving;
-55.402398 to 55.403003 for +1% M;
-26.439087 to 26.439089 for +1% preserving; and
-23.010446 to 23.010450 for +1% reversing. Each representation includes
-its full omitted atomic contribution and the same open-cell work; ranks
-three and four are not treated as identical-dimensional models. This
-reference dependence is not a conditional-energy or forecast-accuracy
-ranking. In particular, the reversing triplet's integrated work and its
-small instantaneous peak-gradient fraction (Table A5) answer different
-questions and need not track one another.
-
-The [four original scalar reports](../../benchmarks/hfo2_channels/20261008/clamped_path_work_E092_20261011/README.md),
-[preserving report](../../benchmarks/hfo2_channels/20261008/clamped_preserving_reference_E101_20261011/README.md),
-[+1% M report](../../benchmarks/hfo2_channels/20261008/clamped_M_strain_reference_E105_20261012/README.md)
-and [eight-band raw-frame replay and cohort check](../../benchmarks/hfo2_channels/20261008/clamped_plus1_reversing_terminal_E148_20261014/README.md)
-thus add an energy-gradient consistency test to geometric coverage, without
-selecting G3 bottlenecks, a reference winner or unseen labels. Measured
-conditional response, stability and the prospectively frozen strong-control
-comparison remain necessary for a predictive claim. This diagnostic uses
-existing data only and does not open an additional sampling or Hessian budget.
-
-### 3.5. Cross-strain work separates imposed control from configuration change
-
-The second work diagnostic pairs equal image indices between the two
-training conditions in the single controlled-coordinate chart of Section 2.6.
-All four pairs retained their sampled peak index (M:3; T and both flips:4).
-The matched-peak energy changes therefore reproduce Table 1 exactly, while
-the signed terms in Table 4 partition the declared endpoint trapezoid.
-
-Table 4. Cross-strain peak-relative work in meV/HfO2. Terms are relative to
-the same initial-pair work; the final column is energy change minus full
-trapezoidal work, not a barrier-error estimate. The retained rigid-translation
-terms are smaller than 2.411e-10 at these peaks.
-
-| Candidate | Observed peak change | Atomic work | Open-row work | Substrate work | Energy minus work |
-|---|---:|---:|---:|---:|---:|
-| PO-to-M | -1.230403 | 2.720687 | -0.174328 | -3.835247 | 0.058485 |
-| PO-to-T | 12.347027 | -0.228947 | 0.220068 | 12.275095 | 0.080811 |
-| Preserving flip | 28.596248 | 36.895288 | -0.078916 | -12.858888 | 4.638764 |
-| Reversing flip | -44.024331 | -32.332083 | -0.270001 | 0.072814 | -11.495061 |
-
-In this connection, the T candidate's work was dominated by the prescribed
-substrate term. For preserving, that term had the opposite sign from the
-observed peak change: +36.895288 atomic work and a +4.638764 residual
-accompanied the -12.858888 substrate term. The isolated mechanical partial
-therefore cannot replace the observed finite path response. It is not a
-measurement that a frozen strain slice would lower the barrier: the endpoint
-gradients here belong to two different internally optimized configurations.
-
-The reversing residual was -11.495061 meV/HfO2. It is preserved rather than
-attributed solely to DFT noise or a particular coupling. No intermediate
-cross-strain geometries were calculated. Independent Cartesian force/stress
-and dual-chart contractions agreed within 6.662e-16 eV/cell, an algebraic
-implementation check rather than physical accuracy evidence. The
-[36-pair source analysis](../../benchmarks/hfo2_channels/20261008/cross_strain_work_E151_20261014/README.md)
-reuses the same 72 frame records/66 distinct identities, without new SCFs,
-held-out inputs or reference selection. The next inference requires measured
-local curvatures, stable conditional branches and frozen independent tests.
-
-### 3.6. The extra negative direction is already present in the atomic sector
-
-The additional raw negative direction at each sampled peak is not created
-solely by opening the cell. Both atomic restrictions already had two
-negative eigenvalues at both finite steps, as did the joint matrices;
-their open-cell restrictions had three positive eigenvalues (Table 5).
-For these measured quadratics, coupling changed the negative curvatures
-without adding another negative direction. This observation is specific
-to the two nonstationary centers, not a general rule excluding coupling-induced
-instabilities or an uncertainty-resolved stationary index.
-
-Table 5. Atomic and cell restrictions of the original sampled-peak matrices.
-Steps are in Angstrom and the three curvature columns in eV/Angstrom
-squared. The last column is the dimensionless open-cell trace of the
-two-dimensional negative subspace, not a percentage of a barrier energy.
-The same length scale L=5.12968067458423 Angstrom is used in every row.
-
-| Center | Step | Minimum atomic | Minimum joint | Minimum cell | Cell trace |
-|---|---:|---:|---:|---:|---:|
-| T | 0.01 | -0.240169 | -0.276193 | 2.956214 | 0.0205773 |
-| T | 0.02 | -0.237806 | -0.273596 | 2.956557 | 0.0206105 |
-| Preserving | 0.01 | -1.271818 | -1.271819 | 3.090798 | 1.04022e-06 |
-| Preserving | 0.02 | -1.281815 | -1.281821 | 3.092172 | 3.09248e-06 |
-
-The T negative subspace contained more open-cell admixture than the
-preserving subspace in this metric. However, the complete atomic-cell
-coupling operator norms were approximately 7.72 and 8.10 eV/Angstrom
-squared, respectively, at the smaller step. A large total coupling norm
-therefore did not identify a strongly cell-mixed unstable direction.
-Conversely, small open-cell weight at one sampled configuration cannot
-establish insensitivity of a complete barrier to the prescribed substrate.
-The substrate response and the permitted open-cell fluctuations are
-different quantities. All four restrictions and the nonzero-gradient
-formal reductions are retained in the
-[atomic/open-cell analysis](../../benchmarks/hfo2_channels/20261008/G3_atomic_cell_signature_E164_20261015/README.md).
-
-### 3.7. A useful curvature seed is not a finite-domain energy predictor
-
-The bounded optimizer result in Section 3.3 did not establish the accuracy
-of the original quadratic over finite retained displacements. In the
-first-step eigenplane, the retained/released coupling was numerically
-zero by construction; its Schur curvature correction was of order
-$10^{-28}$ eV/Angstrom squared in norm. Formal release changed the energy
-offset but supplied no appreciable new shape correction in that plane.
-This algebraic null is not a prediction improvement.
-
-After origin alignment, the original quadratics still disagreed with the
-six common-coordinate DFT candidates (Table 6). Both probe steps are
-reported, not selected according to agreement. The maximum absolute
-shape discrepancies were 8.52--8.59 meV/cell for T and 20.52--20.72
-meV/cell for preserving, each at $q=(-0.2,0)$ Angstrom. The corresponding
-signed errors were positive for T and negative for preserving. All nine
-T candidates and all six preserving candidates in the audited source
-snapshot remain in the records; the common cohort is used only to make the table's
-coordinate coverage explicit.
-
-All three energy columns use meV per twelve-atom cell, not meV/HfO2.
-Origin release is relative to each original center; the shape discrepancy
-uses each model's and candidate's own seen origin. Probe steps are in
-Angstrom. These are seen-training diagnostics, not independent errors or
-continuous-path barrier errors.
-
-Table 6. Unfitted original quadratic versus released DFT candidates.
-
-| Center | Probe step | DFT origin release | Model origin release | Max. shape discrepancy |
-|---|---:|---:|---:|---:|
-| T | 0.01 | -0.652142 | -0.866958 | 8.524106 |
-| T | 0.02 | -0.652142 | -0.874429 | 8.587800 |
-| Preserving | 0.01 | -49.484930 | -54.521222 | 20.521839 |
-| Preserving | 0.02 | -49.484930 | -54.705828 | 20.720640 |
-
-The candidate-energy axial second differences at 0.1 Angstrom were
-(-0.405128, -0.243087) eV/Angstrom squared for T and
-(-0.337763, -0.184576) for preserving. They are finite differences of
-candidate energies, not infinitesimal Hessians of certified conditional
-minima. Nonlinear response, finite-difference effects, branch changes
-and residual relaxation can all contribute to the model disagreement;
-these observations do not distinguish their individual contributions.
-Nor does their size define a physical uncertainty bound. The
-[quadratic comparison](../../benchmarks/hfo2_channels/20261008/G3_quadratic_agreement_E165_20261015/README.md)
-keeps the affine released gradient and both original probe steps.
-
-These results separate two uses of local curvature: an initialization
-that is updated during optimization, and a fixed finite-domain energy
-model. The former can assist local relaxation even when the latter
-misses the observed shape. A matched frozen-coordinate comparison is
-needed before assigning the discrepancy to the relaxation response.
-Eight such static controls, four per center, have now completed under
-the unchanged electronic contract. Native energy, force, stress, input
-and 32-MPI checks passed for all eight. They use the original cached
-origins and seen released counterparts, reserve training slots only,
-and do not replace the independent tests.
-
-The subsequently completed T candidate sheet exposed a separate
-finite-convergence issue. Its 25 points required 118 new SCFs in addition
-to the cached released origin. Final released-gradient norms ranged from
-0.00653 to 0.02978 eV/Angstrom, and the largest total internal displacement
-was 0.46378 Angstrom within the original 0.5-Angstrom domain. Sampled
-energies spanned -38.531 to 0 meV/cell relative to that released origin.
-These are fixed-coordinate candidates, not an end-to-end MEP or certified
-stable conditional minima.
-
-Across the 40 nearest grid edges, the largest absolute discrepancy using
-only retained endpoint work was 1.209 meV/cell. On that edge the signed
-released term was 1.094 meV/cell, leaving a full quadrature discrepancy
-of 0.115 meV/cell. Over all edges the largest absolute full discrepancy
-was 1.039 meV/cell. Across 16 elementary closed loops, the largest absolute
-retained and full endpoint circulations were 2.000 and 0.578 meV/cell,
-respectively; these maxima occurred on different loops. This
-[complete-sheet diagnostic](../../benchmarks/hfo2_channels/20261008/G3_sheet_consistency_E172_20261015/README.md)
-retains finite released residuals and unsampled quadrature separately.
-The values are not DFT, interpolation or barrier-error bounds and do not
-certify smoothness or stability. They also do not identify the cause of
-the original quadratic's finite-domain disagreement.
-
-The completed preserving batch did not attain the same coordinate
-coverage. All 25 coordinates were processed, but only 17, including the
-cached origin, reached the common released-gradient target. The eight
-remaining coordinates stayed as holes. All 172 new SCFs passed native
-energy, force, stress, unchanged-input and genuine 32-MPI checks, and all
-24 nonzero-coordinate optimization trajectories replayed exactly. Seven
-holes exhausted twelve evaluations; one stopped after ten without reaching
-the target. They consumed 94 of the 172 SCFs. The batch required 193.859
-completed-call proxy core-hours and 195.120 allocation core-hours, excluding
-the original curvature and cached preparation.
-
-Cache-only replay attributed every recorded geometry rejection in these
-eight trajectories to the original total-displacement radius, not to a
-changed electronic input or a failed SCF. Their last completed trials lay
-at radii 0.49971--0.50000 Angstrom within the registered 0.5-Angstrom domain;
-none of the completed trials met the 0.03 eV/Angstrom released-gradient
-target. This establishes contact with the optimizer's domain boundary,
-not nonexistence of a solution, boundary stationarity or termination of a
-physical branch. The [complete audit and hole replay](../../benchmarks/hfo2_channels/20261008/G3_preserving_terminal_E179_20261015/README.md)
-retain the original decisions and stopping reasons. We do not fill these
-holes by interpolation or equate batch completion with a stable surface.
-
-The matched controls locate the larger preserving-channel discrepancy
-in the release response, within this four-coordinate training cohort
-(Table 7). Frozen shape discrepancies stayed below 0.12 meV/cell for
-both original probe steps, while released discrepancies reached
-4.67--4.72 meV/cell. The DFT release change relative to its origin
-reached 4.607 meV/cell. At $q=(-0.1,0)$ Angstrom for the first-step model,
-the signed frozen discrepancy -0.064445 and missed release-shape term
--4.606959 summed to the released discrepancy -4.671404 meV/cell.
-
-Table 7. Matched frozen/released shape discrepancies on four axial
-coordinates per original center. All energy columns are meV per
-twelve-atom cell; probe steps are Angstrom. Separate column maxima may
-occur at different coordinates and are not subtracted to form a
-decomposition. All 16 model-point records are retained in the
-[matched ablation](../../benchmarks/hfo2_channels/20261008/G3_frozen_release_E173_20261015/README.md).
-These are training-only diagnostics, not independent predictions or
-physical uncertainty bounds.
-
-| Center | Probe step | Max. frozen shape | Max. released shape | Max. DFT release change |
-|---|---:|---:|---:|---:|
-| Preserving | 0.01 | 0.075880 | 4.671404 | 4.606959 |
-| Preserving | 0.02 | 0.116535 | 4.720758 | 4.606959 |
-| T | 0.01 | 0.416264 | 1.327177 | 1.168761 |
-| T | 0.02 | 0.403160 | 1.346071 | 1.168761 |
-
-Signed cancellation also matters. At T $q=(0.1,0)$ Angstrom, the
-first-step frozen discrepancy -0.416264 and release-shape term
-+0.378430 partly cancelled, leaving -0.037833 meV/cell. This near agreement
-at one coordinate did not establish general model accuracy. The ablation
-distinguishes frozen-shape mismatch from missed release-shape change,
-but does not isolate anharmonicity, finite-step effects, finite released
-residuals or branch changes as a unique microscopic cause. Nor does it
-replace the full T/Cmma strong-control or independent-prediction matrix.
-The eight statics used 8.137 completed-call proxy core-hours and
-9.076 allocation core-hours; curvature and prior candidate preparation
-remain additional.
-
-### 3.8. A complete reference removes a basis advantage, not a finite-domain error
-
-The complete T optical reference and the coupled-coordinate representation
-gave the same constrained quadratic, not competing accuracy results.
-Using the same measured H, affine g, fixed Q and mechanical space, the
-33 optical directions plus three open-cell directions spanned all 36
-internal coordinates. Across both centers, both probe steps and all 25
-registered Q values, the largest energy difference between the constrained
-reference solve and Schur solve was $2.64\times10^{-16}$ eV/cell; the largest
-coordinate difference was $1.56\times10^{-14}$ Angstrom. These differences
-measure numerical realization of an algebraic identity, not DFT accuracy.
-
-Both representations retained the same finite-domain disagreement with
-the completed DFT candidates (Table 8). The larger T maximum compared with
-Table 6 reflects its expanded seen-coordinate cohort, not a newly observed
-independent error. The preserving holes were excluded as missing labels,
-not replaced with their last optimization trials. No coefficients were
-fitted, and subtracting each seen origin remained a retrospective shape
-diagnostic. Counts exclude the origin and share the denominator of 24
-planned nonzero coordinates. All listed candidates passed the original
-geometry guard for both models; probe steps are in Angstrom.
-
-Table 8. Shared full-space shape discrepancies (meV per twelve-atom cell).
-
-| Center | Probe step | Seen nonzero candidates | Max. shape discrepancy |
-|---|---:|---:|---:|
-| T | 0.01 | 24/24 | 28.776664 |
-| T | 0.02 | 24/24 | 28.872042 |
-| Preserving | 0.01 | 16/24 | 20.521839 |
-| Preserving | 0.02 | 16/24 | 20.720640 |
-
-The restricted references did not provide a common nonzero comparison
-cohort in these fixed observables. Their individual eligible sets differed
-(Appendix D.7), and the all-reference intersection was empty at both probe
-steps. Thus neither extrapolated values nor errors computed on different
-subsets were used to rank them. This is a compatibility limitation of the
-selected spans, observables and finite domain, not evidence that a native
-Cmma-coordinate energy model fails. The
-[shared-observable control](../../benchmarks/hfo2_channels/20261008/G3_shared_Q_controls_E180_20261015/README.md)
-retains all seven registered references, four Cmma frames and the full-space
-control: 800 algebraic model-point records, with zero new DFT calls. The
-original 296 curvature SCFs, 118/172 conditional-sheet SCFs and all other
-preparation remain additional; equal preparation cost or speedup was not
-established. These comparisons delimit the claimed contribution without
-replacing a prospective native-chart or independent material test.
-
-### 3.9. A nonlinear energy control explains part of the seen discrepancy
+An independent prediction advantage has not yet been established. A complete
+T optical reference plus the permitted cell directions represents the same
+full quadratic as the coupled-coordinate model: changing that complete basis
+did not change its predictions (Appendix E.5). A useful comparison must
+therefore distinguish nonlinear energy modeling and branch validity from
+a relabeling of the same response. The energy-only controls below address
+that comparison on already seen data; they do not supply the independent
+test.
 
 A standard energy interpolant described the seen T fine-node energies more
 closely than the unchanged original-center quadratics. All five arms
-supported the same sixteen fine targets (Table 9). The tensor-quadratic
+supported the same sixteen fine targets (Table 3). The tensor-quadratic
 maximum shape discrepancy was 2.003468 meV/cell, compared with
 12.901228 and 12.975249 meV/cell for the two original H/g models. This
-restricted cohort differs from the twenty-four nonzero targets in Table 8;
+restricted cohort differs from the twenty-four nonzero targets in Table A16;
 the smaller quadratic maxima do not represent a model improvement.
 
-Table 9. Post-hoc T controls on sixteen common fine targets (meV/cell).
+Table 3. Post-hoc T controls on sixteen common fine targets (meV/cell).
 
 | Model | Max. shape discrepancy | Shape RMSE |
 |---|---:|---:|
@@ -1227,6 +883,14 @@ Its implication is a necessary comparator, not a new interpolation method:
 nonlinear reduction must be tested against a competent energy-only model,
 not only against an unrefitted local quadratic.
 
+Eight prospective local test coordinates per center have been fixed without
+using their DFT labels. They remain uncomputed pending the released-curvature
+checks and final candidate-model forecasts. The separate +0.5% mechanical
+condition also remains sealed; a local-coordinate test cannot replace its
+path-barrier comparison. The [registered local forecasts](../../benchmarks/hfo2_channels/20261008/G3_local_forecast_E185_20261015/README.md)
+and [strong-reference forecasts](../../benchmarks/hfo2_channels/20261008/G3_reference_forecast_E188_20261015/README.md)
+are preparation for those tests, not demonstrated predictive gains.
+
 ## 4. Discussion and remaining material tests
 
 The completed training comparison demonstrates why a decreasing barrier
@@ -1257,6 +921,12 @@ until the released block has been checked. The local tests narrow the
 next material question to whether a stable, reproducible branch supports
 an independent response prediction; they do not already answer it.
 
+The matched atomic-only treatment narrowed one interpretation: most of the
+large preserving-cohort lowering and model mismatch was already present
+with each seed cell fixed. Extra open-cell release is therefore not its
+sole explanation. Finite relaxation residuals, nonlinear response and branch
+selection remain competing explanations, rather than established mechanisms.
+
 The local atomic/open-cell restrictions and the finite-coordinate test
 further delimit the mechanism claim. In these raw matrices the extra
 negative direction was already atomic, rather than an instability added
@@ -1282,7 +952,7 @@ problem, valid retained/released basis changes give the same response
 arise in an explicitly tested finite representation, nonlinear branch,
 validity domain or equal-accuracy cost comparison, rather than in renaming
 coordinates or dropping a strong reference. The existing analytic checks
-enforce this null. Section 3.8 now verifies its constrained counterpart
+enforce this null. Appendix E.5 now verifies its constrained counterpart
 on the measured hafnia matrices: even at fixed retained observables, the
 complete reference and coupled representation agree. Their common
 finite-coordinate discrepancy therefore cannot be removed by relabeling
@@ -1293,7 +963,7 @@ independent material forecast.
 
 The energy-only coarsening supplies a competing explanation for an apparent
 improvement over a local quadratic: elementary nonlinear interpolation may
-already capture much of the seen energy variation. Section 3.9 does not
+already capture much of the seen energy variation. Section 3.4 does not
 establish that its tensor model generalizes, because both labels and branch
 preparation were retrospective. It instead raises the evidential requirement
 for a proposed reduction. Any independent gain must survive this comparator
@@ -1979,3 +1649,423 @@ therefore absent, not zero. No reference is selected by its own-subset
 error, and the four Cmma frames are not pooled into a larger basis.
 The [complete scalar records](../../benchmarks/hfo2_channels/20261008/G3_shared_Q_controls_E180_20261015/analysis.json)
 retain all point identities, signs, origin biases and eligibility decisions.
+
+### D.8. Complete matched atomic-only treatment
+
+Table A10. Origin-aligned maximum model discrepancies on the same four
+axial coordinates per center, in meV per twelve-atom cell. F freezes omitted
+coordinates, A releases atomic coordinates at the frozen-Q seed cell, and J
+jointly releases atomic and permitted cell coordinates. Probe steps are
+Angstrom. The comparison is on seen training labels, not independent errors.
+
+| Center | Probe step | Frozen | Atomic-only | Joint |
+|---|---:|---:|---:|---:|
+| T | 0.01 | 0.416264 | 0.501879 | 1.327177 |
+| T | 0.02 | 0.403160 | 0.515704 | 1.346071 |
+| Preserving | 0.01 | 0.075880 | 4.349824 | 4.671404 |
+| Preserving | 0.02 | 0.116535 | 4.399770 | 4.720758 |
+
+All ten atomic-only candidates and 36 new SCFs passed the complete native
+audit, including unchanged electronic inputs and exact optimizer replay.
+The original twenty model-point predictions and both probe steps were
+retained without refitting. The measured atomic-release call proxy was
+39.749558 core-hours; the allocation used 40.684444 core-hours. The eight
+frozen statics, original 296 curvature SCFs and all previous joint-path and
+candidate preparation remain additional. The unused part of an attempt
+ceiling is not a speedup measurement. The [complete matched records](../../benchmarks/hfo2_channels/20261008/G3_atomic_complete_E194_20261015/README.md)
+retain signed absolute and origin-aligned treatment differences. These
+candidate differences are not uniquely separable mode energies or evidence
+of a stable conditional surface; post-release curvature and independent
+predictions remain separate requirements.
+
+## Appendix E. Detailed response and model-validity diagnostics
+
+These analyses reuse the declared training paths and local candidates. They
+support the mechanical and representation checks in the main text, without
+adding independent observations or changing the electronic contract.
+
+### E.1. Endpoint closure can conceal a bottleneck-region discrepancy
+
+The signed-work diagnostic uses the eight completed clamped training bands,
+not earlier unfinished snapshots or the reserved strain condition. All nine raw
+E/F/stress frames per band are reparsed, with the same ordered continuous
+lift, original T mass chart, permitted open-cell space and electronic
+contract. These 72 frame records contain 66 distinct raw-log/geometry
+identities: four zero-strain paths share one initial PO+ cache, and the
+four +1% paths share another. They are
+neither new SCFs nor independent statistical replicates. Every energy
+change is relative to that band's own matched PO+ well.
+
+Table A11 compares raw sampled peak energies with the full endpoint-gradient
+trapezoid accumulated to the same image. Peak and endpoint residuals use
+the same sign, raw energy change minus accumulated work. Units are
+meV/HfO2 throughout; the Hf4O8-cell values are multiplied by 250.
+
+| Training band | Raw peak | Work to peak | Residual at peak | Residual at endpoint |
+|---|---:|---:|---:|---:|
+| PO-to-M, zero strain | 98.458122 | 77.560379 | 20.897743 | 3.006016 |
+| PO-to-T, zero strain | 84.416624 | 75.955937 | 8.460687 | 0.728018 |
+| Reversing flip, zero strain | 338.968965 | 303.693643 | 35.275323 | 0.115373 |
+| PO-to-T, +1% strain | 96.763650 | 87.345393 | 9.418257 | 1.997185 |
+| Preserving flip, zero strain | 96.828183 | 82.304235 | 14.523948 | 0.032398 |
+| PO-to-M, +1% strain | 97.227719 | 75.922579 | 21.305139 | 2.658882 |
+| Preserving flip, +1% strain | 125.424431 | 111.393911 | 14.030520 | 0.000050 |
+| Reversing flip, +1% strain | 294.944634 | 259.087641 | 35.856993 | -0.000001 |
+
+The reversing candidate illustrates the distinction most clearly. Its
+endpoint closure is only 0.115373 meV/HfO2, whereas the discrepancy at the
+highest sample is 35.275323. Small final closure therefore does not certify
+energy-resolved consistency through the transition region. Conversely,
+the present nine-sample trapezoid cannot determine whether this discrepancy
+comes from coarse quadrature, physical force/stress error or both. It is
+not a measured barrier uncertainty and does not justify retuning the
+electronic inputs or declaring an ordinary-converged band failed.
+
+The coordinate pullback itself passes a distinct implementation check:
+direct native Cartesian-force/ASE-stress contractions agree with the
+dual atomic/open-cell work within $1.12\times10^{-16}$ eV per cell. This
+algebraic agreement does not test DFT accuracy. Under the T geometric
+triplet, signed retained work to the respective peaks is -0.111271,
+2.666921, 195.447066, 1.367408, -0.165926, 0.011623, 3.753494 and 147.404416 meV/HfO2, in Table A11 order.
+Omitted atomic work is 68.756917, 72.789643, 105.539695, 85.773095, 82.500795,
+67.611606, 107.167048 and 108.609913; open-cell work is 8.914733, 0.499373, 2.706882, 0.204891, -0.030633,
+8.299349, 0.473369 and 3.073313. The explicit rigid
+translation terms are also retained, at most $4.63\times10^{-9}$ in these
+units at the displayed peaks, rather than removed by a source ASR repair.
+These signed terms sum to the full sampled work, not to a unique energetic
+allocation among modes.
+
+Strong references remain in the comparison. The two complete T optical
+doublets yield retained work 12.359091, 11.900861, 0.782574, 11.007299, 18.977823,
+11.650637, 26.369936 and 6.179305
+in the same order. Across all four registered Cmma frames, retained-work
+ranges are 55.618955 to 55.619265 for zero-strain M;
+62.066996 to 62.068212 for zero-strain T;
+63.846564 to 63.846572 for reversing;
+67.984207 to 67.985028 for +1% T;
+47.684643 to 47.684652 for preserving;
+55.402398 to 55.403003 for +1% M;
+26.439087 to 26.439089 for +1% preserving; and
+23.010446 to 23.010450 for +1% reversing. Each representation includes
+its full omitted atomic contribution and the same open-cell work; ranks
+three and four are not treated as identical-dimensional models. This
+reference dependence is not a conditional-energy or forecast-accuracy
+ranking. In particular, the reversing triplet's integrated work and its
+small instantaneous peak-gradient fraction (Table A5) answer different
+questions and need not track one another.
+
+The [four original scalar reports](../../benchmarks/hfo2_channels/20261008/clamped_path_work_E092_20261011/README.md),
+[preserving report](../../benchmarks/hfo2_channels/20261008/clamped_preserving_reference_E101_20261011/README.md),
+[+1% M report](../../benchmarks/hfo2_channels/20261008/clamped_M_strain_reference_E105_20261012/README.md)
+and [eight-band raw-frame replay and cohort check](../../benchmarks/hfo2_channels/20261008/clamped_plus1_reversing_terminal_E148_20261014/README.md)
+thus add an energy-gradient consistency test to geometric coverage, without
+selecting G3 bottlenecks, a reference winner or unseen labels. Measured
+conditional response, stability and the prospectively frozen strong-control
+comparison remain necessary for a predictive claim. This diagnostic uses
+existing data only and does not open an additional sampling or Hessian budget.
+
+### E.2. Cross-strain work separates imposed control from configuration change
+
+The second work diagnostic pairs equal image indices between the two
+training conditions in the single controlled-coordinate chart of Section 2.6.
+All four pairs retained their sampled peak index (M:3; T and both flips:4).
+The matched-peak energy changes therefore reproduce Table 1 exactly, while
+the signed terms in Table A12 partition the declared endpoint trapezoid.
+
+Table A12. Cross-strain peak-relative work in meV/HfO2. Terms are relative to
+the same initial-pair work; the final column is energy change minus full
+trapezoidal work, not a barrier-error estimate. The retained rigid-translation
+terms are smaller than 2.411e-10 at these peaks.
+
+| Candidate | Observed peak change | Atomic work | Open-row work | Substrate work | Energy minus work |
+|---|---:|---:|---:|---:|---:|
+| PO-to-M | -1.230403 | 2.720687 | -0.174328 | -3.835247 | 0.058485 |
+| PO-to-T | 12.347027 | -0.228947 | 0.220068 | 12.275095 | 0.080811 |
+| Preserving flip | 28.596248 | 36.895288 | -0.078916 | -12.858888 | 4.638764 |
+| Reversing flip | -44.024331 | -32.332083 | -0.270001 | 0.072814 | -11.495061 |
+
+In this connection, the T candidate's work was dominated by the prescribed
+substrate term. For preserving, that term had the opposite sign from the
+observed peak change: +36.895288 atomic work and a +4.638764 residual
+accompanied the -12.858888 substrate term. The isolated mechanical partial
+therefore cannot replace the observed finite path response. It is not a
+measurement that a frozen strain slice would lower the barrier: the endpoint
+gradients here belong to two different internally optimized configurations.
+
+The reversing residual was -11.495061 meV/HfO2. It is preserved rather than
+attributed solely to DFT noise or a particular coupling. No intermediate
+cross-strain geometries were calculated. Independent Cartesian force/stress
+and dual-chart contractions agreed within 6.662e-16 eV/cell, an algebraic
+implementation check rather than physical accuracy evidence. The
+[36-pair source analysis](../../benchmarks/hfo2_channels/20261008/cross_strain_work_E151_20261014/README.md)
+reuses the same 72 frame records/66 distinct identities, without new SCFs,
+held-out inputs or reference selection. The next inference requires measured
+local curvatures, stable conditional branches and frozen independent tests.
+
+### E.3. The extra negative direction is already present in the atomic sector
+
+The additional raw negative direction at each sampled peak is not created
+solely by opening the cell. Both atomic restrictions already had two
+negative eigenvalues at both finite steps, as did the joint matrices;
+their open-cell restrictions had three positive eigenvalues (Table A13).
+For these measured quadratics, coupling changed the negative curvatures
+without adding another negative direction. This observation is specific
+to the two nonstationary centers, not a general rule excluding coupling-induced
+instabilities or an uncertainty-resolved stationary index.
+
+Steps are in Angstrom and the three curvature columns in eV/Angstrom
+squared. The last column is the dimensionless open-cell trace of the
+two-dimensional negative subspace, not a percentage of a barrier energy.
+The same length scale L=5.12968067458423 Angstrom is used in every row.
+
+Table A13. Atomic and cell restrictions of the original sampled-peak matrices.
+
+| Center | Step | Minimum atomic | Minimum joint | Minimum cell | Cell trace |
+|---|---:|---:|---:|---:|---:|
+| T | 0.01 | -0.240169 | -0.276193 | 2.956214 | 0.0205773 |
+| T | 0.02 | -0.237806 | -0.273596 | 2.956557 | 0.0206105 |
+| Preserving | 0.01 | -1.271818 | -1.271819 | 3.090798 | 1.04022e-06 |
+| Preserving | 0.02 | -1.281815 | -1.281821 | 3.092172 | 3.09248e-06 |
+
+The T negative subspace contained more open-cell admixture than the
+preserving subspace in this metric. However, the complete atomic-cell
+coupling operator norms were approximately 7.72 and 8.10 eV/Angstrom
+squared, respectively, at the smaller step. A large total coupling norm
+therefore did not identify a strongly cell-mixed unstable direction.
+Conversely, small open-cell weight at one sampled configuration cannot
+establish insensitivity of a complete barrier to the prescribed substrate.
+The substrate response and the permitted open-cell fluctuations are
+different quantities. All four restrictions and the nonzero-gradient
+formal reductions are retained in the
+[atomic/open-cell analysis](../../benchmarks/hfo2_channels/20261008/G3_atomic_cell_signature_E164_20261015/README.md).
+
+### E.4. A useful curvature seed is not a finite-domain energy predictor
+
+The bounded optimizer result in Appendix E.6 did not establish the accuracy
+of the original quadratic over finite retained displacements. In the
+first-step eigenplane, the retained/released coupling was numerically
+zero by construction; its Schur curvature correction was of order
+$10^{-28}$ eV/Angstrom squared in norm. Formal release changed the energy
+offset but supplied no appreciable new shape correction in that plane.
+This algebraic null is not a prediction improvement.
+
+After origin alignment, the original quadratics still disagreed with the
+six common-coordinate DFT candidates (Table A14). Both probe steps are
+reported, not selected according to agreement. The maximum absolute
+shape discrepancies were 8.52--8.59 meV/cell for T and 20.52--20.72
+meV/cell for preserving, each at $q=(-0.2,0)$ Angstrom. The corresponding
+signed errors were positive for T and negative for preserving. All nine
+T candidates and all six preserving candidates in the audited source
+snapshot remain in the records; the common cohort is used only to make the table's
+coordinate coverage explicit.
+
+All three energy columns use meV per twelve-atom cell, not meV/HfO2.
+Origin release is relative to each original center; the shape discrepancy
+uses each model's and candidate's own seen origin. Probe steps are in
+Angstrom. These are seen-training diagnostics, not independent errors or
+continuous-path barrier errors.
+
+Table A14. Unfitted original quadratic versus released DFT candidates.
+
+| Center | Probe step | DFT origin release | Model origin release | Max. shape discrepancy |
+|---|---:|---:|---:|---:|
+| T | 0.01 | -0.652142 | -0.866958 | 8.524106 |
+| T | 0.02 | -0.652142 | -0.874429 | 8.587800 |
+| Preserving | 0.01 | -49.484930 | -54.521222 | 20.521839 |
+| Preserving | 0.02 | -49.484930 | -54.705828 | 20.720640 |
+
+The candidate-energy axial second differences at 0.1 Angstrom were
+(-0.405128, -0.243087) eV/Angstrom squared for T and
+(-0.337763, -0.184576) for preserving. They are finite differences of
+candidate energies, not infinitesimal Hessians of certified conditional
+minima. Nonlinear response, finite-difference effects, branch changes
+and residual relaxation can all contribute to the model disagreement;
+these observations do not distinguish their individual contributions.
+Nor does their size define a physical uncertainty bound. The
+[quadratic comparison](../../benchmarks/hfo2_channels/20261008/G3_quadratic_agreement_E165_20261015/README.md)
+keeps the affine released gradient and both original probe steps.
+
+These results separate two uses of local curvature: an initialization
+that is updated during optimization, and a fixed finite-domain energy
+model. The former can assist local relaxation even when the latter
+misses the observed shape. A matched frozen-coordinate comparison is
+needed before assigning the discrepancy to the relaxation response.
+Eight such static controls, four per center, have now completed under
+the unchanged electronic contract. Native energy, force, stress, input
+and 32-MPI checks passed for all eight. They use the original cached
+origins and seen released counterparts, reserve training slots only,
+and do not replace the independent tests.
+
+The subsequently completed T candidate sheet exposed a separate
+finite-convergence issue. Its 25 points required 118 new SCFs in addition
+to the cached released origin. Final released-gradient norms ranged from
+0.00653 to 0.02978 eV/Angstrom, and the largest total internal displacement
+was 0.46378 Angstrom within the original 0.5-Angstrom domain. Sampled
+energies spanned -38.531 to 0 meV/cell relative to that released origin.
+These are fixed-coordinate candidates, not an end-to-end MEP or certified
+stable conditional minima.
+
+Across the 40 nearest grid edges, the largest absolute discrepancy using
+only retained endpoint work was 1.209 meV/cell. On that edge the signed
+released term was 1.094 meV/cell, leaving a full quadrature discrepancy
+of 0.115 meV/cell. Over all edges the largest absolute full discrepancy
+was 1.039 meV/cell. Across 16 elementary closed loops, the largest absolute
+retained and full endpoint circulations were 2.000 and 0.578 meV/cell,
+respectively; these maxima occurred on different loops. This
+[complete-sheet diagnostic](../../benchmarks/hfo2_channels/20261008/G3_sheet_consistency_E172_20261015/README.md)
+retains finite released residuals and unsampled quadrature separately.
+The values are not DFT, interpolation or barrier-error bounds and do not
+certify smoothness or stability. They also do not identify the cause of
+the original quadratic's finite-domain disagreement.
+
+The completed preserving batch did not attain the same coordinate
+coverage. All 25 coordinates were processed, but only 17, including the
+cached origin, reached the common released-gradient target. The eight
+remaining coordinates stayed as holes. All 172 new SCFs passed native
+energy, force, stress, unchanged-input and genuine 32-MPI checks, and all
+24 nonzero-coordinate optimization trajectories replayed exactly. Seven
+holes exhausted twelve evaluations; one stopped after ten without reaching
+the target. They consumed 94 of the 172 SCFs. The batch required 193.859
+completed-call proxy core-hours and 195.120 allocation core-hours, excluding
+the original curvature and cached preparation.
+
+Cache-only replay attributed every recorded geometry rejection in these
+eight trajectories to the original total-displacement radius, not to a
+changed electronic input or a failed SCF. Their last completed trials lay
+at radii 0.49971--0.50000 Angstrom within the registered 0.5-Angstrom domain;
+none of the completed trials met the 0.03 eV/Angstrom released-gradient
+target. This establishes contact with the optimizer's domain boundary,
+not nonexistence of a solution, boundary stationarity or termination of a
+physical branch. The [complete audit and hole replay](../../benchmarks/hfo2_channels/20261008/G3_preserving_terminal_E179_20261015/README.md)
+retain the original decisions and stopping reasons. We do not fill these
+holes by interpolation or equate batch completion with a stable surface.
+
+The matched controls locate the larger preserving-channel discrepancy
+in the release response, within this four-coordinate training cohort
+(Table A15). Frozen shape discrepancies stayed below 0.12 meV/cell for
+both original probe steps, while released discrepancies reached
+4.67--4.72 meV/cell. The DFT release change relative to its origin
+reached 4.607 meV/cell. At $q=(-0.1,0)$ Angstrom for the first-step model,
+the signed frozen discrepancy -0.064445 and missed release-shape term
+-4.606959 summed to the released discrepancy -4.671404 meV/cell.
+
+All energy columns are meV per
+twelve-atom cell; probe steps are Angstrom. Separate column maxima may
+occur at different coordinates and are not subtracted to form a
+decomposition. All 16 model-point records are retained in the
+[matched ablation](../../benchmarks/hfo2_channels/20261008/G3_frozen_release_E173_20261015/README.md).
+These are training-only diagnostics, not independent predictions or
+physical uncertainty bounds.
+
+Table A15. Matched frozen/released shape discrepancies on four axial
+coordinates per original center.
+
+| Center | Probe step | Max. frozen shape | Max. released shape | Max. DFT release change |
+|---|---:|---:|---:|---:|
+| Preserving | 0.01 | 0.075880 | 4.671404 | 4.606959 |
+| Preserving | 0.02 | 0.116535 | 4.720758 | 4.606959 |
+| T | 0.01 | 0.416264 | 1.327177 | 1.168761 |
+| T | 0.02 | 0.403160 | 1.346071 | 1.168761 |
+
+Signed cancellation also matters. At T $q=(0.1,0)$ Angstrom, the
+first-step frozen discrepancy -0.416264 and release-shape term
++0.378430 partly cancelled, leaving -0.037833 meV/cell. This near agreement
+at one coordinate did not establish general model accuracy. The ablation
+distinguishes frozen-shape mismatch from missed release-shape change,
+but does not isolate anharmonicity, finite-step effects, finite released
+residuals or branch changes as a unique microscopic cause. Nor does it
+replace the full T/Cmma strong-control or independent-prediction matrix.
+The eight statics used 8.137 completed-call proxy core-hours and
+9.076 allocation core-hours; curvature and prior candidate preparation
+remain additional.
+
+### E.5. A complete reference removes a basis advantage, not a finite-domain error
+
+The complete T optical reference and the coupled-coordinate representation
+gave the same constrained quadratic, not competing accuracy results.
+Using the same measured H, affine g, fixed Q and mechanical space, the
+33 optical directions plus three open-cell directions spanned all 36
+internal coordinates. Across both centers, both probe steps and all 25
+registered Q values, the largest energy difference between the constrained
+reference solve and Schur solve was $2.64\times10^{-16}$ eV/cell; the largest
+coordinate difference was $1.56\times10^{-14}$ Angstrom. These differences
+measure numerical realization of an algebraic identity, not DFT accuracy.
+
+Both representations retained the same finite-domain disagreement with
+the completed DFT candidates (Table A16). The larger T maximum compared with
+Table A14 reflects its expanded seen-coordinate cohort, not a newly observed
+independent error. The preserving holes were excluded as missing labels,
+not replaced with their last optimization trials. No coefficients were
+fitted, and subtracting each seen origin remained a retrospective shape
+diagnostic. Counts exclude the origin and share the denominator of 24
+planned nonzero coordinates. All listed candidates passed the original
+geometry guard for both models; probe steps are in Angstrom.
+
+Table A16. Shared full-space shape discrepancies (meV per twelve-atom cell).
+
+| Center | Probe step | Seen nonzero candidates | Max. shape discrepancy |
+|---|---:|---:|---:|
+| T | 0.01 | 24/24 | 28.776664 |
+| T | 0.02 | 24/24 | 28.872042 |
+| Preserving | 0.01 | 16/24 | 20.521839 |
+| Preserving | 0.02 | 16/24 | 20.720640 |
+
+The restricted references did not provide a common nonzero comparison
+cohort in these fixed observables. Their individual eligible sets differed
+(Appendix D.7), and the all-reference intersection was empty at both probe
+steps. Thus neither extrapolated values nor errors computed on different
+subsets were used to rank them. This is a compatibility limitation of the
+selected spans, observables and finite domain, not evidence that a native
+Cmma-coordinate energy model fails. The
+[shared-observable control](../../benchmarks/hfo2_channels/20261008/G3_shared_Q_controls_E180_20261015/README.md)
+retains all seven registered references, four Cmma frames and the full-space
+control: 800 algebraic model-point records, with zero new DFT calls. The
+original 296 curvature SCFs, 118/172 conditional-sheet SCFs and all other
+preparation remain additional; equal preparation cost or speedup was not
+established. These comparisons delimit the claimed contribution without
+replacing a prospective native-chart or independent material test.
+
+### E.6. Local curvature, conditional release and bounded optimizer evidence
+
+Direct joint-curvature measurements reveal an additional limitation of a
+one-coordinate description at the two sampled peaks. At both finite steps,
+each internal matrix has two negative eigenvalues; removing the internal
+path tangent still leaves one negative direction (Table A6). For T escape,
+the lowest two values are approximately -0.276 and -0.165 eV/Angstrom squared
+at the smaller step. For preserving switching they are -1.272 and -0.447.
+These are nonstationary, finite-step curvatures in a joint atomic-cell
+length metric, not phonon frequencies or certified saddle indices. For
+these measured matrices, retaining only one internal direction cannot
+leave a positive released complement. This is a property of the measured
+quadratic, not a new reduction theorem.
+
+The registered reference spaces must be tested against this same internal
+problem rather than displacement coverage alone. The rank-three T triplet,
+rank-four optical control and each of the four rank-four Cmma registrations
+leave negative released curvature at both centers and steps (Table A7).
+However, retaining all 33 T optical directions leaves a positive three-cell-
+direction complement, while its retained Schur block still has two negative
+directions. Thus the evidence does not show that all fixed references fail.
+The ranks and released dimensions differ, and a complete quadratic response
+remains invariant under valid basis partitions as described in Section 2.3.
+
+Releasing the remaining coordinates at fixed two-dimensional coordinates
+lowers the T-center energy by 0.00065214 eV per twelve-atom cell and the
+preserving-center energy by 0.04948493 eV per cell. The curvature-seeded
+arms reach released-gradient norms 0.02630 and 0.01959 eV/Angstrom in two
+and five new SCFs, respectively; neither identity arm reaches the common
+target within twelve attempts (Table A8). This is a bounded local result,
+not a whole-NEB acceleration benchmark. The preceding 296 curvature SCFs
+and earlier path costs are additional, so no net cost advantage follows
+from these call counts alone. Post-relaxation released stability remains
+unmeasured.
+
+The two resulting candidate energies differ by only 0.00081345 eV per
+cell, but energy proximity does not establish a common mechanism or branch.
+They retain a 0.19178-Angstrom translation-free distance in the common
+ordered T chart, without atom rematching or rotation. Moreover, each
+retained plane is anchored at its own original center. These local
+fixed-coordinate results therefore do not replace any sampled G2 barrier,
+establish branch merger or certify a transition structure. They motivate
+checking conditional equilibration and branch stability before using a
+low-dimensional surface for prediction.

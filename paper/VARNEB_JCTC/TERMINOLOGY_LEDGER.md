@@ -25,6 +25,8 @@ Updated 2026-10-15. Scope: HfO2 manuscript and its source-to-table checks.
 | Geometry-eligible comparison set | Coordinates with an observed candidate and a model geometry passing the original guard | Stable released branch, a global domain or the error of a missing point |
 | Post-hoc coarsening | Geometric coarse/fine split made after the training labels and relaxation history were seen | A blinded preparation workflow, independent prediction or DFT-call saving |
 | Tensor-quadratic interpolation | Energy interpolation of degree at most two in each retained coordinate, including mixed total-degree-four terms | A harmonic Hessian model, a new algorithm or a validated conditional branch |
+| Atomic-only treatment | Release of 31 atomic fixed-Q directions at each frozen-Q seed cell | One common cell across Q, joint stationarity or transverse stability |
+| Additional joint-release difference | Signed E_J-E_A between the joint and atomic-only candidates at the same Q | A unique strain-energy contribution, global nesting or a whole-path mechanism |
 
 Notation is not interchangeable: the representation figures use the declared
 mass-weighted atomic T chart; local joint-curvature coordinates have length

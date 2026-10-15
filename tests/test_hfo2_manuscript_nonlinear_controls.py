@@ -1,6 +1,7 @@
 """The new comparison must remain retrospective and retain all five arms."""
 from pathlib import Path
 from copy import deepcopy
+from collections import Counter
 import hashlib,importlib.util,json,re
 
 import pytest
@@ -50,10 +51,13 @@ def test_prose_retains_bias_coverage_cost_and_missing_independent_evidence():
 
 def test_prior135_table_lines_nine_figures_external_citations_and_wrapper_preserved():
     old=json.loads((CASE/'preservation.json').read_bytes())
-    text=PAPER.read_text(encoding='utf-8');current=iter(l for l in text.splitlines() if l.startswith('|'))
+    text=PAPER.read_text(encoding='utf-8')
+    current=Counter(l for l in text.splitlines() if l.startswith('|'))
     assert len(old['prior_table_lines'])==135
-    for line in old['prior_table_lines']:assert any(l==line for l in current)
-    assert len([l for l in text.splitlines() if l.startswith('|')])==142
+    # User-approved main/appendix reordering changes order, not row values or multiplicity.
+    assert not Counter(old['prior_table_lines'])-current
+    # All prior rows remain; the complete atomic-treatment table adds six lines.
+    assert len([l for l in text.splitlines() if l.startswith('|')])==148
     assert re.findall(r'!\[[^\]]*\]\(([^)]+)\)',text)==old['prior_figure_targets']
     assert re.findall(r'\]\((https?://[^)]+)\)',text)==old['prior_external_links']
     for name,sha in old['prior_figure_sha256'].items():

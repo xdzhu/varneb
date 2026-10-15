@@ -17,7 +17,7 @@ def test_cross_strain_table_has_actual_signed_work_and_unit_normalization(candid
     data=json.loads(SOURCE.read_text())
     row=next(r for r in data['candidates'] if r['candidate']==candidate)
     pair=row['matched_peak_pair']; parts=pair['relative_PO_parts_meV_fu']
-    text=PAPER.read_text(encoding='utf-8').split('### 3.5.',1)[1].split('## 4.',1)[0]
+    text=PAPER.read_text(encoding='utf-8').split('### E.2.',1)[1].split('### E.3.',1)[0]
     line=next(line for line in text.splitlines() if line.startswith('| '+LABELS[candidate]+' |'))
     actual=[float(s.strip()) for s in line.split('|')[2:-1]]
     expected=[row['observed_sampled_barrier_change_meV_fu'],parts['internal_atomic'],
@@ -30,8 +30,8 @@ def test_cross_strain_table_has_actual_signed_work_and_unit_normalization(candid
 def test_results_lead_with_whole_matrix_and_keep_all_original_nine_figures():
     text=PAPER.read_text(encoding='utf-8')
     main=text.split('## 3.',1)[1].split('## 4.',1)[0]
-    assert re.findall(r'^### (3\.\d+)\.',main,re.M)==['3.1','3.2','3.3','3.4','3.5','3.6','3.7','3.8','3.9']
-    assert main.index('Opposite candidate responses')<main.index('Geometry, gradients')
+    assert re.findall(r'^### (3\.\d+)\.',main,re.M)==['3.1','3.2','3.3','3.4']
+    assert main.index('Opposite candidate responses')<main.index('What the modes capture')
     assert '0.464068' in main and 'not the favorable signature' in main
     assert 'not an error-certified rejection' in main
     assert len(re.findall(r'^!\[',text,re.M))==9
@@ -47,7 +47,7 @@ def test_results_lead_with_whole_matrix_and_keep_all_original_nine_figures():
 
 def test_cross_strain_work_and_missing_prediction_are_not_promoted_to_mechanisms():
     text=PAPER.read_text(encoding='utf-8')
-    cross=text.split('### 3.5.',1)[1].split('## 4.',1)[0]
+    cross=text.split('### E.2.',1)[1].split('### E.3.',1)[0]
     for phrase in ('not a barrier-error estimate','not a\nmeasurement that a frozen strain slice',
         'No intermediate\ncross-strain geometries were calculated','not a total DFT'):
         assert phrase in (text if phrase=='not a total DFT' else cross)

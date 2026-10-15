@@ -9,8 +9,9 @@ PAPER = ROOT / 'paper/VARNEB_JCTC'
 CASE = ROOT / 'benchmarks/hfo2_channels/20261008/G3_frozen_release_E173_20261015'
 
 
-def require_matched_rows(text, analysis):
-    """Compare entire signed-source-derived table rows, not isolated substrings."""
+def matched_rows(analysis):
+    """Complete old-treatment row identities, even when other tables share scalars."""
+    expected_rows = []
     for row in analysis['rows']:
         label = 'Preserving' if row['channel'] == 'preserving' else 'T'
         expected = (
@@ -19,7 +20,14 @@ def require_matched_rows(text, analysis):
             f"{row['max_abs_released_shape_error_meV_cell']:.6f} | "
             f"{row['max_abs_DFT_release_shape_change_meV_cell']:.6f} |"
         )
-        if text.count(expected) != 1:
+        expected_rows.append(expected)
+    return expected_rows
+
+
+def require_matched_rows(text, analysis):
+    """Compare entire signed-source-derived table rows, not isolated substrings."""
+    for expected in matched_rows(analysis):
+        if text.splitlines().count(expected) != 1:
             raise ValueError('one exact source-derived row per center and probe step required')
 
 
@@ -53,7 +61,9 @@ def test_changed_or_duplicated_table_rows_are_rejected(value):
     text = (PAPER / 'MANUSCRIPT_DRAFT.md').read_text(encoding='utf-8')
     with pytest.raises(ValueError, match='exact source-derived'):
         require_matched_rows(text.replace(value, '999.999999'), analysis)
-    row = next(line for line in text.splitlines() if line.startswith('|') and value in line)
+    # The new atomic table legitimately reuses F/J scalars. Duplicate the
+    # source-bound matched F/J row, not whichever table now occurs first.
+    row = next(line for line in matched_rows(analysis) if value in line)
     with pytest.raises(ValueError, match='exact source-derived'):
         require_matched_rows(text + '\n' + row, analysis)
 
