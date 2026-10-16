@@ -5596,3 +5596,49 @@ The full research goal and preserving protocol decision remain incomplete.
 SCF, genuine32MPI and identical six input hashes;118.902510/118.933525s.
 This is an actual launcher/timing observation, not the final native test
 audit or a successful prediction. No models altered using those records.
+
+### E259 2026-10-17 — PROGRESS: original T independent labels, all-arm errors and paper
+
+Both original handles completed0:0 at837/1320s,32CPUs/node3/hfacnormal01.
+All8 original targets reached the fixed.03 released-gradient condition in18
+SCFs; normrange.005287597--.029499670eV/A. Read-only native audit reparsed
+every E/F/stress record, genuineMPI32/six inputs, reservations/producer/target/
+start identities and original380-file runtime/binary. No DFT or scheduler
+write, retry, input/model change, new center/Hessian/NEB or private array.
+Native5dac550e6a802225465b0717ec9b2bb42bb55fc457e3adddc2f05fdd5d455ab5,
+score272bb11781be401e74ad333e4a211973410217ccce68a69fc9f2bd41f41a14cc,
+postprocessLF06ce1197b34549c66a1ccee7b85aa27a3407a6d491573d01c7d78589d1946ec4.
+
+Keep all19 original arms. Five standard max aligned errors(meV/HfO2):
+.256802515/.089077355/.105387851/.129768601/.131911071. Tensor has the
+smallest aligned maximum, but rawH.076064535/.076339313 beat tensor.089077355.
+No metric-independent winner; completeT equals fullH, not independent
+algorithmic gain. Restricted triplet/two-doublet/Cmma errors and6/8vs8/8
+domains retained. Commonall19 set[1,2,3,4] is only axial, not shared2D
+validation. Engineering1meV/fu is not physical error. Local candidates are
+not certified global minima/full stability/TS/physical-strain predictions.
+
+Actual new cost17.833998962callproxy/19.173333333allocationcoreh; all prior
+preparation additional. T8/P0 of original16, T34/P39 training each81 and
+192 original attempt cap unchanged. Preserving refusal and+.005 seal remain.
+T8 labels are now seen; future tuning cannot recycle them as new independent
+validation. Proposed preserving third-coordinate protocol needs author
+decision, no retrospective original success or automatically enlarged budget.
+
+Paper Results3.4/Table4, Discussion and AppendixE.8/TableA18 updated from
+actual data. Original154 tablelines retained,182 now;9figurebytes/order,
+13externalcitations/wrapper/formalplan1--7 and five user hashes preserved.
+ExistingLuaLaTeX exit0;40page PDFb5afee10436cb394290010ec42b4d99b853873f91a1871acabb347e2d929fe0e.
+All40 contactpages and individual18/40 tables reviewed; no new clipping,
+overlap/orphan caption. Working manuscript, not editorial/JCTC sign-off.
+
+Pre-data scorer58local/58independent; actual results/manuscript204local/
+204independent,19modules17new, zero final fail/error/skip, not fullsuite.
+First53pass/5fail optional reason-field adapter fixed without numerical
+change; first expanded201pass/3stale missing-evidence/EOF table guards fixed
+while retaining strict original four-row numeric checks. Both raw XML kept.
+Final tree799869bae93b21065f51d7da53b8d2d3b83a70dc/archive
+8b5078bdd00e6853477bac842dc72145191b949c6005bd098567c246c61a9e6e.
+XML49cb8b83/d9dc197d; independent score CLI byte-identical. Source and reading
+PDF copy on C:/D: as recorded, old generated copy retained recoverably.
+No CI/install/release/monitor or unauthorized push. Full goal incomplete.

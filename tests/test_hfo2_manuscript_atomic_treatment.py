@@ -50,7 +50,7 @@ def test_prose_is_local_signed_and_not_unique_partition_or_joint_stability():
                    '0.80--1.14 meV/cell lower', 'not the whole switching path',
                    'not a unique strain-energy term', 'neither joint stationarity nor transverse stability',
                    'Both original quadratic models were fixed before the atomic labels',
-                   'independent material predictions are still missing',
+                   'independent mechanical-response predictions are still missing',
                    '39.749558 core-hours', '40.684444 core-hours', 'not a speedup measurement'):
         assert phrase in text
     ledger = (PAPER.parent / 'TERMINOLOGY_LEDGER.md').read_text(encoding='utf-8')
@@ -71,12 +71,12 @@ def test_approved_four_part_results_and_six_appendix_diagnostics():
     assert re.findall(r'^### (3\.\d+)\.', main, re.M) == ['3.1', '3.2', '3.3', '3.4']
     assert 'Across the five registered coordinates' in ' '.join(main.split())
     assert 'An independent prediction advantage has not yet been established' in main
-    assert 'Eight prospective local test coordinates per center' in main
-    assert 'They remain uncomputed' in main
-    assert 'failed\nthe necessary post-release sign condition' in main
+    assert 'The prospective T local test supplied eight independent' in main
+    assert 'its eight independent points remain uncomputed' in ' '.join(main.split())
+    assert 'preserving origin failed the necessary post-release sign condition' in ' '.join(main.split())
     assert 'original refusal' in main
     # Six historical diagnostics remain; the actual four-point result adds E.7.
-    assert re.findall(r'^### (E\.\d+)\.', text, re.M) == [f'E.{i}' for i in range(1, 8)]
-    assert not re.search(r'Section 3\.[5-9]\b|Table [4-9]\b', text)
-    for number in range(11, 18):
+    assert re.findall(r'^### (E\.\d+)\.', text, re.M) == [f'E.{i}' for i in range(1, 9)]
+    assert not re.search(r'Section 3\.[5-9]\b|Table [5-9]\b', text)
+    for number in range(11, 19):
         assert f'Table A{number}' in text

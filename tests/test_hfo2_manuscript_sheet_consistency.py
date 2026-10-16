@@ -75,7 +75,8 @@ def test_old_113_table_lines_nine_figures_citations_and_wrapper_are_retained():
     assert before["original_table_line_count"] == 113
     assert not Counter(before["original_table_hash_counts"])-counts
     # Original119 plus shared-reference(16), nonlinear(7), atomic(6), statics(6).
-    assert sum(counts.values())==154
+    assert sum(counts.values())==182
+    assert 'Table 4. Prospective T local errors' in text and 'Table A18. All frozen T test arms' in text
     assert 'Table A17. Four frozen directional training statics' in text
     figures = re.findall(r"!\[[^\]]*\]\(([^)]+)\)", text)
     assert figures == before["original_figure_targets"] and len(figures) == 9

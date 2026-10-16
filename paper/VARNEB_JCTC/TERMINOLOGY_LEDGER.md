@@ -30,6 +30,7 @@ Updated 2026-10-17. Scope: HfO2 manuscript and its source-to-table checks.
 | Directional amplitude zeta | Internal length along the frozen omitted direction; case field t_A | Prescribed substrate-strain coordinate t or a phonon wave vector |
 | Finite-amplitude energy/gradient secants | Separately defined kappa_E and kappa_g at the declared amplitude | Equal values outside a quadratic profile, total error or stationary-index certification |
 | Formal third-coordinate retention | Removing the measured omitted direction from the released block at the same point | A computed stable three-dimensional nonlinear surface or new independent prediction |
+| Original T local independent errors | Frozen E185/E188 predictions compared with eight later single-start gradient-candidate energies | An unseen-strain path test, full transverse stability or a new-method advantage |
 
 Notation is not interchangeable: the representation figures use the declared
 mass-weighted atomic T chart; local joint-curvature coordinates have length

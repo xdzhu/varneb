@@ -42,7 +42,7 @@ def test_prose_retains_equal_problem_null_vs_finite_domain_and_missing_evidence(
                    'not a new theorem or a source of prediction gain',
                    'not evidence that a native Cmma-coordinate energy model fails',
                    'equal preparation cost or speedup was not established',
-                   'independent material predictions are still missing',
+                   'independent mechanical-response predictions are still missing',
                    'not a measured physical stability-resolution floor'):
         assert phrase in text
     assert '2.64' in text and '1.56' in text

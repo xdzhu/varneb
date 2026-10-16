@@ -30,7 +30,7 @@ The current paper is organized by evidence, not job chronology:
 1. Complete channel-response matrix and endpoint-only controls.
 2. Mechanical boundary and the changed energetic role of the Pbcn snapshot.
 3. What the mode descriptions capture and what atomic/joint relaxation changes.
-4. Prediction controls and the still-unfinished independent test.
+4. Prediction controls, the completed T local test and the still-unfinished mechanical-response prediction.
 
 Detailed signed-work, cross-strain, curvature and representation checks are
 retained in Appendix E, not treated as six additional main discoveries.
@@ -80,6 +80,11 @@ are different measurements.
 - The preserving2D origin's admission remains refused; a changed retained
   coordinate, branch or test definition needs a separately recorded pre-label
   protocol, not an overwrite of the original16-point forecast record.
+- The original T8 local test is now natively audited and scored, not pending.
+  All five standard maximum aligned errors are below0.257meV/HfO2, but
+  unaligned maxima change the ranking and the full T reference equals fullH.
+  This does not prove a new method's superiority or complete the preserving8
+  and physical+0.005 mechanical-response tests.
 - Training-only model/representative selection and frozen predictions before
   any physical +0.5% geometry or path labels are read.
 - Independent comparisons against B0--B5, including strong fixed-reference,
@@ -138,6 +143,14 @@ rerun), source preservation and rendered-page review are recorded in the
 [E257 receipt](../../benchmarks/hfo2_channels/20261008/G3_soft_probe_E256_20261016/results_validation_E257.json).
 This supersedes the older36-page build status, not the scientific completion
 gates above. The previous generated reading copy was retained on C:.
+
+The Oct17 E259 build updates Section3.4/Table4 and AppendixE.8/TableA18 with
+the first original joint-space T independent cohort:8 labels,18 nativeSCFs,
+all19 frozen arms and17.833999/19.173333 call-proxy/allocation coreh. The
+40-page working PDF has been rendered and checked; it remains unfinished
+research, not a submission-ready paper. See the [complete T test](../../benchmarks/hfo2_channels/20261008/G3_T_independent_E258_20261017/README.md)
+and its separate results_validation_E259.json receipt. E195/E257 receipts
+are retained as historical structures/builds rather than rewritten.
 
 ## Fixed computation scope
 

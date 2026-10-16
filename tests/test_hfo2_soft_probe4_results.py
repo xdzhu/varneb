@@ -109,7 +109,7 @@ def test_incomplete_or_changed_target_cannot_be_scored(evidence,fault):
 def test_table_A17_is_sourced_and_original_test_refusal_remains(evidence):
     _,a,_,_,_=evidence
     text=(ROOT/'paper/VARNEB_JCTC/MANUSCRIPT_DRAFT.md').read_text(encoding='utf-8')
-    block=text.split('Table A17. Four frozen directional training statics',1)[1]
+    block=text.split('Table A17. Four frozen directional training statics',1)[1].split('\n### ',1)[0]
     rows=[line.strip().strip('|').split('|') for line in block.splitlines()
           if line.startswith('|') and not line.startswith('|---')][1:]
     assert len(rows)==4
@@ -119,5 +119,5 @@ def test_table_A17_is_sourced_and_original_test_refusal_remains(evidence):
         assert float(row[2])==pytest.approx(source['gradient_along_direction_eV_A'],abs=5.01e-10,rel=0)
     assert '0.029245/-0.029491 meV/cell' in text
     section=text.split('### 3.4.',1)[1].split('## 4.',1)[0]
-    assert 'They remain uncomputed' in section and 'original refusal' in section
+    assert 'its eight independent points remain uncomputed' in ' '.join(section.split()) and 'original refusal' in section
     assert a['independent_points_computed']==0 and a['original_independent_admission_refusal_preserved']

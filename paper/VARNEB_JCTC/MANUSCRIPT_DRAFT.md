@@ -17,9 +17,10 @@ released stability. The complete post-release check rejected the preserving
 two-coordinate origin at both probe steps. Four additional same-contract
 statics measured a shallow lowering along its omitted oxygen-dominated
 direction, not a stable nonlinear branch or an independent prediction.
-An uncertainty-resolved
-response interpretation, stable conditional branches and independent
-material predictions are still missing. An abstract and a
+An eight-point T local test now measures the frozen predictions against
+independent gradient-candidate energies. This is not the separate unseen-strain
+path test. An uncertainty-resolved response interpretation, stable conditional
+branches and independent mechanical-response predictions are still missing. An abstract and a
 conclusion asserting those unmeasured results are deliberately withheld.
 The [methods working record](METHODS_DRAFT.md),
 [dated pilot record](PILOT_RESULTS_2026-10-08.md) and
@@ -863,7 +864,7 @@ whole-band barrier or an explanation of the larger release-shape discrepancy.
 The original two-coordinate conditional admission remained refused; formal
 retention of a third coordinate alone did not certify a nonlinear branch.
 
-### 3.4. Prediction controls and the unfinished independent test
+### 3.4. Prediction controls and local independent errors
 
 An independent prediction advantage has not yet been established. A complete
 T optical reference plus the permitted cell directions represents the same
@@ -918,17 +919,55 @@ Its implication is a necessary comparator, not a new interpolation method:
 nonlinear reduction must be tested against a competent energy-only model,
 not only against an unrefitted local quadratic.
 
-Eight prospective local test coordinates per center have been fixed without
-using their DFT labels. They remain uncomputed: the preserving origin failed
-the necessary post-release sign condition, and final candidate-model
-forecasts have not been admitted. The four directional statics were training
-diagnostics, not replacement test labels. A revised retained space, branch
-or test definition would need a separate pre-label protocol; it could not
-turn the original refusal into a successful forecast. The separate +0.5% mechanical
-condition also remains sealed; a local-coordinate test cannot replace its
-path-barrier comparison. The [registered local forecasts](../../benchmarks/hfo2_channels/20261008/G3_local_forecast_E185_20261015/README.md)
+The prospective T local test supplied eight independent gradient-candidate
+energies, using every original nonzero point of the central
+$\{-0.05,0,0.05\}$-Angstrom square. The coordinates, single Q0-parent starts,
+five standard arms and fourteen reference/step records were frozen before
+these labels. Both T-origin raw transverse blocks had passed the original
+necessary sign screen; no test point or electronic input was changed.
+All eight candidates reached the unchanged 0.03 eV/Angstrom released-gradient
+target in eighteen native SCFs. Table 4 reports the predeclared origin-aligned
+errors and retains the unaligned maximum rather than choosing a favorable zero.
+
+Table 4. Prospective T local errors on eight common targets (meV/HfO2).
+
+| Model | Max. aligned error | Aligned RMSE | Max. unaligned error |
+|---|---:|---:|---:|
+| Bilinear | 0.256803 | 0.186280 | 0.256803 |
+| Tensor quadratic | 0.089077 | 0.048248 | 0.089077 |
+| Refitted total quadratic | 0.105388 | 0.062391 | 0.098433 |
+| Original H/g, 0.01 Angstrom | 0.129769 | 0.060608 | 0.076065 |
+| Original H/g, 0.02 Angstrom | 0.131911 | 0.062199 | 0.076339 |
+
+All five maximum aligned errors were below the preregistered 1 meV/HfO2
+engineering reporting target, which is not a physical-error bound. The tensor
+interpolant had the smallest aligned maximum; the original quadratics had
+smaller unaligned maxima. There was therefore no metric-independent winner.
+The complete T-optical reference reproduced the corresponding full-H errors,
+as expected from the same complete quadratic. Restricted triplet, two-doublet
+and Cmma controls were also retained, including their geometry abstentions
+(Appendix E.8, Table A18). All nineteen arms shared only four axial test points;
+that common subset alone was not a two-dimensional validation.
+
+These eighteen new SCFs cost 17.833999 completed-call proxy core-hours and
+19.173333 allocation core-hours; original curvature, training and branch
+preparation remain additional. The test checked one prescribed single-start
+gradient-candidate branch, not global conditional minima or its full transverse
+stability. It did not establish an advantage for a new reduction method.
+The [complete native local test and fixed scoring](../../benchmarks/hfo2_channels/20261008/G3_T_independent_E258_20261017/README.md)
+retain every target, both error conventions, all nineteen arms and actual cost.
+
+The preserving origin failed the necessary post-release sign condition;
+its eight independent points remain uncomputed. The four directional statics
+were training diagnostics, not replacement test labels. A revised retained
+space, branch or test definition would need a separate pre-label protocol;
+it could not turn the original refusal into a successful forecast. The
+original inventory remains sixteen points, not sixteen successful labels.
+The separate +0.5% mechanical condition remains sealed; a local-coordinate
+test cannot replace its path-barrier comparison. The
+[original local forecasts](../../benchmarks/hfo2_channels/20261008/G3_local_forecast_E185_20261015/README.md)
 and [strong-reference forecasts](../../benchmarks/hfo2_channels/20261008/G3_reference_forecast_E188_20261015/README.md)
-are preparation for those tests, not demonstrated predictive gains.
+remain unchanged, including the refused preserving cohort.
 
 ## 4. Discussion and remaining material tests
 
@@ -1004,14 +1043,17 @@ validity, rather than attributing accuracy to a coordinate name. Neither
 the algebraic equality nor the observed training discrepancy is an
 independent material forecast.
 
-The energy-only coarsening supplies a competing explanation for an apparent
-improvement over a local quadratic: elementary nonlinear interpolation may
-already capture much of the seen energy variation. Section 3.4 does not
-establish that its tensor model generalizes, because both labels and branch
-preparation were retrospective. It instead raises the evidential requirement
-for a proposed reduction. Any independent gain must survive this comparator
-with disclosed information, coverage and preparation costs; interpolation
-agreement on seen labels is not itself a method advance.
+The energy-only controls supply a competing explanation for an apparent
+improvement over a local quadratic. The retrospective coarsening captured
+much of the seen energy variation. Its later, separately frozen eight-point
+T test also had small local errors, without reference adaptation or a new
+reduction theorem. The changed ranking between aligned and unaligned maxima
+shows why calibration must be fixed before evaluation. This result raises,
+rather than removes, the evidential requirement for a proposed reduction:
+any independent gain must survive the competent energy-only and complete-space
+comparators with disclosed information, coverage and preparation costs.
+Interpolation agreement is not itself a method advance, and local-coordinate
+agreement does not establish the unseen-strain mechanical response.
 
 The decisive unfinished evidence is a same-boundary conditional response
 with measured transverse stability and a frozen comparison at unseen
@@ -2171,6 +2213,58 @@ The four new statics cost 3.756877 completed-call proxy core-hours and
 4.248889 allocation core-hours, with no new center SCF. The preceding 272
 post-release derivatives cost 276.622222 allocation core-hours; earlier
 training and preparation remain additional. Training commitments are T34/81
-and preserving39/81. The sixteen original independent targets and physical
-+0.5% condition remain uncomputed. Original admission refusal is preserved,
-not backfilled by these training results.
+and preserving39/81. At this four-probe training stage the sixteen original
+independent targets were uncomputed. The later T local test is reported in
+Section 3.4; all eight preserving targets and the physical +0.5% condition remain uncomputed.
+Original admission refusal is preserved, not backfilled by these training results.
+
+### E.8. The original T local independent cohort
+
+All eight originally frozen T targets were processed without a replacement
+point, start, model, derivative step or branch. Each released-gradient norm
+was between 0.005288 and 0.029500 eV/Angstrom. Both original allocations ended
+normally, after 837 and 1320 seconds at 32 MPI ranks; the complete read-only
+audit reparsed all eighteen native SCFs, their energy/force/stress records,
+input hashes and charged attempts. No new Hessian, NEB or center SCF was added.
+
+Table A18 reports every registered arm. Errors are meV/HfO2, four formula units
+per twelve-atom cell. The first two aligned columns use each arm's eligible
+labels; n is its coverage out of eight, not its count of independent replicates.
+The common maximum uses the same four axial labels for all nineteen arms.
+Neither different coverages nor four equivalent Cmma registrations are
+statistical samples for a pooled method ranking. Probe steps are Angstrom.
+
+Table A18. All frozen T test arms, coverage and both error conventions.
+
+| Model | n/8 | Max. aligned | Aligned RMSE | Common max. | Max. unaligned |
+|---|---:|---:|---:|---:|---:|
+| Bilinear | 8 | 0.256803 | 0.186280 | 0.180268 | 0.256803 |
+| Tensor quadratic | 8 | 0.089077 | 0.048248 | 0.053665 | 0.089077 |
+| Refitted total quadratic | 8 | 0.105388 | 0.062391 | 0.105388 | 0.098433 |
+| Original H/g, 0.01 | 8 | 0.129769 | 0.060608 | 0.071940 | 0.076065 |
+| Original H/g, 0.02 | 8 | 0.131911 | 0.062199 | 0.073492 | 0.076339 |
+| T triplet, 0.01 | 6 | 33.075809 | 24.033465 | 33.075809 | 33.170243 |
+| T two optical doublets, 0.01 | 8 | 118.771513 | 63.020030 | 38.103950 | 118.866029 |
+| T all optical, 0.01 | 8 | 0.129769 | 0.060608 | 0.071940 | 0.076065 |
+| Cmma 103, 0.01 | 6 | 50.021808 | 33.963295 | 50.021808 | 50.114924 |
+| Cmma 106, 0.01 | 6 | 50.021575 | 33.962239 | 50.021575 | 50.114690 |
+| Cmma 114, 0.01 | 6 | 50.021575 | 33.962239 | 50.021575 | 50.114690 |
+| Cmma 127, 0.01 | 6 | 50.021808 | 33.963295 | 50.021808 | 50.114924 |
+| T triplet, 0.02 | 6 | 33.072958 | 24.031991 | 33.072958 | 33.167766 |
+| T two optical doublets, 0.02 | 8 | 118.767602 | 63.014235 | 38.109537 | 118.862499 |
+| T all optical, 0.02 | 8 | 0.131911 | 0.062199 | 0.073492 | 0.076339 |
+| Cmma 103, 0.02 | 6 | 50.012837 | 33.955505 | 50.012837 | 50.106338 |
+| Cmma 106, 0.02 | 6 | 50.012590 | 33.954441 | 50.012590 | 50.106090 |
+| Cmma 114, 0.02 | 6 | 50.012590 | 33.954441 | 50.012590 | 50.106090 |
+| Cmma 127, 0.02 | 6 | 50.012837 | 33.955505 | 50.012837 | 50.106338 |
+
+The restricted references clamp directions outside their declared span at
+the same Q. Their errors are not a test of every native Cmma-coordinate
+model. The full T reference includes the entire declared internal space
+and is equivalent to the original full-H control, not an independent method
+replication. All raw/calibrated signed errors, origin biases, geometry
+abstentions and source identities remain in the [test case](../../benchmarks/hfo2_channels/20261008/G3_T_independent_E258_20261017/README.md).
+The eighteen test SCFs and their 19.173333 allocation core-hours are additional
+to all original preparation. Preserving remains refused with zero of eight
+labels; the physical +0.5% path condition is still sealed. These local errors
+do not supply a whole-path barrier error or a resolved methodological gain.
