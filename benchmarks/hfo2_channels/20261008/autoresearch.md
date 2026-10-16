@@ -5425,3 +5425,35 @@ newcasefolder/helper/DFT/schedulerwrite/holdout/parameter/domain/budgetchange.
 RawXMLretainedC scratch, SHA7729c26b5a85ec7a9ceb107eeaf5959e7cfd88d6cb04b34c55d53d1714fe8ccd;
 notfullsuite ornewphysicalresult. RO14:34:34 T136/P16/no failure,
 28868827RUNNINGnode9/32CPU. Fullgoalactive/incomplete.
+
+### E254 2026-10-16 — PROGRESS: complete native stencils; preserving sign admission refused
+
+User resumed the paused goal. Original28868827 endedCOMPLETED0:0,node9,
+32CPUs,31120seconds; no restart/submission. OriginalE190 complete reader
+reparsed272native SCFs, checked380runtime/binary/sixassets/orderedliteral
+reservations/fullEFS/genuineMPI32. Complete reporta3891547; preserving
+summary588e6527; originalterminal70d3e665. E252first138sources/Tbytesretained.
+
+Two steps.01/.02A: Tminimum eigenvalues .164064528478/.157595936408,
+zero negatives; preserving -.022077212864/-.024089732924, one negative each.
+Both released gradients below original.03, but preserving FAILS necessary
+raw-positive condition. Keep full nonsymmetric matrices/actions/spectra;
+no clipping, stepselection, pseudoinverse, repairedphysics/domain/starts.
+Stepdifferences .054468926314/.313107773422 are not totalphysicalerrorbound.
+No stablewholeface, physicalresolvedinstability, TS or predictioncertificate.
+
+74local/74independent relatedchecks,5modules/11new,0failure/error/skip;
+notfullsuite. Actual272native data reconstruction/first138identities/
+literalprobes/signedspectra/negativeclippingrefusal/costs checked. Testedtree
+d1b9e200ac599950c89da7247736c651b6a70ae8/archive0b774c7311c3b7b6b46022c22168751d427dc52919fa888d79a61cdeabf9ab12.
+XMLf6d37891/5191d68a retainedraw. Productioncode unchanged, onlynewtests.
+Completedcallproxies137.839362/137.425203coreh, allocation276.622222;
+old296/G2/faces/B3/preparationadditional, notspeedup.
+
+OriginalE185/E188forecasts,16independent slots/uncomputed and+.005sealed
+preserved. ModelingT34/81,P35/81unchanged. CurrentoverviewupdatedE254;
+formal1--7/priorhistory/v1v2/mainpaper/fiveuserhashespreserved. No newDFT,
+schedulerwrite/CI/install/release/monitor/privatearrayorholdoutaccess.
+Next: inspect failed direction/resolution fromexistingdata before any
+separatelyversionedtrainingrevision; do not backfill originalforecastsuccess.
+Evidence:G3_released_complete_E254_20261016. Fullgoalactive/incomplete.
