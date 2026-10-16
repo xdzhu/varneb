@@ -5486,3 +5486,36 @@ No new DFT, inputs, scheduler write, reservation, private-array or holdout
 access, CI, install, release or monitor. T34/81,P35/81; independent16 uncomputed.
 Next finite physical-direction verification needs its own pre-label scope,
 source and budget; no backfilled original prediction success. Full goal active.
+
+### E256 2026-10-17 — PROGRESS: freeze, preflight and submit four finite training statics
+
+E255 first-step direction and original literal Q0 anchor remain fixed.
+Four amplitudes +.05,-.05,+.10,-.10A, both old quadratic predictions frozen
+before new labels. This is not a replacement independent test, changed
+electronic contract, branch optimization, new Hessian center or NEB rerun.
+Four attempts maximum, no retry/rollover; conservatively charge preserving
+35 ->39/81, T34/81 unchanged, original16 tests and physical+.005 untouched.
+
+24 local/24 independent related checks, three modules/eight new, zero final
+failures/errors/skips. First independent23pass/one metadata failure preserved:
+Git archive converted protocol LF to CRLF. Explicit protocol.md raw-byte
+attribute fixes export without changing its original bytes, config, worker
+algorithm, forecasts, physical inputs or strict hash checks. First XML
+74c30596 and source archivefe57866d retained. Final tested tree
+33df68aacd630c67c7b20cf7ddbc483882b452f5/archive736eb8b812ec9015a2c92601224b683709064a78b99b0d5fbd2ad6142dda1ca0.
+XML7717948b/9e12f330; not a full-suite run. Scratch/exports on C:.
+
+Native preflight e05b34d2 checked original380 runtime/binary/six assets,
+cached native anchor and four inert serialized decks. Radiusmax.326290A,
+minsep2.066736A. Configf7dc1053, bundleed53bc64. Original28912687 submitted
+held; literal node check initially refused NumNodes=1-1. Actual range1..1,
+squeue nodes1, TRES node1 and CPUs32 verified; same handle released, no
+resource change or duplicate submission. hfacnormal01/1node32MPI/1hour.
+00:15:34 metadata: RUNNING node9/32, one result, no failure, no completion;
+not a final native four-SCF audit or physical validity claim.
+
+Original E254/E255 refusal/data, forecasts, guards, v1/v2, formal1--7,
+main paper and five user hashes preserved. No CI/install/release/monitor,
+private author-array or holdout access. Immutable old/live source not edited.
+Case:G3_soft_probe_E256_20261016 (plannedOct16,submittedOct17).
+Full goal active; energy/force consistency and final material evidence pending.
