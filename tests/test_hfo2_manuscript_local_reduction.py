@@ -113,7 +113,7 @@ def test_local_energy_changes_and_censored_cost_are_not_path_barriers():
         delta = seed['final_candidate']['energy_eV_cell'] - audit['center_source']['energy_eV_cell']
         assert f'{abs(delta):.8f} eV per' in text
         assert not audit['conditional_stability_TS_full_face_or_material_speedup_certified']
-    for phrase in ('not a whole-NEB acceleration benchmark', 'Post-relaxation released stability remains',
+    for phrase in ('not a whole-NEB acceleration benchmark', 'Post-relaxation released stability had not',
                    'do not replace any sampled G2 barrier',
                    'a censored cost', '296 curvature SCFs'):
         assert phrase in text

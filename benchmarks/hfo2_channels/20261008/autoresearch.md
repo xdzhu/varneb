@@ -5519,3 +5519,41 @@ main paper and five user hashes preserved. No CI/install/release/monitor,
 private author-array or holdout access. Immutable old/live source not edited.
 Case:G3_soft_probe_E256_20261016 (plannedOct16,submittedOct17).
 Full goal active; energy/force consistency and final material evidence pending.
+
+### E257 2026-10-17 — PROGRESS: native four-point completion, shallow lowering and manuscript
+
+28912687 COMPLETED0:0,478s,node9,32CPUs. All4 new native SCFs and the old
+cached center reparsed with original380 runtime/binary/six assets and MPI32.
+Native audit41321300/analysis761bb4bd. First read-only audit refused lexical
+bundle/../ paths; exact resolved same-file/namespace check accepts the alias
+while preserving producer spelling, hashes and numerical checks. Original
+failure/source retained, no repeated DFT or changed electronic inputs.
+
+Four fixed amplitudes lower only0.012565--0.017158meV/HfO2. Finite-amplitude
+energy and gradient secants differ; a restoring outer gradient with lower
+energy is compatible with a shallow anharmonic profile, not automatic
+energy-force inconsistency or certified stationary minimum. Retrospective
+adjacent-interval work exposes near-center residuals about0.029meV/cell,
+not a total error bound. No origin/fit/sign change. This cannot explain the
+older multi-meV/cell mismatch or establish a whole-path barrier improvement.
+New cost3.756877 call-proxy/4.248889 allocation coreh; all prior costs extra.
+
+Main-text methods/mode interpretation/prediction limits/discussion and
+AppendixE.7/TableA17 updated. Original148 table lines,9 figure bytes/order,
+13 citations and wrapper preserved. Existing LuaLaTeX build succeeds,
+38pages/PDF9f8aeda9, all contact pages reviewed and pages9/15/38 individually;
+no clipping/overlap/orphaned TableA17 found. Not a submission-ready paper.
+
+157local/157independent related checks,14modules/10new, zero final failures,
+errors or skips. First153pass/4stale manuscript guards preserved asXML
+09d894fd; wording/count updates retain old tables, not loosened physics.
+LocalXMLc143a0df/independent8491109a. Testedtree8e067efa7e764af15c8c9da1710c53a5581f062c,
+archive1de64b5fed6beaf014d9c03de2e39b62e5564d2d3ff6e69eb2fca6edda2b6d41.
+Independent CLI analysis byte-identical. Not a new full-suite claim.
+
+Original2D sign-admission refusal and E185/E188 forecasts retained. T34/81,
+preserving39/81;16 independent points uncomputed; physical+.005 sealed.
+Five user-modified files untouched. No new DFT/scheduler write/CI/install/
+release/monitor/private-author-array access. Await author decision on a
+separate pre-label third-coordinate protocol; do not retroactively relabel
+old test success or start new DFT without that decision. Full goal incomplete.

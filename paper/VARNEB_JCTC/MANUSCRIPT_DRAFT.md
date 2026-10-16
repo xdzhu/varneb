@@ -1,6 +1,6 @@
 # Competing switching and phase-escape channels in hafnia: a mode-strain pathway analysis
 
-Working manuscript, 2026-10-15. This is a connected main-text draft, not a
+Working manuscript, 2026-10-17. This is a connected main-text draft, not a
 submission-ready article. The main Results organize eight ordinary-converged clamped training bands
 by scientific question; dated free-cell and detailed representation checks
 are retained in the appendices. All ten
@@ -13,7 +13,11 @@ coordinates passed the released-gradient target, out of 25 per center;
 eight preserving holes remain. Matched atomic-only release has also completed
 at five coordinates per
 center; these treatment results are distinct from joint stationarity or
-released stability. An uncertainty-resolved
+released stability. The complete post-release check rejected the preserving
+two-coordinate origin at both probe steps. Four additional same-contract
+statics measured a shallow lowering along its omitted oxygen-dominated
+direction, not a stable nonlinear branch or an independent prediction.
+An uncertainty-resolved
 response interpretation, stable conditional branches and independent
 material predictions are still missing. An abstract and a
 conclusion asserting those unmeasured results are deliberately withheld.
@@ -598,6 +602,25 @@ defined above. This split was chosen after seeing the training labels.
 Moreover, coarse-node relaxation starts had inherited fine-node geometries;
 withholding fine energies from a fit did not blind the preceding workflow.
 
+We checked the omitted preserving-center direction with four additional
+training statics, keeping the electronic contract unchanged. Let
+$x(\zeta)=x_r+\zeta v$, with cached released origin $x_r$ and the first-step
+lowest transverse eigenvector v in its fixed sign convention. The original
+two retained coordinates and strain control stayed fixed. Here $\zeta$ is
+an internal length, not the external substrate coordinate t of Section 2.3.
+Amplitudes $\pm0.05$/$\pm0.10$ Angstrom, both original quadratic predictions
+and a four-attempt cap were frozen before these labels; the center was reused.
+We reported the distinct finite-amplitude quantities
+
+$$
+\kappa_E(h)=\frac{E(x_r+hv)+E(x_r-hv)-2E(x_r)}{h^2},\qquad
+\kappa_g(h)=\frac{v^Tg(x_r+hv)-v^Tg(x_r-hv)}{2h}.
+$$
+
+They coincide for an exactly quadratic energy, but need not coincide at
+finite amplitude in an anharmonic profile. Neither difference is a total
+physical-error bound. These were training structures, not independent targets.
+
 ## 3. Results: competing responses under one mechanical intervention
 
 ### 3.1. Opposite candidate responses do not imply easier switching
@@ -828,6 +851,18 @@ energy partition. All ten atomic-only candidates passed their own gradient
 target but retained joint released-gradient norms above that target;
 neither joint stationarity nor transverse stability followed from this test.
 
+The post-release curvature test exposed a specific omitted direction at the
+preserving origin. Its transverse block retained one raw negative eigenvalue
+at both steps, approximately -0.0221/-0.0241 eV/Angstrom squared, despite
+meeting the released-gradient target. The directions had squared overlap
+0.999998 and were almost entirely oxygen displacements in the registered
+length metric. Freezing the cell did not remove the raw negative direction.
+Four same-contract statics along it lay 0.0126--0.0172 meV/HfO2 below the cached
+origin (Appendix E.7). This was a shallow local lowering, not a corrected
+whole-band barrier or an explanation of the larger release-shape discrepancy.
+The original two-coordinate conditional admission remained refused; formal
+retention of a third coordinate alone did not certify a nonlinear branch.
+
 ### 3.4. Prediction controls and the unfinished independent test
 
 An independent prediction advantage has not yet been established. A complete
@@ -884,8 +919,12 @@ nonlinear reduction must be tested against a competent energy-only model,
 not only against an unrefitted local quadratic.
 
 Eight prospective local test coordinates per center have been fixed without
-using their DFT labels. They remain uncomputed pending the released-curvature
-checks and final candidate-model forecasts. The separate +0.5% mechanical
+using their DFT labels. They remain uncomputed: the preserving origin failed
+the necessary post-release sign condition, and final candidate-model
+forecasts have not been admitted. The four directional statics were training
+diagnostics, not replacement test labels. A revised retained space, branch
+or test definition would need a separate pre-label protocol; it could not
+turn the original refusal into a successful forecast. The separate +0.5% mechanical
 condition also remains sealed; a local-coordinate test cannot replace its
 path-barrier comparison. The [registered local forecasts](../../benchmarks/hfo2_channels/20261008/G3_local_forecast_E185_20261015/README.md)
 and [strong-reference forecasts](../../benchmarks/hfo2_channels/20261008/G3_reference_forecast_E188_20261015/README.md)
@@ -916,10 +955,14 @@ guarantee equilibration of the coordinates omitted from a proposed surface.
 The substantial preserving-center energy change occurs without changing
 the electronic contract. It warrants a conditional-branch test, not a
 retrospective change of the whole-path barrier table. Conversely, a
-gradient-converged fixed-coordinate candidate is not a conditional minimum
-until the released block has been checked. The local tests narrow the
-next material question to whether a stable, reproducible branch supports
-an independent response prediction; they do not already answer it.
+gradient-converged fixed-coordinate candidate was not established as a
+conditional minimum by its residual alone. The completed transverse check
+now supplies an actual sign-screen refusal at preserving, not only a
+hypothetical warning. The directional statics measured a lowering far smaller
+than the observed multi-meV/cell release-shape discrepancy. They do not show
+that retaining this one direction will solve the finite-domain prediction
+problem. The remaining question is whether an explicitly defined stable
+branch supports an independent response prediction under the same contract.
 
 The matched atomic-only treatment narrowed one interpretation: most of the
 large preserving-cohort lowering and model mismatch was already present
@@ -2057,8 +2100,8 @@ and five new SCFs, respectively; neither identity arm reaches the common
 target within twelve attempts (Table A8). This is a bounded local result,
 not a whole-NEB acceleration benchmark. The preceding 296 curvature SCFs
 and earlier path costs are additional, so no net cost advantage follows
-from these call counts alone. Post-relaxation released stability remains
-unmeasured.
+from these call counts alone. Post-relaxation released stability had not
+been measured in that bounded canary; the later checks follow below.
 
 The two resulting candidate energies differ by only 0.00081345 eV per
 cell, but energy proximity does not establish a common mechanism or branch.
@@ -2069,3 +2112,65 @@ fixed-coordinate results therefore do not replace any sampled G2 barrier,
 establish branch merger or certify a transition structure. They motivate
 checking conditional equilibration and branch stability before using a
 low-dimensional surface for prediction.
+
+### E.7. A shallow omitted direction after conditional release
+
+Complete post-release stencils comprised 136 native SCFs per origin,
+including both 0.01/0.02-Angstrom steps and all 34 released directions.
+At T the minimum symmetric-raw eigenvalues were 0.164065/0.157596
+eV/Angstrom squared; at preserving they were -0.022077/-0.024090, each with
+one negative direction. Released-gradient norms were 0.026300/0.019591
+eV/Angstrom. Both nonsymmetric blocks and their step disagreement remain
+available, not repaired into positive matrices or total physical-error bounds.
+The centers are local path-associated candidates, not endpoint phases or TSs.
+
+The preserving soft vectors had squared overlap 0.999997889 between steps.
+Their oxygen/open-cell squared weights were 0.999990/0.000009 in the original
+length metric, not energy fractions or mass-weighted phonon labels. The
+31-dimensional fixed-cell restriction retained minima -0.022058/-0.024070
+eV/Angstrom squared. Formally retaining the first-step soft direction beside
+the unchanged two coordinates left raw positive 33-dimensional blocks at the
+same point, with minima 0.384878/0.375093. This motivates an explicit-coordinate
+test; it does not supply the new full retained Hessian or a stable nonlinear
+three-coordinate surface.
+
+All four finite-amplitude statics lowered the reported energy relative to
+the same cached origin (Table A17). Changes are per twelve-atom cell, four
+formula units; gradients follow the fixed unit direction in the length chart.
+Case field t_A denotes the paper's internal amplitude $\zeta$, not the external
+strain control t. Full native sources, energy/gradient/stress and both frozen
+quadratic predictions remain in the
+[four-point case](../../benchmarks/hfo2_channels/20261008/G3_soft_probe_E256_20261016/README.md).
+
+Table A17. Four frozen directional training statics at the released preserving origin.
+
+| Amplitude (Angstrom) | Energy change (meV/cell) | Directional gradient (eV/Angstrom) |
+|---|---:|---:|
+| +0.05 | -0.050533 | -0.000841328 |
+| -0.05 | -0.050260 | +0.000840951 |
+| +0.10 | -0.068631 | +0.000135813 |
+| -0.10 | -0.067976 | -0.000136940 |
+
+At amplitudes 0.05/0.10 Angstrom, energy secants $\kappa_E$ were
+-0.040317/-0.013661 eV/Angstrom squared, whereas gradient secants $\kappa_g$
+were -0.016823/+0.001364. They sample different properties outside the
+quadratic regime. A restoring gradient at larger displacement is compatible
+with energy remaining below the center; the sign difference alone neither
+proves energy-force inconsistency nor certifies an intervening stationary point.
+
+A retrospective adjacent-interval work check guards against overinterpreting
+opposite-endpoint cancellation. Energy-minus-trapezoid-work residuals were
++0.029245/-0.029491 meV/cell on the -0.05-to-0 and 0-to-0.05-Angstrom
+intervals; both outer interval magnitudes were below 0.000461 meV/cell.
+These quadrature discrepancies do not separate anharmonicity from numerical
+energy/gradient effects and are not total-error bounds. We did not shift the
+cached origin or refit coefficients to close them. This very shallow lowering
+is not evidence of a new phase or an improved whole-path barrier.
+
+The four new statics cost 3.756877 completed-call proxy core-hours and
+4.248889 allocation core-hours, with no new center SCF. The preceding 272
+post-release derivatives cost 276.622222 allocation core-hours; earlier
+training and preparation remain additional. Training commitments are T34/81
+and preserving39/81. The sixteen original independent targets and physical
++0.5% condition remain uncomputed. Original admission refusal is preserved,
+not backfilled by these training results.

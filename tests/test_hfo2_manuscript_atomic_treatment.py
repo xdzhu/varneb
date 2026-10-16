@@ -72,8 +72,11 @@ def test_approved_four_part_results_and_six_appendix_diagnostics():
     assert 'Across the five registered coordinates' in ' '.join(main.split())
     assert 'An independent prediction advantage has not yet been established' in main
     assert 'Eight prospective local test coordinates per center' in main
-    assert 'remain uncomputed pending the released-curvature' in main
-    assert re.findall(r'^### (E\.\d+)\.', text, re.M) == [f'E.{i}' for i in range(1, 7)]
+    assert 'They remain uncomputed' in main
+    assert 'failed\nthe necessary post-release sign condition' in main
+    assert 'original refusal' in main
+    # Six historical diagnostics remain; the actual four-point result adds E.7.
+    assert re.findall(r'^### (E\.\d+)\.', text, re.M) == [f'E.{i}' for i in range(1, 8)]
     assert not re.search(r'Section 3\.[5-9]\b|Table [4-9]\b', text)
-    for number in range(11, 17):
+    for number in range(11, 18):
         assert f'Table A{number}' in text

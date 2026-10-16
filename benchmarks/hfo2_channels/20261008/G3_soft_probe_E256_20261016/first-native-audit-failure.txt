@@ -1,0 +1,18 @@
+E257 first native post-audit, 2026-10-17; no DFT failure or data edit.
+Original source remains on HF as postprocess_E257.py, SHA256
+c45e523186d28db5225fe08c225d22d3f0039635d123e1a9549b011ce60fb559.
+
+Traceback ended at native_audit():
+  ValueError: producer summary differs from native records or declared scope
+
+Read-only diagnosis: all four returned records equalled producer records;
+all four result byte hashes and validations matched. Only source result_path
+spellings differed: producer paths retained bundle/../probes/evaluations,
+while the first post-audit supplied canonical probes/evaluations paths.
+Every pair resolved strictly to the same exact native result file.
+
+Revision2 verifies the recorded path's strict resolved identity against the
+expected reservation file and namespace, then replays its original lexical
+spelling. It retains every source field and exact hash/EFS check; it neither
+normalizes stored data nor weakens geometry/input/numerical tolerances.
+The failed original source is not overwritten; revision2 has a fresh path.

@@ -56,8 +56,9 @@ def test_prior135_table_lines_nine_figures_external_citations_and_wrapper_preser
     assert len(old['prior_table_lines'])==135
     # User-approved main/appendix reordering changes order, not row values or multiplicity.
     assert not Counter(old['prior_table_lines'])-current
-    # All prior rows remain; the complete atomic-treatment table adds six lines.
-    assert len([l for l in text.splitlines() if l.startswith('|')])==148
+    # All prior rows remain; atomic treatment and four statics add six lines each.
+    assert len([l for l in text.splitlines() if l.startswith('|')])==154
+    assert 'Table A17. Four frozen directional training statics' in text
     assert re.findall(r'!\[[^\]]*\]\(([^)]+)\)',text)==old['prior_figure_targets']
     assert re.findall(r'\]\((https?://[^)]+)\)',text)==old['prior_external_links']
     for name,sha in old['prior_figure_sha256'].items():

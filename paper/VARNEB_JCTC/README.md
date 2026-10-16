@@ -40,6 +40,14 @@ cell of atomic-release lowering; joint candidates were a further 0.80--1.14
 meV/cell lower. This local treatment contrast is not a unique mode-energy
 partition, whole-path mechanism or stable-surface certificate.
 
+The complete post-release check now supplies an actual preserving-origin
+sign-screen refusal, not only a pending warning. Its omitted oxygen-dominated
+direction stays raw-negative at both steps and in the fixed-cell restriction.
+Four additional same-contract training statics measured only0.0126--0.0172
+meV/HfO2 lowering. Main Results3.3 and AppendixE.7/TableA17 distinguish that
+shallow response from a corrected barrier, full stationary index or independent
+accuracy claim. Both secant definitions and adjacent work discrepancies remain.
+
 Free-cell candidates, finite sampling checks, endpoint screens and complete
 reference tables remain **inside the paper's appendices**. No separate
 supplementary manuscript is introduced. All nine original figure assets and
@@ -69,6 +77,9 @@ are different measurements.
   steps. A measured stability-resolution floor and the appropriate stationary
   fixed-strain internal index remain separate; highest images are not automatically TSs.
 - Stable, connected conditional branches and covered sampling domains.
+- The preserving2D origin's admission remains refused; a changed retained
+  coordinate, branch or test definition needs a separately recorded pre-label
+  protocol, not an overwrite of the original16-point forecast record.
 - Training-only model/representative selection and frozen predictions before
   any physical +0.5% geometry or path labels are read.
 - Independent comparisons against B0--B5, including strong fixed-reference,
@@ -120,6 +131,13 @@ are layout snapshots, not portable source-data bundles.
 Build products are ignored by Git. Receipts identify the actual compiler,
 PDF bytes and inspected pages, not byte-identical PDFs across environments.
 Existing published assets and raw outputs are not overwritten by a new build.
+
+The Oct17 E257 build has38 pages including appendices. Its actual native
+four-point result,157 local/157 independent related checks (not a full-suite
+rerun), source preservation and rendered-page review are recorded in the
+[E257 receipt](../../benchmarks/hfo2_channels/20261008/G3_soft_probe_E256_20261016/results_validation_E257.json).
+This supersedes the older36-page build status, not the scientific completion
+gates above. The previous generated reading copy was retained on C:.
 
 ## Fixed computation scope
 

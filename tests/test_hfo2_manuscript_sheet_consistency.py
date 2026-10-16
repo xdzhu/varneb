@@ -74,8 +74,9 @@ def test_old_113_table_lines_nine_figures_citations_and_wrapper_are_retained():
     assert before["baseline_commit"] == "6472844bf4d7689a5106c1e3a5c6d930b03c75d0"
     assert before["original_table_line_count"] == 113
     assert not Counter(before["original_table_hash_counts"])-counts
-    # Original119 rows plus shared-reference(16), nonlinear(7), atomic(6).
-    assert sum(counts.values())==148
+    # Original119 plus shared-reference(16), nonlinear(7), atomic(6), statics(6).
+    assert sum(counts.values())==154
+    assert 'Table A17. Four frozen directional training statics' in text
     figures = re.findall(r"!\[[^\]]*\]\(([^)]+)\)", text)
     assert figures == before["original_figure_targets"] and len(figures) == 9
     assert all(
