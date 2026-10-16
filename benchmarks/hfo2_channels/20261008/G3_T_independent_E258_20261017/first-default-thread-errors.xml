@@ -1,0 +1,833 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="8" failures="0" skipped="0" tests="46" time="5.680" timestamp="2026-10-17T01:08:31.131706" hostname="Aero"><testcase classname="tests.test_hfo2_T_original_independent" name="test_every_original_target_start_and_prediction_is_retained" time="0.401" /><testcase classname="tests.test_hfo2_T_original_independent" name="test_both_T_steps_pass_without_repairing_preserving" time="0.006" /><testcase classname="tests.test_hfo2_T_original_independent" name="test_changed_frozen_test_contract_is_refused[target]" time="0.370" /><testcase classname="tests.test_hfo2_T_original_independent" name="test_changed_frozen_test_contract_is_refused[start]" time="0.367" /><testcase classname="tests.test_hfo2_T_original_independent" name="test_changed_frozen_test_contract_is_refused[budget]" time="0.392" /><testcase classname="tests.test_hfo2_T_original_independent" name="test_changed_frozen_test_contract_is_refused[preserving]" time="0.413" /><testcase classname="tests.test_hfo2_T_original_independent" name="test_changed_frozen_test_contract_is_refused[prediction]" time="0.363" /><testcase classname="tests.test_hfo2_T_original_independent" name="test_shards_are_disjoint_and_do_not_expand_original_attempt_or_training_budget" time="0.000" /><testcase classname="tests.test_hfo2_T_original_independent" name="test_optimizer_gets_literal_start_without_extra_start_or_new_label_parent" time="0.383" /><testcase classname="tests.test_hfo2_T_original_independent" name="test_run_refuses_local_shell_before_any_calculator_or_output" time="0.001" /><testcase classname="tests.test_hfo2_local_forecast" name="test_geometric_targets_are_eight_new_points_not_training_or_origin" time="0.000" /><testcase classname="tests.test_hfo2_local_forecast" name="test_central_nine_have_identified_quadratic_and_only_audited_labels" time="0.904"><error message="failed on setup with &quot;ValueError: metadata amendment must not change any original numerical prediction or start&quot;">@pytest.fixture(scope='module')
+    def forecast():
+&gt;       return f.freeze()
+
+tests\test_hfo2_local_forecast.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def freeze():
+        source = elementary.pinned(elementary.SOURCE, elementary.PIN)
+        rows = []
+        for channel in ('T', 'preserving'):
+            data = faces.load_inputs(channel)
+            proof_name, proof_sha = elementary.PROOFS[channel]
+            proof = elementary.pinned(BASE / proof_name, proof_sha)
+            original_specs = faces.ordered_points()
+            selected = [p for p in original_specs if max(map(abs, p['index'])) &lt;= 1]
+            if len(selected) != 9:
+                raise ValueError('fixed central nine training points required')
+            observed_rows = next(r for r in source['rows'] if r['channel'] == channel
+                                 and r['reference'] == 'T_all_optical' and r['step_A'] == .01)
+            training, labels = [], {}
+            for p in selected:
+                if p['id'] == 0:
+                    candidate = data['origin_point']
+                    calls = 0  # old canary preparation remains additional
+                else:
+                    native = next(r for r in proof['candidate_rows'] if r['id'] == p['id'])
+                    candidate, calls = native['candidate'], native['completed_SCFs']
+                    if native['q_A'] != p['q_A']:
+                        raise ValueError('training observable identity differs')
+                if candidate is None:
+                    raise ValueError('missing central training label; no fill or replacement')
+                energy = candidate['energy_eV_cell'] - data['center_energy']
+                if abs(energy - observed_rows['points'][p['id']]['DFT_energy_change_eV_cell']) &gt; 1e-12:
+                    raise ValueError('source scalar and audited candidate energy disagree')
+                training.append(dict(id=p['id'], original_index=p['index'], q_A=p['q_A'],
+                    energy_change_eV_cell=energy, historical_face_SCFs=calls,
+                    coordinates_internal_A=candidate['coordinates_internal_A']))
+                labels[tuple(2 * i for i in p['index'])] = energy
+            beta, rank = elementary.fit_quadratic(labels)
+            if rank != 6 or beta is None:
+                raise ValueError('identified full quadratic required')
+            b, a = data['basis'], data['axes']
+            complement = np.linalg.svd(a.T, full_matrices=True)[2][2:].T
+            models = {}
+            for block in data['curvature']['blocks']:
+                raw = np.asarray(block['raw_projected_eV_A2'])[:36, :36]
+                model = condition_quadratic_energy((raw + raw.T) / 2,
+                    b.T @ data['center_gradient'], data['center_energy'], a, complement,
+                    stability_floor=0.)
+                models[f"original_H_{block['step_A']:.2f}"] = model
+            if set(models) != {'original_H_0.01', 'original_H_0.02'}:
+                raise ValueError('both original measured steps required')
+            origin_y = labels[(0, 0)]
+            origin_models = {k: elementary.interpolate((0, 0), labels, k)['value']
+                             for k in ('bilinear', 'tensor_quadratic')}
+            origin_models['refitted_total_quadratic'] = float(beta[0])
+            origin_models.update({k: m.energy_change([0., 0.]) for k, m in models.items()})
+            predictions = []
+            for target in targets():
+                q, index = target['q_A'], target['half_grid_index']
+                if any(q == p['q_A'] for p in original_specs):
+                    raise ValueError('test coordinate was already a training target')
+                parent, start = fixed_start(data, training, target)
+                values = {k: elementary.interpolate(index, labels, k)
+                          for k in ('bilinear', 'tensor_quadratic')}
+                values['refitted_total_quadratic'] = dict(
+                    value=float(elementary.features(index) @ beta), reason=None)
+                for k, model in models.items():
+                    x = model.full_displacement(q)
+                    eligible = faces.canary.geometry_guard(data['chart'], b, x)
+                    values[k] = dict(value=model.energy_change(q) if eligible else None,
+                        reason=None if eligible else 'outside_original_geometry_guard',
+                        formal_energy_change_eV_cell=model.energy_change(q),
+                        formal_internal_norm_A=float(np.linalg.norm(x)))
+                for k, value in values.items():
+                    value['origin_model_energy_change_eV_cell'] = origin_models[k]
+                    value['origin_bias_eV_cell'] = origin_models[k] - origin_y
+                    value['seen_origin_calibrated_energy_change_eV_cell'] = (
+                        None if value['value'] is None else value['value'] - origin_models[k] + origin_y)
+                    value['relative_to_seen_origin_eV_cell'] = (
+                        None if value['value'] is None else value['value'] - origin_models[k])
+                predictions.append(dict(**target, training_parent_id=parent,
+                    starting_internal_coordinates_A=start.tolist(),
+                    starting_full_coordinates_A=(b @ start).tolist(),
+                    starting_internal_norm_A=float(np.linalg.norm(start)),
+                    models=values, independent_DFT_label=None))
+            rows.append(dict(channel=channel, training=training, targets=predictions,
+                formula_units=4, raw_peak_reference_energy_eV_cell=data['center_energy'],
+                observed_origin_energy_change_eV_cell=origin_y,
+                refitted_total_quadratic_coefficients=beta.tolist(),
+                energy_interpolants_training_labels=9,
+                original_H_preparation_SCFs_per_center=148,
+                historical_face_SCFs_at_nine_training_targets=sum(r['historical_face_SCFs'] for r in training),
+                original_whole_training_face_SCFs=proof['new_SCFs_reparsed'],
+                source_native_face_sha256=proof_sha, original_input_artifact_sha256=list(faces.PINS[channel])))
+        code = sorted(set((*faces.canary.CODE, 'scripts/hfo2_G3_conditional_faces.py',
+            'vcneb/quadratic_reduction.py', CONTROL.relative_to(ROOT).as_posix(),
+            Path(__file__).resolve().relative_to(ROOT).as_posix())))
+        first = elementary.pinned(Path(__file__).with_name('forecast.json'), FIRST_SHA)
+        if rows != first['channels']:
+&gt;           raise ValueError('metadata amendment must not change any original numerical prediction or start')
+E           ValueError: metadata amendment must not change any original numerical prediction or start
+
+benchmarks\hfo2_channels\20261008\G3_local_forecast_E185_20261015\freeze.py:157: ValueError</error></testcase><testcase classname="tests.test_hfo2_local_forecast" name="test_all_five_forecasts_both_steps_and_calibration_are_retained" time="0.000"><error message="failed on setup with &quot;ValueError: metadata amendment must not change any original numerical prediction or start&quot;">@pytest.fixture(scope='module')
+    def forecast():
+&gt;       return f.freeze()
+
+tests\test_hfo2_local_forecast.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def freeze():
+        source = elementary.pinned(elementary.SOURCE, elementary.PIN)
+        rows = []
+        for channel in ('T', 'preserving'):
+            data = faces.load_inputs(channel)
+            proof_name, proof_sha = elementary.PROOFS[channel]
+            proof = elementary.pinned(BASE / proof_name, proof_sha)
+            original_specs = faces.ordered_points()
+            selected = [p for p in original_specs if max(map(abs, p['index'])) &lt;= 1]
+            if len(selected) != 9:
+                raise ValueError('fixed central nine training points required')
+            observed_rows = next(r for r in source['rows'] if r['channel'] == channel
+                                 and r['reference'] == 'T_all_optical' and r['step_A'] == .01)
+            training, labels = [], {}
+            for p in selected:
+                if p['id'] == 0:
+                    candidate = data['origin_point']
+                    calls = 0  # old canary preparation remains additional
+                else:
+                    native = next(r for r in proof['candidate_rows'] if r['id'] == p['id'])
+                    candidate, calls = native['candidate'], native['completed_SCFs']
+                    if native['q_A'] != p['q_A']:
+                        raise ValueError('training observable identity differs')
+                if candidate is None:
+                    raise ValueError('missing central training label; no fill or replacement')
+                energy = candidate['energy_eV_cell'] - data['center_energy']
+                if abs(energy - observed_rows['points'][p['id']]['DFT_energy_change_eV_cell']) &gt; 1e-12:
+                    raise ValueError('source scalar and audited candidate energy disagree')
+                training.append(dict(id=p['id'], original_index=p['index'], q_A=p['q_A'],
+                    energy_change_eV_cell=energy, historical_face_SCFs=calls,
+                    coordinates_internal_A=candidate['coordinates_internal_A']))
+                labels[tuple(2 * i for i in p['index'])] = energy
+            beta, rank = elementary.fit_quadratic(labels)
+            if rank != 6 or beta is None:
+                raise ValueError('identified full quadratic required')
+            b, a = data['basis'], data['axes']
+            complement = np.linalg.svd(a.T, full_matrices=True)[2][2:].T
+            models = {}
+            for block in data['curvature']['blocks']:
+                raw = np.asarray(block['raw_projected_eV_A2'])[:36, :36]
+                model = condition_quadratic_energy((raw + raw.T) / 2,
+                    b.T @ data['center_gradient'], data['center_energy'], a, complement,
+                    stability_floor=0.)
+                models[f"original_H_{block['step_A']:.2f}"] = model
+            if set(models) != {'original_H_0.01', 'original_H_0.02'}:
+                raise ValueError('both original measured steps required')
+            origin_y = labels[(0, 0)]
+            origin_models = {k: elementary.interpolate((0, 0), labels, k)['value']
+                             for k in ('bilinear', 'tensor_quadratic')}
+            origin_models['refitted_total_quadratic'] = float(beta[0])
+            origin_models.update({k: m.energy_change([0., 0.]) for k, m in models.items()})
+            predictions = []
+            for target in targets():
+                q, index = target['q_A'], target['half_grid_index']
+                if any(q == p['q_A'] for p in original_specs):
+                    raise ValueError('test coordinate was already a training target')
+                parent, start = fixed_start(data, training, target)
+                values = {k: elementary.interpolate(index, labels, k)
+                          for k in ('bilinear', 'tensor_quadratic')}
+                values['refitted_total_quadratic'] = dict(
+                    value=float(elementary.features(index) @ beta), reason=None)
+                for k, model in models.items():
+                    x = model.full_displacement(q)
+                    eligible = faces.canary.geometry_guard(data['chart'], b, x)
+                    values[k] = dict(value=model.energy_change(q) if eligible else None,
+                        reason=None if eligible else 'outside_original_geometry_guard',
+                        formal_energy_change_eV_cell=model.energy_change(q),
+                        formal_internal_norm_A=float(np.linalg.norm(x)))
+                for k, value in values.items():
+                    value['origin_model_energy_change_eV_cell'] = origin_models[k]
+                    value['origin_bias_eV_cell'] = origin_models[k] - origin_y
+                    value['seen_origin_calibrated_energy_change_eV_cell'] = (
+                        None if value['value'] is None else value['value'] - origin_models[k] + origin_y)
+                    value['relative_to_seen_origin_eV_cell'] = (
+                        None if value['value'] is None else value['value'] - origin_models[k])
+                predictions.append(dict(**target, training_parent_id=parent,
+                    starting_internal_coordinates_A=start.tolist(),
+                    starting_full_coordinates_A=(b @ start).tolist(),
+                    starting_internal_norm_A=float(np.linalg.norm(start)),
+                    models=values, independent_DFT_label=None))
+            rows.append(dict(channel=channel, training=training, targets=predictions,
+                formula_units=4, raw_peak_reference_energy_eV_cell=data['center_energy'],
+                observed_origin_energy_change_eV_cell=origin_y,
+                refitted_total_quadratic_coefficients=beta.tolist(),
+                energy_interpolants_training_labels=9,
+                original_H_preparation_SCFs_per_center=148,
+                historical_face_SCFs_at_nine_training_targets=sum(r['historical_face_SCFs'] for r in training),
+                original_whole_training_face_SCFs=proof['new_SCFs_reparsed'],
+                source_native_face_sha256=proof_sha, original_input_artifact_sha256=list(faces.PINS[channel])))
+        code = sorted(set((*faces.canary.CODE, 'scripts/hfo2_G3_conditional_faces.py',
+            'vcneb/quadratic_reduction.py', CONTROL.relative_to(ROOT).as_posix(),
+            Path(__file__).resolve().relative_to(ROOT).as_posix())))
+        first = elementary.pinned(Path(__file__).with_name('forecast.json'), FIRST_SHA)
+        if rows != first['channels']:
+&gt;           raise ValueError('metadata amendment must not change any original numerical prediction or start')
+E           ValueError: metadata amendment must not change any original numerical prediction or start
+
+benchmarks\hfo2_channels\20261008\G3_local_forecast_E185_20261015\freeze.py:157: ValueError</error></testcase><testcase classname="tests.test_hfo2_local_forecast" name="test_start_uses_training_only_exact_ties_origin_and_original_guard" time="0.000"><error message="failed on setup with &quot;ValueError: metadata amendment must not change any original numerical prediction or start&quot;">@pytest.fixture(scope='module')
+    def forecast():
+&gt;       return f.freeze()
+
+tests\test_hfo2_local_forecast.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def freeze():
+        source = elementary.pinned(elementary.SOURCE, elementary.PIN)
+        rows = []
+        for channel in ('T', 'preserving'):
+            data = faces.load_inputs(channel)
+            proof_name, proof_sha = elementary.PROOFS[channel]
+            proof = elementary.pinned(BASE / proof_name, proof_sha)
+            original_specs = faces.ordered_points()
+            selected = [p for p in original_specs if max(map(abs, p['index'])) &lt;= 1]
+            if len(selected) != 9:
+                raise ValueError('fixed central nine training points required')
+            observed_rows = next(r for r in source['rows'] if r['channel'] == channel
+                                 and r['reference'] == 'T_all_optical' and r['step_A'] == .01)
+            training, labels = [], {}
+            for p in selected:
+                if p['id'] == 0:
+                    candidate = data['origin_point']
+                    calls = 0  # old canary preparation remains additional
+                else:
+                    native = next(r for r in proof['candidate_rows'] if r['id'] == p['id'])
+                    candidate, calls = native['candidate'], native['completed_SCFs']
+                    if native['q_A'] != p['q_A']:
+                        raise ValueError('training observable identity differs')
+                if candidate is None:
+                    raise ValueError('missing central training label; no fill or replacement')
+                energy = candidate['energy_eV_cell'] - data['center_energy']
+                if abs(energy - observed_rows['points'][p['id']]['DFT_energy_change_eV_cell']) &gt; 1e-12:
+                    raise ValueError('source scalar and audited candidate energy disagree')
+                training.append(dict(id=p['id'], original_index=p['index'], q_A=p['q_A'],
+                    energy_change_eV_cell=energy, historical_face_SCFs=calls,
+                    coordinates_internal_A=candidate['coordinates_internal_A']))
+                labels[tuple(2 * i for i in p['index'])] = energy
+            beta, rank = elementary.fit_quadratic(labels)
+            if rank != 6 or beta is None:
+                raise ValueError('identified full quadratic required')
+            b, a = data['basis'], data['axes']
+            complement = np.linalg.svd(a.T, full_matrices=True)[2][2:].T
+            models = {}
+            for block in data['curvature']['blocks']:
+                raw = np.asarray(block['raw_projected_eV_A2'])[:36, :36]
+                model = condition_quadratic_energy((raw + raw.T) / 2,
+                    b.T @ data['center_gradient'], data['center_energy'], a, complement,
+                    stability_floor=0.)
+                models[f"original_H_{block['step_A']:.2f}"] = model
+            if set(models) != {'original_H_0.01', 'original_H_0.02'}:
+                raise ValueError('both original measured steps required')
+            origin_y = labels[(0, 0)]
+            origin_models = {k: elementary.interpolate((0, 0), labels, k)['value']
+                             for k in ('bilinear', 'tensor_quadratic')}
+            origin_models['refitted_total_quadratic'] = float(beta[0])
+            origin_models.update({k: m.energy_change([0., 0.]) for k, m in models.items()})
+            predictions = []
+            for target in targets():
+                q, index = target['q_A'], target['half_grid_index']
+                if any(q == p['q_A'] for p in original_specs):
+                    raise ValueError('test coordinate was already a training target')
+                parent, start = fixed_start(data, training, target)
+                values = {k: elementary.interpolate(index, labels, k)
+                          for k in ('bilinear', 'tensor_quadratic')}
+                values['refitted_total_quadratic'] = dict(
+                    value=float(elementary.features(index) @ beta), reason=None)
+                for k, model in models.items():
+                    x = model.full_displacement(q)
+                    eligible = faces.canary.geometry_guard(data['chart'], b, x)
+                    values[k] = dict(value=model.energy_change(q) if eligible else None,
+                        reason=None if eligible else 'outside_original_geometry_guard',
+                        formal_energy_change_eV_cell=model.energy_change(q),
+                        formal_internal_norm_A=float(np.linalg.norm(x)))
+                for k, value in values.items():
+                    value['origin_model_energy_change_eV_cell'] = origin_models[k]
+                    value['origin_bias_eV_cell'] = origin_models[k] - origin_y
+                    value['seen_origin_calibrated_energy_change_eV_cell'] = (
+                        None if value['value'] is None else value['value'] - origin_models[k] + origin_y)
+                    value['relative_to_seen_origin_eV_cell'] = (
+                        None if value['value'] is None else value['value'] - origin_models[k])
+                predictions.append(dict(**target, training_parent_id=parent,
+                    starting_internal_coordinates_A=start.tolist(),
+                    starting_full_coordinates_A=(b @ start).tolist(),
+                    starting_internal_norm_A=float(np.linalg.norm(start)),
+                    models=values, independent_DFT_label=None))
+            rows.append(dict(channel=channel, training=training, targets=predictions,
+                formula_units=4, raw_peak_reference_energy_eV_cell=data['center_energy'],
+                observed_origin_energy_change_eV_cell=origin_y,
+                refitted_total_quadratic_coefficients=beta.tolist(),
+                energy_interpolants_training_labels=9,
+                original_H_preparation_SCFs_per_center=148,
+                historical_face_SCFs_at_nine_training_targets=sum(r['historical_face_SCFs'] for r in training),
+                original_whole_training_face_SCFs=proof['new_SCFs_reparsed'],
+                source_native_face_sha256=proof_sha, original_input_artifact_sha256=list(faces.PINS[channel])))
+        code = sorted(set((*faces.canary.CODE, 'scripts/hfo2_G3_conditional_faces.py',
+            'vcneb/quadratic_reduction.py', CONTROL.relative_to(ROOT).as_posix(),
+            Path(__file__).resolve().relative_to(ROOT).as_posix())))
+        first = elementary.pinned(Path(__file__).with_name('forecast.json'), FIRST_SHA)
+        if rows != first['channels']:
+&gt;           raise ValueError('metadata amendment must not change any original numerical prediction or start')
+E           ValueError: metadata amendment must not change any original numerical prediction or start
+
+benchmarks\hfo2_channels\20261008\G3_local_forecast_E185_20261015\freeze.py:157: ValueError</error></testcase><testcase classname="tests.test_hfo2_local_forecast" name="test_hessian_predictions_match_preexisting_complete_reference_polynomial" time="0.000"><error message="failed on setup with &quot;ValueError: metadata amendment must not change any original numerical prediction or start&quot;">@pytest.fixture(scope='module')
+    def forecast():
+&gt;       return f.freeze()
+
+tests\test_hfo2_local_forecast.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def freeze():
+        source = elementary.pinned(elementary.SOURCE, elementary.PIN)
+        rows = []
+        for channel in ('T', 'preserving'):
+            data = faces.load_inputs(channel)
+            proof_name, proof_sha = elementary.PROOFS[channel]
+            proof = elementary.pinned(BASE / proof_name, proof_sha)
+            original_specs = faces.ordered_points()
+            selected = [p for p in original_specs if max(map(abs, p['index'])) &lt;= 1]
+            if len(selected) != 9:
+                raise ValueError('fixed central nine training points required')
+            observed_rows = next(r for r in source['rows'] if r['channel'] == channel
+                                 and r['reference'] == 'T_all_optical' and r['step_A'] == .01)
+            training, labels = [], {}
+            for p in selected:
+                if p['id'] == 0:
+                    candidate = data['origin_point']
+                    calls = 0  # old canary preparation remains additional
+                else:
+                    native = next(r for r in proof['candidate_rows'] if r['id'] == p['id'])
+                    candidate, calls = native['candidate'], native['completed_SCFs']
+                    if native['q_A'] != p['q_A']:
+                        raise ValueError('training observable identity differs')
+                if candidate is None:
+                    raise ValueError('missing central training label; no fill or replacement')
+                energy = candidate['energy_eV_cell'] - data['center_energy']
+                if abs(energy - observed_rows['points'][p['id']]['DFT_energy_change_eV_cell']) &gt; 1e-12:
+                    raise ValueError('source scalar and audited candidate energy disagree')
+                training.append(dict(id=p['id'], original_index=p['index'], q_A=p['q_A'],
+                    energy_change_eV_cell=energy, historical_face_SCFs=calls,
+                    coordinates_internal_A=candidate['coordinates_internal_A']))
+                labels[tuple(2 * i for i in p['index'])] = energy
+            beta, rank = elementary.fit_quadratic(labels)
+            if rank != 6 or beta is None:
+                raise ValueError('identified full quadratic required')
+            b, a = data['basis'], data['axes']
+            complement = np.linalg.svd(a.T, full_matrices=True)[2][2:].T
+            models = {}
+            for block in data['curvature']['blocks']:
+                raw = np.asarray(block['raw_projected_eV_A2'])[:36, :36]
+                model = condition_quadratic_energy((raw + raw.T) / 2,
+                    b.T @ data['center_gradient'], data['center_energy'], a, complement,
+                    stability_floor=0.)
+                models[f"original_H_{block['step_A']:.2f}"] = model
+            if set(models) != {'original_H_0.01', 'original_H_0.02'}:
+                raise ValueError('both original measured steps required')
+            origin_y = labels[(0, 0)]
+            origin_models = {k: elementary.interpolate((0, 0), labels, k)['value']
+                             for k in ('bilinear', 'tensor_quadratic')}
+            origin_models['refitted_total_quadratic'] = float(beta[0])
+            origin_models.update({k: m.energy_change([0., 0.]) for k, m in models.items()})
+            predictions = []
+            for target in targets():
+                q, index = target['q_A'], target['half_grid_index']
+                if any(q == p['q_A'] for p in original_specs):
+                    raise ValueError('test coordinate was already a training target')
+                parent, start = fixed_start(data, training, target)
+                values = {k: elementary.interpolate(index, labels, k)
+                          for k in ('bilinear', 'tensor_quadratic')}
+                values['refitted_total_quadratic'] = dict(
+                    value=float(elementary.features(index) @ beta), reason=None)
+                for k, model in models.items():
+                    x = model.full_displacement(q)
+                    eligible = faces.canary.geometry_guard(data['chart'], b, x)
+                    values[k] = dict(value=model.energy_change(q) if eligible else None,
+                        reason=None if eligible else 'outside_original_geometry_guard',
+                        formal_energy_change_eV_cell=model.energy_change(q),
+                        formal_internal_norm_A=float(np.linalg.norm(x)))
+                for k, value in values.items():
+                    value['origin_model_energy_change_eV_cell'] = origin_models[k]
+                    value['origin_bias_eV_cell'] = origin_models[k] - origin_y
+                    value['seen_origin_calibrated_energy_change_eV_cell'] = (
+                        None if value['value'] is None else value['value'] - origin_models[k] + origin_y)
+                    value['relative_to_seen_origin_eV_cell'] = (
+                        None if value['value'] is None else value['value'] - origin_models[k])
+                predictions.append(dict(**target, training_parent_id=parent,
+                    starting_internal_coordinates_A=start.tolist(),
+                    starting_full_coordinates_A=(b @ start).tolist(),
+                    starting_internal_norm_A=float(np.linalg.norm(start)),
+                    models=values, independent_DFT_label=None))
+            rows.append(dict(channel=channel, training=training, targets=predictions,
+                formula_units=4, raw_peak_reference_energy_eV_cell=data['center_energy'],
+                observed_origin_energy_change_eV_cell=origin_y,
+                refitted_total_quadratic_coefficients=beta.tolist(),
+                energy_interpolants_training_labels=9,
+                original_H_preparation_SCFs_per_center=148,
+                historical_face_SCFs_at_nine_training_targets=sum(r['historical_face_SCFs'] for r in training),
+                original_whole_training_face_SCFs=proof['new_SCFs_reparsed'],
+                source_native_face_sha256=proof_sha, original_input_artifact_sha256=list(faces.PINS[channel])))
+        code = sorted(set((*faces.canary.CODE, 'scripts/hfo2_G3_conditional_faces.py',
+            'vcneb/quadratic_reduction.py', CONTROL.relative_to(ROOT).as_posix(),
+            Path(__file__).resolve().relative_to(ROOT).as_posix())))
+        first = elementary.pinned(Path(__file__).with_name('forecast.json'), FIRST_SHA)
+        if rows != first['channels']:
+&gt;           raise ValueError('metadata amendment must not change any original numerical prediction or start')
+E           ValueError: metadata amendment must not change any original numerical prediction or start
+
+benchmarks\hfo2_channels\20261008\G3_local_forecast_E185_20261015\freeze.py:157: ValueError</error></testcase><testcase classname="tests.test_hfo2_local_forecast" name="test_interpolant_prediction_uses_central_training_scale_not_old_outer_grid" time="0.000"><error message="failed on setup with &quot;ValueError: metadata amendment must not change any original numerical prediction or start&quot;">@pytest.fixture(scope='module')
+    def forecast():
+&gt;       return f.freeze()
+
+tests\test_hfo2_local_forecast.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def freeze():
+        source = elementary.pinned(elementary.SOURCE, elementary.PIN)
+        rows = []
+        for channel in ('T', 'preserving'):
+            data = faces.load_inputs(channel)
+            proof_name, proof_sha = elementary.PROOFS[channel]
+            proof = elementary.pinned(BASE / proof_name, proof_sha)
+            original_specs = faces.ordered_points()
+            selected = [p for p in original_specs if max(map(abs, p['index'])) &lt;= 1]
+            if len(selected) != 9:
+                raise ValueError('fixed central nine training points required')
+            observed_rows = next(r for r in source['rows'] if r['channel'] == channel
+                                 and r['reference'] == 'T_all_optical' and r['step_A'] == .01)
+            training, labels = [], {}
+            for p in selected:
+                if p['id'] == 0:
+                    candidate = data['origin_point']
+                    calls = 0  # old canary preparation remains additional
+                else:
+                    native = next(r for r in proof['candidate_rows'] if r['id'] == p['id'])
+                    candidate, calls = native['candidate'], native['completed_SCFs']
+                    if native['q_A'] != p['q_A']:
+                        raise ValueError('training observable identity differs')
+                if candidate is None:
+                    raise ValueError('missing central training label; no fill or replacement')
+                energy = candidate['energy_eV_cell'] - data['center_energy']
+                if abs(energy - observed_rows['points'][p['id']]['DFT_energy_change_eV_cell']) &gt; 1e-12:
+                    raise ValueError('source scalar and audited candidate energy disagree')
+                training.append(dict(id=p['id'], original_index=p['index'], q_A=p['q_A'],
+                    energy_change_eV_cell=energy, historical_face_SCFs=calls,
+                    coordinates_internal_A=candidate['coordinates_internal_A']))
+                labels[tuple(2 * i for i in p['index'])] = energy
+            beta, rank = elementary.fit_quadratic(labels)
+            if rank != 6 or beta is None:
+                raise ValueError('identified full quadratic required')
+            b, a = data['basis'], data['axes']
+            complement = np.linalg.svd(a.T, full_matrices=True)[2][2:].T
+            models = {}
+            for block in data['curvature']['blocks']:
+                raw = np.asarray(block['raw_projected_eV_A2'])[:36, :36]
+                model = condition_quadratic_energy((raw + raw.T) / 2,
+                    b.T @ data['center_gradient'], data['center_energy'], a, complement,
+                    stability_floor=0.)
+                models[f"original_H_{block['step_A']:.2f}"] = model
+            if set(models) != {'original_H_0.01', 'original_H_0.02'}:
+                raise ValueError('both original measured steps required')
+            origin_y = labels[(0, 0)]
+            origin_models = {k: elementary.interpolate((0, 0), labels, k)['value']
+                             for k in ('bilinear', 'tensor_quadratic')}
+            origin_models['refitted_total_quadratic'] = float(beta[0])
+            origin_models.update({k: m.energy_change([0., 0.]) for k, m in models.items()})
+            predictions = []
+            for target in targets():
+                q, index = target['q_A'], target['half_grid_index']
+                if any(q == p['q_A'] for p in original_specs):
+                    raise ValueError('test coordinate was already a training target')
+                parent, start = fixed_start(data, training, target)
+                values = {k: elementary.interpolate(index, labels, k)
+                          for k in ('bilinear', 'tensor_quadratic')}
+                values['refitted_total_quadratic'] = dict(
+                    value=float(elementary.features(index) @ beta), reason=None)
+                for k, model in models.items():
+                    x = model.full_displacement(q)
+                    eligible = faces.canary.geometry_guard(data['chart'], b, x)
+                    values[k] = dict(value=model.energy_change(q) if eligible else None,
+                        reason=None if eligible else 'outside_original_geometry_guard',
+                        formal_energy_change_eV_cell=model.energy_change(q),
+                        formal_internal_norm_A=float(np.linalg.norm(x)))
+                for k, value in values.items():
+                    value['origin_model_energy_change_eV_cell'] = origin_models[k]
+                    value['origin_bias_eV_cell'] = origin_models[k] - origin_y
+                    value['seen_origin_calibrated_energy_change_eV_cell'] = (
+                        None if value['value'] is None else value['value'] - origin_models[k] + origin_y)
+                    value['relative_to_seen_origin_eV_cell'] = (
+                        None if value['value'] is None else value['value'] - origin_models[k])
+                predictions.append(dict(**target, training_parent_id=parent,
+                    starting_internal_coordinates_A=start.tolist(),
+                    starting_full_coordinates_A=(b @ start).tolist(),
+                    starting_internal_norm_A=float(np.linalg.norm(start)),
+                    models=values, independent_DFT_label=None))
+            rows.append(dict(channel=channel, training=training, targets=predictions,
+                formula_units=4, raw_peak_reference_energy_eV_cell=data['center_energy'],
+                observed_origin_energy_change_eV_cell=origin_y,
+                refitted_total_quadratic_coefficients=beta.tolist(),
+                energy_interpolants_training_labels=9,
+                original_H_preparation_SCFs_per_center=148,
+                historical_face_SCFs_at_nine_training_targets=sum(r['historical_face_SCFs'] for r in training),
+                original_whole_training_face_SCFs=proof['new_SCFs_reparsed'],
+                source_native_face_sha256=proof_sha, original_input_artifact_sha256=list(faces.PINS[channel])))
+        code = sorted(set((*faces.canary.CODE, 'scripts/hfo2_G3_conditional_faces.py',
+            'vcneb/quadratic_reduction.py', CONTROL.relative_to(ROOT).as_posix(),
+            Path(__file__).resolve().relative_to(ROOT).as_posix())))
+        first = elementary.pinned(Path(__file__).with_name('forecast.json'), FIRST_SHA)
+        if rows != first['channels']:
+&gt;           raise ValueError('metadata amendment must not change any original numerical prediction or start')
+E           ValueError: metadata amendment must not change any original numerical prediction or start
+
+benchmarks\hfo2_channels\20261008\G3_local_forecast_E185_20261015\freeze.py:157: ValueError</error></testcase><testcase classname="tests.test_hfo2_local_forecast" name="test_unsafe_starts_do_not_repair_or_use_test_labels" time="0.001" /><testcase classname="tests.test_hfo2_local_forecast" name="test_model_policies_do_not_claim_physics_or_full_validation" time="0.000"><error message="failed on setup with &quot;ValueError: metadata amendment must not change any original numerical prediction or start&quot;">@pytest.fixture(scope='module')
+    def forecast():
+&gt;       return f.freeze()
+
+tests\test_hfo2_local_forecast.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def freeze():
+        source = elementary.pinned(elementary.SOURCE, elementary.PIN)
+        rows = []
+        for channel in ('T', 'preserving'):
+            data = faces.load_inputs(channel)
+            proof_name, proof_sha = elementary.PROOFS[channel]
+            proof = elementary.pinned(BASE / proof_name, proof_sha)
+            original_specs = faces.ordered_points()
+            selected = [p for p in original_specs if max(map(abs, p['index'])) &lt;= 1]
+            if len(selected) != 9:
+                raise ValueError('fixed central nine training points required')
+            observed_rows = next(r for r in source['rows'] if r['channel'] == channel
+                                 and r['reference'] == 'T_all_optical' and r['step_A'] == .01)
+            training, labels = [], {}
+            for p in selected:
+                if p['id'] == 0:
+                    candidate = data['origin_point']
+                    calls = 0  # old canary preparation remains additional
+                else:
+                    native = next(r for r in proof['candidate_rows'] if r['id'] == p['id'])
+                    candidate, calls = native['candidate'], native['completed_SCFs']
+                    if native['q_A'] != p['q_A']:
+                        raise ValueError('training observable identity differs')
+                if candidate is None:
+                    raise ValueError('missing central training label; no fill or replacement')
+                energy = candidate['energy_eV_cell'] - data['center_energy']
+                if abs(energy - observed_rows['points'][p['id']]['DFT_energy_change_eV_cell']) &gt; 1e-12:
+                    raise ValueError('source scalar and audited candidate energy disagree')
+                training.append(dict(id=p['id'], original_index=p['index'], q_A=p['q_A'],
+                    energy_change_eV_cell=energy, historical_face_SCFs=calls,
+                    coordinates_internal_A=candidate['coordinates_internal_A']))
+                labels[tuple(2 * i for i in p['index'])] = energy
+            beta, rank = elementary.fit_quadratic(labels)
+            if rank != 6 or beta is None:
+                raise ValueError('identified full quadratic required')
+            b, a = data['basis'], data['axes']
+            complement = np.linalg.svd(a.T, full_matrices=True)[2][2:].T
+            models = {}
+            for block in data['curvature']['blocks']:
+                raw = np.asarray(block['raw_projected_eV_A2'])[:36, :36]
+                model = condition_quadratic_energy((raw + raw.T) / 2,
+                    b.T @ data['center_gradient'], data['center_energy'], a, complement,
+                    stability_floor=0.)
+                models[f"original_H_{block['step_A']:.2f}"] = model
+            if set(models) != {'original_H_0.01', 'original_H_0.02'}:
+                raise ValueError('both original measured steps required')
+            origin_y = labels[(0, 0)]
+            origin_models = {k: elementary.interpolate((0, 0), labels, k)['value']
+                             for k in ('bilinear', 'tensor_quadratic')}
+            origin_models['refitted_total_quadratic'] = float(beta[0])
+            origin_models.update({k: m.energy_change([0., 0.]) for k, m in models.items()})
+            predictions = []
+            for target in targets():
+                q, index = target['q_A'], target['half_grid_index']
+                if any(q == p['q_A'] for p in original_specs):
+                    raise ValueError('test coordinate was already a training target')
+                parent, start = fixed_start(data, training, target)
+                values = {k: elementary.interpolate(index, labels, k)
+                          for k in ('bilinear', 'tensor_quadratic')}
+                values['refitted_total_quadratic'] = dict(
+                    value=float(elementary.features(index) @ beta), reason=None)
+                for k, model in models.items():
+                    x = model.full_displacement(q)
+                    eligible = faces.canary.geometry_guard(data['chart'], b, x)
+                    values[k] = dict(value=model.energy_change(q) if eligible else None,
+                        reason=None if eligible else 'outside_original_geometry_guard',
+                        formal_energy_change_eV_cell=model.energy_change(q),
+                        formal_internal_norm_A=float(np.linalg.norm(x)))
+                for k, value in values.items():
+                    value['origin_model_energy_change_eV_cell'] = origin_models[k]
+                    value['origin_bias_eV_cell'] = origin_models[k] - origin_y
+                    value['seen_origin_calibrated_energy_change_eV_cell'] = (
+                        None if value['value'] is None else value['value'] - origin_models[k] + origin_y)
+                    value['relative_to_seen_origin_eV_cell'] = (
+                        None if value['value'] is None else value['value'] - origin_models[k])
+                predictions.append(dict(**target, training_parent_id=parent,
+                    starting_internal_coordinates_A=start.tolist(),
+                    starting_full_coordinates_A=(b @ start).tolist(),
+                    starting_internal_norm_A=float(np.linalg.norm(start)),
+                    models=values, independent_DFT_label=None))
+            rows.append(dict(channel=channel, training=training, targets=predictions,
+                formula_units=4, raw_peak_reference_energy_eV_cell=data['center_energy'],
+                observed_origin_energy_change_eV_cell=origin_y,
+                refitted_total_quadratic_coefficients=beta.tolist(),
+                energy_interpolants_training_labels=9,
+                original_H_preparation_SCFs_per_center=148,
+                historical_face_SCFs_at_nine_training_targets=sum(r['historical_face_SCFs'] for r in training),
+                original_whole_training_face_SCFs=proof['new_SCFs_reparsed'],
+                source_native_face_sha256=proof_sha, original_input_artifact_sha256=list(faces.PINS[channel])))
+        code = sorted(set((*faces.canary.CODE, 'scripts/hfo2_G3_conditional_faces.py',
+            'vcneb/quadratic_reduction.py', CONTROL.relative_to(ROOT).as_posix(),
+            Path(__file__).resolve().relative_to(ROOT).as_posix())))
+        first = elementary.pinned(Path(__file__).with_name('forecast.json'), FIRST_SHA)
+        if rows != first['channels']:
+&gt;           raise ValueError('metadata amendment must not change any original numerical prediction or start')
+E           ValueError: metadata amendment must not change any original numerical prediction or start
+
+benchmarks\hfo2_channels\20261008\G3_local_forecast_E185_20261015\freeze.py:157: ValueError</error></testcase><testcase classname="tests.test_hfo2_local_forecast" name="test_frozen_report_matches_computation" time="0.000"><error message="failed on setup with &quot;ValueError: metadata amendment must not change any original numerical prediction or start&quot;">@pytest.fixture(scope='module')
+    def forecast():
+&gt;       return f.freeze()
+
+tests\test_hfo2_local_forecast.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def freeze():
+        source = elementary.pinned(elementary.SOURCE, elementary.PIN)
+        rows = []
+        for channel in ('T', 'preserving'):
+            data = faces.load_inputs(channel)
+            proof_name, proof_sha = elementary.PROOFS[channel]
+            proof = elementary.pinned(BASE / proof_name, proof_sha)
+            original_specs = faces.ordered_points()
+            selected = [p for p in original_specs if max(map(abs, p['index'])) &lt;= 1]
+            if len(selected) != 9:
+                raise ValueError('fixed central nine training points required')
+            observed_rows = next(r for r in source['rows'] if r['channel'] == channel
+                                 and r['reference'] == 'T_all_optical' and r['step_A'] == .01)
+            training, labels = [], {}
+            for p in selected:
+                if p['id'] == 0:
+                    candidate = data['origin_point']
+                    calls = 0  # old canary preparation remains additional
+                else:
+                    native = next(r for r in proof['candidate_rows'] if r['id'] == p['id'])
+                    candidate, calls = native['candidate'], native['completed_SCFs']
+                    if native['q_A'] != p['q_A']:
+                        raise ValueError('training observable identity differs')
+                if candidate is None:
+                    raise ValueError('missing central training label; no fill or replacement')
+                energy = candidate['energy_eV_cell'] - data['center_energy']
+                if abs(energy - observed_rows['points'][p['id']]['DFT_energy_change_eV_cell']) &gt; 1e-12:
+                    raise ValueError('source scalar and audited candidate energy disagree')
+                training.append(dict(id=p['id'], original_index=p['index'], q_A=p['q_A'],
+                    energy_change_eV_cell=energy, historical_face_SCFs=calls,
+                    coordinates_internal_A=candidate['coordinates_internal_A']))
+                labels[tuple(2 * i for i in p['index'])] = energy
+            beta, rank = elementary.fit_quadratic(labels)
+            if rank != 6 or beta is None:
+                raise ValueError('identified full quadratic required')
+            b, a = data['basis'], data['axes']
+            complement = np.linalg.svd(a.T, full_matrices=True)[2][2:].T
+            models = {}
+            for block in data['curvature']['blocks']:
+                raw = np.asarray(block['raw_projected_eV_A2'])[:36, :36]
+                model = condition_quadratic_energy((raw + raw.T) / 2,
+                    b.T @ data['center_gradient'], data['center_energy'], a, complement,
+                    stability_floor=0.)
+                models[f"original_H_{block['step_A']:.2f}"] = model
+            if set(models) != {'original_H_0.01', 'original_H_0.02'}:
+                raise ValueError('both original measured steps required')
+            origin_y = labels[(0, 0)]
+            origin_models = {k: elementary.interpolate((0, 0), labels, k)['value']
+                             for k in ('bilinear', 'tensor_quadratic')}
+            origin_models['refitted_total_quadratic'] = float(beta[0])
+            origin_models.update({k: m.energy_change([0., 0.]) for k, m in models.items()})
+            predictions = []
+            for target in targets():
+                q, index = target['q_A'], target['half_grid_index']
+                if any(q == p['q_A'] for p in original_specs):
+                    raise ValueError('test coordinate was already a training target')
+                parent, start = fixed_start(data, training, target)
+                values = {k: elementary.interpolate(index, labels, k)
+                          for k in ('bilinear', 'tensor_quadratic')}
+                values['refitted_total_quadratic'] = dict(
+                    value=float(elementary.features(index) @ beta), reason=None)
+                for k, model in models.items():
+                    x = model.full_displacement(q)
+                    eligible = faces.canary.geometry_guard(data['chart'], b, x)
+                    values[k] = dict(value=model.energy_change(q) if eligible else None,
+                        reason=None if eligible else 'outside_original_geometry_guard',
+                        formal_energy_change_eV_cell=model.energy_change(q),
+                        formal_internal_norm_A=float(np.linalg.norm(x)))
+                for k, value in values.items():
+                    value['origin_model_energy_change_eV_cell'] = origin_models[k]
+                    value['origin_bias_eV_cell'] = origin_models[k] - origin_y
+                    value['seen_origin_calibrated_energy_change_eV_cell'] = (
+                        None if value['value'] is None else value['value'] - origin_models[k] + origin_y)
+                    value['relative_to_seen_origin_eV_cell'] = (
+                        None if value['value'] is None else value['value'] - origin_models[k])
+                predictions.append(dict(**target, training_parent_id=parent,
+                    starting_internal_coordinates_A=start.tolist(),
+                    starting_full_coordinates_A=(b @ start).tolist(),
+                    starting_internal_norm_A=float(np.linalg.norm(start)),
+                    models=values, independent_DFT_label=None))
+            rows.append(dict(channel=channel, training=training, targets=predictions,
+                formula_units=4, raw_peak_reference_energy_eV_cell=data['center_energy'],
+                observed_origin_energy_change_eV_cell=origin_y,
+                refitted_total_quadratic_coefficients=beta.tolist(),
+                energy_interpolants_training_labels=9,
+                original_H_preparation_SCFs_per_center=148,
+                historical_face_SCFs_at_nine_training_targets=sum(r['historical_face_SCFs'] for r in training),
+                original_whole_training_face_SCFs=proof['new_SCFs_reparsed'],
+                source_native_face_sha256=proof_sha, original_input_artifact_sha256=list(faces.PINS[channel])))
+        code = sorted(set((*faces.canary.CODE, 'scripts/hfo2_G3_conditional_faces.py',
+            'vcneb/quadratic_reduction.py', CONTROL.relative_to(ROOT).as_posix(),
+            Path(__file__).resolve().relative_to(ROOT).as_posix())))
+        first = elementary.pinned(Path(__file__).with_name('forecast.json'), FIRST_SHA)
+        if rows != first['channels']:
+&gt;           raise ValueError('metadata amendment must not change any original numerical prediction or start')
+E           ValueError: metadata amendment must not change any original numerical prediction or start
+
+benchmarks\hfo2_channels\20261008\G3_local_forecast_E185_20261015\freeze.py:157: ValueError</error></testcase><testcase classname="tests.test_hfo2_local_forecast" name="test_original_numbers_and_policies_remain_unchanged" time="0.000"><error message="failed on setup with &quot;ValueError: metadata amendment must not change any original numerical prediction or start&quot;">@pytest.fixture(scope='module')
+    def forecast():
+&gt;       return f.freeze()
+
+tests\test_hfo2_local_forecast.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def freeze():
+        source = elementary.pinned(elementary.SOURCE, elementary.PIN)
+        rows = []
+        for channel in ('T', 'preserving'):
+            data = faces.load_inputs(channel)
+            proof_name, proof_sha = elementary.PROOFS[channel]
+            proof = elementary.pinned(BASE / proof_name, proof_sha)
+            original_specs = faces.ordered_points()
+            selected = [p for p in original_specs if max(map(abs, p['index'])) &lt;= 1]
+            if len(selected) != 9:
+                raise ValueError('fixed central nine training points required')
+            observed_rows = next(r for r in source['rows'] if r['channel'] == channel
+                                 and r['reference'] == 'T_all_optical' and r['step_A'] == .01)
+            training, labels = [], {}
+            for p in selected:
+                if p['id'] == 0:
+                    candidate = data['origin_point']
+                    calls = 0  # old canary preparation remains additional
+                else:
+                    native = next(r for r in proof['candidate_rows'] if r['id'] == p['id'])
+                    candidate, calls = native['candidate'], native['completed_SCFs']
+                    if native['q_A'] != p['q_A']:
+                        raise ValueError('training observable identity differs')
+                if candidate is None:
+                    raise ValueError('missing central training label; no fill or replacement')
+                energy = candidate['energy_eV_cell'] - data['center_energy']
+                if abs(energy - observed_rows['points'][p['id']]['DFT_energy_change_eV_cell']) &gt; 1e-12:
+                    raise ValueError('source scalar and audited candidate energy disagree')
+                training.append(dict(id=p['id'], original_index=p['index'], q_A=p['q_A'],
+                    energy_change_eV_cell=energy, historical_face_SCFs=calls,
+                    coordinates_internal_A=candidate['coordinates_internal_A']))
+                labels[tuple(2 * i for i in p['index'])] = energy
+            beta, rank = elementary.fit_quadratic(labels)
+            if rank != 6 or beta is None:
+                raise ValueError('identified full quadratic required')
+            b, a = data['basis'], data['axes']
+            complement = np.linalg.svd(a.T, full_matrices=True)[2][2:].T
+            models = {}
+            for block in data['curvature']['blocks']:
+                raw = np.asarray(block['raw_projected_eV_A2'])[:36, :36]
+                model = condition_quadratic_energy((raw + raw.T) / 2,
+                    b.T @ data['center_gradient'], data['center_energy'], a, complement,
+                    stability_floor=0.)
+                models[f"original_H_{block['step_A']:.2f}"] = model
+            if set(models) != {'original_H_0.01', 'original_H_0.02'}:
+                raise ValueError('both original measured steps required')
+            origin_y = labels[(0, 0)]
+            origin_models = {k: elementary.interpolate((0, 0), labels, k)['value']
+                             for k in ('bilinear', 'tensor_quadratic')}
+            origin_models['refitted_total_quadratic'] = float(beta[0])
+            origin_models.update({k: m.energy_change([0., 0.]) for k, m in models.items()})
+            predictions = []
+            for target in targets():
+                q, index = target['q_A'], target['half_grid_index']
+                if any(q == p['q_A'] for p in original_specs):
+                    raise ValueError('test coordinate was already a training target')
+                parent, start = fixed_start(data, training, target)
+                values = {k: elementary.interpolate(index, labels, k)
+                          for k in ('bilinear', 'tensor_quadratic')}
+                values['refitted_total_quadratic'] = dict(
+                    value=float(elementary.features(index) @ beta), reason=None)
+                for k, model in models.items():
+                    x = model.full_displacement(q)
+                    eligible = faces.canary.geometry_guard(data['chart'], b, x)
+                    values[k] = dict(value=model.energy_change(q) if eligible else None,
+                        reason=None if eligible else 'outside_original_geometry_guard',
+                        formal_energy_change_eV_cell=model.energy_change(q),
+                        formal_internal_norm_A=float(np.linalg.norm(x)))
+                for k, value in values.items():
+                    value['origin_model_energy_change_eV_cell'] = origin_models[k]
+                    value['origin_bias_eV_cell'] = origin_models[k] - origin_y
+                    value['seen_origin_calibrated_energy_change_eV_cell'] = (
+                        None if value['value'] is None else value['value'] - origin_models[k] + origin_y)
+                    value['relative_to_seen_origin_eV_cell'] = (
+                        None if value['value'] is None else value['value'] - origin_models[k])
+                predictions.append(dict(**target, training_parent_id=parent,
+                    starting_internal_coordinates_A=start.tolist(),
+                    starting_full_coordinates_A=(b @ start).tolist(),
+                    starting_internal_norm_A=float(np.linalg.norm(start)),
+                    models=values, independent_DFT_label=None))
+            rows.append(dict(channel=channel, training=training, targets=predictions,
+                formula_units=4, raw_peak_reference_energy_eV_cell=data['center_energy'],
+                observed_origin_energy_change_eV_cell=origin_y,
+                refitted_total_quadratic_coefficients=beta.tolist(),
+                energy_interpolants_training_labels=9,
+                original_H_preparation_SCFs_per_center=148,
+                historical_face_SCFs_at_nine_training_targets=sum(r['historical_face_SCFs'] for r in training),
+                original_whole_training_face_SCFs=proof['new_SCFs_reparsed'],
+                source_native_face_sha256=proof_sha, original_input_artifact_sha256=list(faces.PINS[channel])))
+        code = sorted(set((*faces.canary.CODE, 'scripts/hfo2_G3_conditional_faces.py',
+            'vcneb/quadratic_reduction.py', CONTROL.relative_to(ROOT).as_posix(),
+            Path(__file__).resolve().relative_to(ROOT).as_posix())))
+        first = elementary.pinned(Path(__file__).with_name('forecast.json'), FIRST_SHA)
+        if rows != first['channels']:
+&gt;           raise ValueError('metadata amendment must not change any original numerical prediction or start')
+E           ValueError: metadata amendment must not change any original numerical prediction or start
+
+benchmarks\hfo2_channels\20261008\G3_local_forecast_E185_20261015\freeze.py:157: ValueError</error></testcase><testcase classname="tests.test_hfo2_local_forecast" name="test_only_text_code_hash_normalizes_windows_line_endings" time="0.007" /><testcase classname="tests.test_hfo2_reference_forecast" name="test_all_seven_references_frames_steps_and_locked_targets_retained" time="0.003" /><testcase classname="tests.test_hfo2_reference_forecast" name="test_coverage_and_empty_common_set_do_not_imply_bad_accuracy" time="0.000" /><testcase classname="tests.test_hfo2_reference_forecast" name="test_outside_guard_values_are_diagnostics_and_never_filled" time="0.001" /><testcase classname="tests.test_hfo2_reference_forecast" name="test_full_reference_reproduces_already_locked_complete_space_predictions" time="0.002" /><testcase classname="tests.test_hfo2_reference_forecast" name="test_all224_formal_energies_and_norm_squared_match_independent_old_scalar_polynomials" time="0.009" /><testcase classname="tests.test_hfo2_reference_forecast" name="test_scoring_budget_information_and_novelty_boundaries_are_preserved" time="0.002" /><testcase classname="tests.test_hfo2_reference_forecast" name="test_private_raw_and_transformed_vectors_are_not_in_report" time="0.001" /><testcase classname="tests.test_hfo2_reference_forecast" name="test_existing_output_rejected_before_private_input_access" time="0.004" /><testcase classname="tests.test_hfo2_reference_forecast" name="test_private_root_cannot_be_output_destination" time="0.004" /><testcase classname="tests.test_hfo2_released_soft_direction" name="test_actual_two_steps_track_the_same_negative_direction" time="0.457" /><testcase classname="tests.test_hfo2_released_soft_direction" name="test_species_weights_are_coordinate_weights_not_energy_partition" time="0.000" /><testcase classname="tests.test_hfo2_released_soft_direction" name="test_negative_curvature_remains_in_the_fixed_cell_restriction" time="0.000" /><testcase classname="tests.test_hfo2_released_soft_direction" name="test_formal_promotion_is_not_a_new_stable_surface_or_full_index" time="0.000" /><testcase classname="tests.test_hfo2_released_soft_direction" name="test_analysis_does_not_reserve_new_points_or_unlock_old_tests" time="0.000" /><testcase classname="tests.test_hfo2_complete_released_curvature" name="test_normal_whole_job_requires_both_complete_native_cohorts" time="0.022" /><testcase classname="tests.test_hfo2_complete_released_curvature" name="test_complete_read_preserves_every_previously_audited_source" time="0.001" /><testcase classname="tests.test_hfo2_complete_released_curvature" name="test_exact_original_136_probe_order_and_literal_anchors[T]" time="0.005" /><testcase classname="tests.test_hfo2_complete_released_curvature" name="test_exact_original_136_probe_order_and_literal_anchors[preserving]" time="0.005" /><testcase classname="tests.test_hfo2_complete_released_curvature" name="test_full_native_gradients_reconstruct_both_unrepaired_actions[T]" time="0.008" /><testcase classname="tests.test_hfo2_complete_released_curvature" name="test_full_native_gradients_reconstruct_both_unrepaired_actions[preserving]" time="0.007" /><testcase classname="tests.test_hfo2_complete_released_curvature" name="test_both_steps_keep_observed_signs_without_selection[T-minima0-0-0.054468926313563405]" time="0.001" /><testcase classname="tests.test_hfo2_complete_released_curvature" name="test_both_steps_keep_observed_signs_without_selection[preserving-minima1-1-0.31310777342198165]" time="0.001" /><testcase classname="tests.test_hfo2_complete_released_curvature" name="test_negative_preserving_spectrum_cannot_be_clipped_in_summary" time="0.011" /><testcase classname="tests.test_hfo2_complete_released_curvature" name="test_failed_necessary_sign_condition_is_not_repaired_by_gradient_target" time="0.000" /><testcase classname="tests.test_hfo2_complete_released_curvature" name="test_completed_cost_separates_two_cohorts_allocation_and_prior_preparation" time="0.001" /></testsuite></testsuites>

@@ -5557,3 +5557,42 @@ Five user-modified files untouched. No new DFT/scheduler write/CI/install/
 release/monitor/private-author-array access. Await author decision on a
 separate pre-label third-coordinate protocol; do not retroactively relabel
 old test success or start new DFT without that decision. Full goal incomplete.
+
+### E258 2026-10-17 — PROGRESS: original T eight-point independent cohort running
+
+Review found a safe original-protocol action independent of the pending
+preserving third-coordinate decision. Both T raw R34 steps pass the
+necessary sign screen after complete B3/272-SCF native audits. Freeze and
+execute all8 original T targets, literal starts and all five E185 plus14
+E188 reference/step rows unchanged. Preserving8 remain refused/uncomputed,
+not passes; overall denominator16 retained. No new Q/center/branch/strain,
+training structure, Hessian, NEB or physical-input change. T34/P39 each81;
+12attempts/point,96 for this cohort within original192, no retry/rollover.
+
+46local/46independent related checks,5modules10new, zero final failure/error/
+skip; not a full-suite run. First expanded38pass/8setup errors trace to
+OpenBLAS24-thread last-bit regeneration (178 fields,maxnumeric8.05e-16),
+all original source hashes identical. Original single-thread process setting
+restores exact old forecasts; no changed algorithm/tolerance/data. Raw first
+XML retained. First mistyped test-file command collected0, retained in C.
+Tree e1429e666ab99391642c3b9479e828c9750306d2/archive833ecd6841cb851a4c410ed57ce15caf929272a606340627314a4681ab906a1a.
+Independent config byte-identical d78a39c6; bundleef491d96; native preflight
+c789ff38 checks380 original runtime files/binary/six assets/cached origin
+and8 inert decks, no DFT. Old/live source immutable; scratch on C:.
+
+Two disjoint4point shards,28913247/28913248, submitted held, exact one-node
+NumNodes1-1/32CPU/4h/hfacnormal01 verified, accepted and released on same IDs.
+01:17:12 both RUNNING/node3/99s, fresh output directories,0 completed point/
+native-SCF/failure records yet. Startup is not actual material validation.
+At prior28SCFs/8centralTpoints and roughly2min/SCF, similar work suggests
+about30--60min for parallel shards, not a guaranteed ETA; hard caps remain.
+
+No private author arrays/+.005, CI/install/release/monitor or user-file edit.
+Original2D preserving refusal and forecasts stay intact. Main article stays
+the E257 measured-result version until independent data are audited/scored.
+The full research goal and preserving protocol decision remain incomplete.
+
+01:19:35 read-only first-record metadata: each shard completed one native
+SCF, genuine32MPI and identical six input hashes;118.902510/118.933525s.
+This is an actual launcher/timing observation, not the final native test
+audit or a successful prediction. No models altered using those records.
