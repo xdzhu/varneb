@@ -5457,3 +5457,32 @@ schedulerwrite/CI/install/release/monitor/privatearrayorholdoutaccess.
 Next: inspect failed direction/resolution fromexistingdata before any
 separatelyversionedtrainingrevision; do not backfill originalforecastsuccess.
 Evidence:G3_released_complete_E254_20261016. Fullgoalactive/incomplete.
+
+### E255 2026-10-16 — PROGRESS: locate the omitted oxygen direction using existing data
+
+The first-step measured R34 eigenvector uses a deterministic sign/tie rule,
+not step or label selection. Two-step squared overlap:0.999997888732;
+coordinate weights O:0.999990071669, cell:0.000009038942, not energy/phonon
+fractions or an irrep. Original Q1/Q2 overlap is below2e-17. At the same
+joint candidate, fixed-cell restriction minima are -0.022058208479 and
+-0.024070008618eV/A2. Freezing the cell alone does not remove the raw negative
+direction. Its absolute gradient is3.35e-7eV/A: a force stopping test alone
+cannot supply curvature admission.
+
+Formal retention as a third coordinate leaves33D block minima
+0.384877896966/0.375093159739. This is algebra at one point, not a new3D
+nonlinear PES, full retained Hessian/index/TS, resolved physical instability
+or independent gain. Original2D sign refusal remains; no clipped/inverted
+negative block or replacement branch/test labels. The radius-only interval
+is not a full geometry/DFT admission check.
+
+79 local/79 independent related checks, six modules/five new, zero failures,
+errors or skips; not the full suite. Independent CLI output is byte-identical,
+analysis SHA1e5dcd01. Tree1516e653dfb643c12d8debdf6c687024ccdbdb24,
+archive075e531b5db7749233c341c569ae5808c88073688bd36976fc5deb1d8577a53c;
+XML e6d3883f/f341767e retained separately. Existing E254 raw data/records,
+formal sections1--7, prior history, v1/v2, paper and five user hashes remain.
+No new DFT, inputs, scheduler write, reservation, private-array or holdout
+access, CI, install, release or monitor. T34/81,P35/81; independent16 uncomputed.
+Next finite physical-direction verification needs its own pre-label scope,
+source and budget; no backfilled original prediction success. Full goal active.

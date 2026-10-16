@@ -92,3 +92,58 @@ unchanged. Scratch and independent exports are on C:, not E:; the five
 pre-existing user file hashes are preserved. The full goal remains active
 and incomplete: this failed local admission is not a substitute for its
 required independent prediction evidence.
+
+## E255: what the refused direction actually contains
+
+The offline `soft_direction_analysis.py` consumes the unchanged complete
+native report and E181 configuration. It selects the **first-step** lowest
+eigenvector, fixes its sign by a declared component/tie rule and evaluates
+the same direction against both original matrices. No target label or
+private reference array selects the direction.
+
+- The two soft eigenvectors have squared overlap0.999997888732.
+- In the registered length-coordinate metric, O/Hf/open-cell squared
+  weights are0.999990071669/0.000000889390/0.000009038942. These are not
+  energy fractions, mass-weighted phonon weights or an assigned irrep.
+- Its component along the original Q1/Q2 plane is below2e-17; it is an
+  omitted direction, not a relabeling of either displayed coordinate.
+- At the **same joint candidate**, restricting the measured Hessian to
+  the31-dimensional fixed-cell subspace still gives minima
+  -0.022058208479/-0.024070008618eV/A^2. This is a matrix restriction,
+  not a new atomic-only relaxation or a whole-path mechanism result.
+- The absolute gradient along the soft direction is3.35e-7eV/A. A small
+  first derivative does not exclude negative curvature; tightening a force
+  stopping criterion alone would not supply the missing curvature test.
+
+If that first-step direction is formally retained as a third coordinate,
+the **remaining measured33-dimensional block at the same point** has raw
+minima0.384877896966/0.375093159739eV/A^2. This motivates an explicit-extra-
+coordinate investigation, not a completed3D nonlinear surface. The new
+retained Hessian, full stationary index, physical resolution and branch
+away from this point are not certified. Original2D test admission remains
+refused; no replacement branch silently fills its predictions.
+
+`soft_direction.json` retains the full vectors, both matrices' diagnostics,
+atomic/cell restrictions and a radius-only analytic interval. The latter
+is not a minimum-distance/geometry/DFT admission check. Its SHA256 is
+1e5dcd01ec5c7731646c9e1f6b0f230fc8bcf45bbcad5a785125534a0d2ee065.
+
+```text
+python benchmarks/hfo2_channels/20261008/G3_released_complete_E254_20261016/soft_direction_analysis.py --output FRESH_SOFT_DIRECTION.json
+python -m pytest -q tests/test_hfo2_released_soft_direction.py
+```
+
+This step creates no DFT inputs, allocation, training reservation or test
+label. Modeling commitments remainT34/81,preserving35/81; original16local
+tests and the physical+0.005 condition remain uncomputed/sealed. Next
+finite training probes, if admitted, need a separate pre-label plan and
+explicit budget accounting, not a retrospective reinterpretation of this
+algebra as independent physical validation.
+
+E255 verification:79 local/79 independent related checks across six modules,
+five new; zero failures/errors/skips, not a new full-suite run. Independent
+CLI output matches soft_direction.json bytewise. Tested tree
+1516e653dfb643c12d8debdf6c687024ccdbdb24, archive SHA256
+075e531b5db7749233c341c569ae5808c88073688bd36976fc5deb1d8577a53c.
+The separate soft-local-tests.xml/soft-independent-tests.xml and
+soft_validation.json preserve E255 without replacing E254's records.
