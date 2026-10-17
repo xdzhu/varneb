@@ -5,6 +5,12 @@ The execution plan and finite calculation matrix are in
 The existing software manuscript remains in `../VARNEB_CPC`; neither its title
 nor its numerical claims are silently promoted to a new journal.
 
+Status updated through E259 on 2026-10-17. The
+[paper-completion blueprint](../../docs/HFO2_PAPER_BLUEPRINT_2026-10-17.md)
+separates completed material observations from the proposed remaining tests.
+It retains the original prediction protocols and the author-approved four-part
+Results structure; its proposed third-coordinate study is not yet authorized.
+
 ## Scientific thesis to test
 
 Can mechanical boundary conditions decouple homogeneous polarization switching
@@ -20,10 +26,10 @@ field or a domain-wall nucleation barrier.
 
 | Candidate claim | Required measurement | Null/negative outcome | Status |
 |---|---|---|---|
-| Boundary conditions change switching/escape selectivity | Same PO+, matched Hamiltonian, several channels and error-resolved barrier differences | All barriers move together, or differences below uncertainty | Unmeasured |
-| The change is not explained by well shifts alone | Endpoint and transition-region responses, common reference, force–energy consistency | Endpoint-only model predicts equally well | Unmeasured |
-| Stable orthogonal relaxation enables useful reduced predictions | Curvature resolution and stable eliminated block; independent DFT holdouts | Extra unstable directions or branch crossings invalidate one chart | Analytic foundation and8-point fixed-cell T atomic pilot pass; joint-cell/channel prediction pending |
-| Adaptive mode/branch information improves efficiency | Equal seeds/contracts, DFT-call and core-hour accounting, mechanism agreement | Faster iteration changes pathway or fails held-out prediction | Unmeasured |
+| Boundary conditions change switching/escape selectivity | Same PO+, matched Hamiltonian, several channels and error-resolved barrier differences | All barriers move together, or differences below uncertainty | Eight clamped training bands complete; sampled selectivity change is unfavorable, -16.249222 meV/HfO2; error-resolved/global ordering not established |
+| The change is not explained by well shifts alone | Endpoint and transition-region responses, common reference, force–energy consistency | Endpoint-only model predicts equally well | Seen training responses differ from both registered well-shift nulls; independent response test remains pending |
+| Stable orthogonal relaxation enables useful reduced predictions | Curvature resolution and stable eliminated block; independent DFT holdouts | Extra unstable directions or branch crossings invalidate one chart | Original joint T8 completed and all19 arms scored; all five standard aligned maxima below0.257meV/HfO2, without a new-method advantage; preserving2D admission refused, preserving8 unseen |
+| Adaptive mode/branch information improves efficiency | Equal seeds/contracts, DFT-call and core-hour accounting, mechanism agreement | Faster iteration changes pathway or fails held-out prediction | No demonstrated full-cost gain for this response method; prior software-optimizer benchmarks are a separate result |
 
 The Schur complement and envelope theorem are established mathematics. Neither
 is claimed as a newly invented theory. Strain effects, trilinear coupling,
