@@ -5894,3 +5894,34 @@ errors, not final editorial sign-off. Physical+.005/private bank remains
 sealed. Its missing error-certified final selection versus a new sampled-peak
 protocol still requires author direction; no source gate is silently weakened.
 This local success is not the two-path physical forecast or completed goal.
+
+## E268 — delegated design decision, audited endpoints, prospective freeze (Oct18)
+
+The author explicitly delegated tactical/protocol choices. Researcher selected
+the separately registered finite sampled-peak response test; no additional
+author decision is pending. Original error-certified selector refusals remain.
+Registration77d1a7ca preceded all+.005 geometry. Endpoints28938150/28938151
+completed0:0 with3/3/5native SCFs and unchanged100Ry/full10auDZP/six hashes/
+Gamma2x2x2/P0/E0/native32MPI. All89portable raw files replay; PO+/PO-/T retain
+29/29/137 at three tolerances, correct polar-displacement signs and preserving
+pattern. Physical endpoint forces and open tractions pass. These are identity
+screens, not full Hessian or polarization certificates. Native-call cost
+13.703824core-hours; allocation cost15.022222core-hours; all prior costs extra.
+
+Endpoint feature0441a5e7e63ec86a68807068ea21db6901f4a762d740592473d91bf15bbd8f23.
+Complete forecast1dd8dc4cacb22b073a6402acb38ffb956b3e0dd3738a85db18fab2afb279a88b
+was frozen and pushed(a8dcca7d) before any target interior geometry/SCF.
+Six numerical B0/B1 records and132 explicit unavailable-transfer records
+are retained. No local model is credited with physical-strain transfer;
+no missing value becomes zero error. Two channel representatives are fixed
+by zero-strain sampled peaks, not global-minimum or TS certification.
+The two9-image warm starts preserve source ordered lift and deform only to
+the prescribed mechanical boundary/new endpoints. No original cache is used
+at changed geometry. New exact endpoint caches avoid repeated endpoint SCFs.
+
+Independent162related tests pass, six modules,0failures/errors/skips; rawXML
+and exact staged-tree/supplement pin in case README. Fullsuite not claimed.
+Raw native whitespace remains unchanged. The two finite physical path tests,
+point-score/cost audit and four-part manuscript decision are the remaining
+closure; no extra training/model fit/material/curvature campaign is opened.
+Private Cmma source bank remains unopened. Whole research goal not complete.
