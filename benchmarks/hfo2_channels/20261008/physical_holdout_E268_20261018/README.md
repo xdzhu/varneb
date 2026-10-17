@@ -29,3 +29,23 @@ invocation issue, not a DFT failure or changed scientific protocol.
 
 At registration: target endpoint/path DFT calls0. Deployment and actual
 results will be recorded below with immutable handles and hashes.
+
+## Endpoint deployment
+
+After registration commit `77d1a7ca`, three +.005 endpoint-only seeds were
+prepared from the audited zero-strain wells. No old SCF result was transferred
+to strained geometry. Actual HF preflight checked all six original input
+hashes, the ABACUS binary, all375 exported runtime files, and all three native
+STRU roundtrips. No target interior was generated/evaluated.
+
+Bundle pin: `689a26fed0f47dede6d7c2f2230d3181fe5a16bbc5eee0356da6f033d89987cf`.
+Source archive: `8e1457e90827696c6d976a1dbca46fb43a5421acda1fdb41d7bd763bf99a00fc`.
+Remote root: `/public/home/iai806/abacus/agent-runs/20261018-varneb-physical-E268-r1`.
+Archive contains the375 existing runtime files from `77d1a7ca`; the frozen
+endpoint worker is in the separate bundle. No running source is overwritten.
+
+57 related local checks passed, including real seed-boundary/hash checks,
+numeric controls and scheduler-resource refusal checks. A preceding test
+command named a nonexistent module and ran zero tests; the corrected command
+is the recorded57, not an additional test success. The native preflight is
+actual HF evidence, not a local synthetic DFT validation.
