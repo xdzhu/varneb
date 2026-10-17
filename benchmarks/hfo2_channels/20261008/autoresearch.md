@@ -5823,3 +5823,25 @@ archive94986342e3ccbadec1c3ee137dcff1241c494afc8b7b88bb9219d1fab7413813.
 All rawXML/data/hash scope in E265validation.json. Actual P8 source/input
 deployment preflight remains before DFT; final physical B0--B5 strain/barrier
 freeze is still incomplete. All old preparation costs remain additional.
+
+## E266 — frozen P8 actually launched; native prefix verified (Oct18)
+
+Prepared source1ef27c1c was pushed before held submission. Exact handles
+28935677/28935679 were accepted and released once, started01:56:11/12CST
+on node13/node40, hfacnormal01/one node/32CPUs/four hours each. Original
+four-point shards, twelve-attempt caps and all physical inputs are unchanged.
+The native startup audit reparses two completed SCFs with full E/F/stress,
+genuine MPI32 and exact six-input hashes,139.7664/123.5693seconds. Audit
+a215c09e8f0ae40591a75512f8ea66106e333a0d9795ebd4c0728b62c1c131bf
+is a prefix only; no complete-cohort/stability/accuracy claim follows.
+
+Read-only external postprocessor requires both normal terminal allocations
+and every native attempt before all23frozen-arm scoring. Refusals/missing
+labels/denominator8, raw/aligned errors, common subsets and costs remain.
+No fit, solver, source step, calibration or training change can use P8labels.
+37related checks pass each locally/independently, four modules/seven new,
+no final failures/errors/skips; not fullsuite. Independent verification uses
+the original full-source archive plus exact two-file Git supplement; see
+E266validation_execution.json and rawXML for bytes/scope. P8now runs;
+physical+.005/private arrays remain sealed. No new material, Hessian,
+CI, electronic setting, retry or rollover. Goal remains active/incomplete.

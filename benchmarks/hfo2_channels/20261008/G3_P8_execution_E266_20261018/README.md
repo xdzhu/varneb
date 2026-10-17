@@ -71,3 +71,37 @@ modules/13new checks, no failures/errors/skips; not fullsuite. The full-source
 export and all XML/config/native-input hashes are recorded in
 [validation_preparation.json](validation_preparation.json). These checks
 precede submission and do not claim a completed independent test.
+
+## Actual deployment and native startup (E266, Oct18)
+
+Prepared source was pushed as `1ef27c1c` before submission. Original handles
+`28935677`/`28935679` were submitted held, verified at one node/32CPUs/four
+hours, accepted and then released exactly once. They started at01:56:11/12
+CST on node13/node40 respectively. The held/accepted/released JSON receipts
+are historical scheduler snapshots, not current status commands. Do not rerun
+`dispatch.py` or submit a replacement because a status observation is missing.
+
+The read-only [startup audit](native_startup.json) reparses the first actual
+SCF of each shard, confirms full E/F/stress, genuine MPI32 and all original
+physical hashes. Durations139.7664/123.5693s are two completed-call timings,
+not a forecast of optimizer convergence. Its SHA256 is
+`a215c09e8f0ae40591a75512f8ea66106e333a0d9795ebd4c0728b62c1c131bf`.
+This is a two-call prefix, **not** a complete eight-target audit or stability
+certificate. P8 is now being evaluated; physical+.005 remains sealed.
+
+[postprocess.py](postprocess.py) lives outside the immutable running bundle.
+It never invokes DFT or changes the scheduler. `audit` requires both original
+jobs COMPLETED0:0 and reparses every charged attempt, native source, starting
+geometry, budget and dual-gradient result. `score` requires an externally
+pinned complete audit and the exact pre-label forecast; it reports all23
+arms/all184 point records, refusals, missing labels, raw and origin-aligned
+errors and comparable subsets without refitting or changing the denominator.
+The revised candidate target does not retroactively validate the original
+stable conditional-plane target.
+
+The combined software checks pass37local/37independent, four modules/seven
+new postprocess checks, no failures/errors/skips; not a full regression.
+The independent source is the previously tested full Git export plus an
+exact two-file Git-archive supplement, not a newly claimed full export.
+Hashes and verification scope are in [validation_execution.json](validation_execution.json).
+Synthetic scoring/routing tests are not material accuracy or real-MPI evidence.
