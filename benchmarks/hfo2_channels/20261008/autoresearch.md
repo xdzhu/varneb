@@ -5787,3 +5787,39 @@ six new checks, no final failures/errors/skips; not fullsuite. Tree9b2072413215d
 archive3338c26faba68deb1063ad48306f47b9b67fd6b6f9d8ae3f2953196744254b92.
 E260case validation_E264.json and rawXML preserve verification scope/identities.
 The main scientific protocol and full goal remain unfinished and active.
+
+## E265 — finite zero-DFT model test; local P8 predictions frozen (Oct18)
+
+Protocol committed4afab21c before fitting, after all ten training outcomes.
+Reuse all81native E/g observations as physical points, not conditional minima.
+Both0.01/0.02source steps use the same actual origin,34measured columns and
+unchanged raw negative direction. Unknown Q/Q block is fitted, not declared
+a measured zero. Compare exactly3parameter harmonic and109parameter retained-
+nonlinear families, energy/full-gradient weight0.1A, column scaling/SVD1e-10.
+All full/fivefold designs identified; no extra DFT, degree/weight/step search,
+training cohort or full Hessian. This standard polynomial ansatz is not a
+new theorem or measured predictive superiority.
+
+Nonlinear training maximum energy error0.1769/0.1686meV/fu versus harmonic
+3.6167/3.5844; held-out central-family errors worsen to4.0836/4.4101versus
+3.6167/3.5844. That fold also shifts zeta support0.1000->0.3688A; report this
+as a shifted-support training diagnostic, not an unseen-P8 result. All force
+errors/folds and strong complete-reference equivalence remain visible.
+
+Freeze all four candidate-model rollouts, original eight starts/targets,
+numerical domain/guard and twelve-call definition:31predictions/one refusal
+(harmonic0.02,target8). ExactP8forecastd1d368372537a3d57d6a0cf38716ac8ea67210dbcac463d0dd2296a13e7b2046;
+fit9b301edb4d96646a324293f90b5a8fa6b85d8b4ee4ef6ca9eed791a511f7c935.
+All5standard+14reference/step old records and original2Drefusal preserved.
+This explicitly revised gradient-candidate target does not certify a stable
+conditional sheet; that predictive domain remains empty. Typical differences
+are~0.01meV/fu, not a physically resolved gain. No independent labels, rebias,
+step selection, physical+.005geometry/labels or private arrays used.
+
+23related checks each local/independent full-source export, three modules/
+eight new, no failures/errors/skips; not fullsuite. Actual fit and forecast
+CLIs also independently rerun, both byte-identical. Testedtreeccf3d7b95b4aa7186a9914008942ae446646c4c2;
+archive94986342e3ccbadec1c3ee137dcff1241c494afc8b7b88bb9219d1fab7413813.
+All rawXML/data/hash scope in E265validation.json. Actual P8 source/input
+deployment preflight remains before DFT; final physical B0--B5 strain/barrier
+freeze is still incomplete. All old preparation costs remain additional.
