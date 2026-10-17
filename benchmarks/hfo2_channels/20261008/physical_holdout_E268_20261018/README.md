@@ -49,3 +49,16 @@ numeric controls and scheduler-resource refusal checks. A preceding test
 command named a nonexistent module and ran zero tests; the corrected command
 is the recorded57, not an additional test success. The native preflight is
 actual HF evidence, not a local synthetic DFT validation.
+
+Original submitted endpoint handles are `28938150` (PO+ then preserving PO-)
+and `28938151` (T). Both were independently verified held before release,
+then started at07:26:26CST on node6, each one node/32CPUs; sharing a node
+does not change each native32MPI group. Exact submission receipts are retained.
+
+The follow-on `forecast_and_chain.py` uses the existing complete-panel freezer
+and audited endpoint/path readers. It preserves69 registered model/variant
+records across two cases (three numerical baselines plus unavailable physical
+transfers); these are not69 newly fitted models or successful predictions.
+The two endpoint-feature B1 values are substituted only after native endpoint
+and identity checks. Synthetic freezer plus existing chain tests:80 passed.
+No +.005 interior has been evaluated at this stage.

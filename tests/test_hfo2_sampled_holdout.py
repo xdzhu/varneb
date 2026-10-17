@@ -97,3 +97,56 @@ def test_submission_guard_checks_real_allocation_and_exact_handle():
                 valid.replace('hfacnormal01', 'other'), valid.replace('JobId=123', 'JobId=124'),
                 valid.replace('NumNodes=1-1', 'NumNodes=2')):
         with pytest.raises(ValueError): module.validate_held(bad, 0, '123')
+
+
+def continuation_module():
+    path = PATH.parent/'forecast_and_chain.py'
+    s = importlib.util.spec_from_file_location('sampled_forecast', path)
+    module = importlib.util.module_from_spec(s); s.loader.exec_module(module)
+    return module
+
+
+def test_all_registered_references_retained_when_physical_transfer_unavailable(tmp_path):
+    module = continuation_module()
+    definitions = module.model_definitions()
+    assert len(definitions) == 69
+    assert all(any(f'Cmma_{i}' in name for name in definitions) for i in (103, 106, 114, 127))
+    assert len([name for name in definitions if name.startswith('B5_retained_anharmonic')]) == 2
+    # Synthetic endpoint features test arithmetic/storage only; not native DFT evidence.
+    f = dict(status='three_native_visible_endpoint_features_audited',
+        registration_sha256=module.REGISTRATION_PIN, target_interiors_read=False,
+        physical_input_sha256=study.CONTRACT, new_SCF_calls=3, SCF_core_hours=1.,
+        allocation_core_hours=2., endpoints={p: dict(anchor_energy_eV_cell=-100.,
+        target_energy_eV_cell=-99.96 if p != 'T' else -99.94) for p in study.PHASES})
+    source = tmp_path/'synthetic_features.json'; study.save(source, f)
+    result = module.freeze(ROOT, source, study.sha(source), tmp_path/'forecast')
+    assert result['models'] == 69 and result['forecast_records'] == 138
+    assert result['numeric_records'] == 6
+    assert not result['target_interiors_read']
+    assert result['baselines']['PO_to_T']['B1_fixed']['prediction_eV_fu'] == pytest.approx(.08441662388122495-.01)
+    from vcneb.forecast_freeze import load_frozen_forecast_panel
+    rows = load_frozen_forecast_panel(tmp_path/'forecast/frozen', expected_manifest_sha256=result['manifest_sha256'])
+    assert len([r for r in rows if r.prediction_eV_fu is None and r.abstention_reason]) == 132
+    assert all(r.abstention_reason is None for r in rows if r.model_id == 'B0')
+
+
+def test_geometry_only_polygon_preserves_order_lift_endpoints_and_plane():
+    from ase import Atoms
+    from vcneb import clamped_plane_vcneb_boundary
+    import numpy as np
+    module = continuation_module()
+    positions = [[x, y, z] for x in (1., 3., 5.) for y in (1., 3.) for z in (1., 3.)]
+    start = Atoms(['Hf']*4+['O']*8, cell=np.eye(3)*8, positions=positions, pbc=True)
+    images = [start.copy() for _ in range(9)]
+    for i, atoms in enumerate(images): atoms.positions[4:, 0] += .01*i
+    reference = start.cell.array.copy(); reference[:2] *= 1.02
+    boundary = clamped_plane_vcneb_boundary(12, reference, allow_tilt=True)
+    ends = [images[0].copy(), images[-1].copy()]
+    for a in ends: a.set_cell(reference, scale_atoms=True)
+    ends[1].positions[4:, 2] += .02
+    result = module.deform_zero_band(images, ends, boundary)
+    assert all(a.calc is None and a.get_chemical_symbols() == start.get_chemical_symbols() for a in result)
+    assert all(np.array_equal(a.cell.array[:2], reference[:2]) for a in result)
+    np.testing.assert_allclose(result[0].positions, ends[0].positions, atol=1e-12)
+    np.testing.assert_allclose(result[-1].positions, ends[-1].positions, atol=1e-12)
+    np.testing.assert_allclose(images[0].positions, start.positions, atol=1e-12)
