@@ -5860,3 +5860,37 @@ sparse figure layout remains a final-editing task. No new figure or scientific
 claim follows from typesetting. Physical+.005remains sealed; a separate
 author clarification on sampled-peak versus strict error-certified edge
 selection is pending, not permission to silently relax the old selector.
+
+## E267 — all remaining P8 labels audited and frozen forecasts scored (Oct18)
+
+Both original jobs completed0:0,1069/2075seconds. The unchanged external
+auditor reparsed all24native E/F/stress calls with exact geometry/input/
+MPI32/source/budget evidence. Counts2/2/2/2/6/4/3/3, all8dual-gradient
+candidates. Auditdd245ac8f7335442ef5355b484b5c01dcba03ae3201ec1ad02131a3ae16ac654;
+scorec51dec44d4e92e05ad824bd7952a9e1cee16d662476684675c9ae0c7489c2607.
+All23arms/184records retained. New four-arm common set1--7; harmonic0.02's
+target8model-oracle refusal is retained although native DFT converged.
+Harmonic/nonlinear common maxima0.033195/0.035625at0.01 and0.033928/0.036390
+at0.02meV/fu; nonlinear RMSE slightly lower. No metric-independent or
+physically resolved nonlinear advantage. Old19controls are new-target
+diagnostics, not retroactive stable-plane validation; all23common set empty.
+
+New cost26.469276call-proxy/27.946667allocation core-hours, all earlier
+training81SCFs,296+272derivatives/paths/faces/probes additional. No refit,
+step selection, new start, retry, Hessian or electronic change. Original
+2Drefusal and unchecked transverse stability remain. Public stdlib replay
+exports all8P candidates/23arms/184predictions plus unchanged T/G2tables;
+actual independent CLI output is byte-identical across all7files.
+
+149related checks pass locally/independently, thirteen modules/seven new,
+not fullsuite. Initial146pass/2stale table-count failures retained. The exact
+thirteen-file Git supplement and original full-export chain are distinguished
+in E266case validation_E267.json. Paper Methods/Results3.4/Table5/AppendixE.9
+retain all prior182table lines plus31new, nine figures/old citations/wrapper.
+Source8efc90bf677da355c7c391d8f69c0e5237af4e0a656a0072a4d1b9a4d8d11e8f
+compiles to42pages, PDFdd9ef93765515c381c175655676b79100876c29b98e624f40a0dc75c22d30099.
+All rendered/reviewed as explicitly scoped in the receipt; no new layout
+errors, not final editorial sign-off. Physical+.005/private bank remains
+sealed. Its missing error-certified final selection versus a new sampled-peak
+protocol still requires author direction; no source gate is silently weakened.
+This local success is not the two-path physical forecast or completed goal.

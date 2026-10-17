@@ -57,7 +57,8 @@ def test_prior135_table_lines_nine_figures_external_citations_and_wrapper_preser
     # User-approved main/appendix reordering changes order, not row values or multiplicity.
     assert not Counter(old['prior_table_lines'])-current
     # All prior rows remain; atomic treatment and four statics add six lines each.
-    assert len([l for l in text.splitlines() if l.startswith('|')])==182
+    # Retain every old row; the completed P8 adds 6 main and25 appendix lines.
+    assert len([l for l in text.splitlines() if l.startswith('|')])==213
     assert 'Table 4. Prospective T local errors' in text and 'Table A18. All frozen T test arms' in text
     assert 'Table A17. Four frozen directional training statics' in text
     assert re.findall(r'!\[[^\]]*\]\(([^)]+)\)',text)==old['prior_figure_targets']

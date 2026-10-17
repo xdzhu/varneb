@@ -1,6 +1,6 @@
 # Competing switching and phase-escape channels in hafnia: a mode-strain pathway analysis
 
-Working manuscript, 2026-10-17. This is a connected main-text draft, not a
+Working manuscript, 2026-10-18. This is a connected main-text draft, not a
 submission-ready article. The main Results organize eight ordinary-converged clamped training bands
 by scientific question; dated free-cell and detailed representation checks
 are retained in the appendices. All ten
@@ -17,9 +17,11 @@ released stability. The complete post-release check rejected the preserving
 two-coordinate origin at both probe steps. Four additional same-contract
 statics measured a shallow lowering along its omitted oxygen-dominated
 direction, not a stable nonlinear branch or an independent prediction.
-An eight-point T local test now measures the frozen predictions against
-independent gradient-candidate energies. This is not the separate unseen-strain
-path test. An uncertainty-resolved response interpretation, stable conditional
+Eight original T and eight separately revised preserving local candidates
+now measure the frozen predictions against independent energies. The latter
+used24native SCFs and did not establish a metric-independent nonlinear-fit
+advantage. The original preserving two-coordinate refusal is unchanged.
+These are not the separate unseen-strain path test. An uncertainty-resolved response interpretation, stable conditional
 branches and independent mechanical-response predictions are still missing. An abstract and a
 conclusion asserting those unmeasured results are deliberately withheld.
 The [methods working record](METHODS_DRAFT.md),
@@ -1033,9 +1035,44 @@ older controls, their reference definitions and the original two-coordinate
 refusal remained in the panel. The revised target is a single-start
 gradient-candidate energy, not retroactive stable-sheet validation. These
 [pre-label forecasts](../../benchmarks/hfo2_channels/20261008/G3_anharmonic_model_E265_20261018/P8_forecasts.json)
-are now being tested by the [native independent workflow](../../benchmarks/hfo2_channels/20261008/G3_P8_execution_E266_20261018/README.md);
-complete-cohort errors remain pending. No model is refitted on those labels.
-The original inventory remains sixteen points, not sixteen successful labels.
+were tested without refitting. All eight candidates passed both gradient
+tests in 24 native SCFs, with 2/2/2/2/6/4/3/3 calls in original target order.
+Released norms were 0.00164--0.01949 eV/Angstrom and the largest absolute
+directional gradient was $9.918\times10^{-5}$ eV/Angstrom. Full native
+energy/forces/stress, unchanged physical inputs and genuine32MPI were
+reparsed for every charged call. The [complete audit and fixed scoring](../../benchmarks/hfo2_channels/20261008/G3_P8_execution_E266_20261018/README.md)
+retain all 23 arms and 184 model/point records. This completes the revised
+candidate-label test, not stable-sheet validation. The original sixteen-point
+inventory now contains eight original T labels and eight revised preserving
+labels; the original preserving sign-screen refusal is not reversed.
+
+Table 5. Revised preserving errors on the seven targets supported by all four
+new family/step arms, in meV/HfO2. Coverage refers to the original denominator
+eight. Raw and origin-aligned values coincide for these four fixed-origin
+models; no independent-label calibration was applied.
+
+| Family | Probe step/Angstrom | Coverage | Common-set max. error | Common-set RMSE |
+|---|---:|---:|---:|---:|
+| Full-space harmonic | 0.01 | 8/8 | 0.033195 | 0.027153 |
+| Retained nonlinear residual | 0.01 | 8/8 | 0.035625 | 0.024916 |
+| Full-space harmonic | 0.02 | 7/8 | 0.033928 | 0.027050 |
+| Retained nonlinear residual | 0.02 | 8/8 | 0.036390 | 0.024852 |
+
+The nonlinear family had slightly smaller RMSE but larger maximum error at
+both steps; neither metric supplied a physically resolved advantage. The
+one harmonic model-oracle budget refusal remained missing even though its
+corresponding DFT candidate converged. All nineteen old controls were also
+scored numerically against the revised target (Appendix E.9), without treating
+that agreement as validation of their old stable-plane assumptions. Their
+tensor interpolant had maximum raw discrepancy 0.029103 meV/HfO2, comparable
+to the new families, but used a different previously registered training
+representation. Across all 23 arms the common supported set was empty;
+restricted references were not compared as if they predicted a common full
+surface. The test cost 26.469276 completed-call proxy core-hours and
+27.946667 allocation core-hours. All 81 training SCFs, both curvature groups
+and earlier preparations remain additional. These small local errors do not
+establish a more accurate force field, stable sheet, stationary TS or
+unseen-strain path prediction.
 The separate +0.5% mechanical condition remains sealed; a local-coordinate
 test cannot replace its path-barrier comparison. The
 [original local forecasts](../../benchmarks/hfo2_channels/20261008/G3_local_forecast_E185_20261015/README.md)
@@ -2338,6 +2375,64 @@ and is equivalent to the original full-H control, not an independent method
 replication. All raw/calibrated signed errors, origin biases, geometry
 abstentions and source identities remain in the [test case](../../benchmarks/hfo2_channels/20261008/G3_T_independent_E258_20261017/README.md).
 The eighteen test SCFs and their 19.173333 allocation core-hours are additional
-to all original preparation. Preserving remains refused with zero of eight
-labels; the physical +0.5% path condition is still sealed. These local errors
+to all original preparation. The original preserving two-coordinate target
+remains refused; its separately revised eight-candidate test is reported
+below. The physical +0.5% path condition is still sealed. These local errors
 do not supply a whole-path barrier error or a resolved methodological gain.
+
+### E.9. The revised preserving local independent cohort
+
+The complete eight-candidate native audit covers24SCFs and both original
+normal terminal allocations,1069/2075seconds at32CPUs. Every original start,
+per-point cap, native source and physical input was checked; no second start,
+retry or post-label threshold change was used. All candidates passed the
+registered dual-gradient conditions, but their transverse stability remains
+unchecked. The original two-coordinate refusal and the already seen T test
+remain separate evidence, not sixteen stable-sheet successes.
+
+Table A19. All23frozen arms on revised preserving candidates (meV/HfO2).
+
+| Arm and source step/Angstrom | Supported/8 | Raw max. | Raw RMSE | Aligned max. | Aligned RMSE |
+|---|---:|---:|---:|---:|---:|
+| New full-space harmonic, 0.01 | 8 | 0.033195 | 0.026829 | 0.033195 | 0.026829 |
+| Retained nonlinear, 0.01 | 8 | 0.035625 | 0.024219 | 0.035625 | 0.024219 |
+| New full-space harmonic, 0.02 | 7 | 0.033928 | 0.027050 | 0.033928 | 0.027050 |
+| Retained nonlinear, 0.02 | 8 | 0.036390 | 0.024151 | 0.036390 | 0.024151 |
+| Bilinear | 8 | 0.182055 | 0.144969 | 0.182055 | 0.144969 |
+| Tensor quadratic | 8 | 0.029103 | 0.018169 | 0.029103 | 0.018169 |
+| Refitted quadratic | 8 | 0.059872 | 0.044073 | 0.063879 | 0.035656 |
+| Original H/g, 0.01 | 8 | 1.611666 | 1.534980 | 0.352593 | 0.295880 |
+| Original H/g, 0.02 | 8 | 1.664167 | 1.585322 | 0.358942 | 0.300219 |
+| T triplet, 0.01 | 0 | -- | -- | -- | -- |
+| T two optical doublets, 0.01 | 8 | 147.755933 | 88.600341 | 135.387518 | 78.347208 |
+| T all optical, 0.01 | 8 | 1.611666 | 1.534980 | 0.352593 | 0.295880 |
+| Cmma 103, 0.01 | 2 | 19.448543 | 15.751533 | 7.214300 | 5.192788 |
+| Cmma 106, 0.01 | 2 | 19.264559 | 15.595606 | 7.030254 | 5.082366 |
+| Cmma 114, 0.01 | 2 | 19.264559 | 15.595606 | 7.030254 | 5.082366 |
+| Cmma 127, 0.01 | 2 | 19.448543 | 15.751533 | 7.214300 | 5.192788 |
+| T triplet, 0.02 | 0 | -- | -- | -- | -- |
+| T two optical doublets, 0.02 | 8 | 147.677582 | 88.557743 | 135.309194 | 78.304392 |
+| T all optical, 0.02 | 8 | 1.664167 | 1.585322 | 0.358942 | 0.300219 |
+| Cmma 103, 0.02 | 2 | 19.444749 | 15.747429 | 7.210592 | 5.190878 |
+| Cmma 106, 0.02 | 2 | 19.260955 | 15.591722 | 7.026735 | 5.080630 |
+| Cmma 114, 0.02 | 2 | 19.260955 | 15.591722 | 7.026735 | 5.080630 |
+| Cmma 127, 0.02 | 2 | 19.444749 | 15.747429 | 7.210592 | 5.190878 |
+
+Errors are numerical discrepancies on each arm's available IDs; different
+support is not a common-domain comparison. Missing values are not zero
+errors. All four Cmma registrations and both source steps are retained.
+
+The four new models share IDs1--7; target8 is the pre-label harmonic0.02
+model-oracle budget refusal, not a failed DFT calculation. The original T
+triplet has no supported target and the Cmma restrictions each have only two;
+there is no all23-arm common target set. Original restricted-model numbers
+remain a new-target diagnostic, not retroactive stable-plane admission or
+failure of every possible native Cmma-coordinate model. Raw/aligned errors,
+all184predictions and all8native candidate energies are available through
+[the offline paper-table command](../../examples/cases/hfo2_competing_channels/README.md).
+The [complete fixed scoring](../../benchmarks/hfo2_channels/20261008/G3_P8_execution_E266_20261018/score_E267.json)
+uses no new fit, bias, source-step selection or extrapolation across the
+failed training center. Neither the small errors nor the increased candidate
+coverage certify a stable surface, a TS or a physically resolved methodology
+gain. The physical+0.5% path comparison remains a separate unfinished test.
+

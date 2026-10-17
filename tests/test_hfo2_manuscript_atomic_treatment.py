@@ -77,10 +77,10 @@ def test_approved_four_part_results_and_six_appendix_diagnostics():
     assert 'preserving origin still fails the original necessary sign condition' in ' '.join(main.split())
     assert '31 numeric forecasts and one explicit twelve-call' in ' '.join(main.split())
     assert 'not retroactive stable-sheet validation' in ' '.join(main.split())
-    assert 'complete-cohort errors remain pending' in ' '.join(main.split())
+    assert 'All eight candidates passed both gradient tests in 24 native SCFs' in ' '.join(main.split())
     assert 'original two-coordinate refusal' in ' '.join(main.split())
-    # Six historical diagnostics remain; the actual four-point result adds E.7.
-    assert re.findall(r'^### (E\.\d+)\.', text, re.M) == [f'E.{i}' for i in range(1, 9)]
-    assert not re.search(r'Section 3\.[5-9]\b|Table [5-9]\b', text)
+    # Historical diagnostics and both independent cohorts remain in E.1--E.9.
+    assert re.findall(r'^### (E\.\d+)\.', text, re.M) == [f'E.{i}' for i in range(1, 10)]
+    assert not re.search(r'Section 3\.[5-9]\b|Table [6-9]\b', text)
     for number in range(11, 19):
         assert f'Table A{number}' in text

@@ -1,5 +1,10 @@
 # E266: execute the frozen remaining P8 candidate tests
 
+**Latest E267 result:** both original jobs completed normally;8/8candidates,
+24native SCFs audited and all23frozen arms scored. See the complete-result
+section below. Earlier preparation/startup paragraphs are historical, not
+instructions to submit again. Physical+.005remains sealed.
+
 2026-10-18. This implements the local-test stage of the author-approved
 [blueprint Section5C](../../../../docs/HFO2_PAPER_BLUEPRINT_2026-10-17.md):
 freeze the revised local models before P8; **afterwards** complete the
@@ -117,3 +122,63 @@ No new clipping/notation/layout error found; older sparse figure layout is
 retained, not final editorial approval. Raw XML and
 [manuscript_integration.json](manuscript_integration.json) preserve scope/hashes.
 No production source, parameter, model or threshold changed in this integration.
+
+## E267: complete native cohort and prospective scores
+
+Both original handles are COMPLETED0:0:28935677 in1069s and28935679 in2075s,
+ending02:14:00/02:30:47CST. Every one of24new SCFs was reparsed for ordered
+geometry, exact inputs/native E/F/stress, genuine MPI32, source identity and
+budget. All8candidates meet the original released-norm0.03eV/A and directional
+1e-4eV/A tests; SCFcounts are2/2/2/2/6/4/3/3. No new start, retry or changed
+threshold. [Complete native audit](native_complete_E267.json) SHA256:
+`dd245ac8f7335442ef5355b484b5c01dcba03ae3201ec1ad02131a3ae16ac654`.
+
+The unchanged read-only scorer used the exact pre-label forecasts and this
+external audit pin. [All23-arm score](score_E267.json) SHA256:
+`c51dec44d4e92e05ad824bd7952a9e1cee16d662476684675c9ae0c7489c2607`.
+Four new arms share targets1--7; harmonic0.02still abstains at8although its
+DFT candidate converged. On that common set, harmonic/nonlinear maximum
+errors are0.033195/0.035625meV/fu at0.01and0.033928/0.036390at0.02;
+nonlinear RMSE is slightly smaller. There is no metric-independent or
+physically resolved nonlinear accuracy advantage. All new raw/aligned
+predictions coincide because the same native origin was fixed, not refitted.
+
+All19old controls and their new-target warnings remain. Tensor's raw maximum
+is0.029103meV/fu but it has a different registered representation/information
+set; a numerical comparison does not revalidate its old stable-plane claim.
+The two restricted T-triplet arms have no supported target; each Cmma arm
+supports2/8. The all23-arm common set is empty, not a zero-error success.
+Full tables and all184signed records are retained, not only favorable arms.
+
+Actual new cost is26.469276completed-call proxy and27.946667allocation
+core-hours. Training81SCFs/85.6allocation core-hours, original296+272
+derivatives, seen T8 and all other preparations stay additional. Source-point
+R33positivity and these candidate energies do not certify a stable conditional
+sheet/TS. The original2Drefusal remains; neither a new Hessian nor another
+training family is scheduled. Physical+.005/private arrays remain unopened.
+
+The [public standard-library replay](../../../../examples/cases/hfo2_competing_channels/README.md)
+now exports all8P candidates,23arms/184predictions alongside unchanged T/G2
+tables. It verifies the exact pre-label predictions and recomputes signed-error
+units/statistics; it performs no new native audit or DFT. Paper Results3.4/
+Table5 and AppendixE.9/TableA19 report these data, without claiming JCTC
+readiness. The next physical-path stage awaits the author's clarification on
+sampled-peak versus strict error-certified selection; the old selector is not
+silently relaxed and the goal is not declared complete.
+
+Final related checks pass149local/149independent, thirteen modules/seven new,
+zero failures/errors/skips; not fullsuite. The independent source is the
+recorded E266 full export/supplements plus an exact thirteen-file E267 Git
+supplement, not a new full-source export. Actual `python -S` CLI replays
+produce seven byte-identical files. Initial146pass/2failure XML retains the
+two stale182-versus213table-count guards; prior row-value guards remain intact.
+Both new tables are source-derived checked, including coverage and missing
+values. [validation_E267.json](validation_E267.json) records all source/data/
+XML/export hashes and verification scope.
+
+The existing LuaLaTeX build succeeds to42pages without compiler/layout
+warnings. All final pages are rendered. Seven contact sheets were inspected;
+after a caption-only repair, first40page pixels are unchanged and final
+pages19/41/42 individually reviewed. New TableA19's caption now stays with
+its table; no new clipping/overlap/broken notation found. Pre-existing sparse
+figure pages are retained, not final editorial sign-off or submission readiness.
