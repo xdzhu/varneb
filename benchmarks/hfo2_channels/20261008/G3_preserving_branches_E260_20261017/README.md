@@ -112,3 +112,56 @@ window is Oct18 00:15--01:30CST, conditional on healthy calls and scheduler
 continuity. The actual4h allocation caps are03:25:14. This is processing-time
 estimation, not guaranteed convergence; unsuccessful candidates retain their
 original outcomes and costs. No periodic monitor is created.
+
+## E262: first-four native replay, not a completed cohort (Oct18)
+
+At00:10:10CST both original allocations were still RUNNING. The separate
+[prefix auditor](prefix_review_E262.py) reparsed all36 native SCFs of the
+first four completed candidates, including both unsuccessful starts. It
+checked original source/input identities, ordered attempts, actual E/F/stress
+and MPI provenance. An ordered replay of the unchanged optimizer consumed
+every record with zero coordinate difference on HF and no new DFT. It
+recovered accepted states, rather than treating arbitrary trial records as
+an optimization trajectory. The complete ten-candidate auditor is unchanged
+and still requires both original jobs to finish normally.
+
+| Q / starts | Native SCFs | Outcome at the preset cap |
+|---|---:|---|
+| (0,0), positive / negative |12 /12|Both capped, not converged|
+| (-0.1,0), positive / negative |6 /6|Both pass the declared gradient tests; stability unchecked|
+
+The [read-only diagnosis](prefix_diagnosis_E262.json) identifies a concrete
+numerical limitation at Q=0. All12 native records in each start were accepted
+energy-decreasing states, not repeated energy-rejected evaluations. Energy
+decreases6.710/6.714meV per cell, but the final full released norms remain
+0.29791/0.29780eV/A. Total radii reach0.49999059/0.49999942A against the
+original0.5A guard. Constant-radius tangent gradient norms remain
+0.29559/0.29547eV/A; these are neither stationary candidates nor boundary
+KKT solutions. Successively tiny accepted steps are consistent with the
+scalar search being limited by the original radius, not an SCF failure.
+The radius is centered at internal-coordinate zero, **not** the relaxed
+origin. No radius extension, projected-gradient success criterion or retry
+is authorized by this diagnosis.
+
+At Q=(-0.1,0), final released norms are0.001411/0.001446eV/A and signed
+zeta gradients -7.6003e-5/+7.3270e-5eV/A. Final zeta values are
+-0.001461/+0.001292A: opposite initial signs do not prove distinct branches.
+The final structures are0.002771A apart in this internal metric, with an
+energy difference0.000675meV/cell. Neither positive curvature, uniqueness,
+a whole sheet nor independent predictive gain follows from these results.
+
+All36 native calls retain their costs:37.6168 completed-call proxy core-hours,
+with median119.58s/SCF (96.63--155.43s). This is not full allocation cost or
+the entire preparation cost. The native report SHA256 is
+`c122d71eb2dd46f3a3e892e49389b5d38a24a38eb86794ee0dd35ea7bc100772`.
+
+Seven new replay/decomposition checks plus15 related checks pass locally
+and in a targeted independent Git export (22each; not fullsuite). The exact
+export scope, tree/archive and XML hashes are in [validation_E262.json](validation_E262.json).
+One initial diagnostic assertion failed because
+local BLAS reconstruction differed by at most2.776e-17A. The raw failed XML
+is retained. Exact accepted energy/order identifies the record; the existing
+2e-12 matrix-reconstruction check handles arithmetic only. Native record
+identities and the original HF replay remain exact; no physical tolerance
+changed. The remaining six candidates keep their original runtime, starts,
+caps and inputs. P8 independent labels and physical+0.005 remain unopened.

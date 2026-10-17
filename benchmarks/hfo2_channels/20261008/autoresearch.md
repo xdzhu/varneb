@@ -5704,3 +5704,22 @@ Current jobs were reverified live at23:41:22; the later23:48producer prefix
 showed10/11SCFs on the first two starts, no failures/complete point rows,
 zeta near+/-0.37 and released norms about0.30. This is not a final native
 audit or successful branch; original12attempt caps remain, no retuning/retry.
+
+## E262 — native first-four replay and radius diagnosis (2026-10-18)
+
+All36 completed native SCFs of IDs0--3 reparsed at00:10:10CST, both original
+jobs still running. Ordered unchanged-optimizer replay consumed every record
+with zero arithmetic difference on HF, recovering capped accepted states.
+Q=0 signed starts exhaust12SCFs each; all calls accepted as energy descent,
+but radius0.49999059/0.49999942A and tangent gradients0.29559/0.29547eV/A
+show no stationary or boundaryKKT solution. The scalar search is consistent with radius limitation;
+this does not authorize a larger radius, a projected-gradient pass or retries.
+At Q=(-.1,0), both signed starts pass the original dual gradient tests in6SCFs
+each, near zeta0; no distinct stable branches/TS/predictive gain established.
+37.6168 completed-call proxy core-hours, all earlier costs additional.
+Nativeprefixc122d71eb2dd46f3a3e892e49389b5d38a24a38eb86794ee0dd35ea7bc100772.
+Seven new/22total local and targeted independent-export checks pass each,
+not fullsuite; first21pass/1failure XML
+retained for cross-BLAS2.776e-17 reconstruction, not a physical input failure.
+No DFT/scheduler/source/domain change. Original ten starts continue unchanged;
+remaining independent labels and physical-strain holdouts are sealed.

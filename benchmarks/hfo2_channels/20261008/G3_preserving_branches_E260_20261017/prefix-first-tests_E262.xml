@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="22" time="0.963" timestamp="2026-10-18T00:18:08.309024" hostname="Aero"><testcase classname="tests.test_hfo2_branch_prefix_diagnosis" name="test_frozen_component_excluded_from_radial_and_tangent_gradient" time="0.001" /><testcase classname="tests.test_hfo2_branch_prefix_diagnosis" name="test_zero_released_radius_retains_full_gradient_without_division" time="0.001" /><testcase classname="tests.test_hfo2_branch_prefix_diagnosis" name="test_all_first_four_native_calls_accounted_not_only_successful_candidates" time="0.005"><failure message="ValueError: unique native last accepted state required">def test_all_first_four_native_calls_accounted_not_only_successful_candidates():
+&gt;       result = module.diagnose()
+
+tests\test_hfo2_branch_prefix_diagnosis.py:29: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def diagnose():
+        report = pinned(HERE/'prefix_review_E262.json', PREFIX_SHA)
+        config = pinned(HERE/'config.json', CONFIG_SHA)
+        if (report['scope_ids'] != [0, 1, 2, 3]
+                or report['native_SCFs_reparsed'] != 36
+                or report['complete_ten_candidate_audit']):
+            raise ValueError('first-four native audit scope required')
+        basis = np.asarray(report['basis_40_by_36'])
+        free = np.asarray(report['free_basis_36_by_34'])
+        origin = np.asarray(report['origin_internal_A'])
+        direction = np.asarray(config['branch_direction_36'])
+        rows = []
+        for row in report['rows']:
+            replay = row['replay']
+            if replay['status'] == 'budget_exception_replayed':
+                x = np.asarray(replay['last_accepted_internal_A'])
+                energy = replay['last_accepted_energy_eV_cell']
+                trace = replay['accepted_trace']
+            else:
+                x = np.asarray(replay['result']['coordinates'])
+                energy = replay['result']['energy']
+                trace = replay['result']['trace']
+            matches = [i for i, r in enumerate(row['native_records'])
+                       if np.array_equal(basis @ x, r['coordinates']) and energy == r['enthalpy_eV']]
+            if len(matches) != 1:
+&gt;               raise ValueError('unique native last accepted state required')
+E               ValueError: unique native last accepted state required
+
+benchmarks\hfo2_channels\20261008\G3_preserving_branches_E260_20261017\diagnose_prefix_E262.py:63: ValueError</failure></testcase><testcase classname="tests.test_hfo2_branch_cached_replay" name="test_cap_replay_recovers_last_accepted_state_without_new_call" time="0.002" /><testcase classname="tests.test_hfo2_branch_cached_replay" name="test_normal_candidate_replays_same_energy_and_stop_tests" time="0.002" /><testcase classname="tests.test_hfo2_branch_cached_replay" name="test_changed_ordered_coordinate_refuses_instead_of_searching_nearest" time="0.002" /><testcase classname="tests.test_hfo2_branch_cached_replay" name="test_extra_unconsumed_records_are_refused" time="0.002" /><testcase classname="tests.test_branch_relaxation" name="test_soft_direction_must_converge_even_when_total_norm_would_pass[-1]" time="0.001" /><testcase classname="tests.test_branch_relaxation" name="test_soft_direction_must_converge_even_when_total_norm_would_pass[1]" time="0.001" /><testcase classname="tests.test_branch_relaxation" name="test_rotation_keeps_physical_solution_and_energy" time="0.001" /><testcase classname="tests.test_branch_relaxation" name="test_geometry_rejection_precedes_every_calculator_call" time="0.001" /><testcase classname="tests.test_branch_relaxation" name="test_calculator_budget_exception_is_not_retried_or_swallowed" time="0.001" /><testcase classname="tests.test_branch_relaxation" name="test_bad_contract_refuses_before_calculation[direction]" time="0.000" /><testcase classname="tests.test_branch_relaxation" name="test_bad_contract_refuses_before_calculation[negative_seed]" time="0.001" /><testcase classname="tests.test_branch_relaxation" name="test_bad_contract_refuses_before_calculation[complex]" time="0.000" /><testcase classname="tests.test_branch_relaxation" name="test_bad_contract_refuses_before_calculation[bad_start]" time="0.001" /><testcase classname="tests.test_hfo2_branch_native_audit" name="test_allocation_cost_keeps_both_synthetic_shards" time="0.000" /><testcase classname="tests.test_hfo2_branch_native_audit" name="test_nonterminal_partial_failure_and_wrong_resources_are_not_a_complete_audit[28934048|RUNNING|0:0|3600|32|node3|hfacnormal01|1\n28934049|COMPLETED|0:0|1800|32|node28|hfacnormal01|1\n]" time="0.000" /><testcase classname="tests.test_hfo2_branch_native_audit" name="test_nonterminal_partial_failure_and_wrong_resources_are_not_a_complete_audit[28934048|COMPLETED|1:0|3600|32|node3|hfacnormal01|1\n28934049|COMPLETED|0:0|1800|32|node28|hfacnormal01|1\n]" time="0.000" /><testcase classname="tests.test_hfo2_branch_native_audit" name="test_nonterminal_partial_failure_and_wrong_resources_are_not_a_complete_audit[28934048|COMPLETED|0:0|3600|32|node3|hfacnormal01|1]" time="0.000" /><testcase classname="tests.test_hfo2_branch_native_audit" name="test_nonterminal_partial_failure_and_wrong_resources_are_not_a_complete_audit[28934048|COMPLETED|0:0|3600|64|node3|hfacnormal01|1\n28934049|COMPLETED|0:0|1800|32|node28|hfacnormal01|1\n]" time="0.000" /><testcase classname="tests.test_hfo2_branch_native_audit" name="test_nonterminal_partial_failure_and_wrong_resources_are_not_a_complete_audit[28934048|COMPLETED|0:0|3600|32|node3|hfacnormal01|1\n28934049|COMPLETED|0:0|1800|32|node28|hfacnormal01|1\n28934048|COMPLETED|0:0|3600|32|node3|hfacnormal01|1\n]" time="0.000" /></testsuite></testsuites>
