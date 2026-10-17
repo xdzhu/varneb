@@ -416,8 +416,26 @@ fitted to the four already seen signed gradient probes. It does not replace
 the original physical Hessian or certify release stability. Each start has
 the same twelve-attempt cap, geometry guards and electronic contract. The
 [pre-label protocol and exact optimizer](../../benchmarks/hfo2_channels/20261008/G3_preserving_branches_E260_20261017/protocol.md)
-retain both starts and their costs; their nonlinear branch and predictive
-outcomes remain pending.
+retain both starts and their costs; the bounded training outcomes are
+reported in Section 3.3. No further start or radius adjustment followed.
+
+We used all 81 energy/full-gradient observations from this trial, including
+rejected steps and budget-exhausted starts, for one finite model comparison.
+They were physical point observations, not 81 conditional minima. At each
+original curvature step separately, the measured 34 columns fixed the free
+block and its coupling to Q. The unmeasured symmetric Q/Q block supplied
+three fitted coefficients. The comparison family added seven terms,
+$\zeta^3,\zeta^4,Q_i\zeta^2,Q_iQ_j\zeta^2$ ($1\leq i\leq j\leq2$), and the 99 terms
+$r_j\zeta^2,r_jQ_1\zeta^2,r_jQ_2\zeta^2$ over the remaining 33 coordinates.
+The harmonic and nonlinear families therefore fitted 3 and 109 coefficients,
+respectively, keeping the same native origin energy and gradient. Coordinates
+were normalized by 0.1 Angstrom; gradient equations were multiplied by
+0.1 Angstrom before column-scaled least squares with relative SVD cutoff
+$10^{-10}$. Both original steps and five leave-one-Q-family-out diagnostics
+were retained, without choosing a degree, weight or step from independent
+labels. The [registered ansatz and exact fit](../../benchmarks/hfo2_channels/20261008/G3_anharmonic_model_E265_20261018/README.md)
+preserve the raw negative direction; a positive bath at the source point
+does not certify stability throughout the fitted domain.
 
 ### 2.5. Signed path work as an energy-consistency diagnostic
 
@@ -881,6 +899,24 @@ whole-band barrier or an explanation of the larger release-shape discrepancy.
 The original two-coordinate conditional admission remained refused; formal
 retention of a third coordinate alone did not certify a nonlinear branch.
 
+Allowing that direction to relax explicitly did not complete the central
+branch within the registered search domain. Seven of the ten two-sided
+training starts met both gradient tests in 81 native SCFs altogether.
+Both Q=0 starts approached the original 0.5-Angstrom total-displacement bound
+with released-gradient norms near 0.296 eV/Angstrom. The third capped start
+was not radius-limited: its norm was 0.001166 eV/Angstrom, but its directional
+gradient, $1.30035\times10^{-4}$ eV/Angstrom, exceeded the preset requirement.
+Five energy-rejected trials consumed its remaining allowance. These distinct
+failures were retained rather than repaired by changing the geometry or
+electronic settings. At the three Q positions where both starts passed,
+the resulting structures differed by about 0.0028 Angstrom and less than
+0.000607 meV/HfO2. They did not establish two distinct stable branches.
+The [complete trial and native replay](../../benchmarks/hfo2_channels/20261008/G3_preserving_branches_E260_20261017/README.md)
+retain all ten outcomes; their 85.6 allocation core-hours are additional
+to the earlier curvature and sampling costs. The original two-coordinate
+refusal is unchanged, and no continuous stable three-coordinate surface
+is inferred from these candidates.
+
 ### 3.4. Prediction controls and local independent errors
 
 An independent prediction advantage has not yet been established. A complete
@@ -974,12 +1010,32 @@ stability. It did not establish an advantage for a new reduction method.
 The [complete native local test and fixed scoring](../../benchmarks/hfo2_channels/20261008/G3_T_independent_E258_20261017/README.md)
 retain every target, both error conventions, all nineteen arms and actual cost.
 
-The preserving origin failed the necessary post-release sign condition;
-its eight independent points remain uncomputed. The four directional statics
-were training diagnostics, not replacement test labels. A revised retained
-space, branch or test definition would need a separate pre-label protocol;
-it could not turn the original refusal into a successful forecast. The
-original inventory remains sixteen points, not sixteen successful labels.
+The retained-direction nonlinear fit improved training energies without
+establishing a transferable accuracy gain. Its maximum training errors were
+0.1769/0.1686 meV/HfO2 at the two source steps, versus 3.6167/3.5844 for the
+same-information harmonic family. Excluding the central Q family reversed
+that comparison: nonlinear maxima were 4.0836/4.4101, versus 3.6167/3.5844.
+This exclusion also changed support, from training amplitudes
+$|\zeta|\leq0.1000$ Angstrom to test amplitudes as large as 0.3688 Angstrom.
+It was therefore a shifted-support training diagnostic, not the independent
+small-Q interpolation test. All fitted and group-excluded designs were
+identified at the fixed cutoff; maximum nonlinear training full-gradient
+errors remained about 0.213 eV/Angstrom. Energy-fit improvement alone did
+not validate gradients, a stable conditional branch or a new method advantage.
+
+The preserving origin still fails the original necessary sign condition.
+After the finite training trial, a separately registered test froze all four
+family/step predictions for the original eight remaining Q positions, using
+one fixed training-parent start per position and the same dual-gradient
+stopping rule. There were 31 numeric forecasts and one explicit twelve-call
+model-oracle refusal; those oracle calls were not DFT costs. All nineteen
+older controls, their reference definitions and the original two-coordinate
+refusal remained in the panel. The revised target is a single-start
+gradient-candidate energy, not retroactive stable-sheet validation. These
+[pre-label forecasts](../../benchmarks/hfo2_channels/20261008/G3_anharmonic_model_E265_20261018/P8_forecasts.json)
+are now being tested by the [native independent workflow](../../benchmarks/hfo2_channels/20261008/G3_P8_execution_E266_20261018/README.md);
+complete-cohort errors remain pending. No model is refitted on those labels.
+The original inventory remains sixteen points, not sixteen successful labels.
 The separate +0.5% mechanical condition remains sealed; a local-coordinate
 test cannot replace its path-barrier comparison. The
 [original local forecasts](../../benchmarks/hfo2_channels/20261008/G3_local_forecast_E185_20261015/README.md)

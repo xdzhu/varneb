@@ -13,6 +13,16 @@ bounded preserving branch trial and independent-validation route; the new
 [E260 preregistration](../../benchmarks/hfo2_channels/20261008/G3_preserving_branches_E260_20261017/protocol.md)
 defines the first ten training candidates and preserves the original refusal.
 
+October18 source update: the ten-start trial is complete (7gradient candidates,
+3capped starts;81native SCFs), and one finite nonlinear/harmonic fit and all
+remaining P8 forecasts are frozen. Results3.3/3.4 and Methods2.4 now describe
+these outcomes and their limits. P8 is actually running under E266; its errors
+are not yet reported. The local reading PDF has been rebuilt from this
+source with the existing LuaLaTeX toolchain (40pages, no compiler/layout
+warnings); all pages were rendered and the new method/results pages reviewed.
+It remains a working manuscript, not a finished article. Rebuild again after
+the independent cohort is integrated. Physical+.005 remains sealed.
+
 The [current structure and source checks](../../benchmarks/hfo2_channels/20261008/manuscript_atomic_treatment_E195_20261015/README.md)
 record the user-approved four-part Results revision. Older dated receipts,
 including the E153 narrative revision, remain historical.

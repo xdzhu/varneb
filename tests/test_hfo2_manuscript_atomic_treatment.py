@@ -72,9 +72,13 @@ def test_approved_four_part_results_and_six_appendix_diagnostics():
     assert 'Across the five registered coordinates' in ' '.join(main.split())
     assert 'An independent prediction advantage has not yet been established' in main
     assert 'The prospective T local test supplied eight independent' in main
-    assert 'its eight independent points remain uncomputed' in ' '.join(main.split())
-    assert 'preserving origin failed the necessary post-release sign condition' in ' '.join(main.split())
-    assert 'original refusal' in main
+    # The original refusal survives the separately registered P8 deployment;
+    # a stale "uncomputed" sentence must not block an honest status update.
+    assert 'preserving origin still fails the original necessary sign condition' in ' '.join(main.split())
+    assert '31 numeric forecasts and one explicit twelve-call' in ' '.join(main.split())
+    assert 'not retroactive stable-sheet validation' in ' '.join(main.split())
+    assert 'complete-cohort errors remain pending' in ' '.join(main.split())
+    assert 'original two-coordinate refusal' in ' '.join(main.split())
     # Six historical diagnostics remain; the actual four-point result adds E.7.
     assert re.findall(r'^### (E\.\d+)\.', text, re.M) == [f'E.{i}' for i in range(1, 9)]
     assert not re.search(r'Section 3\.[5-9]\b|Table [5-9]\b', text)

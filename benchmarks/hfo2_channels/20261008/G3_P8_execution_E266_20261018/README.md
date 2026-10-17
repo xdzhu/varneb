@@ -105,3 +105,15 @@ The independent source is the previously tested full Git export plus an
 exact two-file Git-archive supplement, not a newly claimed full export.
 Hashes and verification scope are in [validation_execution.json](validation_execution.json).
 Synthetic scoring/routing tests are not material accuracy or real-MPI evidence.
+
+The manuscript Methods2.4/Results3.3--3.4 now integrate the completed ten-start
+training result and the fixed fit comparison, without reporting pending P8
+errors. All original tables/figures and four Results subsections remain.
+Related checks pass138locally/138in the independent source, twelve modules,
+not fullsuite; two intermediate failures were stale status-text guards, not
+physical/data failures. The existing LuaLaTeX build succeeds,40pages; every
+page rendered, five contact sheets and new pages6/17/18/19 actually inspected.
+No new clipping/notation/layout error found; older sparse figure layout is
+retained, not final editorial approval. Raw XML and
+[manuscript_integration.json](manuscript_integration.json) preserve scope/hashes.
+No production source, parameter, model or threshold changed in this integration.

@@ -1,6 +1,6 @@
 # Manuscript terminology and claim boundaries
 
-Updated 2026-10-17. Scope: HfO2 manuscript and its source-to-table checks.
+Updated 2026-10-18. Scope: HfO2 manuscript and its source-to-table checks.
 
 | Term | Meaning used here | Does not establish |
 |---|---|---|
@@ -31,6 +31,9 @@ Updated 2026-10-17. Scope: HfO2 manuscript and its source-to-table checks.
 | Finite-amplitude energy/gradient secants | Separately defined kappa_E and kappa_g at the declared amplitude | Equal values outside a quadratic profile, total error or stationary-index certification |
 | Formal third-coordinate retention | Removing the measured omitted direction from the released block at the same point | A computed stable three-dimensional nonlinear surface or new independent prediction |
 | Original T local independent errors | Frozen E185/E188 predictions compared with eight later single-start gradient-candidate energies | An unseen-strain path test, full transverse stability or a new-method advantage |
+| Two-sided preserving training trial | Ten registered starts at five Q positions, with both released-norm and directional-gradient tests | Ten minima, distinct stable branches or a complete three-dimensional PES |
+| Retained-direction nonlinear fit | Registered 109-coefficient polynomial/harmonic-bath ansatz fitted to 81 native physical point observations | A new theorem, independently improved accuracy or a validated force field |
+| Revised preserving P8 target | Eight original Q positions with frozen training-parent starts and dual-gradient candidate energies | Retroactive success of the refused two-coordinate sheet or unseen-strain path barriers |
 
 Notation is not interchangeable: the representation figures use the declared
 mass-weighted atomic T chart; local joint-curvature coordinates have length

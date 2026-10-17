@@ -5845,3 +5845,18 @@ the original full-source archive plus exact two-file Git supplement; see
 E266validation_execution.json and rawXML for bytes/scope. P8now runs;
 physical+.005/private arrays remain sealed. No new material, Hessian,
 CI, electronic setting, retry or rollover. Goal remains active/incomplete.
+
+E266paper integration adds completed ten-start outcomes and the frozen
+training-only fit comparison to existing Methods2.4/Results3.3--3.4. No P8
+error/advantage is inserted.138local/138independent related checks pass,
+twelve modules; two earlier stale text guards are retained in rawXML.
+No new full regression. Independent source supplements and hashes are
+explicitly distinguished from full exports. The current scientific source
+23f6b3493d11c6e2aca3006174fa7e2d1b668c412eb68153f03aec21b45fb1d5
+compiles with existing LuaLaTeX to40pages, PDF9905398a39ff359fb5c064bc84b3b0ed21be74ef46d8d1b485caac1631195d59.
+All pages rendered; all five contact sheets and changed pages6/17/18/19
+inspected without new clipping, overlap or notation errors. The pre-existing
+sparse figure layout remains a final-editing task. No new figure or scientific
+claim follows from typesetting. Physical+.005remains sealed; a separate
+author clarification on sampled-peak versus strict error-certified edge
+selection is pending, not permission to silently relax the old selector.
