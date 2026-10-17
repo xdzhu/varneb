@@ -160,6 +160,15 @@ research, not a submission-ready paper. See the [complete T test](../../benchmar
 and its separate results_validation_E259.json receipt. E195/E257 receipts
 are retained as historical structures/builds rather than rewritten.
 
+The E261 reading build remains40pages. Section2.4 now records the approved
+fixed-Q signed-start branch experiment, its explicit directional stopping
+test and numerical-preconditioner boundary. The original182 table lines,
+nine figure assets and13 external citations are unchanged; training outcomes
+are still pending. The [E261 methods/build receipt](../../benchmarks/hfo2_channels/20261008/G3_preserving_branches_E260_20261017/manuscript_methods_E261.json)
+records67related manuscript checks and visual review of all40pages, including
+the new paragraph on page6. This is a reproducibility update, not a new
+material result or a submission-readiness claim.
+
 ## Fixed computation scope
 
 ABACUS/PBE, Hf4O8/four formula units, 100 Ry/full 10 au DZP/original six file

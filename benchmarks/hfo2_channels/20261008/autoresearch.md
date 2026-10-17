@@ -5683,3 +5683,24 @@ six hashes and full EFS,119.285/109.394s. Prefix4ee3e136e2eb36b47703bbef6f7b6d85
 The separate complete auditor is ready and refuses live/failed/incomplete
 accounting; it has not claimed a completed training batch. Nominal processing
 window Oct18 00:15--01:30, actual4h caps03:25:14, not a convergence promise.
+
+## E261 — branch-method definition in the paper (2026-10-17)
+
+One paragraph added to Section2.4: fixed Q/two independent signed starts,
+an explicit internal v_zeta direction, the0.03norm plus1e-4directional stop,
+and the positive numerical seed distinguished from physical curvature.
+No branch convergence, training completion or predictive advantage asserted.
+Original182 tablelines/ninefigurebytes/order/13externalcitations preserved;
+all four Results sections and the original refusal/T8 evidence remain.
+67related manuscript checks pass, not fullsuite. ExistingTeXLive2023
+LuaLaTeX/latexmk-norc exit0;40pages, all seven contact sheets and new page6
+visually inspected, no new clipping/overlap or TeX overfull/underfull/errors.
+Manuscript8002cbce3aa44be8eee416ff8829c33a8f00deb41b308b82ce65d2a101b17c15;
+PDF6881fcd9b993108e252a6e345525f0a44743d37f81e6b5e57bc1218654cd6081.
+Actual receipt manuscript_methods_E261.json and raw XML stay in the E260case.
+Previous readingPDF retained on C:. Production source/physical parameters,
+five user hashes and sealed independent/physicalstrain labels unchanged.
+Current jobs were reverified live at23:41:22; the later23:48producer prefix
+showed10/11SCFs on the first two starts, no failures/complete point rows,
+zeta near+/-0.37 and released norms about0.30. This is not a final native
+audit or successful branch; original12attempt caps remain, no retuning/retry.

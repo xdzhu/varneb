@@ -402,6 +402,23 @@ the ordinary NEB residual threshold. Preparation and all trial calls are
 charged separately; a budget-exhausted arm supplies a censored cost, not
 a completed denominator for a speedup factor.
 
+A separately registered branch trial resolves the shallow omitted internal
+direction explicitly. At each of five fixed Q pairs, two independent starts
+are displaced by $\zeta=\pm0.10$ Angstrom from the original conditional origin
+along the same unit direction $v_\zeta$. Both zeta and the other permitted released
+coordinates can move; the start sign is not a constraint. Safeguarded BFGS
+requires both $\|U^Tg\|\leq0.03$ eV/Angstrom and
+$|v_\zeta^Tg|\leq10^{-4}$ eV/Angstrom in the internal length chart. The additional
+test prevents an unresolved shallow direction from passing solely because
+its force is below the norm threshold. A positive numerical preconditioner
+combines the measured 33-direction restriction with a directional stiffness
+fitted to the four already seen signed gradient probes. It does not replace
+the original physical Hessian or certify release stability. Each start has
+the same twelve-attempt cap, geometry guards and electronic contract. The
+[pre-label protocol and exact optimizer](../../benchmarks/hfo2_channels/20261008/G3_preserving_branches_E260_20261017/protocol.md)
+retain both starts and their costs; their nonlinear branch and predictive
+outcomes remain pending.
+
 ### 2.5. Signed path work as an energy-consistency diagnostic
 
 Displacement and instantaneous gradient coverage do not measure the energy
