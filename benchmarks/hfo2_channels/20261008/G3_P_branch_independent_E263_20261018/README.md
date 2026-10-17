@@ -61,3 +61,21 @@ exported outputs are byte-identical. [validation.json](validation.json) records
 the tested tree, archive/XML/output hashes and the limited verification scope.
 This software milestone neither freezes a final scientific model nor releases
 any independent DFT computation.
+
+## E264: actual start arrays prepared after the full training audit
+
+The ten-start training trial has now finished and all81native SCFs passed
+its original complete auditor. `prepare_starts.py` consumes that exact report
+under the external SHA256 pin30971f61ab7d12d8e9bfa729a517603566c20cefa6bf442b06a4100264bd8811,
+verifies the original eight-file training bundle and applies its original
+geometry checks. [starts_E264.json](starts_E264.json) contains all8 admissible
+training-only starts and no DFT label. Parent IDs are2/4/7/8/2/2/4/7.
+
+The helper selects neither an independent result nor the lowest training
+energy. It excludes capped training parents0/1/6 under the preset dual
+gradient test. Its output explicitly keeps
+`final_models_domains_and_predictions_frozen=false` and
+`authorizes_independent_DFT=false`; actual model/domain/control freezing
+is still required before any test label. Physical+0.005 remains unopened.
+This observation supersedes the preparation-only snapshot above, without
+rewriting that snapshot or retroactively validating the original target.

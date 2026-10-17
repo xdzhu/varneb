@@ -165,3 +165,65 @@ is retained. Exact accepted energy/order identifies the record; the existing
 identities and the original HF replay remain exact; no physical tolerance
 changed. The remaining six candidates keep their original runtime, starts,
 caps and inputs. P8 independent labels and physical+0.005 remain unopened.
+
+## E264: the bounded ten-start trial is complete
+
+Both original jobs ended normally:28934048 at00:52:14CST (5220s),28934049
+at00:38:44CST (4410s). The original complete auditor reparsed **all81 native
+SCFs**, original380-file runtime/binary/six assets, ordered inputs, full
+energy/forces/stress and genuine32MPI provenance. The [complete native report](native_complete_E264.json)
+SHA256 is`30971f61ab7d12d8e9bfa729a517603566c20cefa6bf442b06a4100264bd8811`.
+No new calculation, restart, changed source or revised cutoff was used.
+
+| Q/A | Positive-start SCFs/outcome | Negative-start SCFs/outcome |
+|---|---|---|
+| (0,0) |12/capped|12/capped|
+| (-0.1,0) |6/gradient candidate|6/gradient candidate|
+| (0,-0.1) |7/gradient candidate|7/gradient candidate|
+| (0,+0.1) |12/capped|7/gradient candidate|
+| (+0.1,0) |6/gradient candidate|6/gradient candidate|
+
+Seven of ten pass **both** declared gradient tests. This is gradient-candidate
+coverage, not stable-sheet coverage. The three paired successful Q locations
+finish only0.00274--0.00281A apart, with absolute energy differences below
+0.000607meV/HfO2. These outcomes do not establish distinct stable branches.
+The central two starts remain nonconverged. No complete continuous stable
+conditional sheet, TS or independent predictive advantage is certified.
+
+An [ordered offline replay](analysis_E264.json) of the unchanged optimizer
+consumes all81 records; maximum cross-BLAS proposal difference is1.805e-16A,
+within the existing arithmetic check. It distinguishes two failure mechanisms:
+
+- IDs0/1 approach the original0.5A radius while tangent gradients remain
+  about0.296eV/A; all their native trials were energy-accepted.
+- ID6 is **not** radius-limited: its last accepted radius is0.327566A and
+  full released norm0.001166eV/A, but its zeta gradient1.30035e-4eV/A fails
+  the preset1e-4test. Seven accepted states plus five energy-rejected calls
+  exhaust12SCFs. It is not retrospectively passed by loosening that test,
+  nor is the cause of these small energy rejections attributed to SCF noise
+  without independent evidence.
+
+The [first offline caller error](analysis_first_error_E264.md) was a40D/36D
+direction mismatch; the corrected caller uses the frozen internal direction.
+No optimizer or dimensional guard changed. Actual-material regression now
+exercises all ten trajectories and the two different capped mechanisms.
+
+Completed-call proxy cost is84.101744core-hours; actual Slurm allocation
+cost85.6core-hours. All earlier296+272 derivative evaluations, training paths,
+faces, probes and other preparation remain additional. The120attempt cap
+was not filled, transferred, extended or retried. Training staysT34/P49.
+
+The remaining P8 start arrays are prepared from eligible **training-only**
+parents under the separately documented [new target policy](../G3_P_branch_independent_E263_20261018/README.md).
+All eight pass the original geometry guard; their parent IDs are2/4/7/8/
+2/2/4/7. This is not a final model/domain/forecast freeze or an authorization
+to calculate labels. The original E185/E188 forecast and E254 refusal remain;
+T8 are seen, preserving8 and physical+0.005 remain unseen. No extra training
+cohort or full Hessian is implicit in this completed trial.
+
+Related checks pass29local/29independent across five modules, six new actual-
+cohort checks; zero final failures/errors/skips, not fullsuite. The full-source
+export tree9b2072413215d3604374577573a7c38bd2e755a7 and archive/XML/data hashes
+are in [validation_E264.json](validation_E264.json). Independent replay also
+reproduces the exact eight prepared start arrays. This verifies archived-data
+processing and source portability, not additional independent material labels.

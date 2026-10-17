@@ -5753,3 +5753,37 @@ No production physics/source/threshold/domain change or extra DFT/job.
 The original training jobs continue independently; the E260 complete auditor
 was copied to a previously absent external read-only helper path, not the
 immutable runtime. No physical+0.005 or private arrays accessed.
+
+## E264 — complete bounded training, distinct failure mechanisms (Oct18)
+
+Original28934048/28934049 completed0:0 in5220/4410s, actual85.6allocation
+core-hours. The unchanged native auditor reparsed all81SCFs, original380
+runtime/binary/six assets/fullEFS/true32MPI and exact ordered inputs/sources.
+Nativeaudit30971f61ab7d12d8e9bfa729a517603566c20cefa6bf442b06a4100264bd8811.
+Seven of10pass both original gradient tests; capped IDs0/1/6 remain failures.
+Original120cohort/12per-start caps are retained, no retries or extra cohort.
+All prior296+272derivatives and other preparation costs remain additional;
+completed-call proxy84.101744core-hours. Training staysT34/P49, not full81grids.
+
+Ordered offline replay consumes all81records with max1.805e-16A arithmetic
+difference. Central0/1are radius-limited with tangent gradient~0.296eV/A.
+ID6is different: radius0.327566A/norm0.001166eV/A, but zeta gradient1.30035e-4
+exceeds the frozen1e-4target; five energy-rejected calls use its remaining
+budget. No claim that SCF noise caused those rejections. The initial offline
+caller40D/36D wiring error is retained; using the exact frozen internal36
+direction fixes the caller only. No physics/optimizer/guard change.
+
+Three successful two-sided pairs differ<0.000607meV/fu and~0.0028A; no distinct
+stable branches, complete continuous stable face, TS or independent gain
+established. The original2Drefusal and all original forecasts remain intact.
+All eight revised P starts pass the original geometry guard from training-only
+parents2/4/7/8/2/2/4/7; startplan90e63ea901c15abc19cb1e552bde55f85221fc928032947be6b30b401bb8b2fc.
+This is geometry preparation, not final model/domain/forecast freezing or
+permission to evaluate independent labels. Preserving8 and physical+.005
+remain unseen. T8 are seen. No full Hessian or new training is implicit.
+
+29related checks pass locally and in a full-source Git export, five modules/
+six new checks, no final failures/errors/skips; not fullsuite. Tree9b2072413215d3604374577573a7c38bd2e755a7,
+archive3338c26faba68deb1063ad48306f47b9b67fd6b6f9d8ae3f2953196744254b92.
+E260case validation_E264.json and rawXML preserve verification scope/identities.
+The main scientific protocol and full goal remain unfinished and active.
