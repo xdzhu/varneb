@@ -142,3 +142,13 @@ per channel; this is a launch-health check, not the full terminal audit.
 native calls, point errors, unavailable predictions and actual costs.
 No restart, follow-up submission, automatic parameter change, or model
 refit is performed by either inspector.
+
+At 07:57:02 CST, both jobs remained RUNNING and each had completed its first
+interior SCF and begun the second. Native replay confirmed electronic
+convergence, complete energy/forces/stress, the six unchanged physical input
+hashes and genuine MPI32 (no singleton fallback) in both first calls.
+They took 131.078 s and 181.611 s, respectively. Evidence is retained in
+`path_first_call_snapshot.json`. This is a two-call startup audit, not an
+all-call audit or a converged path. If subsequent calls have similar cost,
+one seven-interior chain evaluation is roughly 15--22 minutes; total NEB
+completion cannot be inferred before observing its residual trajectory.
