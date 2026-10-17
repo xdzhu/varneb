@@ -9,7 +9,9 @@ Status updated through E259 on 2026-10-17. The
 [paper-completion blueprint](../../docs/HFO2_PAPER_BLUEPRINT_2026-10-17.md)
 separates completed material observations from the proposed remaining tests.
 It retains the original prediction protocols and the author-approved four-part
-Results structure; its proposed third-coordinate study is not yet authorized.
+Results structure. The author has now approved the bounded third-coordinate
+trial; its exact ten starts, stop tests and budgets are recorded separately
+in the [E260 protocol](../../benchmarks/hfo2_channels/20261008/G3_preserving_branches_E260_20261017/protocol.md).
 
 ## Scientific thesis to test
 

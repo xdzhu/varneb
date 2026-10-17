@@ -8,8 +8,10 @@ reading PDF through [the thin TeX wrapper](varneb_JCTC_draft.tex).
 For a concise Chinese account of what is complete, what the final paper must
 establish, and a bounded route to completion, start with the
 [October 17 research blueprint](../../docs/HFO2_PAPER_BLUEPRINT_2026-10-17.md).
-It is a planning review based on E259, not a new calculation or an amendment
-authorizing the proposed preserving third-coordinate experiment.
+It is a planning review based on E259. The author subsequently approved its
+bounded preserving branch trial and independent-validation route; the new
+[E260 preregistration](../../benchmarks/hfo2_channels/20261008/G3_preserving_branches_E260_20261017/protocol.md)
+defines the first ten training candidates and preserves the original refusal.
 
 The [current structure and source checks](../../benchmarks/hfo2_channels/20261008/manuscript_atomic_treatment_E195_20261015/README.md)
 record the user-approved four-part Results revision. Older dated receipts,

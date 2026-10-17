@@ -5642,3 +5642,44 @@ Final tree799869bae93b21065f51d7da53b8d2d3b83a70dc/archive
 XML49cb8b83/d9dc197d; independent score CLI byte-identical. Source and reading
 PDF copy on C:/D: as recorded, old generated copy retained recoverably.
 No CI/install/release/monitor or unauthorized push. Full goal incomplete.
+
+## E260 — author-approved bounded preserving branch trial (2026-10-17)
+
+The author approved the paper-completion blueprint and the new third-coordinate
+protocol. A new active goal preserves the original physical contract, original
+2D refusal, seen T8 and still-unseen preserving8/physical+.005 tests.
+Five original Q pairs each receive two separately fixed +/-0.10A starts;
+10training candidates,12fresh attempts each,120total, no continuation/retry.
+Training commitments T34/P39 -> T34/P49 within81each. The added directional
+stop1e-4eV/A resolves the shallow coordinate while retaining the0.03norm test;
+neither changes DFT or ordinaryNEB0.10. A positive numerical seed is explicitly
+distinguished from the original physical negative curvature.
+
+The first local run had41pass/1hand-entered expectation failure; raw XML kept.
+Correcting that expected number from the unchanged four-probe formula gave
+42/42. An explicit arithmetic replay check added one test:43local/43independent
+pass, plus8dispatcher checks against actual Slurm spelling/range records.
+No fullsuite rerun. Original r1 preflight found1382 last-bit matrix/coordinate
+differences,max1.0658141036401503e-14, before inert decks/DFT/jobs. Original
+config/manifest/bundle and diagnosis retained; r2 uses frozen arrays with the
+existing2e-12 arithmetic reconstruction tolerance and exact physical/policy
+identities, rather than platform-regenerated optimizer seeds.
+
+Ten native inert decks and old380runtime/binary/six-asset/origin checks passed.
+Config63b1aa0eea88e7cd7c2f1a78ce9f4f3c7f39e16a9caf04d3f6d8c6ef5f84ab80;
+bundle manifest4422902d6474afe1056181b978f6098c9fc1284ff6cc66d11ff865d499d87eff.
+Jobs28934048/28934049 were submitted held, exact1node/32CPU/4h verified,
+then released on the same IDs. At23:25:46CST both RUNNING,32s elapsed,
+node3/node28. This is startup, not completed training/stability/prediction.
+The case README and later dated receipts provide actual progress; no blind
+resubmission, live-source overwrite, CI, publication or new monitor.
+
+Final E260related checks57local/57independent,6modules/32new, no final
+failures/errors/skips. Testedtreee33b523efd584f6a360a773408693ec0fac8a0f0,
+archivee63f51d86086c9fad1b12ca7b570c4c0850b5dab7dc6cbcca80969e47b211cd2.
+At23:32:30CST, both jobs RUNNING436s,6complete evaluator records/0failures/
+0completed points. First SCF per shard natively reparsed:32trueMPI, original
+six hashes and full EFS,119.285/109.394s. Prefix4ee3e136e2eb36b47703bbef6f7b6d858a3ef048263b70edf8df7d0558c62f11.
+The separate complete auditor is ready and refuses live/failed/incomplete
+accounting; it has not claimed a completed training batch. Nominal processing
+window Oct18 00:15--01:30, actual4h caps03:25:14, not a convergence promise.

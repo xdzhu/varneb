@@ -67,3 +67,29 @@ optimizer defaults, frozen production traces and calculator settings are
 unchanged. Current evidence is analytic plus an analytic ASE E/F/stress budget
 test, not demonstrated HfO2 acceleration. Read its total-versus-released-radius
 contract before preparing any bounded material experiment.
+
+## Explicit stopping test for a shallow branch direction
+
+`vcneb.branch_relaxation.relax_branch_candidate` is an opt-in numerical helper
+for a declared Euclidean length chart. It relaxes in an orthonormal
+`free_basis` while holding its complement fixed. The caller supplies the
+physical energy/gradient, a geometry guard, a unit open `branch_direction`
+and a positive numerical `initial_hessian` on the free space.
+
+Convergence requires both the released-gradient norm and the absolute
+directional derivative to pass their explicit tolerances. This prevents a
+small-curvature direction being accepted at its starting geometry solely
+because the norm threshold is larger than its force. The
+[E260 protocol](../benchmarks/hfo2_channels/20261008/G3_preserving_branches_E260_20261017/protocol.md)
+uses0.03eV/A for the norm and1e-4eV/A for its registered internal direction;
+these are local optimization choices, not changes to DFT input or ordinary
+NEB convergence. Other studies must choose and record their own criteria.
+
+The helper uses geometry-screened Armijo/BFGS steps, returns the accepted
+trace and termination reason, and propagates evaluator failures/budget
+exceptions. The evaluator continues to own exact caching and cumulative
+attempt accounting. A positive optimizer seed is not a physical stability
+test; neither two starts nor a successful stop certifies separate minima,
+a global conditional surface or a transition state. Current validation is
+analytic plus fixed-source experiment preflight; native material results
+must be reported separately after completion.
