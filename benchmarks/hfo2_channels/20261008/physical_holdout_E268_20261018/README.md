@@ -106,3 +106,39 @@ JUnit evidence is `independent-tests.xml`; this is not a full-suite claim.
 The tested staged tree was`e0af9051951b5d3cd404314d6f0f3f3b658ebebe`;
 the scoped supplement archive SHA256 was
 `79f5500d7f3ebbb2b4ff5d786756908e1c01fafde8d55d7ab65814b1a4680edd`.
+
+## Actual two-path deployment
+
+The complete prediction panel was pushed in `a8dcca7d` before constructing
+the target interiors. The separate path bundle retains the original runtime
+and physical inputs; no source used by the completed endpoint jobs was edited.
+Its external SHA256 is
+`ce9bfed78e7b3e8d9c1708f4cc72879e977ef1c54653f7b45e04675611edfe7b`.
+Actual native preflight validated all 18 input structures and four endpoint
+cache uses, with fresh DFT disabled. All 96 deployed source/forecast/seed
+files also reproduce byte-for-byte from the `165fd143` Git archive, as do
+all 89 portable endpoint evidence files. The remaining generated config is
+the two-channel list plus the already recorded forecast manifest pin.
+
+Original path handles, submitted held and resource-checked before release:
+
+| Job | Channel | Resources | Fixed limit |
+| --- | --- | --- | --- |
+| 28938772 | PO+ to preserving PO- | hfacnormal01, one node, 32 MPI | 80 updates / 24 h |
+| 28938773 | PO+ to T | hfacnormal01, one node, 32 MPI | 80 updates / 24 h |
+
+Both started at 07:53:24 CST on 2026-10-18, on node6 in separate allocations.
+At 07:54:33 both were RUNNING and each had begun one fresh interior SCF;
+no complete chain or convergence claim follows. The seven interior images
+are evaluated sequentially within each allocation; the two paths run in
+parallel. Each image uses native `mpirun -np 32`, with one thread per rank.
+The new converged endpoints are cached, so they are not recalculated each
+iteration. Ordinary NEB uses 0.10 eV/A and no climbing image.
+
+`inspect_paths.py` makes one read-only snapshot of these exact handles.
+Its optional prefix audit reparses only the first completed interior call
+per channel; this is a launch-health check, not the full terminal audit.
+`audit_paths.py` will retain converged versus bounded-step outcomes, all
+native calls, point errors, unavailable predictions and actual costs.
+No restart, follow-up submission, automatic parameter change, or model
+refit is performed by either inspector.
