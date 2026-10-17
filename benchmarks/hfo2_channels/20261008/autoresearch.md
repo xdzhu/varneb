@@ -5723,3 +5723,33 @@ not fullsuite; first21pass/1failure XML
 retained for cross-BLAS2.776e-17 reconstruction, not a physical input failure.
 No DFT/scheduler/source/domain change. Original ten starts continue unchanged;
 remaining independent labels and physical-strain holdouts are sealed.
+
+## E263 — user-facing offline replay and remaining-test start preparation (Oct18)
+
+The repository now has one standard-library-only entry point:
+`python -m examples.hfo2_paper_results --output NEW_DIR`.
+It exports all8 archived channel rows,19local model arms and152model/point
+records, retaining missing predictions, coverage and raw/aligned errors.
+Two exact archived report hashes bind the inputs; maxima, forward/reverse
+identity, shared initial energy and individual local errors are recomputed.
+It is report replay, not a fresh native log audit or unseen-strain prediction.
+The compact case guide avoids requiring users to navigate research E IDs.
+The example index's obsolete backend-promotion wording now points to the
+existing five-backend GaN evidence and separates that evidence from readiness.
+
+The separate remaining-P8 helper fixes the original eight Q coordinates,
+training-only nearest-eligible-parent/ID selection, both original gradient
+tests and explicit unchanged-guard refusal. It has no DFT, scheduler or
+file I/O. Complete native cohort audit and final model/domain/prediction
+freezing remain prerequisites; no actual P8 start array or label is generated.
+Changed targets cannot retrospectively validate E185/E188 or erase E254.
+
+Eight new related checks pass locally and in a targeted Git export, not
+fullsuite. Both independent CLI runs also pass with `python -S` (no site
+packages), producing byte-identical four-file outputs. Tree317cd05ed321fb566afc4673bba636cb02d23675;
+archivea430ffdb2aada57b3cfb116c9dd20d9f6f676b4a0210421e92fdd5242a2ccd48.
+Raw XML/output hashes and verification scope are in the E263validation.json.
+No production physics/source/threshold/domain change or extra DFT/job.
+The original training jobs continue independently; the E260 complete auditor
+was copied to a previously absent external read-only helper path, not the
+immutable runtime. No physical+0.005 or private arrays accessed.

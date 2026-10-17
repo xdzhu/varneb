@@ -89,6 +89,12 @@ It reports physical energy or fixed-pressure enthalpy derivatives without
 launching a calculator. A local work derivative or endpoint energy shift is
 not by itself a transition-state certificate or a barrier prediction.
 
+To replay the archived HfO2 paper tables without DFT, run
+`python -m examples.hfo2_paper_results --output hfo2_paper_tables` from a source
+checkout. The [compact case guide](examples/cases/hfo2_competing_channels/README.md)
+explains the eight-channel comparison, all19 local-model arms, raw/aligned
+errors, coverage and remaining validation limits.
+
 The old `README_VCNEB.md`, `run_NEB/`, and `run_VCNEB/` names remain as
 compatibility entry points for existing research scripts.  New work should use
 the public CLI, `vcneb` API, and the layout documented in

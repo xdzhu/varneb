@@ -21,17 +21,19 @@ not require a DFT executable.
 
 | Case | Purpose | Status and documentation |
 | --- | --- | --- |
+| [`cases/hfo2_competing_channels/`](cases/hfo2_competing_channels/README.md) | One-command offline replay of HfO2 channel and local-prediction tables | All8 archived paths/all19 T-local model arms; no DFT or private arrays; not the unfinished physical-strain holdout |
 | `batio3_vasp_pbe_paw_static/` | Minimal VASP static-input fixture for backend validation | Input-only example; licensed POTCAR is not committed |
 | `gan_qian_2013/` | GaN B4/B3 to B1 literature-path studies at finite pressure | Includes auditable seeds and accepted B3/B1 endpoints; see `docs/GAN_QIAN_2013_REPLICATION_PLAN.md` |
 | `cdse_sheppard_2012/` | CdSe rock-salt to wurtzite cell- and atom-mapped G-SSNEB comparison | Preparation/launch description only while production paths remain under review; see `docs/CDSE_SHEPPARD_2012_REPLICATION_PLAN.md` |
 | `prl2023_hfo2_fig2a/` | HfO2 polymorph paths from the 2023 PRL figure-2a study | Reproduction contract and failure-safe VASP workflow; not yet a manuscript result |
 
-QE, LAMMPS, CP2K, and ABINIT adapters use the same isolated-image factory
-contract as the DFT backends. Their adapter status is intentionally not a
-material-validation claim; use `varneb doctor` and the HF module list before
-selecting a potential or basis/pseudopotential set. The compact ABINIT H2
-contract smoke is recorded under `validation/backend_smoke/`; BTO promotion
-requires an independently converged PBE pseudopotential/cutoff gate.
+ABACUS, VASP, QE, CP2K, and ABINIT use isolated-image calculator contracts
+and have archived, independently converged GaN B4-to-B1 paths at45.7GPa;
+see the [backend evidence and case links](../README.md#backends). This does
+not make different Hamiltonians interchangeable. LAMMPS remains a separate
+classical-potential adapter. Use `varneb doctor` and an actual one-image
+energy/force/stress preflight to establish readiness on your machine; a
+historical adapter smoke or archived material result alone is not readiness.
 
 Material directories contain compact structures, preparation metadata, or
 documentation.  Scheduler templates live in `cluster/`; run outputs and restart
