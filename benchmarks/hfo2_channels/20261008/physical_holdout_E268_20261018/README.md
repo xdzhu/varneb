@@ -62,3 +62,47 @@ transfers); these are not69 newly fitted models or successful predictions.
 The two endpoint-feature B1 values are substituted only after native endpoint
 and identity checks. Synthetic freezer plus existing chain tests:80 passed.
 No +.005 interior has been evaluated at this stage.
+
+## Native endpoint results and prospective numeric freeze
+
+Both original jobs completed0:0:28938150 at07:43:17CST and28938151 at07:37:45CST.
+All11 actual SCFs replay from native energy/forces/stress logs. PO+, preserving
+PO- and T consumed3/3/5SCFs; final atomic forces were0.016430/0.017196/0.0000275
+eV/A and open tractions1.1806/1.5335/1.7154kbar, within the unchanged0.03eV/A
+and2kbar endpoint criteria. All three symmetry-tolerance screens retained
+Pca21/Pca21/P42/nmc, respectively; the two PO polar displacement signs and
+the registered preserving pattern remained distinct. These identity screens
+are not Hessian-stability or electronic-polarization certificates.
+
+The89-file portable native export excludes pseudopotential/orbital bytes;
+their original HF full-byte audit remains preserved. Export archive SHA256:
+`3299b20e11355fa468ea7d495a42a41f9140f8a1793db70bb39a2692f6851e18`.
+The first local extraction attempt used a newer Python tar API and created
+no extraction; explicit member/type/path/hash checks permitted extraction
+with the installed Python. No DFT or scientific settings changed.
+
+Audited feature SHA256:
+`0441a5e7e63ec86a68807068ea21db6901f4a762d740592473d91bf15bbd8f23`.
+Final numeric forecast manifest SHA256, frozen before any target interior
+was generated or evaluated:
+`1dd8dc4cacb22b073a6402acb38ffb956b3e0dd3738a85db18fab2afb279a88b`.
+
+| Forecast (meV/HfO2) | Preserving flip | PO-to-T |
+| --- | ---: | ---: |
+| B0 midpoint | 111.126307 | 90.590137 |
+| B1 fixed absolute peak | 95.597499 | 83.185940 |
+| B1 final-well-following peak | 96.863034 | 85.413539 |
+
+These are six numeric records, with132 explicit unavailable-transfer records
+retained, not discarded competitors or zero errors. No physical error bounds
+are inferred from the ordinary NEB force tolerance. Preparation cost:
+13.703824 native-SCF core-hours,15.022222 allocated core-hours. All previous
+training, curvature and P8 costs remain additional.
+
+Independent scoped regression:162 passed,0failed/0errors/0skipped in39.811s,
+covering the new sampled protocol, unchanged strict prediction controls,
+forecast freezer, clamped endpoints/chains and prediction evaluation. Raw
+JUnit evidence is `independent-tests.xml`; this is not a full-suite claim.
+The tested staged tree was`e0af9051951b5d3cd404314d6f0f3f3b658ebebe`;
+the scoped supplement archive SHA256 was
+`79f5500d7f3ebbb2b4ff5d786756908e1c01fafde8d55d7ab65814b1a4680edd`.

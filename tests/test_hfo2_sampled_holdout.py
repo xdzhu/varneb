@@ -150,3 +150,25 @@ def test_geometry_only_polygon_preserves_order_lift_endpoints_and_plane():
     np.testing.assert_allclose(result[0].positions, ends[0].positions, atol=1e-12)
     np.testing.assert_allclose(result[-1].positions, ends[-1].positions, atol=1e-12)
     np.testing.assert_allclose(images[0].positions, start.positions, atol=1e-12)
+
+
+def test_sampled_scores_keep_caps_and_model_abstentions_out_of_accuracy():
+    path = PATH.parent/'audit_paths.py'
+    s = importlib.util.spec_from_file_location('holdout_score', path)
+    module = importlib.util.module_from_spec(s); s.loader.exec_module(module)
+    from vcneb.prediction_evaluation import FrozenChannelForecast
+    channels = module.CHANNELS
+    forecasts = [FrozenChannelForecast('B0', c, p, None, 'a'*64, 'b'*64)
+                 for c, p in zip(channels, (.11, .09))]
+    forecasts += [FrozenChannelForecast('B5', c, None, 'physical transfer unavailable', 'a'*64, 'c'*64)
+                  for c in channels]
+    refs = {c: dict(ordinary_converged=True, sampled_peak_eV_fu=e)
+            for c, e in zip(channels, (.111, .088))}
+    rows = {r['model']: r for r in module.point_scores(forecasts, refs)}
+    assert rows['B0']['maximum_absolute_error_meV_fu'] == pytest.approx(2.)
+    assert rows['B0']['T_minus_preserving_error_meV_fu'] == pytest.approx(3.)
+    assert rows['B5']['scored'] == 0 and rows['B5']['maximum_absolute_error_meV_fu'] is None
+    refs[channels[1]]['ordinary_converged'] = False
+    rows = {r['model']: r for r in module.point_scores(forecasts, refs)}
+    assert rows['B0']['scored'] == 1 and rows['B0']['T_minus_preserving_error_meV_fu'] is None
+    assert all(not r['physically_resolved_advantage_certified'] for r in rows.values())
