@@ -18,6 +18,16 @@ interiors evolve freely; the local intervention constraints do not become
 new NEB constraints. The original two endpoints and atom/periodic gauge
 are retained. No physical parameter changes or sign/strain search.
 
+The first complete free-chain update at00:55:24 has been exported and
+independently replayed: sampled maximum85.269291meV/HfO2, residual0.123740,
+still unconverged. The [four-panel mechanism preview](figures/step_0001/README.md)
+shows original/seed/step1 energies, transverse/z structural proxies and
+per-image residuals. Signed component checks locate the remaining force
+primarily in the perpendicular physical term, not spring spacing. No k
+change, new prediction score or acceleration claim follows. The76-file
+selected snapshot stays compressed in `snapshot_step_0001.tar.gz`; it
+contains only this evaluated frame, not all past/future runtime calls.
+
 The inert `prepared/` seed includes all nine exact native E/F/stress cache
 references, the single replaced J geometry, the full connection replay
 and byte hashes. Standard public resume-cache behavior invalidates each
