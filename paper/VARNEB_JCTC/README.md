@@ -5,29 +5,43 @@ The [CPC software paper](../VARNEB_CPC/README.md) is a separate artifact.
 One editable source, [MANUSCRIPT_DRAFT.md](MANUSCRIPT_DRAFT.md), supplies the
 reading PDF through [the thin TeX wrapper](varneb_JCTC_draft.tex).
 
-For a concise Chinese account of what is complete, what the final paper must
-establish, and a bounded route to completion, start with the
-[October 17 research blueprint](../../docs/HFO2_PAPER_BLUEPRINT_2026-10-17.md).
-It is a planning review based on E259. The author subsequently approved its
-bounded preserving branch trial and independent-validation route; the new
-[E260 preregistration](../../benchmarks/hfo2_channels/20261008/G3_preserving_branches_E260_20261017/protocol.md)
-defines the first ten training candidates and preserves the original refusal.
+## Current reading route: mechanism first
 
-October18 source update: the ten-start trial is complete (7gradient candidates,
-3capped starts;81native SCFs), and one finite nonlinear/harmonic fit and all
-remaining P8 forecasts were frozen before their labels. P8 is now complete:
-8/8dual-gradient candidates,24native SCFs and all23frozen arms scored. The
-nonlinear family has slightly lower RMSE but higher maximum error than its
-same-information harmonic control at both steps; no resolved predictive gain
-is claimed. Methods2.4/Results3.3--3.4/Table5 and AppendixE.9/TableA19 retain
-failures, coverage, strong controls and actual cost. Verification/build details
-are in the [complete P8 case](../../benchmarks/hfo2_channels/20261008/G3_P8_execution_E266_20261018/README.md).
-It remains a working manuscript, not a finished article. Physical+.005 stays
-sealed pending its separate complete forecast/protocol gate.
+The October 18 revision connects the results to one material question:
+**how mechanical constraints change competition between homogeneous
+switching and escape from the polar well, and which atomic rearrangements
+accompany that response.** The main Results retain four sections:
+path competition, mechanical boundary, microscopic interpretation, and
+independent prediction checks.
 
-The [current structure and source checks](../../benchmarks/hfo2_channels/20261008/manuscript_atomic_treatment_E195_20261015/README.md)
-record the user-approved four-part Results revision. Older dated receipts,
-including the E153 narrative revision, remain historical.
+- Figure 1 compares all four candidate peaks and their endpoint-only controls.
+- Figure 2 retains the free-cell/clamped Pbcn comparison.
+- Figure 3 follows signed oxygen shuffles and open-axis stretch on both flips
+  and T escape at both strain conditions.
+- Figure 4 separates observed atomic-only and additional joint relaxation
+  at all five local coordinates per center.
+
+The [three new main figures and source data](figures/hfo2_mechanism_20261018/README.md)
+have a single replay command:
+
+~~~sh
+python -m scripts.plot_hfo2_mechanism --output paper/VARNEB_JCTC/figures/hfo2_mechanism_20261018
+~~~
+
+No new DFT, force audit, parameter change, atom rematching or fitted smoothing
+is introduced by that command. Previous representation figures and every
+numerical table row are retained in the same article: the former main
+Figures 2--5 are now Figures A5--A8; former Tables 3--5 are Tables A20--A22.
+The Results plus Discussion are shorter even with the new mechanism text.
+
+The bounded ten-start preserving trial and revised P8 test are complete.
+Their details and negative model-comparison findings remain in Appendices
+E and F; they do not define the visual center of the paper.
+The [separately frozen +0.5% physical test](../../benchmarks/hfo2_channels/20261008/physical_holdout_E268_20261018/README.md)
+has been launched for preserving switching and T escape. Its terminal
+results are not included in this manuscript revision. The
+[research blueprint](../../docs/HFO2_PAPER_BLUEPRINT_2026-10-17.md)
+remains the bounded completion plan, not a new experiment matrix.
 
 ## Scientific question and current evidence
 
@@ -45,11 +59,11 @@ favorable signature. This is not an error-certified physical ordering: the
 strained T/M escape peaks differ by only 0.464068 meV/HfO2 and their continuous
 bottleneck errors are unmeasured.
 
-The current paper is organized by evidence, not job chronology:
+The current paper is organized by the material argument, not job chronology:
 
 1. Complete channel-response matrix and endpoint-only controls.
 2. Mechanical boundary and the changed energetic role of the Pbcn snapshot.
-3. What the mode descriptions capture and what atomic/joint relaxation changes.
+3. Signed oxygen-shuffle routes, open-cell response and matched atomic/joint release.
 4. Prediction controls, the completed T local test and the still-unfinished mechanical-response prediction.
 
 Detailed signed-work, cross-strain, curvature and representation checks are
@@ -64,7 +78,7 @@ The complete post-release check now supplies an actual preserving-origin
 sign-screen refusal, not only a pending warning. Its omitted oxygen-dominated
 direction stays raw-negative at both steps and in the fixed-cell restriction.
 Four additional same-contract training statics measured only0.0126--0.0172
-meV/HfO2 lowering. Main Results3.3 and AppendixE.7/TableA17 distinguish that
+meV/HfO2 lowering. Appendices E.7 and F.1 distinguish that
 shallow response from a corrected barrier, full stationary index or independent
 accuracy claim. Both secant definitions and adjacent work discrepancies remain.
 
@@ -187,4 +201,5 @@ ABACUS/PBE, Hf4O8/four formula units, 100 Ry/full 10 au DZP/original six file
 hashes/Gamma2x2x2/P0/E0. No cutoff, orbital, pseudopotential, SCF, CI or
 unregistered material/functional/orientation matrix change. The same
 mechanical active space applies at every image and endpoint of a comparison.
-The physical +0.005 holdout stays sealed until the predictive freeze.
+The physical +0.005 path predictions were frozen before the two bands were
+launched; no terminal labels from those bands are used in the present figures.

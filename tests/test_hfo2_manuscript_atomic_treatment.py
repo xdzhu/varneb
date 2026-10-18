@@ -71,13 +71,16 @@ def test_approved_four_part_results_and_six_appendix_diagnostics():
     assert re.findall(r'^### (3\.\d+)\.', main, re.M) == ['3.1', '3.2', '3.3', '3.4']
     assert 'Across the five registered coordinates' in ' '.join(main.split())
     assert 'An independent prediction advantage has not yet been established' in main
-    assert 'The prospective T local test supplied eight independent' in main
+    assert 'The prospective T local test supplied eight independent' in ' '.join(main.split())
     # The original refusal survives the separately registered P8 deployment;
     # a stale "uncomputed" sentence must not block an honest status update.
     assert 'preserving origin still fails the original necessary sign condition' in ' '.join(main.split())
-    assert '31 numeric forecasts and one explicit twelve-call' in ' '.join(main.split())
-    assert 'not retroactive stable-sheet validation' in ' '.join(main.split())
-    assert 'All eight candidates passed both gradient tests in 24 native SCFs' in ' '.join(main.split())
+    # Complete frozen-protocol details move to F.2, not out of the paper.
+    detailed = ' '.join(text.split('### F.2.', 1)[1].split())
+    assert '31 numeric forecasts and one explicit twelve-call' in detailed
+    assert 'not retroactive stable-sheet validation' in detailed
+    assert 'All eight candidates passed both gradient tests in 24 native SCFs' in detailed
+    assert 'all eight candidates with both gradient tests in 24 native SCFs' in ' '.join(main.split())
     assert 'original two-coordinate refusal' in ' '.join(main.split())
     # Historical diagnostics and both independent cohorts remain in E.1--E.9.
     assert re.findall(r'^### (E\.\d+)\.', text, re.M) == [f'E.{i}' for i in range(1, 10)]

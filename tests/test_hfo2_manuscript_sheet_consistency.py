@@ -77,10 +77,11 @@ def test_old_113_table_lines_nine_figures_citations_and_wrapper_are_retained():
     # Original119 plus shared-reference(16), nonlinear(7), atomic(6), statics(6).
     # The completed P8 comparison adds6main and25appendix lines, no old loss.
     assert sum(counts.values())==213
-    assert 'Table 4. Prospective T local errors' in text and 'Table A18. All frozen T test arms' in text
+    assert 'Table A21. Prospective T local errors' in text and 'Table A18. All frozen T test arms' in text
     assert 'Table A17. Four frozen directional training statics' in text
     figures = re.findall(r"!\[[^\]]*\]\(([^)]+)\)", text)
-    assert figures == before["original_figure_targets"] and len(figures) == 9
+    assert not Counter(before["original_figure_targets"])-Counter(figures)
+    assert len(figures)==12 and len(set(figures))==12
     assert all(
         hashlib.sha256((PAPER / n).read_bytes()).hexdigest() == h
         for n, h in before["original_figure_sha256"].items()
@@ -109,7 +110,7 @@ def test_methods_ledger_and_interpretation_keep_finite_residual_and_budget_bound
         "does not bound",
         "exact-envelope assumption",
         "nonconservative DFT forces",
-        "independent surface energies or transverse stability",
+        "does not identify one mode as the sole cause",
     ):
         assert phrase in main
     for phrase in (

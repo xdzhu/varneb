@@ -4,6 +4,9 @@ Updated 2026-10-18. Scope: HfO2 manuscript and its source-to-table checks.
 
 | Term | Meaning used here | Does not establish |
 |---|---|---|
+| Signed geometric Qx/Qy/Qz | Unit-Cartesian-norm rotated T oxygen-shuffle projections in the original T lattice metric, with one fixed periodic gauge per ordered chain | Phonon occupations, assigned irreps, local joint Q1/Q2, or a complete atomic representation |
+| Polar displacement proxy | Mean O minus mean Hf displacement along original z in the same reference metric | Electronic polarization or switching charge |
+| Open-axis stretch | 100(Fyy-1) in the original T chart; substrate fixes original x and z | Green strain, elastic-energy partition or an isolated causal mechanism |
 | Sampled peak | Highest evaluated image of a declared ordinary NEB band | Continuous maximum, stationary TS or barrier error |
 | Ordinary-converged band | Meets the declared 0.10 eV/Angstrom NEB residual | Zero physical gradient at each image |
 | Internal local curvature | Finite differences in 36 translation-free joint atomic-cell length coordinates at fixed substrate | Mass-weighted phonon frequencies or an uncertainty-resolved stationary index |
@@ -35,7 +38,8 @@ Updated 2026-10-18. Scope: HfO2 manuscript and its source-to-table checks.
 | Retained-direction nonlinear fit | Registered 109-coefficient polynomial/harmonic-bath ansatz fitted to 81 native physical point observations | A new theorem, independently improved accuracy or a validated force field |
 | Revised preserving P8 target | Eight original Q positions with frozen training-parent starts and dual-gradient candidate energies | Retroactive success of the refused two-coordinate sheet or unseen-strain path barriers |
 
-Notation is not interchangeable: the representation figures use the declared
+Notation is not interchangeable: Figure 3 uses the original T Cartesian
+metric, whereas the appendix representation-coverage figures use the declared
 mass-weighted atomic T chart; local joint-curvature coordinates have length
 units with L=5.12968067458423 Angstrom. Reported E160 total energies and energy
 changes use the twelve-atom cell. Existing G2 barrier tables use their stated
