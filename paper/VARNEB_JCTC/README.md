@@ -10,7 +10,7 @@ reading PDF through [the thin TeX wrapper](varneb_JCTC_draft.tex).
 The single-column review layout retains the main article, references and
 in-article appendices. Historical page counts belong to their dated builds;
 the current PDF is regenerated from the single Markdown source. The
-terminal/crossover revision has58pages. Figure4 is onpage11,
+literature/atom-resolved revision has59pages. Figure4 is onpage11,
 the three-strain T release Figure5 onpage12, the connected preserving
 Figure6 onpage14, independent strain Figure7 onpage15 and completed
 initialization Figure8 onpage17. Table4 onpage16 adds the measured frozen
@@ -39,7 +39,14 @@ methods now contain the material/comparison definitions and calculation
 recipe; the extended response theory and diagnostic procedures are retained
 in Appendix G. All218previous numerical table lines remain; four new lines
 form Table4. All16figure targets from the terminal comparisons remain.
-The bibliography supplies17verified article records.
+The bibliography supplies18verified article records, including the newly
+checked open publisher text of Mu et al. The [bounded three-review assessment](../../docs/HFO2_JCTC_ASSESSMENT_2026-10-19.md)
+explains why transverse oxygen motion and coordination-role exchange are
+not first-discovery claims. The atom-resolved comparison shows that even
+the old center already has nonuniform transverse motion; the new candidate
+also contains staggered oxygen z and Hf x readjustment. Two fixed-budget
+strain continuations are testing the remaining across-strain connection,
+not adding another forecast competition or changing the old labels.
 
 ## Current reading route: mechanism first
 

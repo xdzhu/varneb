@@ -57,6 +57,16 @@ changes and switching paths.
 Thus neither the existence of coupled modes nor the multiplicity of
 switching routes is the new claim of this work.
 
+Mu and colleagues further distinguish transverse and straight oxygen
+routes, motion through or between Hf planes, and exchange of three- and
+four-coordinated oxygen roles. Their bulk and electrode studies therefore
+also preclude claiming transverse motion or coordination-role exchange
+itself as a new mechanism here.
+([Mu et al., 2025](https://doi.org/10.1038/s41524-025-01633-2))
+Our question is instead whether accommodation within a common partially
+clamped boundary changes reversal relative to phase escape, and whether
+that comparison survives a change in the initialized path.
+
 Reference choice and boundary conditions further shape the physical
 interpretation. A Cmma reference organizes competing phases through
 unstable phonon bands, while strain-dependent mode models describe changes
@@ -658,6 +668,23 @@ The final sampled maximum returned to the central image at 83.166281 meV/HfO2,
 at the peak. This is evidence that the mixed atomic accommodation can
 form a lower connected candidate, not merely an isolated low-energy point.
 
+The species-mean transverse proxy does not identify the entire motion.
+In the registered original-T chart, the original central image already
+has individual oxygen y displacements up to 0.322 Angstrom relative to
+the initial Hf sublattice, although their mean is almost zero. Comparing
+the new and old centers in that same fixed metric gives staggered oxygen
+z differences of approximately +0.200 and -0.200 Angstrom for different
+ordered pairs, together with Hf x differences of about $\pm0.068$ Angstrom
+after removing common translation. Thus the lower candidate involves
+mixed atomic rearrangement, not merely a uniform oxygen side shift.
+At the nine samples, oxygen atoms remain between their original ordered
+Hf layer bands in both polygons. These geometric observations do not
+assign a complete literature path family, phonon eigenmode or electronic
+polarization. The old/new-center comparison is descriptive; the separate
+matched-observable F/A/J intervention supplies the controlled local contrast.
+The [atom-resolved source table and reader](../../benchmarks/hfo2_channels/20261008/preserving_connection_E273_20261019/atom_motion/center_motion.csv)
+retain ordered coordinates without atom remapping.
+
 The comparison changes the candidate competition at zero strain.
 The original T escape peak is only 1.250343 meV/HfO2 above this new
 preserving candidate, rather than 12.411559 below the original one.
@@ -1128,6 +1155,11 @@ their exact identities are recorded by the archived input hashes.
 17. Perdew, J. P.; Burke, K.; Ernzerhof, M. Generalized Gradient
     Approximation Made Simple. Physical Review Letters 1996, 77,
     3865--3868. DOI: 10.1103/PhysRevLett.77.3865.
+
+18. Mu, X.; Wu, Y.; Zeng, B.; Jiang, J.; Zhou, Y.; Yin, L.; Liao, M.;
+    Yang, Q. Polarization switching of HfO2 ferroelectric in bulk and
+    electrode/ferroelectric/electrode heterostructure. npj Computational
+    Materials 2025, 11, 126. DOI: 10.1038/s41524-025-01633-2.
 
 ## Appendix A. Reproducibility and scope
 
@@ -3181,6 +3213,17 @@ does not certify stability throughout the fitted domain.
 
 
 ### G.7. Literature boundaries for the mode and pathway comparisons
+
+The open publisher text of Mu et al. distinguishes C:N, C:T, S:N and S:T
+oxygen routes and variants with three-/four-coordination exchange. Its
+bulk discussion also includes a variable-cell comparison; it is not treated
+as exclusively fixed-cell prior work. Its VASP/PAW/PBE calculations at
+500 eV with bulk $6\times6\times6$ sampling differ from the present ABACUS basis, mesh and partial
+clamp, so barrier-height agreement is not used to identify a path family.
+The corrected publisher version was consulted. Neither the citation nor
+the geometrical comparison supplies a matched numerical benchmark here.
+([Mu et al., original article](https://www.nature.com/articles/s41524-025-01633-2);
+[publisher correction](https://www.nature.com/articles/s41524-025-01660-z))
 
 The geometric descriptors used here do not replace the symmetry-resolved
 mode analyses of earlier hafnia studies. Our Cmma and T reference controls
