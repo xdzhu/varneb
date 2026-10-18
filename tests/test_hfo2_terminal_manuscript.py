@@ -28,7 +28,8 @@ def test_no_frozen_target_replacement_or_stationary_saddle_claim():
     assert 'Neither a global MEP nor a stationary' in text
     assert 'the small T releases cannot fill that gap' in text
     figures=re.findall(r'^Figure (\d+)\.',text,re.M)
-    assert figures==[str(i) for i in range(1,9)]
+    assert figures==[str(i) for i in range(1,10)]
+    assert 'summary_three_strains/strain_mechanism_summary.pdf' in text
 
 
 def test_frozen_crossover_table_uses_the_measured_conditional_contrasts():

@@ -1,6 +1,6 @@
 # Manuscript terminology and claim boundaries
 
-Updated 2026-10-18. Scope: HfO2 manuscript and its source-to-table checks.
+Updated 2026-10-19. Scope: HfO2 manuscript and its source-to-table checks.
 
 | Term | Meaning used here | Does not establish |
 |---|---|---|
@@ -42,6 +42,9 @@ Updated 2026-10-18. Scope: HfO2 manuscript and its source-to-table checks.
 | Revised preserving P8 target | Eight original Q positions with frozen training-parent starts and dual-gradient candidate energies | Retroactive success of the refused two-coordinate sheet or unseen-strain path barriers |
 | Independent physical-strain test | Two preselected nine-image ordinary bands at +0.5%, with all forecasts frozen before target-interior evaluation | Four-channel coverage at +0.5%, a fresh search over starting paths or a stationary-barrier error bound |
 | Reverse-continuation control | A separate +0.5% ordinary band initialized from the same channel's +1% training band, using the original target endpoint cache | A new independent prediction target, replacement prospective label, unique MEP or continuous-barrier error bound |
+| Released-source strain transfer | The actual lower zero-strain connected band transferred once to an already studied substrate and its original endpoint caches, with all interiors free | A new independent forecast, symmetry-mode constraint, matched local A/J release or guaranteed stable branch |
+| Transverse structural proxy | Mean O-minus-Hf displacement along original y in the fixed T metric | The full atom-resolved motion, a phonon eigenmode, electronic polarization or a mode-energy fraction |
+| Zero-update ordinary pass | Seven freshly evaluated interiors of the transferred chain already meet the same0.10 criterion | An optimizer speedup, initializer-independent relaxation or a stationary saddle |
 | Nonmonotonic sampled competition | T-minus-preserving peak contrast of -12.411559/-8.112699/-28.660781 meV/HfO2 at 0/+0.5/+1% | Positive selectivity, a physical bifurcation or resolved continuous-path curvature |
 
 Notation is not interchangeable: Figure 3 uses the original T Cartesian

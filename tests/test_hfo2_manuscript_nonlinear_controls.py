@@ -65,7 +65,8 @@ def test_prior135_table_lines_nine_figures_external_citations_and_wrapper_preser
     assert 'Table A17. Four frozen directional training statics' in text
     figures=re.findall(r'!\[[^\]]*\]\(([^)]+)\)',text)
     assert not Counter(old['prior_figure_targets'])-Counter(figures)
-    assert len(figures)==16 and len(set(figures))==16
+    assert len(figures)==17 and len(set(figures))==17
+    assert any(p.endswith('summary_three_strains/strain_mechanism_summary.pdf') for p in figures)
     assert 'figures/hfo2_matched_T_20261018/matched_T_release.pdf' in figures
     assert not Counter(old['prior_external_links'])-Counter(re.findall(r'\]\((https?://[^)]+)\)',text))
     for name,sha in old['prior_figure_sha256'].items():

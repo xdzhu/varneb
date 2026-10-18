@@ -1,5 +1,22 @@
 # Hafnia pathway study: complete reading manuscript
 
+## Current result: the prescribed three-strain connection is complete
+
+The October19 complete result changes the central interpretation: internal
+atomic accommodation lowers the examined preserving peaks to83.166281,
+87.718545 and91.698937meV/HfO2 at0,+0.5% and+1%. The sampled strain
+penalty is8.532656 instead of28.596248. T escape gives84.416624,
+90.418178 and96.763650; the small1--5meV/fu gaps do not certify global
+physical barrier ordering. The original labels, higher alternatives and
+forecast failures are retained. No new prediction advantage is established.
+
+Both original target handles completed, with42fresh SCFs/36.008889
+allocation core-hours in total. Full native replay and main Figure9 are
+available in the [completed strain case](../../benchmarks/hfo2_channels/20261008/preserving_strain_E275_20261019/README.md).
+The finite computation plan is closed, including the explicit failed
++1% local A/J control; no additional matrix is silently scheduled.
+See the [Chinese scientific result and journal-positioning summary](../../docs/HFO2_MECHANISM_RESULTS_2026-10-19.md).
+
 This is the complete scientific reading manuscript for author review,
 including its abstract, conclusions, references and in-article appendices.
 The [CPC software paper](../VARNEB_CPC/README.md) is a separate artifact.
@@ -10,11 +27,12 @@ reading PDF through [the thin TeX wrapper](varneb_JCTC_draft.tex).
 The single-column review layout retains the main article, references and
 in-article appendices. Historical page counts belong to their dated builds;
 the current PDF is regenerated from the single Markdown source. The
-literature/atom-resolved revision has59pages. Figure4 is onpage11,
-the three-strain T release Figure5 onpage12, the connected preserving
-Figure6 onpage14, independent strain Figure7 onpage15 and completed
-initialization Figure8 onpage17. Table4 onpage16 adds the measured frozen
-atomic/cell crossover. Original labels and forecast scores remain.
+complete three-strain reading build has61pages. Figure8 is onpage18,
+new Figure9 onpage20, Discussion onpage21 and Conclusions onpage22.
+The [current build receipt](reading/complete_strain_mechanism_20261019.json)
+records actual bytes and inspected pages; historical page numbers are
+not current figure locations. Table4 adds
+the measured frozen atomic/cell crossover. Original labels and scores remain.
 
 The October19 update adds the completed zero-minus preserving local
 control to Results3.3 and Discussion4. Holding the original three T-pattern
@@ -38,15 +56,17 @@ the supported contributions and the role of each main figure. The main
 methods now contain the material/comparison definitions and calculation
 recipe; the extended response theory and diagnostic procedures are retained
 in Appendix G. All218previous numerical table lines remain; four new lines
-form Table4. All16figure targets from the terminal comparisons remain.
+form Table4. All16prior figure targets remain; the new three-strain main
+Figure9 brings the total to17. No table row was removed or relabelled.
 The bibliography supplies18verified article records, including the newly
 checked open publisher text of Mu et al. The [bounded three-review assessment](../../docs/HFO2_JCTC_ASSESSMENT_2026-10-19.md)
 explains why transverse oxygen motion and coordination-role exchange are
 not first-discovery claims. The atom-resolved comparison shows that even
 the old center already has nonuniform transverse motion; the new candidate
-also contains staggered oxygen z and Hf x readjustment. Two fixed-budget
-strain continuations are testing the remaining across-strain connection,
-not adding another forecast competition or changing the old labels.
+also contains staggered oxygen z and Hf x readjustment. Both fixed-budget
+strain continuations are complete, without another forecast competition
+or changing old labels. Their retained transverse structural proxy and
+new peaks now connect the local result to all three studied boundaries.
 
 ## Current reading route: mechanism first
 
@@ -74,6 +94,9 @@ independent prediction checks.
   nonlinear sampled competition and errors of all three numeric forecasts.
 - Figure 8 tests that sampled response against the opposite initialization;
   preserving changes appreciably while T changes little.
+- Figure 9 connects the complete prescribed three-strain transfers to
+  their actual peaks, T competition, transverse proxy and open-y response.
+  No fitted strain law or energy uncertainty is invented.
 
 The [three new main figures and source data](figures/hfo2_mechanism_20261018/README.md)
 have a single replay command:
@@ -118,13 +141,16 @@ Can a branch-aware mode-strain model predict that response better than the
 registered strong references and simpler controls?
 
 All eight ordinary clamped training bands and all ten endpoint representations
-are audited. At zero/+1% substrate strain the sampled preserving switching peak
+are audited. **Within the original registered candidate set**, at zero/+1%
+substrate strain the sampled preserving switching peak
 increases by 28.596248 meV/HfO2, while the higher reversing peak decreases by
 44.024331. The lower sampled escape peak increases by 12.347027. The raw
 candidate-set selectivity proxy therefore worsens by 16.249222, not the desired
 favorable signature. This is not an error-certified physical ordering: the
 strained T/M escape peaks differ by only 0.464068 meV/HfO2 and their continuous
-bottleneck errors are unmeasured.
+bottleneck errors are unmeasured. The lower released-source candidates in
+Figure9 change this finite comparison, so those old response numbers are
+not presented as a unique intrinsic strain law.
 
 The current paper is organized by the material argument, not job chronology:
 
@@ -175,12 +201,14 @@ are different measurements.
 ## Scope closure and remaining manuscript work
 
 The later [finite mechanism-closure plan](../../docs/HFO2_MECHANISM_CLOSURE_2026-10-18.md)
-is active and is distinct from the completed forecast protocol. The +0.5%
+has reached its finite calculation outcomes and is distinct from the
+completed forecast protocol. The +0.5%
 T continuation from the +1% band has completed, with a sampled peak of
 90.286243 meV/HfO2 versus the original 90.418178. Section 3.4 retains both
 and explains why agreement of this scalar does not establish identical
 structures or a continuous-barrier error bound. The preserving counterpart
-is still being evaluated; it is not imputed from the T outcome. None of the
+completed at109.351721 versus98.530877meV/fu; it is not imputed from T.
+The subsequent lower-source transfers also completed, as summarized above. None of the
 original target labels or frozen prediction scores is replaced.
 
 The bounded ten-start trial, revised P8 test and two-path physical +0.5%
@@ -229,7 +257,12 @@ that permits local links. External review-build paths recorded in receipts
 are layout snapshots, not portable source-data bundles.
 
 Build products are ignored by Git; the reviewed PDF is retained separately
-in reading/ for repository access. The October18 complete reading build
+in reading/ for repository access. The newest reading receipt identifies
+the current source, native analysis, test scope and inspected pages.
+
+### Historical build receipts (not current page counts or job states)
+
+The October18 complete reading build
 passed119related scientific/manuscript checks. All51pages were inspected
 in contact sheets and the abstract, conclusions and bibliography at reading
 resolution; no overfull/underfull boxes or missing characters remain.

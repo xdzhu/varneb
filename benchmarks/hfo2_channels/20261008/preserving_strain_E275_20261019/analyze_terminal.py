@@ -5,6 +5,7 @@ import csv
 import importlib.util
 import json
 from pathlib import Path
+from importlib.metadata import version
 import sys
 import tarfile
 import tempfile
@@ -70,6 +71,12 @@ def describe(images, obs, strain, kind, source_sha):
         row.update(strain=strain, kind=kind, open_y_stretch_percent=float(100*(chart['deformation_gradients'][i, 1, 1]-1)))
     b.update(strain=strain, kind=kind, source_job=obs['source_job_id'], observation_sha256=source_sha,
              endpoint_native_records=[obs['raw_image_evaluations'][i] for i in (0, 8)])
+    if kind in ('registered_preserving', 'released_seed'):
+        # Six actual preserving peaks over the completed three conditions.
+        # Reuse the fixed historical tolerance sweep, never fit a desired group.
+        from scripts.analyze_hfo2_network_update import structure_audit
+        b['peak_structure_audit'] = structure_audit(images[b['sampled_peak_image']])
+        b['peak_structure_not_a_stable_phase_or_electronic_polarization'] = True
     return b
 
 
@@ -216,7 +223,8 @@ def analyze(output, *, allow_partial=False):
     data.update(outcomes=summarize(data['bands'], require_all=not allow_partial), terminal_cohorts=costs,
         status='partial_terminal_connection_comparison' if missing else 'finite_same_strain_connection_comparison',
         pending_terminal_archives=missing, complete_selected_target_pair_available=not missing, physical_error_bound=None,
-        global_MEP_or_TS_certified=False, independent_prediction_test=False)
+        global_MEP_or_TS_certified=False, independent_prediction_test=False,
+        structure_analysis_versions={name: version(name) for name in ('pymatgen', 'spglib', 'numpy')})
     output.mkdir(parents=True)
     with (output/'analysis.json').open('x', encoding='utf-8', newline='\n') as h:
         json.dump(data, h, indent=2, allow_nan=False); h.write('\n')

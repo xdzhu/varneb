@@ -93,7 +93,8 @@ def test_old_tables_figures_citations_and_wrapper_are_preserved():
     assert not Counter(baseline['original_table_line_sha256_counts']) - counts
     figures = re.findall(r'!\[[^\]]*\]\(([^)]+)\)', text)
     assert not Counter(baseline['original_figure_targets'])-Counter(figures)
-    assert len(figures)==16 and len(set(figures))==16
+    assert len(figures)==17 and len(set(figures))==17
+    assert any(p.endswith('summary_three_strains/strain_mechanism_summary.pdf') for p in figures)
     assert 'figures/hfo2_matched_T_20261018/matched_T_release.pdf' in figures
     for name, sha in baseline['original_figure_sha256'].items():
         assert hashlib.sha256((PAPER / name).read_bytes()).hexdigest() == sha

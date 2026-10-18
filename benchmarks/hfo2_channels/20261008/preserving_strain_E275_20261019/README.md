@@ -1,25 +1,63 @@
 # Strain response of the lower connected preserving candidate
 
-**+0.5% complete; +1% still running.** Original28951226 completed0:0 at
-04:06:49 with7fresh interior SCFs, zero optimizer updates and ordinary
-residual0.0923153015eV/A. The native sampled peak is87.7185447330meV/fu,
-10.8123321834 below the registered98.5308769164. T escape is90.4181783358,
-so the new sampled separation is2.6996336028, not a resolved physical ordering.
-The transverse structural proxy remains0.1210822924A. An initial force pass
-does not prove initialization-independent relaxation or branch stability.
+**Both original targets completed0:0.** Job28951226(+0.5%) ended04:06:49;
+28951227(+1%) ended04:51:10 on2026-10-19 CST. All42fresh native interior
+energy/force/stress calls and both selected nine-image bands have been
+independently replayed locally. No restart, parameter change or endpoint
+recalculation was required.
 
-All7fresh calls and the selected9native E/F/stress records have been
-independently replayed locally. The128-file archive is285005bytes, SHA256
-`0eec746dc93431d001a57f72ebea3f38f941fbd62b514fa005d9684d475de02b`.
-New cost6.128975native proxy/6.177778allocation core-hours; source path,
-release and earlier strain calculations remain additional. Full assets
-were checked onHF, not redistributed or rehashed locally.
+| Strain | Registered preserving | Released-source preserving | Registered T | T minus new preserving |
+|---|---:|---:|---:|---:|
+| 0 | 96.828183 | 83.166281 | 84.416624 | 1.250343 |
+| +0.5% | 98.530877 | 87.718545 | 90.418178 | 2.699634 |
+| +1% | 125.424431 | 91.698937 | 96.763650 | 5.064714 |
 
-The [four-panel mechanism comparison](figures/strain_0050/README.md)
-retains all four same-strain candidates, including the prior upper-seed
-control. `completed_analysis_0050` explicitly marks+1% pending and leaves
-old labels/scores untouched. It is not a new independent prediction.
-The original+1% handle28951227 continues with no retry or runtime change.
+Energies are native sampled peaks in meV/HfO2, not certified stationary
+barriers. The new0-to-+1% rise is8.532656 rather than28.596248meV/fu;
+the20.063593difference shows candidate-response sensitivity to internal
+accommodation. Small positive separations do not resolve global physical
+ordering. One prescribed source, not a unique continuous branch or a new
+independent prediction, was evaluated. Old labels and all scores remain.
+
+The midpoint passed at step0 after7fresh calls, residual.0923153015eV/A;
+the high-strain band required4updates/35calls, residual.0909313638eV/A.
+The midpoint's initial pass is not proof of relaxed-branch uniqueness.
+Transverse structural proxies at the peaks are.121082/.122675A, not
+electronic polarization or single-phonon amplitudes. New total cost is
+35.798164native-call-proxy/36.008889allocated core-hours; source path,
+release and earlier strain costs remain additional and are not double-counted.
+Full six assets were checked onHF, not redistributed or rehashed locally.
+
+The complete [three-strain summary](figures/summary_three_strains/README.md)
+is manuscript Figure9. The [+1% profile comparison](figures/strain_0100/README.md)
+and earlier [four-candidate midpoint comparison](figures/strain_0050/README.md)
+retain all sampled curves, including the upper-initialized midpoint control.
+`completed_analysis_full` contains10bands/90native sample rows and both
+actual target archives. `completed_analysis_0050` remains a dated partial
+snapshot; its pending flag is historical, not the current job state.
+
+The original P central samples are geometrically Pbcn at the three fixed
+symmetry tolerances. The released-source zero center is Aea2; the strained
+centers change Pc/Pna2_1/Aea2 with tolerance. These are post-processing
+labels, not new phases or DFT symmetrization. The +1% local fixed-observable
+A/J experiment remains missing despite this complete free-chain result.
+
+Archives: +0.5%,128files/285005bytes, SHA256
+`0eec746dc93431d001a57f72ebea3f38f941fbd62b514fa005d9684d475de02b`;
++1%,324files/720284bytes, SHA256
+`cd6803ba0c7971d9719049c5e7dee23599fb25fb7a19cf17271e608f2186553b`.
+Collection receipts preserve original Slurm rows, source/bundle hashes and
+the separate collector version. Collection/replay itself creates zero SCFs.
+
+Replay the complete data without an allocation or an ABACUS executable:
+
+```text
+python benchmarks/hfo2_channels/20261008/preserving_strain_E275_20261019/analyze_terminal.py --output FRESH_DIRECTORY
+python benchmarks/hfo2_channels/20261008/preserving_strain_E275_20261019/plot_summary.py --source FRESH_DIRECTORY/analysis.json --output FRESH_FIGURE_DIRECTORY
+```
+
+The finite two-target protocol is closed. No additional local relaxation,
+Hessian, strain, forecast arm or allocation is automatically scheduled.
 
 The admission/startup records below remain historical evidence.
 

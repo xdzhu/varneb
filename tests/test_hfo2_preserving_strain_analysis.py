@@ -27,6 +27,13 @@ def test_real_reference_bands_keep_old_labels_and_resolve_only_zero_candidate(re
     for b in reference['bands']:
         assert b['ordinary_residual_pass']
         assert b['rows'][0]['NEB_residual_eV_A'] is b['rows'][-1]['NEB_residual_eV_A'] is None
+    # Actual geometric labels, with the original tolerance sweep; not a new phase.
+    old_symmetry = zero['registered_preserving']['peak_structure_audit']['symmetry_sweep']
+    new_symmetry = zero['released_seed']['peak_structure_audit']['symmetry_sweep']
+    assert [r['symprec_A'] for r in old_symmetry] == [.001, .01, .05]
+    assert [r['number'] for r in old_symmetry] == [60]*3
+    assert [r['number'] for r in new_symmetry] == [41]*3
+    assert zero['released_seed']['peak_structure_not_a_stable_phase_or_electronic_polarization']
     assert not any(b['kind'] == 'released_seed' and b['strain'] != 0. for b in reference['bands'])
     upper = next(b for b in reference['bands'] if b['kind'] == 'upper_seed_midpoint')
     assert upper['sampled_polygon_peak_meV_fu'] == pytest.approx(109.3517206327)
@@ -41,13 +48,13 @@ def test_competition_requires_actual_common_native_well(reference):
     with pytest.raises(ValueError, match='common native well'): m.require_same_well(original, wrong)
 
 
-def test_missing_original_targets_are_not_filled_from_a_reference(tmp_path):
+def test_missing_original_targets_are_not_filled_from_a_reference(tmp_path, monkeypatch):
     output = tmp_path/'analysis'
-    # This gate covers a genuinely absent target archive, never fabricates one.
-    if all((CASE/'completed'/n/'collection_receipt.json').exists() for n in ('strain_0050', 'strain_0100')):
-        pytest.skip('actual target archives now exist; the real terminal replay is the stronger test')
+    # An empty namespace exercises missing-file behavior without moving or
+    # deleting the real terminal archives or inventing material observations.
+    m = reader(); monkeypatch.setattr(m, 'CASE', tmp_path/'missing_case')
     with pytest.raises(FileNotFoundError, match='await original terminal archive'):
-        reader().analyze(output)
+        m.analyze(output)
     assert not output.exists()
 
 
