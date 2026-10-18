@@ -3,12 +3,52 @@ from pathlib import Path
 
 import numpy as np
 import pytest
-from scripts.plot_hfo2_preserving_connection import build_data,draw
+from scripts.plot_hfo2_preserving_connection import build_data,draw,restore,terminal_calls
 
 
 @pytest.fixture(scope='module')
 def data():
     return build_data(1)
+
+
+@pytest.fixture(scope='module')
+def terminal_data():
+    return build_data(9,terminal=True)
+
+
+def test_actual_completed_chain_retains_all_63_native_calls(terminal_data):
+    result=terminal_data
+    assert result['status']=='ordinary_converged_free_chain' and result['step']==9
+    assert result['terminal_audit']['all_fresh_native_calls_reparsed_locally']
+    assert result['terminal_audit']['new_SCF_calls']==63
+    assert result['selected_new_SCF_calls']==7 and result['new_DFT_calls']==0
+    assert result['terminal_audit']['native_proxy_core_hours']==pytest.approx(55.71881813705795)
+    assert result['terminal_audit']['allocated_core_hours']==pytest.approx(55.85777777777778)
+    final=result['bands'][-1]
+    assert final['ordinary_residual_pass']
+    assert final['fmax_eV_A']==pytest.approx(.09401200325199699,abs=1e-12)
+    assert final['sampled_polygon_peak_meV_fu']==pytest.approx(83.16628094007683,abs=1e-9)
+    assert final['sampled_peak_image']==4
+    assert not result['stationary_TS_or_sampling_bound_certified']
+    assert result['old_labels_and_forecast_scores_unchanged']
+
+
+def test_full_chain_reconnection_keeps_transverse_accommodation_and_endpoints(terminal_data):
+    old,seed,final=terminal_data['bands']
+    assert old['sampled_polygon_peak_meV_fu']-final['sampled_polygon_peak_meV_fu']==pytest.approx(13.66190206272222)
+    assert final['rows'][4]['polar_proxy_y_A']==pytest.approx(.12107444440165076,abs=1e-12)
+    assert final['rows'][4]['Qx_A']!=pytest.approx(seed['rows'][4]['Qx_A'],abs=1e-5)
+    for i in (0,8):
+        assert final['rows'][i]['energy_meV_fu']==old['rows'][i]['energy_meV_fu']
+        assert final['rows'][i]['NEB_residual_eV_A'] is None
+
+
+def test_live_snapshot_is_not_admitted_as_a_terminal_archive(tmp_path):
+    import json
+    folder,_=restore(1,tmp_path)
+    receipt=json.loads((folder/'receipt.json').read_bytes())
+    with pytest.raises(ValueError,match='completed'):
+        terminal_calls(folder,receipt,1)
 
 
 def test_original_seed_and_one_actual_complete_update_replay(data):

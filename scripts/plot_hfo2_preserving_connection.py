@@ -22,6 +22,7 @@ from ase.calculators.singlepoint import SinglePointCalculator
 from ase.io import read
 from examples.hfo2_fixed_input_factory import CONTRACT,read_fixed_hfo2_stru,same_ordered_geometry
 from scripts.audit_hfo2_static_replica import audited_results,sha256
+from scripts.audit_hfo2_clamped_terminal import completed_step,validate_terminal
 from scripts.analyze_hfo2_clamped_residual import decompose
 from scripts.plot_hfo2_mechanism import original_chart_images,path_coordinates,rotated_t_triplet
 from vcneb import VCNEB,clamped_plane_vcneb_boundary,validate_path_geometry,validate_periodic_path_lift
@@ -33,13 +34,14 @@ SCALE=5.12968067458423
 PIN='a452d5b125d6d95c729ea60607524ce5d35370d5aab57ac6f2b1b7869d61991a'
 
 
-def restore(step,destination):
-    archive=CASE/f'snapshot_step_{step:04d}.tar.gz'
-    receipt=json.loads((CASE/f'snapshot_step_{step:04d}_receipt.json').read_bytes())
+def restore(step,destination,*,terminal=False):
+    stem='native_terminal' if terminal else f'snapshot_step_{step:04d}'
+    archive=CASE/f'{stem}.tar.gz'
+    receipt=json.loads((CASE/f'{stem}_receipt.json').read_bytes())
     if (sha256(archive)!=receipt['archive_sha256'] or receipt['job_id']!='28949435'
             or receipt['step']!=step or receipt['new_DFT_calls']!=0 or receipt['scheduler_mutations']!=0):
         raise ValueError('exact selected native-frame archive required')
-    expected=f'step_{step:04d}'
+    expected='native_terminal' if terminal else f'step_{step:04d}'
     with tarfile.open(archive) as tar:
         for member in tar.getmembers():
             p=Path(member.name)
@@ -55,6 +57,55 @@ def restore(step,destination):
         if not p.resolve().is_relative_to(folder.resolve()) or sha256(p)!=digest:
             raise ValueError('selected native bytes changed')
     return folder,receipt
+
+
+def terminal_calls(folder,receipt,step):
+    """Replay all actual calls, not just the final force-evaluated frame."""
+    row=receipt['scheduler_row_at_export']
+    if (len(row)<10 or row[6]!='1' or row[0]!='28949435'
+            or row[1:7]!=['COMPLETED','0:0','32','hfacnormal01','iai806','1']):
+        raise ValueError('only the original completed one-node32CPU terminal is admitted')
+    summary=json.loads((folder/'vcneb_summary.json').read_bytes())
+    validate_terminal('28949435','|'.join(row[:6]),summary,False,
+        outcome='converged' if summary.get('converged') else 'step-cap')
+    if (completed_step(folder/'vcneb.opt.log')!=step or receipt['step']!=step
+            or receipt['ordinary_converged']!=summary['converged']
+            or (not summary['converged'] and step!=24)):
+        raise ValueError('terminal summary, actual completed update and outcome must agree')
+    records=receipt['calls'];expected=7*step;paths=set();seconds=[]
+    if (len(records)!=expected or receipt['new_SCF_calls']!=expected
+            or not receipt['all_new_native_calls_six_assets_MPI_EFS_replayed_on_HF']):
+        raise ValueError('the exact original cache policy and all native calls are required')
+    for record in records:
+        path=folder/'all_calls'/record['relative_directory']
+        if (not path.resolve().is_relative_to((folder/'all_calls').resolve())
+                or path in paths or path.parent.name not in {f'image_{i:04d}' for i in range(1,8)}):
+            raise ValueError('unique fresh interior calls only; no endpoint recalculation')
+        paths.add(path);call=json.loads((path/'call_audit.json').read_bytes())
+        if (sha256(path/'call_audit.json')!=record['call_audit_sha256']
+                or call['input_sha256']!=record['input_sha256']
+                or any(call['input_sha256'][n]!=h for n,h in CONTRACT.items())
+                or any(sha256(path/n)!=call['input_sha256'][n] for n in ('INPUT','KPT','STRU'))
+                or sha256(path/'OUT.ABACUS/running_scf.log')!=record['raw_log_sha256']
+                or call['raw_log_sha256']!=record['raw_log_sha256']):
+            raise ValueError('complete native call input/output bytes differ')
+        parsed=audited_results(path)
+        if any(not np.allclose(parsed[k],call['results'][k],atol=1e-12,rtol=0) for k in parsed):
+            raise ValueError('an actual intermediate native energy/force/stress does not replay')
+        elapsed=call['elapsed_seconds']
+        if not np.isfinite(elapsed) or elapsed<=0 or elapsed!=record['seconds']:
+            raise ValueError('actual native timing must be positive and unchanged')
+        seconds.append(elapsed)
+    if paths!={p.parent for p in (folder/'all_calls').glob('image_*/scf_*/call_audit.json')}:
+        raise ValueError('terminal call inventory must include every exported native call')
+    if any(sum(p.parent.name==f'image_{i:04d}' for p in paths)!=step for i in range(1,8)):
+        raise ValueError('every moving interior requires exactly one fresh call per update')
+    core_hours=sum(seconds)*32/3600
+    if not np.isclose(core_hours,receipt['native_proxy_core_hours'],atol=1e-10,rtol=0):
+        raise ValueError('all-call native cost differs')
+    return dict(all_fresh_native_calls_reparsed_locally=True,new_SCF_calls=expected,
+        native_proxy_core_hours=core_hours,allocated_core_hours=receipt['allocated_core_hours'],
+        ordinary_converged=summary['converged'],stationary_TS_or_sampling_bound_certified=False)
 
 
 def native_images(folder,step):
@@ -107,7 +158,7 @@ def band(images,reference,t,parent,patterns,orientation,label):
         residual_decomposition=force,geometry_gate=geometry)
 
 
-def build_data(step=1):
+def build_data(step=1,*,terminal=False):
     if not 1<=step<=24:raise ValueError('one actual post-initialization complete update required')
     spec=importlib.util.spec_from_file_location('E273_original_native_frames',PARENT/'analyze_prefix.py')
     original=importlib.util.module_from_spec(spec);spec.loader.exec_module(original)
@@ -119,17 +170,28 @@ def build_data(step=1):
     t=read(tpath);parent,patterns,_=rotated_t_triplet(t);orientation=json.loads(frame.read_bytes())['orientation']
     reference=old_obs['mechanical_boundary']['reference_cell_A']
     with tempfile.TemporaryDirectory(prefix='varneb_connection_frame_') as tmp:
-        folder,outer=restore(step,Path(tmp));current,obs,receipt=native_images(folder,step)
+        folder,outer=restore(step,Path(tmp),terminal=terminal);current,obs,receipt=native_images(folder,step)
+        terminal_audit=terminal_calls(folder,receipt,step) if terminal else None
+        if terminal and (not outer['all_runtime_calls_exported']
+                or outer['new_SCF_calls']!=terminal_audit['new_SCF_calls']
+                or outer['ordinary_converged']!=terminal_audit['ordinary_converged']):
+            raise ValueError('complete terminal archive and native outcome must agree')
         for i in (0,8):
             if (not np.allclose(current[i].get_scaled_positions(wrap=False),old[i].get_scaled_positions(wrap=False),atol=1e-12,rtol=0)
                     or not np.array_equal(current[i].calc.results['forces'],old[i].calc.results['forces'])
                     or current[i].get_potential_energy()!=old[i].get_potential_energy()):
                 raise ValueError('fixed endpoint ordered lift and native cache changed')
+        current_label=('Free chain (converged)' if terminal_audit and terminal_audit['ordinary_converged']
+            else f'Free-chain step {step}')
         bands=[band(images,reference,t,parent,patterns,orientation,label) for images,label in
-               ((old,'Original band'),(seed,'Released-center seed'),(current,f'Free-chain step {step}'))]
+               ((old,'Original band'),(seed,'Released-center seed'),(current,current_label))]
         if abs(bands[-1]['fmax_eV_A']-obs['replayed_fmax_eV_A'])>1e-10:
             raise ValueError('local full-chain force replay differs from native snapshot')
-    return dict(status='actual_free_chain_progress_not_a_final_barrier',step=step,bands=bands,
+        if terminal and bands[-1]['ordinary_residual_pass']!=terminal_audit['ordinary_converged']:
+            raise ValueError('native terminal and independently reconstructed NEB force differ')
+    status=('ordinary_converged_free_chain' if terminal_audit and terminal_audit['ordinary_converged']
+        else 'bounded_unconverged_free_chain' if terminal else 'actual_free_chain_progress_not_a_final_barrier')
+    return dict(status=status,step=step,bands=bands,terminal_audit=terminal_audit,
         source_archive_sha256=outer['archive_sha256'],source_observation_sha256=original.OBSERVATION_SHA,
         same_physical_parameters_and_endpoint_caches=True,full_orbital_bytes_rechecked_locally=False,
         new_DFT_calls=0,old_labels_and_forecast_scores_unchanged=True,stationary_TS_or_sampling_bound_certified=False,
@@ -187,13 +249,15 @@ def draw(data,output):
     return dict(archetype='quantitative grid',size_mm=[183,155],axes_bounds=bounds,backend='Python/matplotlib',
         panel_letter_weight='normal',panel_letter_size_pt=13,top_and_right_spines=True,subpanel_titles=False,
         legend_white_background_alpha=.85,interpolation_or_error_bars_or_synthetic_points=False,
-        intended_role='mechanistic progress only; not a final or acceleration benchmark')
+        intended_role=('ordinary terminal connection comparison; not a stationary TS or acceleration benchmark'
+            if data.get('terminal_audit') else 'mechanistic progress only; not a final or acceleration benchmark'))
 
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--step',type=int,default=1)
+    parser.add_argument('--terminal',action='store_true',help='use the complete original terminal archive, not a live snapshot')
     parser.add_argument('--output',type=Path,required=True);args=parser.parse_args()
-    data=build_data(args.step);args.output.mkdir(parents=True,exist_ok=True)
+    data=build_data(args.step,terminal=args.terminal);args.output.mkdir(parents=True,exist_ok=True)
     with (args.output/'source_data.csv').open('w',encoding='utf-8',newline='') as handle:
         writer=csv.DictWriter(handle,fieldnames=list(data['bands'][0]['rows'][0]));writer.writeheader()
         writer.writerows(row for b in data['bands'] for row in b['rows'])
