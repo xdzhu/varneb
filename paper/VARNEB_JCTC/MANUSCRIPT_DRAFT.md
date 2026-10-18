@@ -6,9 +6,10 @@ response and matched local relaxation. Detailed representation, curvature
 and model comparisons remain in the appendices, with their unsuccessful
 outcomes retained. Eight clamped training bands and both local independent
 candidate-energy tests are complete. The separately frozen +0.5% preserving
-and PO-to-T path calculations have been launched; their terminal results
-are not included in this revision. Stable conditional branches and
-independent mechanical-response predictions are still missing. This is a
+and PO-to-T path tests are complete and included. Their different midpoint
+responses and all frozen prediction errors are reported, with no demonstrated
+predictive advantage of a new reduced model. Stable conditional branches
+remain unestablished. This is a
 working article, not a submission-ready claim of a new predictive method.
 The [methods record](METHODS_DRAFT.md) and
 [prospective protocol](../../docs/HFO2_PREDICTION_PROTOCOL_V2_2026-10-09.md)
@@ -726,8 +727,8 @@ increments, in meV/HfO2. Neither column is a measured bottleneck slope.
 The [complete native training replay](../../benchmarks/hfo2_channels/20261008/clamped_plus1_reversing_terminal_E148_20261014/README.md)
 retains 72 frame records and 66 distinct raw-log/geometry identities,
 including the repeated common initial caches. They are not independent
-statistical replicates. The separately frozen +0.5% path test has been launched, but its terminal
-results are not included here; the training matrix does not establish H2.
+statistical replicates. The independent +0.5% test is reported separately
+in Section 3.4; these training values alone do not establish H2.
 
 ### 3.2. Clamping changes the sampled energetic role without changing the group label
 
@@ -805,12 +806,13 @@ Section 3.1 thus concern different atomic routes, even though both reverse
 the polar displacement and reach equivalent final-phase energies.
 Polar reversal alone does not label the path.
 
-![Signed shuffle amplitudes and open-cell response on the two flips and T escape](figures/hfo2_mechanism_20261018/hfo2_path_geometry.pdf)
+![Signed shuffle amplitudes and open-cell response on the two flips and T escape](figures/hfo2_independent_20261018/hfo2_path_geometry.pdf)
 
 Figure 3. Energy, oxygen-shuffle coordinates and open-axis stretch on the
 preserving flip (left), reversing flip (middle) and PO-to-T escape (right).
-Blue circles and orange squares denote zero and +1% substrate strain.
-(a--c) Native energies relative to the matched initial well; the reversing
+Blue circles and orange squares denote zero and +1% substrate strain;
+green diamonds add the independent +0.5% preserving and T paths. The
+reversing path was not evaluated at the midpoint. (a--c) Native energies relative to the matched initial well; the reversing
 column has a larger energy range. (d--f) Signed geometric $Q_x$ (solid)
 and $Q_z$ (dashed), in the same fixed reference metric and on common scales.
 (g--i) $100(F_{yy}-1)$ in the original T chart, with x and z prescribed by
@@ -818,8 +820,8 @@ the substrate. This stretch is not the Green-strain component or a strain
 energy. Each chain has its own normalized generalized arc; equal abscissae
 do not match structures between chains. Points are the nine actual images,
 including cached endpoints; straight connectors are not a fitted continuous
-MEP. All eight chains, including PO-to-M, and the omitted-coordinate norms
-are exported with the figure source.
+MEP. All ten chains, including PO-to-M at the two training strains, and the
+omitted-coordinate norms are exported with the figure source.
 
 The T escape provides the complementary structural change. Instead of
 ending at the opposite polar well, it removes the initial negative $Q_x$
@@ -884,7 +886,89 @@ reported in Appendices E.7 and F.1. We therefore retain the measured
 relaxation effect without calling this neighborhood a stable conditional
 surface or retroactively lowering the path barrier.
 
-### 3.4. Independent checks delimit what can be predicted
+### 3.4. The independent strain test resolves different sampled responses
+
+Both preregistered +0.5% bands met the same ordinary NEB criterion:
+the preserving flip reached 0.079773 eV/Angstrom and PO-to-T reached
+0.080825 eV/Angstrom. Their nine-image sampled peaks were 98.530877
+and 90.418178 meV/HfO2, respectively (Figure 5). Relative to zero strain,
+the preserving peak increased by 1.702694, whereas the T escape peak
+increased by 6.001554 meV/HfO2. The common starting well, electronic inputs,
+ordered path definitions and stopping criterion were kept as registered.
+
+The selected-pair contrast, T minus preserving, was -8.112699 meV/HfO2
+at +0.5%, compared with -12.411559 at zero and -28.660781 at +1%.
+Thus the midpoint contrast improved by 4.298861 meV/HfO2 relative to zero,
+before worsening at the larger imposed strain. It remained negative:
+escape still had the lower sampled peak in this tested pair. This changes
+the interpretation from a uniformly unfavorable strain trend to a
+nonmonotonic sampled competition. Only the two preselected channels were
+computed at +0.5%; their comparison does not establish the complete
+four-channel ordering at that condition.
+
+![Independent midpoint paths and the errors of the frozen response predictions](figures/hfo2_independent_20261018/hfo2_independent_response.pdf)
+
+Figure 5. The independently evaluated +0.5% mechanical condition.
+(a,b) Actual nine-image preserving and PO-to-T profiles alongside their
+zero/+1% training bands; blue, green and orange encode strain.
+(c) Sampled peaks versus strain, with blue circles for preserving and
+orange squares for T escape. Hollow diamonds are the B0 midpoint forecasts
+frozen before target-interior evaluation. (d) Signed errors of all three
+numerical forecast arms. Channel colors in (c,d) differ from the strain
+colors in (a,b), as specified by the separate legends. Straight connectors
+are visual guides through measured samples; no smooth-MEP or strain fit is
+introduced. Both bands use the same target PO+ cache and the same electronic
+parameters. No uncertainty interval is inferred from the force criterion.
+
+The frozen B0 interpolation was accurate for T escape at this resolution
+but overpredicted the preserving peak by 12.595430 meV/HfO2 (Table 3).
+Its predicted pair contrast, -20.536170, missed the measured value by
+-12.423471 meV/HfO2. Conversely, both endpoint-only B1 forecasts were closer
+for preserving than B0 but less accurate for T escape. B1-follow had the
+smallest maximum error across the two paths, 5.004639 meV/HfO2. A single
+linear response inferred from the two outer strains therefore did not
+describe both registered channels equally well.
+
+Table 3. Frozen physical-strain forecast errors, prediction minus DFT,
+in meV/HfO2. Pair error is the error in T minus preserving. All three
+models cover both targets; there is no post-label calibration.
+
+| Model | Preserving error | T error | Max. absolute error | Mean absolute error | Pair error |
+|---|---:|---:|---:|---:|---:|
+| B0 midpoint | 12.595430 | 0.171959 | 12.595430 | 6.383694 | -12.423471 |
+| B1 fixed absolute peak | -2.933378 | -7.232239 | 7.232239 | 5.082809 | -4.298861 |
+| B1 final-well following | -1.667843 | -5.004639 | 5.004639 | 3.336241 | -3.336796 |
+
+The structural check preserves the distinction between the two routes
+(Figure 3). At the +0.5% preserving peak, $Q_x=-0.798917$ Angstrom and
+$Q_z$ remains nearly zero, close to the zero-strain pattern and different
+from the larger negative $Q_x$ at +1%. The T peak instead retains mixed
+$Q_x=-0.725241$ and $Q_z=0.150244$ Angstrom, intermediate in $Q_z$ between
+the two training conditions. Their open-y stretches are -0.416145%
+and -0.605986%, respectively. The midpoint data therefore retain the
+route identities while exposing different sampled energy and lattice
+responses; no new phase or bifurcation is assigned from these descriptors.
+
+This test used the registered zero-strain polygons as warm starts after
+affinely imposing the target plane and distributing the relaxed endpoint
+corrections. The preserving seed already passed the ordinary criterion
+after its first seven interior SCFs, with no optimizer update; T required
+two updates and 21 interior SCFs. These are completed fixed-protocol tests,
+rather than independent searches over starting paths. Their finite image
+resolution, stopping tolerance and history do not separate genuine
+continuous-path curvature from numerical path-relaxation effects.
+Accordingly, the measured deviation from B0 is reported for the declared
+sampled observable, without claiming a transition-state error bound.
+
+All 138 frozen forecast records remain: six numerical predictions and
+132 unavailable physical-transfer records across the two cases.
+The local reduced models had not supplied a valid transfer to this
+physical control, so this test establishes no predictive advantage for
+a branch-adapted mode model. The bounded physical test is complete; its
+outcome does not initiate model reselection. The 28 path SCFs and eleven
+endpoint SCFs consumed 47.289888 native-call proxy core-hours and
+48.808889 allocation core-hours together. Earlier training, curvature
+and local-model preparation remain additional.
 
 An independent prediction advantage has not yet been established. The
 prospective T local test supplied eight independent candidate energies,
@@ -909,15 +993,6 @@ all older controls, unsuccessful training starts and actual preparation
 costs remain in Appendices E.8--E.9 and F.2. No independent labels were
 used to refit these predictions.
 
-The remaining physical check has a narrower and more direct purpose:
-do the two lower competing candidates retain the inferred response at
-+0.5% substrate strain? Predictions and the protocol were frozen before
-launching the preserving and PO-to-T bands under the unchanged electronic
-contract. Their terminal results are not included in this revision.
-Direct interpolation and endpoint-only controls are retained even if a
-more elaborate branch-based model cannot supply an admissible forecast.
-This test will assess transfer of the physical response, rather than use
-another local fit to stand in for a new path calculation.
 
 ## 4. Discussion: mechanical control acts on the route as well as the wells
 
@@ -927,10 +1002,21 @@ examined +1% substrate intervention, the high reversing candidate becomes
 lower while the already lower preserving candidate becomes higher.
 The easiest sampled escape candidate rises less than the preserving
 candidate, so the escape-minus-switching contrast becomes more negative.
-Within this declared candidate set, tensile strain therefore does not
+Within this declared candidate set, +1% strain therefore does not
 produce the favorable switching-versus-escape response sought here.
 Selecting only the decreasing reversing barrier would give the wrong
 account of this competition.
+
+The independent midpoint refines this conclusion. At +0.5%, the selected
+escape-minus-switching contrast improves relative to zero strain but stays
+negative; at +1% it is more negative. The registered sampled competition is
+therefore nonmonotonic over these three conditions. The preserving peak's
+midpoint deviation from B0 contrasts with the nearly interpolating T peak,
+while the signed mode patterns retain their route identities. This favors
+examining route-dependent atomic and lattice accommodation over an
+interpretation based only on endpoint well shifts. The warm-started ordinary
+bands do not identify a physical bifurcation or isolate the origin of this
+finite-resolution nonlinearity.
 
 The mode and strain results explain why a single polar coordinate or an
 endpoint phase label is insufficient. The two flips reverse essentially
@@ -968,10 +1054,10 @@ metric-independent accuracy gain for the added nonlinear family. These
 outcomes do not negate the measured channel competition or structural
 contrast. They instead separate the material result from a stronger,
 currently unsupported claim that one particular reduced model predicts
-it better. The contribution at this stage is the connected comparison
-of competing routes, their mechanical responses and a controlled local
-relaxation test; a new predictive-method claim requires additional
-independent evidence, not more fit parameters.
+it better. The contribution is the connected comparison of competing routes, their
+mechanical responses, a controlled local relaxation test and a prospectively
+frozen physical-strain test. A new predictive-method claim would require
+additional independent evidence beyond the completed comparison.
 
 The quantitative scope is periodic twelve-atom hafnia at zero field and
 temperature under the fixed ABACUS/PBE contract. The four ordered candidates
@@ -979,10 +1065,11 @@ are not an exhaustive search, ordinary-converged sampled peaks are not
 certified stationary transition states, and the strained T/M separation
 of 0.464068 meV/HfO2 is not a resolved physical ordering. The study does
 not infer device switching rates, retention times, domain-wall nucleation
-or finite-temperature free energies. The already launched +0.5% comparison
-is the outstanding direct check of response transfer in this scope.
-No expansion to new materials, electronic parameters or fitted model
-families is needed to report the existing mechanism evidence.
+or finite-temperature free energies. The registered +0.5% test is now
+complete, with both successful path outcomes and all model abstentions
+retained. The resulting evidence supports a material pathway comparison
+and explicit limits on response transfer, rather than a validated new
+predictive reduction method.
 
 ## Appendix A. Reproducibility and editorial completion checks
 
@@ -2127,8 +2214,8 @@ post-release derivatives cost 276.622222 allocation core-hours; earlier
 training and preparation remain additional. Training commitments are T34/81
 and preserving39/81. At this four-probe training stage the sixteen original
 independent targets were uncomputed. The later T local test is reported in
-Appendix F.2; the revised preserving test is also complete, whereas terminal
-results for the launched physical +0.5% paths are not included in this revision.
+Appendix F.2; the revised preserving and physical +0.5% tests are now
+complete, with the latter reported in Section 3.4.
 Original admission refusal is preserved, not backfilled by these training results.
 
 ### E.8. The original T local independent cohort
@@ -2180,8 +2267,8 @@ abstentions and source identities remain in the [test case](../../benchmarks/hfo
 The eighteen test SCFs and their 19.173333 allocation core-hours are additional
 to all original preparation. The original preserving two-coordinate target
 remains refused; its separately revised eight-candidate test is reported
-below. The separately frozen physical +0.5% path test is launched but has
-no terminal results included in this revision. These local errors
+below. The separately frozen physical +0.5% path test is complete and
+reported in Section 3.4. These local errors
 do not supply a whole-path barrier error or a resolved methodological gain.
 
 ### E.9. The revised preserving local independent cohort
@@ -2238,7 +2325,8 @@ The [complete fixed scoring](../../benchmarks/hfo2_channels/20261008/G3_P8_execu
 uses no new fit, bias, source-step selection or extrapolation across the
 failed training center. Neither the small errors nor the increased candidate
 coverage certify a stable surface, a TS or a physically resolved methodology
-gain. The physical+0.5% path comparison remains a separate unfinished test.
+gain. The completed physical +0.5% path comparison is reported separately
+in Section 3.4.
 
 ## Appendix F. Reference coverage, branch trials and model-comparison details
 
@@ -2545,9 +2633,9 @@ surface. The test cost 26.469276 completed-call proxy core-hours and
 and earlier preparations remain additional. These small local errors do not
 establish a more accurate force field, stable sheet, stationary TS or
 unseen-strain path prediction.
-The separately frozen +0.5% mechanical path test has been launched, but
-its terminal results are not included here; a local-coordinate test cannot
-replace its path-barrier comparison. The
+The separately frozen +0.5% mechanical path test is now complete and
+reported in Section 3.4; local-coordinate accuracy remains a different
+observable from its physical path response. The
 [original local forecasts](../../benchmarks/hfo2_channels/20261008/G3_local_forecast_E185_20261015/README.md)
 and [strong-reference forecasts](../../benchmarks/hfo2_channels/20261008/G3_reference_forecast_E188_20261015/README.md)
 remain unchanged, including the refused preserving cohort.

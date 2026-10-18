@@ -34,9 +34,9 @@ def test_results_lead_with_whole_matrix_and_keep_all_original_nine_figures():
     assert main.index('Strain changes channel competition')<main.index('Distinct oxygen-shuffle routes')
     assert '0.464068' in main and 'not the favorable signature' in main
     assert 'not an error-certified rejection' in main
-    assert len(re.findall(r'^!\[',text,re.M))==12
+    assert len(re.findall(r'^!\[',text,re.M))==13
     labels=re.findall(r'^Figure (\w+)\.',text,re.M)
-    assert labels==['1','2','3','4','A1','A2','A3','A4','A5','A6','A7','A8']
+    assert labels==['1','2','3','4','5','A1','A2','A3','A4','A5','A6','A7','A8']
     for target in re.findall(r'^!\[[^\]]*\]\(([^)]+)\)',text,re.M):
         assert (PAPER.parent/target).is_file()
     # Detailed barrier/coverage tables are relocated, never dropped.
@@ -54,4 +54,4 @@ def test_cross_strain_work_and_missing_prediction_are_not_promoted_to_mechanisms
     discussion=text.split('## 4.',1)[1].split('## Appendix A.',1)[0]
     normalized=' '.join(discussion.split())
     assert 'A complete change of coordinates leaves the same quadratic response unchanged' in normalized
-    assert 'a new predictive-method claim requires additional independent evidence' in normalized
+    assert 'A new predictive-method claim would require additional independent evidence' in normalized

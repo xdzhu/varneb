@@ -29,6 +29,7 @@ ATOMIC_PIN = '3cc150ec3a6d0dbfa5f5879f7215a3692524309add3e5bb7f5abed384a197444'
 CHANNELS = ('preserving', 'reversing', 'T', 'M')
 LABELS = ('Preserving\nflip', 'Reversing\nflip', 'PO to T', 'PO to M')
 COLORS = ('#306A94', '#D48345')
+STRAIN_STYLE = {0.: (COLORS[0], 'o'), .005: ('#3C8C78', 'D'), .01: (COLORS[1], 's')}
 
 
 def sha(path):
@@ -206,16 +207,21 @@ def competition_figure(data):
     return finish(fig, axes)
 
 
-def geometry_figure(data):
+def geometry_figure(data, conditions=(0., .01)):
     plt = style()
     from matplotlib.lines import Line2D
     fig, axes = plt.subplots(3, 3, figsize=(183/25.4, 196/25.4))
     fig.subplots_adjust(left=.105, right=.99, bottom=.09, top=.89, wspace=.33, hspace=.48)
     for col, c in enumerate(('preserving', 'reversing', 'T')):
-        for j, s in enumerate((0., .01)):
-            band = next(b for b in data['bands'] if b['channel'] == c and b['strain'] == s)
+        for s in conditions:
+            band = next((b for b in data['bands'] if b['channel'] == c and b['strain'] == s), None)
+            if band is None:
+                if s == .005 and c == 'reversing':
+                    continue  # Only the two preregistered channels were tested.
+                raise ValueError('requested structural path is unavailable')
             rows = band['rows']; arc = [r['s'] for r in rows]
-            kw = dict(color=COLORS[j], marker=('o', 's')[j], markersize=3.5)
+            color, marker = STRAIN_STYLE[s]
+            kw = dict(color=color, marker=marker, markersize=3.5)
             axes[0, col].plot(arc, [r['relative_energy_meV_fu'] for r in rows], **kw)
             axes[1, col].plot(arc, [r['Q_x_A'] for r in rows], **kw)
             axes[1, col].plot(arc, [r['Q_z_A'] for r in rows], linestyle='--', **kw)
@@ -231,12 +237,14 @@ def geometry_figure(data):
     axes[0, 0].set_ylabel('Energy (meV/HfO$_2$)')
     axes[1, 0].set_ylabel('Shuffle amplitude (Å)')
     axes[2, 0].set_ylabel('Open-axis stretch (%)')
-    handles = [Line2D([], [], color=COLORS[j], marker=('o', 's')[j], label=label)
-               for j, label in enumerate(('0% strain', '+1% strain'))]
+    handles = [Line2D([], [], color=STRAIN_STYLE[s][0], marker=STRAIN_STYLE[s][1], label=f'{s*100:g}% strain')
+               for s in conditions]
     handles += [Line2D([], [], color='#555555', linestyle=ls, label=label)
                 for ls, label in (('-', '$Q_x$ (shuffle row)'), ('--', '$Q_z$ (shuffle row)'))]
+    if len(conditions) == 3:
+        handles = [handles[0], handles[3], handles[1], handles[4], handles[2]]
     fig.legend(handles=handles, loc='upper center', bbox_to_anchor=(.54, .994),
-               ncol=2, frameon=True, columnspacing=1.8)
+               ncol=3 if len(conditions) == 3 else 2, frameon=True, columnspacing=1.8)
     return finish(fig, axes)
 
 

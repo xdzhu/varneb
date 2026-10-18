@@ -93,7 +93,7 @@ def test_old_tables_figures_citations_and_wrapper_are_preserved():
     assert not Counter(baseline['original_table_line_sha256_counts']) - counts
     figures = re.findall(r'!\[[^\]]*\]\(([^)]+)\)', text)
     assert not Counter(baseline['original_figure_targets'])-Counter(figures)
-    assert len(figures)==12 and len(set(figures))==12
+    assert len(figures)==13 and len(set(figures))==13
     for name, sha in baseline['original_figure_sha256'].items():
         assert hashlib.sha256((PAPER / name).read_bytes()).hexdigest() == sha
     links = re.findall(r'(?<!!)\[[^\]]*\]\(([^)]+)\)', text)

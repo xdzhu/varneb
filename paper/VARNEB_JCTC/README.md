@@ -17,9 +17,11 @@ independent prediction checks.
 - Figure 1 compares all four candidate peaks and their endpoint-only controls.
 - Figure 2 retains the free-cell/clamped Pbcn comparison.
 - Figure 3 follows signed oxygen shuffles and open-axis stretch on both flips
-  and T escape at both strain conditions.
+  and T escape; the +0.5% independent paths are now included.
 - Figure 4 separates observed atomic-only and additional joint relaxation
   at all five local coordinates per center.
+- Figure 5 completes the independent strain test with actual paths, the
+  nonlinear sampled competition and errors of all three numeric forecasts.
 
 The [three new main figures and source data](figures/hfo2_mechanism_20261018/README.md)
 have a single replay command:
@@ -38,8 +40,21 @@ The bounded ten-start preserving trial and revised P8 test are complete.
 Their details and negative model-comparison findings remain in Appendices
 E and F; they do not define the visual center of the paper.
 The [separately frozen +0.5% physical test](../../benchmarks/hfo2_channels/20261008/physical_holdout_E268_20261018/README.md)
-has been launched for preserving switching and T escape. Its terminal
-results are not included in this manuscript revision. The
+is also complete and included in Results3.4/Table3/Figure5. Peaks are
+98.530877/90.418178meV/HfO2 for preserving/T; residuals0.079773/0.080825eV/A.
+The T-minus-preserving contrast improves at +0.5% relative to zero but
+remains negative, then worsens at +1%. B0 predicts T closely and misses
+preserving; endpoint-only B1 models trade those errors differently. This
+does not establish a new reduced-model prediction advantage.
+The [updated figures and complete scoring](figures/hfo2_independent_20261018/README.md)
+replay with:
+
+~~~sh
+python -m scripts.analyze_hfo2_physical_holdout --output paper/VARNEB_JCTC/figures/hfo2_independent_20261018
+~~~
+
+All six numeric predictions and132unavailable transfer records are retained.
+The registered test closes without new fitting or a larger calculation matrix. The
 [research blueprint](../../docs/HFO2_PAPER_BLUEPRINT_2026-10-17.md)
 remains the bounded completion plan, not a new experiment matrix.
 
@@ -64,7 +79,7 @@ The current paper is organized by the material argument, not job chronology:
 1. Complete channel-response matrix and endpoint-only controls.
 2. Mechanical boundary and the changed energetic role of the Pbcn snapshot.
 3. Signed oxygen-shuffle routes, open-cell response and matched atomic/joint release.
-4. Prediction controls, the completed T local test and the still-unfinished mechanical-response prediction.
+4. Completed independent strain test, full frozen controls and local candidate-energy checks.
 
 Detailed signed-work, cross-strain, curvature and representation checks are
 retained in Appendix E, not treated as six additional main discoveries.
@@ -105,41 +120,26 @@ The two lengths in the response chart are not mass-weighted phonon amplitudes.
 Geometry coverage, gradient coverage, integrated work and prediction accuracy
 are different measurements.
 
-## What remains before the intended JCTC claim
+## Scope closure and remaining manuscript work
 
-- The original two-center joint-curvature batches are complete at both probe
-  steps. A measured stability-resolution floor and the appropriate stationary
-  fixed-strain internal index remain separate; highest images are not automatically TSs.
-- Stable, connected conditional branches and covered sampling domains.
-- The preserving2D origin's admission remains refused; a changed retained
-  coordinate, branch or test definition needs a separately recorded pre-label
-  protocol, not an overwrite of the original16-point forecast record.
-- The original T8 local test is now natively audited and scored, not pending.
-  All five standard maximum aligned errors are below0.257meV/HfO2, but
-  unaligned maxima change the ranking and the full T reference equals fullH.
-  This does not prove a new method's superiority or complete the preserving8
-  and physical+0.005 mechanical-response tests.
-- Training-only model/representative selection and frozen predictions before
-  any physical +0.5% geometry or path labels are read.
-- Independent comparisons against B0--B5, including strong fixed-reference,
-  endpoint-information and interpolation controls, with actual preparation,
-  SCF and allocation costs. An unavailable model abstains.
-- A demonstrated nonlinear/finite-representation/branch or equal-accuracy-cost
-  gain: changing a complete harmonic basis alone cannot improve its exact
-  stationary response.
-- Final numerical/figure/layout/citation audit and permitted reproducibility
-  package. This structural revision is not scientific completion.
+The bounded ten-start trial, revised P8 test and two-path physical +0.5%
+test are complete. Their failures and unavailable forecasts are results,
+rather than requests to start another fitting or DFT campaign. The physical
+test establishes no prediction advantage for the local branch-adapted model;
+that stronger claim is withdrawn from the current paper.
 
-The completed [matched-ablation analysis](../../benchmarks/hfo2_channels/20261008/G3_frozen_release_E173_20261015/README.md)
-and [connected manuscript validation](../../benchmarks/hfo2_channels/20261008/G3_release_manuscript_E174_20261015/README.md)
-supersede the earlier preparation-only status. They do not close the stable-
-branch or independent strong-control prediction gates.
-The first bounded native local-curvature batches were
-[registered in E150](../../benchmarks/hfo2_channels/20261008/G3_curvature_E150_20261014/README.md).
-The [E152 read-only replay](../../benchmarks/hfo2_channels/20261008/G3_curvature_audit_E152_20261014/README.md)
-checks actual completed raw probe prefixes without filling missing columns,
-new DFT or a live-source change. Neither is a completed conditional-face or
-prediction result. Job progress belongs to those dated records, not the paper.
+Stable connected conditional surfaces and certified stationary indices have
+not been established. They would be required for stronger conditional-PES or
+transition-state claims, but are not scheduled as additional experiments
+under this completed sampled-path protocol. The original preserving-plane
+refusal remains visible.
+
+The remaining article work is to finalize the abstract/conclusion, align
+the introduction and literature comparison with the measured material
+contribution, and prepare the final reproducible reading package. Journal
+positioning follows that contribution; a new-method JCTC claim cannot be
+inferred from local model fits. Existing numerical and structural evidence
+should be reused during this writing stage.
 
 ## Sources and reproduction
 
@@ -202,4 +202,4 @@ hashes/Gamma2x2x2/P0/E0. No cutoff, orbital, pseudopotential, SCF, CI or
 unregistered material/functional/orientation matrix change. The same
 mechanical active space applies at every image and endpoint of a comparison.
 The physical +0.005 path predictions were frozen before the two bands were
-launched; no terminal labels from those bands are used in the present figures.
+launched; both completed terminal paths now appear in the figures and scoring.

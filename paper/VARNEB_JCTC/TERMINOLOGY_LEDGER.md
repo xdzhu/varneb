@@ -37,6 +37,8 @@ Updated 2026-10-18. Scope: HfO2 manuscript and its source-to-table checks.
 | Two-sided preserving training trial | Ten registered starts at five Q positions, with both released-norm and directional-gradient tests | Ten minima, distinct stable branches or a complete three-dimensional PES |
 | Retained-direction nonlinear fit | Registered 109-coefficient polynomial/harmonic-bath ansatz fitted to 81 native physical point observations | A new theorem, independently improved accuracy or a validated force field |
 | Revised preserving P8 target | Eight original Q positions with frozen training-parent starts and dual-gradient candidate energies | Retroactive success of the refused two-coordinate sheet or unseen-strain path barriers |
+| Independent physical-strain test | Two preselected nine-image ordinary bands at +0.5%, with all forecasts frozen before target-interior evaluation | Four-channel coverage at +0.5%, a fresh search over starting paths or a stationary-barrier error bound |
+| Nonmonotonic sampled competition | T-minus-preserving peak contrast of -12.411559/-8.112699/-28.660781 meV/HfO2 at 0/+0.5/+1% | Positive selectivity, a physical bifurcation or resolved continuous-path curvature |
 
 Notation is not interchangeable: Figure 3 uses the original T Cartesian
 metric, whereas the appendix representation-coverage figures use the declared

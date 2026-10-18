@@ -43,8 +43,8 @@ def test_prose_retains_bias_coverage_cost_and_missing_independent_evidence():
                  'leaving the six-term quadratic design rank five','47/71','58/114',
                  'withholding fine energies from a fit did not blind the preceding workflow',
                  'the smaller quadratic maxima do not represent a model improvement',
-                 'a new predictive-method claim requires additional independent evidence',
-                 'independent mechanical-response predictions are still missing'):
+                 'A new predictive-method claim would require additional independent evidence',
+                 'this test establishes no predictive advantage'):
         assert term in text
     ledger=(PAPER.parent/'TERMINOLOGY_LEDGER.md').read_text(encoding='utf-8')
     for name in ('Post-hoc coarsening','Tensor-quadratic interpolation'):assert f'| {name} |' in ledger
@@ -59,12 +59,12 @@ def test_prior135_table_lines_nine_figures_external_citations_and_wrapper_preser
     assert not Counter(old['prior_table_lines'])-current
     # All prior rows remain; atomic treatment and four statics add six lines each.
     # Retain every old row; the completed P8 adds 6 main and25 appendix lines.
-    assert len([l for l in text.splitlines() if l.startswith('|')])==213
+    assert len([l for l in text.splitlines() if l.startswith('|')])==218
     assert 'Table A21. Prospective T local errors' in text and 'Table A18. All frozen T test arms' in text
     assert 'Table A17. Four frozen directional training statics' in text
     figures=re.findall(r'!\[[^\]]*\]\(([^)]+)\)',text)
     assert not Counter(old['prior_figure_targets'])-Counter(figures)
-    assert len(figures)==12 and len(set(figures))==12
+    assert len(figures)==13 and len(set(figures))==13
     assert re.findall(r'\]\((https?://[^)]+)\)',text)==old['prior_external_links']
     for name,sha in old['prior_figure_sha256'].items():
         assert hashlib.sha256((PAPER.parent/name).read_bytes()).hexdigest()==sha

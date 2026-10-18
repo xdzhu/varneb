@@ -1,5 +1,47 @@
 # Physical +0.5% holdout: sampled-path response (E268)
 
+## Completed result, 2026-10-18
+
+Both original handles completed0:0 on hfacnormal01:28938772 at08:10:04CST
+and28938773 at08:40:05CST. Both meet the registered ordinary criterion.
+
+| Channel | Sampled peak (meV/HfO2) | Change from zero | NEB residual (eV/A) | Updates | Interior SCFs |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Preserving flip | 98.530877 | 1.702694 | 0.079773 | 0 | 7 |
+| PO-to-T | 90.418178 | 6.001554 | 0.080825 | 2 | 21 |
+
+The selected-pair T-minus-preserving contrast is -8.112699meV/HfO2,
+4.298861 above its zero-strain value. It remains negative. B0's signed
+errors are+12.595430/+0.171959meV/HfO2; B1-fixed gives-2.933378/-7.232239;
+B1-follow gives-1.667843/-5.004639 in preserving/T order. All138frozen
+records, including132unavailable transfers, are scored without refitting.
+The test establishes no predictive gain for the proposed local reduction.
+
+Native replay checked every28interior call, the six original physical input
+files, real32MPI and complete E/F/stress. All11endpoint calls were already
+checked before prediction freeze. Total physical-test cost is39SCFs,
+47.289888native-call proxy core-hours and48.808889allocation core-hours;
+all previous training/curvature/model costs remain additional.
+
+The transferred archive has SHA256
+`72276fb0fa799e2c4ce07dc31ad270ca246e60cc88f81bec59a375d1307ee68a`.
+Its242payload files and their hashes are in
+[completed_paths_20261018/files.json](completed_paths_20261018/files.json).
+It contains both terminal observations and all28native interior call logs,
+inputs, geometries and receipts; pseudopotential/orbital bytes are excluded.
+The existing terminal reader was copied to a fresh postprocess directory
+after both jobs ended. The first collection attempt found that reader had
+not been deployed at the root and created no output; deploying the unchanged
+reader resolved the postprocess invocation without any new DFT.
+
+The bounded warm-start test has finished. A zero-update preserving pass is
+reported explicitly, not presented as a fresh path search or a speedup.
+No additional response models or calculations are triggered by this result.
+The [paper analysis and plots](../../../../paper/VARNEB_JCTC/figures/hfo2_independent_20261018/README.md)
+replay the frozen forecasts, selected-pair responses and original-frame modes.
+
+The remaining sections preserve the registration and deployment chronology.
+
 The author delegated protocol decisions on 2026-10-18. The researcher selected
 the finite sampled-peak test in [protocol.md](protocol.md). Original certified
 selector refusals and the previous T8/P8 evidence remain unchanged.

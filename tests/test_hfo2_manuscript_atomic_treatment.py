@@ -50,7 +50,7 @@ def test_prose_is_local_signed_and_not_unique_partition_or_joint_stability():
                    '0.80--1.14 meV/cell lower', 'not the whole switching path',
                    'not a unique strain-energy term', 'neither joint stationarity nor transverse stability',
                    'Both original quadratic models were fixed before the atomic labels',
-                   'independent mechanical-response predictions are still missing',
+                   'this test establishes no predictive advantage',
                    '39.749558 core-hours', '40.684444 core-hours', 'not a speedup measurement'):
         assert phrase in text
     ledger = (PAPER.parent / 'TERMINOLOGY_LEDGER.md').read_text(encoding='utf-8')
