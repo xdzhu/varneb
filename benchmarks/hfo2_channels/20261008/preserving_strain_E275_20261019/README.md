@@ -1,6 +1,29 @@
 # Strain response of the lower connected preserving candidate
 
-**Running, not a converged result.** Actual jobs28951226(+0.5%) and
+**+0.5% complete; +1% still running.** Original28951226 completed0:0 at
+04:06:49 with7fresh interior SCFs, zero optimizer updates and ordinary
+residual0.0923153015eV/A. The native sampled peak is87.7185447330meV/fu,
+10.8123321834 below the registered98.5308769164. T escape is90.4181783358,
+so the new sampled separation is2.6996336028, not a resolved physical ordering.
+The transverse structural proxy remains0.1210822924A. An initial force pass
+does not prove initialization-independent relaxation or branch stability.
+
+All7fresh calls and the selected9native E/F/stress records have been
+independently replayed locally. The128-file archive is285005bytes, SHA256
+`0eec746dc93431d001a57f72ebea3f38f941fbd62b514fa005d9684d475de02b`.
+New cost6.128975native proxy/6.177778allocation core-hours; source path,
+release and earlier strain calculations remain additional. Full assets
+were checked onHF, not redistributed or rehashed locally.
+
+The [four-panel mechanism comparison](figures/strain_0050/README.md)
+retains all four same-strain candidates, including the prior upper-seed
+control. `completed_analysis_0050` explicitly marks+1% pending and leaves
+old labels/scores untouched. It is not a new independent prediction.
+The original+1% handle28951227 continues with no retry or runtime change.
+
+The admission/startup records below remain historical evidence.
+
+Actual jobs28951226(+0.5%) and
 28951227(+1%) started2026-10-19 at03:55:14CST onnode1/node13. Each is
 the verified one-node32CPU/18h allocation, released only after native
 zero-SCF preflight and held identity/resource checks. Runtime source

@@ -49,3 +49,12 @@ def test_missing_original_targets_are_not_filled_from_a_reference(tmp_path):
     with pytest.raises(FileNotFoundError, match='await original terminal archive'):
         reader().analyze(output)
     assert not output.exists()
+
+
+def test_partial_summary_reports_only_actual_completed_strains(reference):
+    rows = reader().summarize(reference['bands'], require_all=False)
+    assert len(rows) == 1 and rows[0]['strain'] == 0.
+    assert rows[0]['new_T_minus_preserving_meV_fu'] == pytest.approx(1.2503429411)
+    with pytest.raises(KeyError): reader().summarize(reference['bands'])
+    duplicate = reference['bands']+[copy.deepcopy(reference['bands'][0])]
+    with pytest.raises(ValueError, match='duplicate'): reader().summarize(duplicate, require_all=False)

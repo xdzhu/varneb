@@ -178,10 +178,13 @@ def read_terminal(label, destination):
         all_new_native_EFS_reparsed_locally=True, full_orbital_bytes_rechecked_locally=False)
 
 
-def summarize(bands):
+def summarize(bands, *, require_all=True):
     rows = []
     for strain in (0., .005, .01):
-        group = {b['kind']: b for b in bands if b['strain'] == strain}
+        subset = [b for b in bands if b['strain'] == strain]
+        group = {b['kind']: b for b in subset}
+        if len(group) != len(subset): raise ValueError('duplicate candidates cannot be silently selected')
+        if 'released_seed' not in group and not require_all: continue
         old, new, escape = (group[k] for k in ('registered_preserving', 'released_seed', 'T_escape'))
         require_same_well(old, new, final=True); require_same_well(new, escape)
         rows.append(dict(strain=strain, original_preserving_meV_fu=old['sampled_polygon_peak_meV_fu'],
@@ -194,19 +197,25 @@ def summarize(bands):
     return rows
 
 
-def analyze(output):
+def analyze(output, *, allow_partial=False):
     output = Path(output)
     if output.exists(): raise FileExistsError(output)
     # Missing/live jobs remain missing: no partial target, selection or relaunch.
+    available, missing = [], []
     for label in ('strain_0050', 'strain_0100'):
-        if not (CASE/'completed'/label/'collection_receipt.json').is_file():
+        if (CASE/'completed'/label/'collection_receipt.json').is_file(): available.append(label)
+        else:
+            missing.append(label)
+        if label in missing and not allow_partial:
             raise FileNotFoundError(f'await original terminal archive: {label}')
+    if not available: raise FileNotFoundError('at least one actual target terminal archive is required')
     data = reference_data(); costs = []
-    for label in ('strain_0050', 'strain_0100'):
+    for label in available:
         with tempfile.TemporaryDirectory(prefix='E275-terminal-') as td:
             b, cost = read_terminal(label, Path(td)); data['bands'].append(b); costs.append(cost)
-    data.update(outcomes=summarize(data['bands']), terminal_cohorts=costs,
-        status='finite_same_strain_connection_comparison', physical_error_bound=None,
+    data.update(outcomes=summarize(data['bands'], require_all=not allow_partial), terminal_cohorts=costs,
+        status='partial_terminal_connection_comparison' if missing else 'finite_same_strain_connection_comparison',
+        pending_terminal_archives=missing, complete_selected_target_pair_available=not missing, physical_error_bound=None,
         global_MEP_or_TS_certified=False, independent_prediction_test=False)
     output.mkdir(parents=True)
     with (output/'analysis.json').open('x', encoding='utf-8', newline='\n') as h:
@@ -220,4 +229,6 @@ def analyze(output):
 
 if __name__ == '__main__':
     p = argparse.ArgumentParser(description=__doc__); p.add_argument('--output', type=Path, required=True)
-    r = analyze(p.parse_args().output); print(json.dumps(r['outcomes']))
+    p.add_argument('--partial-completed', action='store_true')
+    args = p.parse_args(); r = analyze(args.output, allow_partial=args.partial_completed)
+    print(json.dumps(dict(status=r['status'], outcomes=r['outcomes'], pending=r['pending_terminal_archives'])))
