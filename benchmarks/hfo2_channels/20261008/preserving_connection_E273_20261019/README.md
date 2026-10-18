@@ -19,6 +19,15 @@ interior's results after it moves. No new SCF or scheduler mutation occurs
 in preparation. A real run is bounded by24updates/168interiorSCFs/6h,
 with the original0.10eV/A target and no CI.
 
+`control.py`, `run.slurm` and `package.py` implement the finite entry point
+without submitting anything. Native preflight refuses a live/timeout parent,
+checks all nine exact E/F/stress caches with fresh DFT disabled and replays
+the same initial NEB residual. Execution requires the exact separately
+accepted one-node32CPU/6h identity, one thread/rank and at most two study
+allocations. The deployed runtime remains the original immutable E268
+source, not a mutable local checkout. These guards are not a claim that
+preflight or a production run has already succeeded.
+
 ```text
 python benchmarks/hfo2_channels/20261008/preserving_connection_E273_20261019/prepare.py --output FRESH_DIRECTORY
 python -m pytest -q tests/test_hfo2_preserving_native_connection.py tests/test_hfo2_preserving_connection_seed.py
