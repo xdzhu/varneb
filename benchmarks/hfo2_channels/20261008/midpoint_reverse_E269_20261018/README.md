@@ -84,3 +84,40 @@ It was preserved as `failed_inspect_shadowing.py.txt` on HF and replaced by
 `inspect_paths.py`, outside the frozen executed bundle. A subsequent local
 direct-CLI path issue was corrected and regression-tested. The production
 controls, source, input files and exact original handles were not changed.
+
+## Complete initial evaluations, not terminal results
+
+Both original jobs completed the first full seven-interior evaluation and
+continued optimizing. Initial force residuals were0.135999/0.151237eV/A,
+above the unchanged0.10 target. The native first snapshots are exported
+read-only under `initial_complete_chains`; all18frame geometries/EFS are
+replayed, using14already-completed new interiorSCFs and four cached endpoints.
+The export launches no new DFT and does not modify a job or replace a label.
+
+The initial archive SHA256 is
+`5aa870888e5bc49da5388ac430ca47e89a439d213b23027d419b64f1cae0b2d0`;
+all98payload files have separate hashes. The initial collector and terminal
+collector reside in the separate HF `postprocess_v1` directory, not the running
+bundle or old375-file runtime. The latter collector refuses live handles.
+
+Preserving's initial peak is138.889103meV/fu,40.358226 above E268's98.530877;
+T's is90.503363, only0.085185 above90.418178. The preserving peak also changes
+Qx from-0.798917 to-1.039388A and open-y stretch from-0.416145 to+0.654708%.
+This is a simultaneous atomic/cell seed contrast, not a unique energy partition
+or a final sensitivity after equal relaxation. Do not assign the old midpoint
+nonlinearity uniquely to intrinsic barrier curvature before E269 finishes.
+
+[The stage figure and source tables](../../../../paper/VARNEB_JCTC/figures/hfo2_midpoint_initial_20261018/README.md)
+retain both optimization stages explicitly. The updated38scoped checks passed,
+including real initial-data replay and rejection of promotion to terminal paths.
+The figure was visually reviewed, with editablePDF/SVG, larger normal-weight
+panel labels, aligned axes and the author's framed legend/top-right axes style.
+
+At19:52:09CST both exact jobs remained RUNNING, each with the complete step-zero
+record above; step1SCFs were in progress. No failure, restart or parameter change.
+
+At19:55:26CST the same handles remain RUNNING. Preserving completed step1
+with fmax0.136367 after0.135999 at step0; this small rebound does not stop
+the path. It has15completed interiorSCFs and T13, with more in progress.
+The terminal collector and comparison tool are ready but have not produced
+or claimed terminal results. No new job or calculator setting was added.
