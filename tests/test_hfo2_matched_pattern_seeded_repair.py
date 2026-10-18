@@ -103,3 +103,15 @@ def test_seed_never_bypasses_cap_or_changes_failure_to_candidate(source):
     row = repair.seeded_arm(study, chart, data, cache, h, 'A')
     assert row['candidate'] is None and row['new_attempts'] <= 12
     assert cache.fresh == row['new_attempts']
+
+
+def test_actual_seeded_zero_A_repairs_one_budget_failure_not_the_original_label():
+    case = BASE/'matched_pattern_seeded_E271_20261018'
+    reader = load(BASE/'matched_pattern_release_E270_20261018/review_arm.py', 'E271_native_reader_test')
+    r = reader.review(BASE/'matched_pattern_release_E270_20261018', case/'zero_A_prefix', 0, 'A')
+    assert r['total_arm_attempts_reported'] == 2
+    assert r['released_gradient_norm_eV_A'] == pytest.approx(.02101509741313)
+    assert r['energy_change_meV_fu'] == pytest.approx(-.057641912008)
+    assert r['physical_retained_defect_A'] < 1.5e-18 and r['cell_coordinate_norm_A'] == 0
+    assert r['complete_allowed_gradient_norm_eV_A'] == pytest.approx(.10574104875965)
+    assert not r['energy_partition_or_stationary_TS_or_minimum_certified']

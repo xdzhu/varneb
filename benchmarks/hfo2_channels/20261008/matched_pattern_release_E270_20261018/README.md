@@ -1,5 +1,35 @@
 # E270: matched geometric-pattern controls at T's three strain conditions
 
+## Terminal result, 2026-10-18 22:24:10 CST
+
+Original job28947338 is COMPLETED0:0 (1h10m42s). All41 new native SCFs
+passed original-six-asset, real32MPI and complete E/F/stress replay on HF.
+The finite optimization outcomes are not all successful:
+
+| Strain | A, attempts | J, attempts |
+| --- | --- | --- |
+| 0% | budget exhausted,12 | not attempted: A unavailable,0 |
+| +0.5% | gradient candidate,5 | budget exhausted,12 |
+| +1% | budget exhausted,12 | not attempted: A unavailable,0 |
+
+The one A candidate lowers energy by0.008858301meV/HfO2, with released
+gradient0.023923316eV/A and an exactly fixed cell. Missing A/J energies
+remain null; a numerical-budget failure is not a failed SCF or divergence.
+This batch alone cannot support a completed cross-strain mechanism contrast.
+
+Actual additional cost is37.269966 native-call proxy core-hours and37.706667
+allocated core-hours, including all unsuccessful optimization trials, and
+excluding earlier curvature/path preparation. `native_terminal.tar.gz`
+preserves all339 exported files in one compressed fixture; its SHA256 is
+`8008b9c1c7f716324e9cfc28be866734739e635ec771a19b813d3720f434a9fc`.
+`native_terminal_receipt.json` and `terminal_review.json` retain accounting
+and independent local candidate replay. Extract the archive only into a
+fresh directory; the ignored local expansion is not another data version.
+
+One separate bounded numerical repair, E271, was admitted only after this
+terminal result. It reuses the midpoint A and preserves every outcome/cost
+here. It does not replace the original labels or change physical inputs.
+
 This finite batch addresses the mechanism, not a new reduced-model contest.
 The existing T continuation control is complete; the preserving E269 job is
 still live. This batch admits only T, using its original0,+0.5,+1% native

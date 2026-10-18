@@ -1,7 +1,9 @@
 """Terminal handle gating and unavailable arms are not scientific results."""
 import importlib.util
 import json
+import hashlib
 from pathlib import Path
+import tarfile
 
 import pytest
 
@@ -43,3 +45,24 @@ def test_actual_completed_A_candidate_reproduces_energy_and_held_variables():
     assert r['physical_retained_defect_A'] < 1e-15 and r['cell_coordinate_norm_A'] == 0
     native['gradient'][0] += .1
     with pytest.raises(ValueError): module.candidate_summary(None, None, data, 'A', row, [native])
+
+
+def test_original_terminal_fixture_retains_all_41_calls_and_missing_outcomes():
+    case = path.parent.with_name('matched_pattern_release_E270_20261018')
+    archive = case/'native_terminal.tar.gz'
+    receipt = json.loads((case/'native_terminal_receipt.json').read_bytes())
+    assert hashlib.sha256(archive.read_bytes()).hexdigest() == receipt['archive_sha256']
+    with tarfile.open(archive) as tar:
+        manifest = json.load(tar.extractfile('native_terminal/files.json'))
+        assert len(manifest) == receipt['exported_files'] == 339
+        for name, digest in manifest.items():
+            assert hashlib.sha256(tar.extractfile('native_terminal/'+name).read()).hexdigest() == digest
+        audit = json.load(tar.extractfile('native_terminal/audit.json'))
+    assert audit['new_native_SCF_calls'] == 41 and len(audit['calls']) == 41
+    assert audit['allocation_core_hours'] == pytest.approx(37.70666666667)
+    assert audit['native_call_proxy_core_hours'] == pytest.approx(37.26996625612)
+    arms = [a for r in audit['rows'] for a in r['arms']]
+    assert sum(a['new_attempts'] for a in arms) == 41
+    assert sum(a['candidate_energy_eV_cell'] is not None for a in arms) == 1
+    assert all(a['energy_change_from_F_meV_fu'] is None for a in arms if a['candidate_energy_eV_cell'] is None)
+    assert not audit['stationary_TS_or_minimum_or_stable_surface_certified']
