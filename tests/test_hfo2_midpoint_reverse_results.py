@@ -88,3 +88,43 @@ def test_actual_initial_figure_keeps_all_samples_and_labels():
     finally:
         import matplotlib.pyplot as plt
         plt.close(fig)
+
+
+def test_actual_completed_T_can_be_processed_without_imputing_preserving(tmp_path):
+    compare = module('compare_paths')
+    exported = CASE/'completed_channels'
+    result = compare.compare(ROOT, exported, channels=('T',))
+    assert result['status'] == 'one_completed_midpoint_channel_compared'
+    assert not result['complete_selected_pair_available'] and result['paired'] is None
+    assert [r['channel'] for r in result['outcomes']] == ['T']
+    row = result['outcomes'][0]
+    assert row['upper_ordinary_converged'] and row['upper_terminal_path']
+    assert row['from_upper_peak_meV_fu'] == pytest.approx(90.28624292841414)
+    assert row['from_zero_peak_meV_fu'] == pytest.approx(90.41817833576715)
+    assert row['upper_SCFs'] == 21 and row['from_upper_updates'] == 2
+    with pytest.raises(ValueError): compare.figure(result)
+    with pytest.raises(ValueError): compare.write_result(result, tmp_path/'refused_figure', draw=True)
+    assert not (tmp_path/'refused_figure').exists()
+    with pytest.raises(FileNotFoundError): compare.compare(ROOT, exported)
+
+
+def test_every_completed_T_native_call_is_retained_and_replays():
+    import json
+    import numpy as np
+    from scripts.audit_hfo2_static_replica import audited_results, sha256
+    from examples.hfo2_fixed_input_factory import CONTRACT
+    folder = CASE/'completed_channels/T'
+    audit = json.loads((folder/'audit.json').read_bytes())
+    assert len(audit['calls']) == audit['new_SCF_calls'] == 21
+    assert audit['job_id'] == '28946181' and audit['ordinary_converged']
+    assert audit['scheduler_row'][1:7] == ['COMPLETED', '0:0', '32', 'hfacnormal01', 'iai806', '1']
+    for i, record in enumerate(audit['calls']):
+        raw = folder/'all_calls'/f'{i:04d}'
+        assert sha256(raw/'call_audit.json') == record['call_audit_sha256']
+        call = json.loads((raw/'call_audit.json').read_bytes())
+        assert all(call['input_sha256'][n] == h for n, h in CONTRACT.items())
+        assert all(sha256(raw/n) == call['input_sha256'][n] for n in ('INPUT', 'KPT', 'STRU'))
+        assert sha256(raw/'OUT.ABACUS/running_scf.log') == call['raw_log_sha256']
+        parsed = audited_results(raw)
+        for key in parsed:
+            np.testing.assert_allclose(parsed[key], call['results'][key], atol=1e-12, rtol=0)

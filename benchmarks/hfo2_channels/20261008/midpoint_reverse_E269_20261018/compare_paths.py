@@ -46,14 +46,17 @@ def paired_summary(rows):
         complete_four_channel_ordering_claimed=False)
 
 
-def compare(repository, exported, *, initial=False):
+def compare(repository, exported, *, initial=False, channels=('preserving', 'T')):
     repository, exported = Path(repository), Path(exported)
+    channels = tuple(channels)
+    if not channels or len(set(channels)) != len(channels) or not set(channels) <= set(JOBS):
+        raise ValueError('explicit unique original channels required')
     original = analyze(repository)
     t = read(repository/BASE/'reference_variants/T.vasp', format='vasp')
     parent, basis, _ = rotated_t_triplet(t)
     orientation = json.loads((repository/BASE/'clamped_endpoint_seeds/clamped_seed_manifest.json').read_bytes())['orientation']
     bands, outcomes = [], []
-    for channel in ('preserving', 'T'):
+    for channel in channels:
         old_band = next(b for b in original['bands'] if b['channel'] == channel and b['strain'] == .005)
         old_audit = json.loads((repository/RESULTS/channel/'audit.json').read_bytes())
         old_obs = json.loads((repository/RESULTS/channel/f"step_{old_audit['step']:04d}"/'observation.json').read_bytes())
@@ -132,9 +135,14 @@ def compare(repository, exported, *, initial=False):
             upper_SCFs=audit['new_SCFs_in_this_initial_evaluation'] if initial else audit['new_SCF_calls'],
             upper_allocation_core_hours=None if initial else audit['allocation_core_hours'],
             source_observation_sha256=audit['observation_sha256']))
-    return dict(status='initial_seed_comparison_not_terminal_paths' if initial else 'two_initializations_same_midpoint_compared',
+    status = ('initial_seed_comparison_not_terminal_paths' if initial else
+              'two_initializations_same_midpoint_compared' if len(channels) == 2 else
+              'one_completed_midpoint_channel_compared')
+    return dict(status=status,
         bands=bands, outcomes=outcomes, upper_stage='initial_evaluation' if initial else 'ordinary_terminal',
-        paired=paired_summary(outcomes), target_strain=.005, new_DFT_calls=0,
+        paired=paired_summary(outcomes) if len(channels) == 2 else None,
+        complete_selected_pair_available=len(channels) == 2,
+        target_strain=.005, new_DFT_calls=0,
         old_forecast_manifest_sha256=original['forecast_manifest_sha256'],
         not_a_new_independent_prediction_test=True, stationary_TS_certified=False)
 
@@ -142,6 +150,8 @@ def compare(repository, exported, *, initial=False):
 def figure(data):
     # Quantitative grid: energies, oxygen rearrangement and cell response form
     # one evidence chain. Each line retains its own actual normalized arc.
+    if {b['channel'] for b in data['bands']} != set(JOBS):
+        raise ValueError('two-channel figure requires both completed selected channels')
     plt = style()
     from matplotlib.lines import Line2D
     fig, axes = plt.subplots(3, 2, figsize=(183/25.4, 190/25.4))
@@ -186,6 +196,8 @@ def draw_result(data, output):
 
 
 def write_result(data, output, draw=False):
+    if draw and {b['channel'] for b in data['bands']} != set(JOBS):
+        raise ValueError('do not fabricate a missing channel for the two-channel figure')
     output.mkdir(parents=True, exist_ok=False)
     with (output/'comparison.json').open('x', encoding='utf-8') as handle:
         json.dump(data, handle, indent=2, allow_nan=False); handle.write('\n')
@@ -203,6 +215,11 @@ if __name__ == '__main__':
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--draw', action='store_true')
     parser.add_argument('--initial', action='store_true', help='explicitly compare nonterminal step-zero snapshots')
+    parser.add_argument('--channel', choices=('preserving', 'T'), help='process one completed channel without a paired-gap claim')
     args = parser.parse_args()
-    result = compare(args.repository, args.exported, initial=args.initial); write_result(result, args.output, args.draw)
+    if args.channel and args.draw:
+        parser.error('the two-channel figure needs both channels; omit --draw for a partial result')
+    result = compare(args.repository, args.exported, initial=args.initial,
+                     channels=(args.channel,) if args.channel else ('preserving', 'T'))
+    write_result(result, args.output, args.draw)
     print(json.dumps(dict(outcomes=result['outcomes'], paired=result['paired']), allow_nan=False))

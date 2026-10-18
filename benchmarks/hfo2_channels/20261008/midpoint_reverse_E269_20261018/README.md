@@ -1,5 +1,9 @@
 # E269: does the hafnia midpoint depend on the seed path?
 
+**20:20 latest:** PO-to-T28946181 completed0:0 at20:12:08, ordinary fmax0.082374;
+preserving28946180 remains RUNNING at step3/fmax0.140626. Only T has a terminal
+comparison. No replacement paired-gap or final preserving sensitivity is inferred.
+
 Actual HF deployment, 2026-10-18. This is the first finite batch of the
 [mechanism-closure plan](../../../../docs/HFO2_MECHANISM_CLOSURE_2026-10-18.md).
 The two opposite-strain initializations test the same already-seen +0.5%
@@ -138,3 +142,39 @@ No new material, backend, Hessian, NEB chain or model search has been opened.
 At20:03:20CST both original jobs were RUNNING. T completed step1 at19:58:35,
 with residual falling from0.151237 to0.123360eV/A. Preserving still had its
 completed step1 at0.136367 and continued step2SCFs. Neither was converged.
+
+## Completed T response, 20:12:08 CST
+
+The original PO-to-T handle28946181 completed0:0 after44m21s. The two FIRE
+updates used21new interiorSCFs, retaining the same two endpoint caches.
+The full native audit rechecked all21calls, every original physical asset,
+genuine32MPI, complete E/F/stress, exact accounting and the unchanged runtime.
+The terminal snapshot is retained alongside all21call logs/inputs/receipts.
+
+| Initialization at the same +0.5% target | Sampled peak (meV/HfO2) | Ordinary fmax (eV/A) | Updates |
+| --- | ---: | ---: | ---: |
+| from0%, E268 | 90.418178 | 0.080825 | 2 |
+| from1%, E269 | 90.286243 | 0.082374 | 2 |
+
+The difference is-0.131935meV/HfO2. Both sampled peaks are close at the
+declared ordinary resolution; this is not a continuous-barrier error bound,
+a unique-MEP proof or an independently trained predictor. The peak Qx values
+remain-0.725241/-0.741484A, with open-y stretches-0.605986/-0.502644%.
+Similar peak energies do not imply identical configurations. The original
+E268 prediction scores remain unchanged; this is a follow-up initialization test.
+
+New actual cost is23.242526native-call proxy core-hours and23.653333allocated
+core-hours, additional to all earlier E268/training costs. Identical21call
+counts are not a demonstration of optimizer acceleration.
+
+[Native completed T data](completed_channels/T/audit.json),
+[the separate T comparison](T_terminal_comparison/comparison.json), and
+[the export receipt](T_terminal_export.json) preserve this result. The archive
+hash was checked before safe local extraction. The46scoped tests pass,
+including replay of every21native call and refusal to invent a missing P
+outcome or draw the two-channel comparison before both paths complete.
+
+`compare_paths.py --channel T` exports this single-channel result without
+computing a new T-minus-preserving value (`paired=null`). Its default remains
+the complete two-channel comparison. The running preserving path is not
+restarted or altered. At20:20 it had28completedSCFs and step3 residual0.140626.
