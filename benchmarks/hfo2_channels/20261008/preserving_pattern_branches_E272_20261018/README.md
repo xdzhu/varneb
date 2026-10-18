@@ -1,5 +1,54 @@
 # E272: preserving-mode branch controls
 
+## Complete original batch, 2026-10-19 00:36:18 CST
+
+Job28948425 finished COMPLETED0:0 after1h26m18s. All54 native SCFs,
+including both budget-failed branches, were exported with450 files in
+`native_terminal.tar.gz` (SHA256
+`fee229e74ed9132edf7ec2a38288893a4e66bdb6b113d3ace8ce6b0fb97681e9`).
+All six assets/MPI/EFS/chart gradients were rechecked on HF; all54 native
+EFS/physical-gradient records were independently replayed locally. Local
+exports omit pseudo/orbital binaries, so their full bytes are not claimed
+to have been rehashed locally. See `native_terminal_receipt.json` and
+`complete_analysis/analysis.json`.
+
+| Strain | Signed start | A-F (meV/HfO2) | J-F (meV/HfO2) | Fresh A/check/J |
+| --- | --- | ---: | ---: | --- |
+| 0 | minus | -13.599258 | -13.617082 | 12/2/1 |
+| 0 | plus | -13.599564 | -13.617889 | 12/2/1 |
+| +1% | minus | unavailable | unavailable | 12/0/0 |
+| +1% | plus | unavailable | unavailable | 12/0/0 |
+
+Both zero-strain signs pass the local released-gradient target. In the
+common original-T metric, negative A has0.476962A atomic displacement,
+80.364% oxygen squared norm and a+0.121857A change in the transverse y
+mean-O-minus-Hf structural proxy, while the three displayed T patterns
+and z proxy stay fixed. The other A sign gives-0.121879A transverse
+change. These are geometric observations, not electronic polarization,
+energy fractions or a proof of global branch equivalence. The separate
+known-direction energy/gradient secants at A are also independently
+reproduced; no full stability or J Hessian is certified.
+
+At+1%, the two atomic arms exhausted12 attempts each. Their final trial
+norms0.499979/0.499972A approached the predeclared0.5A neighborhood bound;
+released atomic gradients0.377865/0.377769eV/A remained above0.03.
+No qualified A, J or direction-check value is imputed. This is a bounded
+optimization outcome, not an electronic-SCF failure or proof that no
+other minimum exists. No bound/parameter change or repeated budget follows.
+
+Actual new cost is45.648128native-proxy/46.026667allocated core-hours;
+all earlier curvature/path/preparation costs remain additional. Original
+labels and forecast scores are unchanged. The next scientific test is
+the separately frozen E273 zero-minus free-interior connection, not an
+automatic extension of these local failures.
+
+The complete54-call analysis is reproducible locally without DFT or SSH:
+
+```text
+python benchmarks/hfo2_channels/20261008/preserving_pattern_branches_E272_20261018/analyze_terminal.py --output FRESH_DIRECTORY
+python -m pytest -q tests/test_hfo2_preserving_terminal_analysis.py
+```
+
 ## Zero-new-DFT connection result, 2026-10-19
 
 The four selected native SCFs in the zero-minus prefix have now been

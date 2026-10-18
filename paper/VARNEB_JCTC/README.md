@@ -10,10 +10,19 @@ reading PDF through [the thin TeX wrapper](varneb_JCTC_draft.tex).
 The single-column review layout retains the main article, references and
 in-article appendices. Historical page counts belong to their dated builds;
 the current PDF is regenerated from the single Markdown source. The
-matched-observable revision has54pages. Figure4 is onpage11, the new
+zero-strain branch revision has55pages. Figure4 is onpage11, the new
 three-strain T release Figure5 onpage12 and the independent strain test
-Figure6 onpage13. The separate T initialization control remains in
+Figure6 onpage14. The separate T initialization control remains in
 Section3.4, without changing the original labels or forecast scores.
+
+The October19 update adds the completed zero-minus preserving local
+control to Results3.3 and Discussion4. Holding the original three T-pattern
+amplitudes and z structural polar proxy still allows0.122A transverse
+mean-O-minus-Hf motion and13.599meV/HfO2 fixed-cell lowering. This is a
+structural proxy, not electronic polarization. Its reconnected polygon
+fails the ordinary NEB target, so no corrected barrier or channel
+reordering is claimed. The separately bounded free-interior E273
+connection test, not another reduced-model search, addresses that gap.
 
 The [Chinese reading guide](AUTHOR_READING_GUIDE.md) explains the argument,
 the supported contributions and the role of each main figure. The main

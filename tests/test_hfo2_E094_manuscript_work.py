@@ -106,10 +106,15 @@ def test_section_numbers_and_new_evidence_links_are_unambiguous():
     text = PAPER.read_text(encoding='utf-8')
     numbers = re.findall(r'^### ((?:\d+|[A-Z])\.\d+)\.',text,re.M)
     assert len(numbers) == len(set(numbers))
-    assert all(n in numbers for n in ('2.5', '2.6', 'E.1', 'E.2'))
+    # The mechanism-first manuscript moved the former work-theory methods
+    # into G.3/G.4; retain their content/link checks, not obsolete numbering.
+    assert [n for n in numbers if n.startswith('2.')] == ['2.1', '2.2', '2.3', '2.4']
+    assert all(n in numbers for n in ('G.3', 'G.4', 'E.1', 'E.2'))
     assert [n for n in numbers if n.startswith('3.')] == ['3.1', '3.2', '3.3', '3.4']
     assert 'Table A11' in section()
-    method = text.split('### 2.5. ',1)[1].split('## 3.',1)[0]
+    assert '### G.3. Signed path work as an energy-consistency diagnostic' in text
+    assert '### G.4. Work between the two seen strain conditions' in text
+    method = text.split('### G.3. ',1)[1].split('### G.5.',1)[0]
     for target in re.findall(r'\]\(([^)]+)\)',method+section()):
         assert not target.startswith(('http','file:'))
         assert (PAPER.parent/target).resolve().is_file()

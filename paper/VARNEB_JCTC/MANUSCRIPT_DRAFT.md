@@ -254,6 +254,15 @@ native results exactly; it did not modify the physical calculation or
 replace the whole-path labels. These four-observable controls are not
 nested with the earlier two-coordinate controls.
 
+For the preserving neighborhoods, the same four-observable restriction
+was tested from two signed 0.10 Angstrom atomic starts along the omitted
+negative direction of the existing local curvature calculation. Each A
+or J arm allowed at most twelve fresh attempts, with a 0.5 Angstrom
+full-coordinate neighborhood bound and no electronic-parameter changes.
+Only a successful A candidate could seed J and two 0.01 Angstrom probes
+along that known direction. These are finite branch tests, not an
+exhaustive search or a full post-release stability calculation.
+
 ### 2.4. Prospective strain test and prediction comparison
 
 Eight training bands compare all four candidates at substrate strain
@@ -579,8 +588,9 @@ by 0.141, 0.099 and 0.101 percentage points relative to F.
 Thus the joint contrast includes coupled atomic motion even when its
 energy is small. These same-definition T controls do not isolate the
 cost of adding one coordinate to Figure 4, whose retained subspaces are
-different. Matched preserving controls and stability checks remain
-necessary before extending this comparison to both competing bottlenecks.
+different. The following zero-strain preserving control addresses the
+same physical restriction, while its across-strain and stability coverage
+remains incomplete.
 
 ![Matched physical-pattern T energy release and atomic motion](figures/hfo2_matched_T_20261018/matched_T_release.pdf)
 
@@ -598,6 +608,25 @@ seed cell. Each bar represents one computed gradient candidate, not a
 statistical replicate; no uncertainty interval is inferred. Local lowering
 is not a corrected path barrier or a stability certificate. Source data
 and independent native replays accompany the calculation archive.
+
+At zero strain, the same four-observable restriction left substantial
+preserving accommodation. Negative-start A lowered the native peak configuration
+by 13.599 meV/HfO2; J added another 0.018 meV/HfO2. The F-to-A atomic
+displacement norm was 0.477 Angstrom in the common original-T metric,
+with oxygen contributing 80.4% of its squared norm. Despite unchanged
+T-pattern amplitudes and z polar proxy, the transverse mean O-minus-Hf
+displacement increased by 0.122 Angstrom along y. This is a structural
+descriptor, not an electronic-polarization measurement or a minimum
+certificate. At +1%, both signed A starts exhausted twelve attempts near
+the fixed 0.5 Angstrom neighborhood boundary, with released gradients
+about 0.378 eV/Angstrom; their J energies remain unavailable.
+
+Reinserting J as a free central image moved the polygon's sampled maximum
+to a neighbor (85.500 meV/HfO2), but the recomputed chain residual was
+0.1256 eV/Angstrom. This
+[local gain](../../benchmarks/hfo2_channels/20261008/preserving_pattern_branches_E272_20261018/README.md)
+is therefore not a corrected barrier; the neighboring path still requires
+relaxation.
 
 ### 3.4. The independent strain test resolves different sampled responses
 
@@ -793,8 +822,13 @@ lowering stayed below 0.25 meV/HfO2 at all three PO-to-T peaks. This provides
 no evidence for a large unaccounted complementary release at those
 configurations under the tested restriction. It does not certify their
 full stability, constrain every alternative T route, or explain the
-preserving response by subtraction. The corresponding same-definition
-preserving intervention is a separate requirement, rather than an
+preserving response by subtraction. At zero strain, the same-definition
+preserving intervention instead exposes a mixed atomic reorganization
+with a transverse structural polar component that is invisible to the
+held z proxy and T-pattern amplitudes. The force imbalance of the
+reconnected polygon shows why this local observation must be followed
+along the neighboring path before changing a channel ordering. Its
+across-strain behavior remains a separate question, rather than an
 assumption based on the smaller T relaxation energies.
 
 The model tests place an important limit on the methodological claim.

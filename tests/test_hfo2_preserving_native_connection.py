@@ -90,3 +90,22 @@ def test_changed_archive_cannot_be_accepted(tmp_path, monkeypatch):
     monkeypatch.setattr(reader, 'CASE', tmp_path)
     with pytest.raises(ValueError, match='archive changed'):
         reader.restore(tmp_path/'out')
+
+
+def test_held_z_proxy_does_not_hide_the_actual_transverse_structural_motion():
+    import json
+    import tarfile
+    spec = importlib.util.spec_from_file_location('P_native_motion_test', CASE/'analyze_terminal.py')
+    motion_reader = importlib.util.module_from_spec(spec); spec.loader.exec_module(motion_reader)
+    chart, _, _, _ = reader.setup()
+    with tarfile.open(CASE/'prefix_0_minus.tar.gz') as archive:
+        point = json.load(archive.extractfile('prefix_0_minus/treatment_A.json'))['candidate']
+    actual = motion_reader.candidate_motion(chart, point['coordinates'])
+    motion = actual['atomic_motion_F_to_candidate']
+    assert motion['total_norm_A'] == pytest.approx(.4769622206405656, abs=1e-12)
+    assert motion['oxygen_squared_norm_fraction'] == pytest.approx(.803640885869185, abs=1e-12)
+    assert motion['complement_squared_norm_fraction'] == pytest.approx(1., abs=1e-12)
+    assert actual['structural_polar_proxy_change_A'][1] == pytest.approx(.1218569385862389, abs=1e-12)
+    assert abs(actual['structural_polar_proxy_change_A'][2]) < 1e-12
+    assert actual['measured_four_pattern_defect_A'] < 1e-12
+    assert actual['structural_proxy_is_not_electronic_polarization']

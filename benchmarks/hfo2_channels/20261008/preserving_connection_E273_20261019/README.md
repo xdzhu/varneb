@@ -1,8 +1,14 @@
 # One bounded preserving-path connection test
 
-**Prepared only, not submitted.** E272 must finish and one of the two study
-allocation slots must be free before a separately frozen runtime admission.
-The original E269/E272 running sources are unchanged.
+**Submitted and released as28949435 after native preflight.** The original
+E272 job completed0:0, freeing the second study slot. All nine exact
+native caches and structure roundtrips passed with zero fresh DFT; the
+replayed initial NEB residual is0.1256114037eV/A. Held one-node32CPU/6h
+resources were verified before release. Runtime source3f72b35f was pushed
+before deployment; the ten-file immutable bundle pin is
+`a452d5b125d6d95c729ea60607524ce5d35370d5aab57ac6f2b1b7869d61991a`.
+See deployment/native-preflight/held/accepted/released receipts. No
+original E269/E272 runtime source was overwritten or third job submitted.
 
 The [protocol](protocol.md) asks whether the lower, matched-observable
 zero-strain J branch can form a connected ordinary-NEB path. The current
@@ -25,8 +31,16 @@ checks all nine exact E/F/stress caches with fresh DFT disabled and replays
 the same initial NEB residual. Execution requires the exact separately
 accepted one-node32CPU/6h identity, one thread/rank and at most two study
 allocations. The deployed runtime remains the original immutable E268
-source, not a mutable local checkout. These guards are not a claim that
-preflight or a production run has already succeeded.
+source, not a mutable local checkout. Preparation metadata retains its
+original non-admission status; the later native/held receipts establish
+actual runtime admission. No convergence or new barrier is yet claimed.
+
+Job28949435 started onnode1 and reproduced the cached step-zero residual
+0.125611 without new endpoint calculations. Its first fresh interior SCF
+completed in85.041s with genuine32MPI, unchanged six input assets and full
+finite E/F/stress; see `startup_snapshot.json`. This is one completed
+native call, not a complete NEB update or convergence claim. Only E269
+preserving and this connection job occupy study allocations.
 
 ```text
 python benchmarks/hfo2_channels/20261008/preserving_connection_E273_20261019/prepare.py --output FRESH_DIRECTORY

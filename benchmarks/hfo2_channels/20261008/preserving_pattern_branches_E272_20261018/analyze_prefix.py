@@ -58,7 +58,9 @@ def restore(destination):
     return root
 
 
-def setup():
+def setup(index=0):
+    if index not in (0, 2):
+        raise ValueError('only original zero and +1% preserving neighborhoods admitted')
     manifest = CASE/'executed_bundle_files.json'
     if sha256(manifest) != BUNDLE_PIN:
         raise ValueError('executed E272 physical protocol changed')
@@ -71,11 +73,12 @@ def setup():
         raise ValueError('original chart/native replay source changed')
     spec = importlib.util.spec_from_file_location('E272_prefix_original_chart', original/'study.py')
     study = importlib.util.module_from_spec(spec); spec.loader.exec_module(study)
-    seed = CASE/'prepared/seeds/0'
+    seed = CASE/'prepared/seeds'/str(index)
     data = json.loads((seed/'seed.json').read_bytes())
-    if (data['channel'] != 'preserving' or data['substrate_strain'] != 0
-            or data['source_job'] != '28727382' or data['observation_sha256'] != OBSERVATION_SHA):
-        raise ValueError('original zero-strain preserving peak required')
+    expected = (0., '28727382') if index == 0 else (.01, '28812952')
+    if (data['channel'] != 'preserving' or (data['substrate_strain'],data['source_job']) != expected
+            or index == 0 and data['observation_sha256'] != OBSERVATION_SHA):
+        raise ValueError('original registered preserving peak required')
     chart = study.chart_for(seed)
     e0, g0 = study.cached_frozen(seed, chart)
     return chart, data, e0, g0
