@@ -121,3 +121,20 @@ with fmax0.136367 after0.135999 at step0; this small rebound does not stop
 the path. It has15completed interiorSCFs and T13, with more in progress.
 The terminal collector and comparison tool are ready but have not produced
 or claimed terminal results. No new job or calculator setting was added.
+
+## Minimal mechanistic follow-up prepared, not submitted
+
+The [frozen atomic–cell intervention](FACTORIAL_INTERVENTION.md) now has a
+tested preparer. It preserves internal fractional patterns while exchanging
+the two candidate cells' open row. Two existing diagonal statics per channel
+are reused; only two crossover SCFs per channel would be new. Missing energies
+remain null, so no interaction or causal attribution is reported yet.
+Four diagnostic native decks were actually generated in ignored build/ with
+zero DFT/submissions and the original INPUT/KPT. They are not run-ready on HF
+and do not bypass review of the terminal E269 comparison. The default preparer
+requires terminal results; initial snapshots need an explicit diagnostic flag.
+No new material, backend, Hessian, NEB chain or model search has been opened.
+
+At20:03:20CST both original jobs were RUNNING. T completed step1 at19:58:35,
+with residual falling from0.151237 to0.123360eV/A. Preserving still had its
+completed step1 at0.136367 and continued step2SCFs. Neither was converged.
