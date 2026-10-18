@@ -1,5 +1,24 @@
 # E272: preserving-mode branch controls
 
+## Actual native start, 2026-10-18 23:13 CST
+
+Execution source31c31178 was pushed before deployment. The fresh HF root is
+`/public/home/iai806/abacus/agent-runs/20261018-varneb-preserving-branches-E272-r1`;
+its17-file immutable bundle pin is
+`d12af56eac84edf28e536c69b524d12681f876db1918c889fbf4d89eb59e06c2`.
+Zero-DFT native preflight passed both original sources and all four signed
+geometry/input roundtrips after T28947723 completed. Slurm returned28948425;
+held1node/32CPU/1task/6h resources were checked before release.
+
+Job28948425 started23:10:00 onnode1/hfacnormal01. At23:13:10 its first
+SCF passed real32MPI, the same six physical inputs, full E/F/stress and
+physical-gradient replay,92.861s. The zero-strain minus0.10A seed lowers
+energy by0.540401meV/HfO2, retaining four-pattern defect<9e-18A and exactly
+zero cell coordinates. This is one evaluated seed, not a completed A/J
+treatment, two-side equivalence, stable minimum or a corrected barrier.
+See the preflight/held/accepted/released/startup receipts. E269 preserving
+remains the only other study allocation; no midpoint branch is admitted.
+
 The main question is whether oxygen rearrangements outside the displayed
 patterns account for the preserving bottleneck's residual accommodation.
 This differs from T's positive-atomic-block conditioning problem. Keep the

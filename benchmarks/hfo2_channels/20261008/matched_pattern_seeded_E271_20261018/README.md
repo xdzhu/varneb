@@ -27,6 +27,17 @@ preparation costs remain additional. The14-call repair alone is not an
 end-to-end acceleration benchmark. The123-file native export is retained
 as `native_terminal.tar.gz`, with its receipt, without scattering raw files.
 
+`analyze_complete.py` restores both hash-pinned archives into temporary
+folders, verifies every portable file, then independently replays all six
+final native candidates against the original physical-coordinate reader.
+It resolves the reused midpoint A to E270 rather than pretending it was
+recalculated. [The complete energy table](complete_analysis/energies.csv)
+and `complete_analysis/analysis.json` retain these6 local E/F/stress/gradient
+replays and all55 original/repair costs, without changing any path label.
+The four retained variables here are not nested with the older two-axis
+controls in the current Fig.4. Do not subtract their energies as the isolated
+cost of adding one mode; matched preserving controls are still being run.
+
 ## Actual admission, 2026-10-18 22:26 CST
 
 Original E27028947338 completed0:0 with41 new SCFs and explicit incomplete
