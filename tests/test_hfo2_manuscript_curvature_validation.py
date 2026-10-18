@@ -75,7 +75,7 @@ def test_existing_tables_figures_citations_and_wrapper_are_not_displaced():
     figures=re.findall(r'!\[[^\]]*\]\(([^)]+)\)',text)
     # All original assets remain; the matched-T control adds one main figure.
     assert not Counter(baseline['original_figure_targets'])-Counter(figures)
-    assert len(figures)==14 and len(set(figures))==14
+    assert len(figures)==16 and len(set(figures))==16
     assert 'figures/hfo2_matched_T_20261018/matched_T_release.pdf' in figures
     assert all(hashlib.sha256((PAPER/p).read_bytes()).hexdigest()==h
                for p,h in baseline['original_figure_sha256'].items())

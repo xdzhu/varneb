@@ -1,8 +1,33 @@
 # E269: does the hafnia midpoint depend on the seed path?
 
-**20:20 latest:** PO-to-T28946181 completed0:0 at20:12:08, ordinary fmax0.082374;
-preserving28946180 remains RUNNING at step3/fmax0.140626. Only T has a terminal
-comparison. No replacement paired-gap or final preserving sensitivity is inferred.
+**Both original jobs completed0:0.** Preserving28946180 ended2026-10-19
+02:34:09 CST after26updates/189fresh interiorSCFs, fmax0.0998929973eV/A.
+PO-to-T28946181 ended2026-10-18 at20:12:08, step2/21SCFs/fmax0.0823743870.
+All210calls were independently replayed locally from the complete compressed
+native cohort; full pseudo/orbital bytes were rechecked on HF, not redistributed.
+
+| Channel | From0% peak | From1% peak | Difference (meV/HfO2) |
+| --- | ---: | ---: | ---: |
+| Preserving | 98.530877 | 109.351721 | +10.820844 |
+| PO-to-T | 90.418178 | 90.286243 | -0.131935 |
+
+The preserving difference is comparable with the original12.595430meV/fu
+midpoint departure from B0, and exceeds the4.298861meV/fu registered
+paired-gap improvement. The T-minus-preserving contrast changes from
+-8.112699 to-19.065478meV/fu between initializations. Thus that sampled
+nonmonotonic response is not initialization-independent. The peak Qx and
+open-y stretch both change; this does not uniquely identify an atomic or
+elastic cause, a distinct branch, a saddle or a continuous-barrier error.
+The original independent labels and forecast scores remain unchanged.
+
+[The complete terminal comparison](terminal_comparison/README.md) contains
+both energy/structure profiles and a six-panel figure. `completed_paths.tar.gz`
+retains1152payload files (SHA256
+`1b063ed812189d3c17073c4953495f5f537dcf51c40109c8bcf2f9665d2fd44f`).
+Costs for these two original control jobs are250.055860native-call proxy
+and251.048889allocated core-hours. The earlier T-only export is not charged
+again; older training, endpoints and independent-test costs remain additional.
+The records below retain the earlier admission and progress stages.
 
 Actual HF deployment, 2026-10-18. This is the first finite batch of the
 [mechanism-closure plan](../../../../docs/HFO2_MECHANISM_CLOSURE_2026-10-18.md).

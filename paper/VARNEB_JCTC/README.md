@@ -10,28 +10,31 @@ reading PDF through [the thin TeX wrapper](varneb_JCTC_draft.tex).
 The single-column review layout retains the main article, references and
 in-article appendices. Historical page counts belong to their dated builds;
 the current PDF is regenerated from the single Markdown source. The
-zero-strain branch revision has55pages. Figure4 is onpage11, the new
-three-strain T release Figure5 onpage12 and the independent strain test
-Figure6 onpage14. The separate T initialization control remains in
-Section3.4, without changing the original labels or forecast scores.
+terminal connection/initialization revision has57pages. Figure4 is onpage10,
+the three-strain T release Figure5 onpage11, the connected preserving
+Figure6 onpage13, independent strain Figure7 onpage14 and completed
+initialization Figure8 onpage16. Original labels and forecast scores remain.
 
 The October19 update adds the completed zero-minus preserving local
 control to Results3.3 and Discussion4. Holding the original three T-pattern
 amplitudes and z structural polar proxy still allows0.122A transverse
 mean-O-minus-Hf motion and13.599meV/HfO2 fixed-cell lowering. This is a
-structural proxy, not electronic polarization. Its reconnected polygon
-fails the ordinary NEB target, so no corrected barrier or channel
-reordering is claimed. The separately bounded free-interior E273
-connection test, not another reduced-model search, addresses that gap.
+structural proxy, not electronic polarization. The later free-interior
+connection completed9updates/63SCFs at0.094012eV/A, with a sampled peak
+of83.166281meV/HfO2 instead of96.828183. Its1.250343meV/fu separation
+from original T escape is not resolved as a physical ordering.
+The completed midpoint initialization check shifts preserving by10.820844
+but T by only-.131935meV/fu; the registered nonmonotonic strain signal
+is therefore not initialization-independent. These are material results,
+not a new reduced-model or optimizer-acceleration claim.
 
 The [Chinese reading guide](AUTHOR_READING_GUIDE.md) explains the argument,
 the supported contributions and the role of each main figure. The main
 methods now contain the material/comparison definitions and calculation
 recipe; the extended response theory and diagnostic procedures are retained
-in Appendix G. All218existing numerical table lines and13prior figure
-targets remain; the matched-observable control adds one new main figure.
-The abstract has208words and the conclusion about
-300words; the bibliography supplies17verified article records.
+in Appendix G. All218existing numerical table lines and14prior figure
+targets remain; the two actual terminal comparisons add two main figures.
+The bibliography supplies17verified article records.
 
 ## Current reading route: mechanism first
 
@@ -53,8 +56,12 @@ independent prediction checks.
 - Figure 5 connects the completed T three-strain same-observable local
   energy release to actual atomic readjustment. It does not turn local
   lowering into a corrected barrier or compare nonnested controls by subtraction.
-- Figure 6 completes the independent strain test with actual paths, the
+- Figure 6 connects the controlled local release to a lower complete
+  preserving candidate and the retained transverse structural component.
+- Figure 7 completes the independent strain test with actual paths, the
   nonlinear sampled competition and errors of all three numeric forecasts.
+- Figure 8 tests that sampled response against the opposite initialization;
+  preserving changes appreciably while T changes little.
 
 The [three new main figures and source data](figures/hfo2_mechanism_20261018/README.md)
 have a single replay command:
@@ -73,7 +80,7 @@ The bounded ten-start preserving trial and revised P8 test are complete.
 Their details and negative model-comparison findings remain in Appendices
 E and F; they do not define the visual center of the paper.
 The [separately frozen +0.5% physical test](../../benchmarks/hfo2_channels/20261008/physical_holdout_E268_20261018/README.md)
-is also complete and included in Results3.4/Table3/Figure6. Peaks are
+is also complete and included in Results3.4/Table3/Figure7. Peaks are
 98.530877/90.418178meV/HfO2 for preserving/T; residuals0.079773/0.080825eV/A.
 The T-minus-preserving contrast improves at +0.5% relative to zero but
 remains negative, then worsens at +1%. B0 predicts T closely and misses

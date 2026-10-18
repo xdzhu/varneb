@@ -8,22 +8,24 @@ We examine this competition in twelve-atom HfO2 using first-principles
 variable-cell nudged elastic band calculations under a common partially
 clamped boundary. Four ordered candidates connect the same polar initial
 well to opposite-polar variants or tetragonal and monoclinic structures.
-At +1% substrate strain, the higher switching candidate decreases by
-44.0 meV/HfO2, whereas the lower switching candidate increases by
-28.6 meV/HfO2, exceeding the 12.3 meV/HfO2 increase of the lowest examined
-escape peak. Signed oxygen-shuffle coordinates distinguish preservation,
-reversal and reorientation of the reference distortion, accompanied by
-different open-axis responses. Matched local controls show that most of
-the preserving neighborhood's relaxation energy is recovered through
-atomic rearrangement at fixed seed cells. A prospectively frozen +0.5%
-test yields sampled peaks of 98.5 and 90.4 meV/HfO2 for preserving
-switching and tetragonal escape. Their difference varies nonmonotonically
-over the three strains; interpolation misses the preserving peak by
-12.6 meV/HfO2 while describing tetragonal escape closely. These results
-show why mechanical control must be assessed through competing atomic-cell
-routes rather than a single decreasing switching profile. The conclusions
-concern the declared ordinary-converged sampled paths; the independent
-test supports no additional predictive advantage of the local reduced models.
+The registered switching candidates respond oppositely to +1% substrate
+strain, despite equal final-well responses. Signed oxygen-shuffle coordinates
+distinguish their atomic routes, but do not exhaust their accommodation.
+With the displayed patterns and polar z proxy fixed, atomic release at
+the zero-strain preserving bottleneck recovers 13.6 meV/HfO2 through mixed
+motion with a transverse structural component. Reconnecting this configuration
+and relaxing every interior yields a sampled peak of 83.2 rather than
+96.8 meV/HfO2, close to the examined tetragonal escape peak of 84.4 meV/HfO2.
+A prospectively frozen +0.5% test gives preserving and escape peaks of
+98.5 and 90.4 meV/HfO2. Subsequent initialization controls change the
+preserving peak by 10.8 meV/HfO2 but the escape peak by only 0.13 meV/HfO2.
+Thus a compact mode projection and an ordinary force pass alone do not
+make the inferred competition or strain nonlinearity initialization-independent.
+The measured local intervention and lower connected candidate link this
+limitation to atomic accommodation beyond the displayed patterns.
+The conclusions concern finite sampled paths under the specified boundary,
+not certified saddles or a global ordering; the independent tests establish
+no additional predictive advantage of the local reduced models.
 
 ## 1. Introduction
 
@@ -263,6 +265,15 @@ Only a successful A candidate could seed J and two 0.01 Angstrom probes
 along that known direction. These are finite branch tests, not an
 exhaustive search or a full post-release stability calculation.
 
+One zero-strain negative-start J candidate was then inserted as the free
+central image of the original nine-image band. Both endpoints and their
+native static caches were retained, while all seven interiors were free;
+the four local observable constraints were not carried into NEB.
+This connection test allowed at most 24 FIRE updates and used the same
+ordinary 0.10 eV/Angstrom target, spring and step limits, with no CI.
+It tests a complete connected candidate rather than subtracting a local
+relaxation energy from the original barrier.
+
 ### 2.4. Prospective strain test and prediction comparison
 
 Eight training bands compare all four candidates at substrate strain
@@ -357,6 +368,10 @@ of the original favorable-response hypothesis or a global pathway ordering. The 
 or certify stationary bottlenecks. Both escape candidates and both ordered
 switching candidates remain in the analysis; the decreasing but high
 reversing candidate is not used alone to claim improved switching.
+The later zero-strain connection test in Section 3.3 finds a lower
+preserving candidate, so the registered zero-strain ordering is not robust
+to the admitted atomic accommodation. Table 1 remains the original
+training set, not a retrospectively selected set of lowest outcomes.
 
 The response difference is not an initial-energy-offset effect. The common
 PO+ well rises by 6.806502 meV/HfO2. Before subtracting it, the preserving
@@ -621,19 +636,47 @@ certificate. At +1%, both signed A starts exhausted twelve attempts near
 the fixed 0.5 Angstrom neighborhood boundary, with released gradients
 about 0.378 eV/Angstrom; their J energies remain unavailable.
 
-Reinserting J as a free central image moved the polygon's sampled maximum
-to a neighbor (85.500 meV/HfO2), but the recomputed chain residual was
-0.1256 eV/Angstrom. This
-[local gain](../../benchmarks/hfo2_channels/20261008/preserving_pattern_branches_E272_20261018/README.md)
-is therefore not a corrected barrier; the neighboring path still requires
-relaxation.
+The local gain survived a finite whole-path connection test (Figure 6).
+Reinserting J first moved the polygon's sampled maximum to a neighbor,
+at 85.500 meV/HfO2, with a residual of 0.1256 eV/Angstrom. Nine subsequent
+ordinary updates, with all seven interiors free, reached 0.094012 eV/Angstrom.
+The final sampled maximum returned to the central image at 83.166281 meV/HfO2,
+13.661902 below the original band. The transverse y proxy remained
+0.121074 Angstrom while $Q_x$ changed only from -0.799 to -0.789 Angstrom
+at the peak. This is evidence that the mixed atomic accommodation can
+form a lower connected candidate, not merely an isolated low-energy point.
+
+The comparison changes the candidate competition at zero strain.
+The original T escape peak is only 1.250343 meV/HfO2 above this new
+preserving candidate, rather than 12.411559 below the original one.
+The small new separation is not resolved as a physical ordering by the
+current sampling and force target. Neither a global MEP nor a stationary
+TS is certified, and the registered training labels are not replaced.
+The connection required 63 fresh interior SCFs and 55.857778 allocation
+core-hours; the earlier local-release and path costs remain additional.
+
+![A lower connected preserving candidate retains transverse atomic accommodation](../../benchmarks/hfo2_channels/20261008/preserving_connection_E273_20261019/figures/terminal_step_0009/connection_step_0009.pdf)
+
+Figure 6. Connecting local atomic accommodation to the complete zero-strain
+preserving band. Blue circles denote the original band, hollow orange
+triangles its released-center seed and green diamonds the final ordinary
+band. (a) Native sampled energies relative to the unchanged initial well.
+(b,c) Mean O-minus-Hf displacements along original y and z, respectively;
+these are structural proxies, not electronic polarization. (d) Seven
+interior NEB residuals with the 0.10 eV/Angstrom target. Endpoint residuals
+are undefined and omitted, not set to zero. Each polygon has its own
+normalized generalized arc; straight connectors do not resolve a smooth
+MEP. The final chain retains the original endpoint caches and has no
+local-pattern constraints. One prescribed seed was tested, not statistical
+replicates or an acceleration comparison. All 63 fresh SCFs accompany the
+native archive and were independently reparsed.
 
 ### 3.4. The independent strain test resolves different sampled responses
 
 Both preregistered +0.5% bands met the same ordinary NEB criterion:
 the preserving flip reached 0.079773 eV/Angstrom and PO-to-T reached
 0.080825 eV/Angstrom. Their nine-image sampled peaks were 98.530877
-and 90.418178 meV/HfO2, respectively (Figure 6). Relative to zero strain,
+and 90.418178 meV/HfO2, respectively (Figure 7). Relative to zero strain,
 the preserving peak increased by 1.702694, whereas the T escape peak
 increased by 6.001554 meV/HfO2. The common starting well, electronic inputs,
 ordered path definitions and stopping criterion were kept as registered.
@@ -650,7 +693,7 @@ four-channel ordering at that condition.
 
 ![Independent midpoint paths and the errors of the frozen response predictions](figures/hfo2_independent_20261018/hfo2_independent_response.pdf)
 
-Figure 6. The independently evaluated +0.5% mechanical condition.
+Figure 7. The independently evaluated +0.5% mechanical condition.
 (a,b) Actual nine-image preserving and PO-to-T profiles alongside their
 zero/+1% training bands; blue, green and orange encode strain.
 (c) Sampled peaks versus strain, with blue circles for preserving and
@@ -713,10 +756,40 @@ Angstrom, and open-y stretches were -0.502644% and -0.605986%,
 respectively. Thus the T sampled energy was insensitive to this particular
 change of starting band, despite a remaining geometric difference. This
 finite control is not an error bound on the continuous barrier or evidence
-of a unique MEP. The corresponding preserving control is not yet complete,
-so no updated two-channel contrast is formed. The original prospective
-labels and all frozen forecast scores remain unchanged; the control adds
-23.653333 allocation core-hours, separate from the test cost below.
+of a unique MEP.
+
+The preserving control was substantially more sensitive (Figure 8).
+It required 26 updates and 189 fresh interior SCFs to reach
+0.099893 eV/Angstrom, with a sampled peak of 109.351721 meV/HfO2.
+This is 10.820844 above the registered zero-strain-start midpoint,
+comparable with its 12.595430 meV/HfO2 deviation from the frozen B0 forecast.
+The peak's $Q_x$ changed from -0.798917 to -0.881752 Angstrom and its
+open-y stretch from -0.416145% to -0.046946%. The paired T-minus-preserving
+contrast consequently changed from -8.112699 to -19.065478 meV/HfO2.
+The previously observed 4.298861 meV/HfO2 midpoint improvement therefore
+does not survive this initialization control as a path-independent response.
+The two sampled outcomes do not distinguish a distinct continuous branch
+from residual relaxation and finite-discretization effects. They also do
+not assign the energy difference uniquely to the atomic pattern or cell.
+Both original prospective labels and all frozen forecast scores remain
+unchanged. These two initialization controls add 251.048889 allocation
+core-hours, including the T control already described, not a new cost for
+re-exporting it.
+
+![The midpoint preserving peak is more initialization-sensitive than escape to T](../../benchmarks/hfo2_channels/20261008/midpoint_reverse_E269_20261018/terminal_comparison/hfo2_midpoint_seed.pdf)
+
+Figure 8. Two ordinary-converged initializations at the same +0.5%
+mechanical boundary. Blue circles start from zero-strain bands and orange
+squares from +1% bands; both use the identical target endpoint caches.
+Left and right columns show preserving reversal and T escape, respectively.
+(a,b) Native sampled energy profiles. (c,d) Signed $Q_x$ (solid) and $Q_z$
+(dashed) in the same original-T metric. (e,f) Allowed y stretch in the
+original chart. There are nine actual images per band, each with its own
+normalized arc. The T energy agreement does not imply identical structures;
+the larger preserving difference prevents attributing the registered
+midpoint nonlinearity uniquely to intrinsic strain response. This is a
+follow-up sensitivity test, not a second independent prediction cohort,
+an exhaustive branch search or a continuous-barrier error bound.
 
 All 138 frozen forecast records remain: six numerical predictions and
 132 unavailable physical-transfer records across the two cases.
@@ -775,10 +848,11 @@ examining route-dependent atomic and lattice accommodation over an
 interpretation based only on endpoint well shifts. The warm-started ordinary
 bands do not identify a physical bifurcation or isolate the origin of this
 finite-resolution nonlinearity. The completed reverse-continuation control
-supports the T sampled peak against one change of initialization, but does
-not close this question for preserving reversal. Consequently the
-nonmonotonic sampled contrast is not yet an initialization-independent
-strain-response law. In particular, nearly equal T peak energies at
+supports the T sampled peak against one change of initialization, but
+changes the preserving peak by 10.820844 meV/HfO2. This exceeds the
+registered 4.298861 meV/HfO2 midpoint improvement of the paired contrast.
+Consequently the nonmonotonic registered contrast is not an
+initialization-independent strain-response law. In particular, nearly equal T peak energies at
 different oxygen amplitudes and open-axis stretches do not isolate a
 unique atomic or elastic cause.
 
@@ -811,8 +885,9 @@ fraction to one mode. The paired structural data place most of this
 fixed-cell accommodation outside the three displayed T-pattern directions,
 with both oxygen and Hf motion. This directly limits the mechanistic
 information carried by those geometric projections. It also explains why a visually compact two-coordinate
-plot can omit energetically important accommodation. The observed effect
-remains local: it is not a replacement for a newly optimized whole path.
+plot can omit energetically important accommodation. The two-coordinate
+release itself remains local; the separate four-observable intervention
+and subsequent free-interior connection provide the whole-path test.
 
 The across-strain T control further separates a compact geometric
 description from an assertion that all omitted coordinates are already
@@ -825,11 +900,16 @@ full stability, constrain every alternative T route, or explain the
 preserving response by subtraction. At zero strain, the same-definition
 preserving intervention instead exposes a mixed atomic reorganization
 with a transverse structural polar component that is invisible to the
-held z proxy and T-pattern amplitudes. The force imbalance of the
-reconnected polygon shows why this local observation must be followed
-along the neighboring path before changing a channel ordering. Its
-across-strain behavior remains a separate question, rather than an
-assumption based on the smaller T relaxation energies.
+held z proxy and T-pattern amplitudes. Relaxing the reconnected band
+retained that transverse component and lowered its sampled peak by
+13.661902 meV/HfO2. A local force pass on the original high-symmetry
+candidate had therefore not exhausted the available atomic accommodation.
+The resulting near-degeneracy with T escape also removes a robust claim
+of escape preference at zero strain. This does not prove that one transverse
+coordinate alone causes the reduction: several atomic directions were
+released together. Its across-strain behavior remains incomplete because
+the bounded +1% preserving releases did not supply converged A/J candidates;
+the small T releases cannot fill that gap.
 
 The model tests place an important limit on the methodological claim.
 A complete change of coordinates leaves the same quadratic response
@@ -859,13 +939,16 @@ predictive reduction method.
 
 Mechanical control of hafnia must be assessed through the competition
 between complete structural routes from the same polar well. Within the
-examined clamped candidate set, +1% strain lowers the high reversing
+original registered clamped candidate set, +1% strain lowers the high reversing
 switching peak while raising the already lower preserving peak more than
 the lowest escape peak. Selecting the decreasing switching profile alone
 would therefore misrepresent the available competition. The independent
 +0.5% test adds a different response: the selected escape-minus-switching
-contrast improves relative to zero strain but stays negative, giving a
-nonmonotonic sampled trend over the three imposed conditions.
+contrast improves relative to zero strain but stays negative. However,
+the later initialization test shifts the preserving midpoint by
+10.820844 meV/HfO2 while leaving the T peak nearly unchanged. The registered
+nonmonotonic trend cannot therefore be interpreted as an intrinsic,
+initialization-independent strain law.
 
 The structural comparison identifies the atomic and lattice accommodation
 that distinguishes the routes.
@@ -881,6 +964,12 @@ atomic relaxation already recovers most of the preserving neighborhood's
 energy lowering at fixed seed cells. These observations support coupled
 atomic and lattice accommodation as the physical basis for interpreting
 the route differences, with no unique mode-by-mode energy partition.
+The four-observable preserving intervention and free-chain connection
+further recover a 13.661902 meV/HfO2 lower zero-strain sampled peak while
+retaining transverse atomic accommodation. This brings reversal and
+examined T escape close enough that their physical ordering remains
+unresolved. The original displayed patterns and force criterion alone
+were insufficient to make that competition robust.
 
 The independent comparison further shows that good interpolation for
 T escape does not ensure a comparable description of preserving reversal.
@@ -900,10 +989,13 @@ geometries, native-output exports, figure source tables, projection and
 relaxation analyses, frozen forecasts and replay scripts supporting this
 article are included in the same repository and linked throughout the
 appendices. The calculation and data version used for the completed
-independent test is Git revision dc328d50. The later T initialization
-control and its native outputs are archived separately in the
+independent test is Git revision dc328d50. The later two-channel initialization
+control and its complete native outputs are archived separately in the
 [E269 case](../../benchmarks/hfo2_channels/20261008/midpoint_reverse_E269_20261018/README.md)
-at data revision b18a8352; they do not replace the original forecast labels.
+and the lower connected zero-strain candidate in the
+[E273 case](../../benchmarks/hfo2_channels/20261008/preserving_connection_E273_20261019/README.md),
+whose terminal data first entered Git revision 902da0d9. Neither follow-up
+replaces the original forecast labels.
 The reading manuscript and its TeX wrapper are in paper/VARNEB_JCTC;
 the scalar tables and main figures can be regenerated without launching
 a DFT calculation. Executables and

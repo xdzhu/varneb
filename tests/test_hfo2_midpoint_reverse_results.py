@@ -128,3 +128,46 @@ def test_every_completed_T_native_call_is_retained_and_replays():
         parsed = audited_results(raw)
         for key in parsed:
             np.testing.assert_allclose(parsed[key], call['results'][key], atol=1e-12, rtol=0)
+
+
+@pytest.fixture(scope='module')
+def completed_pair(tmp_path_factory):
+    return module('analyze_completed').analyze(tmp_path_factory.mktemp('E269_pair')/'comparison')
+
+
+def test_actual_completed_pair_exposes_preserving_initialization_dependence(completed_pair):
+    data=completed_pair
+    assert data['status']=='two_initializations_same_midpoint_compared'
+    assert data['complete_selected_pair_available']
+    p,t=data['outcomes']
+    assert p['from_upper_updates']==26 and p['upper_SCFs']==189
+    assert p['from_upper_peak_meV_fu']==pytest.approx(109.35172063273058,abs=1e-9)
+    assert p['from_upper_fmax_eV_A']==pytest.approx(.09989299731314168,abs=1e-12)
+    assert p['from_upper_Qx_A']==pytest.approx(-.8817524579105793,abs=1e-12)
+    assert p['from_upper_open_y_percent']==pytest.approx(-.046945614056082,abs=1e-10)
+    assert t['from_upper_updates']==2 and t['upper_SCFs']==21
+    assert data['paired']['per_channel_upper_minus_zero_meV_fu']==pytest.approx({
+        'preserving':10.820843716373929,'T':-.13193540735301212})
+    assert data['paired']['seed_gap_difference_meV_fu']==pytest.approx(-10.952779123726941)
+    assert not data['paired']['original_prediction_scores_replaced']
+    assert data['paired']['physical_barrier_error_bound'] is None
+
+
+def test_all_210_cohort_calls_are_replayed_without_recounting_export_as_DFT(completed_pair):
+    native=completed_pair['native_cohort']
+    assert native['all_native_calls_reparsed_locally'] and native['new_DFT_calls']==0
+    assert {c:v['calls'] for c,v in native['channels'].items()}=={'preserving':189,'T':21}
+    assert all(v['all_native_calls_reparsed_locally'] for v in native['channels'].values())
+    assert not any(v['full_pseudo_orbital_bytes_rechecked_locally'] for v in native['channels'].values())
+    assert sum(v['allocated_core_hours'] for v in native['channels'].values())==pytest.approx(251.04888888888888)
+
+
+def test_completed_pair_figure_does_not_call_terminal_curves_initial(completed_pair):
+    comparison=module('compare_paths');fig=comparison.figure(completed_pair)
+    try:
+        assert all('initial' not in t.get_text() for t in fig.legends[0].get_texts())
+        assert sum('converged' in t.get_text() for t in fig.legends[0].get_texts())==2
+        assert all(len(line.get_xdata())==9 for ax in fig.axes for line in ax.lines)
+    finally:
+        import matplotlib.pyplot as plt
+        plt.close(fig)
