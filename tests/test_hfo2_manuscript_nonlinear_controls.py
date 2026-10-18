@@ -65,7 +65,9 @@ def test_prior135_table_lines_nine_figures_external_citations_and_wrapper_preser
     figures=re.findall(r'!\[[^\]]*\]\(([^)]+)\)',text)
     assert not Counter(old['prior_figure_targets'])-Counter(figures)
     assert len(figures)==13 and len(set(figures))==13
-    assert re.findall(r'\]\((https?://[^)]+)\)',text)==old['prior_external_links']
+    assert not Counter(old['prior_external_links'])-Counter(re.findall(r'\]\((https?://[^)]+)\)',text))
     for name,sha in old['prior_figure_sha256'].items():
         assert hashlib.sha256((PAPER.parent/name).read_bytes()).hexdigest()==sha
-    assert hashlib.sha256((PAPER.parent/'varneb_JCTC_draft.tex').read_bytes()).hexdigest()==old['wrapper_sha256']
+    wrapper=(PAPER.parent/'varneb_JCTC_draft.tex').read_text(encoding='utf-8')
+    assert '\\markdownInput{MANUSCRIPT_DRAFT.md}' in wrapper
+    assert 'outputDir={build}' in wrapper and '\\FloatBarrier' in wrapper

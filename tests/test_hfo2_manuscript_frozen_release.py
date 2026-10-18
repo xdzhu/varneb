@@ -90,4 +90,4 @@ def test_completed_eight_statics_supersede_preparation_not_the_unfinished_predic
     assert 'now completed' in main and 'not completed DFT results' not in main
     assert '22.' in methods and 'eight' in methods and 'supersed' in methods
     assert '| Missed release-shape change |' in ledger
-    assert 'independent mechanical-response predictions are still missing' in main
+    assert 'this test establishes no predictive advantage' in main

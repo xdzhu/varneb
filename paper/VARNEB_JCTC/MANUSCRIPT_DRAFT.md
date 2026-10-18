@@ -1,121 +1,123 @@
 # Competing switching and phase-escape channels in hafnia: a mode-strain pathway analysis
 
-Working manuscript, 2026-10-18. The main Results connect the completed
-same-initial-state pathway comparison to signed atomic shuffles, lattice
-response and matched local relaxation. Detailed representation, curvature
-and model comparisons remain in the appendices, with their unsuccessful
-outcomes retained. Eight clamped training bands and both local independent
-candidate-energy tests are complete. The separately frozen +0.5% preserving
-and PO-to-T path tests are complete and included. Their different midpoint
-responses and all frozen prediction errors are reported, with no demonstrated
-predictive advantage of a new reduced model. Stable conditional branches
-remain unestablished. This is a
-working article, not a submission-ready claim of a new predictive method.
-The [methods record](METHODS_DRAFT.md) and
-[prospective protocol](../../docs/HFO2_PREDICTION_PROTOCOL_V2_2026-10-09.md)
-supply the detailed definitions and frozen tests.
+## Abstract
+
+Mechanical constraints can alter polarization-reversal paths while also
+changing the routes by which a polar crystal leaves its original phase.
+We examine this competition in twelve-atom HfO2 using first-principles
+variable-cell nudged elastic band calculations under a common partially
+clamped boundary. Four ordered candidates connect the same polar initial
+well to opposite-polar variants or tetragonal and monoclinic structures.
+At +1% substrate strain, the higher switching candidate decreases by
+44.0 meV/HfO2, whereas the lower switching candidate increases by
+28.6 meV/HfO2, exceeding the 12.3 meV/HfO2 increase of the lowest examined
+escape peak. Signed oxygen-shuffle coordinates distinguish preservation,
+reversal and reorientation of the reference distortion, accompanied by
+different open-axis responses. Matched local controls show that most of
+the preserving neighborhood's relaxation energy is recovered through
+atomic rearrangement at fixed seed cells. A prospectively frozen +0.5%
+test yields sampled peaks of 98.5 and 90.4 meV/HfO2 for preserving
+switching and tetragonal escape. Their difference varies nonmonotonically
+over the three strains; interpolation misses the preserving peak by
+12.6 meV/HfO2 while describing tetragonal escape closely. These results
+show why mechanical control must be assessed through competing atomic-cell
+routes rather than a single decreasing switching profile. The conclusions
+concern the declared ordinary-converged sampled paths; the independent
+test supports no additional predictive advantage of the local reduced models.
 
 ## 1. Introduction
 
-A polar crystal must do more than possess a metastable energy minimum to be
-usefully switchable. A structural route to the opposite polarization can
-compete with routes that leave the polar phase altogether. Lowering a
-polarization-reversal barrier is therefore not, by itself, evidence that the
-polar phase becomes more resistant to structural escape. Hafnia provides a
-particularly useful setting for separating these questions because several
-polar and nonpolar structures can be connected through coupled atomic
-distortions and lattice deformation. Our question is whether a common
-mechanical intervention can facilitate homogeneous switching without
-facilitating the easiest examined route out of the polar well.
+Ferroelectric hafnia combines polar and nonpolar structures that can be
+connected by relatively small atomic shuffles and lattice deformation.
+A useful polar state must support reversal while resisting transformation
+into another structural phase. These requirements involve different
+trajectories on the energy landscape: reducing a switching barrier can
+also change the barriers for leaving the polar well. The relevant
+mechanical-control question is therefore how an imposed constraint changes
+the competition between these routes from one common initial state.
+This distinction matters even before effects such as domain-wall motion,
+defects and temperature are introduced.
 
-The connection between mechanical constraints and hafnia pathways is already
-well established. Liu and Hanrahan studied orientation, epitaxial strain and
-variable-cell transformation barriers, while Delodovici, Barone and Picozzi
-identified coupled lattice distortions and their strain response.
+Prior work establishes both the mechanical sensitivity of hafnia pathways
+and their connection to lattice distortions. Liu and Hanrahan showed that
+orientation, epitaxial strain and clamping affect phase stability and
+variable-cell transformation barriers. Behara and Van der Ven described
+structural variants and their pathways in strain coordinates and connected
+intermediate shuffle patterns to mechanically constrained domain boundaries.
 ([Liu and Hanrahan, 2019](https://doi.org/10.1103/PhysRevMaterials.3.054404);
-[Delodovici et al., 2021](https://doi.org/10.1103/PhysRevMaterials.5.064405))
-Behara and Van der Ven connected strain coordinates, structural variants and
-switching pathways, including a change of intermediate when the entire
-orthorhombic cell is fixed. Lattice-mode analysis by Qi, Singh and Rabe
-further demonstrates that reversing polarization does not uniquely specify
-the accompanying nonpolar distortions or the switching route.
-([Behara and Van der Ven, 2022](https://doi.org/10.1103/PhysRevMaterials.6.054403);
+[Behara and Van der Ven, 2022](https://doi.org/10.1103/PhysRevMaterials.6.054403))
+Mode-based studies identify coupled polar and nonpolar distortions:
+Delodovici, Barone and Picozzi analyzed trilinear coupling, while Qi, Singh
+and Rabe showed that reversal can involve distinct accompanying antipolar
+changes and switching paths.
+([Delodovici et al., 2021](https://doi.org/10.1103/PhysRevMaterials.5.064405);
 [Qi et al., 2025](https://doi.org/10.1103/PhysRevB.111.134106))
-Neither mode enumeration nor a strain-induced pathway change is consequently
-a new result to be established by repeating these calculations.
-Ma and Liu also examine competing M-to-PO mappings involving oxygen and
-mixed hafnium-oxygen shuffles. Their supplemental Figure S2 makes clear that
-a phase-pair name or one conserved shuffle does not uniquely identify the
-path. Our clamped M candidate is therefore not assigned to a literature
-mapping by barrier-height agreement; candidate coverage, ordered mapping
-and cell-frame transport must remain explicit.
-([Ma and Liu, 2023, publicly archived v3 supplement](https://arxiv.org/pdf/2204.09374v3#page=24))
-Constrained-mode landscapes have also predicted switching mechanisms that
-were subsequently checked by NEB; independent DFT validation alone is not
-our novelty criterion.
+Thus neither the existence of coupled modes nor the multiplicity of
+switching routes is the new claim of this work.
+
+Reference choice and boundary conditions further shape the physical
+interpretation. A Cmma reference organizes competing phases through
+unstable phonon bands, while strain-dependent mode models describe changes
+in the tetragonal-to-polar landscape.
+([Qi and Rabe, 2025](https://doi.org/10.1103/9759-kp38);
+[Lee, Lee and Yu, 2026](https://doi.org/10.1038/s41535-025-00841-9))
+Constrained-mode landscapes and subsequent NEB checks have also been used
+to study an antipolar switching intermediate.
 ([Zhou et al., 2022](https://doi.org/10.1126/sciadv.add5953))
-
-The interpretation of a reduced landscape also depends on its reference and
-mechanical boundary. Qi and Rabe organize competing structures using unstable
-bands of a Cmma reference, providing a strong alternative to a selected
-tetragonal-mode representation.
-([Qi and Rabe, 2025](https://doi.org/10.1103/9759-kp38))
-More recently, phonon-pair condensation has been used to explain low-energy
-domain-wall motifs in hafnia. That interface mechanism cannot be equated
-with a homogeneous transformation barrier.
-([Lee et al., 2026](https://doi.org/10.1103/63lf-k7zs))
-Fan, Zhu and Liu show that Pbcn energetics depend on the functional and
-boundary, including strain-dependent switching under a fully prescribed
-PO-referenced lattice. The present partially clamped T-referenced ensemble
-is different; matching its electronic settings does not erase that distinction.
-Their phase-resolved energy-gap approximation also agrees with NEB for the
-switching routes examined there. Such a proxy and an initial/final-well response
-null are distinct controls; neither is assumed valid for an unverified escape
-bottleneck.
+The energetic role of Pbcn depends on the functional and mechanical
+ensemble; fixing a PO-referenced lattice gives a different comparison
+from allowing selected cell directions to relax.
 ([Fan et al., 2025](https://doi.org/10.1038/s41524-025-01647-w))
+Likewise, a phase-pair name alone does not specify the ordered atomic
+mapping, as illustrated by distinct M-to-PO candidates in the public
+Ma--Liu study.
+([Ma and Liu, 2023, v3 supplement](https://arxiv.org/pdf/2204.09374v3#page=24))
+Phonon-pair condensation can also explain low-energy domain walls, although
+an interface energy and a homogeneous transformation profile describe
+different physical processes.
+([Lee et al., 2026](https://doi.org/10.1103/63lf-k7zs))
 
-Strain-dependent mode-amplitude models have also been compared with DFT under
-uniaxial and biaxial loading and connected to hafnia's formation landscape.
-([Lee, Lee and Yu, 2026](https://doi.org/10.1038/s41535-025-00841-9))
-Predicting a strain-induced distortion is therefore not, on its own, the
-methodological distinction sought here. The test concerns the competing
-barrier responses after subtraction of the same initial well, with their
-actual mechanical freedoms and strong controls kept explicit.
-Their supplementary Part 2 also contrasts a coupled three-mode interpolation
-with restricted relaxation. Relaxation-induced lowering of such a profile
-is therefore not presented here as a methodological innovation.
-Figure S3 uses a coupled interpolation parameter and cell energies, whereas
-Table S1 labels its coefficients per formula unit. Amplitude normalization,
-energy units and each starting-state reference must consequently remain
-explicit; profile lowering alone does not certify our partially clamped
-bottleneck or predict its barrier response.
-([Lee et al., Supplementary Part 2 and Figure S3](https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fs41535-025-00841-9/MediaObjects/41535_2025_841_MOESM1_ESM.pdf#page=3))
+These results motivate a comparison that keeps three questions together.
+Which examined route has the lower peak from the same polar well? Which
+atomic rearrangements and permitted strains distinguish the routes?
+How far does their observed response transfer to an independently
+evaluated mechanical condition? Endpoint energy shifts answer only part
+of the first question, and a compact displacement projection does not by
+itself answer the third. A useful analysis must connect the full path
+energies to actual structures and then test the explanatory or predictive
+role of selected coordinates.
 
-We therefore compare switching and phase escape from the same polar
-initial state under a common mechanical intervention. The material question
-is which atomic rearrangements and lattice responses accompany the change
-in their competition, rather than whether strain lowers any one barrier.
-We combine three kinds of evidence: matched path energies, signed structural
-coordinates along the paths, and local calculations that release specified
-degrees of freedom. The first measures competition, the second identifies
-the rearrangements, and the third tests a limited relaxation mechanism.
-An unseen-strain comparison then tests how far the response can be predicted
-from the two known conditions. Strong fixed-reference, endpoint-response
-and direct barrier-interpolation controls remain explicit; a new predictive
-method is claimed only if it improves on these controls, not because its
-coordinates produce a compact plot.
+Here we compare two ordered reversal candidates and escape to tetragonal
+and monoclinic HfO2 under one T-referenced substrate constraint. We use the
+polar orthorhombic Pca21 structure, denoted PO, as the common initial well;
+T and M denote the tetragonal P42/nmc and monoclinic P21/c structures.
+The reversal candidates preserve or reverse a signed reference oxygen
+shuffle while reversing the polar structural displacement. VARNEB provides
+the common atomic-cell path representation and energy/force/stress
+interface. We combine their energy profiles with signed shuffle amplitudes,
+open-cell deformation and matched frozen, atomic-only and joint relaxation
+controls. Finally, forecasts fixed before the target-interior calculations
+are compared with two +0.5% paths. The contribution is a common-reference
+analysis linking channel competition to atomic and lattice accommodation,
+testing a local relaxation explanation and checking response transfer at
+an independently evaluated strain. Keeping the candidate identities,
+permitted deformations and energy reference together makes the physical
+comparison explicit.
 
 ## 2. Theory and computational approach
 
 ### 2.1. Joint pathways and a common energy reference
 
 Ordinary NEB relaxes the physical force perpendicular to the path while
-springs control image spacing. Atomic-cell extensions incorporate lattice
+springs control image spacing.
+([Henkelman and Jonsson, 2000](https://doi.org/10.1063/1.1323224)) Atomic-cell extensions incorporate lattice
 degrees of freedom with an explicit relative metric.
 ([Sheppard et al., 2012](https://doi.org/10.1063/1.3684549);
 [Qian et al., 2013](https://doi.org/10.1016/j.cpc.2013.04.004))
 VARNEB applies these established path ideas through energy, force and stress
-results obtained via ASE-compatible calculators. The backend, optimizer and
+results obtained via ASE-compatible calculators.
+([Larsen et al., 2017](https://doi.org/10.1088/1361-648X/aa680e))
+The backend, optimizer and
 mechanical active space are independent choices. Ordered atoms, reference
 cells and continuous periodic lifts are preserved during optimization and
 analysis; an image-wise remapping is not a physical pathway improvement.
@@ -147,507 +149,132 @@ are retained. These are candidate-set statements, not an exhaustive network
 or a calculation of device lifetime. At finite prescribed pressure the
 objective would be $E+PV$; all hafnia results here instead use $P=0$ and $E$.
 
-### 2.2. Mechanical ensembles and branch-aware reduction
+### 2.2. Mechanical boundary, ordered coordinates and mode interpretation
 
-All images and endpoints of one path share the same permitted cell space.
-The planned epitaxial experiment fixes two T-referenced in-plane vectors
-and releases the third vector, including its two tilt components. Atomic
-and cell variables are relaxed in that same space. A clamped reaction stress
-is not an open-coordinate convergence failure. Zero applied stress and
-zero nominal substrate strain are distinct ensembles, and are not adjacent
-points of a single strain derivative.
+The partially clamped ensemble fixes two T-referenced in-plane cell vectors
+and releases the third vector, including its two permitted tilt components.
+Every endpoint and image shares that allowed space. In the original T
+chart, x and z follow the prescribed substrate strain, while y remains
+open. Zero substrate strain denotes the unscaled reference plane and
+differs from a fully stress-free crystal. At each condition the initial
+and final wells are separately relaxed under the same boundary.
 
-Adding a constraint orders ideal minimax barriers only when the endpoints
-and thermodynamic potential are held common. For allowed continuous paths
-$\mathcal G_U(I,F)$ and $\mathcal G_C(I,F)\subseteq\mathcal G_U(I,F)$,
+We preserve atom order and a continuous periodic lift over each chain.
+For the structural interpretation in Figure 3, fractional displacements
+are expressed in one original-T Cartesian metric after removal of rigid
+translation. Three orthonormal geometric oxygen-shuffle patterns, obtained
+from the tetragonal distortion and its rotated variants, define signed
+amplitudes $Q_x$, $Q_y$ and $Q_z$ in Angstrom. The patterns describe the path
+geometry and do not assign phonon irreducible representations or energies
+to individual modes. A polar-displacement descriptor is the mean O minus
+mean Hf displacement along the original polar z direction; electronic
+polarization requires a separate calculation.
 
-$$
-B_U^*(I,F)=\inf_{\gamma\in\mathcal G_U(I,F)}
- \max_{s\in[0,1]}E(\gamma(s))-E(I)\le B_C^*(I,F).
-$$
+Cell response is reported separately through the deformation gradient F.
+The plotted open-axis stretch is $100(F_{yy}-1)$, distinct from the
+Green-strain component and from an elastic energy. Atomic projections,
+cell stretch and their joint energy response answer different questions.
+The alternative mass-weighted T optical and Cmma reference comparisons
+remain in Appendices D and F, with every original rank and registration
+retained. Coordinate and boundary identities are not selected from the
+independent labels.
 
-The star denotes the ideal minimax value, not a finite-image NEB estimate.
-Neither a local optimizer nor discrete sampling establishes that ordering
-for two computed candidate bands. More importantly, newly relaxed endpoints
-under a different substrate do not satisfy the common-endpoint premise.
-Our free-cell and T-substrate-clamped results therefore are not interpreted
-as a nested-path inequality, and the matched 0/+1% clamped comparison still
-requires each condition's own initial-well subtraction. A higher absolute
-bottleneck energy can accompany a lower activation barrier if the well rises
-more. Appendix B gives an elementary counterexample, not hafnia evidence or
-a new theoretical contribution. This is why the endpoint-response controls
-and the separate absolute escape-barrier test cannot be replaced by a generic
-statement that clamping raises barriers.
+For the free-cell/clamped comparison, each band has its own relaxed
+endpoints and initial energy. A constraint orders ideal minimax barriers
+only when those endpoints and the thermodynamic potential are common.
+The present relaxed-endpoint comparison does not meet that premise.
+Appendix B gives a simple counterexample; Appendix G retains the detailed
+boundary and response derivations.
 
-In the registered generalized-coordinate metric, a prescribed active-space
-projector separates the allowed physical gradient from support reactions.
-Ordinary NEB residuals, allowed physical gradients and excluded reactions
-are reported separately. Only enforced mechanical constraints enter this
-projection; an unmeasured but physically movable mode is not relabelled as
-a support reaction merely because a reduced model omits it.
-
-A retained coordinate $q$ can specify one mode or a declared combination of
-modes. A frozen slice keeps the remaining coordinates $r$ fixed. A conditional
-surface instead follows a particular local minimum in the permitted r
-space at each $q$; the lower envelope over branches is a third object.
-With $q$ and $r$ measured from the same expansion centre and stable $H_{rr}$, local
-quadratic release gives
-
-$$
-r^*(q)=-H_{rr}^{-1}(g_r+H_{rq}q),\qquad
-K_{\mathrm{eff}}=H_{qq}-H_{qr}H_{rr}^{-1}H_{rq}.
-$$
-
-The offset from a nonzero $g_r$ is retained. The Schur complement is standard
-mathematics, not a new theorem. An unresolved or unstable eliminated block
-invalidates this release; a physical unstable direction cannot be removed
-by a pseudoinverse. Unmeasured directions remain fixed, not implicitly stable.
-At a smooth constrained stationary branch, the corresponding barrier strain
-derivative is the difference of bottleneck and initial-state work derivatives,
-evaluated with their actual cell Jacobians and volumes. An ordinary NEB
-sampled peak alone does not justify that stationary-branch formula.
-
-### 2.3. Controlled stationary response and paired energy gaps
-
-Stable orthogonal release and continuation of a stationary bottleneck are
-different operations. After the permitted stable r block has been eliminated,
-write the local energy in retained internal coordinates q and a prescribed
-external coordinate t as
-
-$$
-\begin{aligned}
-\mathcal E(q,t)={}&\widetilde E_0+\widetilde g_q^Tq+\widetilde g_t t\\
-&+\tfrac12q^TAq+t b^Tq+\tfrac12d t^2.
-\end{aligned}
-$$
-
-All quantities come from one centre, potential and allowed-space chart.
-The t coordinate is controlled by the substrate, not released or counted
-as an internal unstable direction. If A is resolved and nonsingular, its
-specified stationary branch is
-
-$$
-q^*(t)=-A^{-1}(\widetilde g_q+b t),\qquad
-C=d-b^TA^{-1}b.
-$$
-
-In the length-valued response chart, both $q$ and $t$ have Angstrom units and
-$A$, $b$ and $d$ have units of $\mathrm{eV}\,\text{\AA}^{-2}$ at the cell-energy level.
-Thus $dq^*/d\epsilon=-L A^{-1}b$ has Angstrom per unit strain, not the
-energy-density units of an elastic stiffness. These coordinates are not
-the mass-weighted amplitudes used for path projections. An acoustic
-continuum relation or a fitted optical-mode slope from a different
-reference/boundary does not independently validate this internal mixed
-response. Same-contract probes and prospective material tests must do so;
-the latter remain outstanding here.
-
-For an internal minimum, A is positive definite and C cannot exceed d.
-For an index-one saddle, A is indefinite and this curvature correction is
-not sign definite. A bottleneck's controlled curvature can therefore harden
-even though elimination of its stable directions softens a retained block.
-This follows from standard quadratic stationary response, not a new theorem;
-softening of one selected mode alone does not determine a barrier change.
-An unresolved inverse is rejected rather than repaired by a pseudoinverse.
-The index is established only in the represented internal space; physically
-movable but unrepresented gradients remain distinct from clamped reactions.
-
-Each centre a uses its own registered scale
-$t_a=L_a(\epsilon-\epsilon_0)$. Let e_a(t) denote its stationary model energy
-change relative to its raw centre energy, including all nonstationary anchor
-corrections. With the independently recorded raw centre gap
-$G_{\mathrm{ref}}=E_{S,\mathrm{ref}}-E_{I,\mathrm{ref}}$, define
-
-$$
-D(\epsilon_0)=\frac{G_{\mathrm{ref}}+e_S(0)-e_I(0)}{n_{\mathrm{fu}}}.
-$$
-
-The small increments $d_a=e_a'(0)t_a+C_a t_a^2/2$ avoid subtracting large
-total energies to obtain response. The paired change and its derivatives are
-
-$$
-\delta D=\frac{d_S-d_I}{n_{\mathrm{fu}}},\qquad
-D(\epsilon)=D(\epsilon_0)+\delta D,
-$$
-
-$$
-\frac{dD}{d\epsilon}=\frac{L_S e_S'(t_S)-L_I e_I'(t_I)}{n_{\mathrm{fu}}},\qquad
-\frac{d^2D}{d\epsilon^2}=\frac{L_S^2 C_S-L_I^2 C_I}{n_{\mathrm{fu}}}.
-$$
-
-Consequently neither equal numerical t values in different charts nor a
-bottleneck response with the initial-well term omitted represents this
-mechanical intervention. The raw gap, stationary-anchor correction and
-parameter response are retained separately. A common energy-zero shift
-does not affect the response; negative model gaps are not clipped into
-apparent activation barriers.
-
-D equals a physical activation barrier only when I and S are the appropriate
-actual stationary initial state and connected bottleneck on the same branch.
-A restricted quadratic solution cannot establish those premises, identify
-the highest bottleneck of a complete path or exclude lower competing routes.
-Adding $\delta D$ to an audited NEB barrier is a separate calibration choice:
-its anchor mismatch must be disclosed and checked, not silently discarded.
-Caller-declared parameter bounds and displacement radii reject obvious
-out-of-domain use but do not prove probe-hull coverage or anharmonic accuracy.
-The [stationary](../../docs/CONTROLLED_STATIONARY_BRANCH.md) and
-[paired-response](../../docs/STATIONARY_GAP_RESPONSE.md) implementations and
-their analytic tests are thus methodological preparation, not new hafnia
-barrier data or a successful independent material prediction.
-
-A full initial-well quadratic need not be constructed for every comparison.
-When audited target endpoint energies are declared visible inputs, the
-bottleneck model can instead be paired with that measured initial-well shift.
-Every control receives the same endpoint information and its preparation
-cost. This is endpoint-assisted bottleneck prediction, not a zero-DFT or
-fully predicted well response. It does not add an unregistered initial-well
-Hessian to the finite two-bottleneck probe budget. The exact input choice,
-basis, domain and calibration must be frozen before complete target path
-labels are read; the present module tests alone do not freeze that batch.
-
-The local ablations now share one dataset of measured physical Hessian
-actions $D=HM$, where the columns of M are orthonormal in the declared joint
-coordinate metric. A control is unavailable unless its retained, released
-and prescribed-control directions lie in this measured span; an unmeasured
-complement is unknown, not a stable zero block. Frozen, atomic-only and
-joint-release controls retain the same affine gradient. Atomic-only release
-is unavailable if the retained coordinates already contain cell motion.
-The local stability-aware arm promotes the complete released eigensubspace
-at or below the registered resolution floor, then requires a resolved
-combined internal block of the specified index. This is training-only
-increment-dimension continuation, not an anharmonic branch search. When
-joint release is already valid, promotion changes no physical stationary
-response and cannot establish an accuracy advantage. Measured coverage,
-strong reference registration and material validation remain separate gates.
-
-For the same complete quadratic and admissible internal space, valid joint
-stationarity is also invariant under changes of the retained subspace and its
-dimension. Direct full-space solves verify this null across five partitions,
-including a correctly refused unstable-release case restored by promotion.
-This prevents a coordinate-partition gain from being claimed as physical
-prediction improvement. Independent nonharmonic, branch or equal-accuracy
-cost evidence is needed to establish an actual increment; a surface at fixed
-retained coordinates is a different object. The
-[partition check](../../benchmarks/hfo2_channels/20261008/partition_null_E057_20261010/README.md)
-is not a hafnia material forecast.
-
-### 2.4. Fixed material contract and prospective comparisons
+### 2.3. Electronic calculations and matched local relaxation
 
 The production model is periodic Hf4O8, twelve atoms and four formula units,
-with zero external pressure and field. Calculations use ABACUS/PBE, the
-original Hf/O pseudopotentials, full 10-au DZP orbitals generated at 100 Ry,
-ecutwfc=100 Ry and the original Gamma-centred 2x2x2 mesh. INPUT, KPT,
-pseudopotentials and orbital bytes are bound to each observation by hashes.
-No electronic setting is retuned between channels or mechanical conditions.
-The unchanged electronic input sets scf_thr=1e-8, scf_nmax=150 and
-mixing_beta=0.3. Byte-exact [INPUT](../../benchmarks/hfo2_channels/20261008/manuscript_local_reduction_E162_20261015/INPUT)
+at zero temperature, external pressure and electric field. Calculations use
+ABACUS/PBE, the original Hf/O pseudopotentials, full 10-au DZP orbitals
+generated at 100 Ry, ecutwfc=100 Ry and the original Gamma-centred 2x2x2 mesh.
+The same input, pseudopotential and orbital bytes apply to every comparison.
+The unchanged electronic settings are scf_thr=1e-8, scf_nmax=150 and
+mixing_beta=0.3.
+([Li et al., 2016](https://doi.org/10.1016/j.commatsci.2015.07.004);
+[Chen et al., 2010](https://doi.org/10.1088/0953-8984/22/44/445501);
+[Perdew et al., 1996](https://doi.org/10.1103/PhysRevLett.77.3865))
+Byte-exact [INPUT](../../benchmarks/hfo2_channels/20261008/manuscript_local_reduction_E162_20261015/INPUT)
 and [KPT](../../benchmarks/hfo2_channels/20261008/manuscript_local_reduction_E162_20261015/KPT)
-snapshots retain the literal settings rather than inferred defaults.
-Ordinary NEB uses 0.10 eV/Angstrom, without climbing images; cached fixed
-endpoints are not recalculated at every iteration. The repaired T-PO band
-has ten total images, while new channel bands have nine total, seven moving.
-A residual pass does not supply a barrier error or a saddle certificate.
-The preserving candidate subsequently receives six same-contract static
-sampling checks, producing a fifteen-image cached reconstruction without
-an additional optimization or endpoint recalculation (Appendix C.3). The M
-edge requires a twelve-image ordinary refinement after its sampling audit;
-this changes resolution on the same edge, not the declared channel set.
+files accompany the data. A calculation at a changed geometry always obtains
+new energy, forces and stress; only exact endpoint caches are reused.
 
-The subsequent fixed-plane comparison uses strain 0 and +1%, with +0.5%
-reserved as an unseen in-range condition. Predictions and their visible
-inputs are frozen before complete held-out path labels are inspected.
-Controls include direct barrier interpolation, two endpoint-response nulls,
-strong T/Cmma references and restricted versus released reductions.
-Unavailable predictions and unstable branches are reported as abstentions.
-Actual SCF calls and allocation core-hours, including preparation, define
-cost; faster optimization to a different mechanism is not same-path
-acceleration. The [detailed methods](METHODS_DRAFT.md) retain unit, gauge,
-stability, selection and uncertainty definitions.
+The clamped channel comparisons use nine total images, including seven
+moving interior images, and the unchanged ordinary NEB residual target
+0.10 eV/Angstrom. No climbing image is used. The ten-image historical
+T-to-PO formation band, finite sampling supplements and free-cell
+candidates are retained separately in Appendix C. These are distinct
+calculations rather than alternative resolutions silently pooled into
+one optimized path. A residual pass determines ordinary convergence
+for the declared polygon and does not bound its continuous-barrier error.
 
-For the zero-strain T-escape and preserving-switching sampled peaks, the
-local length-metric chart contains 36 translation-free internal coordinates:
-33 atomic coordinates and three components of the open cell row. The
-prescribed substrate control is separate. Its length scale is
-$L=5.12968067458423$ Angstrom; this chart is not the mass-weighted atomic
-projection used in the representation figures. Central differences of
-the physical energy gradient use steps 0.01 and 0.02 Angstrom in each of
-37 internal-plus-control directions, with two signs per step. The cached
-center is reused: each center requires 148 new SCFs, 296 in total. Control
-probes use $\delta\epsilon=h/L$, not the reserved physical +0.5% condition.
-Raw directional responses are retained; spectra below use the symmetrized
-internal block only. Finite-step disagreement and symmetrization changes
-are diagnostics, not physical error bounds or a stationary-index certificate.
+To distinguish local atomic accommodation from additional cell response,
+we compare three treatments at fixed retained joint coordinates
+$q=(Q_1,Q_2)$:
+a frozen configuration F, atomic-only release A at that configuration's
+cell, and joint atomic/open-cell release J. Each of the preserving and
+T sampled-peak neighborhoods uses its origin and four axial q pairs.
+The local chart has 33 translation-free atomic and three open-cell length
+coordinates with scale $L=5.12968067458423$ Angstrom; q is not the geometric
+$Q_x$/$Q_z$ projection. Retained coordinates are held fixed. The atomic-only
+treatment releases 31 atomic directions; joint release also allows the
+permitted cell response.
 
-For a bounded conditional-relaxation comparison, the two negative
-eigendirections of the first-step internal matrix define fixed retained
-coordinates. The remaining 34 directions are released. Both optimizer
-arms start at the same cached center with the same retained coordinates,
-released-gradient norm target 0.03 eV/Angstrom, initial trust radius
-0.05 Angstrom, internal-displacement bound 0.5 Angstrom and minimum atomic
-separation 1.6 Angstrom. Each arm has a conservative limit of twelve new
-SCF attempts, including unsuccessful calls; cache hits are free. One arm
-uses the default identity initialization. The other uses the measured
-Hessian restricted to a metric-orthonormal released basis, $U^T H U$,
-as a standard quasi-Newton initialization. Cholesky factorization must
-succeed without clipping eigenvalues. This algebraic check does not
-certify stability after relaxation. The conditional norm target is not
-the ordinary NEB residual threshold. Preparation and all trial calls are
-charged separately; a budget-exhausted arm supplies a censored cost, not
-a completed denominator for a speedup factor.
+The pointwise differences $E_A-E_F$ and $E_J-E_A$ measure the observed
+treatment contrasts. The latter includes atomic readjustment as well as
+cell motion, so it is not a unique strain-energy term. The released-gradient
+target is 0.03 eV/Angstrom, distinct from the NEB threshold. Finite-step
+curvature probes, branch trials, model definitions, geometry guards and
+actual costs are retained in Appendices D--G. These diagnostics do not
+replace the measured path peaks or imply stable conditional minima.
 
-A separately registered branch trial resolves the shallow omitted internal
-direction explicitly. At each of five fixed Q pairs, two independent starts
-are displaced by $\zeta=\pm0.10$ Angstrom from the original conditional origin
-along the same unit direction $v_\zeta$. Both zeta and the other permitted released
-coordinates can move; the start sign is not a constraint. Safeguarded BFGS
-requires both $\|U^Tg\|\leq0.03$ eV/Angstrom and
-$|v_\zeta^Tg|\leq10^{-4}$ eV/Angstrom in the internal length chart. The additional
-test prevents an unresolved shallow direction from passing solely because
-its force is below the norm threshold. A positive numerical preconditioner
-combines the measured 33-direction restriction with a directional stiffness
-fitted to the four already seen signed gradient probes. It does not replace
-the original physical Hessian or certify release stability. Each start has
-the same twelve-attempt cap, geometry guards and electronic contract. The
-[pre-label protocol and exact optimizer](../../benchmarks/hfo2_channels/20261008/G3_preserving_branches_E260_20261017/protocol.md)
-retain both starts and their costs; the bounded training outcomes are
-reported in Appendix F.1. No further start or radius adjustment followed.
+### 2.4. Prospective strain test and prediction comparison
 
-We used all 81 energy/full-gradient observations from this trial, including
-rejected steps and budget-exhausted starts, for one finite model comparison.
-They were physical point observations, not 81 conditional minima. At each
-original curvature step separately, the measured 34 columns fixed the free
-block and its coupling to Q. The unmeasured symmetric Q/Q block supplied
-three fitted coefficients. The comparison family added seven terms,
-$\zeta^3,\zeta^4,Q_i\zeta^2,Q_iQ_j\zeta^2$ ($1\leq i\leq j\leq2$), and the 99 terms
-$r_j\zeta^2,r_jQ_1\zeta^2,r_jQ_2\zeta^2$ over the remaining 33 coordinates.
-The harmonic and nonlinear families therefore fitted 3 and 109 coefficients,
-respectively, keeping the same native origin energy and gradient. Coordinates
-were normalized by 0.1 Angstrom; gradient equations were multiplied by
-0.1 Angstrom before column-scaled least squares with relative SVD cutoff
-$10^{-10}$. Both original steps and five leave-one-Q-family-out diagnostics
-were retained, without choosing a degree, weight or step from independent
-labels. The [registered ansatz and exact fit](../../benchmarks/hfo2_channels/20261008/G3_anharmonic_model_E265_20261018/README.md)
-preserve the raw negative direction; a positive bath at the source point
-does not certify stability throughout the fitted domain.
+Eight training bands compare all four candidates at substrate strain
+0 and +1%. Before generating target structures, the lower sampled
+switching and escape representatives at zero strain were selected:
+preserving reversal and PO-to-T. Their ordering at a new condition was
+not used to change that selection. Three +0.5% endpoints were then
+optimized under the imposed plane with atomic force at most
+0.03 eV/Angstrom and open traction below 2 kbar. Endpoint features were
+shared equally by the forecast arms that require them. The complete
+numerical and unavailable prediction panel was frozen before evaluating
+either target path's interiors.
 
-### 2.5. Signed path work as an energy-consistency diagnostic
-
-Displacement and instantaneous gradient coverage do not measure the energy
-change accumulated along a path. We therefore retain a separate, signed
-physical-work check on the sampled coordinate polygon. For successive
-coordinates $x_i$ and their conjugate physical energy gradients $g_i$, define
+B0 predicts the arithmetic midpoint of each zero/+1% sampled peak.
+With zero-strain anchor $\widehat B(0)$ and measured initial/final well
+shifts $\Delta E_I,\Delta E_F$ per formula unit, the two endpoint controls are
 
 $$
-W_i=\frac{g_i+g_{i+1}}{2}\cdot(x_{i+1}-x_i),\qquad
-R_i=E_{i+1}-E_i-W_i.
+\widehat B_{\mathrm{B1,fixed}}=\widehat B(0)-\Delta E_I,\qquad
+\widehat B_{\mathrm{B1,follow}}=\widehat B(0)+\Delta E_F-\Delta E_I.
 $$
 
-Within each declared coordinate block, orthogonal retained, omitted and
-translation projectors partition this trapezoidal work exactly. Atomic
-mass coordinates and the original permitted open-cell coordinates retain
-their own dual gradients and units; no basis mixes these blocks. The cell
-contribution completes the physical contraction. Rotating a basis inside
-one span changes no result, but choosing another span changes its work.
-Neither spring nor projected NEB forces replace the physical gradient.
+All local response models and reference variants remain in the panel.
+A model that had not supplied a valid transfer to the physical strain
+control records an unavailable prediction rather than an inferred value.
+Errors retain their signs; channel errors and the T-minus-preserving
+error use the same initial-well convention.
 
-These contributions are path-dependent signed work, not state-function
-energies assigned to phonon modes. Negative work is retained. The cumulative
-residual $\sum_i R_i$ diagnoses sampled energy-gradient consistency, but
-does not separate unsampled nonlinearity from force/stress error or bound
-the activation-barrier error. In particular, cancellation can make final
-endpoint closure small while the bottleneck-region discrepancy is large.
-The [implementation and finite-data checks](../../docs/SAMPLED_PATH_WORK.md)
-introduce no new calculator evaluations or reduction-model accuracy claim.
+Each target band starts from its corresponding zero-strain polygon,
+with the plane affinely changed and the new endpoint corrections
+distributed along image index. The fixed recipe uses FIRE,
+$k=0.2$ eV/Angstrom squared, maxstep 0.02 Angstrom, maximum cell step
+0.02, minimum pair distance 1.6 Angstrom and maximum deformation 0.25.
+It permits at most 80 updates, four candidate-step retries and 24 hours
+per path. The nine-image target and 0.10 eV/Angstrom criterion are unchanged.
+Both paths use native 32-rank mpirun allocations with one thread per rank.
 
-### 2.6. Work between the two seen strain conditions
-
-To distinguish imposed control from internal configuration changes, the
-cross-strain diagnostic uses a single ordered zero-strain PO+ chart
-$y=(u,a,t)$. Atomic displacements u, the three open-row coordinates a and
-$t=L_\epsilon\epsilon$ are length-valued; $L_\epsilon=5.12968067458423$
-Angstrom. They are not the mass-weighted phonon amplitudes in the projection
-figures. The first two cell rows follow the prescribed substrate scaling;
-the original third row remains open. Physical gradients retain both internal
-forces and substrate reaction stress.
-
-For equal-index native frames at the two training conditions, define
-
-$$
-W_i^{\mathrm{cross}}=\tfrac12[g_i(0)+g_i(0.01)]^T
- [y_i(0.01)-y_i(0)],\qquad
-w_i=W_i^{\mathrm{cross}}-W_I^{\mathrm{cross}}.
-$$
-
-The residual is $\Delta[E_i-E_I]-w_i$. Orthogonal atomic, explicit rigid-
-translation, open-row and prescribed-control blocks partition w exactly.
-The row-cell/fractional-coordinate connection, ordered lift, energy unit
-and initial-pair subtraction are fixed for every channel; no minimum-image
-convention (MIC) relabelling
-or intermediate DFT geometry is introduced. Equal image index is an explicit
-discrete pairing, not a canonical correspondence of continuous MEPs.
-The observed peak indices must coincide before this energy contrast is
-identified with the difference of sampled maxima.
-
-These endpoint trapezoids are connection-dependent work, not unique mode
-energies, a frozen-slice measurement or a stationary barrier derivative.
-Their closure residual is not a total DFT or activation-barrier uncertainty
-bound. The two-configuration decomposition tests what a stress-only account
-omits without assigning a causal microscopic coupling.
-
-### 2.7. Atomic/open-cell restrictions and finite-coordinate model checks
-
-The same measured internal matrix is restricted to the 33-dimensional
-translation-free atomic space and the three-dimensional open-cell space
-to distinguish their raw instabilities. The prescribed substrate is not
-part of either internal instability count. Let $P_a$ project onto the
-open-cell space in the fixed length metric and $P_-$ onto the entire
-negative eigenspace of the symmetrized internal matrix. We report
-$W_a=\operatorname{Tr}(P_aP_-)$ rather than assigning individual vectors
-across nearly degenerate eigenvalues. This trace is invariant under
-orthogonal re-expression of these spaces, including negative-space basis
-rotations, but not arbitrary changes of the cell length scale. It is
-neither an energy fraction nor a phonon amplitude. A raw-positive cell
-block permits a formal cell-stationary Schur reduction; its nonzero
-cell gradient and constant energy offset are retained, as in Section 2.2.
-Raw signs do not supply a measured stability-resolution floor.
-
-We separately test whether an unchanged original-center quadratic describes
-finite-coordinate DFT candidates. Both finite-difference models use the
-same retained plane selected from the first-step matrix; no coefficients
-are fitted to the candidate energies. To isolate shape disagreement from
-the origin offset, we evaluate
-
-$$
-d(q)=[E_{\mathrm{model}}(q)-E_{\mathrm{model}}(0)]
-     -[E_{\mathrm{candidate}}(q)-E_{\mathrm{candidate}}(0)].
-$$
-
-Subtracting the already seen candidate origin makes this a retrospective
-shape diagnostic, not a calibration-free or independent prediction. The
-common six-coordinate cohort is $(0,0)$, $(-0.1,0)$, $(0,-0.1)$,
-$(0,0.1)$, $(0.1,0)$ and $(-0.2,0)$ Angstrom. The audited source snapshot
-contains nine T and six preserving candidates, all retained in the analysis.
-Equal numeric coordinates at the two centers do not identify the same
-physical structure. Finite released residuals also preclude treating
-retained partial gradients as exact conditional-envelope derivatives.
-
-For the separate joint length chart, a fixed orthonormal partition
-$x=x_0+V_q q+V_r r$ permits the work check of Section 2.5 on neighboring
-conditional candidates. With $g_q=V_q^Tg$ and $g_r=V_r^Tg$, the endpoint
-trapezoids obey
-
-$$
-\Delta E-W_q=W_r+\mathcal R,\qquad
-W_\alpha=\tfrac12(g_{\alpha,i}+g_{\alpha,j})^T\Delta\alpha,
-\quad\alpha\in\{q,r\}.
-$$
-
-Here $\mathcal R=\Delta E-W_q-W_r$ is the full endpoint quadrature
-discrepancy, not an energy-error bound. The Cauchy inequality bounds only
-the released endpoint term,
-$|W_r|\leq(\|g_{r,i}\|+\|g_{r,j}\|)\|\Delta r\|/2$; it does not bound
-unsampled energy variation. We retain this term at finite convergence
-rather than setting it to zero by an exact-envelope assumption. Closed
-grid loops provide a complementary diagnostic: their raw energy changes
-telescope to zero, whereas finite endpoint-gradient quadrature need not.
-Neither a nonzero circulation nor a large neighboring displacement alone
-establishes nonconservative DFT forces or a branch discontinuity.
-
-The matched frozen-R comparison separates two parts of an origin-aligned
-shape discrepancy without refitting either quadratic. For each original
-center, R=0 at four axial coordinates $q=(-0.1,0)$, $(0,-0.1)$, $(0,0.1)$
-and $(0.1,0)$ Angstrom supplies the frozen DFT counterpart. Both original finite-difference
-models use the same retained plane and affine gradient. Writing $d_F$ and
-$d_R$ for the frozen and released shape discrepancies, respectively, define
-
-$$
-\delta_{\mathrm{rel}}(q)=[E_R(q)-E_F(q)]-[E_R(0)-E_F(0)],\qquad
-d_R(q)=d_F(q)+\delta_{\mathrm{rel}}^{\mathrm{model}}(q)
-                 -\delta_{\mathrm{rel}}^{\mathrm{DFT}}(q).
-$$
-
-Every term remains signed and is evaluated at the same q. The original
-raw and released origins are exactly reused. Because Q includes open-cell
-motion, R=0 is not a fully fixed-cell experiment. Positive released-minus-
-frozen candidate differences would be retained rather than clipped; a
-finite-gradient candidate is not assumed to be a global conditional minimum.
-
-We additionally released the 31 atomic directions orthogonal to the same
-retained observables, while fixing each frozen-Q seed's cell. This atomic-only
-treatment, A, was compared with the frozen treatment F and the joint atomic-
-and-open-cell treatment J at the origin and four axial coordinates per
-center. Both original quadratic models were fixed before the atomic labels
-were read. The signed differences $E_A-E_F$ and $E_J-E_A$ were retained pointwise,
-along with each treatment's own origin. The second difference includes atomic
-readjustment as well as cell motion; it is not a unique strain-energy term.
-Because Q contains cell motion, A does not impose one shared cell across Q.
-
-Reference comparisons at fixed coordinates must preserve the observables,
-not merely reuse their numerical labels. Let x denote the 36 internal
-coordinates, let $q=C^Tx$ specify the same two retained observables in every
-arm, and let the orthonormal columns of U span the permitted displacement
-space. For $x=Uz$, the affine quadratic $g^Tx+x^THx/2$ is stationary under
-these constraints when
-
-$$
-\begin{pmatrix}U^THU&U^TC\\ C^TU&0\end{pmatrix}
-\begin{pmatrix}z\\\lambda\end{pmatrix}
-=\begin{pmatrix}-U^Tg\\q\end{pmatrix}.
-$$
-
-The constrained minimum requires positive curvature on the null space of
-$C^TU$, not positive curvature on all of U. We retain the nonzero affine
-gradient and reject a nonpositive free block rather than pseudoinverting
-it. If U spans the complete internal space, a different orthonormal
-reference is a re-expression of the same constrained problem. Its energy
-and physical coordinates must agree with an equivalent Schur solve. This
-standard constrained-quadratic identity is a comparator check, not a new
-theorem or a source of prediction gain.
-
-The zero sign threshold used for this raw algebraic comparison is not a
-measured physical stability-resolution floor.
-
-For restricted-reference ablations, U instead contains the transported
-atomic reference span and all three open-cell directions. Directions
-outside U are clamped; this is not the full outside-reference release of
-Appendix D.5. Each resulting geometry is checked against the same original
-0.5-Angstrom radius and distance guard. We report the actual eligible
-coordinate sets and their intersection before comparing errors. Values
-outside the domain remain algebraic diagnostics, not failed physical
-predictions. These shared-observable ablations do not test a model defined
-with different native parent-phase coordinates and a different target.
-
-To compare the local quadratic with elementary nonlinear energy models,
-we also performed a post-hoc coarsening of each original 5x5 sheet.
-The nine nodes on the 3x3 subgrid with coordinates -0.2, 0 and 0.2 Angstrom
-were designated coarse; the other sixteen nodes were designated fine.
-Energy-only controls were piecewise bilinear interpolation, tensor-quadratic
-interpolation (degree at most two in each coordinate), and a six-parameter
-least-squares polynomial of total degree at most two. The tensor polynomial
-can include mixed terms of total degree four; it is not another harmonic
-model. Both unchanged H/g quadratics were retained. Comparisons used only
-fine-node cohorts supported by all included arms, with the origin-aligned discrepancy
-defined above. This split was chosen after seeing the training labels.
-Moreover, coarse-node relaxation starts had inherited fine-node geometries;
-withholding fine energies from a fit did not blind the preceding workflow.
-
-We checked the omitted preserving-center direction with four additional
-training statics, keeping the electronic contract unchanged. Let
-$x(\zeta)=x_r+\zeta v$, with cached released origin $x_r$ and the first-step
-lowest transverse eigenvector v in its fixed sign convention. The original
-two retained coordinates and strain control stayed fixed. Here $\zeta$ is
-an internal length, not the external substrate coordinate t of Section 2.3.
-Amplitudes $\pm0.05$/$\pm0.10$ Angstrom, both original quadratic predictions
-and a four-attempt cap were frozen before these labels; the center was reused.
-We reported the distinct finite-amplitude quantities
-
-$$
-\kappa_E(h)=\frac{E(x_r+hv)+E(x_r-hv)-2E(x_r)}{h^2},\qquad
-\kappa_g(h)=\frac{v^Tg(x_r+hv)-v^Tg(x_r-hv)}{2h}.
-$$
-
-They coincide for an exactly quadratic energy, but need not coincide at
-finite amplitude in an anharmonic profile. Neither difference is a total
-physical-error bound. These were training structures, not independent targets.
+The scored observable is the endpoint-inclusive sampled peak relative
+to the common PO+ well. We report its change from zero strain, the
+selected-pair difference, every frozen error or abstention, and actual
+SCF/allocation cost. The [complete preregistration and data](../../benchmarks/hfo2_channels/20261008/physical_holdout_E268_20261018/README.md)
+record the chronology. This fixed-protocol check tests response transfer;
+it does not search for new channels or resolve continuous-path curvature.
 
 ## 3. Results: competing responses under one mechanical intervention
 
@@ -690,10 +317,11 @@ at both training conditions. The lower sampled switching peak increased by
 28.596248, whereas the lower sampled escape peak increased by 12.347027.
 The sampled selectivity proxy, escape minus switching peak, consequently
 changed from -12.411559 to -28.660781 meV/HfO2. Its decrease of 16.249222 is
-not the favorable signature proposed in H1.
+not the favorable signature of simultaneously easing switching and
+retaining resistance to escape.
 
 This is an observed candidate-set contrast, not an error-certified rejection
-of H1 or a global pathway ordering. The +1% T/M escape peaks differ by only
+of the original favorable-response hypothesis or a global pathway ordering. The +1% T/M escape peaks differ by only
 0.464068 meV/HfO2, and ordinary residuals do not bound sampled-barrier error
 or certify stationary bottlenecks. Both escape candidates and both ordered
 switching candidates remain in the analysis; the decreasing but high
@@ -728,7 +356,7 @@ The [complete native training replay](../../benchmarks/hfo2_channels/20261008/cl
 retains 72 frame records and 66 distinct raw-log/geometry identities,
 including the repeated common initial caches. They are not independent
 statistical replicates. The independent +0.5% test is reported separately
-in Section 3.4; these training values alone do not establish H2.
+in Section 3.4; these training values alone do not establish independent predictive accuracy.
 
 ### 3.2. Clamping changes the sampled energetic role without changing the group label
 
@@ -868,7 +496,7 @@ Blue bars show $E_{\mathrm{frozen}}-E_{\mathrm{atomic}}$; orange increments
 show $E_{\mathrm{atomic}}-E_{\mathrm{joint}}$. The two panels deliberately
 use different vertical ranges. All ten physical points are included once;
 the two curvature probe steps are not duplicate energy observations.
-$Q_1,Q_2$ are the fixed joint-length coordinates of Section 2.4, not the
+$Q_1,Q_2$ are the fixed joint-length coordinates of Section 2.3, not the
 geometric $Q_x,Q_z$ of Figure 3. Each atomic-only treatment fixes its own
 frozen-Q seed cell. The total height is a local candidate-energy lowering,
 not a correction to the complete path barrier.
@@ -1071,7 +699,133 @@ retained. The resulting evidence supports a material pathway comparison
 and explicit limits on response transfer, rather than a validated new
 predictive reduction method.
 
-## Appendix A. Reproducibility and editorial completion checks
+## 5. Conclusions
+
+Mechanical control of hafnia must be assessed through the competition
+between complete structural routes from the same polar well. Within the
+examined clamped candidate set, +1% strain lowers the high reversing
+switching peak while raising the already lower preserving peak more than
+the lowest escape peak. Selecting the decreasing switching profile alone
+would therefore misrepresent the available competition. The independent
++0.5% test adds a different response: the selected escape-minus-switching
+contrast improves relative to zero strain but stays negative, giving a
+nonmonotonic sampled trend over the three imposed conditions.
+
+The structural comparison identifies the atomic and lattice accommodation
+that distinguishes the routes.
+Reversal of the polar displacement can accompany preservation or reversal
+of a signed oxygen shuffle; escape to T transfers the initial distortion
+into a differently oriented pattern. Each route uses a different allowed
+lattice response. Equal final-well shifts cannot explain the opposite
+switching-peak changes, so the path interior must enter the interpretation.
+Clamping also changes the sampled energetic role of
+a Pbcn-labelled central configuration while excluding the large expansion
+seen on the free-cell path. Matched local controls show that internal
+atomic relaxation already recovers most of the preserving neighborhood's
+energy lowering at fixed seed cells. These observations support coupled
+atomic and lattice accommodation as the physical basis for interpreting
+the route differences, with no unique mode-by-mode energy partition.
+
+The independent comparison further shows that good interpolation for
+T escape does not ensure a comparable description of preserving reversal.
+The tested local reduced models establish no additional physical-response
+prediction advantage. The resulting contribution is a reproducible
+connection between channel competition, ordered structural descriptors,
+permitted strain and controlled relaxation, together with a measured
+test of response transfer. Its quantitative scope is the declared
+zero-field, zero-temperature sampled paths under one ABACUS/PBE contract;
+it does not determine device rates or an exhaustive transition network.
+
+## Data and code availability
+
+VARNEB source code is available from the
+[project repository](https://github.com/xdzhu/varneb). The calculation
+geometries, native-output exports, figure source tables, projection and
+relaxation analyses, frozen forecasts and replay scripts supporting this
+article are included in the same repository and linked throughout the
+appendices. The calculation and data version used for the completed
+independent test is Git revision dc328d50. The reading manuscript and its
+TeX wrapper are in paper/VARNEB_JCTC; the scalar tables and main figures
+can be regenerated without launching a DFT calculation. Executables and
+pseudopotential/orbital binaries are not redistributed with these exports;
+their exact identities are recorded by the archived input hashes.
+
+## References
+
+1. Liu, S.; Hanrahan, B. M. Effects of growth orientations and epitaxial
+   strains on phase stability of HfO2 thin films. Physical Review Materials
+   2019, 3, 054404. DOI: 10.1103/PhysRevMaterials.3.054404.
+
+2. Behara, S. S.; Van der Ven, A. Ferroelectric HfO2 and the importance of
+   strain. Physical Review Materials 2022, 6, 054403.
+   DOI: 10.1103/PhysRevMaterials.6.054403.
+
+3. Delodovici, F.; Barone, P.; Picozzi, S. Trilinear-coupling-driven
+   ferroelectricity in HfO2. Physical Review Materials 2021, 5, 064405.
+   DOI: 10.1103/PhysRevMaterials.5.064405.
+
+4. Qi, Y.; Singh, S.; Rabe, K. M. Polarization switching in ferroelectric
+   HfO2 from first-principles lattice mode analysis. Physical Review B
+   2025, 111, 134106. DOI: 10.1103/PhysRevB.111.134106.
+
+5. Qi, Y.; Rabe, K. M. Competing Phases of HfO2 from Unstable Flat Phonon
+   Bands of an Unconventional High-Symmetry Structure. Physical Review
+   Letters 2025, 135, 046101. DOI: 10.1103/9759-kp38.
+
+6. Lee, I.; Lee, W.; Yu, J. Strain-tuned ferroelectric transitions in HfO2:
+   role of $X_2^-$ mode in ferroelectric instabilities. npj Quantum
+   Materials 2026, 11, 34. DOI: 10.1038/s41535-025-00841-9.
+
+7. Zhou, S.; Zhang, J.; Rappe, A. M. Strain-induced antipolar phase in
+   hafnia stabilizes robust thin-film ferroelectricity. Science Advances
+   2022, 8, eadd5953. DOI: 10.1126/sciadv.add5953.
+
+8. Fan, D.; Zhu, T.; Liu, S. Unexpected density functional dependence
+   of the antipolar Pbcn phase in HfO2. npj Computational Materials
+   2025, 11, 140. DOI: 10.1038/s41524-025-01647-w.
+
+9. Ma, L.-Y.; Liu, S. Structural Polymorphism Kinetics Promoted by Charged
+   Oxygen Vacancies in HfO2. Physical Review Letters 2023, 130, 096801.
+   DOI: 10.1103/PhysRevLett.130.096801. The mapping comparison uses the
+   public arXiv:2204.09374v3 supplement.
+
+10. Lee, H.-J.; Kumar, P.; Go, K.-J.; et al. Bulklike Costless Domain Walls
+    Driven by Phonon Pair Condensation in HfO2. Physical Review X
+    2026, 16, 031041. DOI: 10.1103/63lf-k7zs.
+
+11. Henkelman, G.; Jónsson, H. Improved tangent estimate in the nudged
+    elastic band method for finding minimum energy paths and saddle
+    points. J. Chem. Phys. 2000, 113, 9978--9985.
+    DOI: 10.1063/1.1323224.
+
+12. Sheppard, D.; Xiao, P.; Chemelewski, W.; Johnson, D. D.; Henkelman, G.
+    A generalized solid-state nudged elastic band method. J. Chem. Phys.
+    2012, 136, 074103. DOI: 10.1063/1.3684549.
+
+13. Qian, G.-R.; Dong, X.; Zhou, X.-F.; Tian, Y.; Oganov, A. R.; Wang, H.-T.
+    Variable cell nudged elastic band method for studying solid--solid
+    structural phase transitions. Computer Physics Communications
+    2013, 184, 2111--2118. DOI: 10.1016/j.cpc.2013.04.004.
+
+14. Larsen, A. H.; Mortensen, J. J.; Blomqvist, J.; et al. The atomic
+    simulation environment--a Python library for working with atoms.
+    Journal of Physics: Condensed Matter 2017, 29, 273002.
+    DOI: 10.1088/1361-648X/aa680e.
+
+15. Li, P.; Liu, X.; Chen, M.; Lin, P.; Ren, X.; Lin, L.; Yang, C.; He, L.
+    Large-scale ab initio simulations based on systematically improvable
+    atomic basis. Computational Materials Science 2016, 112, 503--517.
+    DOI: 10.1016/j.commatsci.2015.07.004.
+
+16. Chen, M.; Guo, G.-C.; He, L. Systematically improvable optimized atomic
+    basis sets for ab initio calculations. Journal of Physics: Condensed
+    Matter 2010, 22, 445501. DOI: 10.1088/0953-8984/22/44/445501.
+
+17. Perdew, J. P.; Burke, K.; Ernzerhof, M. Generalized Gradient
+    Approximation Made Simple. Physical Review Letters 1996, 77,
+    3865--3868. DOI: 10.1103/PhysRevLett.77.3865.
+
+## Appendix A. Reproducibility and scope
 
 The archived cases provide frozen numeric observations, input/log/geometry
 checksums, continuous ordered lifts, analysis commands and figure CSVs.
@@ -1079,14 +833,21 @@ Raw production logs remain read-only on HF. Earlier incomplete snapshots
 remain dated evidence rather than being overwritten by final values.
 No external paper figure or unpublished author dataset is copied into this draft.
 
-Before a submission-ready abstract or conclusion is written, this manuscript
-requires: completed error/phase audits and resolved matched G2 responses;
-same-boundary conditional-branch and transverse-stability evidence;
-prospectively frozen predictions with strong-control comparison and actual
-cost accounting; final numeric captions and an openly reproducible release
-of the results permitted for redistribution. These are requirements, not
-claims that those outcomes have been achieved. Details belong in main-text
-appendices rather than a separate supplementary manuscript, as requested.
+The eight clamped training bands, matched local controls, local independent
+candidate-energy tests and two-path physical-strain test are complete.
+Their detailed outcomes, including failed branch trials and unavailable
+forecasts, remain in the appendices and archived cases. The interpretation
+in the main text concerns those measured sampled paths. Stable connected
+conditional surfaces and stationary transition-state indices were not
+established and are not assumed in its material conclusions.
+
+The main-figure and scalar-table replay commands read the archived data
+without invoking a calculator. Full byte-bound physical inputs and native
+outputs remain associated with the calculation records; the three visible
+endpoint features and complete forecast panel preceded both target-interior
+calculations. No physical error interval is inferred from an ordinary NEB
+residual. The appendices provide the extended evidence within this article,
+without a separate supplementary manuscript.
 
 ## Appendix B. Why a constraint need not increase a relaxed-endpoint barrier
 
@@ -1851,7 +1612,7 @@ existing data only and does not open an additional sampling or Hessian budget.
 ### E.2. Cross-strain work separates imposed control from configuration change
 
 The second work diagnostic pairs equal image indices between the two
-training conditions in the single controlled-coordinate chart of Section 2.6.
+training conditions in the single controlled-coordinate chart of Appendix G.4.
 All four pairs retained their sampled peak index (M:3; T and both flips:4).
 The matched-peak energy changes therefore reproduce Table 1 exactly, while
 the signed terms in Table A12 partition the declared endpoint trapezoid.
@@ -2131,7 +1892,7 @@ However, retaining all 33 T optical directions leaves a positive three-cell-
 direction complement, while its retained Schur block still has two negative
 directions. Thus the evidence does not show that all fixed references fail.
 The ranks and released dimensions differ, and a complete quadratic response
-remains invariant under valid basis partitions as described in Section 2.3.
+remains invariant under valid basis partitions as described in Appendix G.2.
 
 Releasing the remaining coordinates at fixed two-dimensional coordinates
 lowers the T-center energy by 0.00065214 eV per twelve-atom cell and the
@@ -2639,4 +2400,498 @@ observable from its physical path response. The
 [original local forecasts](../../benchmarks/hfo2_channels/20261008/G3_local_forecast_E185_20261015/README.md)
 and [strong-reference forecasts](../../benchmarks/hfo2_channels/20261008/G3_reference_forecast_E188_20261015/README.md)
 remain unchanged, including the refused preserving cohort.
+
+## Appendix G. Response theory and extended computational details
+
+### G.1. Mechanical ensembles and branch-aware reduction
+
+All images and endpoints of one path share the same permitted cell space.
+The epitaxial calculation fixes two T-referenced in-plane vectors
+and releases the third vector, including its two tilt components. Atomic
+and cell variables are relaxed in that same space. A clamped reaction stress
+is not an open-coordinate convergence failure. Zero applied stress and
+zero nominal substrate strain are distinct ensembles, and are not adjacent
+points of a single strain derivative.
+
+Adding a constraint orders ideal minimax barriers only when the endpoints
+and thermodynamic potential are held common. For allowed continuous paths
+$\mathcal G_U(I,F)$ and $\mathcal G_C(I,F)\subseteq\mathcal G_U(I,F)$,
+
+$$
+B_U^*(I,F)=\inf_{\gamma\in\mathcal G_U(I,F)}
+ \max_{s\in[0,1]}E(\gamma(s))-E(I)\le B_C^*(I,F).
+$$
+
+The star denotes the ideal minimax value, not a finite-image NEB estimate.
+Neither a local optimizer nor discrete sampling establishes that ordering
+for two computed candidate bands. More importantly, newly relaxed endpoints
+under a different substrate do not satisfy the common-endpoint premise.
+Our free-cell and T-substrate-clamped results therefore are not interpreted
+as a nested-path inequality, and the matched 0/+1% clamped comparison still
+requires each condition's own initial-well subtraction. A higher absolute
+bottleneck energy can accompany a lower activation barrier if the well rises
+more. Appendix B gives an elementary counterexample, not hafnia evidence or
+a new theoretical contribution. This is why the endpoint-response controls
+and the separate absolute escape-barrier test cannot be replaced by a generic
+statement that clamping raises barriers.
+
+In the registered generalized-coordinate metric, a prescribed active-space
+projector separates the allowed physical gradient from support reactions.
+Ordinary NEB residuals, allowed physical gradients and excluded reactions
+are reported separately. Only enforced mechanical constraints enter this
+projection; an unmeasured but physically movable mode is not relabelled as
+a support reaction merely because a reduced model omits it.
+
+A retained coordinate $q$ can specify one mode or a declared combination of
+modes. A frozen slice keeps the remaining coordinates $r$ fixed. A conditional
+surface instead follows a particular local minimum in the permitted r
+space at each $q$; the lower envelope over branches is a third object.
+With $q$ and $r$ measured from the same expansion centre and stable $H_{rr}$, local
+quadratic release gives
+
+$$
+r^*(q)=-H_{rr}^{-1}(g_r+H_{rq}q),\qquad
+K_{\mathrm{eff}}=H_{qq}-H_{qr}H_{rr}^{-1}H_{rq}.
+$$
+
+The offset from a nonzero $g_r$ is retained. The Schur complement is standard
+mathematics, not a new theorem. An unresolved or unstable eliminated block
+invalidates this release; a physical unstable direction cannot be removed
+by a pseudoinverse. Unmeasured directions remain fixed, not implicitly stable.
+At a smooth constrained stationary branch, the corresponding barrier strain
+derivative is the difference of bottleneck and initial-state work derivatives,
+evaluated with their actual cell Jacobians and volumes. An ordinary NEB
+sampled peak alone does not justify that stationary-branch formula.
+
+### G.2. Controlled stationary response and paired energy gaps
+
+Stable orthogonal release and continuation of a stationary bottleneck are
+different operations. After the permitted stable r block has been eliminated,
+write the local energy in retained internal coordinates q and a prescribed
+external coordinate t as
+
+$$
+\begin{aligned}
+\mathcal E(q,t)={}&\widetilde E_0+\widetilde g_q^Tq+\widetilde g_t t\\
+&+\tfrac12q^TAq+t b^Tq+\tfrac12d t^2.
+\end{aligned}
+$$
+
+All quantities come from one centre, potential and allowed-space chart.
+The t coordinate is controlled by the substrate, not released or counted
+as an internal unstable direction. If A is resolved and nonsingular, its
+specified stationary branch is
+
+$$
+q^*(t)=-A^{-1}(\widetilde g_q+b t),\qquad
+C=d-b^TA^{-1}b.
+$$
+
+In the length-valued response chart, both $q$ and $t$ have Angstrom units and
+$A$, $b$ and $d$ have units of $\mathrm{eV}\,\text{\AA}^{-2}$ at the cell-energy level.
+Thus $dq^*/d\epsilon=-L A^{-1}b$ has Angstrom per unit strain, not the
+energy-density units of an elastic stiffness. These coordinates are not
+the mass-weighted amplitudes used for path projections. An acoustic
+continuum relation or a fitted optical-mode slope from a different
+reference/boundary does not independently validate this internal mixed
+response. Same-contract probes and prospective material tests must do so;
+the physical-strain comparison is completed in Section 3.4, without a
+validated transfer of these local stationary models.
+
+For an internal minimum, A is positive definite and C cannot exceed d.
+For an index-one saddle, A is indefinite and this curvature correction is
+not sign definite. A bottleneck's controlled curvature can therefore harden
+even though elimination of its stable directions softens a retained block.
+This follows from standard quadratic stationary response, not a new theorem;
+softening of one selected mode alone does not determine a barrier change.
+An unresolved inverse is rejected rather than repaired by a pseudoinverse.
+The index is established only in the represented internal space; physically
+movable but unrepresented gradients remain distinct from clamped reactions.
+
+Each centre a uses its own registered scale
+$t_a=L_a(\epsilon-\epsilon_0)$. Let e_a(t) denote its stationary model energy
+change relative to its raw centre energy, including all nonstationary anchor
+corrections. With the independently recorded raw centre gap
+$G_{\mathrm{ref}}=E_{S,\mathrm{ref}}-E_{I,\mathrm{ref}}$, define
+
+$$
+D(\epsilon_0)=\frac{G_{\mathrm{ref}}+e_S(0)-e_I(0)}{n_{\mathrm{fu}}}.
+$$
+
+The small increments $d_a=e_a'(0)t_a+C_a t_a^2/2$ avoid subtracting large
+total energies to obtain response. The paired change and its derivatives are
+
+$$
+\delta D=\frac{d_S-d_I}{n_{\mathrm{fu}}},\qquad
+D(\epsilon)=D(\epsilon_0)+\delta D,
+$$
+
+$$
+\frac{dD}{d\epsilon}=\frac{L_S e_S'(t_S)-L_I e_I'(t_I)}{n_{\mathrm{fu}}},\qquad
+\frac{d^2D}{d\epsilon^2}=\frac{L_S^2 C_S-L_I^2 C_I}{n_{\mathrm{fu}}}.
+$$
+
+Consequently neither equal numerical t values in different charts nor a
+bottleneck response with the initial-well term omitted represents this
+mechanical intervention. The raw gap, stationary-anchor correction and
+parameter response are retained separately. A common energy-zero shift
+does not affect the response; negative model gaps are not clipped into
+apparent activation barriers.
+
+D equals a physical activation barrier only when I and S are the appropriate
+actual stationary initial state and connected bottleneck on the same branch.
+A restricted quadratic solution cannot establish those premises, identify
+the highest bottleneck of a complete path or exclude lower competing routes.
+Adding $\delta D$ to an audited NEB barrier is a separate calibration choice:
+its anchor mismatch must be disclosed and checked, not silently discarded.
+Caller-declared parameter bounds and displacement radii reject obvious
+out-of-domain use but do not prove probe-hull coverage or anharmonic accuracy.
+The [stationary](../../docs/CONTROLLED_STATIONARY_BRANCH.md) and
+[paired-response](../../docs/STATIONARY_GAP_RESPONSE.md) implementations and
+their analytic tests are thus methodological preparation, not new hafnia
+barrier data or a successful independent material prediction.
+
+A full initial-well quadratic need not be constructed for every comparison.
+When audited target endpoint energies are declared visible inputs, the
+bottleneck model can instead be paired with that measured initial-well shift.
+Every control receives the same endpoint information and its preparation
+cost. This is endpoint-assisted bottleneck prediction, not a zero-DFT or
+fully predicted well response. It does not add an unregistered initial-well
+Hessian to the finite two-bottleneck probe budget. The exact input choice,
+basis, domain and calibration must be frozen before complete target path
+labels are read; the present module tests alone do not freeze that batch.
+
+The local ablations now share one dataset of measured physical Hessian
+actions $D=HM$, where the columns of M are orthonormal in the declared joint
+coordinate metric. A control is unavailable unless its retained, released
+and prescribed-control directions lie in this measured span; an unmeasured
+complement is unknown, not a stable zero block. Frozen, atomic-only and
+joint-release controls retain the same affine gradient. Atomic-only release
+is unavailable if the retained coordinates already contain cell motion.
+The local stability-aware arm promotes the complete released eigensubspace
+at or below the registered resolution floor, then requires a resolved
+combined internal block of the specified index. This is training-only
+increment-dimension continuation, not an anharmonic branch search. When
+joint release is already valid, promotion changes no physical stationary
+response and cannot establish an accuracy advantage. Measured coverage,
+strong reference registration and material validation remain separate gates.
+
+For the same complete quadratic and admissible internal space, valid joint
+stationarity is also invariant under changes of the retained subspace and its
+dimension. Direct full-space solves verify this null across five partitions,
+including a correctly refused unstable-release case restored by promotion.
+This prevents a coordinate-partition gain from being claimed as physical
+prediction improvement. Independent nonharmonic, branch or equal-accuracy
+cost evidence is needed to establish an actual increment; a surface at fixed
+retained coordinates is a different object. The
+[partition check](../../benchmarks/hfo2_channels/20261008/partition_null_E057_20261010/README.md)
+is not a hafnia material forecast.
+
+### G.3. Signed path work as an energy-consistency diagnostic
+
+Displacement and instantaneous gradient coverage do not measure the energy
+change accumulated along a path. We therefore retain a separate, signed
+physical-work check on the sampled coordinate polygon. For successive
+coordinates $x_i$ and their conjugate physical energy gradients $g_i$, define
+
+$$
+W_i=\frac{g_i+g_{i+1}}{2}\cdot(x_{i+1}-x_i),\qquad
+R_i=E_{i+1}-E_i-W_i.
+$$
+
+Within each declared coordinate block, orthogonal retained, omitted and
+translation projectors partition this trapezoidal work exactly. Atomic
+mass coordinates and the original permitted open-cell coordinates retain
+their own dual gradients and units; no basis mixes these blocks. The cell
+contribution completes the physical contraction. Rotating a basis inside
+one span changes no result, but choosing another span changes its work.
+Neither spring nor projected NEB forces replace the physical gradient.
+
+These contributions are path-dependent signed work, not state-function
+energies assigned to phonon modes. Negative work is retained. The cumulative
+residual $\sum_i R_i$ diagnoses sampled energy-gradient consistency, but
+does not separate unsampled nonlinearity from force/stress error or bound
+the activation-barrier error. In particular, cancellation can make final
+endpoint closure small while the bottleneck-region discrepancy is large.
+The [implementation and finite-data checks](../../docs/SAMPLED_PATH_WORK.md)
+introduce no new calculator evaluations or reduction-model accuracy claim.
+
+### G.4. Work between the two seen strain conditions
+
+To distinguish imposed control from internal configuration changes, the
+cross-strain diagnostic uses a single ordered zero-strain PO+ chart
+$y=(u,a,t)$. Atomic displacements u, the three open-row coordinates a and
+$t=L_\epsilon\epsilon$ are length-valued; $L_\epsilon=5.12968067458423$
+Angstrom. They are not the mass-weighted phonon amplitudes in the projection
+figures. The first two cell rows follow the prescribed substrate scaling;
+the original third row remains open. Physical gradients retain both internal
+forces and substrate reaction stress.
+
+For equal-index native frames at the two training conditions, define
+
+$$
+W_i^{\mathrm{cross}}=\tfrac12[g_i(0)+g_i(0.01)]^T
+ [y_i(0.01)-y_i(0)],\qquad
+w_i=W_i^{\mathrm{cross}}-W_I^{\mathrm{cross}}.
+$$
+
+The residual is $\Delta[E_i-E_I]-w_i$. Orthogonal atomic, explicit rigid-
+translation, open-row and prescribed-control blocks partition w exactly.
+The row-cell/fractional-coordinate connection, ordered lift, energy unit
+and initial-pair subtraction are fixed for every channel; no minimum-image
+convention (MIC) relabelling
+or intermediate DFT geometry is introduced. Equal image index is an explicit
+discrete pairing, not a canonical correspondence of continuous MEPs.
+The observed peak indices must coincide before this energy contrast is
+identified with the difference of sampled maxima.
+
+These endpoint trapezoids are connection-dependent work, not unique mode
+energies, a frozen-slice measurement or a stationary barrier derivative.
+Their closure residual is not a total DFT or activation-barrier uncertainty
+bound. The two-configuration decomposition tests what a stress-only account
+omits without assigning a causal microscopic coupling.
+
+### G.5. Atomic/open-cell restrictions and finite-coordinate model checks
+
+The same measured internal matrix is restricted to the 33-dimensional
+translation-free atomic space and the three-dimensional open-cell space
+to distinguish their raw instabilities. The prescribed substrate is not
+part of either internal instability count. Let $P_a$ project onto the
+open-cell space in the fixed length metric and $P_-$ onto the entire
+negative eigenspace of the symmetrized internal matrix. We report
+$W_a=\operatorname{Tr}(P_aP_-)$ rather than assigning individual vectors
+across nearly degenerate eigenvalues. This trace is invariant under
+orthogonal re-expression of these spaces, including negative-space basis
+rotations, but not arbitrary changes of the cell length scale. It is
+neither an energy fraction nor a phonon amplitude. A raw-positive cell
+block permits a formal cell-stationary Schur reduction; its nonzero
+cell gradient and constant energy offset are retained, as in Appendix G.1.
+Raw signs do not supply a measured stability-resolution floor.
+
+We separately test whether an unchanged original-center quadratic describes
+finite-coordinate DFT candidates. Both finite-difference models use the
+same retained plane selected from the first-step matrix; no coefficients
+are fitted to the candidate energies. To isolate shape disagreement from
+the origin offset, we evaluate
+
+$$
+d(q)=[E_{\mathrm{model}}(q)-E_{\mathrm{model}}(0)]
+     -[E_{\mathrm{candidate}}(q)-E_{\mathrm{candidate}}(0)].
+$$
+
+Subtracting the already seen candidate origin makes this a retrospective
+shape diagnostic, not a calibration-free or independent prediction. The
+common six-coordinate cohort is $(0,0)$, $(-0.1,0)$, $(0,-0.1)$,
+$(0,0.1)$, $(0.1,0)$ and $(-0.2,0)$ Angstrom. The audited source snapshot
+contains nine T and six preserving candidates, all retained in the analysis.
+Equal numeric coordinates at the two centers do not identify the same
+physical structure. Finite released residuals also preclude treating
+retained partial gradients as exact conditional-envelope derivatives.
+
+For the separate joint length chart, a fixed orthonormal partition
+$x=x_0+V_q q+V_r r$ permits the work check of Appendix G.3 on neighboring
+conditional candidates. With $g_q=V_q^Tg$ and $g_r=V_r^Tg$, the endpoint
+trapezoids obey
+
+$$
+\Delta E-W_q=W_r+\mathcal R,\qquad
+W_\alpha=\tfrac12(g_{\alpha,i}+g_{\alpha,j})^T\Delta\alpha,
+\quad\alpha\in\{q,r\}.
+$$
+
+Here $\mathcal R=\Delta E-W_q-W_r$ is the full endpoint quadrature
+discrepancy, not an energy-error bound. The Cauchy inequality bounds only
+the released endpoint term,
+$|W_r|\leq(\|g_{r,i}\|+\|g_{r,j}\|)\|\Delta r\|/2$; it does not bound
+unsampled energy variation. We retain this term at finite convergence
+rather than setting it to zero by an exact-envelope assumption. Closed
+grid loops provide a complementary diagnostic: their raw energy changes
+telescope to zero, whereas finite endpoint-gradient quadrature need not.
+Neither a nonzero circulation nor a large neighboring displacement alone
+establishes nonconservative DFT forces or a branch discontinuity.
+
+The matched frozen-R comparison separates two parts of an origin-aligned
+shape discrepancy without refitting either quadratic. For each original
+center, R=0 at four axial coordinates $q=(-0.1,0)$, $(0,-0.1)$, $(0,0.1)$
+and $(0.1,0)$ Angstrom supplies the frozen DFT counterpart. Both original finite-difference
+models use the same retained plane and affine gradient. Writing $d_F$ and
+$d_R$ for the frozen and released shape discrepancies, respectively, define
+
+$$
+\delta_{\mathrm{rel}}(q)=[E_R(q)-E_F(q)]-[E_R(0)-E_F(0)],\qquad
+d_R(q)=d_F(q)+\delta_{\mathrm{rel}}^{\mathrm{model}}(q)
+                 -\delta_{\mathrm{rel}}^{\mathrm{DFT}}(q).
+$$
+
+Every term remains signed and is evaluated at the same q. The original
+raw and released origins are exactly reused. Because Q includes open-cell
+motion, R=0 is not a fully fixed-cell experiment. Positive released-minus-
+frozen candidate differences would be retained rather than clipped; a
+finite-gradient candidate is not assumed to be a global conditional minimum.
+
+We additionally released the 31 atomic directions orthogonal to the same
+retained observables, while fixing each frozen-Q seed's cell. This atomic-only
+treatment, A, was compared with the frozen treatment F and the joint atomic-
+and-open-cell treatment J at the origin and four axial coordinates per
+center. Both original quadratic models were fixed before the atomic labels
+were read. The signed differences $E_A-E_F$ and $E_J-E_A$ were retained pointwise,
+along with each treatment's own origin. The second difference includes atomic
+readjustment as well as cell motion; it is not a unique strain-energy term.
+Because Q contains cell motion, A does not impose one shared cell across Q.
+
+Reference comparisons at fixed coordinates must preserve the observables,
+not merely reuse their numerical labels. Let x denote the 36 internal
+coordinates, let $q=C^Tx$ specify the same two retained observables in every
+arm, and let the orthonormal columns of U span the permitted displacement
+space. For $x=Uz$, the affine quadratic $g^Tx+x^THx/2$ is stationary under
+these constraints when
+
+$$
+\begin{pmatrix}U^THU&U^TC\\ C^TU&0\end{pmatrix}
+\begin{pmatrix}z\\\lambda\end{pmatrix}
+=\begin{pmatrix}-U^Tg\\q\end{pmatrix}.
+$$
+
+The constrained minimum requires positive curvature on the null space of
+$C^TU$, not positive curvature on all of U. We retain the nonzero affine
+gradient and reject a nonpositive free block rather than pseudoinverting
+it. If U spans the complete internal space, a different orthonormal
+reference is a re-expression of the same constrained problem. Its energy
+and physical coordinates must agree with an equivalent Schur solve. This
+standard constrained-quadratic identity is a comparator check, not a new
+theorem or a source of prediction gain.
+
+The zero sign threshold used for this raw algebraic comparison is not a
+measured physical stability-resolution floor.
+
+For restricted-reference ablations, U instead contains the transported
+atomic reference span and all three open-cell directions. Directions
+outside U are clamped; this is not the full outside-reference release of
+Appendix D.5. Each resulting geometry is checked against the same original
+0.5-Angstrom radius and distance guard. We report the actual eligible
+coordinate sets and their intersection before comparing errors. Values
+outside the domain remain algebraic diagnostics, not failed physical
+predictions. These shared-observable ablations do not test a model defined
+with different native parent-phase coordinates and a different target.
+
+To compare the local quadratic with elementary nonlinear energy models,
+we also performed a post-hoc coarsening of each original 5x5 sheet.
+The nine nodes on the 3x3 subgrid with coordinates -0.2, 0 and 0.2 Angstrom
+were designated coarse; the other sixteen nodes were designated fine.
+Energy-only controls were piecewise bilinear interpolation, tensor-quadratic
+interpolation (degree at most two in each coordinate), and a six-parameter
+least-squares polynomial of total degree at most two. The tensor polynomial
+can include mixed terms of total degree four; it is not another harmonic
+model. Both unchanged H/g quadratics were retained. Comparisons used only
+fine-node cohorts supported by all included arms, with the origin-aligned discrepancy
+defined above. This split was chosen after seeing the training labels.
+Moreover, coarse-node relaxation starts had inherited fine-node geometries;
+withholding fine energies from a fit did not blind the preceding workflow.
+
+We checked the omitted preserving-center direction with four additional
+training statics, keeping the electronic contract unchanged. Let
+$x(\zeta)=x_r+\zeta v$, with cached released origin $x_r$ and the first-step
+lowest transverse eigenvector v in its fixed sign convention. The original
+two retained coordinates and strain control stayed fixed. Here $\zeta$ is
+an internal length, not the external substrate coordinate t of Appendix G.2.
+Amplitudes $\pm0.05$/$\pm0.10$ Angstrom, both original quadratic predictions
+and a four-attempt cap were frozen before these labels; the center was reused.
+We reported the distinct finite-amplitude quantities
+
+$$
+\kappa_E(h)=\frac{E(x_r+hv)+E(x_r-hv)-2E(x_r)}{h^2},\qquad
+\kappa_g(h)=\frac{v^Tg(x_r+hv)-v^Tg(x_r-hv)}{2h}.
+$$
+
+They coincide for an exactly quadratic energy, but need not coincide at
+finite amplitude in an anharmonic profile. Neither difference is a total
+physical-error bound. These were training structures, not independent targets.
+
+### G.6. Local curvature, optimizer and finite-model definitions
+
+For the zero-strain T-escape and preserving-switching sampled peaks, the
+local length-metric chart contains 36 translation-free internal coordinates:
+33 atomic coordinates and three components of the open cell row. The
+prescribed substrate control is separate. Its length scale is
+$L=5.12968067458423$ Angstrom; this chart is not the mass-weighted atomic
+projection used in the representation figures. Central differences of
+the physical energy gradient use steps 0.01 and 0.02 Angstrom in each of
+37 internal-plus-control directions, with two signs per step. The cached
+center is reused: each center requires 148 new SCFs, 296 in total. Control
+probes use $\delta\epsilon=h/L$, not the reserved physical +0.5% condition.
+Raw directional responses are retained; spectra below use the symmetrized
+internal block only. Finite-step disagreement and symmetrization changes
+are diagnostics, not physical error bounds or a stationary-index certificate.
+
+For a bounded conditional-relaxation comparison, the two negative
+eigendirections of the first-step internal matrix define fixed retained
+coordinates. The remaining 34 directions are released. Both optimizer
+arms start at the same cached center with the same retained coordinates,
+released-gradient norm target 0.03 eV/Angstrom, initial trust radius
+0.05 Angstrom, internal-displacement bound 0.5 Angstrom and minimum atomic
+separation 1.6 Angstrom. Each arm has a conservative limit of twelve new
+SCF attempts, including unsuccessful calls; cache hits are free. One arm
+uses the default identity initialization. The other uses the measured
+Hessian restricted to a metric-orthonormal released basis, $U^T H U$,
+as a standard quasi-Newton initialization. Cholesky factorization must
+succeed without clipping eigenvalues. This algebraic check does not
+certify stability after relaxation. The conditional norm target is not
+the ordinary NEB residual threshold. Preparation and all trial calls are
+charged separately; a budget-exhausted arm supplies a censored cost, not
+a completed denominator for a speedup factor.
+
+A separately registered branch trial resolves the shallow omitted internal
+direction explicitly. At each of five fixed Q pairs, two independent starts
+are displaced by $\zeta=\pm0.10$ Angstrom from the original conditional origin
+along the same unit direction $v_\zeta$. Both zeta and the other permitted released
+coordinates can move; the start sign is not a constraint. Safeguarded BFGS
+requires both $\|U^Tg\|\leq0.03$ eV/Angstrom and
+$|v_\zeta^Tg|\leq10^{-4}$ eV/Angstrom in the internal length chart. The additional
+test prevents an unresolved shallow direction from passing solely because
+its force is below the norm threshold. A positive numerical preconditioner
+combines the measured 33-direction restriction with a directional stiffness
+fitted to the four already seen signed gradient probes. It does not replace
+the original physical Hessian or certify release stability. Each start has
+the same twelve-attempt cap, geometry guards and electronic contract. The
+[pre-label protocol and exact optimizer](../../benchmarks/hfo2_channels/20261008/G3_preserving_branches_E260_20261017/protocol.md)
+retain both starts and their costs; the bounded training outcomes are
+reported in Appendix F.1. No further start or radius adjustment followed.
+
+We used all 81 energy/full-gradient observations from this trial, including
+rejected steps and budget-exhausted starts, for one finite model comparison.
+They were physical point observations, not 81 conditional minima. At each
+original curvature step separately, the measured 34 columns fixed the free
+block and its coupling to Q. The unmeasured symmetric Q/Q block supplied
+three fitted coefficients. The comparison family added seven terms,
+$\zeta^3,\zeta^4,Q_i\zeta^2,Q_iQ_j\zeta^2$ ($1\leq i\leq j\leq2$), and the 99 terms
+$r_j\zeta^2,r_jQ_1\zeta^2,r_jQ_2\zeta^2$ over the remaining 33 coordinates.
+The harmonic and nonlinear families therefore fitted 3 and 109 coefficients,
+respectively, keeping the same native origin energy and gradient. Coordinates
+were normalized by 0.1 Angstrom; gradient equations were multiplied by
+0.1 Angstrom before column-scaled least squares with relative SVD cutoff
+$10^{-10}$. Both original steps and five leave-one-Q-family-out diagnostics
+were retained, without choosing a degree, weight or step from independent
+labels. The [registered ansatz and exact fit](../../benchmarks/hfo2_channels/20261008/G3_anharmonic_model_E265_20261018/README.md)
+preserve the raw negative direction; a positive bath at the source point
+does not certify stability throughout the fitted domain.
+
+
+### G.7. Literature boundaries for the mode and pathway comparisons
+
+The geometric descriptors used here do not replace the symmetry-resolved
+mode analyses of earlier hafnia studies. Our Cmma and T reference controls
+are compared in their stated metrics and ranks. The homogeneous paths do
+not compute a domain-wall mechanism. The public Ma--Liu v3 supplement
+provides examples of distinct oxygen and mixed Hf--O M-to-PO mappings;
+the present M candidate is not assigned to one by barrier-height agreement.
+
+The supplementary Part 2 of Lee, Lee and Yu compares coupled-mode
+interpolation with restricted relaxation. Its Figure S3 uses a coupled
+interpolation parameter and cell energies, whereas Table S1 gives
+coefficients per formula unit. Those definitions differ from an
+initial/final-well response control and from the joint local q used here.
+Consequently, relaxation-induced profile lowering is not presented as
+a new method, and no literature mode coefficients are transferred into
+our energy model.
+([Lee et al., Supplementary Part 2 and Figure S3](https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fs41535-025-00841-9/MediaObjects/41535_2025_841_MOESM1_ESM.pdf#page=3))
 

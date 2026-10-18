@@ -1,9 +1,23 @@
-# Hafnia JCTC study: evidence-bound working manuscript
+# Hafnia pathway study: complete reading manuscript
 
-This is a research manuscript in development, **not submission-ready**.
+This is the complete scientific reading manuscript for author review,
+including its abstract, conclusions, references and in-article appendices.
 The [CPC software paper](../VARNEB_CPC/README.md) is a separate artifact.
 One editable source, [MANUSCRIPT_DRAFT.md](MANUSCRIPT_DRAFT.md), supplies the
 reading PDF through [the thin TeX wrapper](varneb_JCTC_draft.tex).
+
+[Read the compiled manuscript](reading/VARNEB_HfO2_manuscript.pdf).
+The current single-column review layout has51pages: the main article and
+references occupy about15pages, followed by the retained in-article appendices.
+The abstract/introduction begin on page1 and the conclusions on page13.
+
+The [Chinese reading guide](AUTHOR_READING_GUIDE.md) explains the argument,
+the supported contributions and the role of each main figure. The main
+methods now contain the material/comparison definitions and calculation
+recipe; the extended response theory and diagnostic procedures are retained
+in Appendix G. No numerical table row or figure source was changed by this
+editorial integration. The abstract has208words and the conclusion about
+300words; the bibliography supplies17verified article records.
 
 ## Current reading route: mechanism first
 
@@ -134,12 +148,12 @@ transition-state claims, but are not scheduled as additional experiments
 under this completed sampled-path protocol. The original preserving-plane
 refusal remains visible.
 
-The remaining article work is to finalize the abstract/conclusion, align
-the introduction and literature comparison with the measured material
-contribution, and prepare the final reproducible reading package. Journal
-positioning follows that contribution; a new-method JCTC claim cannot be
-inferred from local model fits. Existing numerical and structural evidence
-should be reused during this writing stage.
+The abstract, introduction and conclusion now state the measured material
+contribution consistently. The introduction synthesizes the relevant
+primary literature; the complete references credit both the material
+studies and the numerical tools. Journal positioning follows the material
+contribution; a new-method JCTC claim cannot be inferred from local model
+fits. The author-review PDF uses the existing data and figures throughout.
 
 ## Sources and reproduction
 
@@ -167,7 +181,13 @@ reading copy in build so its relative evidence links resolve with a reader
 that permits local links. External review-build paths recorded in receipts
 are layout snapshots, not portable source-data bundles.
 
-Build products are ignored by Git. Receipts identify the actual compiler,
+Build products are ignored by Git; the reviewed PDF is retained separately
+in reading/ for repository access. The October18 complete reading build
+passed119related scientific/manuscript checks. All51pages were inspected
+in contact sheets and the abstract, conclusions and bibliography at reading
+resolution; no overfull/underfull boxes or missing characters remain.
+All218numerical table lines and13figure targets are retained.
+Receipts identify the actual compiler,
 PDF bytes and inspected pages, not byte-identical PDFs across environments.
 Existing published assets and raw outputs are not overwritten by a new build.
 

@@ -4,6 +4,7 @@ Updated 2026-10-18. Scope: HfO2 manuscript and its source-to-table checks.
 
 | Term | Meaning used here | Does not establish |
 |---|---|---|
+| PO, T, M | Polar orthorhombic Pca21, tetragonal P42/nmc and monoclinic P21/c structural endpoints | Equivalent atom mappings or one unique pathway for each phase pair |
 | Signed geometric Qx/Qy/Qz | Unit-Cartesian-norm rotated T oxygen-shuffle projections in the original T lattice metric, with one fixed periodic gauge per ordered chain | Phonon occupations, assigned irreps, local joint Q1/Q2, or a complete atomic representation |
 | Polar displacement proxy | Mean O minus mean Hf displacement along original z in the same reference metric | Electronic polarization or switching charge |
 | Open-axis stretch | 100(Fyy-1) in the original T chart; substrate fixes original x and z | Green strain, elastic-energy partition or an isolated causal mechanism |
@@ -49,6 +50,8 @@ per-formula-unit normalization. No ASR, atom rematching, new reference selection
 or held-out labels are introduced by the manuscript integration.
 
 The local tests ask whether omitted coordinates are equilibrated well enough
-for a reduced description. They do not answer the final independent material
-prediction question. Full T optical and all four Cmma registrations remain
+for a reduced description. The completed +0.5% physical test answers a
+different question about the sampled response under a new substrate control;
+it did not establish a new reduced-model prediction advantage.
+Full T optical and all four Cmma registrations remain
 strong controls; unequal ranks are disclosed rather than called equivalent.
