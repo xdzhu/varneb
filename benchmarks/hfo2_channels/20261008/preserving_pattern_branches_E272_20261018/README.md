@@ -1,5 +1,46 @@
 # E272: preserving-mode branch controls
 
+## What is preserved, and what is not
+
+The registered name describes a signed reference distortion, **not** the
+coordination identity of each oxygen. A zero-DFT geometric check of the
+original0/+0.5/+1% endpoint pairs finds the same ordered role exchange at
+all three strains. With full-cell zero-based indices4--11, the initial
+oxygen Hf-neighbor counts are[4,4,3,3,4,4,3,3] and the final counts are
+[3,3,4,4,3,3,4,4]. Every assignment is unchanged across geometric distance
+cutoffs2.4/2.5/2.6/2.7A. This is postprocessing, not a changed electronic
+cutoff or input. Atom order and periodic images are retained.
+
+`oxygen_roles.json` gives each endpoint's third/fourth/fifth periodic Hf
+neighbor distances and count sensitivity. `inspect_oxygen_roles.py` and
+`tests/test_hfo2_preserving_oxygen_roles.py` reproduce this source-pinned
+three-condition check. No E/F/stress or new DFT is claimed by this
+geometry-only calculation. Coordination exchange alone does not identify
+plane crossing, an irrep, electronic polarization or a complete prior
+path-family label.
+
+### Literature boundary checked on2026-10-19
+
+| Primary source | What is already established | Consequence for our interpretation |
+| --- | --- | --- |
+| Qi, Singh and Rabe,2025, [lattice-mode analysis](https://doi.org/10.1103/PhysRevB.111.134106) | Polar and antipolar changes distinguish switching variants. | Coupled modes and multiple switching paths are not our new claim; our geometric T descriptors are not automatically their irreps. |
+| Mu et al.,2025, [bulk and electrode/ferroelectric/electrode switching](https://www.nature.com/articles/s41524-025-01633-2) | Their pathway definitions include transverse oxygen displacement and three/four-fold coordination exchange. | Our transverse structural proxy or endpoint role exchange alone is not discovery of a new family. Ordered trajectory and boundary matching are still required. |
+| Fan, Zhu and Liu,2025, [functional dependence of Pbcn](https://www.nature.com/articles/s41524-025-01647-w) | Mechanical constraints and strain reference affect phase/path comparisons. | Their hydrostatic, PO-referenced strain is not our two-vector T-referenced clamp; do not equate thresholds or change our PBE settings to match them. |
+
+The two open-access npj publisher HTML texts were read directly. For Qi,
+the2025 publisher abstract was checked; the accessible
+[2021v1 manuscript](https://arxiv.org/pdf/2108.12538) is an earlier version,
+not a substitute for claiming to have read the complete2025 published text.
+OpenAlex discovery returned429 and was not repeatedly queried. Only primary
+texts/metadata support the table, not third-party paper summaries.
+
+The candidate paper-level question remains whether admitting this mixed
+atomic accommodation changes reversal-versus-escape competition under
+the **same specified mechanical ensemble**, and whether its strain response
+survives initialization and the tested finite resolution. The present
+transverse geometry is an observation, not yet a new switching mechanism,
+a polarization-rotation measurement or a JCTC-readiness certificate.
+
 ## Complete original batch, 2026-10-19 00:36:18 CST
 
 Job28948425 finished COMPLETED0:0 after1h26m18s. All54 native SCFs,
