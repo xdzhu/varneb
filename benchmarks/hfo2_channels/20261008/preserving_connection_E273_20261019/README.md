@@ -52,7 +52,16 @@ finite E/F/stress; see `startup_snapshot.json`. This is one completed
 native call, not a complete NEB update or convergence claim. Only E269
 preserving and this connection job occupy study allocations.
 
+`collect_terminal.py` is a separate read-only postprocessor, not a runtime
+replacement. It requires the original COMPLETED0:0 handle, distinguishes
+native0.10 convergence from the24-update step cap, and retains every fresh
+SCF and its cost. The nine initial caches mean exactly7*updates fresh
+interior evaluations and no fresh endpoint calls. It neither relaunches
+a bounded failure nor promotes a live/timeout/exit-zero-only result.
+This terminal collection has not yet run while the original job is live.
+
 ```text
 python benchmarks/hfo2_channels/20261008/preserving_connection_E273_20261019/prepare.py --output FRESH_DIRECTORY
 python -m pytest -q tests/test_hfo2_preserving_native_connection.py tests/test_hfo2_preserving_connection_seed.py
+python -m pytest -q tests/test_hfo2_preserving_connection_terminal.py
 ```
