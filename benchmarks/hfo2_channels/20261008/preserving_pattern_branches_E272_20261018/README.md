@@ -1,5 +1,45 @@
 # E272: preserving-mode branch controls
 
+## Zero-new-DFT connection result, 2026-10-19
+
+The four selected native SCFs in the zero-minus prefix have now been
+independently reparsed locally: energy, forces, stress and physical chart
+gradients agree, the four held observables are preserved, and the separate
+energy/gradient directional secants at A are reproduced. The archive is
+still a partial batch snapshot, not all attempts or whole-job completion.
+
+Replacing only image4 with the native J candidate while preserving the
+original fixed per-atom integer lift gives the following full-polygon
+replay. Every tangent, spring and allowed atomic/cell force is recomputed:
+
+| Polygon | Sampled peak (meV/HfO2) | Peak image(s) | Ordinary NEB fmax (eV/A) |
+| --- | ---: | --- | ---: |
+| Original zero-strain preserving | 96.828183 | 4 | 0.098817 |
+| Original chain with free J image4 | 85.499889 | local peaks3/5, maximum3 | 0.125611 |
+
+The new center itself has residual0.018500eV/A; its neighbors3/5 have
+0.125611/0.124071. The central turn has cosine-0.4560 and the adjacent
+segments are longer. Thus the local13.617082meV/fu lowering does not
+automatically produce a smooth converged path, and subtracting it from
+the old barrier would give the wrong sampled maximum. This directly
+motivates a free-interior connection test, not another local Hessian.
+
+See `zero_minus_connection/analysis.json` and `analyze_prefix.py`.
+[The finite E273 follow-up](../preserving_connection_E273_20261019/protocol.md)
+admits only the first declared zero-minus branch, no midpoint or new strain
+matrix. Its inert exact-cache seed has all seven interiors free and the
+original endpoints fixed; it has **not** been submitted or admitted to run.
+Wait for E272 terminal data and a free study slot; no third dependent job.
+
+At00:15CST, the whole E272 job is still RUNNING with42 completed SCFs and
+no failure file. Both zero-strain signed A/J controls passed (12/1 calls
+each). Their J energies differ by0.000808meV/fu; this is a two-start
+observation, not a proof of symmetry or global equivalence. At+1%, minus A
+exhausted its12-attempt budget, so J/checks were not attempted and no
+candidate energy is reported. The original plus arm continues. This is
+an optimization-budget outcome, not an electronic-SCF failure or a
+permission to alter the physical settings.
+
 ## Actual native start, 2026-10-18 23:13 CST
 
 Execution source31c31178 was pushed before deployment. The fresh HF root is
