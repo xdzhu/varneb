@@ -201,7 +201,8 @@ mixing_beta=0.3.
 Byte-exact [INPUT](../../benchmarks/hfo2_channels/20261008/manuscript_local_reduction_E162_20261015/INPUT)
 and [KPT](../../benchmarks/hfo2_channels/20261008/manuscript_local_reduction_E162_20261015/KPT)
 files accompany the data. A calculation at a changed geometry always obtains
-new energy, forces and stress; only exact endpoint caches are reused.
+new energy, forces and stress; reuse is restricted to byte-linked static
+results at exactly identical geometries and electronic settings.
 
 The clamped channel comparisons use nine total images, including seven
 moving interior images, and the unchanged ordinary NEB residual target
@@ -238,6 +239,20 @@ target is 0.03 eV/Angstrom, distinct from the NEB threshold. Finite-step
 curvature probes, branch trials, model definitions, geometry guards and
 actual costs are retained in Appendices D--G. These diagnostics do not
 replace the measured path peaks or imply stable conditional minima.
+
+A separate across-strain control retains the four physical observables
+$Q_x,Q_z,Q_y$ and the polar displacement proxy along original z, rather
+than the local joint coordinates $Q_1,Q_2$. Their definitions are common
+to the three PO-to-T sampled peaks at 0, +0.5 and +1% strain, but their native
+values differ. Each F/A/J triplet holds its own four values exactly.
+After fixing three translations, A releases 29 atomic directions at
+exactly F's cell; J starts from A and adds the three open-cell directions,
+giving 32 released coordinates. The same 0.03 eV/Angstrom gradient target
+and electronic contract apply. A bounded quasi-Newton initialization
+repair retained the original unsuccessful attempts and reused successful
+native results exactly; it did not modify the physical calculation or
+replace the whole-path labels. These four-observable controls are not
+nested with the earlier two-coordinate controls.
 
 ### 2.4. Prospective strain test and prediction comparison
 
@@ -544,12 +559,52 @@ reported in Appendices E.7 and F.1. We therefore retain the measured
 relaxation effect without calling this neighborhood a stable conditional
 surface or retroactively lowering the path barrier.
 
+The matched physical-pattern test across strain found only small residual
+accommodation at the three native PO-to-T sampled peaks (Figure 5). Fixed-cell
+atomic release lowered their energies by 0.058, 0.009 and 0.167 meV/HfO2
+at 0, +0.5 and +1% strain, respectively. Additional joint release lowered
+them by 0.120, 0.077 and 0.073 meV/HfO2. The total local lowering was
+therefore 0.177, 0.086 and 0.240 meV/HfO2, with all six candidates meeting
+the same released-gradient target. No multi-meV residual lowering was
+observed under this four-observable restriction at these PO-to-T configurations.
+The native held values differ between strains, so these contrasts are not
+a fixed-coordinate strain derivative or a bound on a reoptimized path.
+
+Small energy lowering did not require unchanged internal geometry.
+The F-to-J atomic displacement norms were 0.070, 0.022 and 0.097 Angstrom
+in the common original-T metric, compared with 0.036, 0.002 and 0.078
+Angstrom for F-to-A. The additional A-to-J atomic readjustments were
+0.041, 0.021 and 0.020 Angstrom, while the open-axis stretch increased
+by 0.141, 0.099 and 0.101 percentage points relative to F.
+Thus the joint contrast includes coupled atomic motion even when its
+energy is small. These same-definition T controls do not isolate the
+cost of adding one coordinate to Figure 4, whose retained subspaces are
+different. Matched preserving controls and stability checks remain
+necessary before extending this comparison to both competing bottlenecks.
+
+![Matched physical-pattern T energy release and atomic motion](figures/hfo2_matched_T_20261018/matched_T_release.pdf)
+
+Figure 5. Residual accommodation at the three native PO-to-T sampled peaks with
+four physical observables retained. (a) Blue bars show the fixed-cell
+atomic lowering $E_F-E_A$; orange increments show the additional joint
+lowering $E_A-E_J$. The total height is $E_F-E_J$ in meV/HfO2.
+(b) Translation-free atomic displacement norms from F to A and F to J,
+using the original-T Cartesian metric over all twelve atoms. These are
+not per-atom RMS lengths, mass-weighted amplitudes or energy fractions.
+The definitions of $Q_x,Q_y,Q_z$ and the structural polar z proxy are
+identical across the three mechanical conditions, but their native values
+are not equal. Within each triplet they are fixed, and A fixes its entire
+seed cell. Each bar represents one computed gradient candidate, not a
+statistical replicate; no uncertainty interval is inferred. Local lowering
+is not a corrected path barrier or a stability certificate. Source data
+and independent native replays accompany the calculation archive.
+
 ### 3.4. The independent strain test resolves different sampled responses
 
 Both preregistered +0.5% bands met the same ordinary NEB criterion:
 the preserving flip reached 0.079773 eV/Angstrom and PO-to-T reached
 0.080825 eV/Angstrom. Their nine-image sampled peaks were 98.530877
-and 90.418178 meV/HfO2, respectively (Figure 5). Relative to zero strain,
+and 90.418178 meV/HfO2, respectively (Figure 6). Relative to zero strain,
 the preserving peak increased by 1.702694, whereas the T escape peak
 increased by 6.001554 meV/HfO2. The common starting well, electronic inputs,
 ordered path definitions and stopping criterion were kept as registered.
@@ -566,7 +621,7 @@ four-channel ordering at that condition.
 
 ![Independent midpoint paths and the errors of the frozen response predictions](figures/hfo2_independent_20261018/hfo2_independent_response.pdf)
 
-Figure 5. The independently evaluated +0.5% mechanical condition.
+Figure 6. The independently evaluated +0.5% mechanical condition.
 (a,b) Actual nine-image preserving and PO-to-T profiles alongside their
 zero/+1% training bands; blue, green and orange encode strain.
 (c) Sampled peaks versus strain, with blue circles for preserving and
@@ -729,6 +784,18 @@ with both oxygen and Hf motion. This directly limits the mechanistic
 information carried by those geometric projections. It also explains why a visually compact two-coordinate
 plot can omit energetically important accommodation. The observed effect
 remains local: it is not a replacement for a newly optimized whole path.
+
+The across-strain T control further separates a compact geometric
+description from an assertion that all omitted coordinates are already
+equilibrated. Retaining the displayed physical patterns and polar proxy
+left measurable atomic and open-cell readjustment, but the measured local
+lowering stayed below 0.25 meV/HfO2 at all three PO-to-T peaks. This provides
+no evidence for a large unaccounted complementary release at those
+configurations under the tested restriction. It does not certify their
+full stability, constrain every alternative T route, or explain the
+preserving response by subtraction. The corresponding same-definition
+preserving intervention is a separate requirement, rather than an
+assumption based on the smaller T relaxation energies.
 
 The model tests place an important limit on the methodological claim.
 A complete change of coordinates leaves the same quadratic response

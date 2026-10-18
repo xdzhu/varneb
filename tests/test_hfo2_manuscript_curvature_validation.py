@@ -73,9 +73,10 @@ def test_existing_tables_figures_citations_and_wrapper_are_not_displaced():
                    for line in text.splitlines() if line.lstrip().startswith('|'))
     assert not Counter(baseline['original_table_line_sha256_counts'])-counts
     figures=re.findall(r'!\[[^\]]*\]\(([^)]+)\)',text)
-    # The mechanism revision relocates all nine originals and adds three main figures.
+    # All original assets remain; the matched-T control adds one main figure.
     assert not Counter(baseline['original_figure_targets'])-Counter(figures)
-    assert len(figures)==13 and len(set(figures))==13
+    assert len(figures)==14 and len(set(figures))==14
+    assert 'figures/hfo2_matched_T_20261018/matched_T_release.pdf' in figures
     assert all(hashlib.sha256((PAPER/p).read_bytes()).hexdigest()==h
                for p,h in baseline['original_figure_sha256'].items())
     links=re.findall(r'(?<!!)\[[^\]]*\]\(([^)]+)\)',text)

@@ -40,11 +40,11 @@ two outcomes, three selected-pair contrasts and all138forecast records.
 All earlier training and preparation costs remain additional to the39
 endpoint/path SCFs and48.808889 allocation core-hours of this physical test.
 
-Figure5 compares complete paths, strain response and all numeric forecasts.
+Figure6 (formerlyFigure5 before the matched-T addition) compares complete paths, strain response and all numeric forecasts.
 Figure3 overlays signed shuffles and open-axis stretches. Existing Python
 matplotlib style is retained: normal-weight panel labels, four-sided frames,
 aligned axes, large text and framed translucent white legends outside data.
-Strain colors apply in5(a,b); channel colors in5(c,d), as stated in the caption.
+Strain colors apply in6(a,b); channel colors in6(c,d), as stated in the caption.
 The original training-only exports remain in the adjacent dated folder.
 
 Verification:91scoped scientific/plotting/related manuscript checks passed.

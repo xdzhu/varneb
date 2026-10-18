@@ -81,7 +81,8 @@ def test_old_113_table_lines_nine_figures_citations_and_wrapper_are_retained():
     assert 'Table A17. Four frozen directional training statics' in text
     figures = re.findall(r"!\[[^\]]*\]\(([^)]+)\)", text)
     assert not Counter(before["original_figure_targets"])-Counter(figures)
-    assert len(figures)==13 and len(set(figures))==13
+    assert len(figures)==14 and len(set(figures))==14
+    assert 'figures/hfo2_matched_T_20261018/matched_T_release.pdf' in figures
     assert all(
         hashlib.sha256((PAPER / n).read_bytes()).hexdigest() == h
         for n, h in before["original_figure_sha256"].items()

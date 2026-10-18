@@ -19,6 +19,35 @@ treatment, two-side equivalence, stable minimum or a corrected barrier.
 See the preflight/held/accepted/released/startup receipts. E269 preserving
 remains the only other study allocation; no midpoint branch is admitted.
 
+## First completed signed branch, partial batch snapshot
+
+At23:42:46 the whole job was still RUNNING,21 fresh calls completed and no
+failure file. Zero-strain minus A passed in12 attempts and J in1; two
+additional probes at **A** completed the one-direction check. The A/F and
+J/F changes are-13.599258/-13.617082meV/HfO2; J-A is-0.017824meV/HfO2.
+A/J released-gradient norms are0.008776/0.011617eV/A. At A only, the known
+direction has positive finite-step gradient/energy secants1.247123/0.965819
+eV/A². These are separate raw estimates, not a full Hessian or a TS certificate;
+J's full stability has not been tested.
+
+`prefix_0_minus.tar.gz` retains the four selected native records for A,J
+and its two direction probes, plus outcomes. The36-file byte manifest was
+verified locally. It is **not** all15 attempts or a terminal whole-job
+export; remaining signs/strain are still running. See the explicit scope
+in `prefix_0_minus_receipt.json`. Independent local physical replay follows.
+Do not overwrite or relaunch the original batch.
+
+This local lowering is comparable with the original12.4meV/HfO2 channel
+contrast, motivating a connection check, not subtraction from a barrier.
+The next bounded step is a zero-new-DFT replay of a complete nine-image
+polygon using original native images and this J candidate. All tangents,
+spring and allowed atomic/cell forces must be recomputed; copying the old
+NEB residual is invalid. Preserve endpoints/order/periodic gauge and all
+physical settings. Keep J as a free interior candidate, never a certified
+TS endpoint. Missing geometry/EFS evidence stops replay without imputation.
+Any later real continuation requires a free allocation and a separately
+frozen finite protocol. Original labels and prediction scores stay unchanged.
+
 The main question is whether oxygen rearrangements outside the displayed
 patterns account for the preserving bottleneck's residual accommodation.
 This differs from T's positive-atomic-block conditioning problem. Keep the

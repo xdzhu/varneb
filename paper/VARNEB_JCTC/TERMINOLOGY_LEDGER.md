@@ -14,6 +14,7 @@ Updated 2026-10-18. Scope: HfO2 manuscript and its source-to-table checks.
 | Prescribed control | Substrate strain, excluded from internal instability counting | A free unstable mode |
 | Coupled local direction | A direction of the joint atomic-cell matrix in the declared chart | An endpoint phonon eigenmode |
 | Gradient-converged candidate | Fixed retained coordinates, released-gradient norm at most 0.03 eV/Angstrom | Stable conditional minimum or unique branch |
+| Four-observable F/A/J control | Retain original-T-metric Qx/Qz/Qy and polar structural z proxy; A releases29 atomic directions at exactly F's cell, J adds3 open-cell directions | Equal native observable values across strain, a fixed-Q strain derivative, nesting with the older two-coordinate controls, or a revised barrier |
 | Conditional candidate sheet | Continued candidates at prescribed coordinates, with holes retained | Globally minimized PES or a certified smooth interpolation domain |
 | Curvature seed | Standard measured-Hessian quasi-Newton initialization | A new optimizer theorem, guaranteed convergence or whole-path speedup |
 | Raw negative count | Negative eigenvalues of a finite-step symmetrized matrix | Physical error bound or certified TS index |
@@ -29,7 +30,7 @@ Updated 2026-10-18. Scope: HfO2 manuscript and its source-to-table checks.
 | Geometry-eligible comparison set | Coordinates with an observed candidate and a model geometry passing the original guard | Stable released branch, a global domain or the error of a missing point |
 | Post-hoc coarsening | Geometric coarse/fine split made after the training labels and relaxation history were seen | A blinded preparation workflow, independent prediction or DFT-call saving |
 | Tensor-quadratic interpolation | Energy interpolation of degree at most two in each retained coordinate, including mixed total-degree-four terms | A harmonic Hessian model, a new algorithm or a validated conditional branch |
-| Atomic-only treatment | Release of 31 atomic fixed-Q directions at each frozen-Q seed cell | One common cell across Q, joint stationarity or transverse stability |
+| Atomic-only treatment | Fixed seed cell:31 open atomic directions in the older two-coordinate protocol,29 in the four-observable control | One common cell across Q, joint stationarity or transverse stability |
 | T-pattern displacement complement | Part of the paired translation-free F-to-A displacement orthogonal to the three fixed geometric T patterns in the original T metric | The locally released R subspace, a phonon assignment or a mode-energy fraction |
 | Additional joint-release difference | Signed E_J-E_A between the joint and atomic-only candidates at the same Q | A unique strain-energy contribution, global nesting or a whole-path mechanism |
 | Directional amplitude zeta | Internal length along the frozen omitted direction; case field t_A | Prescribed substrate-strain coordinate t or a phonon wave vector |
