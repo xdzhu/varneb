@@ -1,5 +1,32 @@
 # E271: bounded fixed-pattern numerical repair
 
+## Complete native result, 22:53:48 CST
+
+Job28947723 is COMPLETED0:0 after27m30s. All14 new native calls passed
+six-asset, real32MPI and complete E/F/stress replay. All six F/A/J release
+candidates now meet the unchanged0.03eV/A released-gradient target;
+the midpoint A is the exact original E270 result, not a new call.
+
+| Strain | E_A-E_F | E_J-E_A | E_J-E_F | New A/J calls |
+| --- | ---: | ---: | ---: | --- |
+| 0% | -0.057642 | -0.119733 | -0.177375 | 2/4 |
+| +0.5% | -0.008858 | -0.077234 | -0.086093 | 0/3 (A reused) |
+| +1% | -0.166696 | -0.073329 | -0.240024 | 4/1 |
+
+All energy differences are meV/HfO2. These small same-pattern local
+accommodation energies concern native sampled peaks with different held
+pattern values across strain. They are not fixed-Q strain derivatives,
+corrected barriers or stability/TS certificates. Full allowed gradients
+at J are0.02744/0.10813/0.16338eV/A; only the32-dimensional released
+subspace was the optimization target.
+
+Additional actual cost is14.266900 native-call proxy and14.666667 allocated
+core-hours. Including the preserved E270 failures gives55 new SCFs,
+51.536867 proxy and52.373333 allocated core-hours; all older curvature/path
+preparation costs remain additional. The14-call repair alone is not an
+end-to-end acceleration benchmark. The123-file native export is retained
+as `native_terminal.tar.gz`, with its receipt, without scattering raw files.
+
 ## Actual admission, 2026-10-18 22:26 CST
 
 Original E27028947338 completed0:0 with41 new SCFs and explicit incomplete

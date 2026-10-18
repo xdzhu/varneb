@@ -27,12 +27,17 @@ branch-discriminating start;0.10A is fixed before new DFT, not tuned to its
 outcomes. The quadratic estimate is a rationale, not a force prediction.
 
 The raw atomic block is indefinite, so T's whole-atomic-block numerical
-initializer cannot be used unchanged. A prospective standard on-site Jacobi
-initializer retains each atomic3x3 diagonal block and the open-cell3x3
-block from the same0.01A source, removing only numerical off-site/mixed
-blocks. Check positive definiteness without clipping/damping, then transport
-it covariantly. All actual DFT couplings remain unchanged. This is numerical
-initialization, not a fitted physical model or a new acceleration claim.
+initializer cannot be used unchanged. Build a standard on-site Jacobi
+matrix D from each atomic3x3 block and the open-cell3x3 block of the same
+0.01A source. For the unit branch vector v and P=I-vv^T, use the numerical
+initializer P D P + (1eV/A²)vv^T: default BFGS unit scale along the known
+branch coordinate, on-site scale on its complement. The initial pure
+on-site proposal made both signs exhaust12 calls in a bounded quartic
+regression; separating this coordinate passed without changing its physical
+negative curvature. This is a regression safeguard, not a materials benchmark.
+Check positive definiteness without clipping/damping, then transport
+covariantly. No eigenvalue of the physical Hessian is replaced and all
+actual DFT couplings remain unchanged. No fit or new acceleration claim.
 
 If admitted later, each signed A arm would have at most12 fresh attempts;
 only its successful A may seed one J arm, also capped at12. Two source
@@ -49,9 +54,13 @@ positive result does not certify the other28 released directions or a full
 conditional minimum. No extra displacement amplitudes or retries follow
 a negative result, and no whole Hessian is added.
 
-This package is **inert preparation only**: no worker, deployment, submission
-or new SCF is admitted by creating it. Both current study slots remain with
-E269/E271. A later execution gate must preserve ABACUS/PBE100Ry/full10auDZP,
+Creating the preparation does not admit execution. The separate worker
+requires the original T repair28947723 to be COMPLETED0:0, its own immutable
+bundle/native preflight, an exact accepted held allocation and RUN_DFT=1.
+It admits only0/+1% sources, independently of the still-pending E269
+midpoint source choice. Preserve ABACUS/PBE100Ry/full10auDZP,
 the original six asset bytes, Gamma2x2x2,P=E=0,32 native MPI,hf/hfacnormal01,
 ordinary NEB0.10/noCI and all existing sources/costs. It must also verify
-one free study allocation, a fresh namespace and exact held resources.
+one free study allocation, a fresh namespace and exact held resources:
+one node32CPUs,hfacnormal01,6h. Actual deployment/submission handles are
+recorded only when returned; no preparation or synthetic test is a DFT result.

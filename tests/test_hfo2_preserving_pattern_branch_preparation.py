@@ -71,6 +71,30 @@ def test_numerical_seed_positive_without_removing_physical_negative_curvature(pr
             u = module.release(data, n)
             np.linalg.cholesky(u.T@h[:n, :n]@u)
     assert result['diagnostics'][0]['atomic_min_eigenvalue_eV_A2'] < 0
+    zero = json.loads((folder/'seeds/0/branch_preparation.json').read_bytes())
+    v = np.asarray(zero['signed_starts'][1])/.1
+    np.testing.assert_allclose(np.asarray(zero['numerical_hessian_39'])@v, v, atol=1e-12, rtol=0)
+
+
+@pytest.mark.parametrize('sign', [-1., 1.])
+def test_unit_branch_scale_avoids_oversuppressing_a_negative_direction(sign):
+    from vcneb.mode_surface import _safeguarded_bfgs
+    class Cap(RuntimeError): pass
+    def run(inverse):
+        calls = 0
+        def evaluate(z):
+            nonlocal calls
+            if calls == 12: raise Cap()
+            calls += 1; a = z[0]; k = .4474490104
+            return -.5*k*a*a+.25*k*a**4/.3**2, np.array([-k*a+k*a**3/.3**2])
+        z, _ = _safeguarded_bfgs(evaluate, lambda z: abs(z[0]) <= .5,
+            np.array([sign*.1]), gradient_tolerance=.03, max_iterations=200,
+            initial_trust_radius=.05, initial_inverse_hessian=np.array([[inverse]]))
+        return z
+    with pytest.raises(Cap): run(1/20)
+    z = run(1.)
+    assert .26 < sign*z[0] < .34
+    assert -.4474490104+3*.4474490104*z[0]**2/.3**2 > 0
 
 
 def test_covectors_equal_measured_original_T_pattern_and_polar_changes(prepared):

@@ -1,4 +1,4 @@
-# E272: preserving-mode branch preparation, not a submitted job
+# E272: preserving-mode branch controls
 
 The main question is whether oxygen rearrangements outside the displayed
 patterns account for the preserving bottleneck's residual accommodation.
@@ -21,15 +21,18 @@ The original frozen geometry is not stationary (released atomic norm0.2881
 eV/A), so these matrices do not certify a physical saddle index.
 
 T's whole-atomic-block Jacobi initializer is not admissible here: that block
-itself has a negative released direction. The prepared numerical on-site
-3x3-block initializer is positive without clipping, while the true DFT
-couplings and measured negative curvature remain present.
+itself has a negative released direction. The prepared numerical initializer
+uses default unit BFGS scale along that branch and on-site3x3-block scale
+on its complement. It is positive without clipping, while the true DFT
+couplings and measured negative curvature remain present. A bounded quartic
+regression rejected a pure on-site seed before deployment; it is not a
+DFT acceleration benchmark. The initial proposal remains in Git4cd02905.
 
 `prepared/` contains only the original0/+1% P peaks, cached F E/F/stress,
 matched covectors, signed0.10A atomic starts and transported numerical seeds.
 Midpoint admission remains false pending the E269 initialization control.
-These are geometric proposals, not evaluated candidates. No new Hessian,
-DFT, deployment or submission occurred. See [the finite protocol](protocol.md):
+These are geometric proposals, not evaluated candidates. At preparation,
+no new Hessian, DFT, deployment or submission occurred. See [the finite protocol](protocol.md):
 at most96 optimization attempts plus8 single-direction checks if executed
 later; no whole Hessian, model fitting, altered parameters or unlimited retry.
 
@@ -38,7 +41,16 @@ python benchmarks/hfo2_channels/20261008/preserving_pattern_branches_E272_202610
 python -m pytest -q tests/test_hfo2_preserving_pattern_branch_preparation.py
 ```
 
-Six focused preparation tests and related numerical/export tests passed
-(30 total). They test the actual native inputs, direction signs/ranks,
+Eight focused preparation tests and five execution-plumbing tests now pass,
+alongside numerical/export checks (34 total in the admission run). They test the actual native inputs, direction signs/ranks,
 exact atomic-only cell embedding, positive numerical seed and nonexecution;
 they do not prove successful branch relaxation or a completed mechanism.
+
+`worker.py` and `run.slurm` implement the finite prospective batch. They
+import only pinned original E270/E271 helpers and the immutable E268 runtime,
+and never overwrite those sources or submit jobs. Each signed arm has its
+own evaluator/cache and at most26 fresh calls for A/checks/J; four signed
+arms give104 total. A missing A blocks J and direction checks. A known
+direction check can be positive while whole stability remains uncertified.
+The native preflight and held32CPU/6h admission must occur after T28947723
+has completed. Do not submit a speculative third dependent allocation.

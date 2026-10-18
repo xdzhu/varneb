@@ -26,7 +26,8 @@ POLICY = dict(channel='preserving', prepared_strains=[0., .01], midpoint_admitte
     maximum_directional_check_attempts=8, maximum_prospective_attempts=104,
     gradient_tolerance_eV_A=.03,
     initial_trust_radius_A=.05, maximum_coordinate_norm_A=.5,
-    numerical_seed='on-site atomic3x3 plus open-cell3x3 Jacobi',
+    numerical_seed='unit branch coordinate plus on-site Jacobi complement',
+    numerical_branch_curvature_eV_A2=1.,
     eigenvalue_clipping=False, new_full_Hessian=False, execution_admitted=False)
 
 
@@ -49,6 +50,22 @@ def release(data, n):
     if u.shape[1] != (29 if n == 36 else 32):
         raise ValueError('physical release space changed')
     return u
+
+
+def numerical_branch_initializer(onsite, direction):
+    """Default BFGS unit scale along the branch, on-site metric elsewhere.
+
+    This replaces no eigenvalue of the physical Hessian. It separates one
+    explicitly chosen numerical coordinate from its complement.
+    """
+    direction = np.asarray(direction)
+    if not np.isclose(direction@direction, 1., atol=1e-12, rtol=0):
+        raise ValueError('unit physical branch direction required')
+    np.linalg.cholesky(onsite)
+    vv = np.outer(direction, direction); p = np.eye(len(direction))-vv
+    result = p@onsite@p+POLICY['numerical_branch_curvature_eV_A2']*vv
+    np.linalg.cholesky(.5*(result+result.T))
+    return result
 
 
 def prepare(output):
@@ -130,6 +147,7 @@ def prepare(output):
     for i in range(12): onsite[3*i:3*i+3, 3*i:3*i+3] = source_hessian[3*i:3*i+3, 3*i:3*i+3]
     onsite[36:, 36:] = source_hessian[36:, 36:]
     np.linalg.cholesky(onsite)
+    numerical = numerical_branch_initializer(onsite, directions[0])
     reports = []
     for row in rows:
         transform = numeric.chart_transport(chart0, row['chart'])
@@ -137,7 +155,7 @@ def prepare(output):
         if not np.allclose(transform.T@c0, c, atol=1e-12, rtol=0):
             raise ValueError('physical pattern meanings changed in chart transport')
         direction = np.linalg.solve(transform, directions[0]); direction /= np.linalg.norm(direction)
-        matrix = transform.T@onsite@transform
+        matrix = transform.T@numerical@transform
         for n in (36, 39):
             ur = release(row['data'], n); np.linalg.cholesky(ur.T@matrix[:n, :n]@ur)
         starts = [amplitude*direction for amplitude in POLICY['signed_atomic_starts_A']]
