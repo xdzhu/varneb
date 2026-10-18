@@ -2,6 +2,8 @@
 import importlib.util
 import json
 from pathlib import Path
+import subprocess
+import sys
 
 import numpy as np
 import pytest
@@ -95,3 +97,31 @@ def test_native_slurm_recipe_stays_ordinary_and_uses_mpirun32():
     assert '--steps 80' in text and '--time=24:00:00' in text
     assert '--cpus-per-task=32' in text and 'mpirun -np 32' in text
     assert 'I_MPI_HYDRA_BOOTSTRAP=fork' in text
+
+
+def test_readonly_inspector_cli_has_no_stdlib_shadow_or_cwd_dependency(tmp_path):
+    helper = ROOT/CASE/'inspect_paths.py'
+    assert not helper.with_name('inspect.py').exists()
+    result = subprocess.run([sys.executable, str(helper), '--help'], cwd=tmp_path,
+                            capture_output=True, text=True, timeout=30)
+    assert result.returncode == 0, result.stderr
+    assert '--audit-prefix' in result.stdout
+
+
+def test_six_physical_neighborhoods_replay_allowed_not_raw_reaction_force():
+    spec = importlib.util.spec_from_file_location('E269_neighborhoods', ROOT/CASE/'neighborhoods.py')
+    module = importlib.util.module_from_spec(spec); spec.loader.exec_module(module)
+    report = module.register(ROOT)
+    rows = report['rows']
+    assert len(rows) == 6 and report['new_DFT_calls'] == report['new_curvature_probes'] == 0
+    assert {(r['channel'], r['substrate_strain']) for r in rows} == {
+        (c, s) for c in ('preserving', 'T') for s in (0., .005, .01)}
+    assert [r['sampled_peak_meV_fu'] for r in rows] == pytest.approx([
+        96.8281830028, 98.5308769164, 125.4244311581, 84.4166238812, 90.4181783358, 96.7636503947])
+    for row in rows:
+        assert not row['stationary_bottleneck_certified'] and not row['Hessian_index_certified']
+        assert row['peak_allowed_physical_norm_eV_A'] >= row['peak_allowed_physical_max_vector_eV_A']
+        assert abs(row['peak_allowed_tangential_force_eV_A']) <= row['peak_allowed_physical_norm_eV_A']
+        assert row['ordinary_chain_fmax_eV_A'] < .10
+    assert abs(rows[1]['peak_allowed_tangential_force_eV_A']) < .002
+    assert rows[1]['peak_allowed_physical_norm_eV_A'] > .2
