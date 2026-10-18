@@ -30,6 +30,7 @@ Updated 2026-10-18. Scope: HfO2 manuscript and its source-to-table checks.
 | Post-hoc coarsening | Geometric coarse/fine split made after the training labels and relaxation history were seen | A blinded preparation workflow, independent prediction or DFT-call saving |
 | Tensor-quadratic interpolation | Energy interpolation of degree at most two in each retained coordinate, including mixed total-degree-four terms | A harmonic Hessian model, a new algorithm or a validated conditional branch |
 | Atomic-only treatment | Release of 31 atomic fixed-Q directions at each frozen-Q seed cell | One common cell across Q, joint stationarity or transverse stability |
+| T-pattern displacement complement | Part of the paired translation-free F-to-A displacement orthogonal to the three fixed geometric T patterns in the original T metric | The locally released R subspace, a phonon assignment or a mode-energy fraction |
 | Additional joint-release difference | Signed E_J-E_A between the joint and atomic-only candidates at the same Q | A unique strain-energy contribution, global nesting or a whole-path mechanism |
 | Directional amplitude zeta | Internal length along the frozen omitted direction; case field t_A | Prescribed substrate-strain coordinate t or a phonon wave vector |
 | Finite-amplitude energy/gradient secants | Separately defined kappa_E and kappa_g at the declared amplitude | Equal values outside a quadratic profile, total error or stationary-index certification |

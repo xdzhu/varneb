@@ -224,6 +224,13 @@ $Q_x$/$Q_z$ projection. Retained coordinates are held fixed. The atomic-only
 treatment releases 31 atomic directions; joint release also allows the
 permitted cell response.
 
+To connect these local controls to the path descriptors, we reconstruct
+all F/A/J geometries in the same ordered reference chart and project their
+translation-free atomic displacement differences onto the three geometric
+T patterns of Section 2.2 and the complete orthogonal complement. Norms
+use the original T Cartesian metric over all twelve atoms, without mass
+weighting; their squared fractions describe geometry, not energy.
+
 The pointwise differences $E_A-E_F$ and $E_J-E_A$ measure the observed
 treatment contrasts. The latter includes atomic readjustment as well as
 cell motion, so it is not a unique strain-energy term. The released-gradient
@@ -488,13 +495,36 @@ each seed, and cannot be attributed solely to release of the open lattice
 direction. Additional joint release includes atomic readjustment, so its
 energy difference is not a unique elastic contribution.
 
-![Atomic and additional joint relaxation at matched retained coordinates](figures/hfo2_mechanism_20261018/hfo2_relaxation.pdf)
+Reprojecting the same candidates identifies a structural distinction
+that the displayed oxygen amplitudes alone miss. Across the five
+preserving controls, the fixed-cell F-to-A displacement has a T-pattern
+component of 0.055--0.063 Angstrom and an orthogonal component of
+0.303--0.316 Angstrom. The latter accounts for 95.9--97.1% of its squared
+norm. Oxygen contributes 80.8--81.2% of the total squared displacement,
+with a non-negligible Hf contribution; these are not energy percentages.
+The preserving $Q_x$ moves toward zero while $Q_z$ changes by less than
+0.000335 Angstrom. By comparison, the T controls change $Q_z$ by
+0.020--0.036 Angstrom despite their much smaller atomic energy lowering.
+Thus the local energy contrast accompanies accommodation beyond the
+three plotted T patterns, rather than a common change of one displayed
+amplitude. These observations concern two zero-strain neighborhoods;
+they do not by themselves determine the origin of the whole-path
+strain response.
 
-Figure 4. Measured local energy lowering at the five prescribed retained
-coordinate pairs around (a) the preserving and (b) the T sampled peaks.
+![Local energy release and its geometric accommodation](figures/hfo2_accommodation_20261018/hfo2_accommodation.pdf)
+
+Figure 4. Local energy release and the atomic accommodation absent from
+the displayed T-pattern coordinates. (a,b) Measured energy lowering at
+the five prescribed retained coordinate pairs around the preserving
+and T sampled peaks, respectively, at zero substrate strain.
 Blue bars show $E_{\mathrm{frozen}}-E_{\mathrm{atomic}}$; orange increments
-show $E_{\mathrm{atomic}}-E_{\mathrm{joint}}$. The two panels deliberately
-use different vertical ranges. All ten physical points are included once;
+show $E_{\mathrm{atomic}}-E_{\mathrm{joint}}$. (c,d) Norms of the same
+F-to-A translation-free displacement projected onto the three geometric
+T patterns and their complete orthogonal complement. These are lengths
+over the twelve-atom cell, not per-atom RMS displacements or energy
+fractions; the two norms do not add linearly. Within each row, the two
+panels deliberately use different vertical ranges.
+All ten physical points are included once;
 the two curvature probe steps are not duplicate energy observations.
 $Q_1,Q_2$ are the fixed joint-length coordinates of Section 2.3, not the
 geometric $Q_x,Q_z$ of Figure 3. Each atomic-only treatment fixes its own
@@ -693,7 +723,10 @@ atomic release at each fixed seed cell, whereas the T neighborhood has
 a much smaller atomic lowering. Thus lattice freedom is not the sole
 source of relaxation in the preserving neighborhood. This result supports
 a coupled atomic-cell interpretation without assigning a unique energy
-fraction to one mode. It also explains why a visually compact two-coordinate
+fraction to one mode. The paired structural data place most of this
+fixed-cell accommodation outside the three displayed T-pattern directions,
+with both oxygen and Hf motion. This directly limits the mechanistic
+information carried by those geometric projections. It also explains why a visually compact two-coordinate
 plot can omit energetically important accommodation. The observed effect
 remains local: it is not a replacement for a newly optimized whole path.
 

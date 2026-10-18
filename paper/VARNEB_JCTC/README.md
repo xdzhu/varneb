@@ -9,8 +9,10 @@ reading PDF through [the thin TeX wrapper](varneb_JCTC_draft.tex).
 [Read the compiled manuscript](reading/VARNEB_HfO2_manuscript.pdf).
 The single-column review layout retains the main article, references and
 in-article appendices. Historical page counts belong to their dated builds;
-the current PDF is regenerated from the single Markdown source. The T-control
-revision has52pages; its added result and interpretation appear on pages12--13.
+the current PDF is regenerated from the single Markdown source. The
+accommodation revision has53pages; the expanded mechanism Figure4 is on
+page10. The T-control result remains in Section3.4, without changing the
+original labels or forecast scores.
 
 The [Chinese reading guide](AUTHOR_READING_GUIDE.md) explains the argument,
 the supported contributions and the role of each main figure. The main
@@ -34,7 +36,9 @@ independent prediction checks.
 - Figure 3 follows signed oxygen shuffles and open-axis stretch on both flips
   and T escape; the +0.5% independent paths are now included.
 - Figure 4 separates observed atomic-only and additional joint relaxation
-  at all five local coordinates per center.
+  at all five local coordinates per center. Its added lower row connects
+  those same candidates to the T-pattern triplet and its geometric
+  complement; most preserving F-to-A motion lies in the latter.
 - Figure 5 completes the independent strain test with actual paths, the
   nonlinear sampled competition and errors of all three numeric forecasts.
 
