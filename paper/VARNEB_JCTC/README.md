@@ -7,9 +7,10 @@ One editable source, [MANUSCRIPT_DRAFT.md](MANUSCRIPT_DRAFT.md), supplies the
 reading PDF through [the thin TeX wrapper](varneb_JCTC_draft.tex).
 
 [Read the compiled manuscript](reading/VARNEB_HfO2_manuscript.pdf).
-The current single-column review layout has51pages: the main article and
-references occupy about15pages, followed by the retained in-article appendices.
-The abstract/introduction begin on page1 and the conclusions on page13.
+The single-column review layout retains the main article, references and
+in-article appendices. Historical page counts belong to their dated builds;
+the current PDF is regenerated from the single Markdown source. The T-control
+revision has52pages; its added result and interpretation appear on pages12--13.
 
 The [Chinese reading guide](AUTHOR_READING_GUIDE.md) explains the argument,
 the supported contributions and the role of each main figure. The main
@@ -135,6 +136,15 @@ Geometry coverage, gradient coverage, integrated work and prediction accuracy
 are different measurements.
 
 ## Scope closure and remaining manuscript work
+
+The later [finite mechanism-closure plan](../../docs/HFO2_MECHANISM_CLOSURE_2026-10-18.md)
+is active and is distinct from the completed forecast protocol. The +0.5%
+T continuation from the +1% band has completed, with a sampled peak of
+90.286243 meV/HfO2 versus the original 90.418178. Section 3.4 retains both
+and explains why agreement of this scalar does not establish identical
+structures or a continuous-barrier error bound. The preserving counterpart
+is still being evaluated; it is not imputed from the T outcome. None of the
+original target labels or frozen prediction scores is replaced.
 
 The bounded ten-start trial, revised P8 test and two-path physical +0.5%
 test are complete. Their failures and unavailable forecasts are results,

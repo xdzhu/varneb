@@ -588,6 +588,22 @@ continuous-path curvature from numerical path-relaxation effects.
 Accordingly, the measured deviation from B0 is reported for the declared
 sampled observable, without claiming a transition-state error bound.
 
+A separate continuation from the +1% training band tested initialization
+sensitivity at the same +0.5% boundary, with identical cached endpoints
+and electronic settings. For PO-to-T, this control also required two
+ordinary NEB updates and 21 interior SCFs. It reached a residual of
+0.082374 eV/Angstrom and a sampled peak of 90.286243 meV/HfO2, only
+0.131935 meV/HfO2 below the zero-strain-start result. The peak geometries
+were not identical: their $Q_x$ values were -0.741484 and -0.725241
+Angstrom, and open-y stretches were -0.502644% and -0.605986%,
+respectively. Thus the T sampled energy was insensitive to this particular
+change of starting band, despite a remaining geometric difference. This
+finite control is not an error bound on the continuous barrier or evidence
+of a unique MEP. The corresponding preserving control is not yet complete,
+so no updated two-channel contrast is formed. The original prospective
+labels and all frozen forecast scores remain unchanged; the control adds
+23.653333 allocation core-hours, separate from the test cost below.
+
 All 138 frozen forecast records remain: six numerical predictions and
 132 unavailable physical-transfer records across the two cases.
 The local reduced models had not supplied a valid transfer to this
@@ -644,7 +660,13 @@ while the signed mode patterns retain their route identities. This favors
 examining route-dependent atomic and lattice accommodation over an
 interpretation based only on endpoint well shifts. The warm-started ordinary
 bands do not identify a physical bifurcation or isolate the origin of this
-finite-resolution nonlinearity.
+finite-resolution nonlinearity. The completed reverse-continuation control
+supports the T sampled peak against one change of initialization, but does
+not close this question for preserving reversal. Consequently the
+nonmonotonic sampled contrast is not yet an initialization-independent
+strain-response law. In particular, nearly equal T peak energies at
+different oxygen amplitudes and open-axis stretches do not isolate a
+unique atomic or elastic cause.
 
 The mode and strain results explain why a single polar coordinate or an
 endpoint phase label is insufficient. The two flips reverse essentially
@@ -744,9 +766,13 @@ geometries, native-output exports, figure source tables, projection and
 relaxation analyses, frozen forecasts and replay scripts supporting this
 article are included in the same repository and linked throughout the
 appendices. The calculation and data version used for the completed
-independent test is Git revision dc328d50. The reading manuscript and its
-TeX wrapper are in paper/VARNEB_JCTC; the scalar tables and main figures
-can be regenerated without launching a DFT calculation. Executables and
+independent test is Git revision dc328d50. The later T initialization
+control and its native outputs are archived separately in the
+[E269 case](../../benchmarks/hfo2_channels/20261008/midpoint_reverse_E269_20261018/README.md)
+at data revision b18a8352; they do not replace the original forecast labels.
+The reading manuscript and its TeX wrapper are in paper/VARNEB_JCTC;
+the scalar tables and main figures can be regenerated without launching
+a DFT calculation. Executables and
 pseudopotential/orbital binaries are not redistributed with these exports;
 their exact identities are recorded by the archived input hashes.
 
