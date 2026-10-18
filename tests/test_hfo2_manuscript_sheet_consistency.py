@@ -76,7 +76,7 @@ def test_old_113_table_lines_nine_figures_citations_and_wrapper_are_retained():
     assert not Counter(before["original_table_hash_counts"])-counts
     # Original119 plus shared-reference(16), nonlinear(7), atomic(6), statics(6).
     # The completed P8 comparison adds6main and25appendix lines, no old loss.
-    assert sum(counts.values())==218
+    assert sum(counts.values())==222
     assert 'Table A21. Prospective T local errors' in text and 'Table A18. All frozen T test arms' in text
     assert 'Table A17. Four frozen directional training statics' in text
     figures = re.findall(r"!\[[^\]]*\]\(([^)]+)\)", text)

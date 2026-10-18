@@ -29,3 +29,17 @@ def test_no_frozen_target_replacement_or_stationary_saddle_claim():
     assert 'the small T releases cannot fill that gap' in text
     figures=re.findall(r'^Figure (\d+)\.',text,re.M)
     assert figures==[str(i) for i in range(1,9)]
+
+
+def test_frozen_crossover_table_uses_the_measured_conditional_contrasts():
+    text=PAPER.read_text(encoding='utf-8')
+    data=json.loads((BASE/'midpoint_factorial_E274_20261019/analysis/analysis.json').read_bytes())
+    table=text.split('Table 4. Frozen midpoint contrasts',1)[1].split('![',1)[0]
+    for label,row in zip(('Preserving','PO-to-T'),data['rows']):
+        line=next(l for l in table.splitlines() if l.startswith('| '+label+' |'))
+        measured=[float(s.strip()) for s in line.split('|')[2:-1]]
+        expected=[row[k] for k in ('diagonal_change_meV_fu','internal_at_A_cell_meV_fu',
+            'cell_at_A_internal_meV_fu','finite_interaction_meV_fu')]
+        assert len(measured)==len(expected)==4
+        assert all(abs(a-b)<=5.0001e-7 for a,b in zip(measured,expected))
+    assert 'neither reoptimized barriers nor unique' in table

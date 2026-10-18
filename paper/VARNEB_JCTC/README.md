@@ -10,10 +10,11 @@ reading PDF through [the thin TeX wrapper](varneb_JCTC_draft.tex).
 The single-column review layout retains the main article, references and
 in-article appendices. Historical page counts belong to their dated builds;
 the current PDF is regenerated from the single Markdown source. The
-terminal connection/initialization revision has57pages. Figure4 is onpage10,
-the three-strain T release Figure5 onpage11, the connected preserving
-Figure6 onpage13, independent strain Figure7 onpage14 and completed
-initialization Figure8 onpage16. Original labels and forecast scores remain.
+terminal/crossover revision has58pages. Figure4 is onpage11,
+the three-strain T release Figure5 onpage12, the connected preserving
+Figure6 onpage14, independent strain Figure7 onpage15 and completed
+initialization Figure8 onpage17. Table4 onpage16 adds the measured frozen
+atomic/cell crossover. Original labels and forecast scores remain.
 
 The October19 update adds the completed zero-minus preserving local
 control to Results3.3 and Discussion4. Holding the original three T-pattern
@@ -27,13 +28,17 @@ The completed midpoint initialization check shifts preserving by10.820844
 but T by only-.131935meV/fu; the registered nonmonotonic strain signal
 is therefore not initialization-independent. These are material results,
 not a new reduced-model or optimizer-acceleration claim.
+Four additional frozen SCFs retain10.36--11.40meV/fu of that preserving
+difference at either fixed cell. Conditional cell effects are+.459/-.578
+and their interaction-1.036meV/fu, so an open-cell-only explanation fails
+without implying a unique mode/elastic partition. The finite batch is complete.
 
 The [Chinese reading guide](AUTHOR_READING_GUIDE.md) explains the argument,
 the supported contributions and the role of each main figure. The main
 methods now contain the material/comparison definitions and calculation
 recipe; the extended response theory and diagnostic procedures are retained
-in Appendix G. All218existing numerical table lines and14prior figure
-targets remain; the two actual terminal comparisons add two main figures.
+in Appendix G. All218previous numerical table lines remain; four new lines
+form Table4. All16figure targets from the terminal comparisons remain.
 The bibliography supplies17verified article records.
 
 ## Current reading route: mechanism first

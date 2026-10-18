@@ -19,10 +19,10 @@ and relaxing every interior yields a sampled peak of 83.2 rather than
 A prospectively frozen +0.5% test gives preserving and escape peaks of
 98.5 and 90.4 meV/HfO2. Subsequent initialization controls change the
 preserving peak by 10.8 meV/HfO2 but the escape peak by only 0.13 meV/HfO2.
+Frozen crossovers retain the preserving gap at both fixed cells, ruling
+out an open-cell-only explanation of this finite sensitivity.
 Thus a compact mode projection and an ordinary force pass alone do not
 make the inferred competition or strain nonlinearity initialization-independent.
-The measured local intervention and lower connected candidate link this
-limitation to atomic accommodation beyond the displayed patterns.
 The conclusions concern finite sampled paths under the specified boundary,
 not certified saddles or a global ordering; the independent tests establish
 no additional predictive advantage of the local reduced models.
@@ -317,6 +317,18 @@ selected-pair difference, every frozen error or abstention, and actual
 SCF/allocation cost. The [complete preregistration and data](../../benchmarks/hfo2_channels/20261008/physical_holdout_E268_20261018/README.md)
 record the chronology. This fixed-protocol check tests response transfer;
 it does not search for new channels or resolve continuous-path curvature.
+
+After the initialization control, a finite frozen intervention exchanged
+the peak internal fractional patterns $s_A,s_B$ and open cell rows
+$H_A,H_B$ at the same +0.5% substrate. A denotes the zero-strain-start
+terminal candidate and B the +1%-start terminal candidate. Native AA and
+BB results were reused; only AB and BA required new static SCFs, two per
+channel. The internal contrast at $H_A$ is $E_{BA}-E_{AA}$, the affine-cell
+contrast at $s_A$ is $E_{AB}-E_{AA}$ and their finite interaction is
+$E_{BB}-E_{BA}-E_{AB}+E_{AA}$. Holding fractional patterns under a cell
+change is affine strain, not fixed Cartesian atoms. This intervention
+does not relax a configuration, define a unique mode-energy partition
+or replace a path label.
 
 ## 3. Results: competing responses under one mechanical intervention
 
@@ -776,6 +788,32 @@ unchanged. These two initialization controls add 251.048889 allocation
 core-hours, including the T control already described, not a new cost for
 re-exporting it.
 
+The frozen crossover test showed that the preserving difference largely
+remained at a fixed cell (Table 4). Changing the internal pattern raised
+the energy by 11.398469 meV/HfO2 at $H_A$ and 10.362204 at $H_B$.
+Changing only the cell instead gave +0.458639 at $s_A$ but -0.577625 at
+$s_B$. Their -1.036265 meV/HfO2 interaction makes the conditional effects
+order-dependent. Thus the open-row difference alone does not explain
+the 10.820844 meV/HfO2 initialization gap. For T, both internal contrasts,
+both cell contrasts and the interaction were below 0.1 meV/HfO2 in
+magnitude. This connects the structural differences in Figure 8 to a
+controlled energetic comparison, without distinguishing a separate
+continuous branch from residual atomic relaxation. All four new SCFs
+completed under the unchanged input contract, costing 3.493333 allocation
+core-hours; existing diagonal and earlier preparation costs are additional.
+
+Table 4. Frozen midpoint contrasts in meV/HfO2. The last three columns
+sum to the diagonal change. Internal patterns and cells are those of
+the two completed initialization outcomes, not selected phonon modes.
+The alternative intervention order is reported above and in the source
+data. These differences are neither reoptimized barriers nor unique
+atomic and elastic energy components.
+
+| Channel | Diagonal change | Internal at $H_A$ | Cell at $s_A$ | Interaction |
+|---|---:|---:|---:|---:|
+| Preserving | 10.820844 | 11.398469 | 0.458639 | -1.036265 |
+| PO-to-T | -0.131935 | -0.056351 | -0.050711 | -0.024874 |
+
 ![The midpoint preserving peak is more initialization-sensitive than escape to T](../../benchmarks/hfo2_channels/20261008/midpoint_reverse_E269_20261018/terminal_comparison/hfo2_midpoint_seed.pdf)
 
 Figure 8. Two ordinary-converged initializations at the same +0.5%
@@ -790,9 +828,11 @@ the larger preserving difference prevents attributing the registered
 midpoint nonlinearity uniquely to intrinsic strain response. This is a
 follow-up sensitivity test, not a second independent prediction cohort,
 an exhaustive branch search or a continuous-barrier error bound.
+The finite energetic intervention at these two peak pairs is in Table 4.
 
 All 138 frozen forecast records remain: six numerical predictions and
 132 unavailable physical-transfer records across the two cases.
+
 The local reduced models had not supplied a valid transfer to this
 physical control, so this test establishes no predictive advantage for
 a branch-adapted mode model. The bounded physical test is complete; its
@@ -855,6 +895,12 @@ Consequently the nonmonotonic registered contrast is not an
 initialization-independent strain-response law. In particular, nearly equal T peak energies at
 different oxygen amplitudes and open-axis stretches do not isolate a
 unique atomic or elastic cause.
+The frozen crossover test adds a more limited causal distinction:
+the preserving initialization difference persists at both fixed cells,
+whereas exchanging the open row has much smaller and pattern-dependent
+effects. Internal accommodation, not the open-cell difference alone,
+must therefore enter its explanation. The nonzero finite interaction
+also prevents treating these contrasts as a unique mode/elastic partition.
 
 The mode and strain results explain why a single polar coordinate or an
 endpoint phase label is insufficient. The two flips reverse essentially
@@ -970,6 +1016,9 @@ retaining transverse atomic accommodation. This brings reversal and
 examined T escape close enough that their physical ordering remains
 unresolved. The original displayed patterns and force criterion alone
 were insufficient to make that competition robust.
+At the midpoint, the frozen crossovers also retain the initialization
+gap at either fixed cell, whereas the smaller cell effects depend on
+the internal pattern. Open-cell response alone is therefore not its cause.
 
 The independent comparison further shows that good interpolation for
 T escape does not ensure a comparable description of preserving reversal.
@@ -996,6 +1045,9 @@ and the lower connected zero-strain candidate in the
 [E273 case](../../benchmarks/hfo2_channels/20261008/preserving_connection_E273_20261019/README.md),
 whose terminal data first entered Git revision 902da0d9. Neither follow-up
 replaces the original forecast labels.
+The [four-state frozen intervention](../../benchmarks/hfo2_channels/20261008/midpoint_factorial_E274_20261019/README.md)
+retains its four native SCFs, reused diagonal provenance and conditional
+contrasts separately, without adding a new prediction cohort.
 The reading manuscript and its TeX wrapper are in paper/VARNEB_JCTC;
 the scalar tables and main figures can be regenerated without launching
 a DFT calculation. Executables and
