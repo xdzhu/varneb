@@ -78,3 +78,93 @@ complete E/F/stress. It took102.523s. Its retained-pattern defect is
 fixed-cell/physical-pattern contract on an actual DFT trial, not only a toy
 function. No treatment was complete at that snapshot. `startup_receipt.json`
 is explicitly a prefix observation, not an audit of the unfinished batch.
+
+## Observed bounded failure and root-cause diagnostic
+
+At21:39:14, the zero-strain A arm had consumed its12attempts without a
+gradient-converged candidate; its J arm was correctly not attempted. Both
+raw outcome files are retained in `partial_outcomes_2139/0/`, with missing
+candidates kept null, never zero energy. The original job continued the
+other predeclared strains;14native calls had completed and there were no
+DFT failure files. This is an optimizer-budget outcome, not SCF failure,
+structural divergence or termination of the entire study.
+
+The actual first0.05Å trial raised the energy by8.595753meV/HfO2. Its
+energy/force directional secants are29.5114/29.4176eV/Å². This supports a
+step-scale/conditioning explanation for repeated backtracking with a unit
+initial Hessian. It is not a claim that every SCF was an accepted optimizer
+step, nor that an alternative has already accelerated the calculation.
+
+The independent read-only `diagnose.py` reuses the original zero-strain
+T two-amplitude matrix at this same native input. The references differ
+only by a fixed, explicitly recorded integer lattice offset on a few Hf
+coordinates: the native STRU hash and complete zero-coordinate gradient
+agree, and the offset remains constant under atomic and cell increments.
+No atom remapping, altered structure or looser electronic threshold occurs.
+
+At both original probe steps, the29D atomic block and3D cell block are
+positive in the measured symmetric matrix, whereas their coupled32D block
+has one weak raw negative eigenvalue(-.003673/-.006216eV/Å²). Removing the
+mixed block algebraically removes that negative sign. This is evidence
+about the *measured local quadratic*, not a new physical experiment that
+turns off coupling. The point is nonstationary; no physical uncertainty
+bound or saddle-index certificate follows. The scaled-cell fraction of an
+eigenvector is not the applied substrate strain or an energy contribution.
+
+`numerical_seed.py` checks a possible **standard numerical block-Jacobi
+initializer**, using those existing positive diagonal blocks and affine
+coordinate transport to the three strain charts. The actual DFT mixed
+coupling is not removed. Both original probe steps pass positive-definite
+restriction checks for A and J at all three target chart definitions,
+without eigenvalue clipping. This is not a strained physical-Hessian
+prediction, new optimizer theory, production repair or demonstrated speedup.
+The numerical arrays can be regenerated; no new calculation is admitted.
+If a later targeted numerical repair is justified by the completed batch,
+freeze the first probe step(.01Å) before its DFT outcomes, keep the second
+as a sensitivity control, preserve all baseline failures/costs, and use a
+new namespace. Do not alter the running72-attempt protocol or automatically
+submit more jobs from this diagnostic.
+
+```text
+python benchmarks/hfo2_channels/20261008/matched_pattern_release_E270_20261018/diagnose.py --output NEW_DIAGNOSTIC.json
+python benchmarks/hfo2_channels/20261008/matched_pattern_release_E270_20261018/numerical_seed.py --output NEW_SEED_FEASIBILITY.json
+```
+
+The diagnosis and seed feasibility are saved in `initialization_diagnostic.json`
+and `numerical_seed_feasibility.json`. They add zero DFT/curvature probes;
+no current input, production source, path label or forecast score changes.
+
+## First completed midpoint arm, observed21:50:55
+
+The+0.5% A arm reached its fixed released-gradient target in5new native
+SCFs. The final raw INPUT/KPT/STRU/log/call record and accepted outcome are
+preserved in `midpoint_A_prefix/` (archive SHA256
+5dbbae65bd01e93a9af524c209863f6a2f09479930fe9c298df1b39b9dcb98d7).
+`review_arm.py` independently reparses that **one final** portable SCF and
+replays its physical coordinate gradient. It does not claim to recheck all
+five attempts or locally read undistributed orbital/pseudopotential bytes.
+
+- E_A-E_F=-0.008858301meV/HfO2; this is a candidate-energy contrast, not a
+  path-barrier correction or an upper bound on further relaxation.
+- Released29D gradient norm=.023923316eV/Å; complete allowed39D gradient
+  norm=.129115502eV/Å. The arm is not a full stationary point or TS.
+- All three cell coordinates are exactly zero; the four fixed physical
+  coordinate defects are at most1.22e-19Å.
+- Zero-strain A remains budget-exhausted and its J unavailable. At the
+  midpoint snapshot J was still being calculated; no value is imputed.
+
+```text
+python benchmarks/hfo2_channels/20261008/matched_pattern_release_E270_20261018/review_arm.py --exported benchmarks/hfo2_channels/20261008/matched_pattern_release_E270_20261018/midpoint_A_prefix --index 1 --arm A --output NEW_ARM_REVIEW.json
+```
+
+The result is in `midpoint_A_review.json`. These partial outcomes do not
+form a completed three-strain mechanism curve or a revised path table.
+
+At22:00:47 both original handles were still RUNNING; E270 had27completed
+native SCFs and no failure files. Midpoint J was unfinished and+1% had not
+yet supplied a completed arm. The preserving band had reachedstep10 with
+residual.133896eV/Å, still above its ordinary.10target. No job was cancelled,
+restarted or given a larger budget. Fifty-four scoped checks passed across
+the diagnostics, coordinate transport, native arm replay and prior mechanism/
+physical-holdout analyses; this is not the full repository suite or completed
+physical research. The live worker and bundle are unchanged.
