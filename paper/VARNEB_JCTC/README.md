@@ -1,5 +1,12 @@
 # Hafnia pathway study: complete reading manuscript
 
+Author-authorized follow-up on October19: the missing +1% preserving
+local A/J control is now being addressed by the separate
+[E276 targeted continuation](../../benchmarks/hfo2_channels/20261008/preserving_local_completion_E276_20261019/README.md).
+The original finite plan below remains a completed historical study;
+the new numerical protocol does not rewrite its failed outcomes. The
+reading PDF will incorporate native E276 results only after they exist.
+
 ## Current result: the prescribed three-strain connection is complete
 
 The October19 complete result changes the central interpretation: internal
