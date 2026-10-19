@@ -11,7 +11,10 @@ SCFs. H2: the old neighborhood/backtracking and finite budget obstructed
 the local search. Supported by boundary approach, tiny accepted-trial
 increments and large tangential residual; not proof of an exterior minimum.
 H3: an explicit larger numerical window from the exact failed starts can
-supply the original matched A/J. Prepared, not yet tested by new DFT.
+supply the original matched A/J. The original two handles now run. The
+first new call each has norm.542A, reduced released gradient.234eV/A,
+and native EFS/32MPI proof. This is support for renewed descent, not yet
+successful local convergence or a global-minimum claim.
 
 One revision only in the initial protocol:1.0A guard,32A/16J+2checks per
 original sign. Original electronic inputs, BFGS trust and numerical seed

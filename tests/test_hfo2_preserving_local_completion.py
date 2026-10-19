@@ -116,3 +116,18 @@ def test_native_config_contains_geometry_hash_but_only_six_assets_are_fixed():
     changed_geometry=copy.deepcopy(d);changed_geometry['physical_input_sha256']['STRU']='different geometry'
     # Geometry is checked against its native source separately, not as one of six assets.
     w.validate_config(changed_geometry)
+
+
+@pytest.mark.parametrize('state',['RUNNING','PENDING','TIMEOUT','FAILED'])
+def test_terminal_collector_refuses_nonterminal_or_failed_original_handle(state):
+    collector=load(CASE/'collect_terminal.py','E276_collector_test_'+state)
+    row='28954771|'+state+'|0:0|32|hfacnormal01|iai806|1|60|start|end|hfo2-E276-minus|node117'
+    with pytest.raises(ValueError,match='exact original completed'):collector.terminal_row(row,'minus')
+
+
+def test_terminal_reader_does_not_impute_a_still_missing_original_archive(tmp_path):
+    # No fabricated material result: the actual original exports do not yet exist.
+    reader=load(CASE/'analyze_terminal.py','E276_offline_missing_test')
+    if (CASE/'completed/minus/collection_receipt.json').exists():
+        reader.CASE=tmp_path/'missing_original_exports'
+    with pytest.raises(FileNotFoundError):reader.read_one('minus',tmp_path)
