@@ -104,6 +104,7 @@ def read_one(sign,destination):
             or not np.isclose(float(receipt['scheduler_row'][7])*32/3600,receipt['allocation_core_hours'],atol=1e-10,rtol=0)):
         raise ValueError('new cost accounting differs')
     return dict(sign=sign,job_id=receipt['job_id'],arms=arms,directional_secants_at_A=direction,
+        archive_sha256=receipt['archive_sha256'],original_F_energy_eV_cell=e0,
         new_SCF_calls=len(native),all_new_native_EFS_reparsed_locally=True,
         native_proxy_core_hours=receipt['native_call_proxy_core_hours'],allocated_core_hours=receipt['allocation_core_hours'],
         previous_cached_starts_and_prior_costs_not_charged_again=True,
@@ -120,6 +121,7 @@ if __name__=='__main__':
     a.output.mkdir(parents=True,exist_ok=False)
     result=dict(status='both_original_signed_continuations_replayed',rows=rows,new_DFT_calls=0,
         new_calls=sum(r['new_SCF_calls'] for r in rows),physical_inputs_changed=False,
+        source_reader_sha256=sha256(__file__),
         independent_prediction_or_new_optimizer_advantage=False)
     with (a.output/'analysis.json').open('x',encoding='utf-8',newline='\n') as f:
         json.dump(result,f,indent=2,allow_nan=False);f.write('\n')

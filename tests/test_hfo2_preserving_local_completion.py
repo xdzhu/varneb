@@ -126,8 +126,11 @@ def test_terminal_collector_refuses_nonterminal_or_failed_original_handle(state)
 
 
 def test_terminal_reader_does_not_impute_a_still_missing_original_archive(tmp_path):
-    # No fabricated material result: the actual original exports do not yet exist.
+    import shutil
+    # Keep the real collector code but remove the actual export namespace.
+    # This checks missing data, not a missing Python module, after completion too.
     reader=load(CASE/'analyze_terminal.py','E276_offline_missing_test')
-    if (CASE/'completed/minus/collection_receipt.json').exists():
-        reader.CASE=tmp_path/'missing_original_exports'
-    with pytest.raises(FileNotFoundError):reader.read_one('minus',tmp_path)
+    missing=tmp_path/'missing_original_exports';missing.mkdir()
+    shutil.copyfile(CASE/'collect_terminal.py',missing/'collect_terminal.py')
+    reader.CASE=missing
+    with pytest.raises(FileNotFoundError,match='collection_receipt.json'):reader.read_one('minus',tmp_path)
