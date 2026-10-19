@@ -8,9 +8,11 @@ accommodation permitted by a clamped lattice. We compare homogeneous
 paths in twelve-atom HfO2 using first-principles variable-cell nudged
 elastic band calculations under one partially clamped boundary.
 With three geometric shuffle amplitudes and the polar z displacement
-proxy retained, fixed-cell atomic release at the zero-strain preserving
-sampled peak recovers 13.6 meV/HfO2; matched T-escape releases remain below
-0.25 meV/HfO2 over the three studied strains. Reconnecting the mixed
+proxy retained, fixed-cell atomic release at the preserving sampled
+peak recovers 13.6 meV/HfO2 at zero strain and 17.2 at +1%; additional
+joint release contributes only 0.02 and 0.48, respectively. Matched
+T-escape releases remain below 0.25 meV/HfO2 over the three studied strains.
+Reconnecting the mixed
 atomic rearrangement lowers the zero-strain sampled peak from 96.8 to
 83.2 meV/HfO2. Prescribed transfers give peaks of 87.7 and 91.7 at
 +0.5% and +1%, retaining a transverse structural component. The sampled
@@ -277,6 +279,24 @@ full-coordinate neighborhood bound and no electronic-parameter changes.
 Only a successful A candidate could seed J and two 0.01 Angstrom probes
 along that known direction. These are finite branch tests, not an
 exhaustive search or a full post-release stability calculation.
+
+The original +1% starts exhausted that bound without qualified A
+candidates. Replaying all 24 native trials showed successful electronic
+calculations but shrinking backtracking steps near the neighborhood
+boundary, with a substantial remaining tangential gradient. A separately
+declared continuation therefore enlarged only the numerical search
+radius from 0.5 to 1.0 Angstrom and allowed up to 32 fresh A evaluations,
+two directional probes and 16 J evaluations per original sign. It began
+at the exact last native trials, retained the same four physical
+observables, trust step, quasi-Newton initialization, mechanical boundary
+and electronic inputs, and did not overwrite the unsuccessful protocol.
+A single endpoint-verified periodic registration placed the existing
+lower path on the original chart; its peak projected to the fixed F cell
+and held observables had a displacement scale of 0.810 Angstrom. This
+unevaluated projection motivated the enlarged window but was not an
+energy observation or a continuation seed. The zero- and +1%-strain
+local searches consequently use different numerical windows; comparison
+does not imply success under the original common 0.5 Angstrom bound.
 
 One zero-strain negative-start J candidate was then inserted as the free
 central image of the original nine-image band. Both endpoints and their
@@ -651,8 +671,8 @@ Thus the joint contrast includes coupled atomic motion even when its
 energy is small. These same-definition T controls do not isolate the
 cost of adding one coordinate to Figure 4, whose retained subspaces are
 different. The following zero-strain preserving control addresses the
-same physical restriction, while its across-strain and stability coverage
-remains incomplete.
+same physical restriction. The later +1% continuation extends that
+comparison without establishing complete stability coverage.
 
 ![Matched physical-pattern T energy release and atomic motion](figures/hfo2_matched_T_20261018/matched_T_release.pdf)
 
@@ -679,9 +699,50 @@ with oxygen contributing 80.4% of its squared norm. Despite unchanged
 T-pattern amplitudes and z polar proxy, the transverse mean O-minus-Hf
 displacement increased by 0.122 Angstrom along y. This is a structural
 descriptor, not an electronic-polarization measurement or a minimum
-certificate. At +1%, both signed A starts exhausted twelve attempts near
-the fixed 0.5 Angstrom neighborhood boundary, with released gradients
-about 0.378 eV/Angstrom; their J energies remain unavailable.
+certificate. At +1%, both original signed A starts exhausted twelve
+attempts near the fixed 0.5 Angstrom neighborhood boundary, with released
+gradients about 0.378 eV/Angstrom. The separately declared larger-window
+continuation below supplies A/J candidates without relabelling those
+original failures as successes.
+
+The completed +1% controls show that substantial internal accommodation
+also remains at the strained preserving peak (Figure 10). The two
+original signed continuations lowered F by 17.172 and 17.175 meV/HfO2
+at fixed cell; J added 0.485 and 0.484 meV/HfO2. All four candidates
+met the local 0.03 eV/Angstrom criterion within 27 fresh SCFs in total,
+including four directional probes. The original four observables and
+three translation gauges were retained. Thus the large local lowering
+does not require release of the open lattice coordinates, although
+the additional joint contrast is larger than at zero strain. This is a
+measured intervention at the native strained peak, not an extrapolation
+from the zero-strain release or the small PO-to-T controls.
+
+The strained accommodation is larger in the same original-T atomic
+metric: F-to-A norms are 0.747--0.749 Angstrom, compared with 0.477 at
+zero strain. Oxygen contributes 77.9% of their squared norms and Hf
+also moves. The transverse mean proxy changes by +0.206 and -0.205
+Angstrom for the two signs, compared with about +0.122 and -0.122 at
+zero strain. Holding the geometric $Q_y$ shuffle does not fix this
+species-mean transverse displacement: its covector adds a fifth
+independent observable to the four retained ones. This distinction
+explains why a transverse mean can develop without changing the
+displayed T-pattern amplitudes; it is not a new phonon assignment or
+an electronic-polarization measurement. Because the triplet is fixed,
+the released displacement lies in its complement by construction.
+The nonzero energy lowering, rather than that geometric fact alone,
+is the physical evidence for accommodation beyond those descriptors.
+
+Joint release couples that rearrangement to a changed open-axis
+response. Relative to F, J expands the open y stretch by about 0.058
+percentage points at zero strain but contracts it by 0.310--0.321
+points at +1%; A has exactly zero cell change in both cases. Two
+0.01 Angstrom probes at each new A give positive energy and gradient
+secants along the previously followed direction. This checks that
+direction only, not the full post-release Hessian. The two signs are
+separate finite searches, not statistical replicates or proof of
+symmetry-related minima. Their qualified chart norms, 0.753--0.755
+Angstrom, are inside the new 1.0 Angstrom window but outside the
+original 0.5 Angstrom window.
 
 The local gain survived a finite whole-path connection test (Figure 6).
 Reinserting J first moved the polygon's sampled maximum to a neighbor,
@@ -983,6 +1044,45 @@ Local release, zero-strain connection and all preparation costs are
 additional to the two target transfers. Exact source rows and native
 archives accompany the figure.
 
+The local intervention and the connected band answer different parts
+of the mechanism question. At zero strain, the negative-start J point
+is 83.211 meV/HfO2 above the initial well, close to the connected peak
+at 83.166; its retained $Q_x$ differs by only 0.010 Angstrom from that
+peak. At +1%, the corresponding fixed-observable J point is 107.767,
+whereas the existing free-chain peak is 91.699 meV/HfO2. The free peak
+also changes $Q_x$ from -1.046 to -0.817 Angstrom, has a transverse
+proxy of 0.123 rather than about 0.206 Angstrom, and a different
+open-axis response. These are comparisons of actual configurations
+under the same Hamiltonian and initial-well reference, not additive
+energy components. They show why the larger strained fixed-pattern
+release alone does not reproduce the lower whole-path response:
+the free band also readjusts descriptors that the local intervention
+holds fixed. The mixed internal accommodation, retained shuffle and
+open strain must be interpreted together, rather than assigning the
+entire peak reduction to one transverse coordinate. No new complete
+path or unique minimum is inferred from the local J points.
+
+![Matched preserving release connects internal accommodation to strain](../../benchmarks/hfo2_channels/20261008/preserving_local_completion_E276_20261019/figures/matched_controls/matched_preserving_release.pdf)
+
+Figure 10. Matched preserving F/A/J controls at zero and +1% strain.
+(a) Fixed-cell atomic lowering $E_F-E_A$ and additional joint lowering
+$E_A-E_J$. (b) F-to-A and F-to-J atomic displacement norms in the
+original-T metric over twelve atoms. (c) Signed change of the transverse
+mean O-minus-Hf structural proxy. (d) Change of open-y stretch relative
+to F, in percentage points (pp); A's zeros follow its fixed-cell constraint.
+The blue/orange F-to-A/F-to-J encoding in (b) also applies to (c,d).
+Both original start signs are shown, not averaged or selected by energy.
+Each triplet holds its native $Q_x,Q_z,Q_y$ and z structural proxy;
+these values differ between strains. The zero-strain numerical window
+is 0.5 Angstrom; the explicit +1% revision is 1.0 Angstrom and retains
+the original failed searches. All A/J candidates satisfy the same
+local gradient target, not a full stability or TS certificate. The
+new +1% continuations used 27 fresh SCFs and 27.813333 allocation
+core-hours; prior calculations and cached starts are not charged again.
+Local lowering and geometric fractions are not whole-path barriers or
+unique mode-energy partitions. Original native files and source rows
+accompany this figure.
+
 
 ## 4. Discussion: mechanical control acts on the route as well as the wells
 
@@ -998,8 +1098,8 @@ or from the sign of one candidate's strain response.
 
 The decisive local contrast is that clamping does not remove all internal
 atomic accommodation. With the same four physical observables retained,
-fixed-cell release at the zero-strain preserving peak recovers about
-13.6 meV/HfO2, whereas the total measured release at the three T peaks
+fixed-cell release at the preserving peak recovers about 13.6 meV/HfO2
+at zero strain and 17.2 at +1%, whereas the total measured release at the three T peaks
 stays below 0.25 meV/HfO2. Most of the preserving displacement lies outside
 the displayed T-pattern triplet and includes both oxygen and Hf motion.
 Its transverse species-mean component is useful for following that
@@ -1052,18 +1152,21 @@ configuration family, not a universal energetic meaning of a space-group
 label. A comparison of relaxed endpoints must therefore retain the
 mechanical ensemble as part of the definition of the pathway.
 
-The matched local mechanism comparison remains incomplete at +1%:
-both bounded preserving atomic-release starts failed to supply a converged
-A candidate, so J and its energy contrast remain unavailable there.
-This is a limit of that finite intervention, not evidence that no lower
-accommodation exists. The T results cannot fill the missing preserving
-control: the small T releases cannot fill that gap by subtraction.
-Separately, the +1% free-chain transfer now supplies a lower complete
-ordinary candidate. It is not a substitute for the missing local A/J
-intervention: the whole-chain interiors are free and the retained
-observables need not equal their old-peak values. The conclusion is
-therefore a changed finite candidate response, not a complete causal
-energy decomposition at every strain.
+The +1% matched preserving control now closes the previously missing
+local comparison, while retaining its original finite failure. Enlarging
+the numerical neighborhood, rather than changing a DFT input, allowed
+the two original starts to reach qualified A/J candidates. The new
+controls exclude an open-cell-only account of the strained local
+lowering as well. They do not, however, reproduce the whole-path
+reduction at fixed retained patterns. At +1% the local J point remains
+about 16.1 meV/HfO2 above the connected free peak; at zero strain the
+corresponding difference is only about 0.045. The strained free band
+changes $Q_x$ and the transverse proxy together with open strain.
+This distinction connects the fixed-pattern intervention to the
+changed path response without making their energy differences a
+unique causal decomposition. The different numerical windows and
+incomplete post-release stability tests remain explicit limitations;
+neither the T controls nor a free band substitutes for this intervention.
 
 The methodological conclusion is narrower than the material contrast.
 A complete change of coordinates leaves the same quadratic response
@@ -1112,8 +1215,10 @@ switching-peak changes, so the path interior must enter the interpretation.
 Clamping also changes the sampled energetic role of
 a Pbcn-labelled central configuration while excluding the large expansion
 seen on the free-cell path. Matched local controls show that internal
-atomic relaxation already recovers most of the preserving neighborhood's
-energy lowering at fixed seed cells. These observations support coupled
+atomic relaxation already recovers most of the measured local lowering
+at fixed seed cells at both zero and +1% strain. The larger strained
+release still does not reproduce the free-chain peak while the
+original shuffle amplitudes are held fixed. These observations support coupled
 atomic and lattice accommodation as the physical basis for interpreting
 the route differences, with no unique mode-by-mode energy partition.
 At the midpoint, the frozen crossovers also retain the initialization

@@ -15,6 +15,10 @@ PIN='16bd55d10c00d579026f6aff11e4b472db07d4526c177e0f0e8a6a0ae43422d1'
 JOBS={'minus':'28954771','plus':'28954772'}
 
 
+def own_source_sha256():
+    return sha256(Path(__file__))
+
+
 def save(path,data):
     with Path(path).open('x',encoding='utf-8',newline='\n') as f:
         json.dump(data,f,indent=2,allow_nan=False);f.write('\n')
@@ -68,7 +72,8 @@ def collect(sign):
                 or np.max(np.abs(np.asarray(data['covectors_39_by_4']).T@x))>1e-10
                 or np.linalg.norm(x)>1. or arm=='A' and np.any(x[36:])):
             raise ValueError('native candidate, retained observables or released-gradient criterion differs')
-    dest=ROOT/'exports'/sign;dest.mkdir(parents=True,exist_ok=False);out=dest/'native_terminal';out.mkdir()
+    # v1 copied native files before a Path/string hashing bug; preserve it.
+    dest=ROOT/'exports_v2'/sign;dest.mkdir(parents=True,exist_ok=False);out=dest/'native_terminal';out.mkdir()
     for name in ('complete.json','treatment_A.json','treatment_J.json','known_direction.json'):
         shutil.copyfile(folder/name,out/name)
     for call in calls:
@@ -83,7 +88,7 @@ def collect(sign):
         native_call_proxy_core_hours=sum(seconds)*32/3600,allocation_core_hours=float(row[7])*32/3600,
         all_new_native_EFS_replayed_on_HF=True,original_assets_checked_by_fixed_runtime=True,
         old_cached_source_calls_not_charged_again=True,prior_costs_additional=True,
-        collector_source_sha256=sha256(__file__),calls=calls,new_DFT_calls=0,scheduler_mutations=0)
+        collector_source_sha256=own_source_sha256(),calls=calls,new_DFT_calls=0,scheduler_mutations=0)
     save(out/'receipt.json',receipt)
     files={p.relative_to(out).as_posix():sha256(p) for p in out.rglob('*') if p.is_file()};save(out/'files.json',files)
     archive=dest/'native_terminal.tar.gz'

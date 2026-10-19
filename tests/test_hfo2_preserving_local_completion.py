@@ -134,3 +134,28 @@ def test_terminal_reader_does_not_impute_a_still_missing_original_archive(tmp_pa
     shutil.copyfile(CASE/'collect_terminal.py',missing/'collect_terminal.py')
     reader.CASE=missing
     with pytest.raises(FileNotFoundError,match='collection_receipt.json'):reader.read_one('minus',tmp_path)
+
+
+@pytest.mark.parametrize('filename',['collect_terminal.py','analyze_terminal.py'])
+def test_postprocessor_receipt_hashes_actual_source_as_a_path(filename):
+    import hashlib
+    script=CASE/filename
+    m=load(script,'E276_receipt_hash_'+filename.replace('.','_'))
+    assert m.own_source_sha256()==hashlib.sha256(script.read_bytes()).hexdigest()
+
+
+@pytest.mark.parametrize('sign,calls',[('minus',13),('plus',14)])
+def test_actual_terminal_native_cohort_and_candidates_replay_independently(tmp_path,sign,calls):
+    reader=load(CASE/'analyze_terminal.py','E276_actual_terminal_'+sign)
+    r=reader.read_one(sign,tmp_path)
+    assert r['new_SCF_calls']==calls and r['all_new_native_EFS_reparsed_locally']
+    assert r['old_protocol_success_claimed'] is False
+    assert r['original_search_window_A']==.5 and r['new_search_window_A']==1.
+    assert r['directional_secants_at_A']['energy_secant_eV_A2']>0
+    assert r['directional_secants_at_A']['gradient_secant_eV_A2']>0
+    assert not r['directional_secants_at_A']['full_stability_certified']
+    for arm in r['arms']:
+        c=arm['candidate']
+        assert .03>=c['released_gradient_eV_A']>=0 and .75<c['norm_A']<1.
+        assert c['actual_motion']['measured_four_pattern_defect_A']<1e-12
+        assert -17.7<c['dE_minus_F_meV_fu']<-17.1

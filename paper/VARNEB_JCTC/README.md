@@ -1,11 +1,15 @@
 # Hafnia pathway study: complete reading manuscript
 
 Author-authorized follow-up on October19: the missing +1% preserving
-local A/J control is now being addressed by the separate
+local A/J control is now completed by the separate
 [E276 targeted continuation](../../benchmarks/hfo2_channels/20261008/preserving_local_completion_E276_20261019/README.md).
 The original finite plan below remains a completed historical study;
 the new numerical protocol does not rewrite its failed outcomes. The
-reading PDF will incorporate native E276 results only after they exist.
+native E276 results are incorporated into main Figure 10 and the reading PDF.
+Both original 32MPI jobs completed with 27 new SCFs. Fixed-cell lowering
+is 17.172/17.175 meV/fu and additional joint lowering 0.485/0.484; all four
+candidates meet 0.03 eV/A. The original 0.5 A search failed, while the explicit
+1.0 A numerical revision succeeded without changing electronic inputs.
 
 ## Current result: the prescribed three-strain connection is complete
 
@@ -20,8 +24,9 @@ forecast failures are retained. No new prediction advantage is established.
 Both original target handles completed, with42fresh SCFs/36.008889
 allocation core-hours in total. Full native replay and main Figure9 are
 available in the [completed strain case](../../benchmarks/hfo2_channels/20261008/preserving_strain_E275_20261019/README.md).
-The finite computation plan is closed, including the explicit failed
-+1% local A/J control; no additional matrix is silently scheduled.
+The original finite computation plan is closed, including its explicit failed
++1% local A/J control; the authorized E276 follow-up now fills that gap
+under its separately declared numerical window, not a new calculation matrix.
 See the [Chinese scientific result and journal-positioning summary](../../docs/HFO2_MECHANISM_RESULTS_2026-10-19.md).
 
 This is the complete scientific reading manuscript for author review,
@@ -34,9 +39,11 @@ reading PDF through [the thin TeX wrapper](varneb_JCTC_draft.tex).
 The single-column review layout retains the main article, references and
 in-article appendices. Historical page counts belong to their dated builds;
 the current PDF is regenerated from the single Markdown source. The
-complete three-strain reading build has61pages. Figure8 is onpage18,
-new Figure9 onpage20, Discussion onpage21 and Conclusions onpage22.
-The [current build receipt](reading/complete_strain_mechanism_20261019.json)
+historical complete three-strain build had 61 pages; the new local-mechanism
+build has 62 pages, with Figure10 on page21, Discussion on22 and Conclusions
+on23. The [current receipt](reading/preserving_local_mechanism_20261019.json)
+records the actual current source, PDF, native replay and test scope.
+The [previous build receipt](reading/complete_strain_mechanism_20261019.json)
 records actual bytes and inspected pages; historical page numbers are
 not current figure locations. Table4 adds
 the measured frozen atomic/cell crossover. Original labels and scores remain.
@@ -64,7 +71,8 @@ methods now contain the material/comparison definitions and calculation
 recipe; the extended response theory and diagnostic procedures are retained
 in Appendix G. All218previous numerical table lines remain; four new lines
 form Table4. All16prior figure targets remain; the new three-strain main
-Figure9 brings the total to17. No table row was removed or relabelled.
+Figure9 brought the total to17. The E276 main Figure10 brings the current
+total to18. No table row was removed or relabelled.
 The bibliography supplies18verified article records, including the newly
 checked open publisher text of Mu et al. The [bounded three-review assessment](../../docs/HFO2_JCTC_ASSESSMENT_2026-10-19.md)
 explains why transverse oxygen motion and coordination-role exchange are
@@ -104,6 +112,10 @@ independent prediction checks.
 - Figure 9 connects the complete prescribed three-strain transfers to
   their actual peaks, T competition, transverse proxy and open-y response.
   No fitted strain law or energy uncertainty is invented.
+- Figure 10 adds the completed zero/+1% preserving same-observable local
+  controls. It links atomic lowering, transverse accommodation and
+  opposite open-y responses; the local fixed-pattern point is not the
+  lower free-path peak. Its different numerical windows remain explicit.
 
 The [three new main figures and source data](figures/hfo2_mechanism_20261018/README.md)
 have a single replay command:

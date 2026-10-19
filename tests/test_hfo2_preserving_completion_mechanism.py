@@ -64,3 +64,33 @@ def test_offline_plot_and_mechanism_entry_points_work_outside_repo_cwd(tmp_path)
         result=subprocess.run([sys.executable,str(CASE/name),'--help'],cwd=tmp_path,capture_output=True,text=True)
         assert result.returncode==0,result.stderr
         assert '--output' in result.stdout
+
+
+def test_actual_completed_comparison_links_native_local_and_free_path_without_substitution():
+    m=module('mechanism_data');d=m.build();rows=d['rows']
+    assert d['new_native_calls']==27 and d['new_DFT_calls']==0
+    assert d['original_plus1_failure_preserved'] and d['old_and_new_numerical_radii_differ']
+    assert d['J_point_to_free_peak_difference_is_not_an_additive_causal_mode_energy']
+    assert [(r['strain_percent'],r['sign']) for r in rows]==[(0.,'minus'),(0.,'plus'),(1.,'minus'),(1.,'plus')]
+    for r in rows[2:]:
+        assert 17.17<r['atomic_lowering_meV_fu']<17.18
+        assert .48<r['additional_joint_lowering_meV_fu']<.49
+        assert r['open_y_change_F_A_percentage_points']==0.
+        assert -.33<r['open_y_change_F_J_percentage_points']<-.31
+        assert 16.<r['J_point_minus_connected_free_peak_meV_fu']<16.1
+        assert .229<r['Qx_original_F_to_free_peak_change_A']<.230
+    assert not d['statistical_replicates_or_inferred_error_bars']
+
+
+def test_manuscript_contains_native_completion_and_its_nonadditive_mechanism():
+    text=(BASE.parents[2]/'paper/VARNEB_JCTC/MANUSCRIPT_DRAFT.md').read_text(encoding='utf-8')
+    d=json.loads((CASE/'mechanism_analysis/analysis.json').read_bytes())
+    for r in d['rows'][2:]:
+        assert f"{r['atomic_lowering_meV_fu']:.3f}" in text
+        assert f"{r['additional_joint_lowering_meV_fu']:.3f}" in text
+    assert 'Figure 10. Matched preserving F/A/J controls' in text
+    assert 'held observables had a displacement scale of 0.810' in text
+    assert 'Both original start signs are shown, not averaged or selected by energy' in text
+    assert 'not additive\nenergy components' in text
+    assert 'original failures as successes' in text
+    assert 'remains incomplete at +1%' not in text

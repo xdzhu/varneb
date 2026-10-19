@@ -99,6 +99,9 @@ def build():
     for row in rows:
         strain=row['strain_percent']/100
         original=next(b for b in path['bands'] if b['strain']==strain and b['kind']=='registered_preserving')
+        connected=next(b for b in path['bands'] if b['strain']==strain and b['kind']=='released_seed')
+        old_peak=original['rows'][original['sampled_peak_image']]
+        new_peak=connected['rows'][connected['sampled_peak_image']]
         outcome=next(r for r in path['outcomes'] if r['strain']==strain)
         initial=original['endpoint_native_records'][0]['energy_eV_cell']
         if not np.isclose(250*(row['F_energy_eV_cell']-initial),original['sampled_polygon_peak_meV_fu'],atol=1e-7,rtol=0):
@@ -106,6 +109,10 @@ def build():
         row.update(J_point_energy_relative_IS_meV_fu=250*(row['J_energy_eV_cell']-initial),
             connected_free_chain_sampled_peak_meV_fu=outcome['released_seed_meV_fu'],
             J_point_minus_connected_free_peak_meV_fu=250*(row['J_energy_eV_cell']-initial)-outcome['released_seed_meV_fu'])
+        row.update(retained_Qx_at_original_F_A=old_peak['Qx_A'],connected_free_peak_Qx_A=new_peak['Qx_A'],
+            Qx_original_F_to_free_peak_change_A=new_peak['Qx_A']-old_peak['Qx_A'],
+            connected_free_peak_transverse_proxy_A=new_peak['polar_proxy_y_A'],
+            connected_free_peak_open_y_percent=new_peak['open_y_stretch_percent'])
     return dict(rows=rows,new_source_sha256=sha256(source),zero_native_archive_sha256=old['archive_sha256'],
         descriptor_independence=[transverse_independence(oldcase/'prepared/seeds/0'),transverse_independence(CASE/'prepared/seed')],
         whole_path_context_sha256=sha256(context),whole_path_outcomes=path['outcomes'],

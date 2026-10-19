@@ -14,6 +14,10 @@ from scripts.audit_hfo2_static_replica import sha256
 CASE=Path(__file__).resolve().parent;OLD=CASE.with_name('preserving_pattern_branches_E272_20261018')
 
 
+def own_source_sha256():
+    return sha256(Path(__file__))
+
+
 def module(path,name):
     s=importlib.util.spec_from_file_location(name,path);m=importlib.util.module_from_spec(s);s.loader.exec_module(m);return m
 
@@ -121,7 +125,7 @@ if __name__=='__main__':
     a.output.mkdir(parents=True,exist_ok=False)
     result=dict(status='both_original_signed_continuations_replayed',rows=rows,new_DFT_calls=0,
         new_calls=sum(r['new_SCF_calls'] for r in rows),physical_inputs_changed=False,
-        source_reader_sha256=sha256(__file__),
+        source_reader_sha256=own_source_sha256(),
         independent_prediction_or_new_optimizer_advantage=False)
     with (a.output/'analysis.json').open('x',encoding='utf-8',newline='\n') as f:
         json.dump(result,f,indent=2,allow_nan=False);f.write('\n')

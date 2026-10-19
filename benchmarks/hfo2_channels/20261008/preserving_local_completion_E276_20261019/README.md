@@ -1,6 +1,58 @@
 # +1% preserving local-control completion
 
-## Actual admission and first native evaluations
+## Completed outcome
+
+Both original handles completed with exit 0 on 2026-10-19:
+minus 28954771 at 10:59:50 CST, plus 28954772 at 11:01:15 CST.
+The 27 new SCFs (13/14) all have independently replayed native energy,
+forces, stress and geometry. Allocation cost: 27.813333 coreh;
+completed-call proxy: 26.824676 coreh. Prior work/cached starts are additional.
+
+| Original sign | A lowering | Additional J lowering | A gradient | J gradient |
+|---|---:|---:|---:|---:|
+| minus |17.172494|0.484821|0.028933|0.022660|
+| plus |17.174898|0.484106|0.018045|0.010588|
+
+Energy units: meV/HfO2; gradient units: eV/A. All four held physical observables
+remain fixed; A retains the entire F cell. These are qualified local
+gradient candidates, not stable conditional minima or stationary TS.
+The old 0.5 A searches remain failures; new chart norms 0.753--0.755 A lie
+inside the explicitly revised 1.0 A window. Two probes at each A have
+positive energy/gradient secants along the followed direction only.
+
+In the common original-T metric, F-to-A atomic norms are 0.747--0.749 A;
+the transverse structural proxy changes by +0.206/-0.205 A while the
+geometric Qy remains fixed. Those are different observables (rank 4 to 5).
+Oxygen contributes 77.9% of squared displacement, not energy. J contracts
+open y by 0.310--0.321 percentage points relative to F, in contrast to the
+zero-strain expansion. Most observed local lowering is already atomic.
+
+The +1% J points sit 107.765--107.767 meV/fu above IS, still about 16.1 above
+the existing free-band peak 91.699. That free peak also changes Qx by +0.229 A
+and has transverse proxy 0.123 A rather than about 0.206. Thus the local contrast
+supports internal accommodation but cannot alone reproduce the whole-path
+strain response with the original descriptors fixed. No additive
+mode-energy partition or new global barrier ordering is inferred.
+
+`completed/` holds both original native archives/receipts;
+`complete_analysis/` independently reparses every new call and candidate;
+`mechanism_analysis/` supplies all four 0/+1% signed rows and free-path context.
+`figures/matched_controls/` contains main Figure 10 (PDF/SVG/PNG) and QA.
+The original numerical windows differ across strain and are disclosed.
+
+Reproduction from repository root; outputs must be fresh directories:
+
+```sh
+python benchmarks/hfo2_channels/20261008/preserving_local_completion_E276_20261019/analyze_terminal.py --output /fresh/native-replay
+python benchmarks/hfo2_channels/20261008/preserving_local_completion_E276_20261019/mechanism_data.py --output /fresh/mechanism-data
+python benchmarks/hfo2_channels/20261008/preserving_local_completion_E276_20261019/plot_mechanism.py --source /fresh/mechanism-data/analysis.json --output /fresh/figure
+```
+
+The mechanism builder uses the retained complete analysis in this case
+and validates its actual archive/source hashes; alternate output paths
+do not redirect or replace that source. No new DFT or scheduler write.
+
+## Actual admission and historical startup prefix
 
 Original handles28954771(minus) and28954772(plus) were submitted held,
 checked for one-node32CPU/one-task/4h/hfacnormal01 resources, then released
@@ -24,8 +76,12 @@ Actual terminal exports, not forecasts, will be processed by
 `collect_terminal.py` and independently replayed by`analyze_terminal.py`.
 They reject live/missing/timeout handles and preserve the known old failure.
 The new collector runs as a separate postprocess sidecar, never edits
-runtime sources or issues scheduler writes. No terminal result is yet
-being promoted into the reading PDF.
+runtime sources or issues scheduler writes. Collection v1 passed native
+replay but failed a source-hash Path/string conversion after copying files;
+its partial exports remain untouched. Corrected sidecar v2 used a fresh
+export namespace, regression-tested source hashing, and no fresh SCF.
+Both v2 receipts bind their collector hash. The immutable DFT runtime is unchanged.
+The completed result is integrated into main Figure 10 and the article.
 
 ## Preparation and diagnosis
 

@@ -26,9 +26,10 @@ def test_no_frozen_target_replacement_or_stationary_saddle_claim():
     assert 'registered training labels are not replaced' in text
     assert 'Both original prospective labels and all frozen forecast scores remain' in text
     assert 'Neither a global MEP nor a stationary' in text
-    assert 'the small T releases cannot fill that gap' in text
+    assert 'neither the T controls nor a free band substitutes for this intervention' in text
+    assert 'original finite failure' in text
     figures=re.findall(r'^Figure (\d+)\.',text,re.M)
-    assert figures==[str(i) for i in range(1,10)]
+    assert figures==[str(i) for i in range(1,11)]
     assert 'summary_three_strains/strain_mechanism_summary.pdf' in text
 
 

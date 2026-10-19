@@ -35,12 +35,12 @@ def test_results_lead_with_whole_matrix_and_keep_all_original_nine_figures():
     assert '0.464068' in main and 'not the favorable signature' in main
     assert 'not an error-certified rejection' in main
     # Retain the original assets and the two actual terminal mechanism figures.
-    assert len(re.findall(r'^!\[',text,re.M))==17
+    assert len(re.findall(r'^!\[',text,re.M))==18
     assert 'summary_three_strains/strain_mechanism_summary.pdf' in main
     assert 'terminal_step_0009/connection_step_0009.pdf' in main
     assert 'terminal_comparison/hfo2_midpoint_seed.pdf' in main
     labels=re.findall(r'^Figure (\w+)\.',text,re.M)
-    assert labels==['1','2','3','4','5','6','7','8','9','A1','A2','A3','A4','A5','A6','A7','A8']
+    assert labels==['1','2','3','4','5','6','7','8','9','10','A1','A2','A3','A4','A5','A6','A7','A8']
     assert 'figures/hfo2_matched_T_20261018/matched_T_release.pdf' in main
     for target in re.findall(r'^!\[[^\]]*\]\(([^)]+)\)',text,re.M):
         assert (PAPER.parent/target).is_file()
