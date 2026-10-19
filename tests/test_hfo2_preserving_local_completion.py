@@ -103,3 +103,16 @@ def test_policy_and_submission_script_keep_physics_resources_and_explicit_revisi
     for value in ('--cpus-per-task=32','--ntasks=1','--time=04:00:00','I_MPI_HYDRA_BOOTSTRAP=fork','RUN_DFT','ARM_SIGN'):
         assert value in script
     assert '235' not in script and 'srun ' not in script and 'sbatch ' not in script
+
+
+def test_native_config_contains_geometry_hash_but_only_six_assets_are_fixed():
+    import copy
+    d=json.loads((CASE/'prepared/config.json').read_bytes())
+    assert 'STRU' in d['physical_input_sha256']
+    w.validate_config(d)
+    for name in w.CONTRACT:
+        bad=copy.deepcopy(d);bad['physical_input_sha256'][name]='changed'
+        with pytest.raises(ValueError,match='fixed physical contract'):w.validate_config(bad)
+    changed_geometry=copy.deepcopy(d);changed_geometry['physical_input_sha256']['STRU']='different geometry'
+    # Geometry is checked against its native source separately, not as one of six assets.
+    w.validate_config(changed_geometry)

@@ -11,7 +11,7 @@ from scripts.audit_hfo2_static_replica import audited_results, sha256
 from ase.calculators.singlepoint import SinglePointCalculator
 from vcneb import CalculatorModeEvaluator, relax_orthogonal_at_q, validate_path_geometry
 
-ROOT=Path('/public/home/iai806/abacus/agent-runs/20261019-varneb-preserving-local-E276-r1')
+ROOT=Path('/public/home/iai806/abacus/agent-runs/20261019-varneb-preserving-local-E276-r2')
 BASE=ROOT.with_name('20261018-varneb-matched-pattern-E270-r1')
 HELPER=ROOT.with_name('20261018-varneb-matched-pattern-E271-r1')
 BASE_PIN='f2aca3403e214fbad072ed53e69cd1afc496c560e52f2909aabe233dfb2b42ca'
@@ -36,19 +36,24 @@ def check_files(root,pin):
             raise ValueError('immutable runtime source or prepared input changed')
 
 
+def validate_config(config):
+    p=config['policy']
+    if (config['new_DFT_calls'] or config['execution_admitted'] or p['strain']!=.01
+            or p['retained']!=['Qx','Qz','Qy','polar_proxy_z']
+            or p['maximum_coordinate_norm_A']!=1. or p['atomic_attempts']!=32 or p['joint_attempts']!=16
+            or p['maximum_new_calls_per_sign']!=50 or p['gradient_tolerance_eV_A']!=.03
+            or p['initial_trust_radius_A']!=.05
+            or any(config['physical_input_sha256'].get(n)!=h for n,h in CONTRACT.items())
+            or p['physical_inputs_changed'] or p['new_physical_Hessian']):
+        raise ValueError('finite numerical revision or fixed physical contract differs')
+
+
 def validate(pin):
     for root,value in ((ROOT,pin),(BASE,BASE_PIN),(HELPER,HELPER_PIN)):check_files(root,value)
     study=load(BASE/'bundle/study.py','E276_original_physics')
     helper=load(HELPER/'bundle/repair.py','E276_original_controls')
     study.validate(BASE_PIN)
-    config=json.loads((ROOT/'bundle/prepared/config.json').read_bytes());p=config['policy']
-    if (config['new_DFT_calls'] or config['execution_admitted'] or p['strain']!=.01
-            or p['retained']!=['Qx','Qz','Qy','polar_proxy_z']
-            or p['maximum_coordinate_norm_A']!=1. or p['atomic_attempts']!=32 or p['joint_attempts']!=16
-            or p['maximum_new_calls_per_sign']!=50 or p['gradient_tolerance_eV_A']!=.03
-            or p['initial_trust_radius_A']!=.05 or config['physical_input_sha256']!=CONTRACT
-            or p['physical_inputs_changed'] or p['new_physical_Hessian']):
-        raise ValueError('finite numerical revision or fixed physical contract differs')
+    config=json.loads((ROOT/'bundle/prepared/config.json').read_bytes());validate_config(config)
     return study,helper,config
 
 

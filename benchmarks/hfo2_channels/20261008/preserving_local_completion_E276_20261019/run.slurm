@@ -7,7 +7,7 @@
 #SBATCH --time=04:00:00
 set -euo pipefail
 [[ "${RUN_DFT:-0}" == 1 && -n "${BUNDLE_SHA256:-}" && "${ARM_SIGN:-}" =~ ^(minus|plus)$ ]] || exit 2
-root=/public/home/iai806/abacus/agent-runs/20261019-varneb-preserving-local-E276-r1
+root=/public/home/iai806/abacus/agent-runs/20261019-varneb-preserving-local-E276-r2
 runtime=/public/home/iai806/abacus/agent-runs/20261018-varneb-physical-E268-r1
 [[ ! -e "${root}/results/${ARM_SIGN}" ]] || exit 2
 module purge

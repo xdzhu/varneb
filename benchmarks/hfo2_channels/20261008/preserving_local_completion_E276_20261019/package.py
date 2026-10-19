@@ -31,7 +31,7 @@ def package(output):
             tar.addfile(item,io.BytesIO(raw))
     report=dict(commit=commit,files=files,bundle_pin=hashlib.sha256(manifest).hexdigest(),
         archive_sha256=hashlib.sha256(archive.read_bytes()).hexdigest(),archive_bytes=archive.stat().st_size,
-        remote_root='/public/home/iai806/abacus/agent-runs/20261019-varneb-preserving-local-E276-r1',
+        remote_root='/public/home/iai806/abacus/agent-runs/20261019-varneb-preserving-local-E276-r2',
         runtime_files=len(files),new_DFT_calls=0,scheduler_actions=0)
     with (output/'package.json').open('x',encoding='utf-8',newline='\n') as f:
         json.dump(report,f,indent=2);f.write('\n')
