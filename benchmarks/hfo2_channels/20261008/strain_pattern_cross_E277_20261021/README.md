@@ -19,8 +19,52 @@ Prepare and test locally before packaging; deploy to the unique E277 root,
 then run native zero-SCF preflight and held-resource checks. Two 1-node,
 32-MPI, 2-hour hfacnormal01 allocations are permitted, 40 fresh SCFs each.
 
-At this preparation stage no new DFT result exists. The following commands
-only prepare or test and require a fresh output directory:
+The two original jobs completed on October 21 at 13:12:30 and 13:01:30 CST.
+Only 10+4 new SCFs were used, totaling 15.52 allocation core-hours. Both
+crosses met the unchanged 0.03 eV/A local target. The terminal archive
+contains 114 hashed files, including every new native E/F/stress result;
+all fourteen were independently replayed locally. Two diagonal J records
+were also replayed, not recalculated. This finite calculation is closed.
+
+| Strain | Held vector | Energy above same-strain well (meV/HfO2) | Released gradient (eV/A) | New SCFs |
+| --- | --- | ---: | ---: | ---: |
+| 0 | q0 | 83.211101 | 0.011617 | 0 |
+| 0 | q1 | 114.553122 | 0.015790 | 10 |
+| +1% | q0 | 92.398077 | 0.023149 | 4 |
+| +1% | q1 | 107.767116 | 0.022660 | 0 |
+
+The fixed-pattern strain responses are +9.186976 (q0) and -6.786007 (q1)
+meV/HfO2. The same-strain pattern contrasts are 31.342021 and 15.369039;
+their interaction is **-15.972982 meV/HfO2**, independent of initial-well
+shifts. The +1% q0 cross is only 0.699140 above the existing free-chain
+sampled peak; these local candidates are not new path barriers. Changing
+the four-vector changes the permitted transverse and open-axis response;
+this is not a unique single-mode or atomic/elastic energy partition.
+
+## Offline reproduction
+
+For a standard-library-only export from the source checkout:
+
+```sh
+python -m examples.hfo2_mechanism_results --output /fresh/mechanism_tables
+```
+
+For complete native replay and the main figure (existing project scientific
+dependencies required), use fresh output directories:
+
+```sh
+python benchmarks/hfo2_channels/20261008/strain_pattern_cross_E277_20261021/analyze.py --output /fresh/analysis
+python benchmarks/hfo2_channels/20261008/strain_pattern_cross_E277_20261021/plot.py --source /fresh/analysis/analysis.json --output /fresh/figures
+```
+
+Neither command starts DFT, modifies a scheduler, or changes the runtime.
+`analysis/analysis.json` and `figures/` contain the completed results.
+The complete protocol and original immutable package remain the source of
+execution details, not instructions to resubmit the finished jobs.
+
+## Historical preparation
+
+The following commands only prepare or test and require fresh outputs:
 
 ```sh
 python benchmarks/hfo2_channels/20261008/strain_pattern_cross_E277_20261021/prepare.py --output /fresh/prepared

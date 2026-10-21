@@ -100,3 +100,19 @@ def test_missing_cross_never_filled_or_plotted(tmp_path):
     source.write_text(json.dumps(dict(rows=[],contrasts={'status':'incomplete_no_factor_contrasts'})))
     with pytest.raises(ValueError):plotting.plot(source,tmp_path/'figure')
     assert not (tmp_path/'figure').exists()
+
+
+def test_final_native_cross_rows_and_main_figure_are_not_path_barriers():
+    data=json.loads((CASE/'analysis/analysis.json').read_bytes())
+    text=(REPO/'paper/VARNEB_JCTC/MANUSCRIPT_DRAFT.md').read_text(encoding='utf-8')
+    main=text.split('## 3.',1)[1].split('## 4.',1)[0]
+    assert len(data['rows'])==4
+    assert 0<data['new_native_SCF_calls']<=80
+    assert data['contrasts']['status']=='four_candidate_contrasts'
+    for row in data['rows']:
+        assert row['released_gradient_eV_A']<=.03
+        assert f"{row['relative_energy_meV_fu']:.6f}" in main
+    assert f"{data['contrasts']['interaction_meV_fu']:.6f}" in main
+    assert 'Figure 11. Strain and retained-pattern cross comparison' in main
+    assert 'local candidate energies, not new path barriers' in main
+    assert 'strain_pattern_cross_E277_20261021/figures/strain_pattern_cross.pdf' in main

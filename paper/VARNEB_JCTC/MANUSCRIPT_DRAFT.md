@@ -3,24 +3,27 @@
 ## Abstract
 
 Mechanical constraints affect both polarization reversal and escape from
-the polar phase, but a restricted atomic route need not exhaust the
+the polar phase, but a converged candidate need not exhaust the atomic
 accommodation permitted by a clamped lattice. We compare homogeneous
 paths in twelve-atom HfO2 using first-principles variable-cell nudged
 elastic band calculations under one partially clamped boundary.
+Reconnecting a mixed atomic rearrangement lowers the zero-strain
+preserving-reversal sampled peak from 96.8 to 83.2 meV/HfO2.
+Prescribed transfers give peaks of 87.7 and 91.7 at +0.5% and +1%.
+The sampled strain penalty is then 8.5 rather than 28.6 meV/HfO2
+for the original preserving candidate. T escape gives 84.4, 90.4 and
+96.8 meV/HfO2, bringing switching and escape into close sampled
+competition without resolving their global physical barrier ordering.
 With three geometric shuffle amplitudes and the polar z displacement
 proxy retained, fixed-cell atomic release at the preserving sampled
 peak recovers 13.6 meV/HfO2 at zero strain and 17.2 at +1%; additional
 joint release contributes only 0.02 and 0.48, respectively. Matched
 T-escape releases remain below 0.25 meV/HfO2 over the three studied strains.
-Reconnecting the mixed
-atomic rearrangement lowers the zero-strain sampled peak from 96.8 to
-83.2 meV/HfO2. Prescribed transfers give peaks of 87.7 and 91.7 at
-+0.5% and +1%, retaining a transverse structural component. The sampled
-strain penalty is then 8.5 rather than 28.6 meV/HfO2 for the original
-preserving candidate. T escape gives 84.4, 90.4 and 96.8 meV/HfO2,
-so the apparent competition changes, although the small separations
-do not resolve a global physical barrier ordering. Separate
-initialization and frozen atomic-cell controls also exclude an
+Crossing the two retained pattern vectors with both strains reduces their
+local energy contrast from 31.3 to 15.4 meV/HfO2. At +1%, retaining the
+zero-strain vector gives a local candidate only 0.7 meV/HfO2 above the
+connected free-path peak, rather than 16.1 for the original strained vector.
+Separate initialization and frozen atomic-cell controls also exclude an
 open-cell-only account of the preserving sensitivity. The results link
 candidate competition to internal accommodation that survives partial
 clamping, rather than to endpoint shifts or one displayed mode alone.
@@ -111,7 +114,9 @@ interface. We combine their energy profiles with signed shuffle amplitudes,
 open-cell deformation and matched frozen, atomic-only and joint relaxation
 controls. Reconnection and prescribed strain transfers then test whether
 the accommodation changes complete sampled candidates rather than isolated
-configurations. These tests reveal a substantially smaller apparent
+configurations. A final crossed comparison holds each of two physical
+pattern vectors at both strains, separating their joint change from the
+conditional strain response. These tests reveal a substantially smaller apparent
 preserving strain penalty and close competition with T escape. Separate
 initialization controls delimit that interpretation; forecasts fixed
 before the target-interior calculations test, but do not establish,
@@ -329,6 +334,37 @@ and wrapper warnings accompany the data; a preferred tolerance is not
 selected to obtain a phase name. These postprocessing settings do not
 modify a DFT input or establish dynamical stability or electronic polarization.
 
+The final local comparison crosses strain with the retained shuffle state.
+Here $\mathbf{q}_0$ and $\mathbf{q}_1$ denote the four geometric observables
+at the original zero- and +1%-strain preserving peaks, respectively;
+they are distinct from the two local joint coordinates $q=(Q_1,Q_2)$.
+The previously evaluated negative-start J candidates supply
+$(0,\mathbf{q}_0)$ and $(1\%,\mathbf{q}_1)$. Only the two missing crosses
+are evaluated. Each starts from the other diagonal J geometry, with its
+fractional atomic coordinates and open cell row transported to the target
+prescribed plane. One recorded integer registration and a rigid-translation
+gauge retain atom identities and the original-T observable definitions.
+All four target values remain fixed while the other 32 coordinates relax.
+Each cross allows at most forty fresh SCFs, a 1.0 Angstrom numerical
+window and the same 0.03 eV/Angstrom released-gradient target. No second
+sign, new A treatment or further strain condition is added.
+For a qualified local candidate, its energy per formula unit relative to
+the same-strain initial well is
+
+$$
+U(\epsilon,\mathbf{q})=[E_J(\epsilon,\mathbf{q})-E_{\rm IS}(\epsilon)]/4.
+$$
+
+The finite interaction
+
+$$
+I=[U(1\%,\mathbf{q}_1)-U(1\%,\mathbf{q}_0)]-[U(0,\mathbf{q}_1)-U(0,\mathbf{q}_0)]
+$$
+
+tests whether the local pattern contrast changes with the imposed plane;
+the initial-well shifts cancel. It is not a derivative, a unique
+mode-energy decomposition or a newly calculated path barrier.
+
 ### 2.4. Prospective strain test and prediction comparison
 
 Eight training bands compare all four candidates at substrate strain
@@ -386,6 +422,18 @@ does not relax a configuration, define a unique mode-energy partition
 or replace a path label.
 
 ## 3. Results: competing responses under one mechanical intervention
+
+The central result is that internal accommodation changes the inferred
+mechanical response of the preserving route. The lower connected
+candidates have sampled peaks of 83.2, 87.7 and 91.7 meV/HfO2 at the three
+studied strains, reducing the zero-to-+1% penalty from 28.6 to 8.5 meV/HfO2
+relative to the original candidates. They approach the examined T-escape
+profiles without resolving the small physical barrier ordering. We first
+establish the common-well competition and mechanical boundary, then trace
+the atomic rearrangement and its controlled release, and finally test the
+strain interpretation against independent paths and connection controls.
+The original paths below remain explicit comparators, not the final claim
+that their larger strain penalty is unavoidable.
 
 ### 3.1. Strain changes channel competition, not just one switching peak
 
@@ -1084,6 +1132,76 @@ unique mode-energy partitions. Original native files and source rows
 accompany this figure.
 
 
+The final cross comparison separates the two changes that occurred together
+between the native local controls: imposed plane strain and the retained
+four-observable vector (Table 5 and Figure 11). At zero strain, retaining
+$\mathbf{q}_1$ instead of $\mathbf{q}_0$ raises the qualified local energy
+by 31.342021 meV/HfO2; at +1% the contrast is 15.369039. Their finite
+interaction is therefore -15.972982 meV/HfO2. An additive description
+$U(\epsilon,\mathbf{q})=f(\epsilon)+g(\mathbf{q})$ cannot represent these
+four candidates. This statement concerns the measured local searches;
+it does not establish globally minimized conditional surfaces or isolate
+a phonon-mode energy.
+
+Table 5. Final strain--pattern cross comparison. Energies $U$ are in
+meV/HfO2 above the same-strain initial well. These are local candidate energies, not new path barriers.
+The reused diagonal points and the two new crosses all meet the same
+0.03 eV/Angstrom released-gradient criterion.
+
+| Plane strain (%) | Retained vector | U (meV/HfO2) | Released gradient (eV/Angstrom) | New SCFs |
+| --- | --- | ---: | ---: | ---: |
+| 0 | q0 | 83.211101 | 0.011617 | 0 |
+| 0 | q1 | 114.553122 | 0.015790 | 10 |
+| +1 | q0 | 92.398077 | 0.023149 | 4 |
+| +1 | q1 | 107.767116 | 0.022660 | 0 |
+
+At fixed $\mathbf{q}_0$, the local energy relative to the initial well
+rises by 9.186976 meV/HfO2 under +1% strain; at fixed $\mathbf{q}_1$ it
+falls by 6.786007. The initial well itself rises by 6.806502 meV/HfO2,
+so the latter decrease should not be confused with an absolute lowering
+of that local configuration: its native energy is essentially unchanged
+(sampled difference +0.020496 meV/HfO2).
+The interaction and same-strain pattern contrasts are independent of
+this common-well shift. The larger-amplitude $\mathbf{q}_1$ state is
+therefore less costly relative to $\mathbf{q}_0$ at +1%, but it remains
+the higher of the two evaluated local candidates at both strains.
+
+The cross also closes the connection to the lower free path. At +1%,
+holding $\mathbf{q}_0$ gives 92.398077 meV/HfO2, only 0.699140 above
+the free-chain sampled peak, compared with 16.068179 for the native
+$\mathbf{q}_1$ J point. Its transverse structural proxy is 0.120 Angstrom,
+close to the free peak's 0.123, whereas the $\mathbf{q}_1$ local point
+has 0.206. Thus the retained pattern influences which transverse
+accommodation develops even though that transverse mean is not held.
+At zero strain the corresponding transverse values are 0.121 and
+0.222 Angstrom. The open-y stretch also changes with both factors
+(Figure 11d). Because the full four-vector is exchanged and the remaining
+atomic and cell coordinates respond together, these contrasts do not
+uniquely assign the energy difference to $Q_x$, a transverse displacement
+or an elastic contribution. They identify a coupled internal accommodation
+that is compatible with the lower connected path under the same clamp.
+The two new original jobs completed with fourteen SCFs and 15.52 allocation
+core-hours; no additional condition was introduced after observing the results.
+
+![Strain and retained atomic pattern jointly determine the local accommodation](../../benchmarks/hfo2_channels/20261008/strain_pattern_cross_E277_20261021/figures/strain_pattern_cross.pdf)
+
+Figure 11. Strain and retained-pattern cross comparison. Blue circles hold
+$\mathbf{q}_0$ and orange squares hold $\mathbf{q}_1$, the four geometric
+observables at the original zero- and +1%-strain preserving peaks.
+Their dominant difference is $Q_x=-0.799$ versus -1.046 Angstrom; all four
+values, including the smaller components, are retained exactly.
+(a) Local energies above the same-strain initial well. (b) Same-strain
+pattern contrasts and their difference, for which the initial-well energy
+cancels. (c) Released transverse mean O-minus-Hf displacement. (d) Open-y
+stretch relative to the original T reference, not relative to each F seed.
+Straight lines join only the two measured strain conditions and are guides,
+not interpolated branches. All four points are finite local candidates,
+not certified minima or stationary saddles. The reused zero-strain diagonal
+was found inside its historical 0.5 Angstrom numerical window; the other
+three use the explicit 1.0 Angstrom window. No energy-error bars are inferred
+from force tolerances. Native data, all fourteen new SCFs and the plotting
+script accompany the figure.
+
 ## 4. Discussion: mechanical control acts on the route as well as the wells
 
 The material question is not whether strain lowers one chosen switching
@@ -1168,6 +1286,22 @@ unique causal decomposition. The different numerical windows and
 incomplete post-release stability tests remain explicit limitations;
 neither the T controls nor a free band substitutes for this intervention.
 
+The final cross sharpens this interpretation without another path search.
+Changing the retained vector at the same +1% plane reduces the qualified
+local energy by 15.369 meV/HfO2 and brings it within 0.699 of the connected
+peak. The retained-pattern contrast itself changes by -15.973 meV/HfO2
+between strains, after cancellation of the common-well shift.
+Thus the imposed strain response depends on which internal pattern is
+retained, and that pattern also conditions the transverse atomic and
+open-axis accommodation. The free path's small transverse component is
+consistent with the lower-$|Q_x|$ pattern at +1%, not with the larger
+transverse displacement obtained by releasing the original strained
+pattern alone. This is a finite intervention-based link among pattern,
+accommodation and pathway response, rather than a claim that one scalar
+mode causes the entire barrier change. An additive strain-plus-pattern
+description fails for these four candidates, but no global conditional
+minimum or unique continuous branch is needed for that limited contrast.
+
 The methodological conclusion is narrower than the material contrast.
 A complete change of coordinates leaves the same quadratic response
 unchanged; this supplies a consistency check, not a new theorem.
@@ -1224,6 +1358,12 @@ the route differences, with no unique mode-by-mode energy partition.
 At the midpoint, the frozen crossovers also retain the initialization
 gap at either fixed cell, whereas the smaller cell effects depend on
 the internal pattern. Open-cell response alone is therefore not its cause.
+The final crossed local comparison separates strain from the retained
+four-observable vector: the pattern contrast changes from 31.342 to
+15.369 meV/HfO2, and retaining the zero-strain vector at +1% gives a
+local point only 0.699 meV/HfO2 above the connected free-path peak.
+This nonadditivity links the retained shuffle state to its permitted
+transverse and open-cell accommodation under a common mechanical boundary.
 The preserving initialization sensitivity exceeds the original midpoint
 improvement, so the registered nonmonotonic response is not an intrinsic
 strain law. Ordinary force convergence alone does not establish path uniqueness.
@@ -1259,6 +1399,11 @@ contrasts separately, without adding a new prediction cohort.
 The [released-source strain transfers](../../benchmarks/hfo2_channels/20261008/preserving_strain_E275_20261019/README.md)
 retain target-specific terminal archives and all previous same-strain
 candidates; they do not replace the original independent labels or scores.
+The [final strain--pattern crosses](../../benchmarks/hfo2_channels/20261008/strain_pattern_cross_E277_20261021/README.md)
+retain both original terminal jobs, all fourteen native SCFs, the two reused
+diagonal sources and the final figure data. The source-checkout command
+`python -m examples.hfo2_mechanism_results --output NEW_DIRECTORY` exports
+the complete pathway and final local-cross tables without DFT or SSH.
 The reading manuscript and its TeX wrapper are in paper/VARNEB_JCTC;
 the scalar tables and main figures can be regenerated without launching
 a DFT calculation. Executables and

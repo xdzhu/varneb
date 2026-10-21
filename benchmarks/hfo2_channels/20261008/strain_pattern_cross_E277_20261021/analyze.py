@@ -113,7 +113,16 @@ def analyze():
                 rows.append(row)
             record['native_proxy_core_hours']=seconds*32/3600
     rows.sort(key=lambda r:(r['strain'],r['held_pattern']))
+    path_context=[{k:b[k] for k in ('strain','kind','sampled_polygon_peak_meV_fu','fmax_eV_A')}
+                  for b in context['bands']]
+    for row in rows:
+        peak=next(b['sampled_polygon_peak_meV_fu'] for b in path_context
+                  if b['strain']==row['strain'] and b['kind']=='released_seed')
+        row['connected_free_sampled_peak_meV_fu']=peak
+        row['local_candidate_minus_free_sampled_peak_meV_fu']=(None
+            if row['relative_energy_meV_fu'] is None else row['relative_energy_meV_fu']-peak)
     return dict(rows=rows,contrasts=contrasts(rows),native_calls=calls,new_native_SCF_calls=len(calls),
+        whole_path_context=path_context,local_minus_path_is_not_a_unique_mode_energy=True,
         costs=receipt['rows'],archive_sha256=receipt['archive_sha256'],
         source_code_sha256=sha256(Path(__file__)),prepared_config_sha256=sha256(CASE/'prepared/config.json'),
         whole_path_context_sha256=sha256(context_path),new_DFT_calls=0,physical_inputs_changed=False,

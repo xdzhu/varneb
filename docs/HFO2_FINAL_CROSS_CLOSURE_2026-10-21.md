@@ -41,10 +41,34 @@ Remote namespace:
 `/public/home/iai806/abacus/agent-runs/20261021-varneb-strain-pattern-E277-r1`.
 Zero-SCF native preflight passed both diagonal caches and cross geometries.
 Original held jobs: 28995326 (zero_q1), 28995327 (plus1_q0).
-Both held-resource checks passed and the original jobs were released.
-Slurm reports both RUNNING from 12:52:27 CST, on node4 and node6 respectively.
-This is allocation startup, not yet evidence of completed electronic calls.
-Follow only these two original handles; do not resubmit.
+Both original jobs started at 12:52:27 CST and completed normally at
+13:12:30 / 13:01:30. They used 10 / 4 fresh SCFs, 15.52 allocation
+core-hours total, and reached released gradients 0.015790 / 0.023149 eV/A.
+The 114-file terminal native archive was exported and all fourteen new
+E/F/stress results independently replayed locally, together with both
+reused diagonal candidates. No additional DFT is needed or authorized.
+
+## Completed physical closure
+
+U(0,q0)=83.211101; U(0,q1)=114.553122;
+U(1%,q0)=92.398077; U(1%,q1)=107.767116 meV/HfO2.
+Same-strain pattern contrasts are 31.342021 / 15.369039, giving
+I=-15.972982 meV/HfO2. Fixed-q strain responses are +9.186976 / -6.786007.
+The common initial-well shift cancels in I; the q1 relative-energy decrease
+alone does not imply absolute local-energy lowering.
+
+At +1%, the q0 cross lies only 0.699140 above the existing free-chain
+sampled peak, with transverse proxy 0.120 A versus the free peak's 0.123 A.
+The native q1 J is 16.068179 above that peak, with proxy 0.206 A.
+This links the retained pattern to the transverse and open-cell response;
+it is not a unique single-mode energy partition or another complete barrier.
+The code/case and main Table 5 / Figure 11 now contain these actual results.
+The finite calculation is closed. All 53 scope tests passed; the 65-page
+reading PDF compiled successfully with the existing LuaLaTeX, without
+actual typography/reference warnings. Table 5 (page 23), Figure 11 (24),
+Abstract/Discussion/Conclusions and adjacent pages were visually inspected.
+The compiled PDF and a concise Chinese reading guide are ready for the
+author; no new calculation follows this final integration.
 
 ## Paper closure and stop rule
 

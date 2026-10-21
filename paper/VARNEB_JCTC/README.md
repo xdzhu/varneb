@@ -1,5 +1,33 @@
 # Hafnia pathway study: complete reading manuscript
 
+## Final closure: October 21
+
+The last two strain--pattern crosses are complete: 14 new SCFs, unchanged
+100 Ry/full10auDZP physical inputs, and 15.52 allocation core-hours.
+The local pattern contrast changes from 31.342 to 15.369 meV/HfO2 under
++1% strain (finite interaction -15.973). Holding the zero-strain vector
+at +1% gives a local candidate only 0.699 meV/HfO2 above the lower connected
+sampled peak. This links retained patterns to transverse/open-cell
+accommodation without claiming unique mode-energy components or new barriers.
+The result is in the Abstract, main Table 5 / Figure 11, Discussion and
+Conclusions. The calculation plan is now closed; no extra conditions follow.
+
+Start with the [short Chinese reading guide](AUTHOR_READING_GUIDE.md), then
+main Figures 9--11 and the [complete PDF](reading/VARNEB_HfO2_manuscript.pdf).
+The final reading build has 65 pages: Table 5 on page 23, Figure 11 on 24,
+Discussion on 25, Conclusions on 26 and in-article appendices from 29.
+The [final build receipt](reading/final_cross_closure_20261021.json) records
+actual source/PDF/data hashes and the 53-test scope. All 175 old table
+lines containing numbers and all 18 prior figure targets remain; the
+four-condition table and one figure are added. The [completed native case](../../benchmarks/hfo2_channels/20261008/strain_pattern_cross_E277_20261021/README.md)
+provides full replay and plotting commands. A standard-library export is:
+
+```sh
+python -m examples.hfo2_mechanism_results --output NEW_DIRECTORY
+```
+
+## Previous completed stage: October 19
+
 Author-authorized follow-up on October19: the missing +1% preserving
 local A/J control is now completed by the separate
 [E276 targeted continuation](../../benchmarks/hfo2_channels/20261008/preserving_local_completion_E276_20261019/README.md).
@@ -11,7 +39,7 @@ is 17.172/17.175 meV/fu and additional joint lowering 0.485/0.484; all four
 candidates meet 0.03 eV/A. The original 0.5 A search failed, while the explicit
 1.0 A numerical revision succeeded without changing electronic inputs.
 
-## Current result: the prescribed three-strain connection is complete
+## Established whole-path result: the prescribed three-strain connection
 
 The October19 complete result changes the central interpretation: internal
 atomic accommodation lowers the examined preserving peaks to83.166281,
@@ -39,10 +67,10 @@ reading PDF through [the thin TeX wrapper](varneb_JCTC_draft.tex).
 The single-column review layout retains the main article, references and
 in-article appendices. Historical page counts belong to their dated builds;
 the current PDF is regenerated from the single Markdown source. The
-historical complete three-strain build had 61 pages; the new local-mechanism
-build has 62 pages, with Figure10 on page21, Discussion on22 and Conclusions
-on23. The [current receipt](reading/preserving_local_mechanism_20261019.json)
-records the actual current source, PDF, native replay and test scope.
+historical complete three-strain build had 61 pages; the October19 local-mechanism
+build had 62 pages, with Figure10 on page21, Discussion on22 and Conclusions
+on23. Its [historical receipt](reading/preserving_local_mechanism_20261019.json)
+records that source, PDF, native replay and test scope, not the October21 build.
 The [previous build receipt](reading/complete_strain_mechanism_20261019.json)
 records actual bytes and inspected pages; historical page numbers are
 not current figure locations. Table4 adds
@@ -72,7 +100,8 @@ recipe; the extended response theory and diagnostic procedures are retained
 in Appendix G. All218previous numerical table lines remain; four new lines
 form Table4. All16prior figure targets remain; the new three-strain main
 Figure9 brought the total to17. The E276 main Figure10 brings the current
-total to18. No table row was removed or relabelled.
+total to18 in that historical build. The final October21 cross figure makes
+19 total figure targets. No old table row was removed or relabelled.
 The bibliography supplies18verified article records, including the newly
 checked open publisher text of Mu et al. The [bounded three-review assessment](../../docs/HFO2_JCTC_ASSESSMENT_2026-10-19.md)
 explains why transverse oxygen motion and coordination-role exchange are

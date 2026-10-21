@@ -24,7 +24,7 @@ def plot(source,output):
         'font.size':13,'axes.labelsize':14,'xtick.labelsize':12,'ytick.labelsize':12,
         'legend.fontsize':12,'svg.fonttype':'none','pdf.fonttype':42,'axes.linewidth':1.0})
     fig,axes=plt.subplots(2,2,figsize=(10.4,8.1))
-    fig.subplots_adjust(left=.12,right=.97,bottom=.10,top=.89,wspace=.35,hspace=.37)
+    fig.subplots_adjust(left=.12,right=.97,bottom=.10,top=.87,wspace=.35,hspace=.37)
     specs=[(axes[0,0],'relative_energy_meV_fu',r'$E-E_{\rm IS}$ (meV/HfO$_2$)'),
            (axes[1,0],'transverse_proxy_A',r'Transverse displacement ($\mathrm{\AA}$)'),
            (axes[1,1],'open_y_stretch_percent',r'Open-$y$ stretch (%)')]

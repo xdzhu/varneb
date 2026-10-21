@@ -1,5 +1,24 @@
 # HfO2: replay the competing-channel paper results offline
 
+## Final mechanism comparison (October 21)
+
+```sh
+python -m examples.hfo2_mechanism_results --output hfo2_mechanism_tables
+```
+
+This newer offline entry point exports ten existing whole-path records,
+the completed four-condition strain--pattern comparison and its finite
+contrasts. It uses only the standard library and never starts DFT or SSH.
+The two missing cross conditions required fourteen new SCFs; all inputs
+remained unchanged. Local candidate energies and complete sampled peaks
+are exported separately, not treated as interchangeable barriers.
+The physical result is a reduced preserving strain penalty (28.596 to
+8.533 meV/HfO2), with a final local pattern--strain interaction of -15.973.
+See the [completed native case and figure](../../../benchmarks/hfo2_channels/20261008/strain_pattern_cross_E277_20261021/README.md).
+This supersedes no original prediction label and launches no new experiment.
+
+## Original channel and independent-model tables
+
 From a source checkout with Python3.10 or later:
 
 ```sh

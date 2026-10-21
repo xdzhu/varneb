@@ -29,7 +29,7 @@ def test_no_frozen_target_replacement_or_stationary_saddle_claim():
     assert 'neither the T controls nor a free band substitutes for this intervention' in text
     assert 'original finite failure' in text
     figures=re.findall(r'^Figure (\d+)\.',text,re.M)
-    assert figures==[str(i) for i in range(1,11)]
+    assert figures==[str(i) for i in range(1,12)]
     assert 'summary_three_strains/strain_mechanism_summary.pdf' in text
 
 
