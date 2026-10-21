@@ -49,3 +49,24 @@ has been stated with its reasons, and the work has been pushed. It does
 not mean that a journal has accepted the work or that unsupported stronger
 claims have become true. If originality remains inadequate, report that
 outcome and the specific gap rather than silently starting more calculations.
+
+## Delivered scientific outcome
+
+The primary-source correspondence and its access boundaries are recorded
+in the mechanism_synthesis_20261021 case. New main Figure 4 resolves all
+twelve atom differences and links geometry to complete-path and local-state
+energies. The old overview is intact as Figure A9, Appendix F.3.
+The Abstract, Introduction, Discussion and Conclusions have been rewritten;
+the manuscript README now identifies one current source and reading route.
+
+All 55 scope tests passed. The final 64-page PDF compiled successfully and
+changed pages were visually inspected. All 228 prior table lines and 19
+prior figure targets are preserved; the mechanism figure adds one target.
+This synthesis used zero new DFT calls and changed no physical input.
+
+The [three-emphasis assessment](HFO2_PRESUBMISSION_VERDICT_2026-10-21.md)
+gives a definite adverse JCTC-readiness recommendation: a complete material
+study is available for scientific reading, but the increment over a better-
+relaxed member of a known route class is not sufficient to treat JCTC as
+the passed/default first-submission target. This finite assessment is an
+outcome of the goal, not a reason to quietly start another calculation matrix.

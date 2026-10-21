@@ -1,9 +1,12 @@
 # Manuscript terminology and claim boundaries
 
-Updated 2026-10-19. Scope: HfO2 manuscript and its source-to-table checks.
+Updated 2026-10-21. Scope: HfO2 manuscript and its source-to-table checks.
 
 | Term | Meaning used here | Does not establish |
 |---|---|---|
+| q0 / q1 retained vector | Four original-T geometric observables at the original zero/+1% preserving peaks, held exactly in each local crossed search | A single phonon mode, the earlier local Q1/Q2 pair, or a universal coupling constant |
+| C/S and N/T route features | Published crosswise/straight and non-through/through-Hf-plane distinctions; our sampled polygons have compatible geometric features | Complete published atom/endpoint/trajectory identity or a newly discovered path topology |
+| Original-to-lower center arrow | Actual reference-metric displacement after common translation removal, with no image-wise remapping | Time evolution, a segment of the NEB trajectory, affine cell deformation or a normal-mode eigenvector |
 | PO, T, M | Polar orthorhombic Pca21, tetragonal P42/nmc and monoclinic P21/c structural endpoints | Equivalent atom mappings or one unique pathway for each phase pair |
 | Signed geometric Qx/Qy/Qz | Unit-Cartesian-norm rotated T oxygen-shuffle projections in the original T lattice metric, with one fixed periodic gauge per ordered chain | Phonon occupations, assigned irreps, local joint Q1/Q2, or a complete atomic representation |
 | Polar displacement proxy | Mean O minus mean Hf displacement along original z in the same reference metric | Electronic polarization or switching charge |

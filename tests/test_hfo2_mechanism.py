@@ -126,8 +126,10 @@ def test_style_alignment_and_all_data_inside_axes(data, builder):
 def test_main_text_connects_three_evidence_levels_and_preserves_old_figures():
     text = (ROOT/'paper/VARNEB_JCTC/MANUSCRIPT_DRAFT.md').read_text(encoding='utf-8')
     main = text.split('## 3.', 1)[1].split('## Appendix A.', 1)[0]
-    for name in ('hfo2_competition.pdf', 'hfo2_path_geometry.pdf', 'hfo2_accommodation.pdf'):
+    for name in ('hfo2_competition.pdf', 'hfo2_path_geometry.pdf', 'hfo2_mechanism_synthesis.pdf'):
         assert name in main
+    assert 'hfo2_accommodation.pdf' in text
+    assert 'Figure A9. Local energy release' in text
     assert (ROOT/'paper/VARNEB_JCTC/figures/hfo2_mechanism_20261018/hfo2_relaxation.pdf').is_file()
     assert 'these are not energy percentages' in main
     for n in range(1, 5): assert f'Figure {n}.' in main
