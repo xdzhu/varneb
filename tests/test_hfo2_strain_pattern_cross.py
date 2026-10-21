@@ -76,3 +76,27 @@ def test_only_two_conditions_and_no_automatic_extension(modules):
     assert prep.POLICY['sign']=='minus'
     assert not prep.POLICY['physical_inputs_changed']
     assert not prep.POLICY['automatic_extension']
+
+
+def test_factor_contrasts_cancel_initial_well_offsets():
+    analysis=module(CASE/'analyze.py','cross_analysis')
+    rows=[dict(strain=s,held_pattern=q,relative_energy_meV_fu=e) for s,q,e in
+          [(0.,'q0',10.),(0.,'q1',13.),(.01,'q0',19.),(.01,'q1',27.)]]
+    result=analysis.contrasts(rows)
+    assert result['interaction_meV_fu']==5.
+    assert result['fixed_pattern_strain_response_meV_fu']=={'q0':9.,'q1':14.}
+    for r in rows:
+        r['relative_energy_meV_fu']+=123 if r['strain']==0 else 789
+    assert analysis.contrasts(rows)['interaction_meV_fu']==5.
+    rows[0]['relative_energy_meV_fu']=None
+    assert analysis.contrasts(rows)['status']=='incomplete_no_factor_contrasts'
+
+
+def test_missing_cross_never_filled_or_plotted(tmp_path):
+    analysis=module(CASE/'analyze.py','cross_missing')
+    with pytest.raises(ValueError):analysis.contrasts([])
+    plotting=module(CASE/'plot.py','cross_plot')
+    source=tmp_path/'missing.json'
+    source.write_text(json.dumps(dict(rows=[],contrasts={'status':'incomplete_no_factor_contrasts'})))
+    with pytest.raises(ValueError):plotting.plot(source,tmp_path/'figure')
+    assert not (tmp_path/'figure').exists()
